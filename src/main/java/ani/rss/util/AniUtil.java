@@ -22,7 +22,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.function.Consumer;
-import java.util.function.Function;
+import java.util.stream.Collectors;
 
 public class AniUtil {
 
@@ -72,14 +72,22 @@ public class AniUtil {
                 .setCover(cover)
                 .setExclude(List.of("720"));
 
-        return ani;
+        List<Item> items = getItems(ani, s);
+        if (items.isEmpty()) {
+            return ani;
+        }
+        int offset = items.stream()
+                .map(Item::getEpisode)
+                .min(Comparator.comparingInt(i -> i))
+                .get() - 1;
+        return ani.setOffset(offset);
     }
 
     public static List<Item> getItems(Ani ani, String xml) {
         String title = ani.getTitle();
         List<String> exclude = ani.getExclude();
 
-        int off = ani.getOffset();
+        int offset = ani.getOffset();
         int season = ani.getSeason();
         List<Item> items = new ArrayList<>();
 
@@ -87,7 +95,6 @@ public class AniUtil {
         Node channel = document.getElementsByTagName("channel").item(0);
         NodeList childNodes = channel.getChildNodes();
 
-        int episode = 1 + off;
         for (int i = childNodes.getLength() - 1; i >= 0; i--) {
             Node item = childNodes.item(i);
             String nodeName = item.getNodeName();
@@ -117,38 +124,52 @@ public class AniUtil {
             if (exclude.stream().anyMatch(finalItemTitle::contains)) {
                 continue;
             }
-
-            List<String> strings = new ArrayList<>();
-            Consumer<String> consumer = (e) -> {
-                strings.add(" " + e + " ");
-                strings.add("第" + e + "集");
-                strings.add("第" + e + "话");
-                strings.add("第" + e + "話");
-                strings.add("[" + e + "]");
-            };
-            consumer.accept(String.valueOf(episode));
-            consumer.accept(String.format("%02d", episode));
-            consumer.accept(String.format("%03d", episode));
-            consumer.accept(Convert.numberToChinese(episode, true));
-            consumer.accept(Convert.numberToChinese(episode, false));
-
-            if (strings.stream()
-                    .noneMatch(finalItemTitle::contains)) {
-                continue;
-            }
             items.add(
                     new Item()
                             .setTitle(itemTitle)
                             .setTorrent(torrent)
                             .setLength(length)
-                            .setEpisode(episode)
             );
-            episode++;
         }
 
-        for (Item item : items) {
-            item.setReName(StrFormatter.format("{} S{}E{}", title, String.format("%02d", season), String.format("%02d", item.getEpisode())));
-        }
+        List<Integer> episodes = new ArrayList<>();
+
+        items = items.parallelStream()
+                .filter(item -> {
+                    String itemTitle = item.getTitle();
+                    for (int i = offset; i < 5000; i++) {
+                        if (episodes.contains(i)) {
+                            continue;
+                        }
+                        List<String> strings = new ArrayList<>();
+                        Consumer<String> consumer = (e) -> {
+                            strings.add(" " + e + " ");
+                            strings.add("第" + e + "集");
+                            strings.add("第" + e + "话");
+                            strings.add("第" + e + "話");
+                            strings.add("[" + e + "]");
+                        };
+                        consumer.accept(String.valueOf(i));
+                        consumer.accept(String.format("%02d", i));
+                        consumer.accept(String.format("%03d", i));
+                        consumer.accept(Convert.numberToChinese(i, true));
+                        consumer.accept(Convert.numberToChinese(i, false));
+                        if (strings.stream()
+                                .noneMatch(itemTitle::contains)) {
+                            continue;
+                        }
+                        episodes.add(i);
+                        item.setEpisode(i)
+                                .setReName(
+                                        StrFormatter.format("{} S{}E{}",
+                                                title,
+                                                String.format("%02d", season),
+                                                String.format("%02d", i))
+                                );
+                        return true;
+                    }
+                    return false;
+                }).collect(Collectors.toList());
 
         return items;
     }
