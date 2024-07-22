@@ -1,5 +1,6 @@
 package ani.rss.util;
 
+import ani.rss.action.AniAction;
 import ani.rss.entity.Ani;
 import ani.rss.entity.Item;
 import ani.rss.entity.TorrentsInfo;
@@ -38,12 +39,22 @@ public class TorrentUtil {
                     return torrentsInfoList;
                 });
 
+        File configFile = AniAction.getConfigFile();
+        File torrents = new File(configFile + File.separator + "torrents");
+        FileUtil.mkdir(torrents);
+
         Integer season = ani.getSeason();
         for (Item item : items) {
             String reName = item.getReName();
             String torrent = item.getTorrent();
             Integer length = item.getLength();
             File torrentFile = new File(torrent);
+            File saveTorrentFile = new File(torrents + File.separator + torrentFile.getName());
+
+            // 已经下载过
+            if (saveTorrentFile.exists()) {
+                continue;
+            }
 
             // 已经下载过
             Optional<TorrentsInfo> optionalTorrentsInfo = torrentsInfos.stream().filter(torrentsInfo -> (torrentsInfo.getHash() + ".torrent").equals(torrentFile.getName()))
@@ -93,6 +104,8 @@ public class TorrentUtil {
             log.info("{} 下载", reName);
 
             byte[] bytes = HttpRequest.get(torrent).thenFunction(HttpResponse::bodyBytes);
+
+            FileUtil.writeBytes(bytes, saveTorrentFile);
             HttpRequest.post(host + "/api/v2/torrents/add")
                     .form("addToTopOfQueue", false)
                     .form("autoTMM", false)
