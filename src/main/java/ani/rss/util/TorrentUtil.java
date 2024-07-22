@@ -69,6 +69,7 @@ public class TorrentUtil {
                                 String ext = FileUtil.extName(name);
                                 String newPath = reName + "." + ext;
                                 if (name.equals(newPath)) {
+                                    // 下载完成后自动删除任务
                                     if (EnumUtil.equals(state, "pausedUP")) {
                                         HttpRequest.post(host + "/api/v2/torrents/delete")
                                                 .form("hashes", hash)
