@@ -78,8 +78,8 @@ public class AniUtil {
         String url = ani.getUrl();
         List<String> exclude = ani.getExclude();
 
-        int off = 0;
-        int season = 1;
+        int off = ani.getOff();
+        int season = ani.getSeason();
         List<Item> items = new ArrayList<>();
 
         String s = HttpRequest.get(url)
