@@ -13,10 +13,7 @@ import cn.hutool.log.Log;
 import com.google.gson.*;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 public class TorrentUtil {
     private final static Gson gson = new GsonBuilder()
@@ -26,7 +23,7 @@ public class TorrentUtil {
     private static final Log log = Log.get(TorrentUtil.class);
 
     private final static String host = "https://www.wushuo.fun:8844";
-    private final static String downloadPath = "/downloads";
+    public static String downloadPath = "/downloads";
 
     public static synchronized void download(Ani ani, List<Item> items) {
         List<TorrentsInfo> torrentsInfos = HttpRequest.get(host + "/api/v2/torrents/info")
