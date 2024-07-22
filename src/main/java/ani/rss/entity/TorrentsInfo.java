@@ -3,9 +3,11 @@ package ani.rss.entity;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
+import java.io.Serializable;
+
 @Data
 @Accessors(chain = true)
-public class TorrentsInfo {
+public class TorrentsInfo implements Serializable {
     private String hash;
     private String name;
     private State state;
