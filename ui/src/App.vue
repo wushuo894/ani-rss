@@ -293,12 +293,10 @@ const getList = () => {
       .then(res => res.json())
       .then(res => {
         if (res.code !== 200) {
-          getList()
           ElMessage.error(res.message)
           return
         }
         list.value = res.data
-        getList()
       })
 }
 
