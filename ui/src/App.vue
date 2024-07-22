@@ -107,9 +107,16 @@
     </div>
     <div style="margin: 10px;">
       <el-button @click="()=>{
-        ani.url = ''
-        ani.title = ''
-        addDialogVisible = true
+          ani = {
+                  'url': '',
+                  'season': 1,
+                  'off': 0,
+                  'title': '',
+                  'exclude': []
+                }
+          addDialogVisible = true
+          excludeVisible = false
+          excludeValue = ''
       }">添加
       </el-button>
     </div>
@@ -145,6 +152,8 @@
           <el-button @click="()=>{
             editDialogVisible = true
             ani = item
+            excludeVisible = false
+            excludeValue = ''
           }">编辑
           </el-button>
           <div style="height: 5px;"></div>
@@ -168,7 +177,7 @@ const title = ref('')
 const addDialogVisible = ref(false)
 const editDialogVisible = ref(false)
 const ani = ref({
-  'url': 'https://mikanime.tv/RSS/Bangumi?bangumiId=3359&subgroupid=583',
+  'url': '',
   'season': 1,
   'off': 0,
   'title': '',
