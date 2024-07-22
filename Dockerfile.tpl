@@ -1,6 +1,5 @@
 FROM openjdk:11-jdk
-COPY target/pornhub-download-jar-with-dependencies.jar /usr/app/pornhub-download-jar-with-dependencies.jar
-COPY ffmpeg-release-amd64-static.tar.xz /usr/app/ffmpeg-release-amd64-static.tar.xz
+COPY target/ani-rss-jar-with-dependencies.jar /usr/app/ani-rss-jar-with-dependencies.jar
 WORKDIR /usr/app
 VOLUME /config
 ENV PORT="7789"
