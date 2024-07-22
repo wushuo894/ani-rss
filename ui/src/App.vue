@@ -18,6 +18,33 @@
             <el-input-number v-model:model-value="ani.off"></el-input-number>
           </div>
         </el-form-item>
+        <el-form-item label="排除">
+          <div class="flex gap-2">
+            <el-tag
+                v-for="tag in ani.exclude"
+                :key="tag"
+                closable
+                :disable-transitions="false"
+                @close="handleClose(tag)"
+                style="margin-right: 4px;"
+            >
+              {{ tag }}
+            </el-tag>
+            <el-input
+                style="max-width: 80px;"
+                v-if="excludeVisible"
+                ref="InputRef"
+                v-model="excludeValue"
+                class="w-20"
+                size="small"
+                @keyup.enter="handleInputConfirm"
+                @blur="handleInputConfirm"
+            />
+            <el-button v-else class="button-new-tag" size="small" @click="showInput">
+              +
+            </el-button>
+          </div>
+        </el-form-item>
         <div style="display: flex;justify-content: end;width: 100%;margin-top: 10px;">
           <el-button :loading="addAniButtonLoading" @click="addAni">确定</el-button>
         </div>
@@ -40,6 +67,33 @@
       <el-form-item label="集数偏移">
         <div style="display: flex;justify-content: end;width: 100%;">
           <el-input-number v-model:model-value="ani.off"></el-input-number>
+        </div>
+      </el-form-item>
+      <el-form-item label="排除">
+        <div class="flex gap-2">
+          <el-tag
+              v-for="tag in ani.exclude"
+              :key="tag"
+              closable
+              :disable-transitions="false"
+              @close="handleClose(tag)"
+              style="margin-right: 4px;"
+          >
+            {{ tag }}
+          </el-tag>
+          <el-input
+              style="max-width: 80px;"
+              v-if="excludeVisible"
+              ref="InputRef"
+              v-model="excludeValue"
+              class="w-20"
+              size="small"
+              @keyup.enter="handleInputConfirm"
+              @blur="handleInputConfirm"
+          />
+          <el-button v-else class="button-new-tag" size="small" @click="showInput">
+            +
+          </el-button>
         </div>
       </el-form-item>
       <div style="display: flex;justify-content: end;width: 100%;margin-top: 10px;">
@@ -117,8 +171,31 @@ const ani = ref({
   'url': 'https://mikanime.tv/RSS/Bangumi?bangumiId=3359&subgroupid=583',
   'season': 1,
   'off': 0,
-  'title': ''
+  'title': '',
+  'exclude': []
 })
+
+const excludeVisible = ref(false)
+const excludeValue = ref('')
+
+const handleClose = (tag) => {
+  ani.value.exclude.splice(ani.value.exclude.indexOf(tag), 1)
+}
+
+const InputRef = ref()
+
+const showInput = () => {
+  excludeVisible.value = true
+  InputRef.value?.input?.focus()
+}
+
+const handleInputConfirm = () => {
+  if (excludeValue.value) {
+    ani.value.exclude.push(excludeValue.value)
+  }
+  excludeVisible.value = false
+  excludeValue.value = ''
+}
 
 const rssButtonLoading = ref(false)
 
