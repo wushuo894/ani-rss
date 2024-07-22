@@ -52,11 +52,6 @@ public class TorrentUtil {
             File saveTorrentFile = new File(torrents + File.separator + torrentFile.getName());
 
             // 已经下载过
-            if (saveTorrentFile.exists()) {
-                continue;
-            }
-
-            // 已经下载过
             Optional<TorrentsInfo> optionalTorrentsInfo = torrentsInfos.stream().filter(torrentsInfo -> (torrentsInfo.getHash() + ".torrent").equals(torrentFile.getName()))
                     .findFirst();
             if (optionalTorrentsInfo.isPresent()) {
@@ -89,6 +84,11 @@ public class TorrentUtil {
                                         .thenFunction(HttpResponse::isOk);
                             }
                         });
+                continue;
+            }
+
+            // 已经下载过
+            if (saveTorrentFile.exists()) {
                 continue;
             }
 
