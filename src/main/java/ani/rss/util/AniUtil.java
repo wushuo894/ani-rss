@@ -69,7 +69,7 @@ public class AniUtil {
                 .setSeason(season)
                 .setTitle(title.trim())
                 .setCover(cover)
-                .setExclude(List.of("720", "繁"));
+                .setExclude(List.of("720"));
         return ani;
     }
 
