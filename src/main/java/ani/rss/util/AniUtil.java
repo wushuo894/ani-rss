@@ -5,6 +5,7 @@ import ani.rss.entity.Item;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.text.StrFormatter;
 import cn.hutool.core.util.ReUtil;
+import cn.hutool.core.util.StrUtil;
 import cn.hutool.core.util.XmlUtil;
 import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpResponse;
@@ -132,43 +133,24 @@ public class AniUtil {
             );
         }
 
-        List<Integer> episodes = new ArrayList<>();
+        String s = "(.*|\\[.*])( -? \\d+|\\[\\d+]|\\[\\d+.?[vV]\\d]|第\\d+[话話集]|\\[第?\\d+[话話集]]|\\[\\d+.?END]|[Ee][Pp]?\\d+)(.*)";
 
         items = items.parallelStream()
                 .filter(item -> {
                     String itemTitle = item.getTitle();
-                    for (int i = offset; i < 5000; i++) {
-                        if (episodes.contains(i)) {
-                            continue;
-                        }
-                        List<String> strings = new ArrayList<>();
-                        Consumer<String> consumer = (e) -> {
-                            strings.add(" " + e + " ");
-                            strings.add("第" + e + "集");
-                            strings.add("第" + e + "话");
-                            strings.add("第" + e + "話");
-                            strings.add("[" + e + "]");
-                        };
-                        consumer.accept(String.valueOf(i));
-                        consumer.accept(String.format("%02d", i));
-                        consumer.accept(String.format("%03d", i));
-                        consumer.accept(Convert.numberToChinese(i, true));
-                        consumer.accept(Convert.numberToChinese(i, false));
-                        if (strings.stream()
-                                .noneMatch(itemTitle::contains)) {
-                            continue;
-                        }
-                        episodes.add(i);
-                        item.setEpisode(i)
-                                .setReName(
-                                        StrFormatter.format("{} S{}E{}",
-                                                title,
-                                                String.format("%02d", season),
-                                                String.format("%02d", i))
-                                );
-                        return true;
+                    String e = ReUtil.get(s, itemTitle, 2);
+                    String episode = ReUtil.get("\\d+", e, 0);
+                    if (StrUtil.isBlank(episode)) {
+                        return false;
                     }
-                    return false;
+                    item.setEpisode(Integer.parseInt(episode))
+                            .setReName(
+                                    StrFormatter.format("{} S{}E{}",
+                                            title,
+                                            String.format("%02d", season),
+                                            String.format("%02d", Integer.parseInt(episode)))
+                            );
+                    return true;
                 }).collect(Collectors.toList());
 
         return items;
