@@ -41,6 +41,7 @@ public class TorrentUtil {
 
         File configFile = AniAction.getConfigFile();
         File torrents = new File(configFile + File.separator + "torrents");
+        log.info(torrents.toString());
         FileUtil.mkdir(torrents);
 
         Integer season = ani.getSeason();
