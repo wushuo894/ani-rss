@@ -129,6 +129,7 @@ public class AniAction implements Action {
                         return;
                     }
                     BeanUtil.copyProperties(ani, first.get());
+                    sync();
                     String json = gson.toJson(Result.success().setMessage("修改成功"));
                     IoUtil.writeUtf8(res.getOut(), true, json);
                     return;
