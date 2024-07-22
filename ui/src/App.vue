@@ -15,7 +15,7 @@
         </el-form-item>
         <el-form-item label="集数偏移">
           <div style="display: flex;justify-content: end;width: 100%;">
-            <el-input-number v-model:model-value="ani.off"></el-input-number>
+            <el-input-number v-model:model-value="ani.offset"></el-input-number>
           </div>
         </el-form-item>
         <el-form-item label="排除">
@@ -66,7 +66,7 @@
       </el-form-item>
       <el-form-item label="集数偏移">
         <div style="display: flex;justify-content: end;width: 100%;">
-          <el-input-number v-model:model-value="ani.off"></el-input-number>
+          <el-input-number v-model:model-value="ani.offset"></el-input-number>
         </div>
       </el-form-item>
       <el-form-item label="排除">
@@ -110,7 +110,7 @@
           ani = {
                   'url': '',
                   'season': 1,
-                  'off': 0,
+                  'offset': 0,
                   'title': '',
                   'exclude': []
                 }
@@ -179,7 +179,7 @@ const editDialogVisible = ref(false)
 const ani = ref({
   'url': '',
   'season': 1,
-  'off': 0,
+  'offset': 0,
   'title': '',
   'exclude': []
 })

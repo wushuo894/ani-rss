@@ -16,5 +16,5 @@ public class Item implements Serializable {
 
     private Integer length;
 
-    private Integer collect;
+    private Integer episode;
 }
