@@ -97,6 +97,7 @@ public class TorrentUtil {
             files.addAll(Arrays.asList(ObjectUtil.defaultIfNull(new File(downloadPath + File.separator + ani.getTitle() + "/Season " + season).listFiles(), new File[]{})));
             if (files.stream()
                     .filter(File::isFile)
+                    .filter(file -> List.of("mp4", "mkv", "avi").contains(FileUtil.extName(file)))
                     .anyMatch(file -> file.getName().startsWith(reName) && file.length() == length)) {
                 log.info("{} 已下载", reName);
                 continue;
