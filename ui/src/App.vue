@@ -1,5 +1,5 @@
 <template>
-  <el-dialog v-model="addDialogVisible" title="添加订阅" width="500" center>
+  <el-dialog v-model="addDialogVisible" title="添加订阅" center>
     <el-form style="max-width: 600px" label-width="auto">
       <el-form-item label="RSS 地址">
         <el-input v-model:model-value="ani.url"></el-input>
@@ -54,7 +54,7 @@
       </div>
     </el-form>
   </el-dialog>
-  <el-dialog v-model="editDialogVisible" title="修改订阅" width="500" center>
+  <el-dialog v-model="editDialogVisible" title="修改订阅" center>
     <el-form style="max-width: 600px" label-width="auto">
       <el-form-item label="标题">
         <el-input v-model:model-value="ani.title"></el-input>
@@ -124,10 +124,10 @@
   <div style="margin: 0 10px">
     <el-card shadow="never" v-for="(item,index) in list.filter(it => it.title.indexOf(title) >-1)"
              style="margin: 3px 0;">
-      <div style="display: flex;justify-content: space-between;">
-        <div style="display: flex;align-items: start;">
-          <img :src="item.cover" height="130">
-          <div style="margin-left: 10px">
+      <div style="display: flex;width: 100%;">
+        <img :src="item.cover" height="130" width="92">
+        <div style="flex-grow: 1;position: relative;">
+          <div style="margin-left: 10px;">
             <div style="
               font-size: 0.97em;
               line-height: 1.6;
@@ -147,21 +147,21 @@
             text-transform: none !important;">{{ item.url }}
             </div>
           </div>
-        </div>
-        <div style="display: flex;align-items: flex-end;justify-content:flex-end; flex-direction: column;">
-          <el-button @click="()=>{
+          <div style="display: flex;align-items: flex-end;justify-content:flex-end; flex-direction: column;position: absolute;right: 0;bottom: 0;">
+            <el-button @click="()=>{
             editDialogVisible = true
             ani = JSON.parse(JSON.stringify(item))
             excludeVisible = false
             excludeValue = ''
           }">编辑
-          </el-button>
-          <div style="height: 5px;"></div>
-          <el-popconfirm title="你确定要删除吗?" @confirm="delAni(item)">
-            <template #reference>
-              <el-button>删除</el-button>
-            </template>
-          </el-popconfirm>
+            </el-button>
+            <div style="height: 5px;"></div>
+            <el-popconfirm title="你确定要删除吗?" @confirm="delAni(item)">
+              <template #reference>
+                <el-button>删除</el-button>
+              </template>
+            </el-popconfirm>
+          </div>
         </div>
       </div>
     </el-card>
@@ -303,3 +303,5 @@ const getList = () => {
 getList()
 
 </script>
+
+
