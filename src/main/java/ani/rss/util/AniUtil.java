@@ -76,6 +76,7 @@ public class AniUtil {
     public static List<Item> getItems(Ani ani) {
         String title = ani.getTitle();
         String url = ani.getUrl();
+        List<String> exclude = ani.getExclude();
 
         int off = 0;
         int season = 1;
@@ -110,6 +111,12 @@ public class AniUtil {
                     torrent = attributes.getNamedItem("url").getNodeValue();
                     length = Integer.parseInt(attributes.getNamedItem("length").getNodeValue());
                 }
+            }
+
+            // 进行过滤
+            String finalItemTitle = itemTitle;
+            if (exclude.stream().anyMatch(finalItemTitle::contains)) {
+                continue;
             }
 
             if (!itemTitle.contains(String.valueOf(collect))) {

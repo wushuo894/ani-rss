@@ -46,7 +46,6 @@ public class TorrentUtil {
         for (Item item : items) {
             String reName = item.getReName();
             String torrent = item.getTorrent();
-            Integer length = item.getLength();
             File torrentFile = new File(torrent);
             File saveTorrentFile = new File(torrents + File.separator + torrentFile.getName());
 
