@@ -100,7 +100,7 @@ public class TorrentUtil {
             if (files.stream()
                     .filter(File::isFile)
                     .filter(file -> List.of("mp4", "mkv", "avi").contains(FileUtil.extName(file)))
-                    .anyMatch(file -> file.getName().startsWith(reName) && file.length() == length)) {
+                    .anyMatch(file -> FileUtil.getPrefix(file).equals(reName))) {
                 log.info("{} 已下载", reName);
                 // 保存 torrent 下次只校验 torrent 是否存在 ， 可以将config设置到固态硬盘，防止一直唤醒机械硬盘
                 byte[] bytes = HttpRequest.get(torrent).thenFunction(HttpResponse::bodyBytes);
