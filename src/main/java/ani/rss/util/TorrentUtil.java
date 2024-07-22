@@ -95,8 +95,17 @@ public class TorrentUtil {
             }
 
             String savePath = downloadPath + File.separator + ani.getTitle() + "/S" + String.format("%02d", season);
-            List<File> files = Arrays.asList(ObjectUtil.defaultIfNull(new File(savePath).listFiles(), new File[]{}));
-            files.addAll(Arrays.asList(ObjectUtil.defaultIfNull(new File(downloadPath + File.separator + ani.getTitle() + "/Season " + season).listFiles(), new File[]{})));
+            List<File> files = new ArrayList<>();
+
+            File sFile = new File(savePath);
+            File seasonFile = new File(downloadPath + File.separator + ani.getTitle() + "/Season " + season);
+            if (sFile.exists()) {
+                files.addAll(Arrays.asList(ObjectUtil.defaultIfNull(sFile.listFiles(), new File[]{})));
+            }
+            if (seasonFile.exists()) {
+                files.addAll(Arrays.asList(ObjectUtil.defaultIfNull(seasonFile.listFiles(), new File[]{})));
+            }
+
             if (files.stream()
                     .filter(File::isFile)
                     .filter(file -> List.of("mp4", "mkv", "avi").contains(FileUtil.extName(file)))
