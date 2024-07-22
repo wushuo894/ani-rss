@@ -101,6 +101,7 @@ public class AniAction implements Action {
                             .setUrl(ani.getUrl().trim());
 
                     Optional<Ani> first = aniList.stream()
+                            .filter(it -> !it.getUrl().equals(ani.getUrl()))
                             .filter(it -> it.getTitle().equals(ani.getTitle()))
                             .findFirst();
                     if (first.isPresent()) {
