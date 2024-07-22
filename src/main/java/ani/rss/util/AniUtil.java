@@ -2,6 +2,7 @@ package ani.rss.util;
 
 import ani.rss.entity.Ani;
 import ani.rss.entity.Item;
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.text.StrFormatter;
 import cn.hutool.core.util.ReUtil;
@@ -135,6 +136,7 @@ public class AniUtil {
 
         String s = "(.*|\\[.*])( -? \\d+|\\[\\d+]|\\[\\d+.?[vV]\\d]|第\\d+[话話集]|\\[第?\\d+[话話集]]|\\[\\d+.?END]|[Ee][Pp]?\\d+)(.*)";
 
+        List<String> es = new ArrayList<>();
         items = items.parallelStream()
                 .filter(item -> {
                     String itemTitle = item.getTitle();
@@ -143,6 +145,10 @@ public class AniUtil {
                     if (StrUtil.isBlank(episode)) {
                         return false;
                     }
+                    if (es.contains(episode)) {
+                        return false;
+                    }
+                    es.add(episode);
                     item.setEpisode(Integer.parseInt(episode))
                             .setReName(
                                     StrFormatter.format("{} S{}E{}",
