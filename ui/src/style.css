@@ -7,3 +7,16 @@ body {
     width: 100%;
     height: 100%;
 }
+
+@media (max-width: 450px) {
+    .el-dialog {
+        --el-dialog-width: 95%;
+    }
+}
+
+
+@media (min-width: 450px) {
+    .el-dialog {
+        --el-dialog-width: 500px;
+    }
+}
