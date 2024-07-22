@@ -56,7 +56,7 @@ public class Main {
                         log.error(e);
                     }
                 }
-                ThreadUtil.sleep(10, TimeUnit.MINUTES);
+                ThreadUtil.sleep(5, TimeUnit.MINUTES);
             }
         });
     }
