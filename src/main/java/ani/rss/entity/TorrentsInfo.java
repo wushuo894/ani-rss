@@ -28,6 +28,10 @@ public class TorrentsInfo implements Serializable {
          */
         stalledUP,
         /**
+         * 上传中
+         */
+        uploading,
+        /**
          * 已完成
          */
         pausedUP
