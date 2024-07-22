@@ -78,13 +78,23 @@ public class AniAction implements Action {
                     ani.setTitle(ani.getTitle().trim())
                             .setUrl(ani.getUrl().trim());
                     Optional<Ani> first = aniList.stream()
-                            .filter(it -> it.getUrl().equals(ani.getUrl()) || it.getTitle().equals(ani.getTitle()))
+                            .filter(it -> it.getTitle().equals(ani.getTitle()))
+                            .findFirst();
+                    if (first.isPresent()) {
+                        String json = gson.toJson(Result.error().setMessage("名称重复"));
+                        IoUtil.writeUtf8(res.getOut(), true, json);
+                        return;
+                    }
+
+                    first = aniList.stream()
+                            .filter(it -> it.getUrl().equals(ani.getUrl()))
                             .findFirst();
                     if (first.isPresent()) {
                         String json = gson.toJson(Result.error().setMessage("此订阅已存在"));
                         IoUtil.writeUtf8(res.getOut(), true, json);
                         return;
                     }
+
                     synchronized (aniList) {
                         aniList.add(ani);
                         sync();
