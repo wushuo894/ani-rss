@@ -1,6 +1,6 @@
 #!/bin/bash
 
-mkdir -r src/main/resources/dist
+mkdir -p src/main/resources/dist
 cd ui
 npm install pnpm -g
 pnpm install
