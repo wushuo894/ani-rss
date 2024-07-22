@@ -2,7 +2,10 @@ package ani.rss.action;
 
 import ani.rss.annotation.Path;
 import ani.rss.entity.Ani;
+import ani.rss.entity.Item;
 import ani.rss.entity.Result;
+import ani.rss.util.AniUtil;
+import ani.rss.util.TorrentUtil;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IoUtil;
@@ -85,6 +88,8 @@ public class AniAction implements Action {
                     synchronized (aniList) {
                         aniList.add(ani);
                         sync();
+                        List<Item> items = AniUtil.getItems(ani);
+                        TorrentUtil.download(ani, items);
                     }
                     String json = gson.toJson(Result.success().setMessage("添加订阅成功"));
                     IoUtil.writeUtf8(res.getOut(), true, json);
