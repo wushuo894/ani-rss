@@ -91,11 +91,11 @@ public class TorrentUtil {
                 continue;
             }
 
-            String savePath = downloadPath + File.separator + ani.getTitle() + "/S" + String.format("%02d", season);
+            String savePath = downloadPath + File.separator + ani.getTitle() + "/Season " + season;
             List<File> files = new ArrayList<>();
 
             File sFile = new File(savePath);
-            File seasonFile = new File(downloadPath + File.separator + ani.getTitle() + "/Season " + season);
+            File seasonFile = new File(downloadPath + File.separator + ani.getTitle() + "/S" + String.format("%02d", season));
             if (sFile.exists()) {
                 files.addAll(Arrays.asList(ObjectUtil.defaultIfNull(sFile.listFiles(), new File[]{})));
             }
