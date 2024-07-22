@@ -3,6 +3,7 @@ package ani.rss.action;
 import ani.rss.annotation.Path;
 import ani.rss.entity.Ani;
 import ani.rss.entity.Result;
+import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.util.StrUtil;
@@ -86,6 +87,33 @@ public class AniAction implements Action {
                         sync();
                     }
                     String json = gson.toJson(Result.success().setMessage("添加订阅成功"));
+                    IoUtil.writeUtf8(res.getOut(), true, json);
+                    return;
+                }
+                case "PUT": {
+                    Ani ani = gson.fromJson(req.getBody(), Ani.class);
+                    ani.setTitle(ani.getTitle().trim())
+                            .setUrl(ani.getUrl().trim());
+
+                    Optional<Ani> first = aniList.stream()
+                            .filter(it -> it.getTitle().equals(ani.getTitle()))
+                            .findFirst();
+                    if (first.isPresent()) {
+                        String json = gson.toJson(Result.error().setMessage("名称重复"));
+                        IoUtil.writeUtf8(res.getOut(), true, json);
+                        return;
+                    }
+
+                    first = aniList.stream()
+                            .filter(it -> it.getUrl().equals(ani.getUrl()))
+                            .findFirst();
+                    if (first.isEmpty()) {
+                        String json = gson.toJson(Result.error().setMessage("修改失败"));
+                        IoUtil.writeUtf8(res.getOut(), true, json);
+                        return;
+                    }
+                    BeanUtil.copyProperties(ani, first.get());
+                    String json = gson.toJson(Result.success().setMessage("修改成功"));
                     IoUtil.writeUtf8(res.getOut(), true, json);
                     return;
                 }

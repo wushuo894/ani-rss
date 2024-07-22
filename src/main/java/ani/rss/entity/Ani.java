@@ -3,11 +3,11 @@ package ani.rss.entity;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
-import java.util.List;
+import java.io.Serializable;
 
 @Data
 @Accessors(chain = true)
-public class Ani {
+public class Ani implements Serializable {
     /**
      * RSS URL
      */
