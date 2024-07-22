@@ -72,16 +72,7 @@ public class AniUtil {
                 .setCover(cover)
                 .setExclude(List.of("720"));
 
-        List<Item> items = getItems(ani, s);
-        if (items.isEmpty()) {
-            return ani;
-        }
-
-        int offset = items.stream()
-                .map(Item::getEpisode)
-                .min(Comparator.comparingInt(i -> i))
-                .get() - 1;
-        return ani.setOffset(offset);
+        return ani;
     }
 
     public static List<Item> getItems(Ani ani, String xml) {
@@ -143,7 +134,6 @@ public class AniUtil {
 
             if (strings.stream()
                     .noneMatch(finalItemTitle::contains)) {
-                episode++;
                 continue;
             }
             items.add(
