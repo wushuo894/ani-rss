@@ -4,6 +4,7 @@ import lombok.Data;
 import lombok.experimental.Accessors;
 
 import java.io.Serializable;
+import java.util.List;
 
 @Data
 @Accessors(chain = true)
@@ -32,4 +33,9 @@ public class Ani implements Serializable {
      * 封面
      */
     private String cover;
+
+    /**
+     * 排除
+     */
+    private List<String> exclude;
 }
