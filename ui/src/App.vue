@@ -151,7 +151,7 @@
         <div style="display: flex;align-items: flex-end;justify-content:flex-end; flex-direction: column;">
           <el-button @click="()=>{
             editDialogVisible = true
-            ani = item
+            ani = JSON.parse(JSON.stringify(item))
             excludeVisible = false
             excludeValue = ''
           }">编辑
