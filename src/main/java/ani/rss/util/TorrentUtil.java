@@ -42,7 +42,6 @@ public class TorrentUtil {
         Map<String, String> env = System.getenv();
         String config = env.getOrDefault("CONFIG", "");
         File torrents = new File(config + File.separator + "torrents");
-        log.info(torrents.toString());
         FileUtil.mkdir(torrents);
 
         Integer season = ani.getSeason();
