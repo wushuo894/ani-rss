@@ -1,135 +1,261 @@
 package ani.rss.util;
 
 import ani.rss.entity.Ani;
+import ani.rss.entity.BgmInfo;
+import ani.rss.entity.Config;
 import ani.rss.entity.Item;
-import cn.hutool.core.convert.Convert;
-import cn.hutool.core.text.StrFormatter;
-import cn.hutool.core.util.ReUtil;
+import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.bean.copier.CopyOptions;
+import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.io.resource.ResourceUtil;
+import cn.hutool.core.lang.Assert;
+import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.core.util.StrUtil;
 import cn.hutool.core.util.URLUtil;
-import cn.hutool.core.util.XmlUtil;
-import cn.hutool.http.HttpRequest;
-import cn.hutool.http.HttpResponse;
 import cn.hutool.http.HttpUtil;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
-import org.w3c.dom.Document;
-import org.w3c.dom.NamedNodeMap;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
+import cn.hutool.json.JSONUtil;
+import lombok.extern.slf4j.Slf4j;
 
-import java.net.URL;
+import java.io.File;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
+import java.util.concurrent.CopyOnWriteArrayList;
 
+@Slf4j
 public class AniUtil {
 
-    public static Ani getAni(String url) {
-        int season = 1;
-        String title = "";
+    public static final List<Ani> ANI_LIST = new CopyOnWriteArrayList<>();
 
-        String s = HttpRequest.get(url)
-                .thenFunction(HttpResponse::body);
-        Document document = XmlUtil.readXML(s);
-        Node channel = document.getElementsByTagName("channel").item(0);
-        NodeList childNodes = channel.getChildNodes();
+    /**
+     * 获取订阅配置文件
+     *
+     * @return
+     */
+    public static File getAniFile() {
+        File configDir = ConfigUtil.getConfigDir();
+        return new File(configDir + File.separator + "ani.json");
+    }
 
-        for (int i = childNodes.getLength() - 1; i >= 0; i--) {
-            Node item = childNodes.item(i);
-            String nodeName = item.getNodeName();
-            if (nodeName.equals("title")) {
-                title = ReUtil.replaceAll(item.getTextContent(), "^Mikan Project - ", "");
+    /**
+     * 加载订阅
+     */
+    public static void load() {
+        File configFile = getAniFile();
+
+        if (!configFile.exists()) {
+            FileUtil.writeUtf8String(GsonStatic.toJson(ANI_LIST), configFile);
+        }
+        String s = FileUtil.readUtf8String(configFile);
+        List<Ani> anis = GsonStatic.fromJsonList(s, Ani.class);
+        for (Ani ani : anis) {
+            Ani newAni = Ani.bulidAni();
+            BeanUtil.copyProperties(ani, newAni, CopyOptions
+                    .create()
+                    .setIgnoreNullValue(true));
+            ANI_LIST.add(newAni);
+        }
+        log.debug("加载订阅 共{}项", ANI_LIST.size());
+
+
+        // 处理旧数据
+        for (Ani ani : ANI_LIST) {
+            // 备用rss数据结构改变
+            List<Ani.BackRss> backRssList = ani.getBackRssList();
+            List<String> backRss = ani.getBackRss();
+            if (backRssList.isEmpty() && !backRss.isEmpty()) {
+                for (String rss : backRss) {
+                    backRssList.add(
+                            new Ani.BackRss()
+                                    .setLabel("未知字幕组")
+                                    .setUrl(rss)
+                    );
+                }
+            }
+            for (Ani.BackRss rss : backRssList) {
+                Integer offset = rss.getOffset();
+                offset = ObjectUtil.defaultIfNull(offset, ani.getOffset());
+                rss.setOffset(offset);
             }
         }
+    }
 
-        String seasonReg = "第(.+)季";
-        if (ReUtil.contains(seasonReg, title)) {
-            season = Convert.chineseToNumber(ReUtil.get(seasonReg, title, 1));
-            title = ReUtil.replaceAll(title, seasonReg, "").trim();
+    /**
+     * 将订阅配置保存到磁盘
+     */
+    public static synchronized void sync() {
+        File configFile = getAniFile();
+        log.debug("保存订阅 {}", configFile);
+        try {
+            String json = GsonStatic.toJson(ANI_LIST);
+            File temp = new File(configFile + ".temp");
+            FileUtil.del(temp);
+            FileUtil.writeUtf8String(json, temp);
+            FileUtil.rename(temp, configFile.getName(), true);
+            log.debug("保存成功 {}", configFile);
+        } catch (Exception e) {
+            log.error("保存失败 {}", configFile);
+            log.error(e.getMessage(), e);
+        }
+    }
+
+    /**
+     * 获取动漫信息
+     *
+     * @param url
+     * @return
+     */
+    public static Ani getAni(String url, String type, String bgmUrl) {
+        Config config = ConfigUtil.CONFIG;
+        type = StrUtil.blankToDefault(type, "mikan");
+        String subgroupId = MikanUtil.getSubgroupId(url);
+
+        Ani ani = Ani.bulidAni();
+        ani.setUrl(url.trim());
+
+        if ("mikan".equals(type)) {
+            try {
+                MikanUtil.getMikanInfo(ani, subgroupId);
+            } catch (Exception e) {
+                throw new RuntimeException("获取失败");
+            }
+        } else {
+            ani.setBgmUrl(bgmUrl)
+                    .setSubgroup("未知字幕组");
         }
 
-        String bangumiId = HttpUtil.decodeParamMap(url, StandardCharsets.UTF_8)
-                .get("bangumiId");
+        BgmInfo bgmInfo = BgmUtil.getBgmInfo(ani, true);
 
+        BgmUtil.toAni(bgmInfo, ani);
 
-        String cover = HttpRequest.get("https://mikanime.tv/Home/Bangumi/" + bangumiId)
-                .thenFunction(res -> {
-                    org.jsoup.nodes.Document html = Jsoup.parse(res.body());
-                    Elements elementsByClass = html.getElementsByClass("bangumi-poster");
-                    Element element = elementsByClass.get(0);
-                    String style = element.attr("style");
-                    String image = style.replace("background-image: url('", "").replace("');", "");
-                    return "https://mikanime.tv" + image;
-                });
+        // 只下载最新集
+        Boolean downloadNew = config.getDownloadNew();
+        // 默认启用全局排除
+        Boolean enabledExclude = config.getEnabledExclude();
+        // 默认导入全局排除
+        Boolean importExclude = config.getImportExclude();
+        // 全局排除
+        List<String> exclude = config.getExclude();
 
-        Ani ani = new Ani();
-        ani.setOff(0)
-                .setUrl(url.trim())
-                .setSeason(season)
-                .setTitle(title.trim())
-                .setCover(cover);
+        // 默认导入全局排除
+        if (importExclude) {
+            exclude = new ArrayList<>(exclude);
+            exclude.addAll(ani.getExclude());
+            exclude = exclude.stream().distinct().toList();
+            ani.setExclude(exclude);
+        }
+
+        ani
+                // 只下载最新集
+                .setDownloadNew(downloadNew)
+                // 是否启用全局排除
+                .setGlobalExclude(enabledExclude)
+                // type mikan or other
+                .setType(type);
+
+        log.debug("获取到动漫信息 {}", JSONUtil.formatJsonStr(GsonStatic.toJson(ani)));
+        if (ani.getOva()) {
+            return ani;
+        }
+
+        // 自动推断剧集偏移
+        if (config.getOffset()) {
+            String s = HttpReq.get(url, true)
+                    .timeout(config.getRssTimeout() * 1000)
+                    .thenFunction(res -> {
+                        HttpReq.assertStatus(res);
+                        return res.body();
+                    });
+            List<Item> items = ItemsUtil.getItems(ani, s, new Item());
+            if (items.isEmpty()) {
+                return ani;
+            }
+            Double offset = -(items.stream()
+                    .map(Item::getEpisode)
+                    .min(Comparator.comparingDouble(i -> i))
+                    .get() - 1);
+            log.debug("自动获取到剧集偏移为 {}", offset);
+            ani.setOffset(offset.intValue());
+        }
         return ani;
     }
 
-    public static List<Item> getItems(Ani ani) {
-        String title = ani.getTitle();
+
+    public static String saveJpg(String coverUrl) {
+        return saveJpg(coverUrl, false);
+    }
+
+    /**
+     * 保存图片
+     *
+     * @param coverUrl
+     * @param isOverride 是否覆盖
+     * @return
+     */
+    public static String saveJpg(String coverUrl, Boolean isOverride) {
+        File configDir = ConfigUtil.getConfigDir();
+        FileUtil.mkdir(configDir + "/files/");
+
+        // 默认空图片
+        String cover = "cover.png";
+        if (!FileUtil.exist(configDir + "/files/" + cover)) {
+            byte[] bytes = ResourceUtil.readBytes("image/cover.png");
+            FileUtil.writeBytes(bytes, configDir + "/files/" + cover);
+        }
+        if (StrUtil.isBlank(coverUrl)) {
+            return cover;
+        }
+        String filename = Md5Util.digestHex(coverUrl);
+        filename = filename.charAt(0) + "/" + filename + "." + FileUtil.extName(URLUtil.getPath(coverUrl));
+        FileUtil.mkdir(configDir + "/files/" + filename.charAt(0));
+        File file = new File(configDir + "/files/" + filename);
+        if (file.exists() && !isOverride) {
+            return filename;
+        }
+        FileUtil.del(file);
+        try {
+            HttpReq.get(coverUrl, true)
+                    .then(res -> FileUtil.writeFromStream(res.bodyStream(), file));
+            return filename;
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+            return cover;
+        }
+    }
+
+    /**
+     * 校验参数
+     *
+     * @param ani
+     */
+    public static void verify(Ani ani) {
         String url = ani.getUrl();
-
-        int off = 0;
-        int season = 1;
-        List<Item> items = new ArrayList<>();
-
-        String s = HttpRequest.get(url)
-                .thenFunction(HttpResponse::body);
-        Document document = XmlUtil.readXML(s);
-        Node channel = document.getElementsByTagName("channel").item(0);
-        NodeList childNodes = channel.getChildNodes();
-
-        int collect = 1 + off;
-        for (int i = childNodes.getLength() - 1; i >= 0; i--) {
-            Node item = childNodes.item(i);
-            String nodeName = item.getNodeName();
-            if (!nodeName.equals("item")) {
-                continue;
-            }
-            String itemTitle = "";
-            String torrent = "";
-            int length = 0;
-
-            NodeList itemChildNodes = item.getChildNodes();
-            for (int j = 0; j < itemChildNodes.getLength(); j++) {
-                Node itemChild = itemChildNodes.item(j);
-                String itemChildNodeName = itemChild.getNodeName();
-                if (itemChildNodeName.equals("title")) {
-                    itemTitle = itemChild.getTextContent();
-                }
-                if (itemChildNodeName.equals("enclosure")) {
-                    NamedNodeMap attributes = itemChild.getAttributes();
-                    torrent = attributes.getNamedItem("url").getNodeValue();
-                    length = Integer.parseInt(attributes.getNamedItem("length").getNodeValue());
-                }
-            }
-
-            if (!itemTitle.contains(String.valueOf(collect))) {
-                collect++;
-                continue;
-            }
-            items.add(
-                    new Item()
-                            .setTitle(itemTitle)
-                            .setTorrent(torrent)
-                            .setLength(length)
-                            .setCollect(collect)
-            );
-            collect++;
+        List<String> exclude = ani.getExclude();
+        Integer season = ani.getSeason();
+        Integer offset = ani.getOffset();
+        String title = ani.getTitle();
+        Assert.notBlank(url, "RSS URL 不能为空");
+        if (Objects.isNull(exclude)) {
+            ani.setExclude(new ArrayList<>());
         }
+        Assert.notNull(season, "季不能为空");
+        Assert.notBlank(title, "标题不能为空");
+        Assert.notNull(offset, "集数偏移不能为空");
+    }
 
-        for (Item item : items) {
-            item.setReName(StrFormatter.format("{} S{}E{}", title, String.format("%02d", season), String.format("%02d", item.getCollect())));
+
+    /**
+     * 获取蜜柑的bangumiId
+     *
+     * @param ani
+     * @return
+     */
+    public static String getBangumiId(Ani ani) {
+        String url = ani.getUrl();
+        if (StrUtil.isBlank(url)) {
+            return "";
         }
-
-        return items;
+        Map<String, String> decodeParamMap = HttpUtil.decodeParamMap(url, StandardCharsets.UTF_8);
+        return decodeParamMap.get("bangumiId");
     }
 
 }

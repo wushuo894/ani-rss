@@ -1,9 +1,98 @@
+html.dark {
+    /* 自定义深色背景颜色 */
+    --el-bg-color: #2D2E2F;
+}
+
 * {
     margin: 0;
     padding: 0;
 }
 
-body {
+html, body, #app {
     width: 100%;
     height: 100%;
+}
+
+@media (max-width: 450px) {
+    .el-dialog {
+        --el-dialog-width: 100%;
+        margin-top: 55px;
+    }
+}
+
+@media (min-width: 451px) {
+    .el-dialog {
+        --el-dialog-width: 80%;
+    }
+}
+
+@media (min-width: 900px) {
+    .el-dialog {
+        --el-dialog-width: 800px;
+    }
+}
+
+.grid-container {
+    display: grid;
+    grid-gap: 8px;
+    width: 100%;
+}
+
+@media (min-width: 450px) {
+    #header {
+        display: flex;
+        justify-content: space-between;
+        width: 100%;
+    }
+
+    #page {
+        display: flex;
+    }
+
+    #page-size {
+        margin-left: 5px;
+    }
+}
+
+.el-card__body {
+    height: 100%;
+    box-sizing: border-box;
+}
+
+.el-tag {
+    border-width: 0
+}
+
+/**
+文字单行
+ */
+.single-line {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.flex {
+    display: flex;
+}
+
+.flex-center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.markdown-body code, .markdown-body tt {
+    padding: .2em .4em;
+    margin: 0;
+    font-size: 85%;
+    white-space: break-spaces;
+    background-color: #656c7633;
+    border-radius: 6px;
+}
+
+.markdown-body blockquote {
+    padding: 0 1em;
+    color: #59636e;
+    border-left: .25em solid #d1d9e0;
 }

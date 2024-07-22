@@ -1,13 +1,29 @@
 <!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Vite + Vue</title>
-  </head>
-  <body>
-    <div id="app"></div>
-    <script type="module" src="/src/main.js"></script>
-  </body>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8"/>
+    <link rel="icon" href="/favicon.ico"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <title>ANI-RSS</title>
+    <link rel="manifest" href="/manifest.json"/>
+    <meta content="#ffffff" media="(prefers-color-scheme: light)" name="theme-color"/>
+    <meta content="#000000" media="(prefers-color-scheme: dark)" name="theme-color"/>
+    <meta content="noindex" name="robots">
+</head>
+<script>
+    (() => {
+        if (location.pathname.endsWith('/')) {
+            return;
+        }
+        location.pathname += '/'
+    })()
+</script>
+<body>
+<div id="app"></div>
+<script type="module" src="/src/main.js"></script>
+</body>
+<!--自定义CSS-->
+<link rel="stylesheet" href="./api/custom.css"/>
+<!--自定义JS-->
+<script src="./api/custom.js"></script>
 </html>

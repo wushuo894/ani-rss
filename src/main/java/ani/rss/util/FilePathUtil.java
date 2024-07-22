@@ -1,0 +1,52 @@
+package ani.rss.util;
+
+import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.util.ReUtil;
+
+import java.io.File;
+
+public class FilePathUtil {
+
+    /**
+     * 获取绝对路径 并把 windows 狗日的 \ 转换为 /
+     *
+     * @param file
+     * @return
+     */
+    public static String getAbsolutePath(File file) {
+        String absolutePath = file.getPath();
+        if (absolutePath.startsWith("/")) {
+            // 已是绝对路径
+            return FileUtil.normalize(absolutePath);
+        }
+
+        if (ReUtil.contains("^[A-z]:", absolutePath)) {
+            // 已是绝对路径
+            return FileUtil.normalize(absolutePath);
+        }
+
+        absolutePath = file.getAbsolutePath();
+        return FileUtil.normalize(absolutePath);
+    }
+
+    /**
+     * 获取绝对路径 并把 windows 狗日的 \ 转换为 /
+     *
+     * @param absolutePath
+     * @return
+     */
+    public static String getAbsolutePath(String absolutePath) {
+        if (absolutePath.startsWith("/")) {
+            // 已是绝对路径
+            return FileUtil.normalize(absolutePath);
+        }
+
+        if (ReUtil.contains("^[A-z]:", absolutePath)) {
+            // 已是绝对路径
+            return FileUtil.normalize(absolutePath);
+        }
+
+        absolutePath = new File(absolutePath).getAbsolutePath();
+        return FileUtil.normalize(absolutePath);
+    }
+}

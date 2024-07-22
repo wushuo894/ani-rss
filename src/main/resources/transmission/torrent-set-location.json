@@ -1,0 +1,10 @@
+{
+  "method": "torrent-set-location",
+  "arguments": {
+    "ids": [
+      {}
+    ],
+    "location": "{}",
+    "move": true
+  }
+}

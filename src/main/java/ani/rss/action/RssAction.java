@@ -1,41 +1,48 @@
 package ani.rss.action;
 
+import ani.rss.annotation.Auth;
 import ani.rss.annotation.Path;
 import ani.rss.entity.Ani;
-import ani.rss.entity.Result;
 import ani.rss.util.AniUtil;
-import cn.hutool.core.io.IoUtil;
+import ani.rss.util.ExceptionUtil;
+import cn.hutool.core.lang.Assert;
+import cn.hutool.core.util.ReUtil;
+import cn.hutool.core.util.URLUtil;
 import cn.hutool.http.server.HttpServerRequest;
 import cn.hutool.http.server.HttpServerResponse;
-import cn.hutool.http.server.action.Action;
-import cn.hutool.log.Log;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
 
-@Path("/rss")
-public class RssAction implements Action {
-    private final Log log = Log.get(RssAction.class);
-    private final Gson gson = new GsonBuilder()
-            .disableHtmlEscaping()
-            .create();
 
+/**
+ * 根据rss解析为订阅
+ */
+@Slf4j
+@Auth
+@Path("/rss")
+public class RssAction implements BaseAction {
     @Override
     public void doAction(HttpServerRequest req, HttpServerResponse res) throws IOException {
         if (!req.getMethod().equals("POST")) {
             return;
         }
-        res.setContentType("application/json; charset=utf-8");
+        Ani ani = getBody(Ani.class);
+        String url = ani.getUrl();
+        String type = ani.getType();
+        String bgmUrl = ani.getBgmUrl();
+        Assert.notBlank(url, "RSS地址 不能为空");
+        if (!ReUtil.contains("http(s*)://", url)) {
+            url = "https://" + url;
+        }
+        url = URLUtil.decode(url, "utf-8");
         try {
-            String url = gson.fromJson(req.getBody(), Ani.class).getUrl();
-            Ani ani = AniUtil.getAni(url);
-            String json = gson.toJson(Result.success(ani));
-            IoUtil.writeUtf8(res.getOut(), true, json);
+            Ani newAni = AniUtil.getAni(url, type, bgmUrl);
+            resultSuccess(newAni);
         } catch (Exception e) {
-            log.error(e);
-            String json = gson.toJson(Result.error().setMessage(e.getMessage()));
-            IoUtil.writeUtf8(res.getOut(), true, json);
+            String message = ExceptionUtil.getMessage(e);
+            log.error(message, e);
+            resultErrorMsg("RSS解析失败 {}", message);
         }
     }
 }

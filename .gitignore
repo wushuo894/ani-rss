@@ -3,6 +3,9 @@ target/
 !**/src/main/**/target/
 !**/src/test/**/target/
 
+package-lock.json
+pnpm-lock.yaml
+
 ### IntelliJ IDEA ###
 .idea
 .idea/modules.xml
@@ -25,7 +28,7 @@ target/
 ### NetBeans ###
 /nbproject/private/
 /nbbuild/
-/dist/
+dist/
 /nbdist/
 /.nb-gradle/
 build/
@@ -39,3 +42,13 @@ build/
 .DS_Store
 
 config.json
+ani.json
+files
+logs
+*.log
+/config
+.git
+
+java-17-openjdk-17.0.3.0.6-1.jre.win.x86_64.zip
+ani-rss-update.exe
+/info.json

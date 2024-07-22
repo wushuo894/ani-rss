@@ -1,0 +1,10 @@
+{
+  "method": "torrent-remove",
+  "arguments": {
+    "ids": [
+      {}
+    ],
+    "delete-local-data": {}
+  },
+  "tag": ""
+}
