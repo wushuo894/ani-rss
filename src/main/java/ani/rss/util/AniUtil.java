@@ -5,7 +5,6 @@ import ani.rss.entity.Item;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.text.StrFormatter;
 import cn.hutool.core.util.ReUtil;
-import cn.hutool.core.util.URLUtil;
 import cn.hutool.core.util.XmlUtil;
 import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpResponse;
@@ -18,9 +17,9 @@ import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 public class AniUtil {
@@ -64,31 +63,38 @@ public class AniUtil {
                 });
 
         Ani ani = new Ani();
-        ani.setOff(0)
+        ani.setOffset(0)
                 .setUrl(url.trim())
                 .setSeason(season)
                 .setTitle(title.trim())
                 .setCover(cover)
                 .setExclude(List.of("720"));
-        return ani;
+
+        List<Item> items = getItems(ani, s);
+        if (items.isEmpty()) {
+            return ani;
+        }
+
+        int offset = items.stream()
+                .map(Item::getEpisode)
+                .min(Comparator.comparingInt(i -> i))
+                .get() - 1;
+        return ani.setOffset(offset);
     }
 
-    public static List<Item> getItems(Ani ani) {
+    public static List<Item> getItems(Ani ani, String xml) {
         String title = ani.getTitle();
-        String url = ani.getUrl();
         List<String> exclude = ani.getExclude();
 
-        int off = ani.getOff();
+        int off = ani.getOffset();
         int season = ani.getSeason();
         List<Item> items = new ArrayList<>();
 
-        String s = HttpRequest.get(url)
-                .thenFunction(HttpResponse::body);
-        Document document = XmlUtil.readXML(s);
+        Document document = XmlUtil.readXML(xml);
         Node channel = document.getElementsByTagName("channel").item(0);
         NodeList childNodes = channel.getChildNodes();
 
-        int collect = 1 + off;
+        int episode = 1 + off;
         for (int i = childNodes.getLength() - 1; i >= 0; i--) {
             Node item = childNodes.item(i);
             String nodeName = item.getNodeName();
@@ -119,8 +125,8 @@ public class AniUtil {
                 continue;
             }
 
-            if (!itemTitle.contains(String.valueOf(collect))) {
-                collect++;
+            if (!itemTitle.contains(String.valueOf(episode))) {
+                episode++;
                 continue;
             }
             items.add(
@@ -128,16 +134,23 @@ public class AniUtil {
                             .setTitle(itemTitle)
                             .setTorrent(torrent)
                             .setLength(length)
-                            .setCollect(collect)
+                            .setEpisode(episode)
             );
-            collect++;
+            episode++;
         }
 
         for (Item item : items) {
-            item.setReName(StrFormatter.format("{} S{}E{}", title, String.format("%02d", season), String.format("%02d", item.getCollect())));
+            item.setReName(StrFormatter.format("{} S{}E{}", title, String.format("%02d", season), String.format("%02d", item.getEpisode())));
         }
 
         return items;
+    }
+
+    public static List<Item> getItems(Ani ani) {
+        String url = ani.getUrl();
+        String s = HttpRequest.get(url)
+                .thenFunction(HttpResponse::body);
+        return getItems(ani, s);
     }
 
 }
