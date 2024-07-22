@@ -21,6 +21,8 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.function.Consumer;
+import java.util.function.Function;
 
 public class AniUtil {
 
@@ -125,7 +127,22 @@ public class AniUtil {
                 continue;
             }
 
-            if (!itemTitle.contains(String.valueOf(episode))) {
+            List<String> strings = new ArrayList<>();
+            Consumer<String> consumer = (e) -> {
+                strings.add(" " + e + " ");
+                strings.add("第" + e + "集");
+                strings.add("第" + e + "话");
+                strings.add("第" + e + "話");
+                strings.add("[" + e + "]");
+            };
+            consumer.accept(String.valueOf(episode));
+            consumer.accept(String.format("%02d", episode));
+            consumer.accept(String.format("%03d", episode));
+            consumer.accept(Convert.numberToChinese(episode, true));
+            consumer.accept(Convert.numberToChinese(episode, false));
+
+            if (strings.stream()
+                    .noneMatch(finalItemTitle::contains)) {
                 episode++;
                 continue;
             }
