@@ -15,6 +15,7 @@ import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpResponse;
 import cn.hutool.http.HttpUtil;
 import cn.hutool.json.JSONUtil;
+import cn.hutool.log.Log;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
@@ -38,6 +39,8 @@ import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 public class AniUtil {
+    private static final Log LOG = Log.get(AniUtil.class);
+
     private static final Gson gson = new GsonBuilder()
             .disableHtmlEscaping()
             .create();
@@ -179,26 +182,33 @@ public class AniUtil {
         String s = "(.*|\\[.*])( -? \\d+|\\[\\d+]|\\[\\d+.?[vV]\\d]|第\\d+[话話集]|\\[第?\\d+[话話集]]|\\[\\d+.?END]|[Ee][Pp]?\\d+)(.*)";
 
         List<String> es = new ArrayList<>();
-        items = items.parallelStream()
+        items = items.stream()
                 .filter(item -> {
-                    String itemTitle = item.getTitle();
-                    String e = ReUtil.get(s, itemTitle, 2);
-                    String episode = ReUtil.get("\\d+", e, 0);
-                    if (StrUtil.isBlank(episode)) {
-                        return false;
+                    try {
+                        String itemTitle = item.getTitle();
+                        String e = ReUtil.get(s, itemTitle, 2);
+                        String episode = ReUtil.get("\\d+", e, 0);
+                        if (StrUtil.isBlank(episode)) {
+                            return false;
+                        }
+                        if (es.contains(episode)) {
+                            return false;
+                        }
+                        item.setEpisode(Integer.parseInt(episode) + offset);
+                        es.add(String.valueOf(item.getEpisode()));
+                        item
+                                .setReName(
+                                        StrFormatter.format("{} S{}E{}",
+                                                title,
+                                                String.format("%02d", season),
+                                                String.format("%02d", item.getEpisode()))
+                                );
+                        return true;
+                    } catch (Exception e) {
+                        LOG.error("解析rss视频集次出现问题");
+                        LOG.error(e);
                     }
-                    if (es.contains(episode)) {
-                        return false;
-                    }
-                    es.add(episode);
-                    item.setEpisode(Integer.parseInt(episode))
-                            .setReName(
-                                    StrFormatter.format("{} S{}E{}",
-                                            title,
-                                            String.format("%02d", season),
-                                            String.format("%02d", Integer.parseInt(episode)))
-                            );
-                    return true;
+                    return false;
                 }).collect(Collectors.toList());
 
         return items;
