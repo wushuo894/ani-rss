@@ -101,56 +101,55 @@ public class TorrentUtil {
                 TorrentsInfo torrentsInfo = optionalTorrentsInfo.get();
                 TorrentsInfo.State state = torrentsInfo.getState();
                 String hash = torrentsInfo.getHash();
-                // 重命名
-                HttpRequest.get(host + "/api/v2/torrents/files")
-                        .form("hash", hash)
-                        .then(res -> {
-                            JsonArray jsonElements = GSON.fromJson(res.body(), JsonArray.class);
 
-                            if (jsonElements.isEmpty()) {
-                                return;
-                            }
+                if (rename) {
+                    // 重命名
+                    HttpRequest.get(host + "/api/v2/torrents/files")
+                            .form("hash", hash)
+                            .then(res -> {
+                                JsonArray jsonElements = GSON.fromJson(res.body(), JsonArray.class);
 
-                            List<String> newNames = new ArrayList<>();
-
-                            for (JsonElement jsonElement : jsonElements) {
-                                if (!rename) {
+                                if (jsonElements.isEmpty()) {
                                     return;
                                 }
 
-                                String name = jsonElement.getAsJsonObject().get("name").getAsString();
-                                String ext = FileUtil.extName(name);
-                                String newPath = reName;
-                                if (List.of("mp4", "mkv", "avi").contains(ext)) {
-                                    newPath = newPath + "." + ext;
-                                } else if ("ass".equalsIgnoreCase(ext)) {
-                                    String s = FileUtil.extName(FileUtil.mainName(name));
-                                    if (StrUtil.isNotBlank(s)) {
-                                        newPath = newPath + "." + s;
+                                List<String> newNames = new ArrayList<>();
+
+                                for (JsonElement jsonElement : jsonElements) {
+                                    String name = jsonElement.getAsJsonObject().get("name").getAsString();
+                                    String ext = FileUtil.extName(name);
+                                    String newPath = reName;
+                                    if (List.of("mp4", "mkv", "avi").contains(ext)) {
+                                        newPath = newPath + "." + ext;
+                                    } else if ("ass".equalsIgnoreCase(ext)) {
+                                        String s = FileUtil.extName(FileUtil.mainName(name));
+                                        if (StrUtil.isNotBlank(s)) {
+                                            newPath = newPath + "." + s;
+                                        }
+                                        newPath = newPath + "." + ext;
+                                    } else {
+                                        continue;
                                     }
-                                    newPath = newPath + "." + ext;
-                                } else {
-                                    continue;
+
+                                    if (newNames.contains(newPath)) {
+                                        continue;
+                                    }
+                                    newNames.add(newPath);
+
+                                    if (name.equals(newPath)) {
+                                        continue;
+                                    }
+
+                                    LOG.info("重命名 {} ==> {}", name, newPath);
+
+                                    HttpRequest.post(host + "/api/v2/torrents/renameFile")
+                                            .form("hash", hash)
+                                            .form("oldPath", name)
+                                            .form("newPath", newPath)
+                                            .thenFunction(HttpResponse::isOk);
                                 }
-
-                                if (newNames.contains(newPath)) {
-                                    continue;
-                                }
-                                newNames.add(newPath);
-
-                                if (name.equals(newPath)) {
-                                    continue;
-                                }
-
-                                LOG.info("重命名 {} ==> {}", name, newPath);
-
-                                HttpRequest.post(host + "/api/v2/torrents/renameFile")
-                                        .form("hash", hash)
-                                        .form("oldPath", name)
-                                        .form("newPath", newPath)
-                                        .thenFunction(HttpResponse::isOk);
-                            }
-                        });
+                            });
+                }
                 // 下载完成后自动删除任务
                 if (!EnumUtil.equals(state, TorrentsInfo.State.pausedUP.name())) {
                     return;
