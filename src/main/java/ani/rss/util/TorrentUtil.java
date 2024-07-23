@@ -166,6 +166,7 @@ public class TorrentUtil {
             }
             // 已经下载过
             if (saveTorrentFile.exists()) {
+                LOG.info("{} 已存在", saveTorrentFile);
                 return;
             }
 
