@@ -40,4 +40,8 @@ public class Config implements Serializable {
      * 自动删除已完成任务
      */
     private Boolean delete;
+    /**
+     * DEBUG
+     */
+    private Boolean debug;
 }

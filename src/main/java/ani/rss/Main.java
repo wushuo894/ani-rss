@@ -17,6 +17,8 @@ import cn.hutool.http.HttpUtil;
 import cn.hutool.http.server.SimpleServer;
 import cn.hutool.http.server.action.Action;
 import cn.hutool.log.Log;
+import cn.hutool.log.dialect.console.ConsoleLog;
+import cn.hutool.log.level.Level;
 
 import java.util.List;
 import java.util.Map;
