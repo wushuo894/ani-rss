@@ -7,29 +7,21 @@ import ani.rss.entity.Result;
 import ani.rss.util.AniUtil;
 import ani.rss.util.TorrentUtil;
 import cn.hutool.core.bean.BeanUtil;
-import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IoUtil;
-import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.server.HttpServerRequest;
 import cn.hutool.http.server.HttpServerResponse;
 import cn.hutool.http.server.action.Action;
-import cn.hutool.json.JSONUtil;
 import cn.hutool.log.Log;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
 
-import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 @Path("/ani")
 public class AniAction implements Action {
-    public static final List<Ani> aniList = AniUtil.getAniList();
+    public static final List<Ani> aniList = AniUtil.getANI_LIST();
     private final Log log = Log.get(AniAction.class);
     private static final Gson gson = new GsonBuilder()
             .disableHtmlEscaping()

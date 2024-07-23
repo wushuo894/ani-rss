@@ -1,10 +1,7 @@
 package ani.rss.util;
 
 import ani.rss.entity.Ani;
-import ani.rss.entity.Config;
 import ani.rss.entity.Item;
-import cn.hutool.core.bean.BeanUtil;
-import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.text.StrFormatter;
@@ -34,45 +31,60 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Map;
-import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 public class AniUtil {
     private static final Log LOG = Log.get(AniUtil.class);
 
-    private static final Gson gson = new GsonBuilder()
+    private static final Gson GSON = new GsonBuilder()
             .disableHtmlEscaping()
             .create();
 
     @Getter
-    private static final List<Ani> aniList = new ArrayList<>();
+    private static final List<Ani> ANI_LIST = new ArrayList<>();
 
+    /**
+     * 获取订阅配置文件
+     *
+     * @return
+     */
     public static File getAniFile() {
         File configDir = ConfigUtil.getConfigDir();
         return new File(configDir + File.separator + "ani.json");
     }
 
+    /**
+     * 加载订阅
+     */
     public static void load() {
         File configFile = getAniFile();
 
         if (!configFile.exists()) {
-            FileUtil.writeUtf8String(gson.toJson(aniList), configFile);
+            FileUtil.writeUtf8String(GSON.toJson(ANI_LIST), configFile);
         }
         String s = FileUtil.readUtf8String(configFile);
-        JsonArray jsonElements = gson.fromJson(s, JsonArray.class);
+        JsonArray jsonElements = GSON.fromJson(s, JsonArray.class);
         for (JsonElement jsonElement : jsonElements) {
-            Ani ani = gson.fromJson(jsonElement, Ani.class);
-            aniList.add(ani);
+            Ani ani = GSON.fromJson(jsonElement, Ani.class);
+            ANI_LIST.add(ani);
         }
     }
 
+    /**
+     * 将订阅配置保存到磁盘
+     */
     public static void sync() {
         File configFile = getAniFile();
-        String json = gson.toJson(aniList);
+        String json = GSON.toJson(ANI_LIST);
         FileUtil.writeUtf8String(JSONUtil.formatJsonStr(json), configFile);
     }
 
+    /**
+     * 获取动漫信息
+     *
+     * @param url
+     * @return
+     */
     public static Ani getAni(String url) {
         int season = 1;
         String title = "";
@@ -130,6 +142,13 @@ public class AniUtil {
         return ani.setOffset(offset);
     }
 
+    /**
+     * 获取视频列表
+     *
+     * @param ani
+     * @param xml
+     * @return
+     */
     public static List<Item> getItems(Ani ani, String xml) {
         String title = ani.getTitle();
         List<String> exclude = ani.getExclude();
@@ -214,6 +233,12 @@ public class AniUtil {
         return items;
     }
 
+    /**
+     * 获取视频列表
+     *
+     * @param ani
+     * @return
+     */
     public static List<Item> getItems(Ani ani) {
         String url = ani.getUrl();
         String s = HttpRequest.get(url)
