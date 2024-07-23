@@ -139,7 +139,7 @@ public class AniUtil {
                 .map(Item::getEpisode)
                 .min(Comparator.comparingInt(i -> i))
                 .get() - 1;
-        return ani.setOffset(offset);
+        return ani.setOffset(-offset);
     }
 
     /**
