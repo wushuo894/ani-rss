@@ -1,9 +1,12 @@
 <template>
   <el-dialog v-model="configDialogVisible" title="设置" center>
-    <div style="margin: 0 15px;">
+    <div style="margin: 0 15px;" @keydown.enter="editConfig">
       <el-tabs>
         <el-tab-pane label="qBittorrent 设置">
-          <el-form label-width="auto">
+          <el-form label-width="auto"
+                   @submit="(event)=>{
+                    event.preventDefault()
+                   }">
             <el-form-item label="地址">
               <el-input v-model:model-value="config.host"></el-input>
             </el-form-item>
@@ -19,7 +22,10 @@
           </el-form>
         </el-tab-pane>
         <el-tab-pane label="基本设置">
-          <el-form style="max-width: 600px" label-width="auto">
+          <el-form style="max-width: 600px" label-width="auto"
+                   @submit="(event)=>{
+                      event.preventDefault()
+                   }">
             <el-form-item label="间隔(分钟)">
               <el-input-number v-model:model-value="config.sleep"></el-input-number>
             </el-form-item>
