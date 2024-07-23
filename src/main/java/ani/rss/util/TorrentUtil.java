@@ -7,6 +7,7 @@ import ani.rss.entity.TorrentsInfo;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.EnumUtil;
 import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpResponse;
 import cn.hutool.log.Log;
@@ -23,6 +24,27 @@ public class TorrentUtil {
     private static final Log log = Log.get(TorrentUtil.class);
 
     public static String downloadPath = "/downloads";
+
+    public static Boolean login() {
+        Config config = ConfigUtil.getConfig();
+        String host = config.getHost();
+        String username = config.getUsername();
+        String password = config.getPassword();
+
+        if (StrUtil.isBlank(host) || StrUtil.isBlank(username) || StrUtil.isBlank(password)) {
+            return false;
+        }
+
+        String s = HttpRequest.post(host + "/api/v2/auth/login")
+                .form("username", username)
+                .form("password", password)
+                .thenFunction(HttpResponse::body);
+        if (!s.equals("Ok.")) {
+            log.error("登录 qBittorrent 失败");
+            return false;
+        }
+        return true;
+    }
 
     public static synchronized void download(Ani ani, List<Item> items) {
         Config config = ConfigUtil.getConfig();
