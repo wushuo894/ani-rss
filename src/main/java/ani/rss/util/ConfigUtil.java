@@ -2,6 +2,7 @@ package ani.rss.util;
 
 import ani.rss.entity.Config;
 import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.bean.copier.CopyOptions;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.json.JSONUtil;
 import com.google.gson.Gson;
@@ -56,7 +57,9 @@ public class ConfigUtil {
             FileUtil.writeUtf8String(GSON.toJson(CONFIG), configFile);
         }
         String s = FileUtil.readUtf8String(configFile);
-        BeanUtil.copyProperties(GSON.fromJson(s, Config.class), CONFIG);
+        BeanUtil.copyProperties(GSON.fromJson(s, Config.class), CONFIG, CopyOptions
+                .create()
+                .setIgnoreNullValue(true));
     }
 
     /**
