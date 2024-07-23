@@ -57,20 +57,7 @@ public class Main {
         ThreadUtil.execute(() -> {
             Config config = ConfigUtil.getConfig();
             while (true) {
-                String host = config.getHost();
-                String username = config.getUsername();
-                String password = config.getPassword();
-
-                if (StrUtil.isBlank(host) || StrUtil.isBlank(username) || StrUtil.isBlank(password)) {
-                    continue;
-                }
-
-                String s = HttpRequest.post(host + "/api/v2/auth/login")
-                        .form("username", username)
-                        .form("password", password)
-                        .thenFunction(HttpResponse::body);
-                if (!s.equals("Ok.")) {
-                    log.error("登录 qBittorrent 失败");
+                if (!TorrentUtil.login()) {
                     continue;
                 }
                 List<Ani> aniList = ObjectUtil.clone(AniAction.aniList);
