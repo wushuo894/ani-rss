@@ -33,7 +33,7 @@ public class ConfigAction implements Action {
             Config config = ConfigUtil.getConfig();
             BeanUtil.copyProperties(gson.fromJson(req.getBody(), Config.class), config);
             String host = config.getHost();
-            if (!ReUtil.contains("http(s)://", host)) {
+            if (!ReUtil.contains("http(s*)://", host)) {
                 host = "http://" + host;
             }
             config.setHost(host);
