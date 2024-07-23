@@ -54,7 +54,9 @@ public class Main {
         ThreadUtil.execute(() -> {
             Config config = ConfigUtil.getConfig();
             while (true) {
+                Integer sleep = config.getSleep();
                 if (!TorrentUtil.login()) {
+                    ThreadUtil.sleep(sleep, TimeUnit.MINUTES);
                     continue;
                 }
                 List<Ani> aniList = ObjectUtil.clone(AniAction.aniList);
@@ -66,7 +68,6 @@ public class Main {
                         log.error(e);
                     }
                 }
-                Integer sleep = config.getSleep();
                 ThreadUtil.sleep(sleep, TimeUnit.MINUTES);
             }
         });

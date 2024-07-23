@@ -30,20 +30,28 @@ public class TorrentUtil {
         String password = config.getPassword();
         String downloadPath = config.getDownloadPath();
 
-        if (StrUtil.isBlank(host) || StrUtil.isBlank(username) || StrUtil.isBlank(password)) {
+        if (StrUtil.isBlank(host) || StrUtil.isBlank(username)
+                || StrUtil.isBlank(password) || StrUtil.isBlank(downloadPath)) {
+            log.warn("qBittorrent 未配置完成");
             return false;
         }
 
-        String s = HttpRequest.post(host + "/api/v2/auth/login")
-                .form("username", username)
-                .form("password", password)
-                .thenFunction(HttpResponse::body);
-        if (!s.equals("Ok.")) {
-            log.error("登录 qBittorrent 失败");
-            return false;
+        try {
+            return HttpRequest.post(host + "/api/v2/auth/login")
+                    .form("username", username)
+                    .form("password", password)
+                    .setFollowRedirects(true)
+                    .thenFunction(res -> {
+                        if (!res.isOk() || !res.body().equals("Ok.")) {
+                            log.error("登录 qBittorrent 失败");
+                            return false;
+                        }
+                        return true;
+                    });
+        } catch (Exception e) {
+            log.error("登录 qBittorrent 失败 {}", e.getMessage());
         }
-        // 下载路径不为空
-        return StrUtil.isNotBlank(downloadPath);
+        return false;
     }
 
     public static synchronized void download(Ani ani, List<Item> items) {
