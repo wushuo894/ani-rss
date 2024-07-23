@@ -1,6 +1,7 @@
 package ani.rss.util;
 
 import ani.rss.entity.Ani;
+import ani.rss.entity.Config;
 import ani.rss.entity.Item;
 import ani.rss.entity.TorrentsInfo;
 import cn.hutool.core.io.FileUtil;
@@ -21,10 +22,11 @@ public class TorrentUtil {
 
     private static final Log log = Log.get(TorrentUtil.class);
 
-    private final static String host = "https://www.wushuo.fun:8844";
     public static String downloadPath = "/downloads";
 
     public static synchronized void download(Ani ani, List<Item> items) {
+        Config config = ConfigUtil.getConfig();
+        String host = config.getHost();
         List<TorrentsInfo> torrentsInfos = HttpRequest.get(host + "/api/v2/torrents/info")
                 .thenFunction(res -> {
                     List<TorrentsInfo> torrentsInfoList = new ArrayList<>();
@@ -38,8 +40,8 @@ public class TorrentUtil {
                 });
 
         Map<String, String> env = System.getenv();
-        String config = env.getOrDefault("CONFIG", "");
-        File torrents = new File(config + File.separator + "torrents");
+        String configDir = env.getOrDefault("CONFIG", "");
+        File torrents = new File(configDir + File.separator + "torrents");
         FileUtil.mkdir(torrents);
 
         Integer season = ani.getSeason();
@@ -74,6 +76,10 @@ public class TorrentUtil {
                                                 .form("deleteFiles", false)
                                                 .thenFunction(HttpResponse::isOk);
                                     }
+                                    return;
+                                }
+                                Boolean rename = config.getRename();
+                                if (!rename) {
                                     return;
                                 }
                                 HttpRequest.post(host + "/api/v2/torrents/renameFile")
