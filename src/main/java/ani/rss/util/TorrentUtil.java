@@ -175,28 +175,28 @@ public class TorrentUtil {
             }
             LOG.info("添加下载 {}", reName);
 
-//            byte[] bytes = HttpRequest.get(torrent).thenFunction(HttpResponse::bodyBytes);
+            byte[] bytes = HttpRequest.get(torrent).thenFunction(HttpResponse::bodyBytes);
 
-//            String downloadPath = config.getDownloadPath();
-//            String savePath = downloadPath + File.separator + ani.getTitle() + "/Season " + season;
+            String downloadPath = config.getDownloadPath();
+            String savePath = downloadPath + File.separator + ani.getTitle() + "/Season " + season;
 
-//            FileUtil.writeBytes(bytes, saveTorrentFile);
-//            HttpRequest.post(host + "/api/v2/torrents/add")
-//                    .form("addToTopOfQueue", false)
-//                    .form("autoTMM", false)
-//                    .form("contentLayout", "Original")
-//                    .form("dlLimit", 0)
-//                    .form("firstLastPiecePrio", false)
-//                    .form("paused", false)
-//                    .form("rename", reName)
-//                    .form("savepath", savePath)
-//                    .form("sequentialDownload", false)
-//                    .form("skip_checking", false)
-//                    .form("stopCondition", "None")
-//                    .form("upLimit", 102400)
-//                    .form("useDownloadPath", false)
-//                    .form("torrents", bytes, torrentFile.getName())
-//                    .thenFunction(HttpResponse::isOk);
+            FileUtil.writeBytes(bytes, saveTorrentFile);
+            HttpRequest.post(host + "/api/v2/torrents/add")
+                    .form("addToTopOfQueue", false)
+                    .form("autoTMM", false)
+                    .form("contentLayout", "Original")
+                    .form("dlLimit", 0)
+                    .form("firstLastPiecePrio", false)
+                    .form("paused", false)
+                    .form("rename", reName)
+                    .form("savepath", savePath)
+                    .form("sequentialDownload", false)
+                    .form("skip_checking", false)
+                    .form("stopCondition", "None")
+                    .form("upLimit", 102400)
+                    .form("useDownloadPath", false)
+                    .form("torrents", bytes, torrentFile.getName())
+                    .thenFunction(HttpResponse::isOk);
         }
     }
 
