@@ -174,13 +174,13 @@ public class TorrentUtil {
             // 已经下载过
             if (saveTorrentFile.exists()) {
                 LOG.debug("种子记录已存在 {}", reName);
-                return;
+                continue;
             }
 
             // 未开启rename不进行检测
             if (rename && itemDownloaded(ani, item)) {
                 LOG.debug("本地文件已存在 {}", reName);
-                return;
+                continue;
             }
             LOG.info("添加下载 {}", reName);
 
