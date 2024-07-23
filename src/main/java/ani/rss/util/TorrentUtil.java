@@ -97,11 +97,11 @@ public class TorrentUtil {
             // 已经下载过
             Optional<TorrentsInfo> optionalTorrentsInfo = torrentsInfos.stream()
                     .filter(torrentsInfo ->
-                            torrentsInfo.getHash().equalsIgnoreCase(FileUtil.mainName(torrentFile))
+                            StrUtil.equalsIgnoreCase(FileUtil.mainName(torrentFile), torrentsInfo.getHash())
                     )
                     .findFirst();
             if (optionalTorrentsInfo.isPresent()) {
-                LOG.info("{} 已有下载任务", reName);
+                LOG.info("已有下载任务 {}", reName);
                 TorrentsInfo torrentsInfo = optionalTorrentsInfo.get();
                 TorrentsInfo.State state = torrentsInfo.getState();
                 String hash = torrentsInfo.getHash();
@@ -166,7 +166,7 @@ public class TorrentUtil {
             }
             // 已经下载过
             if (saveTorrentFile.exists()) {
-                LOG.info("{} 已存在", saveTorrentFile);
+                LOG.info("已存在 {}", saveTorrentFile);
                 return;
             }
 
