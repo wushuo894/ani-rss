@@ -249,15 +249,15 @@ public class AniUtil {
         String url = ani.getUrl();
         List<String> exclude = ani.getExclude();
         Integer season = ani.getSeason();
+        Integer offset = ani.getOffset();
         String title = ani.getTitle();
         Assert.notBlank(url, "RSS URL 不能为空");
         if (Objects.isNull(exclude)) {
             ani.setExclude(new ArrayList<>());
         }
-        if (Objects.isNull(season)) {
-            ani.setSeason(0);
-        }
+        Assert.notNull(season, "季不能为空");
         Assert.notBlank(title, "标题不能为空");
+        Assert.notNull(offset, "集数偏移不能为空");
     }
 
 }
