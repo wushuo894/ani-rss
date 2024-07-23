@@ -1,10 +1,18 @@
 <template>
   <el-dialog v-model="addDialogVisible" title="添加订阅" center>
-    <el-form style="max-width: 600px" label-width="auto">
-      <el-form-item label="RSS 地址">
-        <el-input v-model:model-value="ani.url"></el-input>
-      </el-form-item>
-      <div v-if="ani.title">
+    <el-form style="max-width: 600px" label-width="auto"
+             @submit="(event)=>{
+                event.preventDefault()
+             }">
+      <div v-if="showRss" @keydown.enter="getRss">
+        <el-form-item label="RSS 地址">
+          <el-input v-model:model-value="ani.url"></el-input>
+        </el-form-item>
+        <div style="display: flex;justify-content: end;width: 100%;margin-top: 10px;">
+          <el-button :loading="rssButtonLoading" @click="getRss">确定</el-button>
+        </div>
+      </div>
+      <div v-else @keydown.enter="addAni">
         <el-form-item label="标题">
           <el-input v-model:model-value="ani.title"></el-input>
         </el-form-item>
@@ -49,9 +57,6 @@
           <el-button :loading="addAniButtonLoading" @click="addAni">确定</el-button>
         </div>
       </div>
-      <div style="display: flex;justify-content: end;width: 100%;margin-top: 10px;" v-else>
-        <el-button :loading="rssButtonLoading" @click="getRss">确定</el-button>
-      </div>
     </el-form>
   </el-dialog>
 </template>
@@ -59,6 +64,8 @@
 <script setup>
 import {ref} from "vue";
 import {ElMessage} from "element-plus";
+
+const showRss = ref(true)
 
 const addDialogVisible = ref(false)
 
@@ -108,6 +115,7 @@ const getRss = () => {
           return
         }
         ani.value = res.data
+        showRss.value = false
       })
 }
 
@@ -142,6 +150,7 @@ const showAdd = () => {
     'title': '',
     'exclude': []
   }
+  showRss.value = true
   addDialogVisible.value = true
   excludeVisible.value = false
   excludeValue.value = ''
