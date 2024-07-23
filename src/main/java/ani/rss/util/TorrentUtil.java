@@ -4,6 +4,7 @@ import ani.rss.entity.Ani;
 import ani.rss.entity.Config;
 import ani.rss.entity.Item;
 import ani.rss.entity.TorrentsInfo;
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.EnumUtil;
 import cn.hutool.core.util.ObjectUtil;
@@ -94,29 +95,47 @@ public class TorrentUtil {
                 HttpRequest.get(host + "/api/v2/torrents/files")
                         .form("hash", hash)
                         .then(res -> {
+                            List<String> newNames = new ArrayList<>();
                             JsonArray jsonElements = gson.fromJson(res.body(), JsonArray.class);
                             for (JsonElement jsonElement : jsonElements) {
-                                String name = jsonElement.getAsJsonObject().get("name").getAsString();
-                                String ext = FileUtil.extName(name);
-                                String newPath = reName + "." + ext;
-                                if (name.equals(newPath)) {
-                                    // 下载完成后自动删除任务
-                                    if (EnumUtil.equals(state, TorrentsInfo.State.pausedUP.name())) {
-                                        HttpRequest.post(host + "/api/v2/torrents/delete")
-                                                .form("hashes", hash)
-                                                .form("deleteFiles", false)
-                                                .thenFunction(HttpResponse::isOk);
-                                    }
-                                    return;
-                                }
                                 if (!rename) {
                                     return;
                                 }
+
+                                String name = jsonElement.getAsJsonObject().get("name").getAsString();
+                                String ext = FileUtil.extName(name);
+                                String newPath = reName;
+                                if (List.of("mp4", "mkv", "avi").contains(ext)) {
+                                    newPath = newPath + "." + ext;
+                                }
+                                if ("ass".equalsIgnoreCase(ext)) {
+                                    String s = FileUtil.extName(FileUtil.mainName(name));
+                                    if (StrUtil.isNotBlank(s)) {
+                                        newPath = newPath + "." + s;
+                                    }
+                                    newPath = newPath + "." + ext;
+                                }
+
+                                if (newNames.contains(newPath)) {
+                                    continue;
+                                }
+                                newNames.add(newPath);
+
                                 HttpRequest.post(host + "/api/v2/torrents/renameFile")
                                         .form("hash", hash)
                                         .form("oldPath", name)
                                         .form("newPath", newPath)
                                         .thenFunction(HttpResponse::isOk);
+                            }
+
+                            if (CollUtil.isNotEmpty(newNames)) {
+                                // 下载完成后自动删除任务
+                                if (EnumUtil.equals(state, TorrentsInfo.State.pausedUP.name())) {
+                                    HttpRequest.post(host + "/api/v2/torrents/delete")
+                                            .form("hashes", hash)
+                                            .form("deleteFiles", false)
+                                            .thenFunction(HttpResponse::isOk);
+                                }
                             }
                         });
                 continue;
