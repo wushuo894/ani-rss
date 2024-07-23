@@ -95,8 +95,14 @@ public class TorrentUtil {
                 HttpRequest.get(host + "/api/v2/torrents/files")
                         .form("hash", hash)
                         .then(res -> {
-                            List<String> newNames = new ArrayList<>();
                             JsonArray jsonElements = gson.fromJson(res.body(), JsonArray.class);
+
+                            if (jsonElements.isEmpty()) {
+                                return;
+                            }
+
+                            List<String> newNames = new ArrayList<>();
+
                             for (JsonElement jsonElement : jsonElements) {
                                 if (!rename) {
                                     return;
@@ -122,6 +128,10 @@ public class TorrentUtil {
                                 }
                                 newNames.add(newPath);
 
+                                if (name.equals(newPath)) {
+                                    continue;
+                                }
+
                                 HttpRequest.post(host + "/api/v2/torrents/renameFile")
                                         .form("hash", hash)
                                         .form("oldPath", name)
@@ -129,15 +139,15 @@ public class TorrentUtil {
                                         .thenFunction(HttpResponse::isOk);
                             }
 
-                            if (CollUtil.isNotEmpty(newNames)) {
-                                // 下载完成后自动删除任务
-                                if (EnumUtil.equals(state, TorrentsInfo.State.pausedUP.name())) {
-                                    HttpRequest.post(host + "/api/v2/torrents/delete")
-                                            .form("hashes", hash)
-                                            .form("deleteFiles", false)
-                                            .thenFunction(HttpResponse::isOk);
-                                }
+
+                            // 下载完成后自动删除任务
+                            if (!EnumUtil.equals(state, TorrentsInfo.State.pausedUP.name())) {
+                                return;
                             }
+                            HttpRequest.post(host + "/api/v2/torrents/delete")
+                                    .form("hashes", hash)
+                                    .form("deleteFiles", false)
+                                    .thenFunction(HttpResponse::isOk);
                         });
                 continue;
             }
