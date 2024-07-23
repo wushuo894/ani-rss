@@ -70,6 +70,7 @@ public class TorrentUtil {
         Config config = ConfigUtil.getCONFIG();
         String host = config.getHost();
         Boolean rename = config.getRename();
+        Boolean delete = config.getDelete();
 
         List<TorrentsInfo> torrentsInfos = HttpRequest.get(host + "/api/v2/torrents/info")
                 .thenFunction(res -> {
@@ -151,14 +152,13 @@ public class TorrentUtil {
                             });
                 }
                 // 下载完成后自动删除任务
-                if (!EnumUtil.equals(state, TorrentsInfo.State.pausedUP.name())) {
-                    return;
+                if (EnumUtil.equals(state, TorrentsInfo.State.pausedUP.name()) && delete) {
+                    HttpRequest.post(host + "/api/v2/torrents/delete")
+                            .form("hashes", hash)
+                            .form("deleteFiles", false)
+                            .thenFunction(HttpResponse::isOk);
+                    LOG.info("删除已完成任务 {}", reName);
                 }
-                HttpRequest.post(host + "/api/v2/torrents/delete")
-                        .form("hashes", hash)
-                        .form("deleteFiles", false)
-                        .thenFunction(HttpResponse::isOk);
-                LOG.info("删除已完成任务 {}", reName);
                 continue;
             }
             // 已经下载过

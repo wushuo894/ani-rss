@@ -46,6 +46,7 @@ public class ConfigUtil {
         CONFIG.setSleep(5)
                 .setRename(true)
                 .setFileExist(false)
+                .setDelete(false)
                 .setHost("")
                 .setUsername("")
                 .setPassword("");
