@@ -9,14 +9,10 @@ import ani.rss.entity.Item;
 import ani.rss.util.AniUtil;
 import ani.rss.util.ConfigUtil;
 import ani.rss.util.TorrentUtil;
-import cn.hutool.core.lang.Assert;
 import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.core.util.ClassUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.ReflectUtil;
-import cn.hutool.core.util.StrUtil;
-import cn.hutool.http.HttpRequest;
-import cn.hutool.http.HttpResponse;
 import cn.hutool.http.HttpUtil;
 import cn.hutool.http.server.SimpleServer;
 import cn.hutool.http.server.action.Action;
@@ -52,7 +48,7 @@ public class Main {
         AniUtil.load();
         ConfigUtil.load();
         ThreadUtil.execute(() -> {
-            Config config = ConfigUtil.getConfig();
+            Config config = ConfigUtil.getCONFIG();
             while (true) {
                 Integer sleep = config.getSleep();
                 if (!TorrentUtil.login()) {
