@@ -4,6 +4,7 @@ import ani.rss.entity.Ani;
 import ani.rss.entity.Item;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.lang.Assert;
 import cn.hutool.core.text.StrFormatter;
 import cn.hutool.core.util.ReUtil;
 import cn.hutool.core.util.StrUtil;
@@ -28,9 +29,7 @@ import org.w3c.dom.NodeList;
 
 import java.io.File;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class AniUtil {
@@ -41,7 +40,7 @@ public class AniUtil {
             .create();
 
     @Getter
-    private static final List<Ani> ANI_LIST = new ArrayList<>();
+    private static final List<Ani> ANI_LIST = new Vector<>();
 
     /**
      * 获取订阅配置文件
@@ -244,6 +243,21 @@ public class AniUtil {
         String s = HttpRequest.get(url)
                 .thenFunction(HttpResponse::body);
         return getItems(ani, s);
+    }
+
+    public static void verify(Ani ani) {
+        String url = ani.getUrl();
+        List<String> exclude = ani.getExclude();
+        Integer season = ani.getSeason();
+        String title = ani.getTitle();
+        Assert.notBlank(url, "RSS URL 不能为空");
+        if (Objects.isNull(exclude)) {
+            ani.setExclude(new ArrayList<>());
+        }
+        if (Objects.isNull(season)) {
+            ani.setSeason(0);
+        }
+        Assert.notBlank(title, "标题不能为空");
     }
 
 }

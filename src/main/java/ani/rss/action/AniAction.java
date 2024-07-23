@@ -28,7 +28,7 @@ public class AniAction implements Action {
             .create();
 
     @Override
-    public void doAction(HttpServerRequest req, HttpServerResponse res) throws IOException {
+    public void doAction(HttpServerRequest req, HttpServerResponse res) {
         String method = req.getMethod();
         res.setContentType("application/json; charset=utf-8");
 
@@ -38,6 +38,7 @@ public class AniAction implements Action {
                     Ani ani = gson.fromJson(req.getBody(), Ani.class);
                     ani.setTitle(ani.getTitle().trim())
                             .setUrl(ani.getUrl().trim());
+                    AniUtil.verify(ani);
                     Optional<Ani> first = aniList.stream()
                             .filter(it -> it.getTitle().equals(ani.getTitle()))
                             .findFirst();
@@ -56,13 +57,11 @@ public class AniAction implements Action {
                         return;
                     }
 
-                    synchronized (aniList) {
-                        aniList.add(ani);
-                        AniUtil.sync();
-                        List<Item> items = AniUtil.getItems(ani);
-                        if (TorrentUtil.login()) {
-                            TorrentUtil.download(ani, items);
-                        }
+                    aniList.add(ani);
+                    AniUtil.sync();
+                    List<Item> items = AniUtil.getItems(ani);
+                    if (TorrentUtil.login()) {
+                        TorrentUtil.download(ani, items);
                     }
                     String json = gson.toJson(Result.success().setMessage("添加订阅成功"));
                     IoUtil.writeUtf8(res.getOut(), true, json);
@@ -72,7 +71,7 @@ public class AniAction implements Action {
                     Ani ani = gson.fromJson(req.getBody(), Ani.class);
                     ani.setTitle(ani.getTitle().trim())
                             .setUrl(ani.getUrl().trim());
-
+                    AniUtil.verify(ani);
                     Optional<Ani> first = aniList.stream()
                             .filter(it -> !it.getUrl().equals(ani.getUrl()))
                             .filter(it -> it.getTitle().equals(ani.getTitle()))
@@ -112,10 +111,8 @@ public class AniAction implements Action {
                         IoUtil.writeUtf8(res.getOut(), true, json);
                         return;
                     }
-                    synchronized (aniList) {
-                        aniList.remove(first.get());
-                        AniUtil.sync();
-                    }
+                    aniList.remove(first.get());
+                    AniUtil.sync();
                     String json = gson.toJson(Result.success().setMessage("删除订阅成功"));
                     IoUtil.writeUtf8(res.getOut(), true, json);
                     break;

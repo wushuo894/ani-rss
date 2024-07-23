@@ -1,6 +1,11 @@
 <template>
   <el-dialog v-model="editDialogVisible" title="修改订阅" center>
-    <el-form style="max-width: 600px" label-width="auto">
+    <el-form style="max-width: 600px" label-width="auto"
+             @submit="(event)=>{
+                event.preventDefault()
+             }"
+             @keydown.enter="editAni"
+    >
       <el-form-item label="标题">
         <el-input v-model:model-value="ani.title"></el-input>
       </el-form-item>
