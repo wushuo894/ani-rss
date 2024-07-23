@@ -65,9 +65,9 @@ public class ConfigUtil {
                 .setIgnoreNullValue(true));
         Boolean debug = CONFIG.getDebug();
         if (debug) {
-            ConsoleLog.setLevel(Level.INFO);
-        } else {
             ConsoleLog.setLevel(Level.DEBUG);
+        } else {
+            ConsoleLog.setLevel(Level.INFO);
         }
 
     }
@@ -81,9 +81,9 @@ public class ConfigUtil {
         FileUtil.writeUtf8String(JSONUtil.formatJsonStr(json), configFile);
         Boolean debug = CONFIG.getDebug();
         if (debug) {
-            ConsoleLog.setLevel(Level.INFO);
-        } else {
             ConsoleLog.setLevel(Level.DEBUG);
+        } else {
+            ConsoleLog.setLevel(Level.INFO);
         }
     }
 }
