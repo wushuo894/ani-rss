@@ -23,13 +23,12 @@ public class TorrentUtil {
 
     private static final Log log = Log.get(TorrentUtil.class);
 
-    public static String downloadPath = "/downloads";
-
     public static Boolean login() {
         Config config = ConfigUtil.getConfig();
         String host = config.getHost();
         String username = config.getUsername();
         String password = config.getPassword();
+        String downloadPath = config.getDownloadPath();
 
         if (StrUtil.isBlank(host) || StrUtil.isBlank(username) || StrUtil.isBlank(password)) {
             return false;
@@ -43,12 +42,16 @@ public class TorrentUtil {
             log.error("登录 qBittorrent 失败");
             return false;
         }
-        return true;
+        // 下载路径不为空
+        return StrUtil.isNotBlank(downloadPath);
     }
 
     public static synchronized void download(Ani ani, List<Item> items) {
+        Integer season = ani.getSeason();
         Config config = ConfigUtil.getConfig();
         String host = config.getHost();
+        Boolean rename = config.getRename();
+
         List<TorrentsInfo> torrentsInfos = HttpRequest.get(host + "/api/v2/torrents/info")
                 .thenFunction(res -> {
                     List<TorrentsInfo> torrentsInfoList = new ArrayList<>();
@@ -61,12 +64,10 @@ public class TorrentUtil {
                     return torrentsInfoList;
                 });
 
-        Map<String, String> env = System.getenv();
-        String configDir = env.getOrDefault("CONFIG", "");
+        File configDir = ConfigUtil.getConfigDir();
         File torrents = new File(configDir + File.separator + "torrents");
         FileUtil.mkdir(torrents);
 
-        Integer season = ani.getSeason();
         for (Item item : items) {
             String reName = item.getReName();
             String torrent = item.getTorrent();
@@ -100,7 +101,6 @@ public class TorrentUtil {
                                     }
                                     return;
                                 }
-                                Boolean rename = config.getRename();
                                 if (!rename) {
                                     return;
                                 }
@@ -113,37 +113,21 @@ public class TorrentUtil {
                         });
                 continue;
             }
-
             // 已经下载过
             if (saveTorrentFile.exists()) {
-                continue;
+                return;
             }
 
-            String savePath = downloadPath + File.separator + ani.getTitle() + "/Season " + season;
-            List<File> files = new ArrayList<>();
-
-            File sFile = new File(savePath);
-            File seasonFile = new File(downloadPath + File.separator + ani.getTitle() + "/S" + String.format("%02d", season));
-            if (sFile.exists()) {
-                files.addAll(Arrays.asList(ObjectUtil.defaultIfNull(sFile.listFiles(), new File[]{})));
-            }
-            if (seasonFile.exists()) {
-                files.addAll(Arrays.asList(ObjectUtil.defaultIfNull(seasonFile.listFiles(), new File[]{})));
-            }
-
-            if (files.stream()
-                    .filter(File::isFile)
-                    .filter(file -> List.of("mp4", "mkv", "avi").contains(FileUtil.extName(file)))
-                    .anyMatch(file -> FileUtil.getPrefix(file).equals(reName))) {
-                log.info("{} 已下载", reName);
-                // 保存 torrent 下次只校验 torrent 是否存在 ， 可以将config设置到固态硬盘，防止一直唤醒机械硬盘
-                byte[] bytes = HttpRequest.get(torrent).thenFunction(HttpResponse::bodyBytes);
-                FileUtil.writeBytes(bytes, saveTorrentFile);
-                continue;
+            // 未开启rename不进行检测
+            if (rename && itemDownloaded(ani, item)) {
+                return;
             }
             log.info("{} 下载", reName);
 
             byte[] bytes = HttpRequest.get(torrent).thenFunction(HttpResponse::bodyBytes);
+
+            String downloadPath = config.getDownloadPath();
+            String savePath = downloadPath + File.separator + ani.getTitle() + "/Season " + season;
 
             FileUtil.writeBytes(bytes, saveTorrentFile);
             HttpRequest.post(host + "/api/v2/torrents/add")
@@ -164,4 +148,50 @@ public class TorrentUtil {
                     .thenFunction(HttpResponse::isOk);
         }
     }
+
+    public static Boolean itemDownloaded(Ani ani, Item item) {
+        Config config = ConfigUtil.getConfig();
+
+        String downloadPath = config.getDownloadPath();
+        Boolean fileExist = config.getFileExist();
+        if (!fileExist || StrUtil.isBlank(downloadPath)) {
+            return false;
+        }
+
+        Integer season = ani.getSeason();
+        File configDir = ConfigUtil.getConfigDir();
+        File torrents = new File(configDir + File.separator + "torrents");
+        FileUtil.mkdir(torrents);
+
+        String reName = item.getReName();
+        String torrent = item.getTorrent();
+        File torrentFile = new File(torrent);
+        File saveTorrentFile = new File(torrents + File.separator + torrentFile.getName());
+
+        String savePath = downloadPath + File.separator + ani.getTitle() + "/Season " + season;
+        List<File> files = new ArrayList<>();
+
+        File sFile = new File(savePath);
+        File seasonFile = new File(downloadPath + File.separator + ani.getTitle() + "/S" + String.format("%02d", season));
+        if (sFile.exists()) {
+            files.addAll(Arrays.asList(ObjectUtil.defaultIfNull(sFile.listFiles(), new File[]{})));
+        }
+        if (seasonFile.exists()) {
+            files.addAll(Arrays.asList(ObjectUtil.defaultIfNull(seasonFile.listFiles(), new File[]{})));
+        }
+
+        if (files.stream()
+                .filter(File::isFile)
+                .filter(file -> List.of("mp4", "mkv", "avi").contains(FileUtil.extName(file)))
+                .anyMatch(file -> FileUtil.getPrefix(file).equals(reName))) {
+            log.info("{} 已下载", reName);
+            // 保存 torrent 下次只校验 torrent 是否存在 ， 可以将config设置到固态硬盘，防止一直唤醒机械硬盘
+            byte[] bytes = HttpRequest.get(torrent).thenFunction(HttpResponse::bodyBytes);
+            FileUtil.writeBytes(bytes, saveTorrentFile);
+            return true;
+        }
+
+        return false;
+    }
+
 }
