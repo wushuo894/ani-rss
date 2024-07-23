@@ -5,6 +5,8 @@ import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.bean.copier.CopyOptions;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.json.JSONUtil;
+import cn.hutool.log.dialect.console.ConsoleLog;
+import cn.hutool.log.level.Level;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import lombok.Getter;
@@ -50,7 +52,8 @@ public class ConfigUtil {
                 .setDelete(false)
                 .setHost("")
                 .setUsername("")
-                .setPassword("");
+                .setPassword("")
+                .setDebug(false);
         File configFile = getConfigFile();
 
         if (!configFile.exists()) {
@@ -60,6 +63,13 @@ public class ConfigUtil {
         BeanUtil.copyProperties(GSON.fromJson(s, Config.class), CONFIG, CopyOptions
                 .create()
                 .setIgnoreNullValue(true));
+        Boolean debug = CONFIG.getDebug();
+        if (debug) {
+            ConsoleLog.setLevel(Level.INFO);
+        } else {
+            ConsoleLog.setLevel(Level.DEBUG);
+        }
+
     }
 
     /**
@@ -69,5 +79,11 @@ public class ConfigUtil {
         File configFile = getConfigFile();
         String json = GSON.toJson(CONFIG);
         FileUtil.writeUtf8String(JSONUtil.formatJsonStr(json), configFile);
+        Boolean debug = CONFIG.getDebug();
+        if (debug) {
+            ConsoleLog.setLevel(Level.INFO);
+        } else {
+            ConsoleLog.setLevel(Level.DEBUG);
+        }
     }
 }
