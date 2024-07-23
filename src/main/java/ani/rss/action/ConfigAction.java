@@ -6,6 +6,7 @@ import ani.rss.entity.Result;
 import ani.rss.util.ConfigUtil;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.io.IoUtil;
+import cn.hutool.core.util.ReUtil;
 import cn.hutool.http.server.HttpServerRequest;
 import cn.hutool.http.server.HttpServerResponse;
 import cn.hutool.http.server.action.Action;
@@ -31,6 +32,11 @@ public class ConfigAction implements Action {
         if (method.equals("POST")) {
             Config config = ConfigUtil.getConfig();
             BeanUtil.copyProperties(gson.fromJson(req.getBody(), Config.class), config);
+            String host = config.getHost();
+            if (!ReUtil.contains("http(s)://", host)) {
+                host = "http://" + host;
+            }
+            config.setHost(host);
             ConfigUtil.sync();
             String json = gson.toJson(Result.success().setMessage("修改成功"));
             IoUtil.writeUtf8(res.getOut(), true, json);
