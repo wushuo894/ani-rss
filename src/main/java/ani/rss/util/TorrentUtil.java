@@ -10,11 +10,15 @@ import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpResponse;
+import cn.hutool.json.JSONUtil;
 import cn.hutool.log.Log;
 import com.google.gson.*;
 
 import java.io.File;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
 
 public class TorrentUtil {
     private final static Gson GSON = new GsonBuilder()
@@ -66,11 +70,12 @@ public class TorrentUtil {
      * @param items
      */
     public static synchronized void download(Ani ani, List<Item> items) {
-        Integer season = ani.getSeason();
         Config config = ConfigUtil.getCONFIG();
         String host = config.getHost();
         Boolean rename = config.getRename();
         Boolean delete = config.getDelete();
+        Integer season = ani.getSeason();
+        String title = ani.getTitle();
 
         List<TorrentsInfo> torrentsInfos = HttpRequest.get(host + "/api/v2/torrents/info")
                 .thenFunction(res -> {
@@ -88,7 +93,9 @@ public class TorrentUtil {
         File torrents = new File(configDir + File.separator + "torrents");
         FileUtil.mkdir(torrents);
 
+        LOG.debug("{} 共 {} 个", title, items.size());
         for (Item item : items) {
+            LOG.debug(JSONUtil.formatJsonStr(GSON.toJson(item)));
             String reName = item.getReName();
             String torrent = item.getTorrent();
             File torrentFile = new File(torrent);
@@ -166,12 +173,13 @@ public class TorrentUtil {
             }
             // 已经下载过
             if (saveTorrentFile.exists()) {
-                LOG.info("已存在 {}", saveTorrentFile);
+                LOG.debug("种子记录已存在 {}", reName);
                 return;
             }
 
             // 未开启rename不进行检测
             if (rename && itemDownloaded(ani, item)) {
+                LOG.debug("本地文件已存在 {}", reName);
                 return;
             }
             LOG.info("添加下载 {}", reName);

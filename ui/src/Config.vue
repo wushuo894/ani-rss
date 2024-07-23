@@ -37,6 +37,9 @@
             <el-form-item label="自动删除已完成任务">
               <el-switch v-model:model-value="config.delete"></el-switch>
             </el-form-item>
+            <el-form-item label="DEBUG">
+              <el-switch v-model:model-value="config.debug"></el-switch>
+            </el-form-item>
           </el-form>
         </el-tab-pane>
       </el-tabs>
@@ -62,7 +65,8 @@ const config = ref({
   'sleep': 5,
   'downloadPath': '',
   'fileExist': true,
-  'delete': false
+  'delete': false,
+  'debug': false
 })
 
 const showConfig = () => {
