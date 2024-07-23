@@ -19,19 +19,21 @@ public class ConfigUtil {
             .disableHtmlEscaping()
             .create();
 
-    public static File getConfigFile() {
+    public static File getConfigDir() {
         Map<String, String> env = System.getenv();
         String config = env.getOrDefault("CONFIG", "");
-        File configFile = new File("config.json");
-        if (StrUtil.isNotBlank(config)) {
-            configFile = new File(config + File.separator + "config.json");
-        }
-        return configFile;
+        return new File(config).getAbsoluteFile();
+    }
+
+    public static File getConfigFile() {
+        File configDir = getConfigDir();
+        return new File(configDir + File.separator + "config.json");
     }
 
     public static void load() {
         config.setSleep(5)
                 .setRename(true)
+                .setFileExist(false)
                 .setHost("")
                 .setUsername("")
                 .setPassword("");

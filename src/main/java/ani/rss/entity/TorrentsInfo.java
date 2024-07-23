@@ -14,6 +14,9 @@ public class TorrentsInfo implements Serializable {
     private Long progress;
 
     public enum State {
+        /**
+         * 校验元数据
+         */
         checkingResumeData,
         /**
          * 停滞中

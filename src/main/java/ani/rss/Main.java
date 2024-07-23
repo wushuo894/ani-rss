@@ -34,9 +34,6 @@ public class Main {
     public static void main(String[] args) {
         Map<String, String> env = System.getenv();
         String port = env.getOrDefault("PORT", "7789");
-        String downloadPath = env.getOrDefault("DOWNLOAD_PATH", "");
-        Assert.notBlank(downloadPath, "下载地址不能为空");
-        TorrentUtil.downloadPath = downloadPath;
         SimpleServer server = HttpUtil.createServer(Integer.parseInt(port));
 
         server.addAction("/", new RootAction());
