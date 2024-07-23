@@ -13,4 +13,6 @@ public class Config implements Serializable {
     private String password;
     private Boolean rename;
     private Integer sleep;
+    private String downloadPath;
+    private Boolean fileExist;
 }

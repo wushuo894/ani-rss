@@ -46,13 +46,8 @@ public class AniUtil {
     private static final List<Ani> aniList = new ArrayList<>();
 
     public static File getAniFile() {
-        Map<String, String> env = System.getenv();
-        String config = env.getOrDefault("CONFIG", "");
-        File configFile = new File("ani.json");
-        if (StrUtil.isNotBlank(config)) {
-            configFile = new File(config + File.separator + "ani.json");
-        }
-        return configFile;
+        File configDir = ConfigUtil.getConfigDir();
+        return new File(configDir + File.separator + "ani.json");
     }
 
     public static void load() {
