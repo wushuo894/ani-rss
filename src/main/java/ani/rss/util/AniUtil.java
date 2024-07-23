@@ -1,9 +1,12 @@
 package ani.rss.util;
 
 import ani.rss.entity.Ani;
+import ani.rss.entity.Config;
 import ani.rss.entity.Item;
+import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.convert.Convert;
+import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.text.StrFormatter;
 import cn.hutool.core.util.ReUtil;
 import cn.hutool.core.util.StrUtil;
@@ -11,6 +14,12 @@ import cn.hutool.core.util.XmlUtil;
 import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpResponse;
 import cn.hutool.http.HttpUtil;
+import cn.hutool.json.JSONUtil;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import lombok.Getter;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
@@ -19,14 +28,52 @@ import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import java.io.File;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 public class AniUtil {
+    private static final Gson gson = new GsonBuilder()
+            .disableHtmlEscaping()
+            .create();
+
+    @Getter
+    private static final List<Ani> aniList = new ArrayList<>();
+
+    public static File getAniFile() {
+        Map<String, String> env = System.getenv();
+        String config = env.getOrDefault("CONFIG", "");
+        File configFile = new File("ani.json");
+        if (StrUtil.isNotBlank(config)) {
+            configFile = new File(config + File.separator + "ani.json");
+        }
+        return configFile;
+    }
+
+    public static void load() {
+        File configFile = getAniFile();
+
+        if (!configFile.exists()) {
+            FileUtil.writeUtf8String(gson.toJson(aniList), configFile);
+        }
+        String s = FileUtil.readUtf8String(configFile);
+        JsonArray jsonElements = gson.fromJson(s, JsonArray.class);
+        for (JsonElement jsonElement : jsonElements) {
+            Ani ani = gson.fromJson(jsonElement, Ani.class);
+            aniList.add(ani);
+        }
+    }
+
+    public static void sync() {
+        File configFile = getAniFile();
+        String json = gson.toJson(aniList);
+        FileUtil.writeUtf8String(JSONUtil.formatJsonStr(json), configFile);
+    }
 
     public static Ani getAni(String url) {
         int season = 1;

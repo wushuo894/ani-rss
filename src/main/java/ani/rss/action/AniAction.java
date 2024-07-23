@@ -29,42 +29,11 @@ import java.util.Optional;
 
 @Path("/ani")
 public class AniAction implements Action {
-    public static final List<Ani> aniList = new ArrayList<>();
+    public static final List<Ani> aniList = AniUtil.getAniList();
     private final Log log = Log.get(AniAction.class);
     private static final Gson gson = new GsonBuilder()
             .disableHtmlEscaping()
             .create();
-
-    public static File getConfigFile() {
-        Map<String, String> env = System.getenv();
-        String config = env.getOrDefault("CONFIG", "");
-        File configFile = new File("config.json");
-        if (StrUtil.isNotBlank(config)) {
-            configFile = new File(config + File.separator + "config.json");
-        }
-        return configFile;
-    }
-
-    public static void load() {
-        File configFile = getConfigFile();
-
-        if (!configFile.exists()) {
-            FileUtil.writeUtf8String(gson.toJson(aniList), configFile);
-        }
-        String s = FileUtil.readUtf8String(configFile);
-        JsonArray jsonElements = gson.fromJson(s, JsonArray.class);
-        for (JsonElement jsonElement : jsonElements) {
-            Ani ani = gson.fromJson(jsonElement, Ani.class);
-            aniList.add(ani);
-        }
-    }
-
-    public static void sync() {
-        File configFile = getConfigFile();
-        String json = gson.toJson(aniList);
-        FileUtil.writeUtf8String(JSONUtil.formatJsonStr(json), configFile);
-    }
-
 
     @Override
     public void doAction(HttpServerRequest req, HttpServerResponse res) throws IOException {
@@ -97,7 +66,7 @@ public class AniAction implements Action {
 
                     synchronized (aniList) {
                         aniList.add(ani);
-                        sync();
+                        AniUtil.sync();
                         List<Item> items = AniUtil.getItems(ani);
                         TorrentUtil.download(ani, items);
                     }
@@ -129,7 +98,7 @@ public class AniAction implements Action {
                         return;
                     }
                     BeanUtil.copyProperties(ani, first.get());
-                    sync();
+                    AniUtil.sync();
                     String json = gson.toJson(Result.success().setMessage("修改成功"));
                     IoUtil.writeUtf8(res.getOut(), true, json);
                     return;
@@ -151,7 +120,7 @@ public class AniAction implements Action {
                     }
                     synchronized (aniList) {
                         aniList.remove(first.get());
-                        sync();
+                        AniUtil.sync();
                     }
                     String json = gson.toJson(Result.success().setMessage("删除订阅成功"));
                     IoUtil.writeUtf8(res.getOut(), true, json);

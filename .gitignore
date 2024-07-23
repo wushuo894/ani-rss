@@ -39,3 +39,4 @@ build/
 .DS_Store
 
 config.json
+ani.json
