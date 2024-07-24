@@ -14,7 +14,7 @@
               <el-input v-model:model-value="config.username"></el-input>
             </el-form-item>
             <el-form-item label="密码">
-              <el-input v-model:model-value="config.password"></el-input>
+              <el-input show-password v-model:model-value="config.password"></el-input>
             </el-form-item>
             <el-form-item label="下载地址">
               <el-input v-model:model-value="config.downloadPath"></el-input>
