@@ -3,13 +3,22 @@ package ani.rss.util;
 import ani.rss.entity.Ani;
 import ani.rss.entity.Item;
 import cn.hutool.core.convert.Convert;
+import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.lang.Assert;
 import cn.hutool.core.text.StrFormatter;
 import cn.hutool.core.util.ReUtil;
-import cn.hutool.core.util.URLUtil;
+import cn.hutool.core.util.StrUtil;
 import cn.hutool.core.util.XmlUtil;
 import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpResponse;
 import cn.hutool.http.HttpUtil;
+import cn.hutool.json.JSONUtil;
+import cn.hutool.log.Log;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import lombok.Getter;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
@@ -18,13 +27,63 @@ import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import java.net.URL;
+import java.io.File;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class AniUtil {
+    private static final Log LOG = Log.get(AniUtil.class);
 
+    private static final Gson GSON = new GsonBuilder()
+            .disableHtmlEscaping()
+            .create();
+
+    @Getter
+    private static final List<Ani> ANI_LIST = new Vector<>();
+
+    /**
+     * 获取订阅配置文件
+     *
+     * @return
+     */
+    public static File getAniFile() {
+        File configDir = ConfigUtil.getConfigDir();
+        return new File(configDir + File.separator + "ani.json");
+    }
+
+    /**
+     * 加载订阅
+     */
+    public static void load() {
+        File configFile = getAniFile();
+
+        if (!configFile.exists()) {
+            FileUtil.writeUtf8String(GSON.toJson(ANI_LIST), configFile);
+        }
+        String s = FileUtil.readUtf8String(configFile);
+        JsonArray jsonElements = GSON.fromJson(s, JsonArray.class);
+        for (JsonElement jsonElement : jsonElements) {
+            Ani ani = GSON.fromJson(jsonElement, Ani.class);
+            ANI_LIST.add(ani);
+        }
+    }
+
+    /**
+     * 将订阅配置保存到磁盘
+     */
+    public static void sync() {
+        File configFile = getAniFile();
+        String json = GSON.toJson(ANI_LIST);
+        FileUtil.writeUtf8String(JSONUtil.formatJsonStr(json), configFile);
+    }
+
+    /**
+     * 获取动漫信息
+     *
+     * @param url
+     * @return
+     */
     public static Ani getAni(String url) {
         int season = 1;
         String title = "";
@@ -64,31 +123,43 @@ public class AniUtil {
                 });
 
         Ani ani = new Ani();
-        ani.setOff(0)
+        ani.setOffset(0)
                 .setUrl(url.trim())
                 .setSeason(season)
                 .setTitle(title.trim())
                 .setCover(cover)
                 .setExclude(List.of("720"));
-        return ani;
+
+        List<Item> items = getItems(ani, s);
+        if (items.isEmpty()) {
+            return ani;
+        }
+        int offset = items.stream()
+                .map(Item::getEpisode)
+                .min(Comparator.comparingInt(i -> i))
+                .get() - 1;
+        return ani.setOffset(-offset);
     }
 
-    public static List<Item> getItems(Ani ani) {
+    /**
+     * 获取视频列表
+     *
+     * @param ani
+     * @param xml
+     * @return
+     */
+    public static List<Item> getItems(Ani ani, String xml) {
         String title = ani.getTitle();
-        String url = ani.getUrl();
         List<String> exclude = ani.getExclude();
 
-        int off = ani.getOff();
+        int offset = ani.getOffset();
         int season = ani.getSeason();
         List<Item> items = new ArrayList<>();
 
-        String s = HttpRequest.get(url)
-                .thenFunction(HttpResponse::body);
-        Document document = XmlUtil.readXML(s);
+        Document document = XmlUtil.readXML(xml);
         Node channel = document.getElementsByTagName("channel").item(0);
         NodeList childNodes = channel.getChildNodes();
 
-        int collect = 1 + off;
         for (int i = childNodes.getLength() - 1; i >= 0; i--) {
             Node item = childNodes.item(i);
             String nodeName = item.getNodeName();
@@ -118,26 +189,75 @@ public class AniUtil {
             if (exclude.stream().anyMatch(finalItemTitle::contains)) {
                 continue;
             }
-
-            if (!itemTitle.contains(String.valueOf(collect))) {
-                collect++;
-                continue;
-            }
             items.add(
                     new Item()
                             .setTitle(itemTitle)
                             .setTorrent(torrent)
                             .setLength(length)
-                            .setCollect(collect)
             );
-            collect++;
         }
 
-        for (Item item : items) {
-            item.setReName(StrFormatter.format("{} S{}E{}", title, String.format("%02d", season), String.format("%02d", item.getCollect())));
-        }
+        String s = "(.*|\\[.*])( -? \\d+|\\[\\d+]|\\[\\d+.?[vV]\\d]|第\\d+[话話集]|\\[第?\\d+[话話集]]|\\[\\d+.?END]|[Ee][Pp]?\\d+)(.*)";
+
+        List<String> es = new ArrayList<>();
+        items = items.stream()
+                .filter(item -> {
+                    try {
+                        String itemTitle = item.getTitle();
+                        String e = ReUtil.get(s, itemTitle, 2);
+                        String episode = ReUtil.get("\\d+", e, 0);
+                        if (StrUtil.isBlank(episode)) {
+                            return false;
+                        }
+                        if (es.contains(episode)) {
+                            return false;
+                        }
+                        item.setEpisode(Integer.parseInt(episode) + offset);
+                        es.add(String.valueOf(item.getEpisode()));
+                        item
+                                .setReName(
+                                        StrFormatter.format("{} S{}E{}",
+                                                title,
+                                                String.format("%02d", season),
+                                                String.format("%02d", item.getEpisode()))
+                                );
+                        return true;
+                    } catch (Exception e) {
+                        LOG.error("解析rss视频集次出现问题");
+                        LOG.error(e);
+                    }
+                    return false;
+                }).collect(Collectors.toList());
 
         return items;
+    }
+
+    /**
+     * 获取视频列表
+     *
+     * @param ani
+     * @return
+     */
+    public static List<Item> getItems(Ani ani) {
+        String url = ani.getUrl();
+        String s = HttpRequest.get(url)
+                .thenFunction(HttpResponse::body);
+        return getItems(ani, s);
+    }
+
+    public static void verify(Ani ani) {
+        String url = ani.getUrl();
+        List<String> exclude = ani.getExclude();
+        Integer season = ani.getSeason();
+        Integer offset = ani.getOffset();
+        String title = ani.getTitle();
+        Assert.notBlank(url, "RSS URL 不能为空");
+        if (Objects.isNull(exclude)) {
+            ani.setExclude(new ArrayList<>());
+        }
+        Assert.notNull(season, "季不能为空");
+        Assert.notBlank(title, "标题不能为空");
+        Assert.notNull(offset, "集数偏移不能为空");
     }
 
 }

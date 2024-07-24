@@ -14,11 +14,30 @@ public class TorrentsInfo implements Serializable {
     private Long progress;
 
     public enum State {
+        /**
+         * 校验恢复数据
+         */
         checkingResumeData,
+        /**
+         * 正在检验磁盘文件
+         */
+        checkingDisk,
+        /**
+         * [F] 下载中
+         */
+        forcedDL,
         /**
          * 停滞中
          */
         stalledDL,
+        /**
+         * 已暂停
+         */
+        pausedDL,
+        /**
+         * 队列中
+         */
+        queuedDL,
         /**
          * 下载中
          */
@@ -28,13 +47,33 @@ public class TorrentsInfo implements Serializable {
          */
         stalledUP,
         /**
+         * 错误
+         */
+        error,
+        /**
          * 上传中
          */
         uploading,
         /**
          * 已完成
          */
-        pausedUP
+        pausedUP,
+        /**
+         * [F]元数据
+         */
+        forcedMetaDownload,
+        /**
+         * 元数据
+         */
+        metaDownload,
+        /**
+         * 缺失文件
+         */
+        missingFiles,
+        /**
+         * 未知
+         */
+        unknown
     }
 }
 

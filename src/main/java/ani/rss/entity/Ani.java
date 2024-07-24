@@ -22,7 +22,7 @@ public class Ani implements Serializable {
     /**
      * 剧集偏移
      */
-    private Integer off;
+    private Integer offset;
 
     /**
      * 季度
