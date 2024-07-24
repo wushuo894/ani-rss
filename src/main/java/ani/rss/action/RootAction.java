@@ -8,10 +8,10 @@ import cn.hutool.core.util.URLUtil;
 import cn.hutool.http.server.HttpServerRequest;
 import cn.hutool.http.server.HttpServerResponse;
 import cn.hutool.http.server.action.Action;
+import cn.hutool.log.Log;
 import lombok.Cleanup;
 
 import java.io.File;
-import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
@@ -24,11 +24,13 @@ import java.util.jar.JarFile;
  */
 public class RootAction implements Action {
 
-    public static final String DEFAULT_INDEX_FILE_NAME = "index.html";
+    private static final String DEFAULT_INDEX_FILE_NAME = "index.html";
 
     private final String rootDir;
 
     private final List<String> indexFileNames;
+
+    private static final Log LOG = Log.get(RootAction.class);
 
     public RootAction() {
         this("dist", DEFAULT_INDEX_FILE_NAME);
@@ -45,7 +47,7 @@ public class RootAction implements Action {
 
     @Override
     public void doAction(HttpServerRequest request, HttpServerResponse response) {
-        final String path = request.getPath();
+        String path = request.getPath();
         String fileName = rootDir + path;
 
         Boolean ok = file(response, fileName, true);
@@ -55,7 +57,7 @@ public class RootAction implements Action {
     }
 
     public Boolean file(HttpServerResponse response, String fileName, Boolean index) {
-        System.out.println(fileName);
+        LOG.debug(fileName);
         try {
             EnumerationIter<URL> resourceIter = ResourceUtil.getResourceIter(fileName);
             for (URL url : resourceIter) {
@@ -89,8 +91,8 @@ public class RootAction implements Action {
                     return true;
                 }
             }
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (Exception e) {
+            LOG.error(e);
         }
         return false;
     }
