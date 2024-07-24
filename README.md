@@ -15,6 +15,7 @@
 - [x] 自动识别集数偏移
 - [x] 自定义间隔
 - [x] 适配移动端
+- [x] 支持拼音排序与搜索
 
 ![1.png](https://github.com/wushuo894/ani-rss/raw/master/image/1.png)
 
