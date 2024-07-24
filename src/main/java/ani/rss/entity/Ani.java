@@ -38,4 +38,9 @@ public class Ani implements Serializable {
      * 排除
      */
     private List<String> exclude;
+
+    /**
+     * 拼音
+     */
+    private String pinyin;
 }

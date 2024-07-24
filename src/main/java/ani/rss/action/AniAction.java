@@ -7,7 +7,10 @@ import ani.rss.entity.Result;
 import ani.rss.util.AniUtil;
 import ani.rss.util.TorrentUtil;
 import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.comparator.PinyinComparator;
 import cn.hutool.core.io.IoUtil;
+import cn.hutool.extra.pinyin.PinyinUtil;
 import cn.hutool.http.server.HttpServerRequest;
 import cn.hutool.http.server.HttpServerResponse;
 import cn.hutool.http.server.action.Action;
@@ -97,7 +100,15 @@ public class AniAction implements Action {
                     return;
                 }
                 case "GET": {
-                    String json = gson.toJson(Result.success(aniList));
+                    // 按拼音排序
+                    PinyinComparator pinyinComparator = new PinyinComparator();
+                    List<Ani> list = CollUtil.sort(aniList, (a, b) -> pinyinComparator.compare(a.getTitle(), b.getTitle()));
+                    for (Ani ani : list) {
+                        String title = ani.getTitle();
+                        String pinyin = PinyinUtil.getPinyin(title);
+                        ani.setPinyin(pinyin);
+                    }
+                    String json = gson.toJson(Result.success(list));
                     IoUtil.writeUtf8(res.getOut(), true, json);
                     return;
                 }
