@@ -2,12 +2,27 @@
 
 自动订阅下载蜜柑RSS动漫
 
+### 实现功能
+
+- [x] 自动下载
+- [x] 自动识别季数
+- [x] 自动重命名
+- [x] 文件已下载自动跳过
+- [x] 自动删除已完成任务
+- [x] 自定义 qBittorrent 设置
+- [x] RSS 关键字过滤
+- [x] 集数偏移
+- [x] 自动识别集数偏移
+- [x] 自定义间隔
+- [x] 适配移动端
+
 ![1.png](https://github.com/wushuo894/ani-rss/raw/master/image/1.png)
 
 ### docker 部署
 
-docker run -d --name ani-rss -v ./config:/config -p 7789:7789 -e PORT="7789" -e CONFIG="/config" -e TZ=Asia/Shanghai
---restart always wushuo894/ani-rss
+    docker run -d --name ani-rss -v ./config:/config -p 7789:7789 -e PORT="7789" -e CONFIG="/config" -e TZ=Asia/Shanghai --restart always wushuo894/ani-rss
+
+---
 
 | 参数     | 作用       | 默认值           |
 |--------|----------|---------------|
