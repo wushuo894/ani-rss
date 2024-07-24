@@ -36,7 +36,7 @@
               <div>
                 <el-switch v-model:model-value="config.fileExist" :disabled="!config.rename"></el-switch>
                 <br>
-                <el-text class="mx-1" size="small">此选项必须启用 自动重命名。确保 qBittorrent 与本程序 docker 映射路径一致
+                <el-text class="mx-1" size="small">此选项必须启用 自动重命名。确保 qBittorrent 与本程序 docker 映射挂载路径一致
                 </el-text>
               </div>
             </el-form-item>
