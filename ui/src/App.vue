@@ -1,133 +1,23 @@
 <template>
-  <el-dialog v-model="addDialogVisible" title="添加订阅" width="500" center>
-    <el-form style="max-width: 600px" label-width="auto">
-      <el-form-item label="RSS 地址">
-        <el-input v-model:model-value="ani.url"></el-input>
-      </el-form-item>
-      <div v-if="ani.title">
-        <el-form-item label="标题">
-          <el-input v-model:model-value="ani.title"></el-input>
-        </el-form-item>
-        <el-form-item label="季">
-          <div style="display: flex;justify-content: end;width: 100%;">
-            <el-input-number style="max-width: 200px" v-model:model-value="ani.season"></el-input-number>
-          </div>
-        </el-form-item>
-        <el-form-item label="集数偏移">
-          <div style="display: flex;justify-content: end;width: 100%;">
-            <el-input-number v-model:model-value="ani.off"></el-input-number>
-          </div>
-        </el-form-item>
-        <el-form-item label="排除">
-          <div class="flex gap-2">
-            <el-tag
-                v-for="tag in ani.exclude"
-                :key="tag"
-                closable
-                :disable-transitions="false"
-                @close="handleClose(tag)"
-                style="margin-right: 4px;"
-            >
-              {{ tag }}
-            </el-tag>
-            <el-input
-                style="max-width: 80px;"
-                v-if="excludeVisible"
-                ref="InputRef"
-                v-model="excludeValue"
-                class="w-20"
-                size="small"
-                @keyup.enter="handleInputConfirm"
-                @blur="handleInputConfirm"
-            />
-            <el-button v-else class="button-new-tag" size="small" @click="showInput">
-              +
-            </el-button>
-          </div>
-        </el-form-item>
-        <div style="display: flex;justify-content: end;width: 100%;margin-top: 10px;">
-          <el-button :loading="addAniButtonLoading" @click="addAni">确定</el-button>
-        </div>
-      </div>
-      <div style="display: flex;justify-content: end;width: 100%;margin-top: 10px;" v-else>
-        <el-button :loading="rssButtonLoading" @click="getRss">确定</el-button>
-      </div>
-    </el-form>
-  </el-dialog>
-  <el-dialog v-model="editDialogVisible" title="修改订阅" width="500" center>
-    <el-form style="max-width: 600px" label-width="auto">
-      <el-form-item label="标题">
-        <el-input v-model:model-value="ani.title"></el-input>
-      </el-form-item>
-      <el-form-item label="季">
-        <div style="display: flex;justify-content: end;width: 100%;">
-          <el-input-number style="max-width: 200px" v-model:model-value="ani.season"></el-input-number>
-        </div>
-      </el-form-item>
-      <el-form-item label="集数偏移">
-        <div style="display: flex;justify-content: end;width: 100%;">
-          <el-input-number v-model:model-value="ani.off"></el-input-number>
-        </div>
-      </el-form-item>
-      <el-form-item label="排除">
-        <div class="flex gap-2">
-          <el-tag
-              v-for="tag in ani.exclude"
-              :key="tag"
-              closable
-              :disable-transitions="false"
-              @close="handleClose(tag)"
-              style="margin-right: 4px;"
-          >
-            {{ tag }}
-          </el-tag>
-          <el-input
-              style="max-width: 80px;"
-              v-if="excludeVisible"
-              ref="InputRef"
-              v-model="excludeValue"
-              class="w-20"
-              size="small"
-              @keyup.enter="handleInputConfirm"
-              @blur="handleInputConfirm"
-          />
-          <el-button v-else class="button-new-tag" size="small" @click="showInput">
-            +
-          </el-button>
-        </div>
-      </el-form-item>
-      <div style="display: flex;justify-content: end;width: 100%;margin-top: 10px;">
-        <el-button :loading="addAniButtonLoading" @click="editAni">确定</el-button>
-      </div>
-    </el-form>
-  </el-dialog>
+  <Config ref="config"></Config>
+  <Add ref="add" @load="getList"></Add>
+  <Edit ref="edit" @load="getList"></Edit>
   <div style="display: flex;justify-content: space-between;width: 100%;">
     <div style="margin: 10px;">
       <el-input v-model:model-value="title"></el-input>
     </div>
     <div style="margin: 10px;">
-      <el-button @click="()=>{
-          ani = {
-                  'url': '',
-                  'season': 1,
-                  'off': 0,
-                  'title': '',
-                  'exclude': []
-                }
-          addDialogVisible = true
-          excludeVisible = false
-          excludeValue = ''
-      }">添加
-      </el-button>
+      <el-button @click="add?.showAdd">添加</el-button>
+      <el-button @click="config?.showConfig">设置</el-button>
     </div>
   </div>
   <div style="margin: 0 10px">
     <el-card shadow="never" v-for="(item,index) in list.filter(it => it.title.indexOf(title) >-1)"
              style="margin: 3px 0;">
-      <div style="display: flex;justify-content: space-between;">
-        <div style="display: flex;align-items: start;">
-          <img :src="item.cover" height="130">
-          <div style="margin-left: 10px">
+      <div style="display: flex;width: 100%;">
+        <img :src="item.cover" height="130" width="92" :alt="item.title">
+        <div style="flex-grow: 1;position: relative;">
+          <div style="margin-left: 10px;">
             <div style="
               font-size: 0.97em;
               line-height: 1.6;
@@ -147,21 +37,17 @@
             text-transform: none !important;">{{ item.url }}
             </div>
           </div>
-        </div>
-        <div style="display: flex;align-items: flex-end;justify-content:flex-end; flex-direction: column;">
-          <el-button @click="()=>{
-            editDialogVisible = true
-            ani = item
-            excludeVisible = false
-            excludeValue = ''
-          }">编辑
-          </el-button>
-          <div style="height: 5px;"></div>
-          <el-popconfirm title="你确定要删除吗?" @confirm="delAni(item)">
-            <template #reference>
-              <el-button>删除</el-button>
-            </template>
-          </el-popconfirm>
+          <div
+              style="display: flex;align-items: flex-end;justify-content:flex-end; flex-direction: column;position: absolute;right: 0;bottom: 0;">
+            <el-button @click="edit?.showEdit(item)">编辑
+            </el-button>
+            <div style="height: 5px;"></div>
+            <el-popconfirm title="你确定要删除吗?" @confirm="delAni(item)">
+              <template #reference>
+                <el-button>删除</el-button>
+              </template>
+            </el-popconfirm>
+          </div>
         </div>
       </div>
     </el-card>
@@ -171,103 +57,16 @@
 <script setup>
 import {ref} from "vue";
 import {ElMessage} from 'element-plus'
+import Config from "./Config.vue";
+import Edit from "./Edit.vue";
+import Add from "./Add.vue";
 
 const title = ref('')
 
-const addDialogVisible = ref(false)
-const editDialogVisible = ref(false)
-const ani = ref({
-  'url': '',
-  'season': 1,
-  'off': 0,
-  'title': '',
-  'exclude': []
-})
+const config = ref()
+const add = ref()
+const edit = ref()
 
-const excludeVisible = ref(false)
-const excludeValue = ref('')
-
-const handleClose = (tag) => {
-  ani.value.exclude.splice(ani.value.exclude.indexOf(tag), 1)
-}
-
-const InputRef = ref()
-
-const showInput = () => {
-  excludeVisible.value = true
-  InputRef.value?.input?.focus()
-}
-
-const handleInputConfirm = () => {
-  if (excludeValue.value) {
-    ani.value.exclude.push(excludeValue.value)
-  }
-  excludeVisible.value = false
-  excludeValue.value = ''
-}
-
-const rssButtonLoading = ref(false)
-
-const getRss = () => {
-  rssButtonLoading.value = true
-  fetch('/api/rss', {
-    'method': 'POST',
-    'body': JSON.stringify(ani.value)
-  }).then(res => res.json())
-      .then(res => {
-        rssButtonLoading.value = false
-        if (res.code !== 200) {
-          ElMessage.error(res.message)
-          return
-        }
-        ani.value = res.data
-      })
-}
-
-
-const addAniButtonLoading = ref(false)
-
-const addAni = () => {
-  addAniButtonLoading.value = true
-  fetch('/api/ani', {
-    'method': 'POST',
-    'body': JSON.stringify(ani.value)
-  })
-      .then(res => res.json())
-      .then(res => {
-        addAniButtonLoading.value = false
-        if (res.code !== 200) {
-          ElMessage.error(res.message)
-          getList()
-          return
-        }
-        ElMessage.success(res.message)
-        getList()
-        addDialogVisible.value = false
-      })
-}
-
-const editAniButtonLoading = ref(false)
-
-const editAni = () => {
-  editAniButtonLoading.value = true
-  fetch('/api/ani', {
-    'method': 'PUT',
-    'body': JSON.stringify(ani.value)
-  })
-      .then(res => res.json())
-      .then(res => {
-        editAniButtonLoading.value = false
-        if (res.code !== 200) {
-          ElMessage.error(res.message)
-          getList()
-          return
-        }
-        ElMessage.success(res.message)
-        getList()
-        editDialogVisible.value = false
-      })
-}
 
 const delAni = (ani) => {
   fetch('/api/ani', {
@@ -303,3 +102,5 @@ const getList = () => {
 getList()
 
 </script>
+
+
