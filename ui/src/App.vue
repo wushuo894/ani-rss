@@ -4,7 +4,7 @@
   <Edit ref="edit" @load="getList"></Edit>
   <div style="display: flex;justify-content: space-between;width: 100%;">
     <div style="margin: 10px;">
-      <el-input v-model:model-value="title"></el-input>
+      <el-input v-model:model-value="title" placeholder="搜索" @input="currentPage = 1"></el-input>
     </div>
     <div style="margin: 10px;">
       <el-button @click="add?.showAdd">添加</el-button>
@@ -12,7 +12,8 @@
     </div>
   </div>
   <div style="margin: 0 10px">
-    <el-card shadow="never" v-for="(item,index) in list.filter(it => it.title.indexOf(title) >-1)"
+    <el-card shadow="never"
+             v-for="(item,index) in list.filter(it => it.title.indexOf(title) >-1).slice((currentPage-1)*pageSize,(currentPage-1)*pageSize+pageSize)"
              style="margin: 3px 0;">
       <div style="display: flex;width: 100%;">
         <img :src="item.cover" height="130" width="92" :alt="item.title">
@@ -52,6 +53,10 @@
       </div>
     </el-card>
   </div>
+  <div style="margin: 10px;">
+    <el-pagination background layout="prev, pager, next" :total="list.filter(it => it.title.indexOf(title) >-1).length" v-model:current-page="currentPage"
+                   :page-size="pageSize"/>
+  </div>
 </template>
 
 <script setup>
@@ -66,7 +71,8 @@ const title = ref('')
 const config = ref()
 const add = ref()
 const edit = ref()
-
+const currentPage = ref(1)
+const pageSize = ref(10)
 
 const delAni = (ani) => {
   fetch('/api/ani', {
