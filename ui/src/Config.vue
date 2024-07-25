@@ -102,6 +102,7 @@ const about = ref({
 })
 
 const showConfig = () => {
+  configDialogVisible.value = true
   fetch('/api/config', {
     'method': 'GET'
   })
@@ -112,7 +113,6 @@ const showConfig = () => {
           return
         }
         config.value = res.data
-        configDialogVisible.value = true
         loading.value = false
       })
   fetch('/api/about', {
