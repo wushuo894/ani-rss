@@ -54,7 +54,8 @@ public class AboutAction implements Action {
                         }
                     });
         } catch (Exception e) {
-            log.error(e);
+            log.error(e.getMessage());
+            log.debug(e);
         }
 
         String json = gson.toJson(Result.success().setData(about));

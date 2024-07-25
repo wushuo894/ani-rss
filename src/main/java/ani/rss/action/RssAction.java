@@ -29,19 +29,13 @@ public class RssAction implements Action {
             return;
         }
         res.setContentType("application/json; charset=utf-8");
-        try {
-            String url = gson.fromJson(req.getBody(), Ani.class).getUrl();
-            Assert.notBlank(url,"RSS地址 不能为空");
-            if (!ReUtil.contains("http(s*)://", url)) {
-                url = "https://" + url;
-            }
-            Ani ani = AniUtil.getAni(url);
-            String json = gson.toJson(Result.success(ani));
-            IoUtil.writeUtf8(res.getOut(), true, json);
-        } catch (Exception e) {
-            log.error(e);
-            String json = gson.toJson(Result.error().setMessage(e.getMessage()));
-            IoUtil.writeUtf8(res.getOut(), true, json);
+        String url = gson.fromJson(req.getBody(), Ani.class).getUrl();
+        Assert.notBlank(url, "RSS地址 不能为空");
+        if (!ReUtil.contains("http(s*)://", url)) {
+            url = "https://" + url;
         }
+        Ani ani = AniUtil.getAni(url);
+        String json = gson.toJson(Result.success(ani));
+        IoUtil.writeUtf8(res.getOut(), true, json);
     }
 }

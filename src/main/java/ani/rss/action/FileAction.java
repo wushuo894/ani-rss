@@ -22,24 +22,20 @@ public class FileAction implements Action {
 
     @Override
     public void doAction(HttpServerRequest req, HttpServerResponse res) throws IOException {
-        try {
-            String filename = req.getParam("filename");
-            if (StrUtil.isBlank(filename)) {
-                res.sendOk();
-                return;
-            }
-            String mimeType = FileUtil.getMimeType(filename);
-            res.setContentType(mimeType);
-            res.setHeader("Content-Disposition", "attachment; filename=\"" + filename + "\"");
-
-            File configDir = ConfigUtil.getConfigDir();
-            @Cleanup
-            FileInputStream inputStream = IoUtil.toStream(new File(configDir + "/files/" + filename));
-            @Cleanup
-            OutputStream out = res.getOut();
-            IoUtil.copy(inputStream, out);
-        } catch (Exception e) {
-            log.error(e);
+        String filename = req.getParam("filename");
+        if (StrUtil.isBlank(filename)) {
+            res.sendOk();
+            return;
         }
+        String mimeType = FileUtil.getMimeType(filename);
+        res.setContentType(mimeType);
+        res.setHeader("Content-Disposition", "attachment; filename=\"" + filename + "\"");
+
+        File configDir = ConfigUtil.getConfigDir();
+        @Cleanup
+        FileInputStream inputStream = IoUtil.toStream(new File(configDir + "/files/" + filename));
+        @Cleanup
+        OutputStream out = res.getOut();
+        IoUtil.copy(inputStream, out);
     }
 }
