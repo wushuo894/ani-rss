@@ -126,10 +126,12 @@ public class AniUtil {
                     return URLUtil.getHost(httpConnection.getUrl()) + image;
                 });
 
-        String filename = new File(URLUtil.toURI(cover).getPath()).getName();
+        File jpgFile = new File(URLUtil.toURI(cover).getPath());
+        String dir = jpgFile.getParentFile().getName();
+        String filename = jpgFile.getName();
         File configDir = ConfigUtil.getConfigDir();
-        FileUtil.mkdir(configDir + "/files/");
-        File file = new File(configDir + "/files/" + filename);
+        FileUtil.mkdir(configDir + "/files/" + dir);
+        File file = new File(configDir + "/files/" + dir + "/" + filename);
         HttpUtil.downloadFile(cover, file);
 
         Ani ani = new Ani();
@@ -137,7 +139,7 @@ public class AniUtil {
                 .setUrl(url.trim())
                 .setSeason(season)
                 .setTitle(title.trim())
-                .setCover(filename)
+                .setCover(dir + "/" + filename)
                 .setExclude(List.of("720"));
 
         LOG.debug("获取到动漫信息 {}", JSONUtil.formatJsonStr(GSON.toJson(ani)));
