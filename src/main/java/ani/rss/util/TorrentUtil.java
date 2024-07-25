@@ -5,6 +5,7 @@ import ani.rss.entity.Config;
 import ani.rss.entity.Item;
 import ani.rss.entity.TorrentsInfo;
 import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.text.StrFormatter;
 import cn.hutool.core.util.EnumUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
@@ -15,17 +16,19 @@ import cn.hutool.log.Log;
 import com.google.gson.*;
 
 import java.io.File;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
 public class TorrentUtil {
-    private final static Gson GSON = new GsonBuilder()
-            .disableHtmlEscaping()
-            .create();
 
     private static final Log LOG = Log.get(TorrentUtil.class);
+
+    private static final Gson GSON = new GsonBuilder()
+            .disableHtmlEscaping()
+            .create();
 
     /**
      * 登录 qBittorrent
@@ -64,30 +67,17 @@ public class TorrentUtil {
     }
 
     /**
-     * 下载
+     * 下载动漫
      *
      * @param ani
      * @param items
      */
-    public static synchronized void download(Ani ani, List<Item> items) {
+    public static synchronized void downloadAni(Ani ani, List<Item> items) {
         Config config = ConfigUtil.getCONFIG();
-        String host = config.getHost();
-        Boolean rename = config.getRename();
-        Boolean delete = config.getDelete();
         Integer season = ani.getSeason();
         String title = ani.getTitle();
 
-        List<TorrentsInfo> torrentsInfos = HttpRequest.get(host + "/api/v2/torrents/info")
-                .thenFunction(res -> {
-                    List<TorrentsInfo> torrentsInfoList = new ArrayList<>();
-                    JsonArray jsonElements = GSON.fromJson(res.body(), JsonArray.class);
-                    for (JsonElement jsonElement : jsonElements) {
-                        JsonObject jsonObject = jsonElement.getAsJsonObject();
-                        TorrentsInfo torrentsInfo = GSON.fromJson(jsonObject, TorrentsInfo.class);
-                        torrentsInfoList.add(torrentsInfo);
-                    }
-                    return torrentsInfoList;
-                });
+        List<TorrentsInfo> torrentsInfos = getTorrentsInfos();
 
         File configDir = ConfigUtil.getConfigDir();
         File torrents = new File(configDir + File.separator + "torrents");
@@ -110,65 +100,8 @@ public class TorrentUtil {
             if (optionalTorrentsInfo.isPresent()) {
                 LOG.info("已有下载任务 {}", reName);
                 TorrentsInfo torrentsInfo = optionalTorrentsInfo.get();
-                TorrentsInfo.State state = torrentsInfo.getState();
-                String hash = torrentsInfo.getHash();
-
-                if (rename) {
-                    // 重命名
-                    HttpRequest.get(host + "/api/v2/torrents/files")
-                            .form("hash", hash)
-                            .then(res -> {
-                                JsonArray jsonElements = GSON.fromJson(res.body(), JsonArray.class);
-
-                                if (jsonElements.isEmpty()) {
-                                    return;
-                                }
-
-                                List<String> newNames = new ArrayList<>();
-
-                                for (JsonElement jsonElement : jsonElements) {
-                                    String name = jsonElement.getAsJsonObject().get("name").getAsString();
-                                    String ext = FileUtil.extName(name);
-                                    String newPath = reName;
-                                    if (List.of("mp4", "mkv", "avi").contains(ext)) {
-                                        newPath = newPath + "." + ext;
-                                    } else if ("ass".equalsIgnoreCase(ext)) {
-                                        String s = FileUtil.extName(FileUtil.mainName(name));
-                                        if (StrUtil.isNotBlank(s)) {
-                                            newPath = newPath + "." + s;
-                                        }
-                                        newPath = newPath + "." + ext;
-                                    } else {
-                                        continue;
-                                    }
-
-                                    if (newNames.contains(newPath)) {
-                                        continue;
-                                    }
-                                    newNames.add(newPath);
-
-                                    if (name.equals(newPath)) {
-                                        continue;
-                                    }
-
-                                    LOG.info("重命名 {} ==> {}", name, newPath);
-
-                                    HttpRequest.post(host + "/api/v2/torrents/renameFile")
-                                            .form("hash", hash)
-                                            .form("oldPath", name)
-                                            .form("newPath", newPath)
-                                            .thenFunction(HttpResponse::isOk);
-                                }
-                            });
-                }
-                // 下载完成后自动删除任务
-                if (EnumUtil.equals(state, TorrentsInfo.State.pausedUP.name()) && delete) {
-                    HttpRequest.post(host + "/api/v2/torrents/delete")
-                            .form("hashes", hash)
-                            .form("deleteFiles", false)
-                            .thenFunction(HttpResponse::isOk);
-                    LOG.info("删除已完成任务 {}", reName);
-                }
+                rename(torrentsInfo, reName);
+                delete(torrentsInfo);
                 continue;
             }
             // 已经下载过
@@ -178,35 +111,75 @@ public class TorrentUtil {
             }
 
             // 未开启rename不进行检测
-            if (rename && itemDownloaded(ani, item)) {
+            if (itemDownloaded(ani, item)) {
                 LOG.debug("本地文件已存在 {}", reName);
                 continue;
             }
             LOG.info("添加下载 {}", reName);
-
-            byte[] bytes = HttpRequest.get(torrent).thenFunction(HttpResponse::bodyBytes);
+            HttpRequest.get(torrent)
+                    .then(res -> {
+                        InputStream inputStream = res.bodyStream();
+                        FileUtil.writeFromStream(inputStream, saveTorrentFile);
+                    });
 
             String downloadPath = config.getDownloadPath();
-            String savePath = downloadPath + File.separator + ani.getTitle() + "/Season " + season;
-
-            FileUtil.writeBytes(bytes, saveTorrentFile);
-            HttpRequest.post(host + "/api/v2/torrents/add")
-                    .form("addToTopOfQueue", false)
-                    .form("autoTMM", false)
-                    .form("contentLayout", "Original")
-                    .form("dlLimit", 0)
-                    .form("firstLastPiecePrio", false)
-                    .form("paused", false)
-                    .form("rename", reName)
-                    .form("savepath", savePath)
-                    .form("sequentialDownload", false)
-                    .form("skip_checking", false)
-                    .form("stopCondition", "None")
-                    .form("upLimit", 102400)
-                    .form("useDownloadPath", false)
-                    .form("torrents", bytes, torrentFile.getName())
-                    .thenFunction(HttpResponse::isOk);
+            String savePath = StrFormatter.format("{}/{}/Season {}", downloadPath, title, season);
+            download(reName, savePath, torrentFile);
         }
+    }
+
+    /**
+     * 下载
+     *
+     * @param name
+     * @param savePath
+     * @param torrentFile
+     */
+    public static void download(String name, String savePath, File torrentFile) {
+        Config config = ConfigUtil.getCONFIG();
+        String host = config.getHost();
+        HttpRequest.post(host + "/api/v2/torrents/add")
+                .form("addToTopOfQueue", false)
+                .form("autoTMM", false)
+                .form("contentLayout", "Original")
+                .form("dlLimit", 0)
+                .form("firstLastPiecePrio", false)
+                .form("paused", false)
+                .form("rename", name)
+                .form("savepath", savePath)
+                .form("sequentialDownload", false)
+                .form("skip_checking", false)
+                .form("stopCondition", "None")
+                .form("upLimit", 102400)
+                .form("useDownloadPath", false)
+                .form("torrents", torrentFile)
+                .form("tags", "ani-rss")
+                .thenFunction(HttpResponse::isOk);
+    }
+
+    /**
+     * 获取任务列表
+     *
+     * @return
+     */
+    public static List<TorrentsInfo> getTorrentsInfos() {
+        Config config = ConfigUtil.getCONFIG();
+        String host = config.getHost();
+        return HttpRequest.get(host + "/api/v2/torrents/info")
+                .thenFunction(res -> {
+                    List<TorrentsInfo> torrentsInfoList = new ArrayList<>();
+                    JsonArray jsonElements = GSON.fromJson(res.body(), JsonArray.class);
+                    for (JsonElement jsonElement : jsonElements) {
+                        JsonObject jsonObject = jsonElement.getAsJsonObject();
+                        TorrentsInfo torrentsInfo = GSON.fromJson(jsonObject, TorrentsInfo.class);
+                        String tags = torrentsInfo.getTags();
+                        // 包含标签
+                        if (StrUtil.split(tags, ",", true, true).contains("ani-rss")) {
+                            torrentsInfoList.add(torrentsInfo);
+                        }
+                    }
+                    return torrentsInfoList;
+                });
     }
 
     /**
@@ -218,6 +191,10 @@ public class TorrentUtil {
      */
     public static Boolean itemDownloaded(Ani ani, Item item) {
         Config config = ConfigUtil.getCONFIG();
+        Boolean rename = config.getRename();
+        if (rename) {
+            return false;
+        }
 
         String downloadPath = config.getDownloadPath();
         Boolean fileExist = config.getFileExist();
@@ -259,6 +236,92 @@ public class TorrentUtil {
         }
 
         return false;
+    }
+
+    /**
+     * 删除已完成任务
+     *
+     * @param torrentsInfo
+     */
+    public static void delete(TorrentsInfo torrentsInfo) {
+        Config config = ConfigUtil.getCONFIG();
+        String host = config.getHost();
+        Boolean delete = config.getDelete();
+        if (!delete) {
+            return;
+        }
+        String hash = torrentsInfo.getHash();
+        TorrentsInfo.State state = torrentsInfo.getState();
+        String name = torrentsInfo.getName();
+        // 下载完成后自动删除任务
+        if (EnumUtil.equals(state, TorrentsInfo.State.pausedUP.name())) {
+            LOG.info("删除已完成任务 {}", name);
+            HttpRequest.post(host + "/api/v2/torrents/delete")
+                    .form("hashes", hash)
+                    .form("deleteFiles", false)
+                    .thenFunction(HttpResponse::isOk);
+        }
+    }
+
+    /**
+     * 重命名
+     *
+     * @param torrentsInfo
+     * @param reName
+     */
+    public static void rename(TorrentsInfo torrentsInfo, String reName) {
+        Config config = ConfigUtil.getCONFIG();
+        String host = config.getHost();
+        Boolean rename = config.getRename();
+        if (!rename) {
+            return;
+        }
+        String hash = torrentsInfo.getHash();
+        HttpRequest.get(host + "/api/v2/torrents/files")
+                .form("hash", hash)
+                .then(res -> {
+                    JsonArray jsonElements = GSON.fromJson(res.body(), JsonArray.class);
+
+                    if (jsonElements.isEmpty()) {
+                        return;
+                    }
+
+                    List<String> newNames = new ArrayList<>();
+
+                    for (JsonElement jsonElement : jsonElements) {
+                        String name = jsonElement.getAsJsonObject().get("name").getAsString();
+                        String ext = FileUtil.extName(name);
+                        String newPath = reName;
+                        if (List.of("mp4", "mkv", "avi").contains(ext)) {
+                            newPath = newPath + "." + ext;
+                        } else if ("ass".equalsIgnoreCase(ext)) {
+                            String s = FileUtil.extName(FileUtil.mainName(name));
+                            if (StrUtil.isNotBlank(s)) {
+                                newPath = newPath + "." + s;
+                            }
+                            newPath = newPath + "." + ext;
+                        } else {
+                            continue;
+                        }
+
+                        if (newNames.contains(newPath)) {
+                            continue;
+                        }
+                        newNames.add(newPath);
+
+                        if (name.equals(newPath)) {
+                            continue;
+                        }
+
+                        LOG.info("重命名 {} ==> {}", name, newPath);
+
+                        HttpRequest.post(host + "/api/v2/torrents/renameFile")
+                                .form("hash", hash)
+                                .form("oldPath", name)
+                                .form("newPath", newPath)
+                                .thenFunction(HttpResponse::isOk);
+                    }
+                });
     }
 
 }

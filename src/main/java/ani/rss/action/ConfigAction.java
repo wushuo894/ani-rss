@@ -17,7 +17,9 @@ import java.io.IOException;
 
 @Path("/config")
 public class ConfigAction implements Action {
-    private final Gson gson = new GsonBuilder().disableHtmlEscaping().create();
+    private final Gson gson = new GsonBuilder()
+            .disableHtmlEscaping()
+            .create();
 
     @Override
     public void doAction(HttpServerRequest req, HttpServerResponse res) throws IOException {
