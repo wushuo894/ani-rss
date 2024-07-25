@@ -4,6 +4,7 @@ import ani.rss.Main;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.util.ReUtil;
+import cn.hutool.core.util.StrUtil;
 import cn.hutool.log.Log;
 import lombok.Cleanup;
 
@@ -14,8 +15,12 @@ import java.util.jar.JarFile;
 
 public class MavenUtil {
     private static final Log log = Log.get(MavenUtil.class);
+    private static String version = "None";
 
-    public static String getVersion() {
+    public static synchronized String getVersion() {
+        if (!"None".equalsIgnoreCase(version)) {
+            return version;
+        }
         try {
             String path = Main.class.getProtectionDomain().getCodeSource().getLocation().getPath();
             File jar = new File(path);
@@ -25,7 +30,8 @@ public class MavenUtil {
                 JarEntry jarEntry = jarFile.getJarEntry("META-INF/maven/ani.rss/ani-rss/pom.xml");
                 InputStream inputStream = jarFile.getInputStream(jarEntry);
                 String s = IoUtil.readUtf8(inputStream);
-                return ReUtil.get("<version>(.*?)</version>", s, 1);
+                version = ReUtil.get("<version>(.*?)</version>", s, 1);
+                return version;
             }
         } catch (Exception e) {
             log.error(e);
@@ -33,8 +39,8 @@ public class MavenUtil {
         File file = new File("pom.xml");
         if (file.exists()) {
             String s = FileUtil.readUtf8String(file);
-            return ReUtil.get("<version>(.*?)</version>", s, 1);
+            version = ReUtil.get("<version>(.*?)</version>", s, 1);
         }
-        return "None";
+        return version;
     }
 }
