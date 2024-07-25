@@ -44,13 +44,14 @@ public class ServerUtil {
                 public void doAction(HttpServerRequest req, HttpServerResponse res) {
                     try {
                         ((Action) action).doAction(req, res);
-                    } catch (IllegalArgumentException e) {
+                    } catch (Exception e) {
                         res.setContentType("application/json; charset=utf-8");
                         String json = gson.toJson(Result.error().setMessage(e.getMessage()));
                         IoUtil.writeUtf8(res.getOut(), true, json);
-                    } catch (Exception e) {
-                        log.error("{} {}", urlPath, e.getMessage());
-                        log.debug(e);
+                        if (!(e instanceof IllegalArgumentException)) {
+                            log.error("{} {}", urlPath, e.getMessage());
+                            log.debug(e);
+                        }
                     }
                 }
             });
