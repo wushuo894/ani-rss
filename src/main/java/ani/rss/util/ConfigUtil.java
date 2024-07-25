@@ -5,6 +5,7 @@ import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.bean.copier.CopyOptions;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.json.JSONUtil;
+import cn.hutool.log.Log;
 import cn.hutool.log.dialect.console.ConsoleLog;
 import cn.hutool.log.level.Level;
 import com.google.gson.Gson;
@@ -15,9 +16,12 @@ import java.io.File;
 import java.util.Map;
 
 public class ConfigUtil {
+    private static final Log LOG = Log.get(ConfigUtil.class);
+
     @Getter
-    private final static Config CONFIG = new Config();
-    private final static Gson GSON = new GsonBuilder()
+    private static final Config CONFIG = new Config();
+
+    private static final Gson GSON = new GsonBuilder()
             .disableHtmlEscaping()
             .create();
 
@@ -69,7 +73,7 @@ public class ConfigUtil {
         } else {
             ConsoleLog.setLevel(Level.INFO);
         }
-
+        LOG.debug("加载配置文件 {}", configFile);
     }
 
     /**
@@ -85,5 +89,6 @@ public class ConfigUtil {
         } else {
             ConsoleLog.setLevel(Level.INFO);
         }
+        LOG.debug("保存配置 {}", configFile);
     }
 }

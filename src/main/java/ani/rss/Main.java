@@ -17,8 +17,6 @@ import cn.hutool.http.HttpUtil;
 import cn.hutool.http.server.SimpleServer;
 import cn.hutool.http.server.action.Action;
 import cn.hutool.log.Log;
-import cn.hutool.log.dialect.console.ConsoleLog;
-import cn.hutool.log.level.Level;
 
 import java.util.List;
 import java.util.Map;
@@ -57,11 +55,11 @@ public class Main {
                     ThreadUtil.sleep(sleep, TimeUnit.MINUTES);
                     continue;
                 }
-                List<Ani> aniList = ObjectUtil.clone(AniAction.aniList);
+                List<Ani> aniList = ObjectUtil.clone(AniAction.getAniList());
                 for (Ani ani : aniList) {
                     try {
                         List<Item> items = AniUtil.getItems(ani);
-                        TorrentUtil.download(ani, items);
+                        TorrentUtil.downloadAni(ani, items);
                     } catch (Exception e) {
                         log.error(e);
                     }

@@ -17,16 +17,17 @@ import cn.hutool.http.server.action.Action;
 import cn.hutool.log.Log;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import lombok.Getter;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
 @Path("/ani")
 public class AniAction implements Action {
-    public static final List<Ani> aniList = AniUtil.getANI_LIST();
+    @Getter
+    private static final List<Ani> aniList = AniUtil.getANI_LIST();
     private final Log log = Log.get(AniAction.class);
-    private static final Gson gson = new GsonBuilder()
+    private final Gson gson = new GsonBuilder()
             .disableHtmlEscaping()
             .create();
 
@@ -64,7 +65,7 @@ public class AniAction implements Action {
                     AniUtil.sync();
                     List<Item> items = AniUtil.getItems(ani);
                     if (TorrentUtil.login()) {
-                        TorrentUtil.download(ani, items);
+                        TorrentUtil.downloadAni(ani, items);
                     }
                     String json = gson.toJson(Result.success().setMessage("添加订阅成功"));
                     IoUtil.writeUtf8(res.getOut(), true, json);
