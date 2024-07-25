@@ -8,9 +8,29 @@ import java.io.Serializable;
 @Data
 @Accessors(chain = true)
 public class TorrentsInfo implements Serializable {
+    /**
+     * hash
+     */
     private String hash;
+
+    /**
+     * 名称
+     */
     private String name;
+
+    /**
+     * 状态
+     */
     private State state;
+
+    /**
+     * 标签
+     */
+    private String tags;
+
+    /**
+     * 进度
+     */
     private Long progress;
 
     public enum State {

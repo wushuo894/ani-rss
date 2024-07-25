@@ -67,6 +67,7 @@ public class AniUtil {
             Ani ani = GSON.fromJson(jsonElement, Ani.class);
             ANI_LIST.add(ani);
         }
+        LOG.debug("加载订阅 共{}项", ANI_LIST.size());
     }
 
     /**
@@ -76,6 +77,7 @@ public class AniUtil {
         File configFile = getAniFile();
         String json = GSON.toJson(ANI_LIST);
         FileUtil.writeUtf8String(JSONUtil.formatJsonStr(json), configFile);
+        LOG.debug("保存订阅 {}", configFile);
     }
 
     /**
@@ -86,7 +88,7 @@ public class AniUtil {
      */
     public static Ani getAni(String url) {
         int season = 1;
-        String title = "";
+        String title = "无";
 
         String s = HttpRequest.get(url)
                 .thenFunction(HttpResponse::body);
@@ -98,7 +100,7 @@ public class AniUtil {
             Node item = childNodes.item(i);
             String nodeName = item.getNodeName();
             if (nodeName.equals("title")) {
-                title = ReUtil.replaceAll(item.getTextContent(), "^Mikan Project - ", "");
+                title = ReUtil.replaceAll(item.getTextContent(), "^Mikan Project - ", "").trim();
             }
         }
 
@@ -130,15 +132,19 @@ public class AniUtil {
                 .setCover(cover)
                 .setExclude(List.of("720"));
 
+        LOG.debug("获取到动漫信息 {}", JSONUtil.formatJsonStr(GSON.toJson(ani)));
+
         List<Item> items = getItems(ani, s);
+        LOG.debug("获取到视频 共{}个", items.size());
         if (items.isEmpty()) {
             return ani;
         }
-        int offset = items.stream()
+        int offset = -(items.stream()
                 .map(Item::getEpisode)
                 .min(Comparator.comparingInt(i -> i))
-                .get() - 1;
-        return ani.setOffset(-offset);
+                .get() - 1);
+        LOG.debug("自动获取到剧集偏移为 {}", offset);
+        return ani.setOffset(offset);
     }
 
     /**
@@ -245,6 +251,11 @@ public class AniUtil {
         return getItems(ani, s);
     }
 
+    /**
+     * 校验参数
+     *
+     * @param ani
+     */
     public static void verify(Ani ani) {
         String url = ani.getUrl();
         List<String> exclude = ani.getExclude();
