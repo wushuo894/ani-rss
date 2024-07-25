@@ -57,6 +57,7 @@ public class Main {
             }
             cover = AniUtil.saveJpg(cover);
             ani.setCover(cover);
+            AniUtil.sync();
         }
         ThreadUtil.execute(server::start);
 
