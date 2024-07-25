@@ -50,6 +50,17 @@ public class Main {
         AniUtil.load();
         ThreadUtil.execute(server::start);
 
+
+        // 处理旧图片
+        for (Ani ani : AniAction.getAniList()) {
+            String cover = ani.getCover();
+            if (!cover.startsWith("http")) {
+                continue;
+            }
+            cover = AniUtil.saveJpg(cover);
+            ani.setCover(cover);
+        }
+
         ThreadUtil.execute(() -> {
             Config config = ConfigUtil.getCONFIG();
             while (true) {
