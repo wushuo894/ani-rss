@@ -6,20 +6,24 @@ import ani.rss.annotation.Path;
 import ani.rss.entity.Ani;
 import ani.rss.entity.Config;
 import ani.rss.entity.Item;
-import ani.rss.util.AniUtil;
-import ani.rss.util.ConfigUtil;
-import ani.rss.util.MavenUtil;
-import ani.rss.util.TorrentUtil;
+import ani.rss.entity.Result;
+import ani.rss.util.*;
+import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.core.util.ClassUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.ReUtil;
 import cn.hutool.core.util.ReflectUtil;
 import cn.hutool.http.HttpUtil;
+import cn.hutool.http.server.HttpServerRequest;
+import cn.hutool.http.server.HttpServerResponse;
 import cn.hutool.http.server.SimpleServer;
 import cn.hutool.http.server.action.Action;
 import cn.hutool.log.Log;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -27,26 +31,11 @@ import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 public class Main {
-    static Log log = Log.get(Main.class);
+    private static final Log LOG = Log.get(Main.class);
 
     public static void main(String[] args) {
-        Map<String, String> env = System.getenv();
-        String port = env.getOrDefault("PORT", "7789");
-        SimpleServer server = HttpUtil.createServer(Integer.parseInt(port));
-
-        server.addAction("/", new RootAction());
-        Set<Class<?>> classes = ClassUtil.scanPackage("ani.rss.action");
-        for (Class<?> aClass : classes) {
-            Path path = aClass.getAnnotation(Path.class);
-            if (Objects.isNull(path)) {
-                continue;
-            }
-            Object action = ReflectUtil.newInstanceIfPossible(aClass);
-            server.addAction("/api" + path.value(), (Action) action);
-        }
-
         String version = MavenUtil.getVersion();
-        log.info("version {}", version);
+        LOG.info("version {}", version);
         ConfigUtil.load();
         AniUtil.load();
         // 处理旧图片
@@ -59,7 +48,7 @@ public class Main {
             ani.setCover(cover);
             AniUtil.sync();
         }
-        ThreadUtil.execute(server::start);
+        ThreadUtil.execute(() -> ServerUtil.create().start());
 
         ThreadUtil.execute(() -> {
             Config config = ConfigUtil.getCONFIG();
@@ -75,8 +64,11 @@ public class Main {
                         List<Item> items = AniUtil.getItems(ani);
                         TorrentUtil.downloadAni(ani, items);
                     } catch (Exception e) {
-                        log.error(e);
+                        LOG.error("{} {}", ani.getTitle(), e.getMessage());
+                        LOG.debug(e);
                     }
+                    // 避免短时间频繁请求导致流控
+                    ThreadUtil.sleep(500);
                 }
                 ThreadUtil.sleep(sleep, TimeUnit.MINUTES);
             }
