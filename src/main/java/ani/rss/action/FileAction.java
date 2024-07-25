@@ -16,7 +16,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 
-@Path("/ani")
+@Path("/file")
 public class FileAction implements Action {
     private final Log log = Log.get(FileAction.class);
 
@@ -25,6 +25,7 @@ public class FileAction implements Action {
         try {
             String filename = req.getParam("filename");
             if (StrUtil.isBlank(filename)) {
+                res.sendOk();
                 return;
             }
             String mimeType = FileUtil.getMimeType(filename);
