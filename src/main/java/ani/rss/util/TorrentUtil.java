@@ -211,7 +211,7 @@ public class TorrentUtil {
     public static Boolean itemDownloaded(Ani ani, Item item) {
         Config config = ConfigUtil.getCONFIG();
         Boolean rename = config.getRename();
-        if (rename) {
+        if (!rename) {
             return false;
         }
 
