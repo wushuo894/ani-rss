@@ -117,6 +117,7 @@ public class TorrentUtil {
             }
             LOG.info("添加下载 {}", reName);
             HttpRequest.get(torrent)
+                    .setFollowRedirects(true)
                     .then(res -> {
                         InputStream inputStream = res.bodyStream();
                         FileUtil.writeFromStream(inputStream, saveTorrentFile);
