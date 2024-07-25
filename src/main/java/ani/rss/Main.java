@@ -8,6 +8,7 @@ import ani.rss.entity.Config;
 import ani.rss.entity.Item;
 import ani.rss.util.AniUtil;
 import ani.rss.util.ConfigUtil;
+import ani.rss.util.MavenUtil;
 import ani.rss.util.TorrentUtil;
 import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.core.util.ClassUtil;
@@ -43,10 +44,12 @@ public class Main {
             server.addAction("/api" + path.value(), (Action) action);
         }
 
+        String version = MavenUtil.getVersion();
+        log.info("version {}", version);
+        ConfigUtil.load();
+        AniUtil.load();
         ThreadUtil.execute(server::start);
 
-        AniUtil.load();
-        ConfigUtil.load();
         ThreadUtil.execute(() -> {
             Config config = ConfigUtil.getCONFIG();
             while (true) {

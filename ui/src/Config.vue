@@ -1,6 +1,6 @@
 <template>
   <el-dialog v-model="configDialogVisible" title="设置" center>
-    <div style="margin: 0 15px;" @keydown.enter="editConfig">
+    <div style="margin: 0 15px;" @keydown.enter="editConfig" v-loading="loading">
       <el-tabs>
         <el-tab-pane label="qBittorrent 设置">
           <el-form label-width="auto"
@@ -48,6 +48,25 @@
             </el-form-item>
           </el-form>
         </el-tab-pane>
+        <el-tab-pane label="关于">
+          <el-form style="max-width: 600px" label-width="auto"
+                   @submit="(event)=>{
+                      event.preventDefault()
+                   }">
+            <el-form-item label="GiuHub">
+              <a href="https://github.com/wushuo894/ani-rss" target="_blank">https://github.com/wushuo894/ani-rss</a>
+            </el-form-item>
+            <el-form-item label="版本号" v-loading="about.version.length < 1">
+              <div>
+                v{{ about.version }}
+                <div v-if="about.update">
+                  <br>
+                  <a href="https://github.com/wushuo894/ani-rss/releases/latest" target="_blank">有更新 v{{ about.latest }}</a>
+                </div>
+              </div>
+            </el-form-item>
+          </el-form>
+        </el-tab-pane>
       </el-tabs>
       <div style="display: flex;justify-content: end;width: 100%;">
         <el-button :loading="configButtonLoading" @click="editConfig">确定</el-button>
@@ -62,6 +81,7 @@ import {ElMessage} from "element-plus";
 
 const configDialogVisible = ref(false)
 const configButtonLoading = ref(false)
+const loading = ref(true)
 
 const config = ref({
   'rename': true,
@@ -73,6 +93,12 @@ const config = ref({
   'fileExist': true,
   'delete': false,
   'debug': false
+})
+
+const about = ref({
+  'version': '',
+  'latest': '',
+  'update': false
 })
 
 const showConfig = () => {
@@ -87,6 +113,17 @@ const showConfig = () => {
         }
         config.value = res.data
         configDialogVisible.value = true
+        loading.value = false
+      })
+  fetch('/api/about', {
+    'method': 'GET'
+  }).then(res => res.json())
+      .then(res => {
+        if (res.code !== 200) {
+          ElMessage.error(res.message)
+          return
+        }
+        about.value = res.data
       })
 }
 const editConfig = () => {
