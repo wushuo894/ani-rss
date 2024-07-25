@@ -13,6 +13,7 @@ import ani.rss.util.TorrentUtil;
 import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.core.util.ClassUtil;
 import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.core.util.ReUtil;
 import cn.hutool.core.util.ReflectUtil;
 import cn.hutool.http.HttpUtil;
 import cn.hutool.http.server.SimpleServer;
@@ -48,18 +49,16 @@ public class Main {
         log.info("version {}", version);
         ConfigUtil.load();
         AniUtil.load();
-        ThreadUtil.execute(server::start);
-
-
         // 处理旧图片
         for (Ani ani : AniAction.getAniList()) {
             String cover = ani.getCover();
-            if (!cover.startsWith("http")) {
+            if (!ReUtil.contains("http(s*)://", cover)) {
                 continue;
             }
             cover = AniUtil.saveJpg(cover);
             ani.setCover(cover);
         }
+        ThreadUtil.execute(server::start);
 
         ThreadUtil.execute(() -> {
             Config config = ConfigUtil.getCONFIG();
