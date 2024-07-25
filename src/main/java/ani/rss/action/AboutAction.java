@@ -45,10 +45,11 @@ public class AboutAction implements Action {
                         Document document = Jsoup.parse(body);
                         Elements elements = document.getElementsByTag("h1");
                         for (Element element : elements) {
-                            String trim = element.text().replace("v", "").trim();
-                            if (trim.startsWith("v")) {
-                                about.setUpdate(VersionComparator.INSTANCE.compare(trim, version) > 0)
-                                        .setLatest(trim);
+                            String latest = element.text().trim();
+                            if (latest.startsWith("v")) {
+                                latest = latest.replace("v", "").trim();
+                                about.setUpdate(VersionComparator.INSTANCE.compare(latest, version) > 0)
+                                        .setLatest(latest);
                             }
                         }
                     });
