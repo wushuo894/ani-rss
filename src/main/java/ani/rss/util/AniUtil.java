@@ -6,9 +6,8 @@ import cn.hutool.core.convert.Convert;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.text.StrFormatter;
-import cn.hutool.core.util.ReUtil;
-import cn.hutool.core.util.StrUtil;
-import cn.hutool.core.util.XmlUtil;
+import cn.hutool.core.util.*;
+import cn.hutool.http.HttpConnection;
 import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpResponse;
 import cn.hutool.http.HttpUtil;
@@ -91,6 +90,7 @@ public class AniUtil {
         String title = "无";
 
         String s = HttpRequest.get(url)
+                .setFollowRedirects(true)
                 .thenFunction(HttpResponse::body);
         Document document = XmlUtil.readXML(s);
         Node channel = document.getElementsByTagName("channel").item(0);
@@ -114,22 +114,30 @@ public class AniUtil {
                 .get("bangumiId");
 
 
-        String cover = HttpRequest.get("https://mikanime.tv/Home/Bangumi/" + bangumiId)
+        String cover = HttpRequest.get(URLUtil.getHost(URLUtil.url(url)) + "/Home/Bangumi/" + bangumiId)
+                .setFollowRedirects(true)
                 .thenFunction(res -> {
                     org.jsoup.nodes.Document html = Jsoup.parse(res.body());
                     Elements elementsByClass = html.getElementsByClass("bangumi-poster");
                     Element element = elementsByClass.get(0);
                     String style = element.attr("style");
                     String image = style.replace("background-image: url('", "").replace("');", "");
-                    return "https://mikanime.tv" + image;
+                    HttpConnection httpConnection = (HttpConnection) ReflectUtil.getFieldValue(res, "httpConnection");
+                    return URLUtil.getHost(httpConnection.getUrl()) + image;
                 });
+
+        String filename = new File(URLUtil.toURI(cover).getPath()).getName();
+        File configDir = ConfigUtil.getConfigDir();
+        FileUtil.mkdir(configDir + "/files/");
+        File file = new File(configDir + "/files/" + filename);
+        HttpUtil.downloadFile(cover, file);
 
         Ani ani = new Ani();
         ani.setOffset(0)
                 .setUrl(url.trim())
                 .setSeason(season)
                 .setTitle(title.trim())
-                .setCover(cover)
+                .setCover(filename)
                 .setExclude(List.of("720"));
 
         LOG.debug("获取到动漫信息 {}", JSONUtil.formatJsonStr(GSON.toJson(ani)));
@@ -247,6 +255,7 @@ public class AniUtil {
     public static List<Item> getItems(Ani ani) {
         String url = ani.getUrl();
         String s = HttpRequest.get(url)
+                .setFollowRedirects(true)
                 .thenFunction(HttpResponse::body);
         return getItems(ani, s);
     }
