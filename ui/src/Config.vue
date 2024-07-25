@@ -48,6 +48,22 @@
             </el-form-item>
           </el-form>
         </el-tab-pane>
+        <el-tab-pane label="代理设置">
+          <el-form style="max-width: 600px" label-width="auto"
+                   @submit="(event)=>{
+                      event.preventDefault()
+                   }">
+            <el-form-item label="启用">
+              <el-switch v-model:model-value="config.proxy"></el-switch>
+            </el-form-item>
+            <el-form-item label="IP">
+              <el-input v-model:model-value="config.proxyHost" :disabled="!config.proxy"></el-input>
+            </el-form-item>
+            <el-form-item label="端口">
+              <el-input-number v-model:model-value="config.proxyPort" :disabled="!config.proxy"></el-input-number>
+            </el-form-item>
+          </el-form>
+        </el-tab-pane>
         <el-tab-pane label="关于">
           <el-form style="max-width: 600px" label-width="auto"
                    @submit="(event)=>{
@@ -61,7 +77,9 @@
                 v{{ about.version }}
                 <div v-if="about.update">
                   <br>
-                  <a href="https://github.com/wushuo894/ani-rss/releases/latest" target="_blank">有更新 v{{ about.latest }}</a>
+                  <a href="https://github.com/wushuo894/ani-rss/releases/latest" target="_blank">有更新 v{{
+                      about.latest
+                    }}</a>
                 </div>
               </div>
             </el-form-item>
@@ -92,7 +110,10 @@ const config = ref({
   'downloadPath': '',
   'fileExist': true,
   'delete': false,
-  'debug': false
+  'debug': false,
+  'proxy': false,
+  'proxyHost': '',
+  'proxyPort': 8080
 })
 
 const about = ref({

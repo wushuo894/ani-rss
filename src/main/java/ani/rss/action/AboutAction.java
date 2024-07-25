@@ -2,6 +2,7 @@ package ani.rss.action;
 
 import ani.rss.annotation.Path;
 import ani.rss.entity.Result;
+import ani.rss.util.HttpReq;
 import ani.rss.util.MavenUtil;
 import cn.hutool.core.comparator.VersionComparator;
 import cn.hutool.core.io.IoUtil;
@@ -37,8 +38,7 @@ public class AboutAction implements Action {
                 .setUpdate(false)
                 .setLatest("");
         try {
-            HttpRequest.get("https://github.com/wushuo894/ani-rss/releases/latest")
-                    .setFollowRedirects(true)
+            HttpReq.get("https://github.com/wushuo894/ani-rss/releases/latest")
                     .timeout(3000)
                     .then(response -> {
                         String body = response.body();

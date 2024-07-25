@@ -57,7 +57,10 @@ public class ConfigUtil {
                 .setHost("")
                 .setUsername("")
                 .setPassword("")
-                .setDebug(false);
+                .setDebug(false)
+                .setProxy(false)
+                .setProxyHost("")
+                .setProxyPort(8080);
         File configFile = getConfigFile();
 
         if (!configFile.exists()) {

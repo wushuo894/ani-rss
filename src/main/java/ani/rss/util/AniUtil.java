@@ -8,7 +8,6 @@ import cn.hutool.core.lang.Assert;
 import cn.hutool.core.text.StrFormatter;
 import cn.hutool.core.util.*;
 import cn.hutool.http.HttpConnection;
-import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpResponse;
 import cn.hutool.http.HttpUtil;
 import cn.hutool.json.JSONUtil;
@@ -89,8 +88,7 @@ public class AniUtil {
         int season = 1;
         String title = "无";
 
-        String s = HttpRequest.get(url)
-                .setFollowRedirects(true)
+        String s = HttpReq.get(url)
                 .thenFunction(HttpResponse::body);
         Document document = XmlUtil.readXML(s);
         Node channel = document.getElementsByTagName("channel").item(0);
@@ -114,8 +112,7 @@ public class AniUtil {
                 .get("bangumiId");
 
 
-        String cover = HttpRequest.get(URLUtil.getHost(URLUtil.url(url)) + "/Home/Bangumi/" + bangumiId)
-                .setFollowRedirects(true)
+        String cover = HttpReq.get(URLUtil.getHost(URLUtil.url(url)) + "/Home/Bangumi/" + bangumiId)
                 .thenFunction(res -> {
                     org.jsoup.nodes.Document html = Jsoup.parse(res.body());
                     Elements elementsByClass = html.getElementsByClass("bangumi-poster");
@@ -161,7 +158,8 @@ public class AniUtil {
         if (file.exists()) {
             return dir + "/" + filename;
         }
-        HttpUtil.downloadFile(coverUrl, file);
+        HttpReq.get(coverUrl)
+                .then(res -> FileUtil.writeFromStream(res.bodyStream(), file));
         return dir + "/" + filename;
     }
 
@@ -264,8 +262,7 @@ public class AniUtil {
      */
     public static List<Item> getItems(Ani ani) {
         String url = ani.getUrl();
-        String s = HttpRequest.get(url)
-                .setFollowRedirects(true)
+        String s = HttpReq.get(url)
                 .thenFunction(HttpResponse::body);
         return getItems(ani, s);
     }
