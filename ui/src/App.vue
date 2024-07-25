@@ -11,7 +11,7 @@
       <el-button @click="config?.showConfig">设置</el-button>
     </div>
   </div>
-  <div style="margin: 0 10px">
+  <div style="margin: 0 10px;min-height: 500px" v-loading="loading">
     <el-card shadow="never"
              v-for="(item,index) in list.filter(it => it.title.indexOf(title) > -1 || it['pinyin'].indexOf(title) > -1).slice((currentPage-1)*pageSize,(currentPage-1)*pageSize+pageSize)"
              style="margin: 3px 0;">
@@ -54,7 +54,9 @@
     </el-card>
   </div>
   <div style="margin: 10px;">
-    <el-pagination background layout="prev, pager, next" :total="list.filter(it => it.title.indexOf(title) > -1 || it['pinyin'].indexOf(title) > -1).length" v-model:current-page="currentPage"
+    <el-pagination background layout="prev, pager, next"
+                   :total="list.filter(it => it.title.indexOf(title) > -1 || it['pinyin'].indexOf(title) > -1).length"
+                   v-model:current-page="currentPage"
                    :page-size="pageSize"/>
   </div>
 </template>
@@ -73,6 +75,7 @@ const add = ref()
 const edit = ref()
 const currentPage = ref(1)
 const pageSize = ref(10)
+const loading = ref(true)
 
 const delAni = (ani) => {
   fetch('/api/ani', {
@@ -102,6 +105,7 @@ const getList = () => {
           return
         }
         list.value = res.data
+        loading.value = false
       })
 }
 
