@@ -52,4 +52,19 @@ public class Config implements Serializable {
      * DEBUG
      */
     private Boolean debug;
+
+    /**
+     * 代理是否开启
+     */
+    private Boolean proxy;
+
+    /**
+     * 代理host
+     */
+    private String proxyHost;
+
+    /**
+     * 代理端口
+     */
+    private Integer proxyPort;
 }
