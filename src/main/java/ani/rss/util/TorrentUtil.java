@@ -11,12 +11,12 @@ import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpResponse;
+import cn.hutool.http.HttpUtil;
 import cn.hutool.json.JSONUtil;
 import cn.hutool.log.Log;
 import com.google.gson.*;
 
 import java.io.File;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -74,27 +74,23 @@ public class TorrentUtil {
      */
     public static synchronized void downloadAni(Ani ani, List<Item> items) {
         Config config = ConfigUtil.getCONFIG();
+        String downloadPath = config.getDownloadPath();
+
         Integer season = ani.getSeason();
         String title = ani.getTitle();
 
         List<TorrentsInfo> torrentsInfos = getTorrentsInfos();
 
-        File configDir = ConfigUtil.getConfigDir();
-        File torrents = new File(configDir + File.separator + "torrents");
-        FileUtil.mkdir(torrents);
-
         LOG.debug("{} 共 {} 个", title, items.size());
         for (Item item : items) {
             LOG.debug(JSONUtil.formatJsonStr(GSON.toJson(item)));
             String reName = item.getReName();
-            String torrent = item.getTorrent();
-            File torrentFile = new File(torrent);
-            File saveTorrentFile = new File(torrents + File.separator + torrentFile.getName());
+            File torrent = getTorrent(item);
 
             // 已经下载过
             Optional<TorrentsInfo> optionalTorrentsInfo = torrentsInfos.stream()
                     .filter(torrentsInfo ->
-                            StrUtil.equalsIgnoreCase(FileUtil.mainName(torrentFile), torrentsInfo.getHash())
+                            StrUtil.equalsIgnoreCase(FileUtil.mainName(torrent), torrentsInfo.getHash())
                     )
                     .findFirst();
             if (optionalTorrentsInfo.isPresent()) {
@@ -105,7 +101,7 @@ public class TorrentUtil {
                 continue;
             }
             // 已经下载过
-            if (saveTorrentFile.exists()) {
+            if (torrent.exists()) {
                 LOG.debug("种子记录已存在 {}", reName);
                 continue;
             }
@@ -116,17 +112,36 @@ public class TorrentUtil {
                 continue;
             }
             LOG.info("添加下载 {}", reName);
-            HttpRequest.get(torrent)
-                    .setFollowRedirects(true)
-                    .then(res -> {
-                        InputStream inputStream = res.bodyStream();
-                        FileUtil.writeFromStream(inputStream, saveTorrentFile);
-                    });
+            File saveTorrent = saveTorrent(item);
 
-            String downloadPath = config.getDownloadPath();
             String savePath = StrFormatter.format("{}/{}/Season {}", downloadPath, title, season);
-            download(reName, savePath, torrentFile);
+            download(reName, savePath, saveTorrent);
         }
+    }
+
+    public static File getTorrent(Item item) {
+        String torrent = item.getTorrent();
+
+        File configDir = ConfigUtil.getConfigDir();
+        File torrents = new File(configDir + File.separator + "torrents");
+        FileUtil.mkdir(torrents);
+        File torrentFile = new File(torrent);
+        return new File(torrents + File.separator + torrentFile.getName());
+    }
+
+    /**
+     * 下载种子文件
+     *
+     * @param item
+     */
+    public static File saveTorrent(Item item) {
+        String torrent = item.getTorrent();
+        String reName = item.getReName();
+
+        LOG.info("下载种子 {}", reName);
+        File saveTorrentFile = getTorrent(item);
+        HttpUtil.downloadFile(torrent, saveTorrentFile);
+        return saveTorrentFile;
     }
 
     /**
@@ -174,6 +189,9 @@ public class TorrentUtil {
                         JsonObject jsonObject = jsonElement.getAsJsonObject();
                         TorrentsInfo torrentsInfo = GSON.fromJson(jsonObject, TorrentsInfo.class);
                         String tags = torrentsInfo.getTags();
+                        if (StrUtil.isBlank(tags)) {
+                            continue;
+                        }
                         // 包含标签
                         if (StrUtil.split(tags, ",", true, true).contains("ani-rss")) {
                             torrentsInfoList.add(torrentsInfo);
@@ -204,14 +222,7 @@ public class TorrentUtil {
         }
 
         Integer season = ani.getSeason();
-        File configDir = ConfigUtil.getConfigDir();
-        File torrents = new File(configDir + File.separator + "torrents");
-        FileUtil.mkdir(torrents);
-
         String reName = item.getReName();
-        String torrent = item.getTorrent();
-        File torrentFile = new File(torrent);
-        File saveTorrentFile = new File(torrents + File.separator + torrentFile.getName());
 
         String savePath = downloadPath + File.separator + ani.getTitle() + "/Season " + season;
         List<File> files = new ArrayList<>();
@@ -231,8 +242,7 @@ public class TorrentUtil {
                 .anyMatch(file -> FileUtil.getPrefix(file).equals(reName))) {
             LOG.info("已下载 {}", reName);
             // 保存 torrent 下次只校验 torrent 是否存在 ， 可以将config设置到固态硬盘，防止一直唤醒机械硬盘
-            byte[] bytes = HttpRequest.get(torrent).thenFunction(HttpResponse::bodyBytes);
-            FileUtil.writeBytes(bytes, saveTorrentFile);
+            saveTorrent(item);
             return true;
         }
 
