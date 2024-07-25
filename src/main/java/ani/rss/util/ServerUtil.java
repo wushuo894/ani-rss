@@ -46,7 +46,7 @@ public class ServerUtil {
                         ((Action) action).doAction(req, res);
                     } catch (IllegalArgumentException e) {
                         res.setContentType("application/json; charset=utf-8");
-                        String json = gson.toJson(Result.error().setMessage("此订阅已存在"));
+                        String json = gson.toJson(Result.error().setMessage(e.getMessage()));
                         IoUtil.writeUtf8(res.getOut(), true, json);
                     } catch (Exception e) {
                         log.error("{} {}", urlPath, e.getMessage());
