@@ -6,7 +6,7 @@
 
     <groupId>ani.rss</groupId>
     <artifactId>ani-rss</artifactId>
-    <version>1.0.20</version>
+    <version>1.0.21</version>
 
     <properties>
         <maven.compiler.source>11</maven.compiler.source>
@@ -15,6 +15,11 @@
     </properties>
 
     <dependencies>
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <version>1.5.6</version>
+        </dependency>
         <dependency>
             <groupId>io.github.biezhi</groupId>
             <artifactId>TinyPinyin</artifactId>

@@ -1,22 +1,27 @@
 package ani.rss.util;
 
 import ani.rss.entity.Config;
+import ch.qos.logback.classic.LoggerContext;
+import ch.qos.logback.classic.joran.JoranConfigurator;
+import ch.qos.logback.core.joran.spi.JoranException;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.bean.copier.CopyOptions;
 import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.io.resource.ResourceUtil;
 import cn.hutool.json.JSONUtil;
-import cn.hutool.log.Log;
-import cn.hutool.log.dialect.console.ConsoleLog;
-import cn.hutool.log.level.Level;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
+import org.slf4j.LoggerFactory;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
+@Slf4j
 public class ConfigUtil {
-    private static final Log LOG = Log.get(ConfigUtil.class);
 
     @Getter
     private static final Config CONFIG = new Config();
@@ -70,13 +75,8 @@ public class ConfigUtil {
         BeanUtil.copyProperties(GSON.fromJson(s, Config.class), CONFIG, CopyOptions
                 .create()
                 .setIgnoreNullValue(true));
-        Boolean debug = CONFIG.getDebug();
-        if (debug) {
-            ConsoleLog.setLevel(Level.DEBUG);
-        } else {
-            ConsoleLog.setLevel(Level.INFO);
-        }
-        LOG.debug("加载配置文件 {}", configFile);
+        loadLogback();
+        log.debug("加载配置文件 {}", configFile);
     }
 
     /**
@@ -86,12 +86,32 @@ public class ConfigUtil {
         File configFile = getConfigFile();
         String json = GSON.toJson(CONFIG);
         FileUtil.writeUtf8String(JSONUtil.formatJsonStr(json), configFile);
-        Boolean debug = CONFIG.getDebug();
-        if (debug) {
-            ConsoleLog.setLevel(Level.DEBUG);
-        } else {
-            ConsoleLog.setLevel(Level.INFO);
+        loadLogback();
+        log.debug("保存配置 {}", configFile);
+    }
+
+    public static void loadLogback() {
+        LoggerContext context = (LoggerContext) LoggerFactory.getILoggerFactory();
+
+        try {
+            String s = ResourceUtil.readUtf8Str("logback.xml.template");
+            s = s.replace("${config}", ConfigUtil.getConfigDir().toString() + "/");
+            Boolean debug = CONFIG.getDebug();
+            if (debug) {
+                s = s.replace("${level}", "debug");
+            } else {
+                s = s.replace("${level}", "info");
+            }
+
+            JoranConfigurator configurator = new JoranConfigurator();
+            configurator.setContext(context);
+            context.reset();
+
+            ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(s.getBytes(StandardCharsets.UTF_8));
+            configurator.doConfigure(byteArrayInputStream);
+        } catch (JoranException e) {
+            log.error(e.getMessage());
+            log.debug(String.valueOf(e));
         }
-        LOG.debug("保存配置 {}", configFile);
     }
 }

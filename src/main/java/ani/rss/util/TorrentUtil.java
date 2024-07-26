@@ -13,8 +13,8 @@ import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpResponse;
 import cn.hutool.http.HttpUtil;
 import cn.hutool.json.JSONUtil;
-import cn.hutool.log.Log;
 import com.google.gson.*;
+import lombok.extern.slf4j.Slf4j;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -22,9 +22,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
+@Slf4j
 public class TorrentUtil {
-
-    private static final Log LOG = Log.get(TorrentUtil.class);
 
     private static final Gson GSON = new GsonBuilder()
             .disableHtmlEscaping()
@@ -44,7 +43,7 @@ public class TorrentUtil {
 
         if (StrUtil.isBlank(host) || StrUtil.isBlank(username)
                 || StrUtil.isBlank(password) || StrUtil.isBlank(downloadPath)) {
-            LOG.warn("qBittorrent 未配置完成");
+            log.warn("qBittorrent 未配置完成");
             return false;
         }
 
@@ -55,13 +54,13 @@ public class TorrentUtil {
                     .setFollowRedirects(true)
                     .thenFunction(res -> {
                         if (!res.isOk() || !res.body().equals("Ok.")) {
-                            LOG.error("登录 qBittorrent 失败");
+                            log.error("登录 qBittorrent 失败");
                             return false;
                         }
                         return true;
                     });
         } catch (Exception e) {
-            LOG.error("登录 qBittorrent 失败 {}", e.getMessage());
+            log.error("登录 qBittorrent 失败 {}", e.getMessage());
         }
         return false;
     }
@@ -81,9 +80,9 @@ public class TorrentUtil {
 
         List<TorrentsInfo> torrentsInfos = getTorrentsInfos();
 
-        LOG.debug("{} 共 {} 个", title, items.size());
+        log.debug("{} 共 {} 个", title, items.size());
         for (Item item : items) {
-            LOG.debug(JSONUtil.formatJsonStr(GSON.toJson(item)));
+            log.debug(JSONUtil.formatJsonStr(GSON.toJson(item)));
             String reName = item.getReName();
             File torrent = getTorrent(item);
 
@@ -94,7 +93,7 @@ public class TorrentUtil {
                     )
                     .findFirst();
             if (optionalTorrentsInfo.isPresent()) {
-                LOG.info("已有下载任务 {}", reName);
+                log.info("已有下载任务 {}", reName);
                 TorrentsInfo torrentsInfo = optionalTorrentsInfo.get();
                 rename(torrentsInfo, reName);
                 delete(torrentsInfo);
@@ -102,16 +101,16 @@ public class TorrentUtil {
             }
             // 已经下载过
             if (torrent.exists()) {
-                LOG.debug("种子记录已存在 {}", reName);
+                log.debug("种子记录已存在 {}", reName);
                 continue;
             }
 
             // 未开启rename不进行检测
             if (itemDownloaded(ani, item)) {
-                LOG.debug("本地文件已存在 {}", reName);
+                log.debug("本地文件已存在 {}", reName);
                 continue;
             }
-            LOG.info("添加下载 {}", reName);
+            log.info("添加下载 {}", reName);
             File saveTorrent = saveTorrent(item);
 
             String savePath = StrFormatter.format("{}/{}/Season {}", downloadPath, title, season);
@@ -138,7 +137,7 @@ public class TorrentUtil {
         String torrent = item.getTorrent();
         String reName = item.getReName();
 
-        LOG.info("下载种子 {}", reName);
+        log.info("下载种子 {}", reName);
         File saveTorrentFile = getTorrent(item);
         HttpUtil.downloadFile(torrent, saveTorrentFile);
         return saveTorrentFile;
@@ -240,7 +239,7 @@ public class TorrentUtil {
                 .filter(File::isFile)
                 .filter(file -> List.of("mp4", "mkv", "avi").contains(FileUtil.extName(file)))
                 .anyMatch(file -> FileUtil.getPrefix(file).equals(reName))) {
-            LOG.info("已下载 {}", reName);
+            log.info("已下载 {}", reName);
             // 保存 torrent 下次只校验 torrent 是否存在 ， 可以将config设置到固态硬盘，防止一直唤醒机械硬盘
             saveTorrent(item);
             return true;
@@ -266,7 +265,7 @@ public class TorrentUtil {
         String name = torrentsInfo.getName();
         // 下载完成后自动删除任务
         if (EnumUtil.equals(state, TorrentsInfo.State.pausedUP.name())) {
-            LOG.info("删除已完成任务 {}", name);
+            log.info("删除已完成任务 {}", name);
             HttpRequest.post(host + "/api/v2/torrents/delete")
                     .form("hashes", hash)
                     .form("deleteFiles", false)
@@ -331,7 +330,7 @@ public class TorrentUtil {
                 continue;
             }
 
-            LOG.info("重命名 {} ==> {}", name, newPath);
+            log.info("重命名 {} ==> {}", name, newPath);
 
             HttpRequest.post(host + "/api/v2/torrents/renameFile")
                     .form("hash", hash)

@@ -10,15 +10,15 @@ import cn.hutool.core.util.ReUtil;
 import cn.hutool.http.server.HttpServerRequest;
 import cn.hutool.http.server.HttpServerResponse;
 import cn.hutool.http.server.action.Action;
-import cn.hutool.log.Log;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
 
+@Slf4j
 @Path("/rss")
 public class RssAction implements Action {
-    private final Log log = Log.get(RssAction.class);
     private final Gson gson = new GsonBuilder()
             .disableHtmlEscaping()
             .create();
