@@ -17,10 +17,12 @@ import cn.hutool.http.server.action.Action;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
 import java.util.Optional;
 
+@Slf4j
 @Path("/ani")
 public class AniAction implements Action {
     @Getter

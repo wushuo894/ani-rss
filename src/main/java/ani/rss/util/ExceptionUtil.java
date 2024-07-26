@@ -1,0 +1,22 @@
+package ani.rss.util;
+
+import java.util.Map;
+
+public class ExceptionUtil {
+    public static final Map<String, String> messageMap = Map.of(
+            "SocketTimeoutException", "网络连接超时",
+            "UnknownHostException", "DNS 解析出错"
+    );
+
+    public static synchronized String getMessage(Exception e) {
+        String message = e.getMessage();
+        for (Map.Entry<String, String> item : messageMap.entrySet()) {
+            String key = item.getKey();
+            String value = item.getValue();
+            if (message.startsWith(key + ":")) {
+                message = value;
+            }
+        }
+        return message;
+    }
+}

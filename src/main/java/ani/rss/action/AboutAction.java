@@ -6,23 +6,22 @@ import ani.rss.util.HttpReq;
 import ani.rss.util.MavenUtil;
 import cn.hutool.core.comparator.VersionComparator;
 import cn.hutool.core.io.IoUtil;
-import cn.hutool.http.HttpRequest;
 import cn.hutool.http.server.HttpServerRequest;
 import cn.hutool.http.server.HttpServerResponse;
 import cn.hutool.http.server.action.Action;
-import cn.hutool.log.Log;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import lombok.Data;
 import lombok.experimental.Accessors;
+import lombok.extern.slf4j.Slf4j;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+@Slf4j
 @Path("/about")
 public class AboutAction implements Action {
-    private final Log log = Log.get(AboutAction.class);
 
     private final Gson gson = new GsonBuilder()
             .disableHtmlEscaping()
@@ -55,7 +54,7 @@ public class AboutAction implements Action {
                     });
         } catch (Exception e) {
             log.error(e.getMessage());
-            log.debug(e);
+            log.debug(e.getMessage(), e);
         }
 
         String json = gson.toJson(Result.success().setData(about));

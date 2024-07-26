@@ -4,17 +4,16 @@ import ani.rss.Main;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.util.ReUtil;
-import cn.hutool.core.util.StrUtil;
-import cn.hutool.log.Log;
 import lombok.Cleanup;
+import lombok.extern.slf4j.Slf4j;
 
 import java.io.File;
 import java.io.InputStream;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
+@Slf4j
 public class MavenUtil {
-    private static final Log log = Log.get(MavenUtil.class);
     private static String version = "None";
 
     public static synchronized String getVersion() {
@@ -34,7 +33,7 @@ public class MavenUtil {
                 return version;
             }
         } catch (Exception e) {
-            log.error(e);
+            log.error(e.getMessage(), e);
         }
         File file = new File("pom.xml");
         if (file.exists()) {

@@ -8,8 +8,8 @@ import cn.hutool.core.util.URLUtil;
 import cn.hutool.http.server.HttpServerRequest;
 import cn.hutool.http.server.HttpServerResponse;
 import cn.hutool.http.server.action.Action;
-import cn.hutool.log.Log;
 import lombok.Cleanup;
+import lombok.extern.slf4j.Slf4j;
 
 import java.io.File;
 import java.io.InputStream;
@@ -22,6 +22,7 @@ import java.util.jar.JarFile;
 /**
  * 网页处理
  */
+@Slf4j
 public class RootAction implements Action {
 
     private static final String DEFAULT_INDEX_FILE_NAME = "index.html";
@@ -29,8 +30,6 @@ public class RootAction implements Action {
     private final String rootDir;
 
     private final List<String> indexFileNames;
-
-    private static final Log LOG = Log.get(RootAction.class);
 
     public RootAction() {
         this("dist", DEFAULT_INDEX_FILE_NAME);
@@ -57,7 +56,7 @@ public class RootAction implements Action {
     }
 
     public Boolean file(HttpServerResponse response, String fileName, Boolean index) {
-        LOG.debug(fileName);
+        log.debug(fileName);
         try {
             EnumerationIter<URL> resourceIter = ResourceUtil.getResourceIter(fileName);
             for (URL url : resourceIter) {
@@ -92,7 +91,7 @@ public class RootAction implements Action {
                 }
             }
         } catch (Exception e) {
-            LOG.error(e);
+            log.error(e.getMessage(), e);
         }
         return false;
     }
