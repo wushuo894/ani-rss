@@ -41,3 +41,5 @@ build/
 config.json
 ani.json
 files
+logs
+*.log

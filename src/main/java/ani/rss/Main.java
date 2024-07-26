@@ -1,41 +1,22 @@
 package ani.rss;
 
 import ani.rss.action.AniAction;
-import ani.rss.action.RootAction;
-import ani.rss.annotation.Path;
 import ani.rss.entity.Ani;
 import ani.rss.entity.Config;
 import ani.rss.entity.Item;
-import ani.rss.entity.Result;
 import ani.rss.util.*;
-import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.thread.ThreadUtil;
-import cn.hutool.core.util.ClassUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.ReUtil;
-import cn.hutool.core.util.ReflectUtil;
-import cn.hutool.http.HttpUtil;
-import cn.hutool.http.server.HttpServerRequest;
-import cn.hutool.http.server.HttpServerResponse;
-import cn.hutool.http.server.SimpleServer;
-import cn.hutool.http.server.action.Action;
-import cn.hutool.log.Log;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import lombok.extern.slf4j.Slf4j;
 
-import java.io.IOException;
 import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
+@Slf4j
 public class Main {
-    private static final Log LOG = Log.get(Main.class);
 
     public static void main(String[] args) {
-        String version = MavenUtil.getVersion();
-        LOG.info("version {}", version);
         ConfigUtil.load();
         AniUtil.load();
         // 处理旧图片
@@ -49,6 +30,8 @@ public class Main {
             AniUtil.sync();
         }
         ThreadUtil.execute(() -> ServerUtil.create().start());
+        String version = MavenUtil.getVersion();
+        log.info("version {}", version);
 
         ThreadUtil.execute(() -> {
             Config config = ConfigUtil.getCONFIG();
@@ -64,8 +47,9 @@ public class Main {
                         List<Item> items = AniUtil.getItems(ani);
                         TorrentUtil.downloadAni(ani, items);
                     } catch (Exception e) {
-                        LOG.error("{} {}", ani.getTitle(), e.getMessage());
-                        LOG.debug(e);
+                        String message = ExceptionUtil.getMessage(e);
+                        log.error("{} {}", ani.getTitle(), message);
+                        log.debug(e.getMessage(), e);
                     }
                     // 避免短时间频繁请求导致流控
                     ThreadUtil.sleep(500);

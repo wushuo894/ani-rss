@@ -11,12 +11,12 @@ import cn.hutool.http.HttpConnection;
 import cn.hutool.http.HttpResponse;
 import cn.hutool.http.HttpUtil;
 import cn.hutool.json.JSONUtil;
-import cn.hutool.log.Log;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
@@ -30,8 +30,8 @@ import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.stream.Collectors;
 
+@Slf4j
 public class AniUtil {
-    private static final Log LOG = Log.get(AniUtil.class);
 
     private static final Gson GSON = new GsonBuilder()
             .disableHtmlEscaping()
@@ -65,7 +65,7 @@ public class AniUtil {
             Ani ani = GSON.fromJson(jsonElement, Ani.class);
             ANI_LIST.add(ani);
         }
-        LOG.debug("加载订阅 共{}项", ANI_LIST.size());
+        log.debug("加载订阅 共{}项", ANI_LIST.size());
     }
 
     /**
@@ -75,7 +75,7 @@ public class AniUtil {
         File configFile = getAniFile();
         String json = GSON.toJson(ANI_LIST);
         FileUtil.writeUtf8String(JSONUtil.formatJsonStr(json), configFile);
-        LOG.debug("保存订阅 {}", configFile);
+        log.debug("保存订阅 {}", configFile);
     }
 
     /**
@@ -133,10 +133,10 @@ public class AniUtil {
                 .setCover(saveJpg)
                 .setExclude(List.of("720"));
 
-        LOG.debug("获取到动漫信息 {}", JSONUtil.formatJsonStr(GSON.toJson(ani)));
+        log.debug("获取到动漫信息 {}", JSONUtil.formatJsonStr(GSON.toJson(ani)));
 
         List<Item> items = getItems(ani, s);
-        LOG.debug("获取到视频 共{}个", items.size());
+        log.debug("获取到视频 共{}个", items.size());
         if (items.isEmpty()) {
             return ani;
         }
@@ -144,7 +144,7 @@ public class AniUtil {
                 .map(Item::getEpisode)
                 .min(Comparator.comparingInt(i -> i))
                 .get() - 1);
-        LOG.debug("自动获取到剧集偏移为 {}", offset);
+        log.debug("自动获取到剧集偏移为 {}", offset);
         return ani.setOffset(offset);
     }
 
@@ -245,8 +245,8 @@ public class AniUtil {
                                 );
                         return true;
                     } catch (Exception e) {
-                        LOG.error("解析rss视频集次出现问题");
-                        LOG.error(e);
+                        log.error("解析rss视频集次出现问题");
+                        log.error(e.getMessage(), e);
                     }
                     return false;
                 }).collect(Collectors.toList());
