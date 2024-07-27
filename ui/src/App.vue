@@ -12,23 +12,23 @@
     </div>
   </div>
   <div style="margin: 0 10px;min-height: 500px" v-loading="loading">
-    <el-card shadow="never"
-             v-for="(item,index) in searchList().slice((currentPage-1)*pageSize,(currentPage-1)*pageSize+pageSize)"
-             style="margin: 3px 0;">
-      <div style="display: flex;width: 100%;">
-        <img :src="'/api/file?filename='+item['cover']" height="130" width="92" :alt="item.title">
-        <div style="flex-grow: 1;position: relative;">
-          <div style="margin-left: 10px;">
-            <div style="
+    <div class="grid-container">
+      <div v-for="(item,index) in searchList().slice((currentPage-1)*pageSize,(currentPage-1)*pageSize+pageSize)">
+        <el-card shadow="never">
+          <div style="display: flex;width: 100%;">
+            <img :src="'/api/file?filename='+item['cover']" height="130" width="92" :alt="item.title">
+            <div style="flex-grow: 1;position: relative;">
+              <div style="margin-left: 10px;">
+                <div style="
               font-size: 0.97em;
               line-height: 1.6;
               font-weight: 500;
               hyphens: auto;
               letter-spacing: .0125em;
               min-width: 0;">
-              {{ item.title }}
-            </div>
-            <div style="
+                  {{ item.title }}
+                </div>
+                <div style="
             color: #9e9e9e !important;
             font-size: .75rem !important;
             font-weight: 400;
@@ -36,33 +36,37 @@
             letter-spacing: .0333333333em !important;
             font-family: Roboto, sans-serif;
             text-transform: none !important;">{{ item.url }}
+                </div>
+              </div>
+              <div
+                  style="display: flex;align-items: flex-end;justify-content:flex-end; flex-direction: column;position: absolute;right: 0;bottom: 0;">
+                <el-button @click="edit?.showEdit(item)">编辑
+                </el-button>
+                <div style="height: 5px;"></div>
+                <el-popconfirm title="你确定要删除吗?" @confirm="delAni(item)">
+                  <template #reference>
+                    <el-button>删除</el-button>
+                  </template>
+                </el-popconfirm>
+              </div>
             </div>
           </div>
-          <div
-              style="display: flex;align-items: flex-end;justify-content:flex-end; flex-direction: column;position: absolute;right: 0;bottom: 0;">
-            <el-button @click="edit?.showEdit(item)">编辑
-            </el-button>
-            <div style="height: 5px;"></div>
-            <el-popconfirm title="你确定要删除吗?" @confirm="delAni(item)">
-              <template #reference>
-                <el-button>删除</el-button>
-              </template>
-            </el-popconfirm>
-          </div>
-        </div>
+        </el-card>
       </div>
-    </el-card>
+    </div>
   </div>
   <div style="margin: 10px;">
-    <el-pagination background layout="prev, pager, next"
+    <el-pagination background layout="prev, pager, next, sizes"
                    :total="searchList().length"
                    v-model:current-page="currentPage"
-                   :page-size="pageSize"/>
+                   v-model:page-size="pageSize"
+                   :page-sizes="[10, 20, 40, 80, 160]"
+                   @update:pageSize="updatePageSize"/>
   </div>
 </template>
 
 <script setup>
-import {ref} from "vue";
+import {onMounted, ref} from "vue";
 import {ElMessage} from 'element-plus'
 import Config from "./Config.vue";
 import Edit from "./Edit.vue";
@@ -76,6 +80,11 @@ const edit = ref()
 const currentPage = ref(1)
 const pageSize = ref(10)
 const loading = ref(true)
+
+const updatePageSize = (size) => {
+  window.localStorage.setItem('pageSize', size.toString())
+  currentPage.value = 1
+}
 
 const searchList = () => {
   const text = title.value.trim()
@@ -131,6 +140,23 @@ const getList = () => {
 }
 
 getList()
+
+onMounted(() => {
+  pageSize.value = Number.parseInt(window.localStorage.getItem('pageSize'))
+
+  function updateGridLayout() {
+    const gridContainer = document.querySelector('.grid-container');
+    if (!gridContainer) {
+      return
+    }
+    const windowWidth = window.innerWidth;
+    const itemsPerRow = Math.max(1, Math.floor(windowWidth / 400));
+    gridContainer.style.gridTemplateColumns = `repeat(${itemsPerRow}, 1fr)`;
+  }
+
+  window.addEventListener('resize', updateGridLayout);
+  updateGridLayout();
+})
 
 </script>
 
