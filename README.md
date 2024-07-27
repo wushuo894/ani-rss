@@ -35,8 +35,6 @@
 
     docker run -d --name ani-rss -v ./config:/config -p 7789:7789 -e PORT="7789" -e CONFIG="/config" -e TZ=Asia/Shanghai --restart always wushuo894/ani-rss
 
----
-
 | 参数     | 作用       | 默认值           |
 |--------|----------|---------------|
 | PORT   | 端口号      | 9877          |
