@@ -45,7 +45,7 @@
                 <div style="height: 5px;"></div>
                 <el-popconfirm title="你确定要删除吗?" @confirm="delAni(item)">
                   <template #reference>
-                    <el-button>删除</el-button>
+                    <el-button :loading="item['deleteLoading']">删除</el-button>
                   </template>
                 </el-popconfirm>
               </div>
@@ -108,12 +108,14 @@ const searchList = () => {
 }
 
 const delAni = (ani) => {
+  ani['deleteLoading'] = true
   fetch('/api/ani', {
     'method': 'DELETE',
     'body': JSON.stringify(ani)
   })
       .then(res => res.json())
       .then(res => {
+        ani['deleteLoading'] = false
         if (res.code !== 200) {
           ElMessage.error(res.message)
           getList()
