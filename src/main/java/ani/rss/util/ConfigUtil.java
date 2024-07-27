@@ -7,6 +7,7 @@ import ch.qos.logback.core.joran.spi.JoranException;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.bean.copier.CopyOptions;
 import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.io.resource.ResourceUtil;
 import cn.hutool.json.JSONUtil;
 import com.google.gson.Gson;
@@ -93,7 +94,7 @@ public class ConfigUtil {
 
     public static void loadLogback() {
         LoggerContext context = (LoggerContext) LoggerFactory.getILoggerFactory();
-
+        ByteArrayInputStream byteArrayInputStream = null;
         try {
             String s = ResourceUtil.readUtf8Str("logback.xml.template");
             s = s.replace("${config}", ConfigUtil.getConfigDir().toString() + "/");
@@ -108,12 +109,13 @@ public class ConfigUtil {
             configurator.setContext(context);
             context.reset();
 
-            @Cleanup
-            ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(s.getBytes(StandardCharsets.UTF_8));
+            byteArrayInputStream = new ByteArrayInputStream(s.getBytes(StandardCharsets.UTF_8));
             configurator.doConfigure(byteArrayInputStream);
-        } catch (JoranException e) {
+        } catch (Exception e) {
             log.error(e.getMessage());
             log.debug(String.valueOf(e));
+        } finally {
+            IoUtil.close(byteArrayInputStream);
         }
     }
 }
