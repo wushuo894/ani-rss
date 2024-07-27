@@ -11,6 +11,7 @@ import cn.hutool.core.io.resource.ResourceUtil;
 import cn.hutool.json.JSONUtil;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import lombok.Cleanup;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.LoggerFactory;
@@ -107,6 +108,7 @@ public class ConfigUtil {
             configurator.setContext(context);
             context.reset();
 
+            @Cleanup
             ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(s.getBytes(StandardCharsets.UTF_8));
             configurator.doConfigure(byteArrayInputStream);
         } catch (JoranException e) {
