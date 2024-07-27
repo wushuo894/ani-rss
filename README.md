@@ -18,7 +18,7 @@
 - [x] 支持拼音排序与搜索
 - [x] 支持自定义代理
 
-![1.png](https://github.com/wushuo894/ani-rss/raw/master/image/1.png)
+![1.jpg](https://github.com/wushuo894/ani-rss/raw/master/image/1.jpg)
 
 ### docker 部署
 

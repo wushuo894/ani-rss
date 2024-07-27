@@ -14,9 +14,14 @@ body {
     }
 }
 
-
 @media (min-width: 450px) {
     .el-dialog {
         --el-dialog-width: 500px;
     }
+}
+
+.grid-container{
+    display: grid;
+    grid-gap: 5px;
+    width: 100%;
 }
