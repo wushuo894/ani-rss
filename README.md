@@ -1,11 +1,17 @@
-# ANI-RSS
+<h1 align="center">ANI-RSS</h1>
+<p align="center"><strong>自动订阅下载蜜柑RSS动漫</strong></p>
+
+<div align="center">
+
+![GitHub License](https://img.shields.io/github/license/wushuo894/ani-rss)
 
 [![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/wushuo894/ani-rss/maven.yml?branch=master)](https://github.com/wushuo894/ani-rss/actions/workflows/maven.yml)
 [![GitHub release (latest SemVer)](https://img.shields.io/github/v/release/wushuo894/ani-rss?color=blue&label=download&sort=semver)](https://github.com/wushuo894/ani-rss/releases/latest)
 [![GitHub all releases](https://img.shields.io/github/downloads/wushuo894/ani-rss/total?color=blue&label=github%20downloads)](https://github.com/wushuo894/ani-rss/releases)
 [![Docker Pulls](https://img.shields.io/docker/pulls/wushuo894/ani-rss)](https://hub.docker.com/r/wushuo894/ani-rss)
 
-自动订阅下载蜜柑RSS动漫
+</div>
+
 
 ### 实现功能
 
