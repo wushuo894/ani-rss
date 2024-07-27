@@ -47,7 +47,7 @@ jobs:
           context: ./
           file: ./Dockerfile.tpl
           push: true
-          tags: wushuo894/ani-rss:${{ env.version }}
+          tags: wushuo894/ani-rss:latest
       - name: DockerHub Description
         uses: peter-evans/dockerhub-description@v4.0.0
         env:
