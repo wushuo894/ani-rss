@@ -75,7 +75,7 @@ public class ConfigUtil {
         BeanUtil.copyProperties(GSON.fromJson(s, Config.class), CONFIG, CopyOptions
                 .create()
                 .setIgnoreNullValue(true));
-        loadLogback();
+        LogUtil.loadLogback();
         log.debug("加载配置文件 {}", configFile);
     }
 
@@ -86,34 +86,8 @@ public class ConfigUtil {
         File configFile = getConfigFile();
         String json = GSON.toJson(CONFIG);
         FileUtil.writeUtf8String(JSONUtil.formatJsonStr(json), configFile);
-        loadLogback();
+        LogUtil.loadLogback();
         log.debug("保存配置 {}", configFile);
     }
 
-    public static void loadLogback() {
-        LoggerContext context = (LoggerContext) LoggerFactory.getILoggerFactory();
-        ByteArrayInputStream byteArrayInputStream = null;
-        try {
-            String s = ResourceUtil.readUtf8Str("logback.xml.template");
-            s = s.replace("${config}", ConfigUtil.getConfigDir().toString() + "/");
-            Boolean debug = CONFIG.getDebug();
-            if (debug) {
-                s = s.replace("${level}", "debug");
-            } else {
-                s = s.replace("${level}", "info");
-            }
-
-            JoranConfigurator configurator = new JoranConfigurator();
-            configurator.setContext(context);
-            context.reset();
-
-            byteArrayInputStream = new ByteArrayInputStream(s.getBytes(StandardCharsets.UTF_8));
-            configurator.doConfigure(byteArrayInputStream);
-        } catch (Exception e) {
-            log.error(e.getMessage());
-            log.debug(String.valueOf(e));
-        } finally {
-            IoUtil.close(byteArrayInputStream);
-        }
-    }
 }

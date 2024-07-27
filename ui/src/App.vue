@@ -2,13 +2,15 @@
   <Config ref="config"></Config>
   <Add ref="add" @load="getList"></Add>
   <Edit ref="edit" @load="getList"></Edit>
-  <div style="display: flex;justify-content: space-between;width: 100%;">
+  <Logs ref="logs"></Logs>
+  <div id="header">
     <div style="margin: 10px;">
       <el-input v-model:model-value="title" placeholder="搜索" @input="currentPage = 1"></el-input>
     </div>
-    <div style="margin: 10px;">
+    <div style="margin: 10px;display: flex;justify-content: flex-end;">
       <el-button @click="add?.showAdd">添加</el-button>
       <el-button @click="config?.showConfig">设置</el-button>
+      <el-button @click="logs?.showLogs">日志</el-button>
     </div>
   </div>
   <div style="margin: 0 10px;min-height: 500px" v-loading="loading">
@@ -71,12 +73,14 @@ import {ElMessage} from 'element-plus'
 import Config from "./Config.vue";
 import Edit from "./Edit.vue";
 import Add from "./Add.vue";
+import Logs from "./Logs.vue";
 
 const title = ref('')
 
 const config = ref()
 const add = ref()
 const edit = ref()
+const logs = ref()
 const currentPage = ref(1)
 const pageSize = ref(10)
 const loading = ref(true)
