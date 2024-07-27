@@ -25,3 +25,10 @@ body {
     grid-gap: 5px;
     width: 100%;
 }
+
+@media (min-width: 450px) {
+    #header{
+        display: flex;justify-content: space-between;width: 100%;
+    }
+}
+
