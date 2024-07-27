@@ -13,7 +13,7 @@
   </div>
   <div style="margin: 0 10px;min-height: 500px" v-loading="loading">
     <el-card shadow="never"
-             v-for="(item,index) in list.filter(it => it.title.indexOf(title) > -1 || it['pinyin'].indexOf(title) > -1).slice((currentPage-1)*pageSize,(currentPage-1)*pageSize+pageSize)"
+             v-for="(item,index) in searchList().slice((currentPage-1)*pageSize,(currentPage-1)*pageSize+pageSize)"
              style="margin: 3px 0;">
       <div style="display: flex;width: 100%;">
         <img :src="'/api/file?filename='+item['cover']" height="130" width="92" :alt="item.title">
@@ -55,7 +55,7 @@
   </div>
   <div style="margin: 10px;">
     <el-pagination background layout="prev, pager, next"
-                   :total="list.filter(it => it.title.indexOf(title) > -1 || it['pinyin'].indexOf(title) > -1).length"
+                   :total="searchList().length"
                    v-model:current-page="currentPage"
                    :page-size="pageSize"/>
   </div>
@@ -76,6 +76,27 @@ const edit = ref()
 const currentPage = ref(1)
 const pageSize = ref(10)
 const loading = ref(true)
+
+const searchList = () => {
+  const text = title.value.trim()
+  if (text.length < 1) {
+    return list.value
+  }
+  return list.value
+      .filter(it => {
+        if (it['title'].toString().indexOf(text) > -1) {
+          return true
+        }
+        let pinyin = it['pinyin']
+        if (pinyin.indexOf(text) > -1) {
+          return true
+        }
+        if (pinyin.replaceAll(' ', '').indexOf(text.replaceAll(' ', '')) > -1) {
+          return true
+        }
+        return pinyin.split(' ').map(s => s.substring(0, 1)).join('').indexOf(text) > -1;
+      });
+}
 
 const delAni = (ani) => {
   fetch('/api/ani', {
