@@ -142,7 +142,10 @@ const getList = () => {
 getList()
 
 onMounted(() => {
-  pageSize.value = Number.parseInt(window.localStorage.getItem('pageSize'))
+  let size = window.localStorage.getItem('pageSize')
+  if (size) {
+    pageSize.value = Number.parseInt(size)
+  }
 
   function updateGridLayout() {
     const gridContainer = document.querySelector('.grid-container');
