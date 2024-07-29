@@ -22,7 +22,7 @@ public class LogUtil {
         LoggerContext context = (LoggerContext) LoggerFactory.getILoggerFactory();
         ByteArrayInputStream byteArrayInputStream = null;
         try {
-            String s = ResourceUtil.readUtf8Str("logback.xml.template");
+            String s = ResourceUtil.readUtf8Str("logback-template.xml");
             s = s.replace("${config}", ConfigUtil.getConfigDir() + "/");
             if (debug) {
                 s = s.replace("${level}", "debug");
