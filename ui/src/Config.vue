@@ -76,7 +76,6 @@
               <div>
                 v{{ about.version }}
                 <div v-if="about.update">
-                  <br>
                   <a href="https://github.com/wushuo894/ani-rss/releases/latest" target="_blank">有更新 v{{
                       about.latest
                     }}</a>
