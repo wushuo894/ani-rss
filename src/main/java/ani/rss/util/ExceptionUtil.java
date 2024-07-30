@@ -1,5 +1,7 @@
 package ani.rss.util;
 
+import cn.hutool.core.util.StrUtil;
+
 import java.util.Map;
 
 public class ExceptionUtil {
@@ -10,6 +12,9 @@ public class ExceptionUtil {
 
     public static synchronized String getMessage(Exception e) {
         String message = e.getMessage();
+        if (StrUtil.isBlank(message)) {
+            return "";
+        }
         for (Map.Entry<String, String> item : messageMap.entrySet()) {
             String key = item.getKey();
             String value = item.getValue();

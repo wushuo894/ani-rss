@@ -35,22 +35,21 @@ public class AboutAction implements Action {
         About about = new About()
                 .setVersion(version)
                 .setUpdate(false)
-                .setLatest("");
+                .setLatest("")
+                .setMarkdownBody("");
         try {
             HttpReq.get("https://github.com/wushuo894/ani-rss/releases/latest")
                     .timeout(3000)
                     .then(response -> {
                         String body = response.body();
                         Document document = Jsoup.parse(body);
-                        Elements elements = document.getElementsByTag("h1");
-                        for (Element element : elements) {
-                            String latest = element.text().trim();
-                            if (latest.startsWith("v")) {
-                                latest = latest.replace("v", "").trim();
-                                about.setUpdate(VersionComparator.INSTANCE.compare(latest, version) > 0)
-                                        .setLatest(latest);
-                            }
-                        }
+                        Element box = document.getElementsByClass("Box").get(0);
+                        Element element = box.getElementsByTag("h1").get(0);
+                        String latest = element.text().replace("v", "").trim();
+                        about.setUpdate(VersionComparator.INSTANCE.compare(latest, version) > 0)
+                                .setLatest(latest);
+                        Element markdownBody = box.getElementsByClass("markdown-body").get(0);
+                        about.setMarkdownBody(markdownBody.html());
                     });
         } catch (Exception e) {
             log.error(e.getMessage());
@@ -67,5 +66,6 @@ public class AboutAction implements Action {
         private String version;
         private String latest;
         private Boolean update;
+        private String markdownBody;
     }
 }
