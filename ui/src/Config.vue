@@ -27,7 +27,7 @@
                       event.preventDefault()
                    }">
             <el-form-item label="间隔(分钟)">
-              <el-input-number v-model:model-value="config.sleep"></el-input-number>
+              <el-input-number v-model:model-value="config.sleep" min="1" max="1024"></el-input-number>
             </el-form-item>
             <el-form-item label="自动重命名">
               <el-switch v-model:model-value="config.rename"></el-switch>
@@ -60,7 +60,7 @@
               <el-input v-model:model-value="config.proxyHost" :disabled="!config.proxy"></el-input>
             </el-form-item>
             <el-form-item label="端口">
-              <el-input-number v-model:model-value="config.proxyPort" :disabled="!config.proxy"></el-input-number>
+              <el-input-number v-model:model-value="config.proxyPort" :disabled="!config.proxy" min="1" max="65535"></el-input-number>
             </el-form-item>
           </el-form>
         </el-tab-pane>

@@ -29,7 +29,7 @@ public class Config implements Serializable {
     private String downloadPath;
 
     /**
-     * 间隔
+     * 间隔/分钟
      */
     private Integer sleep;
 
