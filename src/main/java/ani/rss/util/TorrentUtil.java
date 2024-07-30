@@ -93,7 +93,7 @@ public class TorrentUtil {
                     )
                     .findFirst();
             if (optionalTorrentsInfo.isPresent()) {
-                log.info("已有下载任务 {}", reName);
+                log.debug("已有下载任务 {}", reName);
                 TorrentsInfo torrentsInfo = optionalTorrentsInfo.get();
                 rename(torrentsInfo, reName);
                 delete(torrentsInfo);
