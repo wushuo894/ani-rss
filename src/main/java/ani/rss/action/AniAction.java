@@ -62,9 +62,8 @@ public class AniAction implements Action {
 
                 aniList.add(ani);
                 AniUtil.sync();
-                List<Item> items = AniUtil.getItems(ani);
                 if (TorrentUtil.login()) {
-                    TorrentUtil.downloadAni(ani, items);
+                    TorrentUtil.downloadAni(ani);
                 }
                 String json = gson.toJson(Result.success().setMessage("添加订阅成功"));
                 IoUtil.writeUtf8(res.getOut(), true, json);

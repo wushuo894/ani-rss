@@ -20,7 +20,6 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 
 @Slf4j
 public class TorrentUtil {
@@ -69,36 +68,21 @@ public class TorrentUtil {
      * 下载动漫
      *
      * @param ani
-     * @param items
      */
-    public static synchronized void downloadAni(Ani ani, List<Item> items) {
+    public static synchronized void downloadAni(Ani ani) {
         Config config = ConfigUtil.getCONFIG();
         String downloadPath = config.getDownloadPath();
 
         Integer season = ani.getSeason();
         String title = ani.getTitle();
 
-        List<TorrentsInfo> torrentsInfos = getTorrentsInfos();
-
+        List<Item> items = AniUtil.getItems(ani);
         log.debug("{} 共 {} 个", title, items.size());
         for (Item item : items) {
             log.debug(JSONUtil.formatJsonStr(GSON.toJson(item)));
             String reName = item.getReName();
             File torrent = getTorrent(item);
 
-            // 已经下载过
-            Optional<TorrentsInfo> optionalTorrentsInfo = torrentsInfos.stream()
-                    .filter(torrentsInfo ->
-                            StrUtil.equalsIgnoreCase(FileUtil.mainName(torrent), torrentsInfo.getHash())
-                    )
-                    .findFirst();
-            if (optionalTorrentsInfo.isPresent()) {
-                log.debug("已有下载任务 {}", reName);
-                TorrentsInfo torrentsInfo = optionalTorrentsInfo.get();
-                rename(torrentsInfo, reName);
-                delete(torrentsInfo);
-                continue;
-            }
             // 已经下载过
             if (torrent.exists()) {
                 log.debug("种子记录已存在 {}", reName);
