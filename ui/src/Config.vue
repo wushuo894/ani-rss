@@ -126,6 +126,13 @@ const about = ref({
 
 const showConfig = () => {
   configDialogVisible.value = true
+  about.value = {
+    'version': '',
+    'latest': '',
+    'update': false,
+    'markdownBody': ''
+  }
+  loading.value = true
   fetch('/api/config', {
     'method': 'GET'
   })

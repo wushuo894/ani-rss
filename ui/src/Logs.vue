@@ -52,7 +52,10 @@ const getHtmlLogs = async () => {
 }
 
 const showLogs = () => {
+  logs.value = []
   logDialogVisible.value = true
+  loading.value = true
+  htmlLogs.value = ''
   fetch('/api/logs', {
     'method': 'GET'
   }).then(res => res.json())
