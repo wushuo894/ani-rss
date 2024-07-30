@@ -4,39 +4,51 @@ import ani.rss.action.AniAction;
 import ani.rss.entity.Ani;
 import ani.rss.entity.Config;
 import ani.rss.entity.Item;
-import cn.hutool.core.text.StrFormatter;
 import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.core.util.ObjectUtil;
-import cn.hutool.core.util.StrUtil;
-import cn.hutool.cron.CronUtil;
-import cn.hutool.cron.Scheduler;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
+import java.util.Objects;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 @Slf4j
 public class TaskUtil {
-    public static final String id = "ani-rss";
-    public static String currentCron = "";
+    public static Integer currentSleep = 0;
+    public static AtomicBoolean loop = new AtomicBoolean(false);
+    public static Thread thread = null;
 
     public static synchronized void start() {
         Config config = ConfigUtil.getCONFIG();
         Integer sleep = config.getSleep();
-        String cron = StrFormatter.format("*/{} * * * *", sleep);
         // 定时未发生改变
-        if (StrUtil.isNotBlank(currentCron) && currentCron.equals(cron)) {
+        if (sleep < 1 || sleep.equals(currentSleep)) {
             return;
         }
-        currentCron = cron;
-        Scheduler scheduler = CronUtil.getScheduler();
-        if (scheduler.isStarted()) {
-            scheduler.stop(true);
+
+        if (Objects.nonNull(thread)) {
+            try {
+                loop.set(false);
+                // 等待现有任务结束
+                while (thread.isAlive()) {
+                    thread.interrupt();
+                    ThreadUtil.sleep(500);
+                }
+                thread.join();
+            } catch (Exception e) {
+                log.error(e.getMessage());
+                log.debug(e.getMessage(), e);
+            }
         }
-        scheduler.schedule(id, currentCron, new Runnable() {
-            @Override
-            public synchronized void run() {
+        currentSleep = sleep;
+        loop.set(true);
+        thread = new Thread(() -> {
+            log.debug("加载定时任务,当前设置间隔为 {} 分钟", currentSleep);
+            while (loop.get()) {
                 if (!TorrentUtil.login()) {
-                    return;
+                    ThreadUtil.sleep(currentSleep, TimeUnit.MINUTES);
+                    continue;
                 }
                 List<Ani> aniList = ObjectUtil.clone(AniAction.getAniList());
                 for (Ani ani : aniList) {
@@ -51,9 +63,11 @@ public class TaskUtil {
                     // 避免短时间频繁请求导致流控
                     ThreadUtil.sleep(500);
                 }
+                ThreadUtil.sleep(currentSleep, TimeUnit.MINUTES);
             }
+            log.debug("任务已停止");
         });
-        scheduler.start();
-        log.debug("加载定时任务,当前设置 {}", currentCron);
+        thread.setName("rss-task-thread");
+        thread.start();
     }
 }
