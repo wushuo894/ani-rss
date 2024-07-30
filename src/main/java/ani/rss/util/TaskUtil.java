@@ -10,7 +10,6 @@ import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.cron.CronUtil;
 import cn.hutool.cron.Scheduler;
-import cn.hutool.cron.task.Task;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
@@ -33,22 +32,25 @@ public class TaskUtil {
         if (scheduler.isStarted()) {
             scheduler.stop(true);
         }
-        scheduler.schedule(id, currentCron, (Task) () -> {
-            if (!TorrentUtil.login()) {
-                return;
-            }
-            List<Ani> aniList = ObjectUtil.clone(AniAction.getAniList());
-            for (Ani ani : aniList) {
-                try {
-                    List<Item> items = AniUtil.getItems(ani);
-                    TorrentUtil.downloadAni(ani, items);
-                } catch (Exception e) {
-                    String message = ExceptionUtil.getMessage(e);
-                    log.error("{} {}", ani.getTitle(), message);
-                    log.debug(e.getMessage(), e);
+        scheduler.schedule(id, currentCron, new Runnable() {
+            @Override
+            public synchronized void run() {
+                if (!TorrentUtil.login()) {
+                    return;
                 }
-                // 避免短时间频繁请求导致流控
-                ThreadUtil.sleep(500);
+                List<Ani> aniList = ObjectUtil.clone(AniAction.getAniList());
+                for (Ani ani : aniList) {
+                    try {
+                        List<Item> items = AniUtil.getItems(ani);
+                        TorrentUtil.downloadAni(ani, items);
+                    } catch (Exception e) {
+                        String message = ExceptionUtil.getMessage(e);
+                        log.error("{} {}", ani.getTitle(), message);
+                        log.debug(e.getMessage(), e);
+                    }
+                    // 避免短时间频繁请求导致流控
+                    ThreadUtil.sleep(500);
+                }
             }
         });
         scheduler.start();
