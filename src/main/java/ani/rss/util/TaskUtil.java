@@ -3,7 +3,7 @@ package ani.rss.util;
 import ani.rss.action.AniAction;
 import ani.rss.entity.Ani;
 import ani.rss.entity.Config;
-import ani.rss.entity.Item;
+import ani.rss.entity.TorrentsInfo;
 import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.core.util.ObjectUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -50,11 +50,21 @@ public class TaskUtil {
                     ThreadUtil.sleep(currentSleep, TimeUnit.MINUTES);
                     continue;
                 }
+                try {
+                    List<TorrentsInfo> torrentsInfos = TorrentUtil.getTorrentsInfos();
+                    for (TorrentsInfo torrentsInfo : torrentsInfos) {
+                        String name = torrentsInfo.getName();
+                        TorrentUtil.rename(torrentsInfo, name);
+                        TorrentUtil.delete(torrentsInfo);
+                    }
+                } catch (Exception e) {
+                    log.error(e.getMessage());
+                    log.debug(e.getMessage(), e);
+                }
                 List<Ani> aniList = ObjectUtil.clone(AniAction.getAniList());
                 for (Ani ani : aniList) {
                     try {
-                        List<Item> items = AniUtil.getItems(ani);
-                        TorrentUtil.downloadAni(ani, items);
+                        TorrentUtil.downloadAni(ani);
                     } catch (Exception e) {
                         String message = ExceptionUtil.getMessage(e);
                         log.error("{} {}", ani.getTitle(), message);
