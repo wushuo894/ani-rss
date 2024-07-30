@@ -154,6 +154,8 @@ const showAdd = () => {
   addDialogVisible.value = true
   excludeVisible.value = false
   excludeValue.value = ''
+  addAniButtonLoading.value = false
+  rssButtonLoading.value = false
 }
 
 defineExpose({showAdd})
