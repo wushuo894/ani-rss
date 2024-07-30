@@ -37,7 +37,7 @@ public class ConfigUtil {
      */
     public static File getConfigDir() {
         Map<String, String> env = System.getenv();
-        String config = env.getOrDefault("CONFIG", "");
+        String config = env.getOrDefault("CONFIG", "config");
         return new File(config).getAbsoluteFile();
     }
 
@@ -69,7 +69,7 @@ public class ConfigUtil {
         File configFile = getConfigFile();
 
         if (!configFile.exists()) {
-            FileUtil.writeUtf8String(GSON.toJson(CONFIG), configFile);
+            FileUtil.writeUtf8String(JSONUtil.formatJsonStr(GSON.toJson(CONFIG)), configFile);
         }
         String s = FileUtil.readUtf8String(configFile);
         BeanUtil.copyProperties(GSON.fromJson(s, Config.class), CONFIG, CopyOptions

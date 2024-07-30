@@ -4,6 +4,7 @@ import ani.rss.annotation.Path;
 import ani.rss.entity.Config;
 import ani.rss.entity.Result;
 import ani.rss.util.ConfigUtil;
+import ani.rss.util.TaskUtil;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.util.ObjectUtil;
@@ -56,6 +57,7 @@ public class ConfigAction implements Action {
             }
         }
         ConfigUtil.sync();
+        TaskUtil.start();
         String json = gson.toJson(Result.success().setMessage("修改成功"));
         IoUtil.writeUtf8(res.getOut(), true, json);
 

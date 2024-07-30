@@ -57,7 +57,7 @@ public class AniUtil {
         File configFile = getAniFile();
 
         if (!configFile.exists()) {
-            FileUtil.writeUtf8String(GSON.toJson(ANI_LIST), configFile);
+            FileUtil.writeUtf8String(JSONUtil.formatJsonStr(GSON.toJson(ANI_LIST)), configFile);
         }
         String s = FileUtil.readUtf8String(configFile);
         JsonArray jsonElements = GSON.fromJson(s, JsonArray.class);
@@ -66,6 +66,23 @@ public class AniUtil {
             ANI_LIST.add(ani);
         }
         log.debug("加载订阅 共{}项", ANI_LIST.size());
+
+
+        // 处理旧图片
+        for (Ani ani : ANI_LIST) {
+            try {
+                String cover = ani.getCover();
+                if (!ReUtil.contains("http(s*)://", cover)) {
+                    continue;
+                }
+                cover = AniUtil.saveJpg(cover);
+                ani.setCover(cover);
+                AniUtil.sync();
+            } catch (Exception e) {
+                log.error(e.getMessage());
+                log.debug(e.getMessage(), e);
+            }
+        }
     }
 
     /**
@@ -260,7 +277,7 @@ public class AniUtil {
      * @param ani
      * @return
      */
-    public static List<Item> getItems(Ani ani) {
+    public static synchronized List<Item> getItems(Ani ani) {
         String url = ani.getUrl();
         String s = HttpReq.get(url)
                 .thenFunction(HttpResponse::body);
