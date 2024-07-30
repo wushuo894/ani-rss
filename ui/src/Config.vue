@@ -69,7 +69,7 @@
                    @submit="(event)=>{
                       event.preventDefault()
                    }">
-            <el-form-item label="GiuHub">
+            <el-form-item label="GitHub">
               <a href="https://github.com/wushuo894/ani-rss" target="_blank">https://github.com/wushuo894/ani-rss</a>
             </el-form-item>
             <el-form-item label="版本号" v-loading="about.version.length < 1">
