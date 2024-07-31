@@ -35,6 +35,12 @@ public class RssTask extends Thread {
             }
             List<Ani> aniList = ObjectUtil.clone(AniAction.getAniList());
             for (Ani ani : aniList) {
+                String title = ani.getTitle();
+                Boolean enable = ani.getEnable();
+                if (!enable) {
+                    log.debug("{} 未启用", title);
+                    continue;
+                }
                 try {
                     TorrentUtil.downloadAni(ani);
                 } catch (Exception e) {

@@ -2,6 +2,8 @@ package ani.rss.util;
 
 import ani.rss.entity.Ani;
 import ani.rss.entity.Item;
+import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.bean.copier.CopyOptions;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.lang.Assert;
@@ -63,7 +65,12 @@ public class AniUtil {
         JsonArray jsonElements = GSON.fromJson(s, JsonArray.class);
         for (JsonElement jsonElement : jsonElements) {
             Ani ani = GSON.fromJson(jsonElement, Ani.class);
-            ANI_LIST.add(ani);
+            Ani newAni = new Ani();
+            newAni.setEnable(true);
+            BeanUtil.copyProperties(ani, newAni, CopyOptions
+                    .create()
+                    .setIgnoreNullValue(true));
+            ANI_LIST.add(newAni);
         }
         log.debug("加载订阅 共{}项", ANI_LIST.size());
 
