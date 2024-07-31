@@ -12,7 +12,7 @@
           <el-button :loading="rssButtonLoading" @click="getRss">确定</el-button>
         </div>
       </div>
-      <div v-else @keydown.enter="addAni">
+      <div v-else>
         <el-form-item label="标题">
           <el-input v-model:model-value="ani.title"></el-input>
         </el-form-item>
