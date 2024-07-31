@@ -17,9 +17,8 @@ import com.google.gson.*;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Slf4j
 public class TorrentUtil {
@@ -76,12 +75,26 @@ public class TorrentUtil {
         Integer season = ani.getSeason();
         String title = ani.getTitle();
 
+        Set<String> hashList = getTorrentsInfos()
+                .stream().map(TorrentsInfo::getHash)
+                .map(String::trim)
+                .map(String::toLowerCase)
+                .collect(Collectors.toSet());
+
         List<Item> items = AniUtil.getItems(ani);
         log.debug("{} 共 {} 个", title, items.size());
         for (Item item : items) {
             log.debug(JSONUtil.formatJsonStr(GSON.toJson(item)));
             String reName = item.getReName();
             File torrent = getTorrent(item);
+            String hash = FileUtil.mainName(torrent)
+                    .trim().toLowerCase();
+
+            // 已经下载过
+            if (hashList.contains(hash)) {
+                log.debug("已有下载任务 {}", reName);
+                continue;
+            }
 
             // 已经下载过
             if (torrent.exists()) {
