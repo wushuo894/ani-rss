@@ -56,6 +56,7 @@ public class ConfigUtil {
      */
     public static void load() {
         CONFIG.setSleep(5)
+                .setRenameSleep(1)
                 .setRename(true)
                 .setFileExist(false)
                 .setDelete(false)

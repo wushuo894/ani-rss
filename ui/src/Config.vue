@@ -32,6 +32,9 @@
             <el-form-item label="自动重命名">
               <el-switch v-model:model-value="config.rename"></el-switch>
             </el-form-item>
+            <el-form-item label="重命名间隔(分钟)">
+              <el-input-number v-model:model-value="config.renameSleep" min="1" :disabled="!config.rename"></el-input-number>
+            </el-form-item>
             <el-form-item label="文件已下载自动跳过">
               <div>
                 <el-switch v-model:model-value="config.fileExist" :disabled="!config.rename"></el-switch>
@@ -114,7 +117,8 @@ const config = ref({
   'debug': false,
   'proxy': false,
   'proxyHost': '',
-  'proxyPort': 8080
+  'proxyPort': 8080,
+  'renameSleep': 1
 })
 
 const about = ref({
