@@ -39,6 +39,8 @@ public class ConfigAction implements Action {
             return;
         }
         Config config = ConfigUtil.getCONFIG();
+        Integer renameSleep = config.getRenameSleep();
+        Integer sleep = config.getSleep();
         BeanUtil.copyProperties(gson.fromJson(req.getBody(), Config.class), config);
         String host = config.getHost();
         if (!ReUtil.contains("http(s*)://", host)) {
@@ -57,7 +59,14 @@ public class ConfigAction implements Action {
             }
         }
         ConfigUtil.sync();
-        TaskUtil.start();
+        Integer newRenameSleep = config.getRenameSleep();
+        Integer newSleep = config.getSleep();
+
+        // 时间间隔发生改变，重启任务
+        if (!Objects.equals(newSleep, sleep) ||
+                !Objects.equals(newRenameSleep, renameSleep)) {
+            TaskUtil.restart();
+        }
         String json = gson.toJson(Result.success().setMessage("修改成功"));
         IoUtil.writeUtf8(res.getOut(), true, json);
 
