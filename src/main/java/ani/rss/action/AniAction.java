@@ -43,7 +43,7 @@ public class AniAction implements Action {
                         .setUrl(ani.getUrl().trim());
                 AniUtil.verify(ani);
                 Optional<Ani> first = aniList.stream()
-                        .filter(it -> it.getTitle().equals(ani.getTitle()))
+                        .filter(it -> it.getTitle().equals(ani.getTitle()) && it.getSeason().equals(ani.getSeason()))
                         .findFirst();
                 if (first.isPresent()) {
                     String json = gson.toJson(Result.error().setMessage("名称重复"));
@@ -76,7 +76,7 @@ public class AniAction implements Action {
                 AniUtil.verify(ani);
                 Optional<Ani> first = aniList.stream()
                         .filter(it -> !it.getUrl().equals(ani.getUrl()))
-                        .filter(it -> it.getTitle().equals(ani.getTitle()))
+                        .filter(it -> it.getTitle().equals(ani.getTitle()) && it.getSeason().equals(ani.getSeason()))
                         .findFirst();
                 if (first.isPresent()) {
                     String json = gson.toJson(Result.error().setMessage("名称重复"));

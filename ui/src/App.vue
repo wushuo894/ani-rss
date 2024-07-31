@@ -31,14 +31,17 @@
                   {{ item.title }}
                 </div>
                 <div style="
-            color: #9e9e9e !important;
-            font-size: .75rem !important;
-            font-weight: 400;
-            line-height: 1.667;
-            letter-spacing: .0333333333em !important;
-            font-family: Roboto, sans-serif;
-            text-transform: none !important;">{{ item.url }}
+                    color: #9e9e9e !important;
+                    font-size: .75rem !important;
+                    font-weight: 400;
+                    line-height: 1.667;
+                    letter-spacing: .0333333333em !important;
+                    font-family: Roboto, sans-serif;
+                    text-transform: none !important;">{{ item.url }}
                 </div>
+                <el-tag>
+                  第 {{ item.season }} 季
+                </el-tag>
               </div>
               <div
                   style="display: flex;align-items: flex-end;justify-content:flex-end; flex-direction: column;position: absolute;right: 0;bottom: 0;">
