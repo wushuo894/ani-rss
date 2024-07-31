@@ -169,6 +169,7 @@ public class TorrentUtil {
     public static void download(String name, String savePath, File torrentFile) {
         Config config = ConfigUtil.getCONFIG();
         String host = config.getHost();
+        Integer downloadCount = config.getDownloadCount();
         HttpReq.post(host + "/api/v2/torrents/add", false)
                 .form("addToTopOfQueue", false)
                 .form("autoTMM", false)
@@ -186,6 +187,9 @@ public class TorrentUtil {
                 .form("torrents", torrentFile)
                 .form("tags", "ani-rss")
                 .thenFunction(HttpResponse::isOk);
+        if (downloadCount < 1) {
+            return;
+        }
         String hash = FileUtil.mainName(torrentFile);
         // 等待任务添加完成 最多等待10次检测
         for (int i = 0; i < 10; i++) {
