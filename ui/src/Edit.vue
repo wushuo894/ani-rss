@@ -45,6 +45,9 @@
           </el-button>
         </div>
       </el-form-item>
+      <el-form-item label="启用">
+        <el-switch v-model:model-value="ani.enable"></el-switch>
+      </el-form-item>
       <div style="display: flex;justify-content: end;width: 100%;margin-top: 10px;">
         <el-button :loading="editAniButtonLoading" @click="editAni">确定</el-button>
       </div>
@@ -63,7 +66,8 @@ const ani = ref({
   'season': 1,
   'offset': 0,
   'title': '',
-  'exclude': []
+  'exclude': [],
+  'enable': true
 })
 
 

@@ -42,6 +42,12 @@
                 <el-tag>
                   第 {{ item.season }} 季
                 </el-tag>
+                <el-tag type="success" v-if="item.enable">
+                  已启用
+                </el-tag>
+                <el-tag type="danger" v-else>
+                  未启用
+                </el-tag>
               </div>
               <div
                   style="display: flex;align-items: flex-end;justify-content:flex-end; flex-direction: column;position: absolute;right: 0;bottom: 0;">
