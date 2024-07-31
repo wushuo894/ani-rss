@@ -123,6 +123,9 @@ public class TorrentUtil {
 
         log.info("下载种子 {}", reName);
         File saveTorrentFile = getTorrent(item);
+        if (saveTorrentFile.exists()) {
+            return saveTorrentFile;
+        }
         HttpUtil.downloadFile(torrent, saveTorrentFile);
         return saveTorrentFile;
     }

@@ -34,6 +34,11 @@ public class Config implements Serializable {
     private Integer sleep;
 
     /**
+     * 重命名间隔(分钟)
+     */
+    private Integer renameSleep;
+
+    /**
      * 自动重命名
      */
     private Boolean rename;
