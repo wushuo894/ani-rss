@@ -39,15 +39,22 @@
                     font-family: Roboto, sans-serif;
                     text-transform: none !important;">{{ item.url }}
                 </div>
-                <el-tag>
-                  第 {{ item.season }} 季
-                </el-tag>
-                <el-tag type="success" v-if="item.enable">
-                  已启用
-                </el-tag>
-                <el-tag type="danger" v-else>
-                  未启用
-                </el-tag>
+                <div style="display: flex;">
+                  <div>
+                    <el-tag>
+                      第 {{ item.season }} 季
+                    </el-tag>
+                  </div>
+                  <div style="width: 4px;"></div>
+                  <div>
+                    <el-tag type="success" v-if="item.enable">
+                      已启用
+                    </el-tag>
+                    <el-tag type="danger" v-else>
+                      未启用
+                    </el-tag>
+                  </div>
+                </div>
               </div>
               <div
                   style="display: flex;align-items: flex-end;justify-content:flex-end; flex-direction: column;position: absolute;right: 0;bottom: 0;">
