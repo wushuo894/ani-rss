@@ -70,15 +70,29 @@ public class TorrentUtil {
     public static synchronized void downloadAni(Ani ani) {
         Config config = ConfigUtil.getCONFIG();
         String downloadPath = config.getDownloadPath();
+        Integer downloadCount = config.getDownloadCount();
 
         Integer season = ani.getSeason();
         String title = ani.getTitle();
 
-        Set<String> hashList = getTorrentsInfos()
+        List<TorrentsInfo> torrentsInfos = getTorrentsInfos();
+
+        Set<String> hashList = torrentsInfos
                 .stream().map(TorrentsInfo::getHash)
                 .map(String::trim)
                 .map(String::toLowerCase)
                 .collect(Collectors.toSet());
+
+        long count = torrentsInfos
+                .stream()
+                .filter(it -> !EnumUtil.equalsIgnoreCase(it.getState(), TorrentsInfo.State.pausedUP.name()))
+                .count();
+
+        // 同时下载数量限制
+        if (downloadCount > 0 && count >= downloadCount) {
+            log.debug("达到同时下载数量限制 {}", downloadCount);
+            return;
+        }
 
         List<Item> items = AniUtil.getItems(ani);
         log.debug("{} 共 {} 个", title, items.size());
@@ -266,7 +280,7 @@ public class TorrentUtil {
         TorrentsInfo.State state = torrentsInfo.getState();
         String name = torrentsInfo.getName();
         // 下载完成后自动删除任务
-        if (EnumUtil.equals(state, TorrentsInfo.State.pausedUP.name())) {
+        if (EnumUtil.equalsIgnoreCase(state, TorrentsInfo.State.pausedUP.name())) {
             log.info("删除已完成任务 {}", name);
             HttpReq.post(host + "/api/v2/torrents/delete", false)
                     .form("hashes", hash)

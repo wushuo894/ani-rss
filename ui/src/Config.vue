@@ -19,6 +19,14 @@
             <el-form-item label="下载地址">
               <el-input v-model:model-value="config.downloadPath"></el-input>
             </el-form-item>
+            <el-form-item label="同时下载数量限制">
+              <div>
+                <el-input-number v-model:model-value="config.downloadCount" min="0"></el-input-number>
+                <div>
+                  设置为 0 为不做限制
+                </div>
+              </div>
+            </el-form-item>
           </el-form>
         </el-tab-pane>
         <el-tab-pane label="基本设置">
@@ -33,7 +41,8 @@
               <el-switch v-model:model-value="config.rename"></el-switch>
             </el-form-item>
             <el-form-item label="重命名间隔(分钟)">
-              <el-input-number v-model:model-value="config.renameSleep" min="1" :disabled="!config.rename"></el-input-number>
+              <el-input-number v-model:model-value="config.renameSleep" min="1"
+                               :disabled="!config.rename"></el-input-number>
             </el-form-item>
             <el-form-item label="文件已下载自动跳过">
               <div>
@@ -118,7 +127,8 @@ const config = ref({
   'proxy': false,
   'proxyHost': '',
   'proxyPort': 8080,
-  'renameSleep': 1
+  'renameSleep': 1,
+  'downloadCount': 0
 })
 
 const about = ref({

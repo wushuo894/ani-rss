@@ -72,4 +72,9 @@ public class Config implements Serializable {
      * 代理端口
      */
     private Integer proxyPort;
+
+    /**
+     * 同时下载数量限制
+     */
+    private Integer downloadCount;
 }

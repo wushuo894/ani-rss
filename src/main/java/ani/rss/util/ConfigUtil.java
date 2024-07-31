@@ -66,7 +66,8 @@ public class ConfigUtil {
                 .setDebug(false)
                 .setProxy(false)
                 .setProxyHost("")
-                .setProxyPort(8080);
+                .setProxyPort(8080)
+                .setDownloadCount(0);
         File configFile = getConfigFile();
 
         if (!configFile.exists()) {
