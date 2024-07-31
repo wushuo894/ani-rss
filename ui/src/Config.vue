@@ -23,7 +23,7 @@
               <div>
                 <el-input-number v-model:model-value="config.downloadCount" min="0"></el-input-number>
                 <div>
-                  设置为 0 为不做限制
+                  设置为时 0 不做限制
                 </div>
               </div>
             </el-form-item>
