@@ -44,3 +44,4 @@ files
 logs
 *.log
 config
+.git
