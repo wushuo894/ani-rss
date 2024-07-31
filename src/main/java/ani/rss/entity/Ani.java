@@ -43,4 +43,9 @@ public class Ani implements Serializable {
      * 拼音
      */
     private String pinyin;
+
+    /**
+     * 启用
+     */
+    private Boolean enable;
 }
