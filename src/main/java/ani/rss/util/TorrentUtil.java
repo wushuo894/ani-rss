@@ -6,6 +6,7 @@ import ani.rss.entity.Item;
 import ani.rss.entity.TorrentsInfo;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.text.StrFormatter;
+import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.core.util.EnumUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
@@ -75,24 +76,11 @@ public class TorrentUtil {
         Integer season = ani.getSeason();
         String title = ani.getTitle();
 
-        List<TorrentsInfo> torrentsInfos = getTorrentsInfos();
-
-        Set<String> hashList = torrentsInfos
+        Set<String> hashList = getTorrentsInfos()
                 .stream().map(TorrentsInfo::getHash)
                 .map(String::trim)
                 .map(String::toLowerCase)
                 .collect(Collectors.toSet());
-
-        long count = torrentsInfos
-                .stream()
-                .filter(it -> !EnumUtil.equalsIgnoreCase(it.getState(), TorrentsInfo.State.pausedUP.name()))
-                .count();
-
-        // 同时下载数量限制
-        if (downloadCount > 0 && count >= downloadCount) {
-            log.debug("达到同时下载数量限制 {}", downloadCount);
-            return;
-        }
 
         List<Item> items = AniUtil.getItems(ani);
         log.debug("{} 共 {} 个", title, items.size());
@@ -120,6 +108,18 @@ public class TorrentUtil {
                 log.debug("本地文件已存在 {}", reName);
                 continue;
             }
+
+            long count = getTorrentsInfos()
+                    .stream()
+                    .filter(it -> !EnumUtil.equalsIgnoreCase(it.getState(), TorrentsInfo.State.pausedUP.name()))
+                    .count();
+
+            // 同时下载数量限制
+            if (downloadCount > 0 && count >= downloadCount) {
+                log.debug("达到同时下载数量限制 {}", downloadCount);
+                continue;
+            }
+
             log.info("添加下载 {}", reName);
             File saveTorrent = saveTorrent(ani, item);
 
@@ -193,7 +193,7 @@ public class TorrentUtil {
      *
      * @return
      */
-    public static List<TorrentsInfo> getTorrentsInfos() {
+    public static synchronized List<TorrentsInfo> getTorrentsInfos() {
         Config config = ConfigUtil.getCONFIG();
         String host = config.getHost();
         return HttpReq.get(host + "/api/v2/torrents/info", false)
