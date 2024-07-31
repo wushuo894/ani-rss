@@ -9,7 +9,6 @@ import cn.hutool.core.text.StrFormatter;
 import cn.hutool.core.util.EnumUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
-import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpResponse;
 import cn.hutool.http.HttpUtil;
 import cn.hutool.json.JSONUtil;
@@ -46,7 +45,7 @@ public class TorrentUtil {
         }
 
         try {
-            return HttpRequest.post(host + "/api/v2/auth/login")
+            return HttpReq.post(host + "/api/v2/auth/login", false)
                     .form("username", username)
                     .form("password", password)
                     .setFollowRedirects(true)
@@ -156,7 +155,7 @@ public class TorrentUtil {
     public static void download(String name, String savePath, File torrentFile) {
         Config config = ConfigUtil.getCONFIG();
         String host = config.getHost();
-        HttpRequest.post(host + "/api/v2/torrents/add")
+        HttpReq.post(host + "/api/v2/torrents/add", false)
                 .form("addToTopOfQueue", false)
                 .form("autoTMM", false)
                 .form("contentLayout", "Original")
@@ -183,7 +182,7 @@ public class TorrentUtil {
     public static List<TorrentsInfo> getTorrentsInfos() {
         Config config = ConfigUtil.getCONFIG();
         String host = config.getHost();
-        return HttpRequest.get(host + "/api/v2/torrents/info")
+        return HttpReq.get(host + "/api/v2/torrents/info", false)
                 .thenFunction(res -> {
                     List<TorrentsInfo> torrentsInfoList = new ArrayList<>();
                     JsonArray jsonElements = GSON.fromJson(res.body(), JsonArray.class);
@@ -269,7 +268,7 @@ public class TorrentUtil {
         // 下载完成后自动删除任务
         if (EnumUtil.equals(state, TorrentsInfo.State.pausedUP.name())) {
             log.info("删除已完成任务 {}", name);
-            HttpRequest.post(host + "/api/v2/torrents/delete")
+            HttpReq.post(host + "/api/v2/torrents/delete", false)
                     .form("hashes", hash)
                     .form("deleteFiles", false)
                     .thenFunction(HttpResponse::isOk);
@@ -290,7 +289,7 @@ public class TorrentUtil {
             return;
         }
         String hash = torrentsInfo.getHash();
-        List<String> nameList = HttpRequest.get(host + "/api/v2/torrents/files")
+        List<String> nameList = HttpReq.get(host + "/api/v2/torrents/files", false)
                 .form("hash", hash)
                 .thenFunction(res -> {
                     JsonArray jsonElements = GSON.fromJson(res.body(), JsonArray.class);
@@ -335,7 +334,7 @@ public class TorrentUtil {
 
             log.info("重命名 {} ==> {}", name, newPath);
 
-            HttpRequest.post(host + "/api/v2/torrents/renameFile")
+            HttpReq.post(host + "/api/v2/torrents/renameFile", false)
                     .form("hash", hash)
                     .form("oldPath", name)
                     .form("newPath", newPath)

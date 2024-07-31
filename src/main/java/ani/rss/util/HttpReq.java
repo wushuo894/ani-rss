@@ -11,11 +11,31 @@ import java.util.Objects;
 public class HttpReq {
 
     public static HttpRequest post(String url) {
-        return setProxy(HttpRequest.post(url));
+        return post(url, true);
+    }
+
+    public static HttpRequest post(String url, Boolean proxy) {
+        HttpRequest req = HttpRequest.post(url);
+        req.timeout(6000)
+                .setFollowRedirects(true);
+        if (proxy) {
+            setProxy(req);
+        }
+        return req;
     }
 
     public static HttpRequest get(String url) {
-        return setProxy(HttpRequest.get(url));
+        return get(url, false);
+    }
+
+    public static HttpRequest get(String url, Boolean proxy) {
+        HttpRequest req = HttpRequest.get(url);
+        req.timeout(6000)
+                .setFollowRedirects(true);
+        if (proxy) {
+            setProxy(req);
+        }
+        return req;
     }
 
     /**
@@ -25,8 +45,6 @@ public class HttpReq {
      * @return
      */
     public static HttpRequest setProxy(HttpRequest req) {
-        req.timeout(6000)
-                .setFollowRedirects(true);
         String url = req.getUrl();
         Config config = ConfigUtil.getCONFIG();
         Boolean proxy = config.getProxy();
