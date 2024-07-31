@@ -187,8 +187,8 @@ public class TorrentUtil {
                 .form("tags", "ani-rss")
                 .thenFunction(HttpResponse::isOk);
         String hash = FileUtil.mainName(torrentFile);
-        // 等待任务添加完成 最多等待30次检测
-        for (int i = 0; i < 30; i++) {
+        // 等待任务添加完成 最多等待10次检测
+        for (int i = 0; i < 10; i++) {
             ThreadUtil.sleep(1000);
             List<TorrentsInfo> torrentsInfos = getTorrentsInfos();
             for (TorrentsInfo torrentsInfo : torrentsInfos) {
