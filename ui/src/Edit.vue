@@ -4,7 +4,6 @@
              @submit="(event)=>{
                 event.preventDefault()
              }"
-             @keydown.enter="editAni"
     >
       <el-form-item label="标题">
         <el-input v-model:model-value="ani.title"></el-input>
