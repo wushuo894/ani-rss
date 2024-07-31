@@ -86,7 +86,7 @@ public class TorrentUtil {
         for (Item item : items) {
             log.debug(JSONUtil.formatJsonStr(GSON.toJson(item)));
             String reName = item.getReName();
-            File torrent = getTorrent(item);
+            File torrent = getTorrent(ani, item);
             String hash = FileUtil.mainName(torrent)
                     .trim().toLowerCase();
 
@@ -108,18 +108,21 @@ public class TorrentUtil {
                 continue;
             }
             log.info("添加下载 {}", reName);
-            File saveTorrent = saveTorrent(item);
+            File saveTorrent = saveTorrent(ani, item);
 
             String savePath = StrFormatter.format("{}/{}/Season {}", downloadPath, title, season);
             download(reName, savePath, saveTorrent);
         }
     }
 
-    public static File getTorrent(Item item) {
+    public static File getTorrent(Ani ani, Item item) {
+        String title = ani.getTitle();
+        Integer season = ani.getSeason();
         String torrent = item.getTorrent();
 
         File configDir = ConfigUtil.getConfigDir();
-        File torrents = new File(configDir + File.separator + "torrents");
+
+        File torrents = new File(StrFormatter.format("{}/torrents/{}/Season {}", configDir, title, season));
         FileUtil.mkdir(torrents);
         File torrentFile = new File(torrent);
         return new File(torrents + File.separator + torrentFile.getName());
@@ -130,12 +133,12 @@ public class TorrentUtil {
      *
      * @param item
      */
-    public static File saveTorrent(Item item) {
+    public static File saveTorrent(Ani ani, Item item) {
         String torrent = item.getTorrent();
         String reName = item.getReName();
 
         log.info("下载种子 {}", reName);
-        File saveTorrentFile = getTorrent(item);
+        File saveTorrentFile = getTorrent(ani, item);
         if (saveTorrentFile.exists()) {
             return saveTorrentFile;
         }
@@ -241,7 +244,7 @@ public class TorrentUtil {
                 .anyMatch(file -> FileUtil.getPrefix(file).equals(reName))) {
             log.info("已下载 {}", reName);
             // 保存 torrent 下次只校验 torrent 是否存在 ， 可以将config设置到固态硬盘，防止一直唤醒机械硬盘
-            saveTorrent(item);
+            saveTorrent(ani, item);
             return true;
         }
 
