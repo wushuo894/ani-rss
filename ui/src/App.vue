@@ -5,9 +5,19 @@
   <Logs ref="logs"></Logs>
   <div id="header">
     <div style="margin: 10px;">
-      <el-input v-model:model-value="title" placeholder="搜索" @input="currentPage = 1"></el-input>
+      <el-input v-model:model-value="title" placeholder="搜索" @input="currentPage = 1" clearable></el-input>
     </div>
     <div style="margin: 10px;display: flex;justify-content: flex-end;">
+      <div style="min-width: 120px;width:100%;margin-right: 15px;">
+        <el-select v-model:model-value="enable">
+          <el-option v-for="selectItem in enableSelect"
+                     :key="selectItem.label"
+                     :label="selectItem.label"
+                     :value="selectItem.label"
+          >
+          </el-option>
+        </el-select>
+      </div>
       <el-button @click="add?.showAdd">添加</el-button>
       <el-button @click="config?.showConfig">设置</el-button>
       <el-button @click="logs?.showLogs">日志</el-button>
@@ -92,6 +102,21 @@ import Add from "./Add.vue";
 import Logs from "./Logs.vue";
 
 const title = ref('')
+const enable = ref('全部')
+const enableSelect = ref([
+  {
+    label: '全部',
+    fun: () => true
+  },
+  {
+    label: '已启用',
+    fun: item => item.enable
+  },
+  {
+    label: '未启用',
+    fun: item => !item.enable
+  }
+])
 
 const config = ref()
 const add = ref()
@@ -108,10 +133,12 @@ const updatePageSize = (size) => {
 
 const searchList = () => {
   const text = title.value.trim()
+  const fun = enableSelect.value.filter(it => it.label === enable.value)[0].fun
   if (text.length < 1) {
-    return list.value
+    return list.value.filter(fun)
   }
   return list.value
+      .filter(fun)
       .filter(it => {
         if (it['title'].toString().indexOf(text) > -1) {
           return true
