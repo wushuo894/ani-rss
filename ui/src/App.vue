@@ -83,13 +83,22 @@
       </div>
     </div>
   </div>
-  <div style="margin: 10px;">
-    <el-pagination background layout="prev, pager, next, sizes"
-                   :total="searchList().length"
-                   v-model:current-page="currentPage"
-                   v-model:page-size="pageSize"
-                   :page-sizes="[10, 20, 40, 80, 160]"
-                   @update:pageSize="updatePageSize"/>
+  <div style="margin: 10px;" id="page">
+    <div style="margin-bottom: 10px;">
+      <el-pagination background layout="prev, pager, next"
+                     :total="searchList().length"
+                     :pager-count="pagerCount"
+                     v-model:current-page="currentPage"
+                     v-model:page-size="pageSize"/>
+    </div>
+    <div style="width: 120px;" id="page-size">
+      <el-select v-model:model-value="pageSize" @change="updatePageSize">
+        <el-option v-for="page in [10, 20, 40, 80, 160]"
+                   :key="page"
+                   :label="page"
+                   :value="page"/>
+      </el-select>
+    </div>
   </div>
 </template>
 
@@ -100,6 +109,8 @@ import Config from "./Config.vue";
 import Edit from "./Edit.vue";
 import Add from "./Add.vue";
 import Logs from "./Logs.vue";
+
+const pagerCount = ref(10)
 
 const title = ref('')
 const enable = ref('全部')
@@ -204,6 +215,9 @@ onMounted(() => {
     const windowWidth = window.innerWidth;
     const itemsPerRow = Math.max(1, Math.floor(windowWidth / 400));
     gridContainer.style.gridTemplateColumns = `repeat(${itemsPerRow}, 1fr)`;
+    if (itemsPerRow === 1) {
+      pagerCount.value = 4
+    }
   }
 
   window.addEventListener('resize', updateGridLayout);
