@@ -20,15 +20,25 @@ body {
     }
 }
 
-.grid-container{
+.grid-container {
     display: grid;
     grid-gap: 5px;
     width: 100%;
 }
 
 @media (min-width: 450px) {
-    #header{
-        display: flex;justify-content: space-between;width: 100%;
+    #header {
+        display: flex;
+        justify-content: space-between;
+        width: 100%;
+    }
+
+    #page {
+        display: flex;
+    }
+
+    #page-size {
+        margin: 0 0 0 15px;
     }
 }
 
