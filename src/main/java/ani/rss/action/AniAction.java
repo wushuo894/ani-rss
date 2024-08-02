@@ -2,7 +2,6 @@ package ani.rss.action;
 
 import ani.rss.annotation.Path;
 import ani.rss.entity.Ani;
-import ani.rss.entity.Item;
 import ani.rss.entity.Result;
 import ani.rss.util.AniUtil;
 import ani.rss.util.TorrentUtil;
