@@ -1,23 +1,19 @@
 package ani.rss.util;
 
 import ani.rss.entity.Config;
-import ch.qos.logback.classic.LoggerContext;
-import ch.qos.logback.classic.joran.JoranConfigurator;
+import ani.rss.entity.MyMailAccount;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.bean.copier.CopyOptions;
 import cn.hutool.core.io.FileUtil;
-import cn.hutool.core.io.IoUtil;
-import cn.hutool.core.io.resource.ResourceUtil;
+import cn.hutool.core.lang.Assert;
+import cn.hutool.core.lang.Validator;
 import cn.hutool.json.JSONUtil;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.LoggerFactory;
 
-import java.io.ByteArrayInputStream;
 import java.io.File;
-import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
 @Slf4j
@@ -67,7 +63,17 @@ public class ConfigUtil {
                 .setProxy(false)
                 .setProxyHost("")
                 .setProxyPort(8080)
-                .setDownloadCount(0);
+                .setDownloadCount(0)
+                .setMail(false)
+                .setMailAddressee("")
+                .setMailAccount(
+                        new MyMailAccount()
+                                .setHost("")
+                                .setPort(25)
+                                .setFrom("")
+                                .setPass("")
+                                .setSslEnable(false)
+                );
         File configFile = getConfigFile();
 
         if (!configFile.exists()) {
@@ -85,6 +91,19 @@ public class ConfigUtil {
      * 将设置保存到磁盘
      */
     public static void sync() {
+        Boolean mail = CONFIG.getMail();
+        MyMailAccount mailAccount = CONFIG.getMailAccount();
+        String from = mailAccount.getFrom();
+        String pass = mailAccount.getPass();
+        String host = mailAccount.getHost();
+        String mailAddressee = CONFIG.getMailAddressee();
+        if (mail) {
+            Assert.notBlank(host, "SMTP地址 不能为空");
+            Assert.notBlank(pass, "发件人密码 不能为空");
+            Assert.isTrue(Validator.isEmail(mailAddressee, true), "收件人 邮箱格式不正确");
+            Assert.isTrue(Validator.isEmail(from, true), "发件人 邮箱格式不正确");
+        }
+
         File configFile = getConfigFile();
         String json = GSON.toJson(CONFIG);
         FileUtil.writeUtf8String(JSONUtil.formatJsonStr(json), configFile);
