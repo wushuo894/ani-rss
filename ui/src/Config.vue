@@ -77,6 +77,33 @@
             </el-form-item>
           </el-form>
         </el-tab-pane>
+        <el-tab-pane label="邮件通知">
+          <el-form style="max-width: 600px" label-width="auto" @submit="(event)=>{
+                      event.preventDefault()
+                   }">
+            <el-form-item label="SMTP地址">
+              <el-input v-model:model-value="config.mailAccount.host" :disabled="!config.mail"/>
+            </el-form-item>
+            <el-form-item label="SMTP端口">
+              <el-input-number v-model:model-value="config.mailAccount.port" min="1" max="65535" :disabled="!config.mail"/>
+            </el-form-item>
+            <el-form-item label="发件人邮箱">
+              <el-input v-model:model-value="config.mailAccount.from" :disabled="!config.mail"/>
+            </el-form-item>
+            <el-form-item label="密码">
+              <el-input v-model:model-value="config.mailAccount.pass" show-password :disabled="!config.mail"/>
+            </el-form-item>
+            <el-form-item label="SSL">
+              <el-switch v-model:model-value="config.mailAccount.sslEnable" :disabled="!config.mail"/>
+            </el-form-item>
+            <el-form-item label="收件人邮箱">
+              <el-input v-model:model-value="config.mailAddressee" :disabled="!config.mail"></el-input>
+            </el-form-item>
+            <el-form-item label="总开关">
+              <el-switch v-model:model-value="config.mail"></el-switch>
+            </el-form-item>
+          </el-form>
+        </el-tab-pane>
         <el-tab-pane label="关于">
           <el-form style="max-width: 600px" label-width="auto"
                    @submit="(event)=>{
@@ -128,7 +155,16 @@ const config = ref({
   'proxyHost': '',
   'proxyPort': 8080,
   'renameSleep': 1,
-  'downloadCount': 0
+  'downloadCount': 0,
+  'mail': false,
+  'mailAddressee': '',
+  'mailAccount': {
+    'host': '',
+    'port': 25,
+    'from': '',
+    'pass': '',
+    'sslEnable': false
+  }
 })
 
 const about = ref({

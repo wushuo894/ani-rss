@@ -77,4 +77,19 @@ public class Config implements Serializable {
      * 同时下载数量限制
      */
     private Integer downloadCount;
+
+    /**
+     * 邮箱是否开启
+     */
+    private Boolean mail;
+
+    /**
+     * 发件人
+     */
+    private MyMailAccount mailAccount;
+
+    /**
+     * 收件人
+     */
+    private String mailAddressee;
 }
