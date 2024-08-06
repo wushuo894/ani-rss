@@ -71,7 +71,7 @@ public class LogUtil {
             });
         } catch (Exception e) {
             log.error(e.getMessage());
-            log.debug(String.valueOf(e));
+            log.debug(e.getMessage(), e);
         } finally {
             IoUtil.close(byteArrayInputStream);
         }
