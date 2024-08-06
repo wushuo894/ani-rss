@@ -32,7 +32,7 @@ const scrollbarRef = ref()
 const innerRef = ref()
 const maxHeight = ref(0)
 
-const options = ['All', 'DEBUG', 'INFO', 'WARNING', 'ERROR']
+const options = ['All', 'DEBUG', 'INFO', 'WARN', 'ERROR']
 
 const selectValue = ref(options[0])
 const htmlLogs = ref('')
@@ -40,9 +40,9 @@ const htmlLogs = ref('')
 const getHtmlLogs = async () => {
   let log = logs.value
   if (selectValue.value !== options[0]) {
-    log = log.filter(it => it.toString().includes(selectValue.value))
+    log = log.filter(it => it['level'] === selectValue.value)
   }
-  htmlLogs.value = await codeToHtml(log.join('\r\n'), {
+  htmlLogs.value = await codeToHtml(log.map(it => it['message']).join('\r\n'), {
     lang: 'log',
     theme: 'nord'
   })
