@@ -54,6 +54,11 @@ public class Config implements Serializable {
     private Boolean delete;
 
     /**
+     * 自动推断剧集偏移
+     */
+    private Boolean offset;
+
+    /**
      * DEBUG
      */
     private Boolean debug;

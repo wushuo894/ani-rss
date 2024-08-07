@@ -56,6 +56,7 @@ public class ConfigUtil {
                 .setRename(true)
                 .setFileExist(false)
                 .setDelete(false)
+                .setOffset(false)
                 .setHost("")
                 .setUsername("")
                 .setPassword("")
