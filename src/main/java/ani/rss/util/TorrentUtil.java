@@ -129,7 +129,11 @@ public class TorrentUtil {
             String savePath = StrFormatter.format("{}/{}/Season {}", downloadPath, title, season);
 
             if (config.getFileExist()) {
-                File seasonFile = new File(downloadPath + File.separator + ani.getTitle() + "/S" + String.format("%02d", season));
+                File seasonFile = new File(StrFormatter.format("{}/{}/S{}", downloadPath, title, String.format("%02d", season)));
+                if (seasonFile.exists()) {
+                    savePath = seasonFile.toString();
+                }
+                seasonFile = new File(StrFormatter.format("{}/{}/S{}", downloadPath, title, season));
                 if (seasonFile.exists()) {
                     savePath = seasonFile.toString();
                 }
@@ -264,6 +268,7 @@ public class TorrentUtil {
             return false;
         }
 
+        String title = ani.getTitle();
         Integer season = ani.getSeason();
         String reName = item.getReName();
 
@@ -271,10 +276,16 @@ public class TorrentUtil {
         List<File> files = new ArrayList<>();
 
         File sFile = new File(savePath);
-        File seasonFile = new File(downloadPath + File.separator + ani.getTitle() + "/S" + String.format("%02d", season));
+
+
         if (sFile.exists()) {
             files.addAll(Arrays.asList(ObjectUtil.defaultIfNull(sFile.listFiles(), new File[]{})));
         }
+        File seasonFile = new File(StrFormatter.format("{}/{}/S{}", downloadPath, title, String.format("%02d", season)));
+        if (seasonFile.exists()) {
+            files.addAll(Arrays.asList(ObjectUtil.defaultIfNull(seasonFile.listFiles(), new File[]{})));
+        }
+        seasonFile = new File(StrFormatter.format("{}/{}/S{}", downloadPath, title, season));
         if (seasonFile.exists()) {
             files.addAll(Arrays.asList(ObjectUtil.defaultIfNull(seasonFile.listFiles(), new File[]{})));
         }
