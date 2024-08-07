@@ -275,7 +275,7 @@ public class TorrentUtil {
         List<TorrentsInfo> torrentsInfos = getTorrentsInfos();
         for (TorrentsInfo torrentsInfo : torrentsInfos) {
             String name = torrentsInfo.getName();
-            if (name.equalsIgnoreCase(title)) {
+            if (name.equalsIgnoreCase(reName)) {
                 log.info("已存在下载任务 {}", reName);
                 saveTorrent(ani, item);
                 return true;
