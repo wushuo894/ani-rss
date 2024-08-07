@@ -127,6 +127,13 @@ public class TorrentUtil {
             File saveTorrent = saveTorrent(ani, item);
 
             String savePath = StrFormatter.format("{}/{}/Season {}", downloadPath, title, season);
+
+            if (config.getFileExist()) {
+                File seasonFile = new File(downloadPath + File.separator + ani.getTitle() + "/S" + String.format("%02d", season));
+                if (seasonFile.exists()) {
+                    savePath = seasonFile.toString();
+                }
+            }
             download(reName, savePath, saveTorrent);
         }
     }
