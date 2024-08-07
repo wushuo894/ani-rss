@@ -1,6 +1,6 @@
 <template>
   <el-dialog v-model="editDialogVisible" title="修改订阅" center>
-    <el-form style="max-width: 600px" label-width="auto"
+    <el-form label-width="auto"
              @submit="(event)=>{
                 event.preventDefault()
              }"
