@@ -55,6 +55,9 @@
             <el-form-item label="自动删除已完成任务">
               <el-switch v-model:model-value="config.delete"></el-switch>
             </el-form-item>
+            <el-form-item label="自动推断剧集偏移">
+              <el-switch v-model:model-value="config.offset"></el-switch>
+            </el-form-item>
             <el-form-item label="DEBUG">
               <el-switch v-model:model-value="config.debug"></el-switch>
             </el-form-item>
@@ -85,7 +88,8 @@
               <el-input v-model:model-value="config.mailAccount.host" :disabled="!config.mail"/>
             </el-form-item>
             <el-form-item label="SMTP端口">
-              <el-input-number v-model:model-value="config.mailAccount.port" min="1" max="65535" :disabled="!config.mail"/>
+              <el-input-number v-model:model-value="config.mailAccount.port" min="1" max="65535"
+                               :disabled="!config.mail"/>
             </el-form-item>
             <el-form-item label="发件人邮箱">
               <el-input v-model:model-value="config.mailAccount.from" :disabled="!config.mail"/>
@@ -150,6 +154,7 @@ const config = ref({
   'downloadPath': '',
   'fileExist': true,
   'delete': false,
+  'offset': false,
   'debug': false,
   'proxy': false,
   'proxyHost': '',
