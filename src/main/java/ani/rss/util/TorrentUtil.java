@@ -272,22 +272,27 @@ public class TorrentUtil {
         Integer season = ani.getSeason();
         String reName = item.getReName();
 
-        String savePath = downloadPath + File.separator + ani.getTitle() + "/Season " + season;
         List<File> files = new ArrayList<>();
-
-        File sFile = new File(savePath);
-
-
-        if (sFile.exists()) {
-            files.addAll(Arrays.asList(ObjectUtil.defaultIfNull(sFile.listFiles(), new File[]{})));
+        File seasonFile = new File(StrFormatter.format("{}/{}/Season {}", downloadPath, title, season));
+        if (seasonFile.exists()) {
+            files.addAll(Arrays.asList(ObjectUtil.defaultIfNull(seasonFile.listFiles(), new File[]{})));
         }
-        File seasonFile = new File(StrFormatter.format("{}/{}/S{}", downloadPath, title, String.format("%02d", season)));
+        seasonFile = new File(StrFormatter.format("{}/{}/S{}", downloadPath, title, String.format("%02d", season)));
         if (seasonFile.exists()) {
             files.addAll(Arrays.asList(ObjectUtil.defaultIfNull(seasonFile.listFiles(), new File[]{})));
         }
         seasonFile = new File(StrFormatter.format("{}/{}/S{}", downloadPath, title, season));
         if (seasonFile.exists()) {
             files.addAll(Arrays.asList(ObjectUtil.defaultIfNull(seasonFile.listFiles(), new File[]{})));
+        }
+
+        List<TorrentsInfo> torrentsInfos = getTorrentsInfos();
+        for (TorrentsInfo torrentsInfo : torrentsInfos) {
+            String name = torrentsInfo.getName();
+            if (name.equalsIgnoreCase(title)) {
+                log.info("已存在下载任务 {}", reName);
+                return true;
+            }
         }
 
         if (files.stream()
