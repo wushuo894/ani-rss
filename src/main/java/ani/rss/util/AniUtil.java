@@ -155,6 +155,7 @@ public class AniUtil {
                 .setSeason(season)
                 .setTitle(title.trim())
                 .setCover(saveJpg)
+                .setEnable(true)
                 .setExclude(List.of("720"));
 
         log.debug("获取到动漫信息 {}", JSONUtil.formatJsonStr(GSON.toJson(ani)));
