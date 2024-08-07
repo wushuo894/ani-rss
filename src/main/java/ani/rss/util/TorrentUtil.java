@@ -277,6 +277,7 @@ public class TorrentUtil {
             String name = torrentsInfo.getName();
             if (name.equalsIgnoreCase(title)) {
                 log.info("已存在下载任务 {}", reName);
+                saveTorrent(ani, item);
                 return true;
             }
         }
