@@ -1,18 +1,25 @@
 <template>
   <el-dialog v-model="addDialogVisible" title="添加订阅" center>
-    <el-form style="max-width: 600px" label-width="auto"
-             @submit="(event)=>{
+    <div v-if="showRss" @keydown.enter="getRss">
+      <el-form label-width="auto"
+               v-if="showRss" @keydown.enter="getRss"
+               @submit="(event)=>{
                 event.preventDefault()
              }">
-      <div v-if="showRss" @keydown.enter="getRss">
         <el-form-item label="RSS 地址">
           <el-input v-model:model-value="ani.url"></el-input>
         </el-form-item>
-        <div style="display: flex;justify-content: end;width: 100%;margin-top: 10px;">
-          <el-button :loading="rssButtonLoading" @click="getRss">确定</el-button>
-        </div>
+      </el-form>
+      <div style="display: flex;justify-content: end;width: 100%;margin-top: 10px;">
+        <el-button :loading="rssButtonLoading" @click="getRss">确定</el-button>
       </div>
-      <div v-else>
+    </div>
+
+    <div v-else>
+      <el-form label-width="auto"
+               @submit="(event)=>{
+                event.preventDefault()
+             }">
         <el-form-item label="标题">
           <el-input v-model:model-value="ani.title"></el-input>
         </el-form-item>
@@ -59,8 +66,8 @@
         <div style="display: flex;justify-content: end;width: 100%;margin-top: 10px;">
           <el-button :loading="addAniButtonLoading" @click="addAni">确定</el-button>
         </div>
-      </div>
-    </el-form>
+      </el-form>
+    </div>
   </el-dialog>
 </template>
 

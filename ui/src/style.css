@@ -14,9 +14,9 @@ body {
     }
 }
 
-@media (min-width: 450px) {
+@media (min-width: 900px) {
     .el-dialog {
-        --el-dialog-width: 500px;
+        --el-dialog-width: 800px;
     }
 }
 

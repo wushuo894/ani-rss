@@ -12,8 +12,8 @@
                   color:#d8dee9ff;
                   margin-top: 5px;"
          v-loading="loading">
-      <el-scrollbar ref="scrollbarRef" height="400px">
-        <div ref="innerRef" style="padding: 5px;" v-html="htmlLogs">
+      <el-scrollbar ref="scrollbarRef" height="450">
+        <div ref="innerRef" style="padding: 5px;min-height: 450px;" v-html="htmlLogs">
         </div>
       </el-scrollbar>
     </div>

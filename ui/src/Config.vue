@@ -30,7 +30,7 @@
           </el-form>
         </el-tab-pane>
         <el-tab-pane label="基本设置">
-          <el-form style="max-width: 600px" label-width="auto"
+          <el-form label-width="auto"
                    @submit="(event)=>{
                       event.preventDefault()
                    }">
@@ -61,7 +61,7 @@
           </el-form>
         </el-tab-pane>
         <el-tab-pane label="代理设置">
-          <el-form style="max-width: 600px" label-width="auto"
+          <el-form label-width="auto"
                    @submit="(event)=>{
                       event.preventDefault()
                    }">
@@ -78,7 +78,7 @@
           </el-form>
         </el-tab-pane>
         <el-tab-pane label="邮件通知">
-          <el-form style="max-width: 600px" label-width="auto" @submit="(event)=>{
+          <el-form label-width="auto" @submit="(event)=>{
                       event.preventDefault()
                    }">
             <el-form-item label="SMTP地址">
