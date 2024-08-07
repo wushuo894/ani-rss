@@ -272,6 +272,15 @@ public class TorrentUtil {
         Integer season = ani.getSeason();
         String reName = item.getReName();
 
+        List<TorrentsInfo> torrentsInfos = getTorrentsInfos();
+        for (TorrentsInfo torrentsInfo : torrentsInfos) {
+            String name = torrentsInfo.getName();
+            if (name.equalsIgnoreCase(title)) {
+                log.info("已存在下载任务 {}", reName);
+                return true;
+            }
+        }
+
         List<File> files = new ArrayList<>();
         File seasonFile = new File(StrFormatter.format("{}/{}/Season {}", downloadPath, title, season));
         if (seasonFile.exists()) {
@@ -286,19 +295,10 @@ public class TorrentUtil {
             files.addAll(Arrays.asList(ObjectUtil.defaultIfNull(seasonFile.listFiles(), new File[]{})));
         }
 
-        List<TorrentsInfo> torrentsInfos = getTorrentsInfos();
-        for (TorrentsInfo torrentsInfo : torrentsInfos) {
-            String name = torrentsInfo.getName();
-            if (name.equalsIgnoreCase(title)) {
-                log.info("已存在下载任务 {}", reName);
-                return true;
-            }
-        }
-
         if (files.stream()
                 .filter(File::isFile)
                 .filter(file -> List.of("mp4", "mkv", "avi").contains(FileUtil.extName(file)))
-                .anyMatch(file -> FileUtil.getPrefix(file).equals(reName))) {
+                .anyMatch(file -> FileUtil.mainName(file).equals(reName))) {
             log.info("已下载 {}", reName);
             // 保存 torrent 下次只校验 torrent 是否存在 ， 可以将config设置到固态硬盘，防止一直唤醒机械硬盘
             saveTorrent(ani, item);
