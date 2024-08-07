@@ -1,6 +1,7 @@
 package ani.rss.util;
 
 import ani.rss.entity.Ani;
+import ani.rss.entity.Config;
 import ani.rss.entity.Item;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.bean.copier.CopyOptions;
@@ -165,12 +166,17 @@ public class AniUtil {
         if (items.isEmpty()) {
             return ani;
         }
-        int offset = -(items.stream()
-                .map(Item::getEpisode)
-                .min(Comparator.comparingInt(i -> i))
-                .get() - 1);
-        log.debug("自动获取到剧集偏移为 {}", offset);
-        return ani.setOffset(offset);
+        Config config = ConfigUtil.getCONFIG();
+        // 自动推断剧集偏移
+        if (config.getOffset()) {
+            int offset = -(items.stream()
+                    .map(Item::getEpisode)
+                    .min(Comparator.comparingInt(i -> i))
+                    .get() - 1);
+            log.debug("自动获取到剧集偏移为 {}", offset);
+            ani.setOffset(offset);
+        }
+        return ani;
     }
 
     public static String saveJpg(String coverUrl) {
