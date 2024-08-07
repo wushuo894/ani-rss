@@ -113,7 +113,7 @@ import Logs from "./Logs.vue";
 const pagerCount = ref(10)
 
 const title = ref('')
-const enable = ref('全部')
+const enable = ref('已启用')
 const enableSelect = ref([
   {
     label: '全部',
