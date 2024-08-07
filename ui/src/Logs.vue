@@ -13,7 +13,7 @@
                   margin-top: 5px;"
          v-loading="loading">
       <el-scrollbar ref="scrollbarRef" height="450">
-        <div ref="innerRef" style="padding: 5px;min-height: 450px;" v-html="htmlLogs">
+        <div ref="innerRef" style="padding: 5px;min-height: 400px;" v-html="htmlLogs">
         </div>
       </el-scrollbar>
     </div>
