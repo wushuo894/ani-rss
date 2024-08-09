@@ -5,6 +5,7 @@ import ani.rss.entity.Config;
 import ani.rss.entity.Item;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.bean.copier.CopyOptions;
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.lang.Assert;
@@ -221,7 +222,6 @@ public class AniUtil {
             }
             String itemTitle = "";
             String torrent = "";
-            int length = 0;
 
             NodeList itemChildNodes = item.getChildNodes();
             for (int j = 0; j < itemChildNodes.getLength(); j++) {
@@ -233,7 +233,6 @@ public class AniUtil {
                 if (itemChildNodeName.equals("enclosure")) {
                     NamedNodeMap attributes = itemChild.getAttributes();
                     torrent = attributes.getNamedItem("url").getNodeValue();
-                    length = Integer.parseInt(attributes.getNamedItem("length").getNodeValue());
                 }
             }
 
@@ -246,13 +245,11 @@ public class AniUtil {
                     new Item()
                             .setTitle(itemTitle)
                             .setTorrent(torrent)
-                            .setLength(length)
             );
         }
 
         String s = "(.*|\\[.*])( -? \\d+|\\[\\d+]|\\[\\d+.?[vV]\\d]|第\\d+[话話集]|\\[第?\\d+[话話集]]|\\[\\d+.?END]|[Ee][Pp]?\\d+)(.*)";
 
-        List<String> es = new ArrayList<>();
         items = items.stream()
                 .filter(item -> {
                     try {
@@ -262,11 +259,7 @@ public class AniUtil {
                         if (StrUtil.isBlank(episode)) {
                             return false;
                         }
-                        if (es.contains(episode)) {
-                            return false;
-                        }
                         item.setEpisode(Integer.parseInt(episode) + offset);
-                        es.add(String.valueOf(item.getEpisode()));
                         item
                                 .setReName(
                                         StrFormatter.format("{} S{}E{}",
@@ -277,12 +270,11 @@ public class AniUtil {
                         return true;
                     } catch (Exception e) {
                         log.error("解析rss视频集次出现问题");
-                        log.error(e.getMessage(), e);
+                        log.debug(e.getMessage(), e);
                     }
                     return false;
                 }).collect(Collectors.toList());
-
-        return items;
+        return CollUtil.distinct(items, Item::getReName, false);
     }
 
     /**
