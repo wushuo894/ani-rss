@@ -24,11 +24,6 @@ public class Item implements Serializable {
     private String torrent;
 
     /**
-     * 大小
-     */
-    private Integer length;
-
-    /**
      * 集数
      */
     private Integer episode;
