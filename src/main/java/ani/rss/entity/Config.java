@@ -59,6 +59,11 @@ public class Config implements Serializable {
     private Boolean offset;
 
     /**
+     * 根据首字母存放
+     */
+    private Boolean acronym;
+
+    /**
      * DEBUG
      */
     private Boolean debug;
