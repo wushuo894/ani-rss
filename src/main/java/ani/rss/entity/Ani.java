@@ -35,6 +35,11 @@ public class Ani implements Serializable {
     private String cover;
 
     /**
+     * 字幕组
+     */
+    private String subgroup;
+
+    /**
      * 排除
      */
     private List<String> exclude;
