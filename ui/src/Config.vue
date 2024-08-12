@@ -19,6 +19,14 @@
             <el-form-item label="下载地址">
               <el-input v-model:model-value="config.downloadPath"></el-input>
             </el-form-item>
+            <el-form-item label="拼音首字母">
+              <div>
+                <el-switch v-model:model-value="config.acronym"></el-switch>
+                <div>
+                  存放为 #,0,A-Z 文件夹下
+                </div>
+              </div>
+            </el-form-item>
             <el-form-item label="同时下载数量限制">
               <div>
                 <el-input-number v-model:model-value="config.downloadCount" min="0"></el-input-number>
@@ -155,6 +163,7 @@ const config = ref({
   'fileExist': true,
   'delete': false,
   'offset': false,
+  'acronym': false,
   'debug': false,
   'proxy': false,
   'proxyHost': '',

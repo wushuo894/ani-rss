@@ -57,6 +57,8 @@ public class ConfigUtil {
                 .setFileExist(false)
                 .setDelete(false)
                 .setOffset(false)
+                .setAcronym(false)
+                .setDownloadPath("")
                 .setHost("")
                 .setUsername("")
                 .setPassword("")

@@ -9,7 +9,9 @@ import cn.hutool.core.text.StrFormatter;
 import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.core.util.EnumUtil;
 import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.core.util.ReUtil;
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.extra.pinyin.PinyinUtil;
 import cn.hutool.http.HttpResponse;
 import cn.hutool.http.HttpUtil;
 import cn.hutool.json.JSONUtil;
@@ -125,19 +127,7 @@ public class TorrentUtil {
 
             log.info("添加下载 {}", reName);
             File saveTorrent = saveTorrent(ani, item);
-
-            String savePath = StrFormatter.format("{}/{}/Season {}", downloadPath, title, season);
-
-            if (config.getFileExist()) {
-                File seasonFile = new File(StrFormatter.format("{}/{}/S{}", downloadPath, title, String.format("%02d", season)));
-                if (seasonFile.exists()) {
-                    savePath = seasonFile.toString();
-                }
-                seasonFile = new File(StrFormatter.format("{}/{}/S{}", downloadPath, title, season));
-                if (seasonFile.exists()) {
-                    savePath = seasonFile.toString();
-                }
-            }
+            String savePath = getDownloadPath(ani).toString();
             download(reName, savePath, saveTorrent);
         }
     }
@@ -181,6 +171,7 @@ public class TorrentUtil {
      * @param torrentFile
      */
     public static void download(String name, String savePath, File torrentFile) {
+        savePath = savePath.replace("\\", "/");
         Config config = ConfigUtil.getCONFIG();
         String host = config.getHost();
         Integer downloadCount = config.getDownloadCount();
@@ -267,9 +258,6 @@ public class TorrentUtil {
         if (!fileExist || StrUtil.isBlank(downloadPath)) {
             return false;
         }
-
-        String title = ani.getTitle();
-        Integer season = ani.getSeason();
         String reName = item.getReName();
 
         List<TorrentsInfo> torrentsInfos = getTorrentsInfos();
@@ -282,19 +270,7 @@ public class TorrentUtil {
             }
         }
 
-        List<File> files = new ArrayList<>();
-        File seasonFile = new File(StrFormatter.format("{}/{}/Season {}", downloadPath, title, season));
-        if (seasonFile.exists()) {
-            files.addAll(Arrays.asList(ObjectUtil.defaultIfNull(seasonFile.listFiles(), new File[]{})));
-        }
-        seasonFile = new File(StrFormatter.format("{}/{}/S{}", downloadPath, title, String.format("%02d", season)));
-        if (seasonFile.exists()) {
-            files.addAll(Arrays.asList(ObjectUtil.defaultIfNull(seasonFile.listFiles(), new File[]{})));
-        }
-        seasonFile = new File(StrFormatter.format("{}/{}/S{}", downloadPath, title, season));
-        if (seasonFile.exists()) {
-            files.addAll(Arrays.asList(ObjectUtil.defaultIfNull(seasonFile.listFiles(), new File[]{})));
-        }
+        List<File> files = Arrays.asList(ObjectUtil.defaultIfNull(getDownloadPath(ani).listFiles(), new File[]{}));
 
         if (files.stream()
                 .filter(File::isFile)
@@ -307,6 +283,47 @@ public class TorrentUtil {
         }
 
         return false;
+    }
+
+    /**
+     * 获取下载位置
+     *
+     * @param ani
+     * @return
+     */
+    public static File getDownloadPath(Ani ani) {
+        String title = ani.getTitle().trim();
+        Integer season = ani.getSeason();
+
+        Config config = ConfigUtil.getCONFIG();
+        String downloadPath = config.getDownloadPath();
+        Boolean acronym = config.getAcronym();
+        Boolean fileExist = config.getFileExist();
+        if (acronym) {
+            String pinyin = PinyinUtil.getPinyin(title);
+            String s = pinyin.substring(0, 1).toUpperCase();
+            if (ReUtil.isMatch("^\\d$", s)) {
+                s = "0";
+            } else if (!ReUtil.isMatch("^\\w$", s)) {
+                s = "#";
+            }
+            downloadPath += "/" + s;
+        }
+
+        File file = new File(StrFormatter.format("{}/{}/Season {}", downloadPath, title, season));
+        if (!fileExist) {
+            return file;
+        }
+
+        File seasonFile = new File(StrFormatter.format("{}/{}/S{}", downloadPath, title, season));
+        if (seasonFile.exists()) {
+            return seasonFile;
+        }
+        seasonFile = new File(StrFormatter.format("{}/{}/S{}", downloadPath, title, String.format("%02d", season)));
+        if (seasonFile.exists()) {
+            return seasonFile;
+        }
+        return file;
     }
 
     /**
