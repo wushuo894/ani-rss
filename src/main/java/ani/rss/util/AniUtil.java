@@ -77,8 +77,10 @@ public class AniUtil {
         log.debug("加载订阅 共{}项", ANI_LIST.size());
 
 
-        // 处理旧图片
+        // 处理旧数据
         for (Ani ani : ANI_LIST) {
+            String subgroup = StrUtil.blankToDefault(ani.getSubgroup(), "");
+            ani.setSubgroup(subgroup);
             try {
                 String cover = ani.getCover();
                 if (!ReUtil.contains("http(s*)://", cover)) {
@@ -134,29 +136,55 @@ public class AniUtil {
             title = ReUtil.replaceAll(title, seasonReg, "").trim();
         }
 
-        String bangumiId = HttpUtil.decodeParamMap(url, StandardCharsets.UTF_8)
-                .get("bangumiId");
+        Map<String, String> decodeParamMap = HttpUtil.decodeParamMap(url, StandardCharsets.UTF_8);
 
+        String bangumiId = "", subgroupid = "";
+        for (String k : decodeParamMap.keySet()) {
+            String v = decodeParamMap.get(k);
+            if (k.equalsIgnoreCase("bangumiId")) {
+                bangumiId = v;
+            }
+            if (k.equalsIgnoreCase("subgroupid")) {
+                subgroupid = v;
+            }
+        }
 
-        String cover = HttpReq.get(URLUtil.getHost(URLUtil.url(url)) + "/Home/Bangumi/" + bangumiId)
-                .thenFunction(res -> {
+        Ani ani = new Ani();
+
+        String finalSubgroupid = subgroupid;
+        HttpReq.get(URLUtil.getHost(URLUtil.url(url)) + "/Home/Bangumi/" + bangumiId)
+                .then(res -> {
                     org.jsoup.nodes.Document html = Jsoup.parse(res.body());
+
+                    // 获取封面
                     Elements elementsByClass = html.getElementsByClass("bangumi-poster");
                     Element element = elementsByClass.get(0);
                     String style = element.attr("style");
                     String image = style.replace("background-image: url('", "").replace("');", "");
                     HttpConnection httpConnection = (HttpConnection) ReflectUtil.getFieldValue(res, "httpConnection");
-                    return URLUtil.getHost(httpConnection.getUrl()) + image;
+                    String saveJpg = saveJpg(URLUtil.getHost(httpConnection.getUrl()) + image);
+                    ani.setCover(saveJpg);
+
+                    // 获取字幕组
+                    Elements subgroupTexts = html.getElementsByClass("subgroup-text");
+                    for (Element subgroupText : subgroupTexts) {
+                        String id = subgroupText.attr("id");
+                        if (!id.equalsIgnoreCase(finalSubgroupid)) {
+                            continue;
+                        }
+                        String ownText = subgroupText.ownText().trim();
+                        if (StrUtil.isNotBlank(ownText)) {
+                            ani.setSubgroup(ownText);
+                            continue;
+                        }
+                        ani.setSubgroup(subgroupText.getElementsByTag("a").get(0).text().trim());
+                    }
                 });
 
-        String saveJpg = saveJpg(cover);
-
-        Ani ani = new Ani();
         ani.setOffset(0)
                 .setUrl(url.trim())
                 .setSeason(season)
                 .setTitle(title.trim())
-                .setCover(saveJpg)
                 .setEnable(true)
                 .setExclude(List.of("720"));
 

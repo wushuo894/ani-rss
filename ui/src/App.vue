@@ -64,6 +64,12 @@
                       未启用
                     </el-tag>
                   </div>
+                  <div style="width: 4px;"></div>
+                  <div v-if="item['subgroup']">
+                    <el-tag type="info">
+                      {{ item['subgroup'] }}
+                    </el-tag>
+                  </div>
                 </div>
               </div>
               <div
