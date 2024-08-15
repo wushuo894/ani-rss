@@ -20,10 +20,10 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Slf4j
 public class TorrentUtil {
@@ -127,7 +127,7 @@ public class TorrentUtil {
 
             log.info("添加下载 {}", reName);
             File saveTorrent = saveTorrent(ani, item);
-            String savePath = getDownloadPath(ani).toString();
+            String savePath = getDownloadPath(ani).get(0).toString();
             download(reName, savePath, saveTorrent);
         }
     }
@@ -269,8 +269,10 @@ public class TorrentUtil {
                 return true;
             }
         }
-
-        List<File> files = Arrays.asList(ObjectUtil.defaultIfNull(getDownloadPath(ani).listFiles(), new File[]{}));
+        List<File> files = getDownloadPath(ani)
+                .stream()
+                .flatMap(file -> Stream.of(ObjectUtil.defaultIfNull(file.listFiles(), new File[]{})))
+                .collect(Collectors.toList());
 
         if (files.stream()
                 .filter(File::isFile)
@@ -291,7 +293,7 @@ public class TorrentUtil {
      * @param ani
      * @return
      */
-    public static File getDownloadPath(Ani ani) {
+    public static List<File> getDownloadPath(Ani ani) {
         String title = ani.getTitle().trim();
         Integer season = ani.getSeason();
 
@@ -309,21 +311,22 @@ public class TorrentUtil {
             }
             downloadPath += "/" + s;
         }
-
+        List<File> files = new ArrayList<>();
         File file = new File(StrFormatter.format("{}/{}/Season {}", downloadPath, title, season));
         if (!fileExist) {
-            return file;
+            files.add(file);
+            return files;
         }
-
         File seasonFile = new File(StrFormatter.format("{}/{}/S{}", downloadPath, title, season));
         if (seasonFile.exists()) {
-            return seasonFile;
+            files.add(seasonFile);
         }
         seasonFile = new File(StrFormatter.format("{}/{}/S{}", downloadPath, title, String.format("%02d", season)));
         if (seasonFile.exists()) {
-            return seasonFile;
+            files.add(seasonFile);
         }
-        return file;
+        files.add(file);
+        return files;
     }
 
     /**
