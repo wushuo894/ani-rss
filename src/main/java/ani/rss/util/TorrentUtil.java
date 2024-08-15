@@ -254,8 +254,13 @@ public class TorrentUtil {
         }
 
         String downloadPath = config.getDownloadPath();
+
+        if (StrUtil.isBlank(downloadPath)) {
+            return false;
+        }
+
         Boolean fileExist = config.getFileExist();
-        if (!fileExist || StrUtil.isBlank(downloadPath)) {
+        if (!fileExist) {
             return false;
         }
         String reName = item.getReName();
