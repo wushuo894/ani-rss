@@ -5,6 +5,7 @@ import ani.rss.entity.Config;
 import ani.rss.entity.Item;
 import ani.rss.entity.TorrentsInfo;
 import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.lang.Assert;
 import cn.hutool.core.text.StrFormatter;
 import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.core.util.EnumUtil;
@@ -418,11 +419,12 @@ public class TorrentUtil {
 
             log.info("重命名 {} ==> {}", name, newPath);
 
-            HttpReq.post(host + "/api/v2/torrents/renameFile", false)
+            Boolean b = HttpReq.post(host + "/api/v2/torrents/renameFile", false)
                     .form("hash", hash)
                     .form("oldPath", name)
                     .form("newPath", newPath)
                     .thenFunction(HttpResponse::isOk);
+            Assert.isTrue(b, "重命名失败 {} ==> {}", name, newPath);
         }
 
     }
