@@ -393,7 +393,7 @@ public class TorrentUtil {
         for (String name : nameList) {
             String ext = FileUtil.extName(name);
             String newPath = reName;
-            if (List.of("mp4", "mkv", "avi").contains(ext)) {
+            if (List.of("mp4", "mkv", "avi", "wmv").contains(ext)) {
                 newPath = newPath + "." + ext;
             } else if ("ass".equalsIgnoreCase(ext)) {
                 String s = FileUtil.extName(FileUtil.mainName(name));
