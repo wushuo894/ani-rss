@@ -309,7 +309,7 @@ public class TorrentUtil {
             String s = pinyin.substring(0, 1).toUpperCase();
             if (ReUtil.isMatch("^\\d$", s)) {
                 s = "0";
-            } else if (!ReUtil.isMatch("^\\w$", s)) {
+            } else if (!ReUtil.isMatch("^[a-zA-Z]$", s)) {
                 s = "#";
             }
             downloadPath += "/" + s;
@@ -332,7 +332,7 @@ public class TorrentUtil {
                 continue;
             }
             String name = seasonFile.getName();
-            String s1 = ReUtil.get("^\\w+", name, 0);
+            String s1 = ReUtil.get("^[a-zA-Z]+", name, 0);
             if (StrUtil.isBlank(s1)) {
                 continue;
             }
