@@ -8,10 +8,7 @@ import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.text.StrFormatter;
 import cn.hutool.core.thread.ThreadUtil;
-import cn.hutool.core.util.EnumUtil;
-import cn.hutool.core.util.ObjectUtil;
-import cn.hutool.core.util.ReUtil;
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.util.*;
 import cn.hutool.extra.pinyin.PinyinUtil;
 import cn.hutool.http.HttpResponse;
 import cn.hutool.http.HttpUtil;
@@ -334,22 +331,26 @@ public class TorrentUtil {
             if (!seasonFile.isDirectory()) {
                 continue;
             }
-            List<String> seasonNames = List.of(
-                    "S" + season,
-                    "S " + season,
-                    "S" + String.format("%02d", season),
-                    "S " + String.format("%02d", season),
-                    "Season" + season,
-                    "Season " + season,
-                    "Season" + String.format("%02d", season),
-                    "Season " + String.format("%02d", season)
-            );
-            for (String seasonName : seasonNames) {
-                if (!seasonFile.getName().equalsIgnoreCase(seasonName)) {
-                    continue;
-                }
-                files.add(seasonFile);
+            String name = seasonFile.getName();
+            String s1 = ReUtil.get("^\\w+", name, 0);
+            if (StrUtil.isBlank(s1)) {
+                continue;
             }
+            if ((!s1.equalsIgnoreCase("S")) && (!s1.equalsIgnoreCase("Season"))) {
+                continue;
+            }
+            String s = ReUtil.get("\\d+$", name, 0);
+            if (StrUtil.isBlank(s)) {
+                continue;
+            }
+            if (!NumberUtil.isNumber(s)) {
+                continue;
+            }
+            Integer sInt = Integer.parseInt(s);
+            if (!NumberUtil.equals(sInt, season)) {
+                continue;
+            }
+            files.add(seasonFile);
         }
         files.add(file);
         return files;
