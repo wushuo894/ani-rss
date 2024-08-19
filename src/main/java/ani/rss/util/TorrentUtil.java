@@ -317,19 +317,39 @@ public class TorrentUtil {
             }
             downloadPath += "/" + s;
         }
-        List<File> files = new ArrayList<>();
         File file = new File(StrFormatter.format("{}/{}/Season {}", downloadPath, title, season));
+        List<File> files = new ArrayList<>();
         if (!fileExist) {
             files.add(file);
             return files;
         }
-        File seasonFile = new File(StrFormatter.format("{}/{}/S{}", downloadPath, title, season));
-        if (seasonFile.exists()) {
-            files.add(seasonFile);
+        File aniFile = new File(downloadPath + "/" + title);
+        if (!aniFile.exists()) {
+            files.add(file);
+            return files;
         }
-        seasonFile = new File(StrFormatter.format("{}/{}/S{}", downloadPath, title, String.format("%02d", season)));
-        if (seasonFile.exists()) {
-            files.add(seasonFile);
+
+        File[] seasonFiles = ObjectUtil.defaultIfNull(aniFile.listFiles(), new File[]{});
+        for (File seasonFile : seasonFiles) {
+            if (!seasonFile.isDirectory()) {
+                continue;
+            }
+            List<String> seasonNames = List.of(
+                    "S" + season,
+                    "S " + season,
+                    "S" + String.format("%02d", season),
+                    "S " + String.format("%02d", season),
+                    "Season" + season,
+                    "Season " + season,
+                    "Season" + String.format("%02d", season),
+                    "Season " + String.format("%02d", season)
+            );
+            for (String seasonName : seasonNames) {
+                if (!seasonFile.getName().equalsIgnoreCase(seasonName)) {
+                    continue;
+                }
+                files.add(seasonFile);
+            }
         }
         files.add(file);
         return files;
