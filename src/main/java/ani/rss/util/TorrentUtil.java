@@ -412,11 +412,11 @@ public class TorrentUtil {
         List<String> newNames = new ArrayList<>();
 
         for (String name : nameList) {
-            String ext = FileUtil.extName(name);
+            String ext = FileUtil.extName(name).toLowerCase();
             String newPath = reName;
             if (List.of("mp4", "mkv", "avi", "wmv").contains(ext)) {
                 newPath = newPath + "." + ext;
-            } else if ("ass".equalsIgnoreCase(ext)) {
+            } else if (List.of("ass", "ssa", "sub", "srt", "lyc").contains(ext)) {
                 String s = FileUtil.extName(FileUtil.mainName(name));
                 if (StrUtil.isNotBlank(s)) {
                     newPath = newPath + "." + s;
