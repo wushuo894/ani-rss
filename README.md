@@ -11,7 +11,6 @@
 
 </div>
 
-
 ### 实现功能
 
 - [x] 自动下载
@@ -42,3 +41,13 @@
 
 ps: 如果需要开启 文件已下载自动跳过 功能 请确保 qBittorrent 与本程序 docker 映射挂载路径一致
 
+
+### 蜜柑
+
+已被墙
+
+[https://mikanani.me/](https://mikanime.tv/)
+
+未被墙
+
+[https://mikanime.tv/](https://mikanime.tv/)
