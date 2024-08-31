@@ -4,7 +4,7 @@
 
 ### docker 部署
 
-    docker run -d --name ani-rss -v ./config:/config -p 7789:7789 -e PORT="7789" -e CONFIG="/config" -e TZ=Asia/Shanghai --restart always wushuo894/ani-rss
+    docker run -d --name ani-rss -v /volume1/docker/ani-rss/config:/config -p 7789:7789 -e PORT="7789" -e CONFIG="/config" -e TZ=Asia/Shanghai --restart always wushuo894/ani-rss
 
 | 参数     | 作用       | 默认值           |
 |--------|----------|---------------|
