@@ -29,6 +29,8 @@
 
 ![1.jpg](https://github.com/wushuo894/ani-rss/raw/master/image/1.jpg)
 
+默认 用户名: admin 密码: admin
+
 ### docker 部署
 
     docker run -d --name ani-rss -v /volume1/docker/ani-rss/config:/config -p 7789:7789 -e PORT="7789" -e CONFIG="/config" -e TZ=Asia/Shanghai --restart always wushuo894/ani-rss

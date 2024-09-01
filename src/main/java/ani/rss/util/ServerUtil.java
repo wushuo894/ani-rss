@@ -1,11 +1,17 @@
 package ani.rss.util;
 
+import ani.rss.action.BaseAction;
 import ani.rss.action.RootAction;
+import ani.rss.annotation.Auth;
 import ani.rss.annotation.Path;
+import ani.rss.entity.Config;
+import ani.rss.entity.Login;
 import ani.rss.entity.Result;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.util.ClassUtil;
 import cn.hutool.core.util.ReflectUtil;
+import cn.hutool.core.util.StrUtil;
+import cn.hutool.crypto.digest.MD5;
 import cn.hutool.http.HttpUtil;
 import cn.hutool.http.server.HttpServerRequest;
 import cn.hutool.http.server.HttpServerResponse;
@@ -20,6 +26,9 @@ import java.util.Objects;
 import java.util.Set;
 
 public class ServerUtil {
+    public static final ThreadLocal<HttpServerRequest> request = new ThreadLocal<>();
+    public static final ThreadLocal<HttpServerResponse> response = new ThreadLocal<>();
+
     public static SimpleServer create() {
         Map<String, String> env = System.getenv();
         String port = env.getOrDefault("PORT", "7789");
@@ -43,7 +52,35 @@ public class ServerUtil {
                 @Override
                 public void doAction(HttpServerRequest req, HttpServerResponse res) {
                     try {
-                        ((Action) action).doAction(req, res);
+                        Auth auth = aClass.getAnnotation(Auth.class);
+                        boolean isAuth = true;
+                        if (Objects.nonNull(auth)) {
+                            isAuth = auth.value();
+                        }
+                        if (isAuth) {
+                            String authorization = req.getHeader("Authorization");
+                            if (StrUtil.isBlank(authorization)) {
+                                res.setContentType("application/json; charset=utf-8");
+                                String json = gson.toJson(new Result<>().setCode(403));
+                                IoUtil.writeUtf8(res.getOut(), true, json);
+                                return;
+                            }
+                            Config config = ConfigUtil.getCONFIG();
+                            Login login = config.getLogin();
+                            String username = login.getUsername();
+                            String password = login.getPassword();
+                            String s = MD5.create().digestHex(username + ":" + password);
+                            if (!authorization.equals(s)) {
+                                res.setContentType("application/json; charset=utf-8");
+                                String json = gson.toJson(new Result<>().setCode(403));
+                                IoUtil.writeUtf8(res.getOut(), true, json);
+                                return;
+                            }
+                        }
+                        request.set(req);
+                        response.set(res);
+                        BaseAction baseAction = (BaseAction) action;
+                        baseAction.doAction(req, res);
                     } catch (Exception e) {
                         String message = ExceptionUtil.getMessage(e);
                         res.setContentType("application/json; charset=utf-8");
@@ -54,6 +91,8 @@ public class ServerUtil {
                             log.debug(e);
                         }
                     }
+                    request.remove();
+                    response.remove();
                 }
             });
         }

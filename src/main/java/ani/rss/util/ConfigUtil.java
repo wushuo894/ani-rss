@@ -1,12 +1,14 @@
 package ani.rss.util;
 
 import ani.rss.entity.Config;
+import ani.rss.entity.Login;
 import ani.rss.entity.MyMailAccount;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.bean.copier.CopyOptions;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.lang.Validator;
+import cn.hutool.crypto.digest.MD5;
 import cn.hutool.json.JSONUtil;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -14,6 +16,7 @@ import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.File;
+import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
 @Slf4j
@@ -51,6 +54,7 @@ public class ConfigUtil {
      * 加载设置
      */
     public static void load() {
+        String password = MD5.create().digestHex("admin");
         CONFIG.setSleep(5)
                 .setRenameSleep(1)
                 .setRename(true)
@@ -76,7 +80,8 @@ public class ConfigUtil {
                                 .setFrom("")
                                 .setPass("")
                                 .setSslEnable(false)
-                );
+                )
+                .setLogin(new Login().setUsername("admin").setPassword(password));
         File configFile = getConfigFile();
 
         if (!configFile.exists()) {

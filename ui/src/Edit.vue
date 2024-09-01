@@ -59,6 +59,7 @@
 
 import {ref} from "vue";
 import {ElMessage} from "element-plus";
+import api from "./api.js";
 
 const editDialogVisible = ref(false)
 const ani = ref({
@@ -97,11 +98,7 @@ const editAniButtonLoading = ref(false)
 
 const editAni = () => {
   editAniButtonLoading.value = true
-  fetch('/api/ani', {
-    'method': 'PUT',
-    'body': JSON.stringify(ani.value)
-  })
-      .then(res => res.json())
+  api.put('/api/ani', ani.value)
       .then(res => {
         editAniButtonLoading.value = false
         if (res.code !== 200) {

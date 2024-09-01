@@ -1,5 +1,6 @@
 package ani.rss.action;
 
+import ani.rss.annotation.Auth;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.EnumerationIter;
 import cn.hutool.core.io.FileUtil;
@@ -22,8 +23,9 @@ import java.util.jar.JarFile;
 /**
  * 网页处理
  */
+@Auth(value = false)
 @Slf4j
-public class RootAction implements Action {
+public class RootAction implements BaseAction {
 
     private static final String DEFAULT_INDEX_FILE_NAME = "index.html";
 

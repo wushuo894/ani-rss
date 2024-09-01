@@ -24,6 +24,7 @@
 import {ref} from "vue";
 import {ElMessage} from "element-plus";
 import {codeToHtml} from 'shiki'
+import api from "./api.js";
 
 const logDialogVisible = ref(false)
 const loading = ref(true)
@@ -56,9 +57,7 @@ const showLogs = () => {
   logDialogVisible.value = true
   loading.value = true
   htmlLogs.value = ''
-  fetch('/api/logs', {
-    'method': 'GET'
-  }).then(res => res.json())
+  api.get('/api/logs')
       .then(async res => {
         loading.value = false
         if (res.code !== 200) {

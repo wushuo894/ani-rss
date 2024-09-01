@@ -1,16 +1,11 @@
 package ani.rss.action;
 
 import ani.rss.annotation.Path;
-import ani.rss.entity.Result;
 import ani.rss.util.HttpReq;
 import ani.rss.util.MavenUtil;
 import cn.hutool.core.comparator.VersionComparator;
-import cn.hutool.core.io.IoUtil;
 import cn.hutool.http.server.HttpServerRequest;
 import cn.hutool.http.server.HttpServerResponse;
-import cn.hutool.http.server.action.Action;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import lombok.Data;
 import lombok.experimental.Accessors;
 import lombok.extern.slf4j.Slf4j;
@@ -20,15 +15,10 @@ import org.jsoup.nodes.Element;
 
 @Slf4j
 @Path("/about")
-public class AboutAction implements Action {
-
-    private final Gson gson = new GsonBuilder()
-            .disableHtmlEscaping()
-            .create();
+public class AboutAction implements BaseAction {
 
     @Override
     public void doAction(HttpServerRequest req, HttpServerResponse res) {
-        res.setContentType("application/json; charset=utf-8");
         String version = MavenUtil.getVersion();
 
         About about = new About()
@@ -55,8 +45,7 @@ public class AboutAction implements Action {
             log.debug(e.getMessage(), e);
         }
 
-        String json = gson.toJson(Result.success().setData(about));
-        IoUtil.writeUtf8(res.getOut(), true, json);
+        resultSuccess(about);
     }
 
     @Data
