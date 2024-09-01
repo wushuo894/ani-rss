@@ -1,9 +1,7 @@
 <template>
   <div style="display: flex;align-items: center;justify-content: center;height: 100%;" v-if="!authorization">
     <el-form label-width="auto"
-             @submit="(event)=>{
-                event.preventDefault()
-             }">
+             @submit="login">
       <el-form-item label="用户名">
         <el-input v-model:model-value="user.username"></el-input>
       </el-form-item>
@@ -11,7 +9,7 @@
         <el-input v-model:model-value="user.password" show-password></el-input>
       </el-form-item>
       <div style="display: flex;width: 100%;align-items: flex-end;flex-flow: column;">
-        <el-button @click="login">登录</el-button>
+        <el-button @click="login" :loading="loading">登录</el-button>
       </div>
     </el-form>
   </div>
@@ -25,6 +23,8 @@ import CryptoJS from "crypto-js"
 import App from "./App.vue";
 import {ElMessage} from "element-plus";
 
+let loading = ref(false)
+
 let authorization = ref("")
 let user = ref({
   'username': '',
@@ -37,6 +37,7 @@ if (authorization.value) {
 }
 
 let login = () => {
+  loading.value = true
   let my_user = JSON.parse(JSON.stringify(user.value))
   my_user.password = CryptoJS.MD5(my_user.password).toString();
   fetch('/api/login', {
@@ -44,6 +45,7 @@ let login = () => {
     'body': JSON.stringify(my_user)
   }).then(res => res.json())
       .then(res => {
+        loading.value = false
         if (res.code !== 200) {
           ElMessage.error(res.message)
           return
