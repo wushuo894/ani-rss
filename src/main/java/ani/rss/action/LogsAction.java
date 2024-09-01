@@ -14,15 +14,11 @@ import com.google.gson.GsonBuilder;
 import java.util.List;
 
 @Path("/logs")
-public class LogsAction implements Action {
-    private final Gson gson = new GsonBuilder()
-            .disableHtmlEscaping()
-            .create();
+public class LogsAction implements BaseAction {
 
     @Override
     public void doAction(HttpServerRequest req, HttpServerResponse res) {
         List<Log> logs = LogUtil.getLogs();
-        String json = gson.toJson(Result.success(logs));
-        IoUtil.writeUtf8(res.getOut(), true, json);
+        resultSuccess(logs);
     }
 }

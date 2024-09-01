@@ -23,12 +23,9 @@ import java.util.Optional;
 
 @Slf4j
 @Path("/ani")
-public class AniAction implements Action {
+public class AniAction implements BaseAction {
     @Getter
     private static final List<Ani> aniList = AniUtil.getANI_LIST();
-    private final Gson gson = new GsonBuilder()
-            .disableHtmlEscaping()
-            .create();
 
     @Override
     public void doAction(HttpServerRequest req, HttpServerResponse res) {
@@ -37,7 +34,7 @@ public class AniAction implements Action {
 
         switch (method) {
             case "POST": {
-                Ani ani = gson.fromJson(req.getBody(), Ani.class);
+                Ani ani = getBody(Ani.class);
                 ani.setTitle(ani.getTitle().trim())
                         .setUrl(ani.getUrl().trim());
                 AniUtil.verify(ani);
@@ -45,8 +42,7 @@ public class AniAction implements Action {
                         .filter(it -> it.getTitle().equals(ani.getTitle()) && it.getSeason().equals(ani.getSeason()))
                         .findFirst();
                 if (first.isPresent()) {
-                    String json = gson.toJson(Result.error().setMessage("名称重复"));
-                    IoUtil.writeUtf8(res.getOut(), true, json);
+                    result(Result.error().setMessage("名称重复"));
                     return;
                 }
 
@@ -54,8 +50,7 @@ public class AniAction implements Action {
                         .filter(it -> it.getUrl().equals(ani.getUrl()))
                         .findFirst();
                 if (first.isPresent()) {
-                    String json = gson.toJson(Result.error().setMessage("此订阅已存在"));
-                    IoUtil.writeUtf8(res.getOut(), true, json);
+                    result(Result.error().setMessage("此订阅已存在"));
                     return;
                 }
 
@@ -64,12 +59,11 @@ public class AniAction implements Action {
                 if (TorrentUtil.login()) {
                     TorrentUtil.downloadAni(ani);
                 }
-                String json = gson.toJson(Result.success().setMessage("添加订阅成功"));
-                IoUtil.writeUtf8(res.getOut(), true, json);
+                result(Result.success().setMessage("添加订阅成功"));
                 return;
             }
             case "PUT": {
-                Ani ani = gson.fromJson(req.getBody(), Ani.class);
+                Ani ani = getBody(Ani.class);
                 ani.setTitle(ani.getTitle().trim())
                         .setUrl(ani.getUrl().trim());
                 AniUtil.verify(ani);
@@ -78,8 +72,7 @@ public class AniAction implements Action {
                         .filter(it -> it.getTitle().equals(ani.getTitle()) && it.getSeason().equals(ani.getSeason()))
                         .findFirst();
                 if (first.isPresent()) {
-                    String json = gson.toJson(Result.error().setMessage("名称重复"));
-                    IoUtil.writeUtf8(res.getOut(), true, json);
+                    result(Result.error().setMessage("名称重复"));
                     return;
                 }
 
@@ -87,14 +80,12 @@ public class AniAction implements Action {
                         .filter(it -> it.getUrl().equals(ani.getUrl()))
                         .findFirst();
                 if (first.isEmpty()) {
-                    String json = gson.toJson(Result.error().setMessage("修改失败"));
-                    IoUtil.writeUtf8(res.getOut(), true, json);
+                    result(Result.error().setMessage("修改失败"));
                     return;
                 }
                 BeanUtil.copyProperties(ani, first.get());
                 AniUtil.sync();
-                String json = gson.toJson(Result.success().setMessage("修改成功"));
-                IoUtil.writeUtf8(res.getOut(), true, json);
+                result(Result.success().setMessage("修改成功"));
                 return;
             }
             case "GET": {
@@ -106,24 +97,21 @@ public class AniAction implements Action {
                     String pinyin = PinyinUtil.getPinyin(title);
                     ani.setPinyin(pinyin);
                 }
-                String json = gson.toJson(Result.success(list));
-                IoUtil.writeUtf8(res.getOut(), true, json);
+                resultSuccess(list);
                 return;
             }
             case "DELETE": {
-                Ani ani = gson.fromJson(req.getBody(), Ani.class);
+                Ani ani = getBody(Ani.class);
                 Optional<Ani> first = aniList.stream()
                         .filter(it -> gson.toJson(it).equals(gson.toJson(ani)))
                         .findFirst();
                 if (first.isEmpty()) {
-                    String json = gson.toJson(Result.error());
-                    IoUtil.writeUtf8(res.getOut(), true, json);
+                    resultError();
                     return;
                 }
                 aniList.remove(first.get());
                 AniUtil.sync();
-                String json = gson.toJson(Result.success().setMessage("删除订阅成功"));
-                IoUtil.writeUtf8(res.getOut(), true, json);
+                result(Result.success().setMessage("删除订阅成功"));
                 break;
             }
         }

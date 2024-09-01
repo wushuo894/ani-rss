@@ -88,6 +88,18 @@
             </el-form-item>
           </el-form>
         </el-tab-pane>
+        <el-tab-pane label="登录设置">
+          <el-form label-width="auto" @submit="(event)=>{
+                      event.preventDefault()
+                   }">
+            <el-form-item label="用户名">
+              <el-input v-model:model-value="config.login.username"/>
+            </el-form-item>
+            <el-form-item label="密码">
+              <el-input v-model:model-value="config.login.password"/>
+            </el-form-item>
+          </el-form>
+        </el-tab-pane>
         <el-tab-pane label="邮件通知">
           <el-form label-width="auto" @submit="(event)=>{
                       event.preventDefault()
@@ -148,6 +160,8 @@
 <script setup>
 import {ref} from "vue";
 import {ElMessage} from "element-plus";
+import CryptoJS from "crypto-js";
+import api from "./api.js";
 
 const configDialogVisible = ref(false)
 const configButtonLoading = ref(false)
@@ -178,6 +192,10 @@ const config = ref({
     'from': '',
     'pass': '',
     'sslEnable': false
+  },
+  'login': {
+    'username': '',
+    'password': ''
   }
 })
 
@@ -197,10 +215,7 @@ const showConfig = () => {
     'markdownBody': ''
   }
   loading.value = true
-  fetch('/api/config', {
-    'method': 'GET'
-  })
-      .then(res => res.json())
+  api.get('/api/config')
       .then(res => {
         if (res.code !== 200) {
           ElMessage.error(res.message)
@@ -209,9 +224,7 @@ const showConfig = () => {
         config.value = res.data
         loading.value = false
       })
-  fetch('/api/about', {
-    'method': 'GET'
-  }).then(res => res.json())
+  api.get('/api/about')
       .then(res => {
         if (res.code !== 200) {
           ElMessage.error(res.message)
@@ -222,11 +235,11 @@ const showConfig = () => {
 }
 const editConfig = () => {
   configButtonLoading.value = true
-  fetch('/api/config', {
-    'method': 'POST',
-    'body': JSON.stringify(config.value)
-  })
-      .then(res => res.json())
+  let my_config = JSON.parse(JSON.stringify(config.value))
+  if (my_config.login.password) {
+    my_config.login.password = CryptoJS.MD5(my_config.login.password).toString();
+  }
+  api.post('/api/config', my_config)
       .then(res => {
         configButtonLoading.value = false
         if (res.code !== 200) {
