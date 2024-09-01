@@ -18,24 +18,19 @@ import java.io.IOException;
 
 @Slf4j
 @Path("/rss")
-public class RssAction implements Action {
-    private final Gson gson = new GsonBuilder()
-            .disableHtmlEscaping()
-            .create();
-
+public class RssAction implements BaseAction {
     @Override
     public void doAction(HttpServerRequest req, HttpServerResponse res) throws IOException {
         if (!req.getMethod().equals("POST")) {
             return;
         }
         res.setContentType("application/json; charset=utf-8");
-        String url = gson.fromJson(req.getBody(), Ani.class).getUrl();
+        String url = getBody(Ani.class).getUrl();
         Assert.notBlank(url, "RSS地址 不能为空");
         if (!ReUtil.contains("http(s*)://", url)) {
             url = "https://" + url;
         }
         Ani ani = AniUtil.getAni(url);
-        String json = gson.toJson(Result.success(ani));
-        IoUtil.writeUtf8(res.getOut(), true, json);
+        resultSuccess(ani);
     }
 }

@@ -9,6 +9,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "crypto-js": "^4.2.0",
     "element-plus": "^2.7.7",
     "vue": "^3.4.31"
   },

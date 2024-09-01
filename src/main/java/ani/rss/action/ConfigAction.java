@@ -2,6 +2,7 @@ package ani.rss.action;
 
 import ani.rss.annotation.Path;
 import ani.rss.entity.Config;
+import ani.rss.entity.Login;
 import ani.rss.entity.Result;
 import ani.rss.util.ConfigUtil;
 import ani.rss.util.TaskUtil;
@@ -20,18 +21,16 @@ import java.io.IOException;
 import java.util.Objects;
 
 @Path("/config")
-public class ConfigAction implements Action {
-    private final Gson gson = new GsonBuilder()
-            .disableHtmlEscaping()
-            .create();
+public class ConfigAction implements BaseAction {
 
     @Override
     public void doAction(HttpServerRequest req, HttpServerResponse res) throws IOException {
         String method = req.getMethod();
         res.setContentType("application/json; charset=utf-8");
         if (method.equals("GET")) {
-            String json = gson.toJson(Result.success(ConfigUtil.getCONFIG()));
-            IoUtil.writeUtf8(res.getOut(), true, json);
+            Config clone = ObjectUtil.clone(ConfigUtil.getCONFIG());
+            clone.getLogin().setPassword("");
+            resultSuccess(clone);
             return;
         }
 
@@ -39,6 +38,8 @@ public class ConfigAction implements Action {
             return;
         }
         Config config = ConfigUtil.getCONFIG();
+        Login login = config.getLogin();
+        String password = login.getPassword();
         Integer renameSleep = config.getRenameSleep();
         Integer sleep = config.getSleep();
         BeanUtil.copyProperties(gson.fromJson(req.getBody(), Config.class), config);
@@ -53,10 +54,14 @@ public class ConfigAction implements Action {
             String proxyHost = config.getProxyHost();
             Integer proxyPort = config.getProxyPort();
             if (StrUtil.isBlank(proxyHost) || Objects.isNull(proxyPort)) {
-                String json = gson.toJson(Result.error().setMessage("代理参数不完整"));
-                IoUtil.writeUtf8(res.getOut(), true, json);
+                result(Result.error().setMessage("代理参数不完整"));
                 return;
             }
+        }
+        String loginPassword = config.getLogin().getPassword();
+        // 密码未发生修改
+        if (StrUtil.isBlank(loginPassword)) {
+            config.getLogin().setPassword(password);
         }
         ConfigUtil.sync();
         Integer newRenameSleep = config.getRenameSleep();
@@ -67,8 +72,8 @@ public class ConfigAction implements Action {
                 !Objects.equals(newRenameSleep, renameSleep)) {
             TaskUtil.restart();
         }
-        String json = gson.toJson(Result.success().setMessage("修改成功"));
-        IoUtil.writeUtf8(res.getOut(), true, json);
 
+
+        result(Result.success().setMessage("修改成功"));
     }
 }

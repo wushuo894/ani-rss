@@ -115,6 +115,7 @@ import Config from "./Config.vue";
 import Edit from "./Edit.vue";
 import Add from "./Add.vue";
 import Logs from "./Logs.vue";
+import api from "./api.js";
 
 const pagerCount = ref(10)
 
@@ -173,11 +174,7 @@ const searchList = () => {
 
 const delAni = (ani) => {
   ani['deleteLoading'] = true
-  fetch('/api/ani', {
-    'method': 'DELETE',
-    'body': JSON.stringify(ani)
-  })
-      .then(res => res.json())
+  api.del('/api/ani', ani)
       .then(res => {
         ani['deleteLoading'] = false
         if (res.code !== 200) {
@@ -193,8 +190,7 @@ const delAni = (ani) => {
 const list = ref([])
 
 const getList = () => {
-  fetch('/api/ani', {'method': 'GET'})
-      .then(res => res.json())
+  api.get('/api/ani')
       .then(res => {
         if (res.code !== 200) {
           ElMessage.error(res.message)

@@ -74,6 +74,7 @@
 <script setup>
 import {ref} from "vue";
 import {ElMessage} from "element-plus";
+import api from "./api.js";
 
 const showRss = ref(true)
 
@@ -115,10 +116,7 @@ const rssButtonLoading = ref(false)
 
 const getRss = () => {
   rssButtonLoading.value = true
-  fetch('/api/rss', {
-    'method': 'POST',
-    'body': JSON.stringify(ani.value)
-  }).then(res => res.json())
+  api.post('/api/rss', ani.value)
       .then(res => {
         rssButtonLoading.value = false
         if (res.code !== 200) {
@@ -135,11 +133,7 @@ const addAniButtonLoading = ref(false)
 
 const addAni = () => {
   addAniButtonLoading.value = true
-  fetch('/api/ani', {
-    'method': 'POST',
-    'body': JSON.stringify(ani.value)
-  })
-      .then(res => res.json())
+  api.post('/api/ani', ani.value)
       .then(res => {
         addAniButtonLoading.value = false
         if (res.code !== 200) {

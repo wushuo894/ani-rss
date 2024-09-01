@@ -102,4 +102,9 @@ public class Config implements Serializable {
      * 收件人
      */
     private String mailAddressee;
+
+    /**
+     * 登录信息
+     */
+    private Login login;
 }
