@@ -1,3 +1,5 @@
+<img alt="mikan-pic.png" height="80" src="https://github.com/wushuo894/ani-rss/raw/master/image/mikan-pic.png"/>
+
 # ANI-RSS
 
 [GitHub](https://github.com/wushuo894/ani-rss)
