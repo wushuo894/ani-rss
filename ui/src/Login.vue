@@ -2,7 +2,10 @@
   <div style="display: flex;align-items: center;justify-content: center;height: 100%;width: 100%;"
        v-if="!authorization">
     <div id="form">
-      <h1 style="text-align: center">ANI-RSS</h1>
+      <div style="text-align: center;">
+        <img src="../public/mikan-pic.png" height="80" width="80"/>
+      </div>
+      <h2 style="text-align: center">ANI-RSS</h2>
       <div style="height: 30px;"></div>
       <el-form label-width="auto"
                @submit="login">
