@@ -11,12 +11,12 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 @Slf4j
 public class TaskUtil {
-    public static AtomicBoolean loop = new AtomicBoolean(false);
-    public static List<Thread> threads = new Vector<>();
+    public static final AtomicBoolean LOOP = new AtomicBoolean(false);
+    public static final List<Thread> THREADS = new Vector<>();
 
     public static synchronized void stop() {
-        loop.set(false);
-        for (Thread thread : threads) {
+        LOOP.set(false);
+        for (Thread thread : THREADS) {
             try {
                 // 等待现有任务结束
                 while (thread.isAlive()) {
@@ -29,7 +29,7 @@ public class TaskUtil {
                 log.debug(e.getMessage(), e);
             }
         }
-        threads.clear();
+        THREADS.clear();
     }
 
     public static synchronized void restart() {
@@ -38,10 +38,10 @@ public class TaskUtil {
     }
 
     public static synchronized void start() {
-        loop.set(true);
-        threads.add(new RenameTask(loop));
-        threads.add(new RssTask(loop));
-        for (Thread thread : threads) {
+        LOOP.set(true);
+        THREADS.add(new RenameTask(LOOP));
+        THREADS.add(new RssTask(LOOP));
+        for (Thread thread : THREADS) {
             thread.start();
         }
     }

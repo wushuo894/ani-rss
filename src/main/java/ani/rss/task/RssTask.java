@@ -1,8 +1,8 @@
 package ani.rss.task;
 
-import ani.rss.action.AniAction;
 import ani.rss.entity.Ani;
 import ani.rss.entity.Config;
+import ani.rss.util.AniUtil;
 import ani.rss.util.ConfigUtil;
 import ani.rss.util.ExceptionUtil;
 import ani.rss.util.TorrentUtil;
@@ -25,7 +25,7 @@ public class RssTask extends Thread {
     @Override
     public void run() {
         super.setName("rss-task-thread");
-        Config config = ConfigUtil.getCONFIG();
+        Config config = ConfigUtil.CONFIG;
         Integer sleep = config.getSleep();
         log.info("{} 当前设置间隔为 {} 分钟", getName(), sleep);
         while (loop.get()) {
@@ -33,7 +33,7 @@ public class RssTask extends Thread {
                 ThreadUtil.sleep(sleep, TimeUnit.MINUTES);
                 continue;
             }
-            List<Ani> aniList = ObjectUtil.clone(AniAction.getAniList());
+            List<Ani> aniList = ObjectUtil.clone(AniUtil.ANI_LIST);
             for (Ani ani : aniList) {
                 String title = ani.getTitle();
                 Boolean enable = ani.getEnable();

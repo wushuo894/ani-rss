@@ -36,7 +36,7 @@ public class TorrentUtil {
      * @return
      */
     public static Boolean login() {
-        Config config = ConfigUtil.getCONFIG();
+        Config config = ConfigUtil.CONFIG;
         String host = config.getHost();
         String username = config.getUsername();
         String password = config.getPassword();
@@ -72,11 +72,9 @@ public class TorrentUtil {
      * @param ani
      */
     public static synchronized void downloadAni(Ani ani) {
-        Config config = ConfigUtil.getCONFIG();
-        String downloadPath = config.getDownloadPath();
+        Config config = ConfigUtil.CONFIG;
         Integer downloadCount = config.getDownloadCount();
 
-        Integer season = ani.getSeason();
         String title = ani.getTitle();
 
         Set<String> hashList = getTorrentsInfos()
@@ -170,7 +168,7 @@ public class TorrentUtil {
      */
     public static void download(String name, String savePath, File torrentFile) {
         savePath = savePath.replace("\\", "/");
-        Config config = ConfigUtil.getCONFIG();
+        Config config = ConfigUtil.CONFIG;
         String host = config.getHost();
         Integer downloadCount = config.getDownloadCount();
         HttpReq.post(host + "/api/v2/torrents/add", false)
@@ -215,7 +213,7 @@ public class TorrentUtil {
      * @return
      */
     public static synchronized List<TorrentsInfo> getTorrentsInfos() {
-        Config config = ConfigUtil.getCONFIG();
+        Config config = ConfigUtil.CONFIG;
         String host = config.getHost();
         return HttpReq.get(host + "/api/v2/torrents/info", false)
                 .thenFunction(res -> {
@@ -245,7 +243,7 @@ public class TorrentUtil {
      * @return
      */
     public static Boolean itemDownloaded(Ani ani, Item item) {
-        Config config = ConfigUtil.getCONFIG();
+        Config config = ConfigUtil.CONFIG;
         Boolean rename = config.getRename();
         if (!rename) {
             return false;
@@ -300,7 +298,7 @@ public class TorrentUtil {
         String title = ani.getTitle().trim();
         Integer season = ani.getSeason();
 
-        Config config = ConfigUtil.getCONFIG();
+        Config config = ConfigUtil.CONFIG;
         String downloadPath = config.getDownloadPath();
         Boolean acronym = config.getAcronym();
         Boolean fileExist = config.getFileExist();
@@ -362,7 +360,7 @@ public class TorrentUtil {
      * @param torrentsInfo
      */
     public static void delete(TorrentsInfo torrentsInfo) {
-        Config config = ConfigUtil.getCONFIG();
+        Config config = ConfigUtil.CONFIG;
         String host = config.getHost();
         Boolean delete = config.getDelete();
         if (!delete) {
@@ -388,7 +386,7 @@ public class TorrentUtil {
      * @param reName
      */
     public static void rename(TorrentsInfo torrentsInfo, String reName) {
-        Config config = ConfigUtil.getCONFIG();
+        Config config = ConfigUtil.CONFIG;
         String host = config.getHost();
         Boolean rename = config.getRename();
         if (!rename) {

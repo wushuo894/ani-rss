@@ -24,7 +24,7 @@ public class ConfigAction implements BaseAction {
         String method = req.getMethod();
         res.setContentType("application/json; charset=utf-8");
         if (method.equals("GET")) {
-            Config clone = ObjectUtil.clone(ConfigUtil.getCONFIG());
+            Config clone = ObjectUtil.clone(ConfigUtil.CONFIG);
             clone.getLogin().setPassword("");
             resultSuccess(clone);
             return;
@@ -33,7 +33,7 @@ public class ConfigAction implements BaseAction {
         if (!method.equals("POST")) {
             return;
         }
-        Config config = ConfigUtil.getCONFIG();
+        Config config = ConfigUtil.CONFIG;
         Login login = config.getLogin();
         String password = login.getPassword();
         Integer renameSleep = config.getRenameSleep();

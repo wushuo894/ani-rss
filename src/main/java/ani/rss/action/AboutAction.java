@@ -1,13 +1,12 @@
 package ani.rss.action;
 
 import ani.rss.annotation.Path;
+import ani.rss.entity.About;
 import ani.rss.util.HttpReq;
 import ani.rss.util.MavenUtil;
 import cn.hutool.core.comparator.VersionComparator;
 import cn.hutool.http.server.HttpServerRequest;
 import cn.hutool.http.server.HttpServerResponse;
-import lombok.Data;
-import lombok.experimental.Accessors;
 import lombok.extern.slf4j.Slf4j;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -48,12 +47,5 @@ public class AboutAction implements BaseAction {
         resultSuccess(about);
     }
 
-    @Data
-    @Accessors(chain = true)
-    public static class About {
-        private String version;
-        private String latest;
-        private Boolean update;
-        private String markdownBody;
-    }
+
 }

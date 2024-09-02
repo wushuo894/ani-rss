@@ -23,7 +23,7 @@ public class RenameTask extends Thread {
     @Override
     public void run() {
         super.setName("rename-task-thread");
-        Config config = ConfigUtil.getCONFIG();
+        Config config = ConfigUtil.CONFIG;
         Integer renameSleep = config.getRenameSleep();
         log.info("{} 当前设置间隔为 {} 分钟", getName(), renameSleep);
         while (loop.get()) {
