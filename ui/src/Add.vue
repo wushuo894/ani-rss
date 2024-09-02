@@ -1,4 +1,5 @@
 <template>
+  <Mikan ref="mikan" @add="args => ani.url = args"></Mikan>
   <el-dialog v-model="addDialogVisible" title="添加订阅" center>
     <div v-if="showRss" @keydown.enter="getRss">
       <el-form label-width="auto"
@@ -10,11 +11,11 @@
           <el-input v-model:model-value="ani.url"></el-input>
         </el-form-item>
       </el-form>
-      <div style="display: flex;justify-content: end;width: 100%;margin-top: 10px;">
+      <div style="display: flex;justify-content: space-between;width: 100%;margin-top: 10px;">
+        <el-button @click="mikan?.show">Mikan</el-button>
         <el-button :loading="rssButtonLoading" @click="getRss">确定</el-button>
       </div>
     </div>
-
     <div v-else>
       <el-form label-width="auto"
                @submit="(event)=>{
@@ -75,8 +76,10 @@
 import {ref} from "vue";
 import {ElMessage} from "element-plus";
 import api from "./api.js";
+import Mikan from "./Mikan.vue";
 
 const showRss = ref(true)
+const mikan = ref()
 
 const addDialogVisible = ref(false)
 
