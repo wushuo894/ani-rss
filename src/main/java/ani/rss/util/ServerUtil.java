@@ -46,6 +46,8 @@ public class ServerUtil {
                 @Override
                 public void doAction(HttpServerRequest req, HttpServerResponse res) {
                     try {
+                        request.set(req);
+                        response.set(res);
                         Auth auth = aClass.getAnnotation(Auth.class);
                         boolean isAuth = true;
                         if (Objects.nonNull(auth)) {
@@ -67,8 +69,6 @@ public class ServerUtil {
                                 return;
                             }
                         }
-                        request.set(req);
-                        response.set(res);
                         BaseAction baseAction = (BaseAction) action;
                         baseAction.doAction(req, res);
                     } catch (Exception e) {
@@ -80,9 +80,10 @@ public class ServerUtil {
                             log.error("{} {}", urlPath, e.getMessage());
                             log.debug(e);
                         }
+                    } finally {
+                        request.remove();
+                        response.remove();
                     }
-                    request.remove();
-                    response.remove();
                 }
             });
         }
