@@ -90,7 +90,7 @@ let list = (body) => {
           activeName.value = items[0].label
         }
         for (let item of data.value.seasons) {
-          if (item['select']) {
+          if (item['select'] && !season.value) {
             season.value = item['year'] + ' ' + item['season']
             return
           }
