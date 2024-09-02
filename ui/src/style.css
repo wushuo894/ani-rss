@@ -38,7 +38,7 @@ html, body, #app {
     }
 
     #page-size {
-        margin: 0 0 0 15px;
+        margin-left: 5px;
     }
 }
 

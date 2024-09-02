@@ -97,15 +97,26 @@
                      v-model:current-page="currentPage"
                      v-model:page-size="pageSize"/>
     </div>
-    <div style="width: 120px;" id="page-size">
-      <el-select v-model:model-value="pageSize" @change="updatePageSize">
-        <el-option v-for="page in [10, 20, 40, 80, 160]"
-                   :key="page"
-                   :label="page"
-                   :value="page"/>
-      </el-select>
+    <div style="display: flex;justify-content: space-between;width: 100%;">
+      <div style="width: 100px;" id="page-size">
+        <el-select v-model:model-value="pageSize" @change="updatePageSize">
+          <el-option v-for="page in [10, 20, 40, 80, 160]"
+                     :key="page"
+                     :label="page"
+                     :value="page"/>
+        </el-select>
+      </div>
+      <div style="margin-left: 5px;">
+        <el-popconfirm title="你确定要退出吗?" @confirm="logout">
+          <template #reference>
+            <el-button>退出登录</el-button>
+          </template>
+        </el-popconfirm>
+
+      </div>
     </div>
   </div>
+  <div style="height: 20px;"></div>
 </template>
 
 <script setup>
@@ -225,6 +236,11 @@ onMounted(() => {
   window.addEventListener('resize', updateGridLayout);
   updateGridLayout();
 })
+
+let logout = () => {
+  localStorage.removeItem('authorization')
+  location.reload()
+}
 
 </script>
 
