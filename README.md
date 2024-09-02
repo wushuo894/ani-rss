@@ -1,9 +1,7 @@
-![mikan-pic.png](https://github.com/wushuo894/ani-rss/raw/master/image/mikan-pic.png)
-
+<div align="center">
+<img alt="mikan-pic.png" height="80" src="https://github.com/wushuo894/ani-rss/raw/master/image/mikan-pic.png"/>
 <h1 align="center">ANI-RSS</h1>
 <p align="center"><strong>自动订阅下载蜜柑RSS动漫</strong></p>
-
-<div align="center">
 
 ![GitHub License](https://img.shields.io/github/license/wushuo894/ani-rss)
 [![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/wushuo894/ani-rss/maven.yml?branch=master)](https://github.com/wushuo894/ani-rss/actions/workflows/maven.yml)
