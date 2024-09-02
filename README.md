@@ -1,3 +1,5 @@
+![mikan-pic.png](https://github.com/wushuo894/ani-rss/raw/master/image/mikan-pic.png)
+
 <h1 align="center">ANI-RSS</h1>
 <p align="center"><strong>自动订阅下载蜜柑RSS动漫</strong></p>
 
