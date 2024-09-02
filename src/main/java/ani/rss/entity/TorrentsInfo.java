@@ -33,6 +33,16 @@ public class TorrentsInfo implements Serializable {
      */
     private Long progress;
 
+    /**
+     * 大小
+     */
+    private String sizeStr;
+
+    /**
+     * 时间
+     */
+    private String dateStr;
+
     public enum State {
         /**
          * 校验恢复数据
