@@ -33,7 +33,7 @@ public class LogUtil {
     private static final List<Log> logs = Collections.synchronizedList(new FixedSizeLinkedList<>(4096));
 
     public static void loadLogback() {
-        Config config = ConfigUtil.getCONFIG();
+        Config config = ConfigUtil.CONFIG;
         Boolean debug = config.getDebug();
         LoggerContext context = (LoggerContext) LoggerFactory.getILoggerFactory();
         Logger rootLogger = context.getLogger(Logger.ROOT_LOGGER_NAME);

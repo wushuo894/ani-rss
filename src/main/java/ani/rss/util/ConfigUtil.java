@@ -12,7 +12,6 @@ import cn.hutool.crypto.digest.MD5;
 import cn.hutool.json.JSONUtil;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.File;
@@ -21,8 +20,41 @@ import java.util.Map;
 @Slf4j
 public class ConfigUtil {
 
-    @Getter
-    private static final Config CONFIG = new Config();
+    public static final Config CONFIG = new Config();
+
+    /**
+     * 默认配置
+     */
+    static {
+        String password = MD5.create().digestHex("admin");
+        CONFIG.setSleep(5)
+                .setRenameSleep(1)
+                .setRename(true)
+                .setFileExist(false)
+                .setDelete(false)
+                .setOffset(false)
+                .setAcronym(false)
+                .setDownloadPath("")
+                .setHost("")
+                .setUsername("")
+                .setPassword("")
+                .setDebug(false)
+                .setProxy(false)
+                .setProxyHost("")
+                .setProxyPort(8080)
+                .setDownloadCount(0)
+                .setMail(false)
+                .setMailAddressee("")
+                .setMailAccount(
+                        new MyMailAccount()
+                                .setHost("")
+                                .setPort(25)
+                                .setFrom("")
+                                .setPass("")
+                                .setSslEnable(false)
+                )
+                .setLogin(new Login().setUsername("admin").setPassword(password));
+    }
 
     private static final Gson GSON = new GsonBuilder()
             .disableHtmlEscaping()
@@ -53,34 +85,6 @@ public class ConfigUtil {
      * 加载设置
      */
     public static void load() {
-        String password = MD5.create().digestHex("admin");
-        CONFIG.setSleep(5)
-                .setRenameSleep(1)
-                .setRename(true)
-                .setFileExist(false)
-                .setDelete(false)
-                .setOffset(false)
-                .setAcronym(false)
-                .setDownloadPath("")
-                .setHost("")
-                .setUsername("")
-                .setPassword("")
-                .setDebug(false)
-                .setProxy(false)
-                .setProxyHost("")
-                .setProxyPort(8080)
-                .setDownloadCount(0)
-                .setMail(false)
-                .setMailAddressee("")
-                .setMailAccount(
-                        new MyMailAccount()
-                                .setHost("")
-                                .setPort(25)
-                                .setFrom("")
-                                .setPass("")
-                                .setSslEnable(false)
-                )
-                .setLogin(new Login().setUsername("admin").setPassword(password));
         File configFile = getConfigFile();
 
         if (!configFile.exists()) {

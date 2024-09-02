@@ -19,7 +19,6 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
-import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
@@ -41,8 +40,7 @@ public class AniUtil {
             .disableHtmlEscaping()
             .create();
 
-    @Getter
-    private static final List<Ani> ANI_LIST = new Vector<>();
+    public static final List<Ani> ANI_LIST = new Vector<>();
 
     /**
      * 获取订阅配置文件
@@ -195,7 +193,7 @@ public class AniUtil {
         if (items.isEmpty()) {
             return ani;
         }
-        Config config = ConfigUtil.getCONFIG();
+        Config config = ConfigUtil.CONFIG;
         // 自动推断剧集偏移
         if (config.getOffset()) {
             int offset = -(items.stream()

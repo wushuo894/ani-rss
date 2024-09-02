@@ -59,7 +59,7 @@ public class ServerUtil {
                                 result(new Result<>().setCode(403));
                                 return;
                             }
-                            Config config = ConfigUtil.getCONFIG();
+                            Config config = ConfigUtil.CONFIG;
                             Login login = config.getLogin();
                             String username = login.getUsername();
                             String password = login.getPassword();
