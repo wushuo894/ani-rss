@@ -25,7 +25,7 @@ let fetch_ = async (url, method, body) => {
         .then(res => res.json())
         .then(res => {
             if (res.code === 403) {
-                localStorage.removeItem("Authorization")
+                localStorage.removeItem("authorization")
                 location.reload()
             }
             return res
