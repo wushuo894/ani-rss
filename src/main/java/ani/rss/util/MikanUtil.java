@@ -113,6 +113,7 @@ public class MikanUtil {
                         group.setItems(torrentsInfos);
                         String attr = subgroupText.getElementsByTag("a").get(1).attr("href");
                         String label = subgroupText.getElementsByTag("a").get(0).ownText();
+                        label = StrUtil.blankToDefault(label, "生肉/不明字幕");
                         group.setLabel(label)
                                 .setRss(host + attr);
                         groups.add(group);
