@@ -46,7 +46,7 @@ public class HttpReq {
      */
     public static HttpRequest setProxy(HttpRequest req) {
         String url = req.getUrl();
-        Config config = ConfigUtil.getCONFIG();
+        Config config = ConfigUtil.CONFIG;
         Boolean proxy = config.getProxy();
         if (!proxy) {
             log.debug("代理未开启 {}", url);

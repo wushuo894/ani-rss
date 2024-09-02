@@ -18,7 +18,7 @@ public class LoginAction implements BaseAction {
     @Override
     public void doAction(HttpServerRequest request, HttpServerResponse response) throws IOException {
         Login myLogin = getBody(Login.class);
-        Config config = ConfigUtil.getCONFIG();
+        Config config = ConfigUtil.CONFIG;
         Login login = config.getLogin();
 
         String myUsername = myLogin.getUsername();

@@ -11,7 +11,6 @@ import cn.hutool.core.comparator.PinyinComparator;
 import cn.hutool.extra.pinyin.PinyinUtil;
 import cn.hutool.http.server.HttpServerRequest;
 import cn.hutool.http.server.HttpServerResponse;
-import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
@@ -20,8 +19,6 @@ import java.util.Optional;
 @Slf4j
 @Path("/ani")
 public class AniAction implements BaseAction {
-    @Getter
-    private static final List<Ani> aniList = AniUtil.getANI_LIST();
 
     @Override
     public void doAction(HttpServerRequest req, HttpServerResponse res) {
@@ -34,7 +31,7 @@ public class AniAction implements BaseAction {
                 ani.setTitle(ani.getTitle().trim())
                         .setUrl(ani.getUrl().trim());
                 AniUtil.verify(ani);
-                Optional<Ani> first = aniList.stream()
+                Optional<Ani> first = AniUtil.ANI_LIST.stream()
                         .filter(it -> it.getTitle().equals(ani.getTitle()) && it.getSeason().equals(ani.getSeason()))
                         .findFirst();
                 if (first.isPresent()) {
@@ -42,7 +39,7 @@ public class AniAction implements BaseAction {
                     return;
                 }
 
-                first = aniList.stream()
+                first = AniUtil.ANI_LIST.stream()
                         .filter(it -> it.getUrl().equals(ani.getUrl()))
                         .findFirst();
                 if (first.isPresent()) {
@@ -50,7 +47,7 @@ public class AniAction implements BaseAction {
                     return;
                 }
 
-                aniList.add(ani);
+                AniUtil.ANI_LIST.add(ani);
                 AniUtil.sync();
                 if (TorrentUtil.login()) {
                     TorrentUtil.downloadAni(ani);
@@ -63,7 +60,7 @@ public class AniAction implements BaseAction {
                 ani.setTitle(ani.getTitle().trim())
                         .setUrl(ani.getUrl().trim());
                 AniUtil.verify(ani);
-                Optional<Ani> first = aniList.stream()
+                Optional<Ani> first = AniUtil.ANI_LIST.stream()
                         .filter(it -> !it.getUrl().equals(ani.getUrl()))
                         .filter(it -> it.getTitle().equals(ani.getTitle()) && it.getSeason().equals(ani.getSeason()))
                         .findFirst();
@@ -72,7 +69,7 @@ public class AniAction implements BaseAction {
                     return;
                 }
 
-                first = aniList.stream()
+                first = AniUtil.ANI_LIST.stream()
                         .filter(it -> it.getUrl().equals(ani.getUrl()))
                         .findFirst();
                 if (first.isEmpty()) {
@@ -87,7 +84,7 @@ public class AniAction implements BaseAction {
             case "GET": {
                 // 按拼音排序
                 PinyinComparator pinyinComparator = new PinyinComparator();
-                List<Ani> list = CollUtil.sort(aniList, (a, b) -> pinyinComparator.compare(a.getTitle(), b.getTitle()));
+                List<Ani> list = CollUtil.sort(AniUtil.ANI_LIST, (a, b) -> pinyinComparator.compare(a.getTitle(), b.getTitle()));
                 for (Ani ani : list) {
                     String title = ani.getTitle();
                     String pinyin = PinyinUtil.getPinyin(title);
@@ -98,14 +95,14 @@ public class AniAction implements BaseAction {
             }
             case "DELETE": {
                 Ani ani = getBody(Ani.class);
-                Optional<Ani> first = aniList.stream()
+                Optional<Ani> first = AniUtil.ANI_LIST.stream()
                         .filter(it -> gson.toJson(it).equals(gson.toJson(ani)))
                         .findFirst();
                 if (first.isEmpty()) {
                     resultError();
                     return;
                 }
-                aniList.remove(first.get());
+                AniUtil.ANI_LIST.remove(first.get());
                 AniUtil.sync();
                 result(Result.success().setMessage("删除订阅成功"));
                 break;

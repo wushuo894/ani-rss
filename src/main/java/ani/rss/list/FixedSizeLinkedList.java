@@ -2,7 +2,7 @@ package ani.rss.list;
 
 import java.util.LinkedList;
 
-public class FixedSizeLinkedList  <T> extends LinkedList<T> {
+public class FixedSizeLinkedList<T> extends LinkedList<T> {
     private final int maxSize;
 
     public FixedSizeLinkedList(int maxSize) {
