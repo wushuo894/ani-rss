@@ -16,10 +16,7 @@ import cn.hutool.http.HttpUtil;
 import cn.hutool.http.server.HttpServerRequest;
 import cn.hutool.http.server.HttpServerResponse;
 import cn.hutool.http.server.SimpleServer;
-import cn.hutool.http.server.action.Action;
 import cn.hutool.log.Log;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 
 import java.util.Map;
 import java.util.Objects;
@@ -43,11 +40,8 @@ public class ServerUtil {
             }
             Object action = ReflectUtil.newInstanceIfPossible(aClass);
             String urlPath = "/api" + path.value();
-            server.addAction(urlPath, new Action() {
+            server.addAction(urlPath, new BaseAction() {
                 private final Log log = Log.get(aClass);
-                private final Gson gson = new GsonBuilder()
-                        .disableHtmlEscaping()
-                        .create();
 
                 @Override
                 public void doAction(HttpServerRequest req, HttpServerResponse res) {
@@ -60,9 +54,7 @@ public class ServerUtil {
                         if (isAuth) {
                             String authorization = req.getHeader("Authorization");
                             if (StrUtil.isBlank(authorization)) {
-                                res.setContentType("application/json; charset=utf-8");
-                                String json = gson.toJson(new Result<>().setCode(403));
-                                IoUtil.writeUtf8(res.getOut(), true, json);
+                                result(new Result<>().setCode(403));
                                 return;
                             }
                             Config config = ConfigUtil.getCONFIG();
@@ -71,9 +63,7 @@ public class ServerUtil {
                             String password = login.getPassword();
                             String s = MD5.create().digestHex(username + ":" + password);
                             if (!authorization.equals(s)) {
-                                res.setContentType("application/json; charset=utf-8");
-                                String json = gson.toJson(new Result<>().setCode(403));
-                                IoUtil.writeUtf8(res.getOut(), true, json);
+                                result(new Result<>().setCode(403));
                                 return;
                             }
                         }

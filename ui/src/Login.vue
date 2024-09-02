@@ -55,7 +55,7 @@ let login = () => {
           ElMessage.error(res.message)
           return
         }
-        localStorage.setItem("Authorization", res.data)
+        localStorage.setItem("authorization", res.data)
         window.authorization = res.data
         authorization.value = res.data
       })

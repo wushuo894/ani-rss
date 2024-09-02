@@ -2,16 +2,11 @@ package ani.rss.action;
 
 import ani.rss.annotation.Path;
 import ani.rss.entity.Ani;
-import ani.rss.entity.Result;
 import ani.rss.util.AniUtil;
-import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.ReUtil;
 import cn.hutool.http.server.HttpServerRequest;
 import cn.hutool.http.server.HttpServerResponse;
-import cn.hutool.http.server.action.Action;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;

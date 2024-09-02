@@ -8,7 +8,6 @@ import cn.hutool.core.io.resource.ResourceUtil;
 import cn.hutool.core.util.URLUtil;
 import cn.hutool.http.server.HttpServerRequest;
 import cn.hutool.http.server.HttpServerResponse;
-import cn.hutool.http.server.action.Action;
 import lombok.Cleanup;
 import lombok.extern.slf4j.Slf4j;
 
