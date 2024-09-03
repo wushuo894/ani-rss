@@ -22,7 +22,6 @@
 
 <script setup>
 import {ref} from "vue";
-import {ElMessage} from "element-plus";
 import {codeToHtml} from 'shiki'
 import api from "./api.js";
 
@@ -59,13 +58,11 @@ const showLogs = () => {
   htmlLogs.value = ''
   api.get('/api/logs')
       .then(async res => {
-        loading.value = false
-        if (res.code !== 200) {
-          ElMessage.error(res.message)
-          return
-        }
         logs.value = res.data
         getHtmlLogs()
+      })
+      .finally(() => {
+        loading.value = false
       })
 }
 

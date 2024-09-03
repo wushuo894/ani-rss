@@ -217,19 +217,13 @@ const showConfig = () => {
   loading.value = true
   api.get('/api/config')
       .then(res => {
-        if (res.code !== 200) {
-          ElMessage.error(res.message)
-          return
-        }
         config.value = res.data
+      })
+      .finally(() => {
         loading.value = false
       })
   api.get('/api/about')
       .then(res => {
-        if (res.code !== 200) {
-          ElMessage.error(res.message)
-          return
-        }
         about.value = res.data
       })
 }
@@ -241,13 +235,11 @@ const editConfig = () => {
   }
   api.post('/api/config', my_config)
       .then(res => {
-        configButtonLoading.value = false
-        if (res.code !== 200) {
-          ElMessage.error(res.message)
-          return
-        }
         ElMessage.success(res.message)
         configDialogVisible.value = false
+      })
+      .finally(() => {
+        configButtonLoading.value = false
       })
 }
 defineExpose({

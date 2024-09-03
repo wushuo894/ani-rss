@@ -19,13 +19,18 @@ public class RssAction implements BaseAction {
         if (!req.getMethod().equals("POST")) {
             return;
         }
-        res.setContentType("application/json; charset=utf-8");
         String url = getBody(Ani.class).getUrl();
         Assert.notBlank(url, "RSS地址 不能为空");
         if (!ReUtil.contains("http(s*)://", url)) {
             url = "https://" + url;
         }
-        Ani ani = AniUtil.getAni(url);
-        resultSuccess(ani);
+        try {
+            Ani ani = AniUtil.getAni(url);
+            resultSuccess(ani);
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            log.debug(e.getMessage(), e);
+            resultErrorMsg("RSS解析失败");
+        }
     }
 }

@@ -2,7 +2,6 @@ package ani.rss.action;
 
 import ani.rss.annotation.Path;
 import ani.rss.entity.Ani;
-import ani.rss.entity.Result;
 import ani.rss.util.AniUtil;
 import ani.rss.util.TorrentUtil;
 import cn.hutool.core.bean.BeanUtil;
@@ -23,8 +22,6 @@ public class AniAction implements BaseAction {
     @Override
     public void doAction(HttpServerRequest req, HttpServerResponse res) {
         String method = req.getMethod();
-        res.setContentType("application/json; charset=utf-8");
-
         switch (method) {
             case "POST": {
                 Ani ani = getBody(Ani.class);
@@ -35,7 +32,7 @@ public class AniAction implements BaseAction {
                         .filter(it -> it.getTitle().equals(ani.getTitle()) && it.getSeason().equals(ani.getSeason()))
                         .findFirst();
                 if (first.isPresent()) {
-                    result(Result.error().setMessage("名称重复"));
+                    resultErrorMsg("名称重复");
                     return;
                 }
 
@@ -43,7 +40,7 @@ public class AniAction implements BaseAction {
                         .filter(it -> it.getUrl().equals(ani.getUrl()))
                         .findFirst();
                 if (first.isPresent()) {
-                    result(Result.error().setMessage("此订阅已存在"));
+                    resultErrorMsg("此订阅已存在");
                     return;
                 }
 
@@ -52,7 +49,7 @@ public class AniAction implements BaseAction {
                 if (TorrentUtil.login()) {
                     TorrentUtil.downloadAni(ani);
                 }
-                result(Result.success().setMessage("添加订阅成功"));
+                resultSuccessMsg("添加订阅成功");
                 return;
             }
             case "PUT": {
@@ -65,7 +62,7 @@ public class AniAction implements BaseAction {
                         .filter(it -> it.getTitle().equals(ani.getTitle()) && it.getSeason().equals(ani.getSeason()))
                         .findFirst();
                 if (first.isPresent()) {
-                    result(Result.error().setMessage("名称重复"));
+                    resultErrorMsg("名称重复");
                     return;
                 }
 
@@ -73,12 +70,12 @@ public class AniAction implements BaseAction {
                         .filter(it -> it.getUrl().equals(ani.getUrl()))
                         .findFirst();
                 if (first.isEmpty()) {
-                    result(Result.error().setMessage("修改失败"));
+                    resultErrorMsg("修改失败");
                     return;
                 }
                 BeanUtil.copyProperties(ani, first.get());
                 AniUtil.sync();
-                result(Result.success().setMessage("修改成功"));
+                resultSuccessMsg("修改成功");
                 return;
             }
             case "GET": {
@@ -104,7 +101,7 @@ public class AniAction implements BaseAction {
                 }
                 AniUtil.ANI_LIST.remove(first.get());
                 AniUtil.sync();
-                result(Result.success().setMessage("删除订阅成功"));
+                resultSuccessMsg("删除订阅成功");
                 break;
             }
         }

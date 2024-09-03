@@ -187,14 +187,11 @@ const delAni = (ani) => {
   ani['deleteLoading'] = true
   api.del('/api/ani', ani)
       .then(res => {
-        ani['deleteLoading'] = false
-        if (res.code !== 200) {
-          ElMessage.error(res.message)
-          getList()
-          return
-        }
         ElMessage.success(res.message)
         getList()
+      })
+      .finally(() => {
+        ani['deleteLoading'] = false
       })
 }
 
@@ -203,11 +200,9 @@ const list = ref([])
 const getList = () => {
   api.get('/api/ani')
       .then(res => {
-        if (res.code !== 200) {
-          ElMessage.error(res.message)
-          return
-        }
         list.value = res.data
+      })
+      .finally(() => {
         loading.value = false
       })
 }

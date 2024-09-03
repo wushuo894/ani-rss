@@ -3,7 +3,6 @@ package ani.rss.action;
 import ani.rss.annotation.Path;
 import ani.rss.entity.Config;
 import ani.rss.entity.Login;
-import ani.rss.entity.Result;
 import ani.rss.util.ConfigUtil;
 import ani.rss.util.TaskUtil;
 import cn.hutool.core.bean.BeanUtil;
@@ -22,7 +21,6 @@ public class ConfigAction implements BaseAction {
     @Override
     public void doAction(HttpServerRequest req, HttpServerResponse res) throws IOException {
         String method = req.getMethod();
-        res.setContentType("application/json; charset=utf-8");
         if (method.equals("GET")) {
             Config clone = ObjectUtil.clone(ConfigUtil.CONFIG);
             clone.getLogin().setPassword("");
@@ -40,7 +38,7 @@ public class ConfigAction implements BaseAction {
         Integer sleep = config.getSleep();
         BeanUtil.copyProperties(gson.fromJson(req.getBody(), Config.class), config);
         String host = config.getHost();
-        if (!ReUtil.contains("http(s*)://", host)) {
+        if (StrUtil.isNotBlank(host) && !ReUtil.contains("http(s*)://", host)) {
             host = "http://" + host;
         }
         config.setHost(host);
@@ -50,7 +48,7 @@ public class ConfigAction implements BaseAction {
             String proxyHost = config.getProxyHost();
             Integer proxyPort = config.getProxyPort();
             if (StrUtil.isBlank(proxyHost) || Objects.isNull(proxyPort)) {
-                result(Result.error().setMessage("代理参数不完整"));
+                resultErrorMsg("代理参数不完整");
                 return;
             }
         }
@@ -70,6 +68,6 @@ public class ConfigAction implements BaseAction {
         }
 
 
-        result(Result.success().setMessage("修改成功"));
+        resultSuccessMsg("修改成功");
     }
 }

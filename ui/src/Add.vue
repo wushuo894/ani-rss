@@ -121,13 +121,11 @@ const getRss = () => {
   rssButtonLoading.value = true
   api.post('/api/rss', ani.value)
       .then(res => {
-        rssButtonLoading.value = false
-        if (res.code !== 200) {
-          ElMessage.error(res.message)
-          return
-        }
-        ani.value = res.data
+        ani.value = res['data']
         showRss.value = false
+      })
+      .finally(() => {
+        rssButtonLoading.value = false
       })
 }
 
@@ -138,15 +136,12 @@ const addAni = () => {
   addAniButtonLoading.value = true
   api.post('/api/ani', ani.value)
       .then(res => {
-        addAniButtonLoading.value = false
-        if (res.code !== 200) {
-          ElMessage.error(res.message)
-          emit('load')
-          return
-        }
         ElMessage.success(res.message)
         emit('load')
         addDialogVisible.value = false
+      })
+      .finally(() => {
+        addAniButtonLoading.value = false
       })
 }
 
