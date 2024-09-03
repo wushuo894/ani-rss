@@ -100,15 +100,12 @@ const editAni = () => {
   editAniButtonLoading.value = true
   api.put('/api/ani', ani.value)
       .then(res => {
-        editAniButtonLoading.value = false
-        if (res.code !== 200) {
-          ElMessage.error(res.message)
-          emit('load')
-          return
-        }
         ElMessage.success(res.message)
         emit('load')
         editDialogVisible.value = false
+      })
+      .finally(() => {
+        editAniButtonLoading.value = false
       })
 }
 

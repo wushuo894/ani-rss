@@ -10,7 +10,7 @@ public class Test2 {
         Gson gson = new GsonBuilder()
                 .disableHtmlEscaping()
                 .create();
-        System.out.println(gson.toJson(MikanUtil.list("",new Mikan.Season().setYear(2020).setSeason("春"))));
+        System.out.println(gson.toJson(MikanUtil.list("", new Mikan.Season().setYear(2020).setSeason("春"))));
         System.out.println(gson.toJson(MikanUtil.getGroups("https://mikanani.me/Home/Bangumi/3360")));
     }
 }
