@@ -4,6 +4,8 @@
 
 [GitHub](https://github.com/wushuo894/ani-rss)
 
+[使用文档](https://github.com/wushuo894/ani-rss/blob/master/DOCS.md)
+
 默认 用户名: admin 密码: admin
 
 ### docker 部署
