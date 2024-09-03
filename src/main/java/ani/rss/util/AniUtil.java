@@ -365,7 +365,10 @@ public class AniUtil {
                                     if (!element.ownText().equals("话数:")) {
                                         continue;
                                     }
-                                    return Integer.parseInt(element.parent().ownText());
+                                    Integer ten = Integer.parseInt(element.parent().ownText());
+                                    ani.setTotalEpisodeNumber(ten);
+                                    AniUtil.sync();
+                                    return ten;
                                 }
                                 return totalEpisodeNumber;
                             });
