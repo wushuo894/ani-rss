@@ -14,34 +14,43 @@
                 <el-collapse-item v-for="it in item.items" :name="it.url">
                   <template #title>
                     <img :src="it['cover']" height="40" width="40">
-                    <div style="margin-left: 5px">
+                    <div style="margin-left: 5px;
+                                         max-width: 70%;
+                                         overflow: hidden;
+                                         white-space: nowrap;
+                                         text-overflow: ellipsis;">
                       {{ it.title }}
                     </div>
                   </template>
-                  <div style="margin-left: 15px;min-height: 50px;" v-if="selectName === it.url" v-loading="groupLoading">
+                  <div style="margin-left: 15px;min-height: 50px;" v-if="selectName === it.url"
+                       v-loading="groupLoading">
                     <el-collapse accordion>
-                      <el-collapse-item v-for="group in groups">
+                      <el-collapse-item v-for="group in groups[it.url]">
                         <template #title>
                           <div style="width: 100%;display: flex;justify-content: space-between;">
-                            <span>
+                            <div>
                               {{ group.label }}
-                            </span>
+                            </div>
                             <div style="display: flex;align-items: center;margin-right: 15px;">
                               <el-button @click.stop="add(group['rss'])">添加</el-button>
                             </div>
                           </div>
                         </template>
-                        <el-card shadow="never" v-for="ti in group.items">
-                          <div>
-                            <div>
-                              {{ ti.name }}
-                            </div>
-                            <div style="width: 100%;display: flex;justify-content: end;">
-                              {{ ti['sizeStr'] }}
-                              {{ ti['dateStr'] }}
-                            </div>
+                        <div style="margin-left: 15px;">
+                          <div v-for="ti in group.items" style="margin-bottom: 4px;">
+                            <el-card shadow="never">
+                              <div>
+                                <h5>
+                                  {{ ti.name }}
+                                </h5>
+                                <div style="width: 100%;display: flex;justify-content: end;">
+                                  {{ ti['sizeStr'] }}
+                                  {{ ti['dateStr'] }}
+                                </div>
+                              </div>
+                            </el-card>
                           </div>
-                        </el-card>
+                        </div>
                       </el-collapse-item>
                     </el-collapse>
                   </div>
@@ -106,24 +115,26 @@ let change = (v) => {
 }
 
 let selectName = ref('')
-let groups = ref([])
+let groups = ref({})
 
 let collapseChange = (v) => {
   if (!v) {
     return
   }
-  groupLoading.value = true
-  groups.value = []
   selectName.value = v
+  if (groups.value[v]) {
+    return;
+  }
+  groupLoading.value = true
   api.get('/api/mikan/group?url=' + v)
       .then(res => {
-        groups.value = res.data
+        groups.value[v] = res.data
         groupLoading.value = false
       })
 }
 
 let add = (v) => {
-  emit('add',v)
+  emit('add', v)
   dialogVisible.value = false
 }
 
@@ -132,3 +143,9 @@ defineExpose({show})
 const emit = defineEmits(['add'])
 
 </script>
+
+<style>
+.el-card {
+  --el-card-padding: 15px;
+}
+</style>
