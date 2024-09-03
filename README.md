@@ -29,7 +29,7 @@
 - [x] 支持拼音排序与搜索
 - [x] 支持自定义代理
 
-![1.jpg](https://github.com/wushuo894/ani-rss/raw/master/image/1.jpg)
+![screenshot.jpg](https://github.com/wushuo894/ani-rss/raw/master/image/screenshot.jpg)
 
 默认 用户名: admin 密码: admin
 
