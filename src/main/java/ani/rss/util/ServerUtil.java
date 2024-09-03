@@ -56,7 +56,7 @@ public class ServerUtil {
                         if (isAuth) {
                             String authorization = req.getHeader("Authorization");
                             if (StrUtil.isBlank(authorization)) {
-                                result(new Result<>().setCode(403));
+                                result(new Result<>().setCode(403).setMessage("未登录"));
                                 return;
                             }
                             Config config = ConfigUtil.CONFIG;
@@ -65,7 +65,7 @@ public class ServerUtil {
                             String password = login.getPassword();
                             String s = MD5.create().digestHex(username + ":" + password);
                             if (!authorization.equals(s)) {
-                                result(new Result<>().setCode(403));
+                                result(new Result<>().setCode(403).setMessage("令牌错误"));
                                 return;
                             }
                         }

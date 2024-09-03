@@ -29,7 +29,6 @@
 import {ref} from "vue";
 import CryptoJS from "crypto-js"
 import App from "./App.vue";
-import {ElMessage} from "element-plus";
 
 let loading = ref(false)
 
@@ -53,14 +52,12 @@ let login = () => {
     'body': JSON.stringify(my_user)
   }).then(res => res.json())
       .then(res => {
-        loading.value = false
-        if (res.code !== 200) {
-          ElMessage.error(res.message)
-          return
-        }
         localStorage.setItem("authorization", res.data)
         window.authorization = res.data
         authorization.value = res.data
+      })
+      .finally(() => {
+        loading.value = false
       })
 }
 </script>
