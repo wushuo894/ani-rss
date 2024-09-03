@@ -88,13 +88,12 @@ let list = (body) => {
   loading.value = true
   api.post('/api/mikan', body)
       .then(res => {
-        let seasons = res.data.seasons
-        let items = res.data.items
+        let seasons = res.data['seasons']
+        let items = res.data['items']
         if (seasons.length) {
           data.value.seasons = seasons
         }
         data.value.items = items
-        loading.value = false
         if (items.length) {
           activeName.value = items[0].label
         }
@@ -104,6 +103,9 @@ let list = (body) => {
             return
           }
         }
+      })
+      .finally(() => {
+        loading.value = false
       })
 }
 
@@ -129,6 +131,8 @@ let collapseChange = (v) => {
   api.get('/api/mikan/group?url=' + v)
       .then(res => {
         groups.value[v] = res.data
+      })
+      .finally(() => {
         groupLoading.value = false
       })
 }

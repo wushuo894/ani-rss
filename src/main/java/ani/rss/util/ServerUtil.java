@@ -73,7 +73,6 @@ public class ServerUtil {
                         baseAction.doAction(req, res);
                     } catch (Exception e) {
                         String message = ExceptionUtil.getMessage(e);
-                        res.setContentType("application/json; charset=utf-8");
                         String json = gson.toJson(Result.error().setMessage(message));
                         IoUtil.writeUtf8(res.getOut(), true, json);
                         if (!(e instanceof IllegalArgumentException)) {

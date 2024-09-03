@@ -1,3 +1,5 @@
+import {ElMessage} from "element-plus";
+
 let post = async (url, body) => {
     return await fetch_(url, 'POST', body);
 }
@@ -28,8 +30,14 @@ let fetch_ = async (url, method, body) => {
                 localStorage.removeItem("authorization")
                 location.reload()
             }
-            return res
-        });
+            if (res.code >= 200 && res.code < 300){
+                return res
+            }
+            ElMessage.error(res.message)
+            return new Promise((resolve, reject) => {
+                reject(new Error(res.message));
+            });
+        })
 }
 
 export default {post, get, del, put}

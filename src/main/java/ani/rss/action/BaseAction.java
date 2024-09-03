@@ -25,12 +25,20 @@ public interface BaseAction extends Action {
         result(Result.success(t));
     }
 
+    default <T> void resultSuccessMsg(String t) {
+        result(Result.success().setMessage(t));
+    }
+
     default <T> void resultError() {
         result(Result.error());
     }
 
     default <T> void resultError(T t) {
         result(Result.error(t));
+    }
+
+    default <T> void resultErrorMsg(String t) {
+        result(Result.error().setMessage(t));
     }
 
     default <T> void result(Result<T> result) {
