@@ -342,7 +342,18 @@ public class AniUtil {
         if (totalEpisodeNumber > 0) {
             return ani.getTotalEpisodeNumber();
         }
-        return HttpReq.get(url)
+
+        Map<String, String> decodeParamMap = HttpUtil.decodeParamMap(url, StandardCharsets.UTF_8);
+
+        String bangumiId = "";
+        for (String k : decodeParamMap.keySet()) {
+            String v = decodeParamMap.get(k);
+            if (k.equalsIgnoreCase("bangumiId")) {
+                bangumiId = v;
+            }
+        }
+
+        return HttpReq.get(URLUtil.getHost(URLUtil.url(url)) + "/Home/Bangumi/" + bangumiId)
                 .thenFunction(res -> {
                     org.jsoup.nodes.Document document = Jsoup.parse(res.body());
                     Elements bangumiInfos = document.select(".bangumi-info");
