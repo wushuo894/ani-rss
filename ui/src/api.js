@@ -26,14 +26,17 @@ let fetch_ = async (url, method, body) => {
     })
         .then(res => res.json())
         .then(res => {
-            if (res.code === 403) {
-                localStorage.removeItem("authorization")
-                location.reload()
-            }
-            if (res.code >= 200 && res.code < 300){
+            if (res.code >= 200 && res.code < 300) {
                 return res
             }
+
             ElMessage.error(res.message)
+            if (res.code === 403) {
+                localStorage.removeItem("authorization")
+                setTimeout(() => {
+                    location.reload()
+                }, 1000)
+            }
             return new Promise((resolve, reject) => {
                 reject(new Error(res.message));
             });
