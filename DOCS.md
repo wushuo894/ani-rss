@@ -86,6 +86,25 @@ ps: 此选项必须启用 自动重命名。确保 qBittorrent 与本程序 dock
 
 可以看到 debug 级别的日志
 
+    2024-09-03 14:26:01 INFO ani.rss.util.TorrentUtil - 已下载 深夜冲击 S01E01
+    2024-09-03 14:26:01 INFO ani.rss.util.TorrentUtil - 下载种子 深夜冲击 S01E01
+    2024-09-03 14:26:02 DEBUG ani.rss.util.TorrentUtil - 本地文件已存在 深夜冲击 S01E01
+    2024-09-03 14:26:02 DEBUG ani.rss.util.TorrentUtil - {
+    "title": "[ANi] Mayonaka Punch /  深夜 Punch - 02 [1080P][Baha][WEB-DL][AAC AVC][CHT][MP4]",
+    "reName": "深夜冲击 S01E02",
+    "torrent": "https://mikanani.me/Download/20240715/1ef6e3168b72cef9a30edb9b97490158629ba7d0.torrent",
+    "episode": 2
+    }
+    2024-09-03 14:26:02 INFO ani.rss.util.TorrentUtil - 已下载 深夜冲击 S01E02
+    2024-09-03 14:26:02 INFO ani.rss.util.TorrentUtil - 下载种子 深夜冲击 S01E02
+    2024-09-03 14:26:03 DEBUG ani.rss.util.TorrentUtil - 本地文件已存在 深夜冲击 S01E02
+    2024-09-03 14:26:03 DEBUG ani.rss.util.TorrentUtil - {
+    "title": "[ANi] Mayonaka Punch /  深夜 Punch - 03 [1080P][Baha][WEB-DL][AAC AVC][CHT][MP4]",
+    "reName": "深夜冲击 S01E03",
+    "torrent": "https://mikanani.me/Download/20240722/ec1ec2faf5356d4b363e42d99b799d31450bc34d.torrent",
+    "episode": 3
+    }
+
 ## 代理设置
 
 主要用与访问 mikan
