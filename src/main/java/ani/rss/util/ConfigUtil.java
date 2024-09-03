@@ -34,6 +34,7 @@ public class ConfigUtil {
                 .setDelete(false)
                 .setOffset(false)
                 .setAcronym(false)
+                .setAutoDisabled(false)
                 .setDownloadPath("")
                 .setHost("")
                 .setUsername("")

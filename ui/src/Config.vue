@@ -42,7 +42,7 @@
                    @submit="(event)=>{
                       event.preventDefault()
                    }">
-            <el-form-item label="间隔(分钟)">
+            <el-form-item label="RSS间隔(分钟)">
               <el-input-number v-model:model-value="config.sleep" min="1"></el-input-number>
             </el-form-item>
             <el-form-item label="自动重命名">
@@ -52,19 +52,35 @@
               <el-input-number v-model:model-value="config.renameSleep" min="1"
                                :disabled="!config.rename"></el-input-number>
             </el-form-item>
-            <el-form-item label="文件已下载自动跳过">
+            <el-form-item label="自动跳过">
               <div>
                 <el-switch v-model:model-value="config.fileExist" :disabled="!config.rename"></el-switch>
                 <br>
-                <el-text class="mx-1" size="small">此选项必须启用 自动重命名。确保 qBittorrent 与本程序 docker 映射挂载路径一致
+                <el-text class="mx-1" size="small">
+                  文件已下载自动跳过 此选项必须启用 自动重命名。确保 qBittorrent 与本程序 docker 映射挂载路径一致
                 </el-text>
               </div>
             </el-form-item>
-            <el-form-item label="自动删除已完成任务">
-              <el-switch v-model:model-value="config.delete"></el-switch>
+            <el-form-item label="自动删除">
+              <div>
+                <el-switch v-model:model-value="config.delete"></el-switch>
+                <br>
+                <el-text class="mx-1" size="small">
+                  自动删除已完成的任务
+                </el-text>
+              </div>
             </el-form-item>
             <el-form-item label="自动推断剧集偏移">
               <el-switch v-model:model-value="config.offset"></el-switch>
+            </el-form-item>
+            <el-form-item label="自动禁用订阅">
+              <div>
+                <el-switch v-model:model-value="config.autoDisabled"></el-switch>
+                <br>
+                <el-text class="mx-1" size="small">
+                  根据 Bangumi 获取总集数 当所有集数都已下载时自动禁用该订阅
+                </el-text>
+              </div>
             </el-form-item>
             <el-form-item label="DEBUG">
               <el-switch v-model:model-value="config.debug"></el-switch>
@@ -178,6 +194,7 @@ const config = ref({
   'delete': false,
   'offset': false,
   'acronym': false,
+  'autoDisabled': false,
   'debug': false,
   'proxy': false,
   'proxyHost': '',
