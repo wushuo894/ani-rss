@@ -73,6 +73,7 @@ public class TorrentUtil {
      */
     public static synchronized void downloadAni(Ani ani) {
         Config config = ConfigUtil.CONFIG;
+        Boolean autoDisabled = config.getAutoDisabled();
         Integer downloadCount = config.getDownloadCount();
 
         String title = ani.getTitle();
@@ -125,6 +126,19 @@ public class TorrentUtil {
             File saveTorrent = saveTorrent(ani, item);
             String savePath = getDownloadPath(ani).get(0).toString();
             download(reName, savePath, saveTorrent);
+        }
+
+        if (!autoDisabled) {
+            return;
+        }
+        Integer totalEpisodeNumber = AniUtil.getTotalEpisodeNumber(ani);
+        if (totalEpisodeNumber < 1) {
+            return;
+        }
+        if (totalEpisodeNumber == items.size()) {
+            ani.setEnable(false);
+            log.info("{} 本季度 {} 集 已全部下载完成, 自动停止订阅", title, totalEpisodeNumber);
+            AniUtil.sync();
         }
     }
 

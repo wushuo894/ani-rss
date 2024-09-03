@@ -35,15 +35,15 @@ public class MikanUtil {
                     List<Mikan.Season> seasons = new ArrayList<>();
 
                     Document document = Jsoup.parse(res.body());
-                    Elements dateSelects = document.getElementsByClass("date-select");
+                    Elements dateSelects = document.select(".date-select");
                     if (!dateSelects.isEmpty()) {
                         Element dateSelect = dateSelects.get(0);
-                        String dateText = dateSelects.get(0).getElementsByClass("date-text").text().trim();
-                        Element dropdownMenu = dateSelect.getElementsByClass("dropdown-menu").get(0);
+                        String dateText = dateSelects.get(0).select(".date-text").text().trim();
+                        Element dropdownMenu = dateSelect.selectFirst(".dropdown-menu");
                         for (Element child : dropdownMenu.children()) {
-                            Elements seasonItems = child.getElementsByTag("li");
+                            Elements seasonItems = child.select("li");
                             for (Element seasonItem : seasonItems.subList(1, seasonItems.size())) {
-                                Element a = seasonItem.getElementsByTag("a").get(0);
+                                Element a = seasonItem.selectFirst("a");
                                 String dataYear = a.attr("data-year");
                                 String dataSeason = a.attr("data-season");
                                 seasons.add(new Mikan.Season()
@@ -56,11 +56,11 @@ public class MikanUtil {
 
                     Function<Element, List<Ani>> get = (el) -> {
                         List<Ani> anis = new ArrayList<>();
-                        Elements lis = el.getElementsByTag("li");
+                        Elements lis = el.select("li");
                         for (Element li : lis) {
-                            String img = host + li.getElementsByTag("span")
-                                    .get(0).attr("data-src");
-                            Elements aa = li.getElementsByTag("a");
+                            String img = host + li.selectFirst("span")
+                                    .attr("data-src");
+                            Elements aa = li.select("a");
                             if (aa.isEmpty()) {
                                 continue;
                             }
@@ -74,10 +74,10 @@ public class MikanUtil {
                         return anis;
                     };
 
-                    Elements skBangumis = document.getElementsByClass("sk-bangumi");
+                    Elements skBangumis = document.select(".sk-bangumi");
 
                     if (skBangumis.isEmpty()) {
-                        List<Ani> anis = get.apply(document.getElementsByClass("an-ul").get(0));
+                        List<Ani> anis = get.apply(document.selectFirst(".an-ul"));
 
                         Mikan.Item item = new Mikan.Item();
                         items.add(item);
@@ -104,25 +104,25 @@ public class MikanUtil {
                 .thenFunction(res -> {
                     Document document = Jsoup.parse(res.body());
                     List<Mikan.Group> groups = new ArrayList<>();
-                    Elements subgroupTexts = document.getElementsByClass("subgroup-text");
+                    Elements subgroupTexts = document.select(".subgroup-text");
                     for (Element subgroupText : subgroupTexts) {
                         Element table = subgroupText.nextElementSibling();
                         Mikan.Group group = new Mikan.Group();
 
                         List<TorrentsInfo> torrentsInfos = new ArrayList<>();
                         group.setItems(torrentsInfos);
-                        String attr = subgroupText.getElementsByTag("a").get(1).attr("href");
-                        String label = subgroupText.getElementsByTag("a").get(0).ownText();
+                        String attr = subgroupText.select("a").get(1).attr("href");
+                        String label = subgroupText.select("a").get(0).ownText();
                         label = StrUtil.blankToDefault(label, "生肉/不明字幕");
                         group.setLabel(label)
                                 .setRss(host + attr);
                         groups.add(group);
 
-                        Element tbody = table.getElementsByTag("tbody").get(0);
+                        Element tbody = table.selectFirst("tbody");
                         for (Element tr : tbody.children()) {
-                            String s = tr.getElementsByTag("a").get(0).ownText();
-                            String sizeStr = tr.getElementsByTag("td").get(1).text().trim();
-                            String dataStr = tr.getElementsByTag("td").get(2).text().trim();
+                            String s = tr.select("a").get(0).ownText();
+                            String sizeStr = tr.select("td").get(1).text().trim();
+                            String dataStr = tr.select("td").get(2).text().trim();
                             torrentsInfos.add(
                                     new TorrentsInfo()
                                             .setName(s)

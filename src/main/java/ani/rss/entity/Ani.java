@@ -53,4 +53,9 @@ public class Ani implements Serializable {
      * 启用
      */
     private Boolean enable;
+
+    /**
+     * 总集数
+     */
+    private Integer totalEpisodeNumber;
 }
