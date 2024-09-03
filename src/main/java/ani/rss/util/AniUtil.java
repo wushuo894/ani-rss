@@ -155,7 +155,7 @@ public class AniUtil {
                     org.jsoup.nodes.Document html = Jsoup.parse(res.body());
 
                     // 获取封面
-                    Elements elementsByClass = html.getElementsByClass("bangumi-poster");
+                    Elements elementsByClass = html.select(".bangumi-poster");
                     Element element = elementsByClass.get(0);
                     String style = element.attr("style");
                     String image = style.replace("background-image: url('", "").replace("');", "");
@@ -164,7 +164,7 @@ public class AniUtil {
                     ani.setCover(saveJpg);
 
                     // 获取字幕组
-                    Elements subgroupTexts = html.getElementsByClass("subgroup-text");
+                    Elements subgroupTexts = html.select(".subgroup-text");
                     for (Element subgroupText : subgroupTexts) {
                         String id = subgroupText.attr("id");
                         if (!id.equalsIgnoreCase(finalSubgroupid)) {
@@ -175,7 +175,7 @@ public class AniUtil {
                             ani.setSubgroup(ownText);
                             continue;
                         }
-                        ani.setSubgroup(subgroupText.getElementsByTag("a").get(0).text().trim());
+                        ani.setSubgroup(subgroupText.selectFirst("a").text().trim());
                     }
                 });
 
@@ -334,6 +334,42 @@ public class AniUtil {
         Assert.notNull(season, "季不能为空");
         Assert.notBlank(title, "标题不能为空");
         Assert.notNull(offset, "集数偏移不能为空");
+    }
+
+    public static Integer getTotalEpisodeNumber(Ani ani) {
+        String url = ani.getUrl();
+        Integer totalEpisodeNumber = ObjectUtil.defaultIfNull(ani.getTotalEpisodeNumber(), 0);
+        if (totalEpisodeNumber > 0) {
+            return ani.getTotalEpisodeNumber();
+        }
+        return HttpReq.get(url)
+                .thenFunction(res -> {
+                    org.jsoup.nodes.Document document = Jsoup.parse(res.body());
+                    Elements bangumiInfos = document.select(".bangumi-info");
+                    String bgmUrl = "";
+                    for (Element bangumiInfo : bangumiInfos) {
+                        if (!bangumiInfo.ownText().equals("Bangumi番组计划链接：")) {
+                            continue;
+                        }
+                        bgmUrl = bangumiInfo.select("a").get(0).attr("href");
+                        break;
+                    }
+                    if (StrUtil.isBlank(bgmUrl)) {
+                        return totalEpisodeNumber;
+                    }
+
+                    return HttpReq.get(bgmUrl)
+                            .thenFunction(response -> {
+                                org.jsoup.nodes.Document parse = Jsoup.parse(response.body());
+                                for (Element element : parse.select(".tip")) {
+                                    if (!element.ownText().equals("话数:")) {
+                                        continue;
+                                    }
+                                    return Integer.parseInt(element.parent().ownText());
+                                }
+                                return totalEpisodeNumber;
+                            });
+                });
     }
 
 }

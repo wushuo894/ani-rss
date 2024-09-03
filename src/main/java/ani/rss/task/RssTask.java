@@ -7,7 +7,6 @@ import ani.rss.util.ConfigUtil;
 import ani.rss.util.ExceptionUtil;
 import ani.rss.util.TorrentUtil;
 import cn.hutool.core.thread.ThreadUtil;
-import cn.hutool.core.util.ObjectUtil;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
@@ -33,7 +32,7 @@ public class RssTask extends Thread {
                 ThreadUtil.sleep(sleep, TimeUnit.MINUTES);
                 continue;
             }
-            List<Ani> aniList = ObjectUtil.clone(AniUtil.ANI_LIST);
+            List<Ani> aniList = AniUtil.ANI_LIST;
             for (Ani ani : aniList) {
                 String title = ani.getTitle();
                 Boolean enable = ani.getEnable();

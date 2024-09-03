@@ -64,6 +64,11 @@ public class Config implements Serializable {
     private Boolean acronym;
 
     /**
+     * 自动禁用已完结番剧的订阅
+     */
+    private Boolean autoDisabled;
+
+    /**
      * DEBUG
      */
     private Boolean debug;

@@ -31,12 +31,12 @@ public class AboutAction implements BaseAction {
                     .then(response -> {
                         String body = response.body();
                         Document document = Jsoup.parse(body);
-                        Element box = document.getElementsByClass("Box").get(0);
-                        Element element = box.getElementsByTag("h1").get(0);
+                        Element box = document.selectFirst(".Box");
+                        Element element = box.selectFirst("h1");
                         String latest = element.text().replace("v", "").trim();
                         about.setUpdate(VersionComparator.INSTANCE.compare(latest, version) > 0)
                                 .setLatest(latest);
-                        Element markdownBody = box.getElementsByClass("markdown-body").get(0);
+                        Element markdownBody = box.selectFirst(".markdown-body");
                         about.setMarkdownBody(markdownBody.html());
                     });
         } catch (Exception e) {
