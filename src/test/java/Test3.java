@@ -8,17 +8,20 @@ import java.util.List;
 
 public class Test3 {
     public static void main(String[] args) {
-        int season = 1;
-        File ff = new File("Z:\\Downloads\\会长是女仆大人\\S01");
+        int season = 5;
+        File ff = new File("Z:\\Downloads\\初音岛\\S05");
         String title = ff.getParentFile().getName();
         File[] files = FileUtil.ls(ff.toString());
         for (File file : files) {
+            if (file.isDirectory()) {
+                continue;
+            }
             String name = file.getName();
             String s = "(.*|\\[.*])( -? \\d+|\\[\\d+]|\\[\\d+.?[vV]\\d]|第\\d+[话話集]|\\[第?\\d+[话話集]]|\\[\\d+.?END]|[Ee][Pp]?\\d+)(.*)";
             String e = ReUtil.get(s, name, 2);
             String episode = ReUtil.get("\\d+", e, 0);
             if (StrUtil.isBlank(episode)) {
-                episode = ReUtil.get(" \\d{2}", name, 0).trim();
+                episode = ReUtil.get("\\[(\\d{2})\\]", name, 1).trim();
             }
             String reName = StrFormatter.format("{} S{}E{}",
                     title,
@@ -42,6 +45,9 @@ public class Test3 {
                 continue;
             }
 
+//            if (name.length() == newPath.length()) {
+//                continue;
+//            }
             System.out.println(name);
             System.out.println(newPath);
             FileUtil.rename(file, newPath, false);
