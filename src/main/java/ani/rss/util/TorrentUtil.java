@@ -259,7 +259,10 @@ public class TorrentUtil {
         if (!fileExist) {
             return false;
         }
+
+        Integer season = ani.getSeason();
         String reName = item.getReName();
+        Integer episode = item.getEpisode();
 
         List<TorrentsInfo> torrentsInfos = getTorrentsInfos();
         for (TorrentsInfo torrentsInfo : torrentsInfos) {
@@ -278,7 +281,26 @@ public class TorrentUtil {
         if (files.stream()
                 .filter(File::isFile)
                 .filter(file -> List.of("mp4", "mkv", "avi").contains(FileUtil.extName(file)))
-                .anyMatch(file -> FileUtil.mainName(file).equals(reName))) {
+                .anyMatch(file -> {
+                    String mainName = FileUtil.mainName(file);
+                    if (StrUtil.isBlank(mainName)) {
+                        return false;
+                    }
+                    mainName = mainName.trim().toUpperCase();
+                    String s = "S(\\d+)E(\\d+)$";
+                    if (!ReUtil.contains(s, mainName)) {
+                        return false;
+                    }
+
+                    String seasonStr = ReUtil.get(s, mainName, 1);
+
+                    String episodeStr = ReUtil.get(s, mainName, 2);
+
+                    if (StrUtil.isBlank(seasonStr) || StrUtil.isBlank(episodeStr)) {
+                        return false;
+                    }
+                    return season == Integer.parseInt(seasonStr) && episode == Integer.parseInt(episodeStr);
+                })) {
             log.info("已下载 {}", reName);
             // 保存 torrent 下次只校验 torrent 是否存在 ， 可以将config设置到固态硬盘，防止一直唤醒机械硬盘
             saveTorrent(ani, item);
