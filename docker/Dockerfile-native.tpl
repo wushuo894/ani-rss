@@ -1,4 +1,4 @@
-FROM scratch
+FROM ubuntu:jammy
 COPY target/ani-rss /usr/app/ani-rss
 WORKDIR /usr/app
 VOLUME /config
