@@ -30,8 +30,8 @@ jobs:
           sudo apt update
           sudo apt install gcc libc6-dev zlib1g-dev curl make
           wget https://raw.githubusercontent.com/graalvm/graalvm-demos/master/tiny-java-containers/setup-musl.sh
-          bash ./setup-musl.sh
-          bash ./native-package.sh
+          sudo bash ./setup-musl.sh
+          sudo bash ./native-package.sh
       - name: Release
         uses: softprops/action-gh-release@v1
         with:
