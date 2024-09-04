@@ -13,12 +13,14 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        java-version: [ '17', 'dev' ]
     steps:
-      - uses: actions/checkout@v3
-      - name: Set up JDK 17
-        uses: graalvm/setup-graalvm@v1
+      - uses: actions/checkout@v4
+      - uses: graalvm/setup-graalvm@v1
         with:
-          java-version: '17'
+          java-version: ${{ matrix.java-version }}
           distribution: 'graalvm'
           cache: maven
           native-image-job-reports: 'true'
@@ -26,11 +28,6 @@ jobs:
         run: |
           version=$(cat pom.xml | grep -oPm1 '(?<=<version>).*?(?=</version>)')
           echo "version=v$version" >> $GITHUB_ENV
-          echo "version=v$version"
-          sudo apt update
-          sudo apt install gcc libc6-dev zlib1g-dev curl make
-          wget https://raw.githubusercontent.com/graalvm/graalvm-demos/master/tiny-java-containers/setup-musl.sh
-          sudo bash ./setup-musl.sh
           bash ./native-package.sh
       - name: Release
         uses: softprops/action-gh-release@v1
