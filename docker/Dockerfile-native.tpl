@@ -6,4 +6,4 @@ ENV PORT="7789"
 ENV CONFIG="/config"
 ENV TZ="Asia/Shanghai"
 EXPOSE 7789
-CMD ["./usr/app/ani-rss"]
+CMD ["/usr/app/ani-rss"]
