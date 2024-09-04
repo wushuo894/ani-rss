@@ -186,6 +186,8 @@ public class AniUtil {
                 .setSeason(season)
                 .setTitle(title.trim())
                 .setEnable(true)
+                .setCurrentEpisodeNumber(0)
+                .setTotalEpisodeNumber(0)
                 .setExclude(List.of("720"));
 
         log.debug("获取到动漫信息 {}", JSONUtil.formatJsonStr(GSON.toJson(ani)));
