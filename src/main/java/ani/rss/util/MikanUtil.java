@@ -15,7 +15,7 @@ import java.util.Objects;
 import java.util.function.Function;
 
 public class MikanUtil {
-    private static final String host = "https://mikanani.me";
+    private static final String host = "https://mikanime.tv";
 
     public static Mikan list(String text, Mikan.Season season) {
         String url = host;
