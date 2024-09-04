@@ -28,7 +28,6 @@ jobs:
           echo "version=v$version" >> $GITHUB_ENV
           sudo apt update
           sudo apt install gcc libc6-dev zlib1g-dev
-          sudo gu install native-image
           bash ./native-package.sh
       - name: Release
         uses: softprops/action-gh-release@v1
