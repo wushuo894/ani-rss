@@ -66,7 +66,9 @@ public class AniUtil {
         for (JsonElement jsonElement : jsonElements) {
             Ani ani = GSON.fromJson(jsonElement, Ani.class);
             Ani newAni = new Ani();
-            newAni.setEnable(true);
+            newAni.setEnable(true)
+                    .setCurrentEpisodeNumber(0)
+                    .setTotalEpisodeNumber(0);
             BeanUtil.copyProperties(ani, newAni, CopyOptions
                     .create()
                     .setIgnoreNullValue(true));
@@ -338,7 +340,7 @@ public class AniUtil {
 
     public static Integer getTotalEpisodeNumber(Ani ani) {
         String url = ani.getUrl();
-        Integer totalEpisodeNumber = ObjectUtil.defaultIfNull(ani.getTotalEpisodeNumber(), 0);
+        Integer totalEpisodeNumber = ani.getTotalEpisodeNumber();
         if (totalEpisodeNumber > 0) {
             return ani.getTotalEpisodeNumber();
         }
