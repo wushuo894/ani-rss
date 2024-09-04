@@ -21,7 +21,6 @@ jobs:
           distribution: 'graalvm'
           cache: maven
           native-image-job-reports: 'true'
-          native-image-musl: 'true'
       - name: Build with Maven
         run: |
           version=$(cat pom.xml | grep -oPm1 '(?<=<version>).*?(?=</version>)')
