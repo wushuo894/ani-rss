@@ -1,4 +1,5 @@
 FROM alpine:edge
+COPY target/ani-rss /usr/app/ani-rss
 COPY docker/run.sh /run.sh
 WORKDIR /usr/app
 VOLUME /config
