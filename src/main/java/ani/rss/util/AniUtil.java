@@ -340,7 +340,7 @@ public class AniUtil {
 
     public static Integer getTotalEpisodeNumber(Ani ani) {
         String url = ani.getUrl();
-        Integer totalEpisodeNumber = ani.getTotalEpisodeNumber();
+        Integer totalEpisodeNumber = ObjectUtil.defaultIfNull(ani.getTotalEpisodeNumber(), 0);
         if (totalEpisodeNumber > 0) {
             return ani.getTotalEpisodeNumber();
         }
