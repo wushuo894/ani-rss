@@ -1,13 +1,9 @@
-FROM alpine:edge
+FROM oraclelinux:7-slim
 COPY target/ani-rss /usr/app/ani-rss
 COPY docker/run.sh /run.sh
 WORKDIR /usr/app
 VOLUME /config
-RUN apk update && \
-    apk upgrade --no-cache && \
-    apk add --no-cache bash ca-certificates su-exec tzdata libc6; \
-    chmod +x /run.sh && \
-    rm -rf /var/cache/apk/*
+RUN chmod +x /run.sh
 ENV PORT="7789"
 ENV CONFIG="/config"
 ENV TZ="Asia/Shanghai"
