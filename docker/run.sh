@@ -1,6 +1,8 @@
 #!/bin/bash
 
+chown -R ${PUID}:${PGID} /usr/app/
+
+umask ${UMASK}
 
 cd /usr/app/
-chmod +x ./ani-rss
-./ani-rss
+exec su-exec ${PUID}:${PGID} ./ani-rss
