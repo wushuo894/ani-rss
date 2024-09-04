@@ -26,6 +26,11 @@ jobs:
         run: |
           version=$(cat pom.xml | grep -oPm1 '(?<=<version>).*?(?=</version>)')
           echo "version=v$version" >> $GITHUB_ENV
+          echo "version=v$version"
+          sudo apt update
+          sudo apt install curl
+          wget https://raw.githubusercontent.com/graalvm/graalvm-demos/master/tiny-java-containers/setup-musl.sh
+          bash ./setup-musl.sh
           bash ./native-package.sh
       - name: Release
         uses: softprops/action-gh-release@v1
