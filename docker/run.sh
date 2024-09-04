@@ -4,5 +4,4 @@ chown -R ${PUID}:${PGID} /usr/app/
 
 umask ${UMASK}
 
-cd /usr/app/
-exec su-exec ${PUID}:${PGID} ./ani-rss
+exec su-exec ${PUID}:${PGID} /usr/app/ani-rss --no-prefix
