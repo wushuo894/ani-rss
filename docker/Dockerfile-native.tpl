@@ -6,9 +6,8 @@ VOLUME /config
 RUN apk update && \
     apk upgrade --no-cache && \
     apk add --no-cache bash ca-certificates su-exec tzdata; \
-    chmod +x /entrypoint.sh && \
+    chmod +x /run.sh && \
     rm -rf /var/cache/apk/*
-RUN chmod +x /run.sh
 ENV PORT="7789"
 ENV CONFIG="/config"
 ENV TZ="Asia/Shanghai"
