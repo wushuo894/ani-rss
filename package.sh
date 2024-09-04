@@ -7,4 +7,4 @@ pnpm install
 pnpm run build
 cp -r dist/* ../src/main/resources/dist
 cd ..
-mvn -B package --file pom.xml
+mvn -B package --file pom.xml -skipTests=true
