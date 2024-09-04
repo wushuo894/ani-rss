@@ -1,4 +1,4 @@
-FROM debian:stable-slim
+FROM ubuntu:24.10
 COPY target/ani-rss /usr/app/ani-rss
 WORKDIR /usr/app
 VOLUME /config

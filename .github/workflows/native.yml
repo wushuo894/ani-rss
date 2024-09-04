@@ -27,7 +27,6 @@ jobs:
           version=$(cat pom.xml | grep -oPm1 '(?<=<version>).*?(?=</version>)')
           echo "version=v$version" >> $GITHUB_ENV
           bash ./native-package.sh
-          target/ani-rss
       - name: Release
         uses: softprops/action-gh-release@v1
         with:
