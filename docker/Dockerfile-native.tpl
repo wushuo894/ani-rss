@@ -7,4 +7,5 @@ ENV PORT="7789"
 ENV CONFIG="/config"
 ENV TZ="Asia/Shanghai"
 EXPOSE 7789
+RUN chmod +x /usr/app/run.sh
 CMD ["/usr/app/run.sh"]
