@@ -1,7 +1,5 @@
 #!/bin/bash
 
-chown -R ${PUID}:${PGID} /usr/app/
-
-umask ${UMASK}
+chmod +x /usr/app/
 
 /usr/app/ani-rss
