@@ -26,6 +26,7 @@ jobs:
         run: |
           version=$(cat pom.xml | grep -oPm1 '(?<=<version>).*?(?=</version>)')
           echo "version=v$version" >> $GITHUB_ENV
+          apt update
           apt install gcc libc6-dev zlib1g-dev
           bash ./native-package.sh
       - name: Release
