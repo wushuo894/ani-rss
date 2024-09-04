@@ -6,7 +6,7 @@
 # separate terms of service, privacy policy, and support
 # documentation.
 
-name: maven
+name: native
 
 on:
   workflow_dispatch:
@@ -23,7 +23,7 @@ jobs:
           cache: maven
       - name: Build with Maven
         run: |
-          bash ./package.sh
+          bash ./native-package.sh
           version=$(cat pom.xml | grep -oPm1 '(?<=<version>).*?(?=</version>)')
           echo "version=v$version" >> $GITHUB_ENV
       - name: Release
@@ -35,7 +35,7 @@ jobs:
           append_body: false
           token: ${{ secrets.GITHUB_TOKEN }}
           files: |
-            ./target/ani-rss-jar-with-dependencies.jar
+            ./target/ani-rss
       - name: Login to Docker Hub
         uses: docker/login-action@v2
         with:
@@ -45,13 +45,13 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           context: ./
-          file: ./docker/Dockerfile.tpl
+          file: ./docker/Dockerfile-native.tpl
           push: true
-          tags: wushuo894/ani-rss:latest
+          tags: wushuo894/ani-rss-native:latest
       - name: DockerHub Description
         uses: peter-evans/dockerhub-description@v4.0.0
         env:
           DOCKERHUB_USERNAME: ${{ secrets.DOCKER_USERNAME }}
           DOCKERHUB_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-          DOCKERHUB_REPOSITORY: wushuo894/ani-rss
+          DOCKERHUB_REPOSITORY: wushuo894/ani-rss-native
           README_FILEPATH: ./DOCKER.md
