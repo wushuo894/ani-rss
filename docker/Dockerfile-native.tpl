@@ -1,4 +1,4 @@
-FROM openjdk:11-jdk
+FROM alpine:edge as builder
 COPY target/ani-rss /usr/app/ani-rss
 WORKDIR /usr/app
 VOLUME /config
