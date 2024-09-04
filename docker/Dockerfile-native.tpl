@@ -5,7 +5,7 @@ WORKDIR /usr/app
 VOLUME /config
 RUN apk update && \
     apk upgrade --no-cache && \
-    apk add --no-cache bash ca-certificates su-exec tzdata; \
+    apk add --no-cache bash ca-certificates su-exec tzdata libc6; \
     chmod +x /run.sh && \
     rm -rf /var/cache/apk/*
 ENV PORT="7789"
