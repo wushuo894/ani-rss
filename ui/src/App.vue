@@ -41,35 +41,36 @@
                   {{ item.title }}
                 </div>
                 <div style="
-                    color: #9e9e9e !important;
-                    font-size: .75rem !important;
-                    font-weight: 400;
-                    line-height: 1.667;
-                    letter-spacing: .0333333333em !important;
-                    font-family: Roboto, sans-serif;
-                    text-transform: none !important;">{{ item.url }}
+                                    color: #9e9e9e !important;
+                                    font-size: .75rem !important;
+                                    font-weight: 400;
+                                    line-height: 1.667;
+                                    letter-spacing: .0333333333em !important;
+                                    font-family: Roboto, sans-serif;
+                                    text-transform: none !important;">
+                  {{ item.url }}
                 </div>
-                <div style="display: flex;">
-                  <div>
-                    <el-tag>
-                      第 {{ item.season }} 季
-                    </el-tag>
-                  </div>
-                  <div style="width: 4px;"></div>
-                  <div>
-                    <el-tag type="success" v-if="item.enable">
-                      已启用
-                    </el-tag>
-                    <el-tag type="danger" v-else>
-                      未启用
-                    </el-tag>
-                  </div>
-                  <div style="width: 4px;"></div>
-                  <div v-if="item['subgroup']">
-                    <el-tag type="info">
-                      {{ item['subgroup'] }}
-                    </el-tag>
-                  </div>
+                <div style="
+                        width: 180px;
+                        display: grid;
+                        grid-gap: 5px;
+                        grid-template-columns: repeat(3, 1fr);
+                        ">
+                  <el-tag>
+                    第 {{ item.season }} 季
+                  </el-tag>
+                  <el-tag type="success" v-if="item.enable">
+                    已启用
+                  </el-tag>
+                  <el-tag type="danger" v-else>
+                    未启用
+                  </el-tag>
+                  <el-tag type="info">
+                    {{ item['subgroup'] }}
+                  </el-tag>
+                  <el-tag type="danger" v-if="item['currentEpisodeNumber'] && item['totalEpisodeNumber']">
+                    {{ item['currentEpisodeNumber'] }} / {{ item['totalEpisodeNumber'] }}
+                  </el-tag>
                 </div>
               </div>
               <div
