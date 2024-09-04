@@ -28,7 +28,7 @@ jobs:
           echo "version=v$version" >> $GITHUB_ENV
           echo "version=v$version"
           sudo apt update
-          sudo apt install curl
+          sudo apt install gcc libc6-dev zlib1g-dev curl make
           wget https://raw.githubusercontent.com/graalvm/graalvm-demos/master/tiny-java-containers/setup-musl.sh
           bash ./setup-musl.sh
           bash ./native-package.sh
