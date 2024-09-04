@@ -1,6 +1,5 @@
 FROM scratch
 COPY target/ani-rss /usr/app/ani-rss
-COPY docker/run.sh /run.sh
 WORKDIR /usr/app
 VOLUME /config
 ENV PORT="7789"
