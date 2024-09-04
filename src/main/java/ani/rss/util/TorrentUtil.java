@@ -77,6 +77,7 @@ public class TorrentUtil {
         Integer downloadCount = config.getDownloadCount();
 
         String title = ani.getTitle();
+        Integer season = ani.getSeason();
 
         Set<String> hashList = getTorrentsInfos()
                 .stream().map(TorrentsInfo::getHash)
@@ -142,7 +143,7 @@ public class TorrentUtil {
         }
         if (totalEpisodeNumber == items.size()) {
             ani.setEnable(false);
-            log.info("{} 本季度 {} 集 已全部下载完成, 自动停止订阅", title, totalEpisodeNumber);
+            log.info("{} 第 {} 季 共 {} 集 已全部下载完成, 自动停止订阅", title, season, totalEpisodeNumber);
             AniUtil.sync();
         }
     }
