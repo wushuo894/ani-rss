@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 ls /usr/app/
 chmod -R 777 /usr/app/ani-rss
