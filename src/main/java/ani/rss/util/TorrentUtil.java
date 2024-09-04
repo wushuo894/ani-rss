@@ -128,6 +128,11 @@ public class TorrentUtil {
             download(reName, savePath, saveTorrent);
         }
 
+        items.stream()
+                .mapToInt(Item::getEpisode)
+                .max()
+                .ifPresent(ani::setCurrentEpisodeNumber);
+
         if (!autoDisabled) {
             return;
         }
