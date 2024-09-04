@@ -6,7 +6,7 @@
 # separate terms of service, privacy policy, and support
 # documentation.
 
-name: Java CI with Maven
+name: maven
 
 on:
   workflow_dispatch:
@@ -45,7 +45,7 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           context: ./
-          file: ./Dockerfile.tpl
+          file: ./docker/Dockerfile.tpl
           push: true
           tags: wushuo894/ani-rss:latest
       - name: DockerHub Description
