@@ -1,5 +1,5 @@
 FROM scratch
-COPY target/ani-rss /ani-rss
+COPY target/ani-rss-x86_64-linux-musl /ani-rss
 WORKDIR /
 VOLUME /config
 ENV PORT="7789"
