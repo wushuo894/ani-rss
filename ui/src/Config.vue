@@ -273,7 +273,7 @@ const stop = (status) => {
   actionLoading.value = true
   api.post("/api/stop?status=" + status)
       .then(res => {
-        ElMessage.info(res.message)
+        ElMessage.success(res.message)
       })
       .finally(() => {
         actionLoading.value = false
@@ -284,7 +284,7 @@ const update = () => {
   actionLoading.value = true
   api.post("/api/update")
       .then(res => {
-        ElMessage.info(res.message)
+        ElMessage.success(res.message)
       })
       .finally(() => {
         actionLoading.value = false
