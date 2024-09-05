@@ -15,19 +15,16 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: graalvm/setup-graalvm@v1
-        with:
-          java-version: '17'
-          distribution: 'graalvm'
-          cache: maven
-          native-image-job-reports: 'true'
       - name: Build with Maven
         run: |
-          version=$(cat pom.xml | grep -oPm1 '(?<=<version>).*?(?=</version>)')
-          echo "version=v$version" >> $GITHUB_ENV
           sudo apt update
           sudo apt install gcc libc6-dev zlib1g-dev
-          sudo apt install make curl
+          sudo apt install make curl wget
+          version=$(cat pom.xml | grep -oPm1 '(?<=<version>).*?(?=</version>)')
+          echo "version=v$version" >> $GITHUB_ENV
+          jar_url="https://github.com/wushuo894/ani-rss/releases/download/$version/ani-rss-jar-with-dependencies.jar"
+          echo jar_url
+          wget jar_url
           bash ./native-package.sh
       - name: Release
         uses: softprops/action-gh-release@v1
