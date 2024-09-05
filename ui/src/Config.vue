@@ -161,6 +161,11 @@
                     }}</a>
                   <div v-if="about.markdownBody" v-html="about.markdownBody"></div>
                 </div>
+                <div v-loading="actionLoading">
+                  <el-button v-if="about.update" @click="update">更新</el-button>
+                  <el-button @click="stop(0)">重启 ani-rss</el-button>
+                  <el-button @click="stop(1)">关闭 ani-rss</el-button>
+                </div>
               </div>
             </el-form-item>
           </el-form>
@@ -259,6 +264,31 @@ const editConfig = () => {
         configButtonLoading.value = false
       })
 }
+
+const actionLoading = ref(false)
+
+const stop = (status) => {
+  actionLoading.value = true
+  api.post("/api/stop?status=" + status)
+      .then(res => {
+        ElMessage.info(res.message)
+      })
+      .finally(() => {
+        actionLoading.value = false
+      })
+}
+
+const update = () => {
+  actionLoading.value = true
+  api.post("/api/update")
+      .then(res => {
+        ElMessage.info(res.message)
+      })
+      .finally(() => {
+        actionLoading.value = false
+      })
+}
+
 defineExpose({
   showConfig
 })

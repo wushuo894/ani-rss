@@ -7,4 +7,4 @@ ENV CONFIG="/config"
 ENV TZ="Asia/Shanghai"
 EXPOSE 7789
 RUN ln -s /opt/java/openjdk /usr/local/openjdk-11
-CMD ["java", "-jar", "ani-rss-jar-with-dependencies.jar"]
+CMD ["/run.sh"]
