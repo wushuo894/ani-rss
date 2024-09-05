@@ -22,7 +22,7 @@ jobs:
           sudo apt install make curl wget
           version=$(cat pom.xml | grep -oPm1 '(?<=<version>).*?(?=</version>)')
           echo "version=v$version" >> $GITHUB_ENV
-          jar_url="https://github.com/wushuo894/ani-rss/releases/download/$version/ani-rss-jar-with-dependencies.jar"
+          jar_url="https://github.com/wushuo894/ani-rss/releases/download/v$version/ani-rss-jar-with-dependencies.jar"
           echo $jar_url
           wget $jar_url
           bash ./native-package.sh
