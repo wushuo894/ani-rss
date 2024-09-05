@@ -1,9 +1,9 @@
 #!/bin/bash
 
 # 创建一个工具存储目录
-mkdir graal-aot-tools
+mkdir /home/runner/work/ani-rss/ani-rss/graal-aot-tools
 # 进入到这个目录
-cd graal-aot-tools
+cd /home/runner/work/ani-rss/ani-rss/graal-aot-tools
 # 下载 x86_64-linux-musl 工具链
 wget http://more.musl.cc/10/x86_64-linux-musl/x86_64-linux-musl-native.tgz
 # 解压下载到的 musl 工具链包
@@ -15,8 +15,8 @@ wget https://zlib.net/current/zlib.tar.gz
 # 解压 zlib 依赖源码包
 tar -zxvf zlib.tar.gz
 
-export PATH="$PATH:/usr/local/graal-aot-tools/x86_64-linux-musl-native/bin"
-export TOOLCHAIN_DIR="/usr/local/graal-aot-tools"
+export PATH="$PATH:/home/runner/work/ani-rss/ani-rss/graal-aot-tools/x86_64-linux-musl-native/bin"
+export TOOLCHAIN_DIR="/home/runner/work/ani-rss/ani-rss/graal-aot-tools"
 export PATH="$TOOLCHAIN_DIR/bin:$PATH"
 export CC="$TOOLCHAIN_DIR/bin/gcc"
 
