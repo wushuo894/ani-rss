@@ -152,14 +152,16 @@
             <el-form-item label="GitHub">
               <a href="https://github.com/wushuo894/ani-rss" target="_blank">https://github.com/wushuo894/ani-rss</a>
             </el-form-item>
-            <el-form-item label="版本号" v-loading="about.version.length < 1">
+            <el-form-item label="版本号">
               <div>
-                v{{ about.version }}
-                <div v-if="about.update">
-                  <a href="https://github.com/wushuo894/ani-rss/releases/latest" target="_blank">有更新 v{{
-                      about.latest
-                    }}</a>
-                  <div v-if="about.markdownBody" v-html="about.markdownBody"></div>
+                <div v-loading="about.version.length < 1">
+                  v{{ about.version }}
+                  <div v-if="about.update">
+                    <a href="https://github.com/wushuo894/ani-rss/releases/latest" target="_blank">有更新 v{{
+                        about.latest
+                      }}</a>
+                    <div v-if="about.markdownBody" v-html="about.markdownBody"></div>
+                  </div>
                 </div>
                 <div v-loading="actionLoading">
                   <el-button v-if="about.update" @click="update">更新</el-button>
