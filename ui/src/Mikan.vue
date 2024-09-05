@@ -1,12 +1,27 @@
 <template>
   <el-dialog v-model="dialogVisible" title="Mikan" center>
-    <div style="min-height: 300px;" v-loading="loading">
-      <el-select v-if="data.seasons.length" v-model:model-value="season" @change="change">
-        <el-option :label="item.year+' '+item.season" :key="item.year+' '+item.season"
-                   :value="item.year+' '+item.season" v-for="item in data.seasons">
-        </el-option>
-      </el-select>
-      <div style="margin: 0 5px">
+    <div style="min-height: 300px;">
+      <div style="margin: 4px;">
+        <div style="display: flex;justify-content: space-between;">
+          <el-input v-model:model-value="text" placeholder="请输入搜索标题" @keyup.enter="search"
+                    clearable
+                    @clear="()=>{
+            text = ''
+            search()
+          }"></el-input>
+          <div style="width: 4px;"></div>
+          <el-button @click="search" :loading="searchLoading">搜索</el-button>
+        </div>
+        <div style="max-width: 280px;margin-top: 4px;">
+          <el-select v-if="data.seasons.length" v-model:model-value="season" @change="change"
+                     :disabled="text.length > 0 || loading">
+            <el-option :label="item.year+' '+item.season" :key="item.year+' '+item.season"
+                       :value="item.year+' '+item.season" v-for="item in data.seasons">
+            </el-option>
+          </el-select>
+        </div>
+      </div>
+      <div style="margin: 0 5px;min-height: 200px;" v-loading="loading">
         <el-collapse v-model="activeName" accordion>
           <el-collapse-item v-for="item in data.items" :title="item.label" :name="item.label">
             <div style="margin-left: 15px;">
@@ -67,6 +82,7 @@
 <script setup>
 import {ref} from "vue";
 import api from "./api.js";
+import {ElMessage} from "element-plus";
 
 let groupLoading = ref(false)
 let activeName = ref("")
@@ -81,12 +97,33 @@ let season = ref('')
 
 let show = () => {
   dialogVisible.value = true
+  text.value = ''
+  data.value = {
+    'seasons': [],
+    'items': []
+  }
   list({})
 }
 
-let list = (body) => {
+let text = ref('')
+
+let searchLoading = ref(false)
+let search = () => {
+  if (text.value.length === 1) {
+    ElMessage.error("搜索最少需要两个字符")
+    return
+  }
+  searchLoading.value = true
+  list({}, text.value).finally(() => {
+    searchLoading.value = false
+  })
+}
+
+let list = async (body, text) => {
   loading.value = true
-  api.post('/api/mikan', body)
+  text = text ? text : ''
+  body = body ? body : {}
+  return api.post('/api/mikan?text=' + text, body)
       .then(res => {
         let seasons = res.data['seasons']
         let items = res.data['items']
@@ -96,6 +133,9 @@ let list = (body) => {
         data.value.items = items
         if (items.length) {
           activeName.value = items[0].label
+          if (!items[0].items.length) {
+            ElMessage.warning("搜索结果为空")
+          }
         }
         for (let item of data.value.seasons) {
           if (item['select'] && !season.value) {
@@ -106,7 +146,8 @@ let list = (body) => {
       })
       .finally(() => {
         loading.value = false
-      })
+        groups.value = {}
+      });
 }
 
 let change = (v) => {
