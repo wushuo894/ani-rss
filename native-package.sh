@@ -15,12 +15,12 @@ wget https://zlib.net/current/zlib.tar.gz
 # 解压 zlib 依赖源码包
 tar -zxvf zlib.tar.gz
 
-ls -al
-cd zlib*
 export TOOLCHAIN_DIR="/usr/local/graal-aot-tools"
 export PATH="$TOOLCHAIN_DIR/bin:$PATH"
 export CC="$TOOLCHAIN_DIR/bin/gcc"
 
+ls -al
+cd zlib-*
 ./configure --prefix=$TOOLCHAIN_DIR --static
 make
 make install
