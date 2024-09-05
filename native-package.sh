@@ -15,6 +15,7 @@ wget https://zlib.net/current/zlib.tar.gz
 # 解压 zlib 依赖源码包
 tar -zxvf zlib.tar.gz
 
+ls -al
 cd zlib*
 export TOOLCHAIN_DIR="/usr/local/graal-aot-tools"
 export PATH="$TOOLCHAIN_DIR/bin:$PATH"
@@ -28,5 +29,5 @@ cd /home/runner/work/ani-rss/ani-rss
 
 /bin/bash ./package.sh
 cd /home/runner/work/ani-rss/ani-rss/target
-native-image --gc=G1 --static --libc=musl --no-fallback -march=compatibility -cp ./ani-rss-jar-with-dependencies.jar ani.rss.Main -o ani-rss -O2 -H:-CheckToolchain -H:+StaticExecutableWithDynamicLibC -H:+ReportExceptionStackTraces
+native-image --gc=G1 --static --libc=musl --no-fallback -march=compatibility -cp ./ani-rss-jar-with-dependencies.jar ani.rss.Main -o ani-rss-x86_64-linux-musl -O2 -H:-CheckToolchain -H:+StaticExecutableWithDynamicLibC -H:+ReportExceptionStackTraces
 cd ..
