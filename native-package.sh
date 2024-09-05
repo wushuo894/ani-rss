@@ -20,7 +20,8 @@ export TOOLCHAIN_DIR="/usr/local/graal-aot-tools"
 export PATH="$TOOLCHAIN_DIR/bin:$PATH"
 export CC="$TOOLCHAIN_DIR/bin/gcc"
 
-ls -al /usr/local/graal-aot-tools/x86_64-linux-musl-native/bin
+pwd
+ls -al
 cd zlib-*
 ./configure --prefix=$TOOLCHAIN_DIR --static
 make
