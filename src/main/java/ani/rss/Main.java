@@ -8,11 +8,16 @@ import lombok.extern.slf4j.Slf4j;
 public class Main {
 
     public static void main(String[] args) {
-        ConfigUtil.load();
-        AniUtil.load();
-        ThreadUtil.execute(() -> ServerUtil.create().start());
-        TaskUtil.start();
-        String version = MavenUtil.getVersion();
-        log.info("version {}", version);
+        try {
+            ConfigUtil.load();
+            AniUtil.load();
+            ThreadUtil.execute(() -> ServerUtil.create().start());
+            TaskUtil.start();
+            String version = MavenUtil.getVersion();
+            log.info("version {}", version);
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+            System.exit(1);
+        }
     }
 }
