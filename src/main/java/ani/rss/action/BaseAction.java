@@ -3,6 +3,7 @@ package ani.rss.action;
 import ani.rss.entity.Result;
 import ani.rss.util.ServerUtil;
 import cn.hutool.core.io.IoUtil;
+import cn.hutool.core.text.StrFormatter;
 import cn.hutool.http.server.HttpServerResponse;
 import cn.hutool.http.server.action.Action;
 import com.google.gson.Gson;
@@ -25,8 +26,8 @@ public interface BaseAction extends Action {
         result(Result.success(t));
     }
 
-    default <T> void resultSuccessMsg(String t) {
-        result(Result.success().setMessage(t));
+    default <T> void resultSuccessMsg(String t, Object... argArray) {
+        result(Result.success().setMessage(StrFormatter.format(t, argArray)));
     }
 
     default <T> void resultError() {
@@ -37,8 +38,8 @@ public interface BaseAction extends Action {
         result(Result.error(t));
     }
 
-    default <T> void resultErrorMsg(String t) {
-        result(Result.error().setMessage(t));
+    default <T> void resultErrorMsg(String t, Object... argArray) {
+        result(Result.error().setMessage(StrFormatter.format(t, argArray)));
     }
 
     default <T> void result(Result<T> result) {
