@@ -23,7 +23,7 @@ public class MailUtils {
         }
         MailAccount mailAccount = new MailAccount();
         BeanUtil.copyProperties(myMailAccount, mailAccount);
-        mailAccount.setUser(myMailAccount.getFrom())
+        mailAccount.setUser("ani-rss")
                 .setAuth(true);
         ThreadUtil.execute(() -> {
             try {

@@ -128,12 +128,7 @@ public class TorrentUtil {
             String savePath = getDownloadPath(ani).get(0).toString();
             download(reName, savePath, saveTorrent);
         }
-
-        items.stream()
-                .mapToInt(Item::getEpisode)
-                .max()
-                .ifPresent(ani::setCurrentEpisodeNumber);
-
+        ani.setCurrentEpisodeNumber(items.size());
         if (!autoDisabled) {
             return;
         }
