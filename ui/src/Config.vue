@@ -16,7 +16,7 @@
             <el-form-item label="密码">
               <el-input show-password v-model:model-value="config.password"></el-input>
             </el-form-item>
-            <el-form-item label="下载地址">
+            <el-form-item label="保存位置">
               <el-input v-model:model-value="config.downloadPath"></el-input>
             </el-form-item>
             <el-form-item label="拼音首字母">
