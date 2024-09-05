@@ -30,5 +30,5 @@ cd /home/runner/work/ani-rss/ani-rss
 
 /bin/bash ./package.sh
 cd /home/runner/work/ani-rss/ani-rss/target
-native-image --static --libc=musl march=compatibility -cp ./ani-rss-jar-with-dependencies.jar ani.rss.Main -o ani-rss-x86_64-linux-musl -H:-CheckToolchain -H:+StaticExecutableWithDynamicLibC -H:+ReportExceptionStackTraces
+native-image --static --libc=musl march=compatibility -cp ./ani-rss-jar-with-dependencies.jar ani.rss.Main -o ani-rss-x86_64-linux-musl -H:+StaticExecutableWithDynamicLibC -H:+ReportExceptionStackTraces
 cd ..
