@@ -65,7 +65,7 @@ public class MikanUtil {
                                 continue;
                             }
                             String href = host + aa.get(0).attr("href");
-                            String title = aa.get(0).attr("title");
+                            String title = aa.get(0).text();
                             anis.add(new Ani()
                                     .setCover(img)
                                     .setTitle(title)
@@ -111,7 +111,7 @@ public class MikanUtil {
 
                         List<TorrentsInfo> torrentsInfos = new ArrayList<>();
                         group.setItems(torrentsInfos);
-                        String attr = subgroupText.select("a").get(1).attr("href");
+                        String attr = subgroupText.selectFirst(".mikan-rss").attr("href");
                         String label = subgroupText.select("a").get(0).ownText();
                         label = StrUtil.blankToDefault(label, "生肉/不明字幕");
                         group.setLabel(label)
