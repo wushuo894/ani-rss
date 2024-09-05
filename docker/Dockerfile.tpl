@@ -6,4 +6,4 @@ ENV PORT="7789"
 ENV CONFIG="/config"
 ENV TZ="Asia/Shanghai"
 EXPOSE 7789
-CMD ["/opt/java/openjdk/java", "-jar", "ani-rss-jar-with-dependencies.jar"]
+CMD ["/opt/java/openjdk/bin/java", "-jar", "ani-rss-jar-with-dependencies.jar"]
