@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # 创建一个工具存储目录
-mkdir /usr/local/graal-aot-tools
+mkdir -r /usr/local/graal-aot-tools
 # 进入到这个目录
 cd /usr/local/graal-aot-tools
 # 下载 x86_64-linux-musl 工具链
@@ -20,10 +20,9 @@ export TOOLCHAIN_DIR="/usr/local/graal-aot-tools"
 export PATH="$TOOLCHAIN_DIR/bin:$PATH"
 export CC="$TOOLCHAIN_DIR/bin/gcc"
 
-pwd
-ls -al
 cd zlib-*
 ./configure --prefix=$TOOLCHAIN_DIR --static
+
 make
 make install
 
