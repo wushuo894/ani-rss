@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # 创建一个工具存储目录
-mkdir -r /usr/local/graal-aot-tools
+mkdir -p /usr/local/graal-aot-tools
 # 进入到这个目录
 cd /usr/local/graal-aot-tools
 # 下载 x86_64-linux-musl 工具链
