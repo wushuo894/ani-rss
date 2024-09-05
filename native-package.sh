@@ -1,9 +1,9 @@
 #!/bin/bash
 
 # 创建一个工具存储目录
-mkdir -p /usr/local/graal-aot-tools
+mkdir graal-aot-tools
 # 进入到这个目录
-cd /usr/local/graal-aot-tools
+cd graal-aot-tools
 # 下载 x86_64-linux-musl 工具链
 wget http://more.musl.cc/10/x86_64-linux-musl/x86_64-linux-musl-native.tgz
 # 解压下载到的 musl 工具链包
