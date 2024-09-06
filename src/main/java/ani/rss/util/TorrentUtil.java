@@ -137,7 +137,7 @@ public class TorrentUtil {
         if (totalEpisodeNumber < 1) {
             return;
         }
-        if (totalEpisodeNumber == items.size()) {
+        if (items.size() >= totalEpisodeNumber) {
             ani.setEnable(false);
             log.info("{} 第 {} 季 共 {} 集 已全部下载完成, 自动停止订阅", title, season, totalEpisodeNumber);
             AniUtil.sync();
