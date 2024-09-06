@@ -45,6 +45,11 @@ public class Ani implements Serializable {
     private List<String> exclude;
 
     /**
+     * 剧场版
+     */
+    private Boolean ova;
+
+    /**
      * 拼音
      */
     private String pinyin;
