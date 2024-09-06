@@ -60,25 +60,25 @@
                         grid-gap: 5px;
                         grid-template-columns: repeat(3, 1fr);
                         ">
-                  <el-tag type="info">
+                  <el-tag>
                     第 {{ item.season }} 季
                   </el-tag>
-                  <el-tag type="info" v-if="item.enable">
+                  <el-tag type="success" v-if="item.enable">
                     已启用
                   </el-tag>
-                  <el-tag type="info" v-else>
+                  <el-tag type="success" v-else>
                     未启用
                   </el-tag>
                   <el-tag type="info">
                     {{ item['subgroup'] }}
                   </el-tag>
-                  <el-tag type="info" v-if="item['currentEpisodeNumber'] && item['totalEpisodeNumber']">
+                  <el-tag type="warning" v-if="item['currentEpisodeNumber'] && item['totalEpisodeNumber']">
                     {{ item['currentEpisodeNumber'] }} / {{ item['totalEpisodeNumber'] }}
                   </el-tag>
-                  <el-tag type="info" v-if="item.ova">
+                  <el-tag type="danger" v-if="item.ova">
                     ova
                   </el-tag>
-                  <el-tag type="info" v-else>
+                  <el-tag type="danger" v-else>
                     tv
                   </el-tag>
                 </div>
