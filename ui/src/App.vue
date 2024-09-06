@@ -63,17 +63,23 @@
                   <el-tag>
                     第 {{ item.season }} 季
                   </el-tag>
-                  <el-tag type="success" v-if="item.enable">
+                  <el-tag v-if="item.enable">
                     已启用
                   </el-tag>
-                  <el-tag type="danger" v-else>
+                  <el-tag v-else>
                     未启用
                   </el-tag>
-                  <el-tag type="info">
+                  <el-tag>
                     {{ item['subgroup'] }}
                   </el-tag>
-                  <el-tag type="danger" v-if="item['currentEpisodeNumber'] && item['totalEpisodeNumber']">
+                  <el-tag v-if="item['currentEpisodeNumber'] && item['totalEpisodeNumber']">
                     {{ item['currentEpisodeNumber'] }} / {{ item['totalEpisodeNumber'] }}
+                  </el-tag>
+                  <el-tag v-if="item.ova">
+                    ova
+                  </el-tag>
+                  <el-tag v-else>
+                    tv
                   </el-tag>
                 </div>
               </div>
