@@ -8,19 +8,19 @@
                     event.preventDefault()
                    }">
             <el-form-item label="地址">
-              <el-input v-model:model-value="config.host"></el-input>
+              <el-input v-model:model-value="config.host" placeholder="http://192.168.0.x:18080"></el-input>
             </el-form-item>
             <el-form-item label="用户名">
-              <el-input v-model:model-value="config.username"></el-input>
+              <el-input v-model:model-value="config.username" placeholder="username"></el-input>
             </el-form-item>
             <el-form-item label="密码">
-              <el-input show-password v-model:model-value="config.password"></el-input>
+              <el-input show-password v-model:model-value="config.password" placeholder="password"></el-input>
             </el-form-item>
             <el-form-item label="保存位置">
-              <el-input v-model:model-value="config.downloadPath"></el-input>
+              <el-input v-model:model-value="config.downloadPath" placeholder="/downloads/media/anime"></el-input>
             </el-form-item>
             <el-form-item label="剧场版保存位置">
-              <el-input v-model:model-value="config.ovaDownloadPath"></el-input>
+              <el-input v-model:model-value="config.ovaDownloadPath" placeholder="/downloads/media/ova"></el-input>
             </el-form-item>
             <el-form-item label="拼音首字母">
               <div>
@@ -99,7 +99,7 @@
               <el-switch v-model:model-value="config.proxy"></el-switch>
             </el-form-item>
             <el-form-item label="IP">
-              <el-input v-model:model-value="config.proxyHost" :disabled="!config.proxy"></el-input>
+              <el-input v-model:model-value="config.proxyHost" :disabled="!config.proxy" placeholder="http://192.168.0.x"></el-input>
             </el-form-item>
             <el-form-item label="端口">
               <el-input-number v-model:model-value="config.proxyPort" :disabled="!config.proxy" min="1"
@@ -124,14 +124,14 @@
                       event.preventDefault()
                    }">
             <el-form-item label="SMTP地址">
-              <el-input v-model:model-value="config.mailAccount.host" :disabled="!config.mail"/>
+              <el-input v-model:model-value="config.mailAccount.host" :disabled="!config.mail" placeholder="smtp.xx.com"/>
             </el-form-item>
             <el-form-item label="SMTP端口">
               <el-input-number v-model:model-value="config.mailAccount.port" min="1" max="65535"
                                :disabled="!config.mail"/>
             </el-form-item>
             <el-form-item label="发件人邮箱">
-              <el-input v-model:model-value="config.mailAccount.from" :disabled="!config.mail"/>
+              <el-input v-model:model-value="config.mailAccount.from" :disabled="!config.mail" placeholder="xx@xx.com"/>
             </el-form-item>
             <el-form-item label="密码">
               <el-input v-model:model-value="config.mailAccount.pass" show-password :disabled="!config.mail"/>
@@ -140,7 +140,7 @@
               <el-switch v-model:model-value="config.mailAccount.sslEnable" :disabled="!config.mail"/>
             </el-form-item>
             <el-form-item label="收件人邮箱">
-              <el-input v-model:model-value="config.mailAddressee" :disabled="!config.mail"></el-input>
+              <el-input v-model:model-value="config.mailAddressee" :disabled="!config.mail" placeholder="xx@xx.com"></el-input>
             </el-form-item>
             <el-form-item label="总开关">
               <el-switch v-model:model-value="config.mail"></el-switch>

@@ -10,12 +10,12 @@
       </el-form-item>
       <el-form-item label="季">
         <div style="display: flex;justify-content: end;width: 100%;">
-          <el-input-number style="max-width: 200px" :min="0" v-model:model-value="ani.season"></el-input-number>
+          <el-input-number style="max-width: 200px" :min="0" v-model:model-value="ani.season" :disabled="ani.ova"></el-input-number>
         </div>
       </el-form-item>
       <el-form-item label="集数偏移">
         <div style="display: flex;justify-content: end;width: 100%;">
-          <el-input-number v-model:model-value="ani.offset"></el-input-number>
+          <el-input-number v-model:model-value="ani.offset" :disabled="ani.ova"></el-input-number>
         </div>
       </el-form-item>
       <el-form-item label="排除">
