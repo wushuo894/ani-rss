@@ -3,6 +3,7 @@ package ani.rss.util;
 import ani.rss.entity.Config;
 import ani.rss.entity.MyMailAccount;
 import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.text.StrFormatter;
 import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.extra.mail.MailAccount;
 import cn.hutool.extra.mail.MailUtil;
@@ -23,7 +24,8 @@ public class MailUtils {
         }
         MailAccount mailAccount = new MailAccount();
         BeanUtil.copyProperties(myMailAccount, mailAccount);
-        mailAccount.setUser("ani-rss")
+        mailAccount.setUser(mailAddressee)
+                .setFrom(StrFormatter.format("ani-rss <{}>",mailAddressee))
                 .setAuth(true);
         ThreadUtil.execute(() -> {
             try {
