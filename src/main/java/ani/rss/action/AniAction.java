@@ -7,11 +7,13 @@ import ani.rss.util.TorrentUtil;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.comparator.PinyinComparator;
+import cn.hutool.core.io.FileUtil;
 import cn.hutool.extra.pinyin.PinyinUtil;
 import cn.hutool.http.server.HttpServerRequest;
 import cn.hutool.http.server.HttpServerResponse;
 import lombok.extern.slf4j.Slf4j;
 
+import java.io.File;
 import java.util.List;
 import java.util.Optional;
 
@@ -102,6 +104,15 @@ public class AniAction implements BaseAction {
                 AniUtil.ANI_LIST.remove(first.get());
                 AniUtil.sync();
                 resultSuccessMsg("删除订阅成功");
+                File torrentDir = TorrentUtil.getTorrentDir(first.get());
+                for (File file : FileUtil.loopFiles(torrentDir)) {
+                    if (file.isDirectory()) {
+                        continue;
+                    }
+                    if (file.getName().endsWith(".torrent")) {
+                        FileUtil.del(file);
+                    }
+                }
                 break;
             }
         }

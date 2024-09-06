@@ -144,11 +144,10 @@ public class TorrentUtil {
         }
     }
 
-    public static File getTorrent(Ani ani, Item item) {
+    public static File getTorrentDir(Ani ani) {
         String title = ani.getTitle();
         Boolean ova = ani.getOva();
         Integer season = ani.getSeason();
-        String torrent = item.getTorrent();
 
         File configDir = ConfigUtil.getConfigDir();
 
@@ -157,6 +156,12 @@ public class TorrentUtil {
             torrents = new File(StrFormatter.format("{}/torrents/{}", configDir, title));
         }
         FileUtil.mkdir(torrents);
+        return torrents;
+    }
+
+    public static File getTorrent(Ani ani, Item item) {
+        String torrent = item.getTorrent();
+        File torrents = getTorrentDir(ani);
         File torrentFile = new File(torrent);
         return new File(torrents + File.separator + torrentFile.getName());
     }
