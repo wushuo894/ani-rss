@@ -278,6 +278,9 @@ const stop = (status) => {
   api.post("/api/stop?status=" + status)
       .then(res => {
         ElMessage.success(res.message)
+        setTimeout(() => {
+          location.reload()
+        }, 5000)
       })
       .finally(() => {
         actionLoading.value = false
@@ -289,6 +292,9 @@ const update = () => {
   api.post("/api/update")
       .then(res => {
         ElMessage.success(res.message)
+        setTimeout(() => {
+          location.reload()
+        }, 5000)
       })
       .finally(() => {
         actionLoading.value = false
