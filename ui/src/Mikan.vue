@@ -96,6 +96,7 @@ let data = ref({
 let season = ref('')
 
 let show = () => {
+  season.value = ''
   dialogVisible.value = true
   text.value = ''
   data.value = {
