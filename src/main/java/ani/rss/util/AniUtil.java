@@ -199,7 +199,7 @@ public class AniUtil {
 
         List<Item> items = getItems(ani, s);
         log.debug("获取到视频 共{}个", items.size());
-        if (items.isEmpty()) {
+        if (items.isEmpty() || ani.getOva()) {
             return ani;
         }
         Config config = ConfigUtil.CONFIG;
