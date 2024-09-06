@@ -10,7 +10,7 @@
       </el-form-item>
       <el-form-item label="季">
         <div style="display: flex;justify-content: end;width: 100%;">
-          <el-input-number style="max-width: 200px" v-model:model-value="ani.season"></el-input-number>
+          <el-input-number style="max-width: 200px" :min="0" v-model:model-value="ani.season"></el-input-number>
         </div>
       </el-form-item>
       <el-form-item label="集数偏移">
@@ -45,6 +45,9 @@
           </el-button>
         </div>
       </el-form-item>
+      <el-form-item label="剧场版">
+        <el-switch v-model:model-value="ani.ova"></el-switch>
+      </el-form-item>
       <el-form-item label="启用">
         <el-switch v-model:model-value="ani.enable"></el-switch>
       </el-form-item>
@@ -68,7 +71,8 @@ const ani = ref({
   'offset': 0,
   'title': '',
   'exclude': [],
-  'enable': true
+  'enable': true,
+  'ova': false
 })
 
 

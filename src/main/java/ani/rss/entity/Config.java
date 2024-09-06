@@ -29,6 +29,11 @@ public class Config implements Serializable {
     private String downloadPath;
 
     /**
+     * 剧场版下载路径
+     */
+    private String ovaDownloadPath;
+
+    /**
      * 间隔/分钟
      */
     private Integer sleep;

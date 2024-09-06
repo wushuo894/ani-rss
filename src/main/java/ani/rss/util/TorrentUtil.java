@@ -132,7 +132,8 @@ public class TorrentUtil {
         if (!autoDisabled) {
             return;
         }
-        Integer totalEpisodeNumber = AniUtil.getTotalEpisodeNumber(ani);
+        AniUtil.getBangumiInfo(ani, false, true);
+        Integer totalEpisodeNumber = ani.getTotalEpisodeNumber();
         if (totalEpisodeNumber < 1) {
             return;
         }
@@ -145,12 +146,16 @@ public class TorrentUtil {
 
     public static File getTorrent(Ani ani, Item item) {
         String title = ani.getTitle();
+        Boolean ova = ani.getOva();
         Integer season = ani.getSeason();
         String torrent = item.getTorrent();
 
         File configDir = ConfigUtil.getConfigDir();
 
         File torrents = new File(StrFormatter.format("{}/torrents/{}/Season {}", configDir, title, season));
+        if (ova) {
+            torrents = new File(StrFormatter.format("{}/torrents/{}", configDir, title));
+        }
         FileUtil.mkdir(torrents);
         File torrentFile = new File(torrent);
         return new File(torrents + File.separator + torrentFile.getName());
@@ -276,6 +281,7 @@ public class TorrentUtil {
         }
 
         Integer season = ani.getSeason();
+        Boolean ova = ani.getOva();
         String reName = item.getReName();
         Integer episode = item.getEpisode();
 
@@ -290,13 +296,22 @@ public class TorrentUtil {
         }
         List<File> files = getDownloadPath(ani)
                 .stream()
-                .flatMap(file -> Stream.of(ObjectUtil.defaultIfNull(file.listFiles(), new File[]{})))
+                .flatMap(file -> {
+                    if (ova) {
+                        return FileUtil.loopFiles(file).stream();
+                    }
+                    return Stream.of(ObjectUtil.defaultIfNull(file.listFiles(), new File[]{}));
+                })
                 .collect(Collectors.toList());
 
         if (files.stream()
                 .filter(File::isFile)
                 .filter(file -> List.of("mp4", "mkv", "avi").contains(FileUtil.extName(file)))
                 .anyMatch(file -> {
+                    if (ova) {
+                        return true;
+                    }
+
                     String mainName = FileUtil.mainName(file);
                     if (StrUtil.isBlank(mainName)) {
                         return false;
@@ -334,11 +349,16 @@ public class TorrentUtil {
     public static List<File> getDownloadPath(Ani ani) {
         String title = ani.getTitle().trim();
         Integer season = ani.getSeason();
+        Boolean ova = ani.getOva();
 
         Config config = ConfigUtil.CONFIG;
         String downloadPath = config.getDownloadPath();
+        String ovaDownloadPath = config.getOvaDownloadPath();
         Boolean acronym = config.getAcronym();
         Boolean fileExist = config.getFileExist();
+        if (ova && StrUtil.isNotBlank(ovaDownloadPath)) {
+            downloadPath = ovaDownloadPath;
+        }
         if (acronym) {
             String pinyin = PinyinUtil.getPinyin(title);
             String s = pinyin.substring(0, 1).toUpperCase();
@@ -348,6 +368,9 @@ public class TorrentUtil {
                 s = "#";
             }
             downloadPath += "/" + s;
+        }
+        if (ova) {
+            return List.of(new File(downloadPath + "/" + title));
         }
         File file = new File(StrFormatter.format("{}/{}/Season {}", downloadPath, title, season));
         List<File> files = new ArrayList<>();
@@ -427,6 +450,9 @@ public class TorrentUtil {
         String host = config.getHost();
         Boolean rename = config.getRename();
         if (!rename) {
+            return;
+        }
+        if (!ReUtil.contains("S\\d+E\\d+$", reName)) {
             return;
         }
         String hash = torrentsInfo.getHash();

@@ -19,6 +19,9 @@
             <el-form-item label="保存位置">
               <el-input v-model:model-value="config.downloadPath"></el-input>
             </el-form-item>
+            <el-form-item label="剧场版保存位置">
+              <el-input v-model:model-value="config.ovaDownloadPath"></el-input>
+            </el-form-item>
             <el-form-item label="拼音首字母">
               <div>
                 <el-switch v-model:model-value="config.acronym"></el-switch>
@@ -197,6 +200,7 @@ const config = ref({
   'password': '',
   'sleep': 5,
   'downloadPath': '',
+  'ovaDownloadPath': '',
   'fileExist': true,
   'delete': false,
   'offset': false,
