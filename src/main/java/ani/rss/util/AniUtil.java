@@ -67,6 +67,7 @@ public class AniUtil {
             Ani ani = GSON.fromJson(jsonElement, Ani.class);
             Ani newAni = new Ani();
             newAni.setEnable(true)
+                    .setOva(false)
                     .setCurrentEpisodeNumber(0)
                     .setTotalEpisodeNumber(0);
             BeanUtil.copyProperties(ani, newAni, CopyOptions
@@ -181,14 +182,18 @@ public class AniUtil {
                     }
                 });
 
+        title = title.replace("剧场版", "").trim();
         ani.setOffset(0)
                 .setUrl(url.trim())
                 .setSeason(season)
-                .setTitle(title.trim())
+                .setTitle(title)
                 .setEnable(true)
                 .setCurrentEpisodeNumber(0)
                 .setTotalEpisodeNumber(0)
+                .setOva(false)
                 .setExclude(List.of("720"));
+
+        AniUtil.getBangumiInfo(ani, true, true);
 
         log.debug("获取到动漫信息 {}", JSONUtil.formatJsonStr(GSON.toJson(ani)));
 
@@ -235,6 +240,7 @@ public class AniUtil {
     public static List<Item> getItems(Ani ani, String xml) {
         String title = ani.getTitle();
         List<String> exclude = ani.getExclude();
+        Boolean ova = ani.getOva();
 
         int offset = ani.getOffset();
         int season = ani.getSeason();
@@ -274,8 +280,13 @@ public class AniUtil {
             items.add(
                     new Item()
                             .setTitle(itemTitle)
+                            .setReName(itemTitle)
                             .setTorrent(torrent)
             );
+        }
+
+        if (ova) {
+            return items;
         }
 
         String s = "(.*|\\[.*])( -? \\d+|\\[\\d+]|\\[\\d+.?[vV]\\d]|第\\d+[话話集]|\\[第?\\d+[话話集]]|\\[\\d+.?END]|[Ee][Pp]?\\d+)(.*)";
@@ -340,11 +351,14 @@ public class AniUtil {
         Assert.notNull(offset, "集数偏移不能为空");
     }
 
-    public static Integer getTotalEpisodeNumber(Ani ani) {
+    public static void getBangumiInfo(Ani ani, Boolean ova, Boolean totalEpisode) {
         String url = ani.getUrl();
         Integer totalEpisodeNumber = ObjectUtil.defaultIfNull(ani.getTotalEpisodeNumber(), 0);
-        if (totalEpisodeNumber > 0) {
-            return ani.getTotalEpisodeNumber();
+        ani.setTotalEpisodeNumber(totalEpisodeNumber);
+        if (totalEpisode) {
+            if (totalEpisodeNumber > 0 && !ova) {
+                return;
+            }
         }
 
         Map<String, String> decodeParamMap = HttpUtil.decodeParamMap(url, StandardCharsets.UTF_8);
@@ -357,8 +371,8 @@ public class AniUtil {
             }
         }
 
-        return HttpReq.get(URLUtil.getHost(URLUtil.url(url)) + "/Home/Bangumi/" + bangumiId)
-                .thenFunction(res -> {
+        HttpReq.get(URLUtil.getHost(URLUtil.url(url)) + "/Home/Bangumi/" + bangumiId)
+                .then(res -> {
                     org.jsoup.nodes.Document document = Jsoup.parse(res.body());
                     Elements bangumiInfos = document.select(".bangumi-info");
                     String bgmUrl = "";
@@ -367,29 +381,45 @@ public class AniUtil {
                             continue;
                         }
                         bgmUrl = bangumiInfo.select("a").get(0).attr("href");
-                        break;
                     }
-                    if (StrUtil.isBlank(bgmUrl)) {
-                        return totalEpisodeNumber;
+                    if (StrUtil.isBlank(bgmUrl) && !ova) {
+                        return;
                     }
 
-                    return HttpReq.get(bgmUrl)
-                            .thenFunction(response -> {
+                    HttpReq.get(bgmUrl)
+                            .then(response -> {
                                 org.jsoup.nodes.Document parse = Jsoup.parse(response.body());
+                                Element inner = parse.selectFirst(".subject_tag_section");
+                                Elements aa = inner.select("a");
+                                for (Element a : aa) {
+                                    Element span = a.selectFirst("span");
+                                    if (Objects.isNull(span)) {
+                                        continue;
+                                    }
+                                    if (List.of("OVA", "剧场版").contains(span.ownText()) && ova) {
+                                        ani.setOva(true)
+                                                .setSeason(0);
+                                    }
+                                }
                                 for (Element element : parse.select(".tip")) {
                                     if (!element.ownText().equals("话数:")) {
                                         continue;
                                     }
                                     try {
                                         Integer ten = Integer.parseInt(element.parent().ownText());
-                                        ani.setTotalEpisodeNumber(ten);
                                         AniUtil.sync();
-                                        return ten;
+                                        if (totalEpisode) {
+                                            ani.setTotalEpisodeNumber(ten);
+                                        }
                                     } catch (Exception e) {
-                                        return totalEpisodeNumber;
+                                        if (totalEpisode) {
+                                            ani.setTotalEpisodeNumber(totalEpisodeNumber);
+                                        }
                                     }
                                 }
-                                return totalEpisodeNumber;
+                                if (totalEpisode) {
+                                    ani.setTotalEpisodeNumber(totalEpisodeNumber);
+                                }
                             });
                 });
     }
