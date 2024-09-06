@@ -72,8 +72,8 @@
                   <el-tag type="info">
                     {{ item['subgroup'] }}
                   </el-tag>
-                  <el-tag type="warning" v-if="item['currentEpisodeNumber'] && item['totalEpisodeNumber']">
-                    {{ item['currentEpisodeNumber'] }} / {{ item['totalEpisodeNumber'] }}
+                  <el-tag type="warning" v-if="item['currentEpisodeNumber']">
+                    {{ item['currentEpisodeNumber'] }} / {{ item['totalEpisodeNumber'] ? item['totalEpisodeNumber'] : '*' }}
                   </el-tag>
                   <el-tag type="danger" v-if="item.ova">
                     ova
