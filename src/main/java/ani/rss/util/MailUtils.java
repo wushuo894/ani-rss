@@ -22,10 +22,11 @@ public class MailUtils {
         if (!mail) {
             return;
         }
+        String from = myMailAccount.getFrom();
         MailAccount mailAccount = new MailAccount();
         BeanUtil.copyProperties(myMailAccount, mailAccount);
-        mailAccount.setUser(mailAddressee)
-                .setFrom(StrFormatter.format("ani-rss <{}>",mailAddressee))
+        mailAccount.setUser(from)
+                .setFrom(StrFormatter.format("ani-rss <{}>",from))
                 .setAuth(true);
         ThreadUtil.execute(() -> {
             try {
