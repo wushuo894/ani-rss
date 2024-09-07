@@ -44,11 +44,14 @@
                       <el-collapse-item v-for="group in groups[it.url]">
                         <template #title>
                           <div style="width: 100%;display: flex;justify-content: space-between;">
-                            <div>
+                            <div style="flex: 1;text-align: start;
+                                         overflow: hidden;
+                                         white-space: nowrap;
+                                         text-overflow: ellipsis;">
                               {{ group.label }}
                               <el-text class="mx-1" size="small">{{ group['updateDay'] }}</el-text>
                             </div>
-                            <div style="display: flex;align-items: center;margin-right: 15px;">
+                            <div style="display: flex;align-items: center;margin-right: 14px;margin-left: 4px;">
                               <el-button text bg @click.stop="add(group['rss'])">
                                 <el-icon class="el-icon--left">
                                   <Plus/>
@@ -90,7 +93,6 @@
 import {ref} from "vue";
 import api from "./api.js";
 import {ElMessage, ElText} from "element-plus";
-import {Search} from "@element-plus/icons-vue";
 
 let groupLoading = ref(false)
 let activeName = ref("")
