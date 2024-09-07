@@ -16,7 +16,7 @@
           <el-input v-model:model-value="user.password" show-password></el-input>
         </el-form-item>
         <div style="display: flex;width: 100%;align-items: flex-end;flex-flow: column;">
-          <el-button @click="login" :loading="loading">登录</el-button>
+          <el-button @click="login" :loading="loading" text bg icon="Right">登录</el-button>
         </div>
       </el-form>
     </div>
