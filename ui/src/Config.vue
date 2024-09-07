@@ -169,9 +169,11 @@
                     <div v-if="about.markdownBody" v-html="about.markdownBody"></div>
                   </div>
                 </div>
-                <div v-loading="actionLoading">
+                <div v-loading="actionLoading" id="menu">
                   <el-button type="success" v-if="about.update" @click="update" text bg icon="Top">更新</el-button>
+                  <div style="margin: 6px;"></div>
                   <el-button type="warning" @click="stop(0)" text bg icon="RefreshRight">重启 ani-rss</el-button>
+                  <div style="margin: 6px;"></div>
                   <el-button type="danger" @click="stop(1)" text bg icon="SwitchButton">关闭 ani-rss</el-button>
                 </div>
               </div>
@@ -310,3 +312,12 @@ defineExpose({
   showConfig
 })
 </script>
+
+
+<style>
+@media (min-width: 900px) {
+  #menu > div {
+    display: inline-block;
+  }
+}
+</style>
