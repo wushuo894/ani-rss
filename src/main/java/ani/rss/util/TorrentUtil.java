@@ -11,7 +11,6 @@ import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.core.util.*;
 import cn.hutool.extra.pinyin.PinyinUtil;
 import cn.hutool.http.HttpResponse;
-import cn.hutool.http.HttpUtil;
 import cn.hutool.json.JSONUtil;
 import com.google.gson.*;
 import lombok.extern.slf4j.Slf4j;
@@ -48,6 +47,7 @@ public class TorrentUtil {
             return false;
         }
 
+        ThreadUtil.sleep(1000);
         try {
             return HttpReq.post(host + "/api/v2/auth/login", false)
                     .form("username", username)
@@ -190,7 +190,8 @@ public class TorrentUtil {
         if (saveTorrentFile.exists()) {
             return saveTorrentFile;
         }
-        HttpUtil.downloadFile(torrent, saveTorrentFile);
+        HttpReq.get(torrent)
+                .then(res -> FileUtil.writeFromStream(res.bodyStream(), saveTorrentFile, true));
         return saveTorrentFile;
     }
 
@@ -247,6 +248,7 @@ public class TorrentUtil {
     public static synchronized List<TorrentsInfo> getTorrentsInfos() {
         Config config = ConfigUtil.CONFIG;
         String host = config.getHost();
+        ThreadUtil.sleep(1000);
         return HttpReq.get(host + "/api/v2/torrents/info", false)
                 .thenFunction(res -> {
                     List<TorrentsInfo> torrentsInfoList = new ArrayList<>();
