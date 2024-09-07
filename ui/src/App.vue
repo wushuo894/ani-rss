@@ -18,17 +18,45 @@
           </el-option>
         </el-select>
       </div>
-      <el-button @click="add?.showAdd">添加</el-button>
-      <el-button @click="config?.showConfig">设置</el-button>
-      <el-button @click="logs?.showLogs">日志</el-button>
+      <el-button type="primary" @click="add?.showAdd">
+        <el-icon :class="elIconClass()">
+          <Plus/>
+        </el-icon>
+        <template v-if="itemsPerRow > 1">
+          添加
+        </template>
+      </el-button>
+      <el-tooltip content="设置">
+        <el-button @click="config?.showConfig">
+          <el-icon :class="elIconClass()">
+            <Setting/>
+          </el-icon>
+          <template v-if="itemsPerRow > 1">
+            设置
+          </template>
+        </el-button>
+      </el-tooltip>
+      <el-tooltip content="日志">
+        <el-button @click="logs?.showLogs">
+          <el-icon :class="elIconClass()">
+            <Tickets/>
+          </el-icon>
+          <template v-if="itemsPerRow > 1">
+            日志
+          </template>
+        </el-button>
+      </el-tooltip>
     </div>
   </div>
   <div style="margin: 0 10px;min-height: 500px" v-loading="loading">
     <div class="grid-container">
       <div v-for="(item,index) in searchList().slice((currentPage-1)*pageSize,(currentPage-1)*pageSize+pageSize)">
         <el-card shadow="never">
-          <div style="display: flex;width: 100%;">
-            <img :src="'/api/file?filename='+item['cover']" height="130" width="92" :alt="item.title" style="border-radius: 4px;">
+          <div style="display: flex;width: 100%;align-items: center;">
+            <div style="height: 100%;">
+              <img :src="'/api/file?filename='+item['cover']" height="130" width="92" :alt="item.title"
+                   style="border-radius: 4px;">
+            </div>
             <div style="flex-grow: 1;position: relative;">
               <div style="margin-left: 10px;">
                 <div style="
@@ -57,9 +85,10 @@
                 <div style="
                         width: 180px;
                         display: grid;
-                        grid-gap: 5px;
-                        grid-template-columns: repeat(3, 1fr);
-                        ">
+                        grid-gap: 4px;
+                        "
+                     :class="itemsPerRow > 1 ? 'gtc3' : 'gtc2'"
+                >
                   <el-tag>
                     第 {{ item.season }} 季
                   </el-tag>
@@ -69,11 +98,15 @@
                   <el-tag type="success" v-else>
                     未启用
                   </el-tag>
-                  <el-tag type="info">
-                    {{ item['subgroup'] }}
+                  <el-tag type="info" v-if="itemsPerRow > 1">
+                      {{ item['subgroup'] }}
+                  </el-tag>
+                  <el-tag type="info" v-else>
+                    {{ item['subgroup'].substr(0,6) }}
                   </el-tag>
                   <el-tag type="warning" v-if="item['currentEpisodeNumber']">
-                    {{ item['currentEpisodeNumber'] }} / {{ item['totalEpisodeNumber'] ? item['totalEpisodeNumber'] : '*' }}
+                    {{ item['currentEpisodeNumber'] }} /
+                    {{ item['totalEpisodeNumber'] ? item['totalEpisodeNumber'] : '*' }}
                   </el-tag>
                   <el-tag type="danger" v-if="item.ova">
                     ova
@@ -85,12 +118,19 @@
               </div>
               <div
                   style="display: flex;align-items: flex-end;justify-content:flex-end; flex-direction: column;position: absolute;right: 0;bottom: 0;">
-                <el-button @click="edit?.showEdit(item)">编辑
+                <el-button text @click="edit?.showEdit(item)" bg>
+                  <el-icon>
+                    <EditIcon/>
+                  </el-icon>
                 </el-button>
                 <div style="height: 5px;"></div>
                 <el-popconfirm title="你确定要删除吗?" @confirm="delAni(item)">
                   <template #reference>
-                    <el-button :loading="item['deleteLoading']">删除</el-button>
+                    <el-button type="danger" text :loading="item['deleteLoading']" bg>
+                      <el-icon>
+                        <Delete/>
+                      </el-icon>
+                    </el-button>
                   </template>
                 </el-popconfirm>
               </div>
@@ -100,7 +140,8 @@
       </div>
     </div>
   </div>
-  <div style="margin: 10px;" id="page">
+  <div style="height: 8px;"></div>
+  <div style="margin: 0 10px;" id="page">
     <div style="margin-bottom: 10px;">
       <el-pagination background layout="prev, pager, next"
                      :total="searchList().length"
@@ -120,19 +161,27 @@
       <div style="margin-left: 5px;">
         <el-popconfirm title="你确定要退出吗?" @confirm="logout">
           <template #reference>
-            <el-button>退出登录</el-button>
+            <el-button type="danger">
+              <el-icon :class="elIconClass()">
+                <SwitchButton/>
+              </el-icon>
+              <template v-if="itemsPerRow > 1">
+                退出登录
+              </template>
+            </el-button>
           </template>
         </el-popconfirm>
 
       </div>
     </div>
   </div>
-  <div style="height: 20px;"></div>
+  <div style="height: 10px;"></div>
 </template>
 
 <script setup>
 import {onMounted, ref} from "vue";
 import {ElMessage} from 'element-plus'
+import {Edit as EditIcon, Plus, SwitchButton} from "@element-plus/icons-vue"
 import Config from "./Config.vue";
 import Edit from "./Edit.vue";
 import Add from "./Add.vue";
@@ -220,6 +269,8 @@ const getList = () => {
 
 getList()
 
+const itemsPerRow = ref(1)
+
 onMounted(() => {
   let size = window.localStorage.getItem('pageSize')
   if (size) {
@@ -232,9 +283,9 @@ onMounted(() => {
       return
     }
     const windowWidth = window.innerWidth;
-    const itemsPerRow = Math.max(1, Math.floor(windowWidth / 400));
-    gridContainer.style.gridTemplateColumns = `repeat(${itemsPerRow}, 1fr)`;
-    if (itemsPerRow === 1) {
+    itemsPerRow.value = Math.max(1, Math.floor(windowWidth / 400));
+    gridContainer.style.gridTemplateColumns = `repeat(${itemsPerRow.value}, 1fr)`;
+    if (itemsPerRow.value === 1) {
       pagerCount.value = 4
     }
   }
@@ -248,6 +299,20 @@ let logout = () => {
   location.reload()
 }
 
+let elIconClass = ()=>{
+  return itemsPerRow.value > 1 ? 'el-icon--left' : '';
+}
+
 </script>
+
+<style>
+.gtc3 {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.gtc2 {
+  grid-template-columns: repeat(2, 1fr);
+}
+</style>
 
 
