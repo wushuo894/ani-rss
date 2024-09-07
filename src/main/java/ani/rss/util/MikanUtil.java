@@ -112,7 +112,7 @@ public class MikanUtil {
 
                         List<TorrentsInfo> torrentsInfos = new ArrayList<>();
                         group.setItems(torrentsInfos);
-                        String label = subgroupText.select("a.subgroup-name").text();
+                        String label = subgroupText.select("a.subgroup-name").text().trim();
                         // id锚点，例如 #213
                         String id = subgroupText.select("a.subgroup-name").attr("data-anchor");
                         String attr = document.selectFirst(id).selectFirst(".mikan-rss").attr("href");
@@ -120,7 +120,7 @@ public class MikanUtil {
                                 .setRss(host + attr);
                         groups.add(group);
                         // 字幕组更新日期
-                        String day = subgroupText.select(".date").text();
+                        String day = subgroupText.select(".date").text().trim();
                         group.setUpdateDay(day);
 
                         Element table = document.selectFirst(id).nextElementSibling();
