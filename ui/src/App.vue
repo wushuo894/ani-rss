@@ -100,7 +100,7 @@
       </div>
     </div>
   </div>
-  <div style="margin: 10px;" id="page">
+  <div style="margin: 0px 10px;" id="page">
     <div style="margin-bottom: 10px;">
       <el-pagination background layout="prev, pager, next"
                      :total="searchList().length"
@@ -127,7 +127,6 @@
       </div>
     </div>
   </div>
-  <div style="height: 20px;"></div>
 </template>
 
 <script setup>
