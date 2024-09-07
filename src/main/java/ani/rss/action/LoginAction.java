@@ -5,6 +5,9 @@ import ani.rss.annotation.Path;
 import ani.rss.entity.Config;
 import ani.rss.entity.Login;
 import ani.rss.util.ConfigUtil;
+import cn.hutool.core.lang.Assert;
+import cn.hutool.core.thread.ThreadUtil;
+import cn.hutool.core.util.RandomUtil;
 import cn.hutool.crypto.digest.MD5;
 import cn.hutool.http.server.HttpServerRequest;
 import cn.hutool.http.server.HttpServerResponse;
@@ -24,6 +27,9 @@ public class LoginAction implements BaseAction {
         String myUsername = myLogin.getUsername();
         String myPassword = myLogin.getPassword();
 
+        Assert.notBlank(myUsername, "密码不能为空");
+        Assert.notBlank(myPassword, "用户名不能为空");
+
         String username = login.getUsername();
         String password = login.getPassword();
 
@@ -32,6 +38,7 @@ public class LoginAction implements BaseAction {
             resultSuccess(s);
             return;
         }
-        resultError();
+        ThreadUtil.sleep(RandomUtil.randomInt(500, 5000));
+        resultErrorMsg("用户名或密码错误");
     }
 }
