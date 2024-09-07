@@ -38,7 +38,7 @@ public class LoginAction implements BaseAction {
             resultSuccess(s);
             return;
         }
-        ThreadUtil.sleep(RandomUtil.randomInt(3000, 10000));
+        ThreadUtil.sleep(RandomUtil.randomInt(500, 5000));
         resultErrorMsg("用户名或密码错误");
     }
 }
