@@ -28,7 +28,7 @@
       <div v-for="(item,index) in searchList().slice((currentPage-1)*pageSize,(currentPage-1)*pageSize+pageSize)">
         <el-card shadow="never">
           <div style="display: flex;width: 100%;">
-            <img :src="'/api/file?filename='+item['cover']" height="130" width="92" :alt="item.title">
+            <img :src="'/api/file?filename='+item['cover']" height="130" width="92" :alt="item.title" style="border-radius: 4px;">
             <div style="flex-grow: 1;position: relative;">
               <div style="margin-left: 10px;">
                 <div style="
