@@ -17,12 +17,15 @@ let put = async (url, body) => {
 }
 
 let fetch_ = async (url, method, body) => {
+    let headers = {}
+    let authorization = window.authorization
+    if (authorization) {
+        headers['Authorization'] = authorization
+    }
     return await fetch(url, {
         'method': method,
         'body': body ? JSON.stringify(body) : null,
-        'headers': {
-            'Authorization': window.authorization
-        }
+        'headers': headers
     })
         .then(res => res.json())
         .then(res => {

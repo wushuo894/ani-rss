@@ -1,8 +1,8 @@
 <template>
   <el-dialog v-model="configDialogVisible" title="设置" center>
     <div style="margin: 0 15px;" @keydown.enter="editConfig" v-loading="loading">
-      <el-tabs>
-        <el-tab-pane label="qBittorrent 设置">
+      <el-tabs v-model:model-value="activeName">
+        <el-tab-pane label="qBittorrent 设置" name="qb">
           <el-form label-width="auto"
                    @submit="(event)=>{
                     event.preventDefault()
@@ -99,7 +99,8 @@
               <el-switch v-model:model-value="config.proxy"></el-switch>
             </el-form-item>
             <el-form-item label="IP">
-              <el-input v-model:model-value="config.proxyHost" :disabled="!config.proxy" placeholder="192.168.0.x"></el-input>
+              <el-input v-model:model-value="config.proxyHost" :disabled="!config.proxy"
+                        placeholder="192.168.0.x"></el-input>
             </el-form-item>
             <el-form-item label="端口">
               <el-input-number v-model:model-value="config.proxyPort" :disabled="!config.proxy" min="1"
@@ -124,7 +125,8 @@
                       event.preventDefault()
                    }">
             <el-form-item label="SMTP地址">
-              <el-input v-model:model-value="config.mailAccount.host" :disabled="!config.mail" placeholder="smtp.xx.com"/>
+              <el-input v-model:model-value="config.mailAccount.host" :disabled="!config.mail"
+                        placeholder="smtp.xx.com"/>
             </el-form-item>
             <el-form-item label="SMTP端口">
               <el-input-number v-model:model-value="config.mailAccount.port" min="1" max="65535"
@@ -140,14 +142,15 @@
               <el-switch v-model:model-value="config.mailAccount.sslEnable" :disabled="!config.mail"/>
             </el-form-item>
             <el-form-item label="收件人邮箱">
-              <el-input v-model:model-value="config.mailAddressee" :disabled="!config.mail" placeholder="xx@xx.com"></el-input>
+              <el-input v-model:model-value="config.mailAddressee" :disabled="!config.mail"
+                        placeholder="xx@xx.com"></el-input>
             </el-form-item>
             <el-form-item label="总开关">
               <el-switch v-model:model-value="config.mail"></el-switch>
             </el-form-item>
           </el-form>
         </el-tab-pane>
-        <el-tab-pane label="关于">
+        <el-tab-pane label="关于" name="about">
           <el-form style="max-width: 600px" label-width="auto"
                    @submit="(event)=>{
                       event.preventDefault()
@@ -167,9 +170,9 @@
                   </div>
                 </div>
                 <div v-loading="actionLoading">
-                  <el-button v-if="about.update" @click="update">更新</el-button>
-                  <el-button @click="stop(0)">重启 ani-rss</el-button>
-                  <el-button @click="stop(1)">关闭 ani-rss</el-button>
+                  <el-button type="success" v-if="about.update" @click="update" text bg icon="Top">更新</el-button>
+                  <el-button type="warning" @click="stop(0)" text bg icon="RefreshRight">重启 ani-rss</el-button>
+                  <el-button type="danger" @click="stop(1)" text bg icon="SwitchButton">关闭 ani-rss</el-button>
                 </div>
               </div>
             </el-form-item>
@@ -177,7 +180,7 @@
         </el-tab-pane>
       </el-tabs>
       <div style="display: flex;justify-content: end;width: 100%;">
-        <el-button :loading="configButtonLoading" @click="editConfig">确定</el-button>
+        <el-button :loading="configButtonLoading" @click="editConfig" text bg type="primary">确定</el-button>
       </div>
     </div>
   </el-dialog>
@@ -234,14 +237,19 @@ const about = ref({
   'markdownBody': ''
 })
 
-const showConfig = () => {
-  configDialogVisible.value = true
-  about.value = {
-    'version': '',
-    'latest': '',
-    'update': false,
-    'markdownBody': ''
+const activeName = ref('qb')
+const showConfig = (ab) => {
+  about.value = ab
+  if (!ab.update) {
+    api.get('/api/about')
+        .then(res => {
+          about.value = res.data
+        })
+  } else {
+    activeName.value = 'about'
   }
+
+  configDialogVisible.value = true
   loading.value = true
   api.get('/api/config')
       .then(res => {
@@ -250,11 +258,8 @@ const showConfig = () => {
       .finally(() => {
         loading.value = false
       })
-  api.get('/api/about')
-      .then(res => {
-        about.value = res.data
-      })
 }
+
 const editConfig = () => {
   configButtonLoading.value = true
   let my_config = JSON.parse(JSON.stringify(config.value))

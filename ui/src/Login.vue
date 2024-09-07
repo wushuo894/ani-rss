@@ -16,7 +16,7 @@
           <el-input v-model:model-value="user.password" show-password></el-input>
         </el-form-item>
         <div style="display: flex;width: 100%;align-items: flex-end;flex-flow: column;">
-          <el-button @click="login" :loading="loading">登录</el-button>
+          <el-button @click="login" :loading="loading" text bg icon="Right">登录</el-button>
         </div>
       </el-form>
     </div>
@@ -29,6 +29,7 @@
 import {ref} from "vue";
 import CryptoJS from "crypto-js"
 import App from "./App.vue";
+import api from "./api.js";
 
 let loading = ref(false)
 
@@ -46,11 +47,8 @@ if (authorization.value) {
 let login = () => {
   loading.value = true
   let my_user = JSON.parse(JSON.stringify(user.value))
-  my_user.password = CryptoJS.MD5(my_user.password).toString();
-  fetch('/api/login', {
-    'method': 'POST',
-    'body': JSON.stringify(my_user)
-  }).then(res => res.json())
+  my_user.password = my_user.password ? CryptoJS.MD5(my_user.password).toString() : '';
+  api.post('/api/login', my_user)
       .then(res => {
         localStorage.setItem("authorization", res.data)
         window.authorization = res.data

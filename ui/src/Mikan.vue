@@ -4,13 +4,14 @@
       <div style="margin: 4px;">
         <div style="display: flex;justify-content: space-between;">
           <el-input v-model:model-value="text" placeholder="请输入搜索标题" @keyup.enter="search"
+                    prefix-icon="Search"
                     clearable
                     @clear="()=>{
             text = ''
             search()
           }"></el-input>
           <div style="width: 4px;"></div>
-          <el-button @click="search" :loading="searchLoading">搜索</el-button>
+          <el-button @click="search" :loading="searchLoading" text bg>搜索</el-button>
         </div>
         <div style="max-width: 280px;margin-top: 4px;">
           <el-select v-if="data.seasons.length" v-model:model-value="season" @change="change"
@@ -45,10 +46,15 @@
                           <div style="width: 100%;display: flex;justify-content: space-between;">
                             <div>
                               {{ group.label }}
-                              <el-text class="mx-1" size="small">{{ group.updateDay }}</el-text>
+                              <el-text class="mx-1" size="small">{{ group['updateDay'] }}</el-text>
                             </div>
                             <div style="display: flex;align-items: center;margin-right: 15px;">
-                              <el-button @click.stop="add(group['rss'])">添加</el-button>
+                              <el-button text bg @click.stop="add(group['rss'])">
+                                <el-icon class="el-icon--left">
+                                  <Plus/>
+                                </el-icon>
+                                添加
+                              </el-button>
                             </div>
                           </div>
                         </template>
@@ -84,6 +90,7 @@
 import {ref} from "vue";
 import api from "./api.js";
 import {ElMessage, ElText} from "element-plus";
+import {Search} from "@element-plus/icons-vue";
 
 let groupLoading = ref(false)
 let activeName = ref("")
