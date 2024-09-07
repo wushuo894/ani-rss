@@ -5,7 +5,12 @@
   <Logs ref="logs"></Logs>
   <div id="header">
     <div style="margin: 10px;">
-      <el-input v-model:model-value="title" placeholder="搜索" @input="currentPage = 1" clearable></el-input>
+      <el-input
+          v-model:model-value="title"
+          placeholder="搜索"
+          @input="currentPage = 1"
+          prefix-icon="Search"
+          clearable/>
     </div>
     <div style="margin: 10px;display: flex;justify-content: flex-end;">
       <div style="min-width: 120px;width:100%;margin-right: 15px;">
@@ -18,7 +23,7 @@
           </el-option>
         </el-select>
       </div>
-      <el-button type="primary" @click="add?.showAdd">
+      <el-button type="primary" @click="add?.showAdd" bg text>
         <el-icon :class="elIconClass()">
           <Plus/>
         </el-icon>
@@ -26,26 +31,26 @@
           添加
         </template>
       </el-button>
-      <el-tooltip content="设置">
-        <el-button @click="config?.showConfig">
-          <el-icon :class="elIconClass()">
-            <Setting/>
-          </el-icon>
-          <template v-if="itemsPerRow > 1">
-            设置
-          </template>
-        </el-button>
-      </el-tooltip>
-      <el-tooltip content="日志">
-        <el-button @click="logs?.showLogs">
-          <el-icon :class="elIconClass()">
-            <Tickets/>
-          </el-icon>
-          <template v-if="itemsPerRow > 1">
-            日志
-          </template>
-        </el-button>
-      </el-tooltip>
+      <div style="margin: 0 6px;">
+        <el-badge :is-dot="about.update" class="item">
+          <el-button @click="config?.showConfig(about)" text bg>
+            <el-icon :class="elIconClass()">
+              <Setting/>
+            </el-icon>
+            <template v-if="itemsPerRow > 1">
+              设置
+            </template>
+          </el-button>
+        </el-badge>
+      </div>
+      <el-button @click="logs?.showLogs" text bg>
+        <el-icon :class="elIconClass()">
+          <Tickets/>
+        </el-icon>
+        <template v-if="itemsPerRow > 1">
+          日志
+        </template>
+      </el-button>
     </div>
   </div>
   <div style="margin: 0 10px;min-height: 500px" v-loading="loading">
@@ -99,10 +104,10 @@
                     未启用
                   </el-tag>
                   <el-tag type="info" v-if="itemsPerRow > 1">
-                      {{ item['subgroup'] }}
+                    {{ item['subgroup'] }}
                   </el-tag>
                   <el-tag type="info" v-else>
-                    {{ item['subgroup'].substr(0,6) }}
+                    {{ item['subgroup'].substr(0, 6) }}
                   </el-tag>
                   <el-tag type="warning" v-if="item['currentEpisodeNumber']">
                     {{ item['currentEpisodeNumber'] }} /
@@ -130,6 +135,19 @@
                       <el-icon>
                         <Delete/>
                       </el-icon>
+                    </el-button>
+                  </template>
+                  <template #actions="{ confirm, cancel }">
+                    <el-button size="small" @click="cancel" bg text icon="Close">取消</el-button>
+                    <div style="margin: 4px;"></div>
+                    <el-button
+                        type="danger"
+                        size="small"
+                        @click="confirm"
+                        bg text
+                        icon="Check"
+                    >
+                      确定
                     </el-button>
                   </template>
                 </el-popconfirm>
@@ -161,13 +179,26 @@
       <div style="margin-left: 5px;">
         <el-popconfirm title="你确定要退出吗?" @confirm="logout">
           <template #reference>
-            <el-button type="danger">
+            <el-button type="danger" bg text>
               <el-icon :class="elIconClass()">
-                <SwitchButton/>
+                <Back/>
               </el-icon>
               <template v-if="itemsPerRow > 1">
                 退出登录
               </template>
+            </el-button>
+          </template>
+          <template #actions="{ confirm, cancel }">
+            <el-button size="small" @click="cancel" bg text icon="Close">取消</el-button>
+            <div style="margin: 4px;"></div>
+            <el-button
+                type="danger"
+                size="small"
+                @click="confirm"
+                bg text
+                icon="Check"
+            >
+              确定
             </el-button>
           </template>
         </el-popconfirm>
@@ -181,7 +212,7 @@
 <script setup>
 import {onMounted, ref} from "vue";
 import {ElMessage} from 'element-plus'
-import {Edit as EditIcon, Plus, SwitchButton} from "@element-plus/icons-vue"
+import {Back, Edit as EditIcon, Plus} from "@element-plus/icons-vue"
 import Config from "./Config.vue";
 import Edit from "./Edit.vue";
 import Add from "./Add.vue";
@@ -299,9 +330,21 @@ let logout = () => {
   location.reload()
 }
 
-let elIconClass = ()=>{
+let elIconClass = () => {
   return itemsPerRow.value > 1 ? 'el-icon--left' : '';
 }
+
+const about = ref({
+  'version': '',
+  'latest': '',
+  'update': false,
+  'markdownBody': ''
+})
+
+api.get('/api/about')
+    .then(res => {
+      about.value = res.data
+    })
 
 </script>
 

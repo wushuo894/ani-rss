@@ -8,12 +8,15 @@
                 event.preventDefault()
              }">
         <el-form-item label="RSS 地址">
-          <el-input v-model:model-value="ani.url"></el-input>
+          <el-input
+              v-model:model-value="ani.url"
+              placeholder="https://mikanani.me/RSS/Bangumi?bangumiId=xxx&subgroupid=xxx"
+          />
         </el-form-item>
       </el-form>
       <div style="display: flex;justify-content: space-between;width: 100%;margin-top: 10px;">
-        <el-button @click="mikan?.show">Mikan</el-button>
-        <el-button :loading="rssButtonLoading" @click="getRss">确定</el-button>
+        <el-button @click="mikan?.show" text bg>Mikan</el-button>
+        <el-button :loading="rssButtonLoading" @click="getRss" text bg>确定</el-button>
       </div>
     </div>
     <div v-else>
@@ -26,7 +29,8 @@
         </el-form-item>
         <el-form-item label="季">
           <div style="display: flex;justify-content: end;width: 100%;">
-            <el-input-number style="max-width: 200px" :min="0" v-model:model-value="ani.season" :disabled="ani.ova"></el-input-number>
+            <el-input-number style="max-width: 200px" :min="0" v-model:model-value="ani.season"
+                             :disabled="ani.ova"></el-input-number>
           </div>
         </el-form-item>
         <el-form-item label="集数偏移">
@@ -68,7 +72,7 @@
           <el-switch v-model:model-value="ani.enable"></el-switch>
         </el-form-item>
         <div style="display: flex;justify-content: end;width: 100%;margin-top: 10px;">
-          <el-button :loading="addAniButtonLoading" @click="addAni">确定</el-button>
+          <el-button :loading="addAniButtonLoading" @click="addAni" bg text>确定</el-button>
         </div>
       </el-form>
     </div>
