@@ -99,7 +99,7 @@
               <el-switch v-model:model-value="config.proxy"></el-switch>
             </el-form-item>
             <el-form-item label="IP">
-              <el-input v-model:model-value="config.proxyHost" :disabled="!config.proxy" placeholder="http://192.168.0.x"></el-input>
+              <el-input v-model:model-value="config.proxyHost" :disabled="!config.proxy" placeholder="192.168.0.x"></el-input>
             </el-form-item>
             <el-form-item label="端口">
               <el-input-number v-model:model-value="config.proxyPort" :disabled="!config.proxy" min="1"
