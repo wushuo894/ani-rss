@@ -239,6 +239,7 @@ const about = ref({
 
 const activeName = ref('qb')
 const showConfig = (ab) => {
+  about.value = ab
   if (!ab.update) {
     api.get('/api/about')
         .then(res => {
@@ -249,7 +250,6 @@ const showConfig = (ab) => {
   }
 
   configDialogVisible.value = true
-  about.value = ab
   loading.value = true
   api.get('/api/config')
       .then(res => {
