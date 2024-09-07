@@ -6,7 +6,7 @@
 
     <groupId>ani.rss</groupId>
     <artifactId>ani-rss</artifactId>
-    <version>1.0.80</version>
+    <version>1.0.81</version>
 
     <properties>
         <maven.compiler.source>11</maven.compiler.source>
