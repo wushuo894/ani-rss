@@ -47,7 +47,7 @@ if (authorization.value) {
 let login = () => {
   loading.value = true
   let my_user = JSON.parse(JSON.stringify(user.value))
-  my_user.password = CryptoJS.MD5(my_user.password).toString();
+  my_user.password = my_user.password ? CryptoJS.MD5(my_user.password).toString() : '';
   api.post('/api/login', my_user)
       .then(res => {
         localStorage.setItem("authorization", res.data)
