@@ -9,6 +9,8 @@
 
 [使用文档](https://github.com/wushuo894/ani-rss/blob/master/DOCS.md)
 
+![Xnip2024-09-08_04-57-29.jpg](https://github.com/wushuo894/ani-rss/raw/master/image/Xnip2024-09-08_04-57-29.jpg)
+
 默认 用户名: admin 密码: admin
 
 | 参数     | 作用       | 默认值           |
