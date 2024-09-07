@@ -18,9 +18,25 @@
           </el-option>
         </el-select>
       </div>
-      <el-button @click="add?.showAdd">添加</el-button>
-      <el-button @click="config?.showConfig">设置</el-button>
-      <el-button @click="logs?.showLogs">日志</el-button>
+      <el-button type="primary" round @click="add?.showAdd">添加
+        <el-icon>
+          <Plus/>
+        </el-icon>
+      </el-button>
+      <el-tooltip content="设置">
+        <el-button @click="config?.showConfig" circle>
+          <el-icon>
+            <Setting/>
+          </el-icon>
+        </el-button>
+      </el-tooltip>
+      <el-tooltip content="日志">
+        <el-button @click="logs?.showLogs" circle>
+          <el-icon>
+            <ChatLineSquare/>
+          </el-icon>
+        </el-button>
+      </el-tooltip>
     </div>
   </div>
   <div style="margin: 0 10px;min-height: 500px" v-loading="loading">
@@ -28,7 +44,8 @@
       <div v-for="(item,index) in searchList().slice((currentPage-1)*pageSize,(currentPage-1)*pageSize+pageSize)">
         <el-card shadow="never">
           <div style="display: flex;width: 100%;">
-            <img :src="'/api/file?filename='+item['cover']" height="130" width="92" :alt="item.title" style="border-radius: 4px;">
+            <img :src="'/api/file?filename='+item['cover']" height="130" width="92" :alt="item.title"
+                 style="border-radius: 4px;">
             <div style="flex-grow: 1;position: relative;">
               <div style="margin-left: 10px;">
                 <div style="
@@ -73,7 +90,8 @@
                     {{ item['subgroup'] }}
                   </el-tag>
                   <el-tag type="warning" v-if="item['currentEpisodeNumber']">
-                    {{ item['currentEpisodeNumber'] }} / {{ item['totalEpisodeNumber'] ? item['totalEpisodeNumber'] : '*' }}
+                    {{ item['currentEpisodeNumber'] }} /
+                    {{ item['totalEpisodeNumber'] ? item['totalEpisodeNumber'] : '*' }}
                   </el-tag>
                   <el-tag type="danger" v-if="item.ova">
                     ova
@@ -85,12 +103,19 @@
               </div>
               <div
                   style="display: flex;align-items: flex-end;justify-content:flex-end; flex-direction: column;position: absolute;right: 0;bottom: 0;">
-                <el-button @click="edit?.showEdit(item)">编辑
+                <el-button text @click="edit?.showEdit(item)">
+                  <el-icon>
+                    <EditIcon/>
+                  </el-icon>
                 </el-button>
                 <div style="height: 5px;"></div>
                 <el-popconfirm title="你确定要删除吗?" @confirm="delAni(item)">
                   <template #reference>
-                    <el-button :loading="item['deleteLoading']">删除</el-button>
+                    <el-button type="danger" text :loading="item['deleteLoading']">
+                      <el-icon>
+                        <Delete/>
+                      </el-icon>
+                    </el-button>
                   </template>
                 </el-popconfirm>
               </div>
@@ -100,7 +125,7 @@
       </div>
     </div>
   </div>
-  <div style="margin: 10px;" id="page">
+  <div style="margin: 0px 10px;" id="page">
     <div style="margin-bottom: 10px;">
       <el-pagination background layout="prev, pager, next"
                      :total="searchList().length"
@@ -120,19 +145,24 @@
       <div style="margin-left: 5px;">
         <el-popconfirm title="你确定要退出吗?" @confirm="logout">
           <template #reference>
-            <el-button>退出登录</el-button>
+            <el-button type="danger">
+              <el-icon>
+                <SwitchButton/>
+              </el-icon>
+              退出登录
+            </el-button>
           </template>
         </el-popconfirm>
 
       </div>
     </div>
   </div>
-  <div style="height: 20px;"></div>
 </template>
 
 <script setup>
 import {onMounted, ref} from "vue";
 import {ElMessage} from 'element-plus'
+import {Edit as EditIcon} from "@element-plus/icons-vue"
 import Config from "./Config.vue";
 import Edit from "./Edit.vue";
 import Add from "./Add.vue";
