@@ -85,8 +85,16 @@ public class TorrentUtil {
                 .map(String::toLowerCase)
                 .collect(Collectors.toSet());
 
+        int currentDownloadCount = 0;
         List<Item> items = AniUtil.getItems(ani);
         log.debug("{} 共 {} 个", title, items.size());
+
+
+        long count = getTorrentsInfos()
+                .stream()
+                .filter(it -> !EnumUtil.equalsIgnoreCase(it.getState(), TorrentsInfo.State.pausedUP.name()))
+                .count();
+
         for (Item item : items) {
             log.debug(JSONUtil.formatJsonStr(GSON.toJson(item)));
             String reName = item.getReName();
@@ -97,36 +105,38 @@ public class TorrentUtil {
             // 已经下载过
             if (hashList.contains(hash)) {
                 log.debug("已有下载任务 {}", reName);
+                currentDownloadCount++;
                 continue;
             }
 
             // 已经下载过
             if (torrent.exists()) {
                 log.debug("种子记录已存在 {}", reName);
+                currentDownloadCount++;
                 continue;
             }
 
             // 未开启rename不进行检测
             if (itemDownloaded(ani, item)) {
                 log.debug("本地文件已存在 {}", reName);
+                currentDownloadCount++;
                 continue;
             }
 
-            long count = getTorrentsInfos()
-                    .stream()
-                    .filter(it -> !EnumUtil.equalsIgnoreCase(it.getState(), TorrentsInfo.State.pausedUP.name()))
-                    .count();
-
             // 同时下载数量限制
-            if (downloadCount > 0 && count >= downloadCount) {
-                log.debug("达到同时下载数量限制 {}", downloadCount);
-                continue;
+            if (downloadCount > 0) {
+                if (count >= downloadCount) {
+                    log.debug("达到同时下载数量限制 {}", downloadCount);
+                    continue;
+                }
             }
 
             log.info("添加下载 {}", reName);
             File saveTorrent = saveTorrent(ani, item);
             String savePath = getDownloadPath(ani).get(0).toString();
             download(reName, savePath, saveTorrent);
+            currentDownloadCount++;
+            count++;
         }
         ani.setCurrentEpisodeNumber(items.size());
         if (!autoDisabled) {
@@ -137,7 +147,7 @@ public class TorrentUtil {
         if (totalEpisodeNumber < 1) {
             return;
         }
-        if (items.size() >= totalEpisodeNumber) {
+        if (currentDownloadCount >= totalEpisodeNumber) {
             ani.setEnable(false);
             log.info("{} 第 {} 季 共 {} 集 已全部下载完成, 自动停止订阅", title, season, totalEpisodeNumber);
             AniUtil.sync();
@@ -195,7 +205,6 @@ public class TorrentUtil {
         savePath = savePath.replace("\\", "/");
         Config config = ConfigUtil.CONFIG;
         String host = config.getHost();
-        Integer downloadCount = config.getDownloadCount();
         HttpReq.post(host + "/api/v2/torrents/add", false)
                 .form("addToTopOfQueue", false)
                 .form("autoTMM", false)
@@ -215,14 +224,10 @@ public class TorrentUtil {
                 .thenFunction(HttpResponse::isOk);
 
         MailUtils.send(StrFormatter.format("{} 已更新", name));
-
-        if (downloadCount < 1) {
-            return;
-        }
         String hash = FileUtil.mainName(torrentFile);
-        // 等待任务添加完成 最多等待10次检测
+        // 等待任务添加完成 最多等待10次检测 共30秒
         for (int i = 0; i < 10; i++) {
-            ThreadUtil.sleep(1000);
+            ThreadUtil.sleep(3000);
             List<TorrentsInfo> torrentsInfos = getTorrentsInfos();
             for (TorrentsInfo torrentsInfo : torrentsInfos) {
                 if (hash.equals(torrentsInfo.getHash())) {
@@ -230,6 +235,8 @@ public class TorrentUtil {
                 }
             }
         }
+        log.warn("{} 添加失败，疑似为坏种", name);
+        MailUtils.send(StrFormatter.format("{} 添加失败，疑似为坏种", name));
     }
 
     /**
