@@ -14,10 +14,15 @@ public class HttpReq {
         return post(url, true);
     }
 
+    private static HttpRequest config(HttpRequest req) {
+        // TODO: 2024/9/7 修改超时时间
+        return req.timeout(6000)
+                .setFollowRedirects(true);
+    }
+
     public static HttpRequest post(String url, Boolean proxy) {
         HttpRequest req = HttpRequest.post(url);
-        req.timeout(6000)
-                .setFollowRedirects(true);
+        config(req);
         if (proxy) {
             setProxy(req);
         }
@@ -30,8 +35,7 @@ public class HttpReq {
 
     public static HttpRequest get(String url, Boolean proxy) {
         HttpRequest req = HttpRequest.get(url);
-        req.timeout(6000)
-                .setFollowRedirects(true);
+        config(req);
         if (proxy) {
             setProxy(req);
         }
