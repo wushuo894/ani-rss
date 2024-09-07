@@ -5,6 +5,7 @@ import ani.rss.annotation.Path;
 import ani.rss.entity.Config;
 import ani.rss.entity.Login;
 import ani.rss.util.ConfigUtil;
+import cn.hutool.core.lang.Assert;
 import cn.hutool.crypto.digest.MD5;
 import cn.hutool.http.server.HttpServerRequest;
 import cn.hutool.http.server.HttpServerResponse;
@@ -23,6 +24,9 @@ public class LoginAction implements BaseAction {
 
         String myUsername = myLogin.getUsername();
         String myPassword = myLogin.getPassword();
+
+        Assert.notBlank(myUsername, "登录密码不能为空");
+        Assert.notBlank(myPassword, "用户名不能为空");
 
         String username = login.getUsername();
         String password = login.getPassword();
