@@ -5,6 +5,7 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.EnumerationIter;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.resource.ResourceUtil;
+import cn.hutool.core.util.StrUtil;
 import cn.hutool.core.util.URLUtil;
 import cn.hutool.http.server.HttpServerRequest;
 import cn.hutool.http.server.HttpServerResponse;
@@ -79,6 +80,11 @@ public class RootAction implements BaseAction {
                 }
                 @Cleanup
                 InputStream inputStream = jarFile.getInputStream(jarEntry);
+                String mimeType = FileUtil.getMimeType(fileName);
+                if (StrUtil.isBlank(mimeType)) {
+                    response.write(inputStream);
+                    return true;
+                }
                 response.write(inputStream, FileUtil.getMimeType(fileName));
                 return true;
             }
