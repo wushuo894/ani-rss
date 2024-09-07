@@ -48,7 +48,12 @@
                               <el-text class="mx-1" size="small">{{ group.updateDay }}</el-text>
                             </div>
                             <div style="display: flex;align-items: center;margin-right: 15px;">
-                              <el-button @click.stop="add(group['rss'])">添加</el-button>
+                              <el-button type="primary" plain @click.stop="add(group['rss'])">
+                                <el-icon>
+                                  <Plus/>
+                                </el-icon>
+                                添加
+                              </el-button>
                             </div>
                           </div>
                         </template>
