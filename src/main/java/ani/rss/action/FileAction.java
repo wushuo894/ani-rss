@@ -6,6 +6,7 @@ import ani.rss.util.ConfigUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.http.ContentType;
 import cn.hutool.http.server.HttpServerRequest;
 import cn.hutool.http.server.HttpServerResponse;
 import lombok.Cleanup;
@@ -29,7 +30,12 @@ public class FileAction implements BaseAction {
             return;
         }
         String mimeType = FileUtil.getMimeType(filename);
-        res.setContentType(mimeType);
+        if (StrUtil.isBlank(mimeType)) {
+            res.setContentType(mimeType);
+        } else {
+            res.setContentType(ContentType.OCTET_STREAM.getValue());
+        }
+
         res.setHeader("Content-Disposition", "attachment; filename=\"" + filename + "\"");
 
         File configDir = ConfigUtil.getConfigDir();
