@@ -7,6 +7,7 @@ import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.resource.ResourceUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.core.util.URLUtil;
+import cn.hutool.http.ContentType;
 import cn.hutool.http.server.HttpServerRequest;
 import cn.hutool.http.server.HttpServerResponse;
 import lombok.Cleanup;
@@ -82,7 +83,7 @@ public class RootAction implements BaseAction {
                 InputStream inputStream = jarFile.getInputStream(jarEntry);
                 String mimeType = FileUtil.getMimeType(fileName);
                 if (StrUtil.isBlank(mimeType)) {
-                    response.write(inputStream);
+                    response.write(inputStream, ContentType.OCTET_STREAM.getValue());
                     return true;
                 }
                 response.write(inputStream, FileUtil.getMimeType(fileName));
