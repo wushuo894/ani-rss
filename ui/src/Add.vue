@@ -12,7 +12,7 @@
         </el-form-item>
       </el-form>
       <div style="display: flex;justify-content: space-between;width: 100%;margin-top: 10px;">
-        <el-button @click="mikan?.show">Mikan</el-button>
+        <el-button type="primary" plain @click="mikan?.show">Mikan</el-button>
         <el-button :loading="rssButtonLoading" @click="getRss">确定</el-button>
       </div>
     </div>
