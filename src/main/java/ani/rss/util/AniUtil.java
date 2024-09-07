@@ -390,15 +390,17 @@ public class AniUtil {
                             .then(response -> {
                                 org.jsoup.nodes.Document parse = Jsoup.parse(response.body());
                                 Element inner = parse.selectFirst(".subject_tag_section");
-                                Elements aa = inner.select("a");
-                                for (Element a : aa) {
-                                    Element span = a.selectFirst("span");
-                                    if (Objects.isNull(span)) {
-                                        continue;
-                                    }
-                                    if (List.of("OVA", "剧场版").contains(span.ownText()) && ova) {
-                                        ani.setOva(true)
-                                                .setSeason(0);
+                                if (Objects.nonNull(inner)) {
+                                    Elements aa = inner.select("a");
+                                    for (Element a : aa) {
+                                        Element span = a.selectFirst("span");
+                                        if (Objects.isNull(span)) {
+                                            continue;
+                                        }
+                                        if (List.of("OVA", "剧场版").contains(span.ownText()) && ova) {
+                                            ani.setOva(true)
+                                                    .setSeason(0);
+                                        }
                                     }
                                 }
                                 for (Element element : parse.select(".tip")) {
