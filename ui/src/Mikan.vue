@@ -45,6 +45,7 @@
                           <div style="width: 100%;display: flex;justify-content: space-between;">
                             <div>
                               {{ group.label }}
+                              <el-text class="mx-1" size="small">{{ group.updateDay }}</el-text>
                             </div>
                             <div style="display: flex;align-items: center;margin-right: 15px;">
                               <el-button @click.stop="add(group['rss'])">添加</el-button>
@@ -82,7 +83,7 @@
 <script setup>
 import {ref} from "vue";
 import api from "./api.js";
-import {ElMessage} from "element-plus";
+import {ElMessage, ElText} from "element-plus";
 
 let groupLoading = ref(false)
 let activeName = ref("")
