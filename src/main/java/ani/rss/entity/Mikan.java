@@ -33,6 +33,7 @@ public class Mikan {
     public static class Group {
         private String label;
         private String rss;
+        private String updateDay;
         private List<TorrentsInfo> items;
     }
 }
