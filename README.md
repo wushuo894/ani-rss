@@ -33,7 +33,7 @@
 - [x] 支持拼音排序与搜索
 - [x] 支持自定义代理
 
-![screenshot.jpg](https://github.com/wushuo894/ani-rss/raw/master/image/screenshot.jpg)
+![Xnip2024-09-08_04-57-29.jpg](https://github.com/wushuo894/ani-rss/raw/master/image/Xnip2024-09-08_04-57-29.jpg)
 
 [使用文档](DOCS.md)
 
