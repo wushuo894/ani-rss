@@ -29,6 +29,7 @@
 import {ref} from "vue";
 import CryptoJS from "crypto-js"
 import App from "./App.vue";
+import api from "./api.js";
 
 let loading = ref(false)
 
@@ -47,10 +48,7 @@ let login = () => {
   loading.value = true
   let my_user = JSON.parse(JSON.stringify(user.value))
   my_user.password = CryptoJS.MD5(my_user.password).toString();
-  fetch('/api/login', {
-    'method': 'POST',
-    'body': JSON.stringify(my_user)
-  }).then(res => res.json())
+  api.post('/api/login', my_user)
       .then(res => {
         localStorage.setItem("authorization", res.data)
         window.authorization = res.data
