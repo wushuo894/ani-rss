@@ -28,7 +28,7 @@
               <el-collapse @change="collapseChange" accordion>
                 <el-collapse-item v-for="it in item.items" :name="it.url">
                   <template #title>
-                    <img :src="it['cover']" height="40" width="40">
+                    <img :src="img(it)" height="40" width="40">
                     <div style="margin-left: 5px;
                                          max-width: 70%;
                                          overflow: hidden;
@@ -183,6 +183,11 @@ let collapseChange = (v) => {
 let add = (v) => {
   emit('add', v)
   dialogVisible.value = false
+}
+
+
+let img = (it) => {
+  return '/api/file?img=' + btoa(it['cover']);
 }
 
 defineExpose({show})
