@@ -94,11 +94,11 @@ public class FileAction implements BaseAction {
                     HttpConnection httpConnection = (HttpConnection) ReflectUtil.getFieldValue(res, "httpConnection");
                     URI host1 = URLUtil.getHost(httpConnection.getUrl());
                     if (host.toString().equals(host1.toString())) {
-                        try (InputStream inputStream = res.bodyStream()) {
+                        try {
+                            @Cleanup
+                            InputStream inputStream = res.bodyStream();
                             consumer.accept(inputStream);
-                        } catch (Exception e) {
-                            log.error(e.getMessage());
-                            log.debug(e.getMessage(), e);
+                        } catch (Exception ignored) {
                         }
                         return;
                     }
