@@ -104,20 +104,26 @@ public class MikanUtil {
                 .thenFunction(res -> {
                     Document document = Jsoup.parse(res.body());
                     List<Mikan.Group> groups = new ArrayList<>();
-                    Elements subgroupTexts = document.select(".subgroup-text");
-                    for (Element subgroupText : subgroupTexts) {
-                        Element table = subgroupText.nextElementSibling();
+
+                    Elements subgroupTitles = document.select(".leftbar-item");
+
+                    for (Element subgroupText : subgroupTitles) {
                         Mikan.Group group = new Mikan.Group();
 
                         List<TorrentsInfo> torrentsInfos = new ArrayList<>();
                         group.setItems(torrentsInfos);
-                        String attr = subgroupText.selectFirst(".mikan-rss").attr("href");
-                        String label = subgroupText.select("a").get(0).ownText();
-                        label = StrUtil.blankToDefault(label, "生肉/不明字幕");
+                        String label = subgroupText.select("a.subgroup-name").text();
+                        // id锚点，例如 #213
+                        String id = subgroupText.select("a.subgroup-name").attr("data-anchor");
+                        String attr = document.selectFirst(id).selectFirst(".mikan-rss").attr("href");
                         group.setLabel(label)
                                 .setRss(host + attr);
                         groups.add(group);
+                        // 字幕组更新日期
+                        String day = subgroupText.select(".date").text();
+                        group.setUpdateDay(day);
 
+                        Element table = document.selectFirst(id).nextElementSibling();
                         Element tbody = table.selectFirst("tbody");
                         for (Element tr : tbody.children()) {
                             String s = tr.select("a").get(0).ownText();
@@ -131,6 +137,7 @@ public class MikanUtil {
                             );
                         }
                     }
+
                     return groups;
                 });
     }
