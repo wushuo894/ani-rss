@@ -98,8 +98,11 @@
                   <el-tag type="success" v-else>
                     未启用
                   </el-tag>
-                  <el-tag type="info">
-                    {{ item['subgroup'] }}
+                  <el-tag type="info" v-if="itemsPerRow > 1">
+                      {{ item['subgroup'] }}
+                  </el-tag>
+                  <el-tag type="info" v-else>
+                    {{ item['subgroup'].substr(0,6) }}
                   </el-tag>
                   <el-tag type="warning" v-if="item['currentEpisodeNumber']">
                     {{ item['currentEpisodeNumber'] }} /
