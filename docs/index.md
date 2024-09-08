@@ -9,7 +9,7 @@
 |
 <a href="DOCS">使用文档</a>
 |
-<a href="Docker 部署">DOCKER</a>
+<a href="DOCKER">Docker部署</a>
 
 <img src="https://github.com/wushuo894/ani-rss/raw/master/image/Xnip2024-09-08_04-57-29.jpg">
 

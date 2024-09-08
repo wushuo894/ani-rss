@@ -2,7 +2,7 @@
 
 ## qBittorrent 设置
 
-![Xnip2024-09-08_04-57-51.jpg](../image/Xnip2024-09-08_04-57-51.jpg)
+![Xnip2024-09-08_04-57-51.jpg](https://github.com/wushuo894/ani-rss/raw/master/image/Xnip2024-09-08_04-57-51.jpg)
 
 ### 拼音首字母
 
@@ -31,7 +31,7 @@
 
 ## 基本设置
 
-![Xnip2024-09-08_04-58-04.jpg](../image/Xnip2024-09-08_04-58-04.jpg)
+![Xnip2024-09-08_04-58-04.jpg](https://github.com/wushuo894/ani-rss/raw/master/image/Xnip2024-09-08_04-58-04.jpg)
 
 ### RSS间隔(分钟)
 
@@ -76,8 +76,8 @@ RSS更新检查的间隔，单位 分钟
 PS: 此选项必须启用 自动重命名。确保 qBittorrent 与 ani-rss 的 docker 映射挂载路径一致
 
 示例：
-![Xnip2024-09-07_13-40-34.jpg](../image/Xnip2024-09-07_13-40-34.jpg)
-![Xnip2024-09-07_13-40-08.jpg](../image/Xnip2024-09-07_13-40-08.jpg)
+![Xnip2024-09-07_13-40-34.jpg](https://github.com/wushuo894/ani-rss/raw/master/image/Xnip2024-09-07_13-40-34.jpg)
+![Xnip2024-09-07_13-40-08.jpg](https://github.com/wushuo894/ani-rss/raw/master/image/Xnip2024-09-07_13-40-08.jpg)
 确保 qBittorrent 与 ani-rss 的 docker 映射挂载路径一致
 
 ### 自动删除已完成任务
@@ -133,7 +133,7 @@ PS: 此选项必须启用 自动重命名。确保 qBittorrent 与 ani-rss 的 d
 
 当有新番开始下载时向邮箱发送通知
 
-![Xnip2024-09-08_04-58-16.jpg](../image/Xnip2024-09-08_04-58-16.jpg)
+![Xnip2024-09-08_04-58-16.jpg](https://github.com/wushuo894/ani-rss/raw/master/image/Xnip2024-09-08_04-58-16.jpg)
 
 ### QQ邮箱设置示例
 
