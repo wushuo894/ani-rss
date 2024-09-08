@@ -1,5 +1,6 @@
 package ani.rss.action;
 
+import ani.rss.annotation.Auth;
 import ani.rss.annotation.Path;
 import ani.rss.entity.Config;
 import ani.rss.entity.Login;
@@ -15,6 +16,7 @@ import cn.hutool.http.server.HttpServerResponse;
 import java.io.IOException;
 import java.util.Objects;
 
+@Auth
 @Path("/config")
 public class ConfigAction implements BaseAction {
 

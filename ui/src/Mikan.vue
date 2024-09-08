@@ -196,7 +196,7 @@ let add = (v) => {
 
 
 let img = (it) => {
-  return '/api/file?img=' + btoa(it['cover']);
+  return `/api/file?img=${btoa(it['cover'])}&s=${window.authorization}`;
 }
 
 defineExpose({show})

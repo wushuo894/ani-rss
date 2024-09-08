@@ -1,5 +1,6 @@
 package ani.rss.action;
 
+import ani.rss.annotation.Auth;
 import ani.rss.annotation.Path;
 import ani.rss.entity.Ani;
 import ani.rss.util.AniUtil;
@@ -17,6 +18,7 @@ import java.io.File;
 import java.util.List;
 import java.util.Optional;
 
+@Auth
 @Slf4j
 @Path("/ani")
 public class AniAction implements BaseAction {

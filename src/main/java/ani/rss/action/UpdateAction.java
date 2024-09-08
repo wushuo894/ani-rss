@@ -1,5 +1,6 @@
 package ani.rss.action;
 
+import ani.rss.annotation.Auth;
 import ani.rss.annotation.Path;
 import ani.rss.entity.About;
 import ani.rss.util.UpdateUtil;
@@ -10,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import java.io.IOException;
 
 @Slf4j
+@Auth
 @Path("/update")
 public class UpdateAction implements BaseAction {
     @Override
