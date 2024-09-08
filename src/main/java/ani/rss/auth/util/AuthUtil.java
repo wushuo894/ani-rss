@@ -27,7 +27,7 @@ public class AuthUtil {
     private static AES AES;
     private static final MD5 MD5 = new MD5();
     private static final Gson GSON = new Gson();
-    private static final Map<String, Class<Function<HttpServerRequest, Boolean>>> authTypeClassMap = new HashMap<>();
+    private static final Map<String, Function<HttpServerRequest, Boolean>> MAP = new HashMap<>();
 
     static {
         resetKey();
@@ -59,21 +59,20 @@ public class AuthUtil {
     }
 
     public static Boolean test(HttpServerRequest request, AuthType authType) {
-        synchronized (authTypeClassMap) {
-            if (authTypeClassMap.isEmpty()) {
-                Map<String, Class<Function<HttpServerRequest, Boolean>>> map = ClassUtil.scanPackage("ani.rss.auth.fun")
+        synchronized (MAP) {
+            if (MAP.isEmpty()) {
+                Map<String, Function<HttpServerRequest, Boolean>> map = ClassUtil.scanPackage("ani.rss.auth.fun")
                         .stream()
-                        .collect(Collectors.toMap(c -> c.getAnnotation(Auth.class).type().name(), i -> (Class<Function<HttpServerRequest, Boolean>>) i));
-                authTypeClassMap.putAll(map);
+                        .collect(Collectors.toMap(c -> c.getAnnotation(Auth.class).type().name(), i -> (Function<HttpServerRequest, Boolean>) ReflectUtil.newInstance(i)));
+                MAP.putAll(map);
             }
         }
         String name = authType.name();
-        Class<Function<HttpServerRequest, Boolean>> functionClass = authTypeClassMap.get(name);
-        if (Objects.isNull(functionClass)) {
+        Function<HttpServerRequest, Boolean> function = MAP.get(name);
+        if (Objects.isNull(function)) {
             return false;
         }
-        Function<HttpServerRequest, Boolean> httpRequestBooleanFunction = ReflectUtil.newInstance(functionClass);
-        return httpRequestBooleanFunction.apply(request);
+        return function.apply(request);
     }
 
 }
