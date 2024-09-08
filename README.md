@@ -1,11 +1,11 @@
 <div align="center">
 <img alt="mikan-pic.png" height="80" src="https://github.com/wushuo894/ani-rss/raw/master/image/mikan-pic.png"/>
-<h1 align="center" style="margin-top: 0">ANI-RSS</h1>
+<h1 align="center" style="margin-top: 0">ani-rss</h1>
 <p align="center">
 <strong>自动订阅下载蜜柑RSS动漫</strong>
 </p>
 
-[快速开始](https://wushuo894.github.io/ani-rss/START) | [使用文档](https://wushuo894.github.io/ani-rss/DOCS) | [Docker部署](https://wushuo894.github.io/ani-rss/DOCKER)
+[快速开始](https://docs.wushuo.top/start) | [使用文档](https://docs.wushuo.top/docs) | [Docker部署](https://docs.wushuo.top/docker)
 
 [![GitHub](https://img.shields.io/badge/-GitHub-181717?logo=github)](https://github.com/wushuo894/ani-rss)
 ![GitHub License](https://img.shields.io/github/license/wushuo894/ani-rss)
@@ -36,7 +36,7 @@
 - [x] 支持拼音排序与搜索
 - [x] 支持自定义代理
 
-![Xnip2024-09-08_04-57-29.jpg](https://github.com/wushuo894/ani-rss/raw/master/image/Xnip2024-09-08_04-57-29.jpg)
+![Xnip2024-09-08_04-57-29.jpg](docs/image/Xnip2024-09-08_04-57-29.jpg)
 
 默认 用户名: admin 密码: admin
 
