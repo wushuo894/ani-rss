@@ -7,7 +7,7 @@
 [![qq-qun](https://img.shields.io/static/v1?label=QQ%E7%BE%A4&message=171563627&color=blue)](http://qm.qq.com/cgi-bin/qm/qr?_wv=1027&k=_EKAkxs6Ld4fWcMNAbUQzcp4tv20vjVH&authKey=KG3GAsZfKQosbAWkks%2FbEj0LCGwxoeLJ3DTU0loHkGdHLqHYgJNv3%2BmSERmYt47b&noverify=0&group_code=171563627)
 [![GitHub](https://img.shields.io/badge/-GitHub-181717?logo=github)](https://github.com/wushuo894/ani-rss)
 
-[使用文档](https://github.com/wushuo894/ani-rss/blob/master/DOCS.md)
+[使用文档](https://wushuo894.github.io/ani-rss/DOCS)
 
 ![Xnip2024-09-08_04-57-29.jpg](https://github.com/wushuo894/ani-rss/raw/master/image/Xnip2024-09-08_04-57-29.jpg)
 
