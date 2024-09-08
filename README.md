@@ -1,5 +1,5 @@
 <div align="center">
-<img alt="mikan-pic.png" height="80" src="https://github.com/wushuo894/ani-rss/raw/master/image/mikan-pic.png"/>
+<img alt="mikan-pic.png" height="80" src="https://docs.wushuo.top/image/mikan-pic.png"/>
 <h1 align="center" style="margin-top: 0">ani-rss</h1>
 <p align="center">
 <strong>自动订阅下载蜜柑RSS动漫</strong>
@@ -36,7 +36,7 @@
 - [x] 支持拼音排序与搜索
 - [x] 支持自定义代理
 
-![Xnip2024-09-08_04-57-29.jpg](docs/image/Xnip2024-09-08_04-57-29.jpg)
+![Xnip2024-09-08_04-57-29.jpg](https://docs.wushuo.top/image/Xnip2024-09-08_04-57-29.jpg)
 
 默认 用户名: admin 密码: admin
 
