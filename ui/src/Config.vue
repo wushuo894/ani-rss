@@ -61,6 +61,7 @@
                 <br>
                 <el-text class="mx-1" size="small">
                   文件已下载自动跳过 此选项必须启用 自动重命名。确保 qBittorrent 与本程序 docker 映射挂载路径一致
+                  <a href="https://docs.wushuo.top/docs#%E8%87%AA%E5%8A%A8%E8%B7%B3%E8%BF%87" target="_blank">详细说明</a>
                 </el-text>
               </div>
             </el-form-item>
@@ -157,6 +158,9 @@
                    }">
             <el-form-item label="GitHub">
               <a href="https://github.com/wushuo894/ani-rss" target="_blank">https://github.com/wushuo894/ani-rss</a>
+            </el-form-item>
+            <el-form-item label="使用文档">
+              <a href="https://docs.wushuo.top" target="_blank">https://docs.wushuo.top</a>
             </el-form-item>
             <el-form-item label="版本号">
               <div>
