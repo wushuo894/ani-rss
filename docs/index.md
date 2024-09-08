@@ -1,6 +1,6 @@
 <div align="center">
 <img alt="mikan-pic.png" height="80" src="image/mikan-pic.png"/>
-<h1 align="center" style="margin-top: 0">ani-rss</h1>
+<h2 align="center" style="margin-top: 0">ani-rss</h2>
 <p align="center">
 <strong>自动追番、订阅、下载 蜜柑RSS动漫</strong>
 </p>
