@@ -4,8 +4,8 @@ title: ANI-RSS
 titleTemplate: 自动追番 自动订阅下载蜜柑RSS动漫
 
 hero:
-  name: AutoBangumi
-  text: 自动追番，解放双手！
+  name: ANI-RSS
+  text: 自动追番 自动订阅下载蜜柑RSS动漫
   tagline: 从 RSS 全自动 订阅解析、下载管理、重命名整理
   actions:
     - theme: brand 
