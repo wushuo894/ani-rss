@@ -52,6 +52,7 @@ public class AniAction implements BaseAction {
                     TorrentUtil.downloadAni(ani);
                 }
                 resultSuccessMsg("添加订阅成功");
+                log.info("添加订阅 {} {}", ani.getTitle(), ani.getUrl());
                 return;
             }
             case "PUT": {
@@ -78,6 +79,7 @@ public class AniAction implements BaseAction {
                 BeanUtil.copyProperties(ani, first.get());
                 AniUtil.sync();
                 resultSuccessMsg("修改成功");
+                log.info("修改订阅 {} {}", ani.getTitle(), ani.getUrl());
                 return;
             }
             case "GET": {
@@ -113,6 +115,7 @@ public class AniAction implements BaseAction {
                         FileUtil.del(file);
                     }
                 }
+                log.info("删除订阅 {} {}", ani.getTitle(), ani.getUrl());
                 break;
             }
         }
