@@ -30,7 +30,7 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           name: ${{ env.version }}
-          body_path: UPDATE.md
+          body_path: docs/update.md
           tag_name: ${{ env.version }}
           append_body: false
           token: ${{ secrets.GITHUB_TOKEN }}
@@ -59,4 +59,4 @@ jobs:
           DOCKERHUB_USERNAME: ${{ secrets.DOCKER_USERNAME }}
           DOCKERHUB_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
           DOCKERHUB_REPOSITORY: wushuo894/ani-rss
-          README_FILEPATH: ./docs/DOCKER.md
+          README_FILEPATH: ./docs/docker.md
