@@ -11,7 +11,7 @@
 |
 <a href="docker">Docker部署</a>
 
-<p>&nbsp</p>
+<p></p>
 
 <p><a href="https://github.com/wushuo894/ani-rss"><img src="https://img.shields.io/badge/-GitHub-181717?logo=github" alt="GitHub"></a>
 <img src="https://img.shields.io/github/license/wushuo894/ani-rss" alt="GitHub License">
