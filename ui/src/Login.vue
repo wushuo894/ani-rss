@@ -8,6 +8,7 @@
       <h2 style="text-align: center">ANI-RSS</h2>
       <div style="height: 30px;"></div>
       <el-form label-width="auto"
+               @keyup.enter="login"
                @submit="login">
         <el-form-item label="用户名">
           <el-input v-model:model-value="user.username"></el-input>
