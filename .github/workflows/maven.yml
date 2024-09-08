@@ -36,6 +36,10 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           files: |
             ./target/ani-rss-jar-with-dependencies.jar
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
       - name: Login to Docker Hub
         uses: docker/login-action@v3
         with:
@@ -46,6 +50,7 @@ jobs:
         with:
           context: ./
           file: ./docker/Dockerfile.tpl
+          platforms: linux/amd64,linux/arm64
           push: true
           tags: wushuo894/ani-rss:latest
       - name: DockerHub Description
