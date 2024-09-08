@@ -2,13 +2,13 @@
 
 <img alt="mikan-pic.png" height="80" src="https://docs.wushuo.top/image/mikan-pic.png"/>
 
-# 使用文档
+## 使用文档
 
-## qBittorrent 设置
+### qBittorrent 设置
 
 ![Xnip2024-09-08_04-57-51.jpg](image/Xnip2024-09-08_04-57-51.jpg)
 
-### 拼音首字母
+#### 拼音首字母
 
 用于整理番剧到A-Z文件夹中
 如:
@@ -27,21 +27,21 @@
     │  │          BanG Dream! It's MyGO!!!!! S01E02.mp4
     │  │          BanG Dream! It's MyGO!!!!! S01E03.mp4
 
-### 同时下载数量限制
+#### 同时下载数量限制
 
 防止同时下载任务过多导致qb卡死
 
 强烈建议视性能设置, 推荐 1-2
 
-## 基本设置
+### 基本设置
 
 ![Xnip2024-09-08_04-58-04.jpg](image/Xnip2024-09-08_04-58-04.jpg)
 
-### RSS间隔(分钟)
+#### RSS间隔(分钟)
 
 RSS更新检查的间隔，单位 分钟
 
-### 自动重命名
+#### 自动重命名
 
 自动命名视频与字幕让其易于刮削
 
@@ -54,11 +54,11 @@ RSS更新检查的间隔，单位 分钟
     2024-09-01 13:29:46.365 [rename-task-thread] INFO  ani.rss.util.TorrentUtil - 重命名 [FLsnow][Wonderful_Precure！][31][1080P]/[FLsnow][Wonderful_Precure！][31][1080P].chs.ass ==> Wonderful 光之美少女！ S01E31.chs.ass
     2024-09-01 13:38:49.392 [rename-task-thread] INFO  ani.rss.util.TorrentUtil - 删除已完成任务 Wonderful 光之美少女！ S01E31
 
-### 重命名间隔(分钟)
+#### 重命名间隔(分钟)
 
 单位 分钟
 
-### 自动跳过
+#### 自动跳过
 
 自动检测季度文件夹下是否已经下载某集
 
@@ -84,11 +84,11 @@ PS: 此选项必须启用 自动重命名。确保 qBittorrent 与 ani-rss 的 d
 ![Xnip2024-09-07_13-40-08.jpg](image/Xnip2024-09-07_13-40-08.jpg)
 确保 qBittorrent 与 ani-rss 的 docker 映射挂载路径一致
 
-### 自动删除已完成任务
+#### 自动删除已完成任务
 
 当qb中已下载并完成做种后删除任务，不会删除本地文件
 
-### 自动推断剧集偏移
+#### 自动推断剧集偏移
 
 当添加RSS时会根据最小集数计算出集数偏移
 
@@ -98,11 +98,11 @@ PS: 此选项必须启用 自动重命名。确保 qBittorrent 与 ani-rss 的 d
 
 主要看你的个人喜好决定是否开启
 
-### 自动禁用订阅
+#### 自动禁用订阅
 
 根据 Bangumi 获取总集数 当所有集数都已下载时自动禁用该订阅
 
-### DEBUG
+#### DEBUG
 
 可以看到 debug 级别的日志
 
@@ -125,21 +125,21 @@ PS: 此选项必须启用 自动重命名。确保 qBittorrent 与 ani-rss 的 d
     "episode": 3
     }
 
-## 代理设置
+### 代理设置
 
 主要用与访问 mikan
 
-## 登录设置
+### 登录设置
 
 设置网页的账号与密码
 
-## 邮件通知
+### 邮件通知
 
 当有新番开始下载时向邮箱发送通知
 
 ![Xnip2024-09-08_04-58-16.jpg](image/Xnip2024-09-08_04-58-16.jpg)
 
-### QQ邮箱设置示例
+#### QQ邮箱设置示例
 
     SMTP地址: smtp.qq.com
     SMTP端口: 465
@@ -148,13 +148,13 @@ PS: 此选项必须启用 自动重命名。确保 qBittorrent 与 ani-rss 的 d
     SSL: 开启
     收件人邮箱: [qq号]@qq.com
 
-### QQ邮箱密码:
+#### QQ邮箱密码:
 
 QQ邮箱 - 常规 - 第三方服务 - IMAP/SMTP服务
 
 开启并 生成授权码
 
-## 关于剧场版
+### 关于剧场版
 
 若 `剧场版保存位置` 为空则使用 `保存位置`
 

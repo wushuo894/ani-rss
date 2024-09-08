@@ -1,22 +1,22 @@
 <img alt="mikan-pic.png" height="80" src="https://docs.wushuo.top/image/mikan-pic.png"/>
 
-# 快速开始
+## 快速开始
 
-## 安装 java
+### 安装 java
 
 推荐使用 jdk11 或 jdk17
 如果已经有了可以跳过
 
-#### windows
+##### windows
 
     winget install 'OpenJDK 11'
 
-#### linux
+##### linux
 
     sudo apt update
     sudo apt install openjdk-11-jdk
 
-### macOS
+#### macOS
 
     brew update
     brew install openjdk@11
