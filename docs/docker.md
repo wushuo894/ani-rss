@@ -1,6 +1,6 @@
 <img alt="mikan-pic.png" height="80" src="https://docs.wushuo.top/image/mikan-pic.png"/>
 
-# ANI-RSS
+# ani-rss
 
 ![Docker Image Size (tag)](https://img.shields.io/docker/image-size/wushuo894/ani-rss/latest)
 [![Docker Pulls](https://img.shields.io/docker/pulls/wushuo894/ani-rss)](https://hub.docker.com/r/wushuo894/ani-rss)
