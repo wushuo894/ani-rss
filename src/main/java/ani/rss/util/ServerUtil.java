@@ -4,14 +4,11 @@ import ani.rss.action.BaseAction;
 import ani.rss.action.RootAction;
 import ani.rss.annotation.Auth;
 import ani.rss.annotation.Path;
-import ani.rss.entity.Config;
-import ani.rss.entity.Login;
+import ani.rss.auth.util.AuthUtil;
 import ani.rss.entity.Result;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.util.ClassUtil;
 import cn.hutool.core.util.ReflectUtil;
-import cn.hutool.core.util.StrUtil;
-import cn.hutool.crypto.digest.MD5;
 import cn.hutool.http.HttpUtil;
 import cn.hutool.http.server.HttpServerRequest;
 import cn.hutool.http.server.HttpServerResponse;
@@ -23,8 +20,8 @@ import java.util.Objects;
 import java.util.Set;
 
 public class ServerUtil {
-    public static final ThreadLocal<HttpServerRequest> request = new ThreadLocal<>();
-    public static final ThreadLocal<HttpServerResponse> response = new ThreadLocal<>();
+    public static final ThreadLocal<HttpServerRequest> REQUEST = new ThreadLocal<>();
+    public static final ThreadLocal<HttpServerResponse> RESPONSE = new ThreadLocal<>();
 
     public static SimpleServer create() {
         Map<String, String> env = System.getenv();
@@ -46,26 +43,12 @@ public class ServerUtil {
                 @Override
                 public void doAction(HttpServerRequest req, HttpServerResponse res) {
                     try {
-                        request.set(req);
-                        response.set(res);
+                        REQUEST.set(req);
+                        RESPONSE.set(res);
                         Auth auth = aClass.getAnnotation(Auth.class);
-                        boolean isAuth = true;
-                        if (Objects.nonNull(auth)) {
-                            isAuth = auth.value();
-                        }
-                        if (isAuth) {
-                            String authorization = req.getHeader("Authorization");
-                            if (StrUtil.isBlank(authorization)) {
-                                result(new Result<>().setCode(403).setMessage("未登录"));
-                                return;
-                            }
-                            Config config = ConfigUtil.CONFIG;
-                            Login login = config.getLogin();
-                            String username = login.getUsername();
-                            String password = login.getPassword();
-                            String s = MD5.create().digestHex(username + ":" + password);
-                            if (!authorization.equals(s)) {
-                                result(new Result<>().setCode(403).setMessage("令牌错误"));
+                        if (auth.value()) {
+                            Boolean test = AuthUtil.test(req, auth.type());
+                            if (!test) {
                                 return;
                             }
                         }
@@ -80,8 +63,8 @@ public class ServerUtil {
                             log.debug(e);
                         }
                     } finally {
-                        request.remove();
-                        response.remove();
+                        REQUEST.remove();
+                        RESPONSE.remove();
                     }
                 }
             });

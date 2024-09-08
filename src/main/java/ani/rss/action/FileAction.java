@@ -2,6 +2,7 @@ package ani.rss.action;
 
 import ani.rss.annotation.Auth;
 import ani.rss.annotation.Path;
+import ani.rss.auth.enums.AuthType;
 import ani.rss.util.ConfigUtil;
 import ani.rss.util.HttpReq;
 import cn.hutool.core.io.FileUtil;
@@ -23,7 +24,7 @@ import java.util.Base64;
 import java.util.function.Consumer;
 
 @Slf4j
-@Auth(value = false)
+@Auth(type = AuthType.FORM)
 @Path("/file")
 public class FileAction implements BaseAction {
 
@@ -67,7 +68,7 @@ public class FileAction implements BaseAction {
 
         String filename = request.getParam("filename");
         if (StrUtil.isBlank(filename)) {
-            response.send404("404");
+            response.send404("404 Not Found !");
             return;
         }
         String mimeType = FileUtil.getMimeType(filename);
