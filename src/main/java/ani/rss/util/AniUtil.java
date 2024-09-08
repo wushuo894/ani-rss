@@ -272,17 +272,16 @@ public class AniUtil {
                 }
             }
 
+            Item newItem = new Item()
+                    .setTitle(itemTitle)
+                    .setReName(itemTitle)
+                    .setTorrent(torrent);
+
             // 进行过滤
-            String finalItemTitle = itemTitle;
-            if (exclude.stream().anyMatch(finalItemTitle::contains)) {
+            if (exclude.stream().anyMatch(s -> ReUtil.contains(s, newItem.getTorrent()))) {
                 continue;
             }
-            items.add(
-                    new Item()
-                            .setTitle(itemTitle)
-                            .setReName(itemTitle)
-                            .setTorrent(torrent)
-            );
+            items.add(newItem);
         }
 
         if (ova) {

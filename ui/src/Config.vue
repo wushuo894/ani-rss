@@ -218,7 +218,7 @@
         </el-tab-pane>
       </el-tabs>
       <div style="display: flex;justify-content: end;width: 100%;">
-        <el-button :loading="configButtonLoading" @click="editConfig" text bg type="primary">确定</el-button>
+        <el-button :loading="configButtonLoading" @click="editConfig" text bg>确定</el-button>
       </div>
     </div>
   </el-dialog>
@@ -279,6 +279,7 @@ const activeName = ref('qb')
 const showConfig = (ab) => {
   about.value = ab
   if (!ab.update) {
+    activeName.value = 'qb'
     api.get('/api/about')
         .then(res => {
           about.value = res.data
