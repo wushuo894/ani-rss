@@ -2,9 +2,9 @@
 
 path="./"
 jar="ani-rss-jar-with-dependencies.jar"
-jar_path=$path+$jar
+jar_path=$path$jar
 
-pid=$(pgrep -f "$jar")
+pid=$(ps -ef | grep java |  grep "$jar" | awk '{print $2}')
 if [ -n "$pid" ]; then
     echo "Stopping process $pid - $jar"
     kill "$pid"
