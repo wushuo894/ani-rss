@@ -5,7 +5,7 @@
 <strong>自动订阅下载蜜柑RSS动漫</strong>
 </p>
 
-[快速开始](docs/START.md) | [使用文档](docs/DOCS.md) | [Docker 部署](docs/DOCKER.md)
+[快速开始](https://wushuo894.github.io/ani-rss/START) | [使用文档](https://wushuo894.github.io/ani-rss/DOCS) | [Docker部署](https://wushuo894.github.io/ani-rss/DOCKER)
 
 [![GitHub](https://img.shields.io/badge/-GitHub-181717?logo=github)](https://github.com/wushuo894/ani-rss)
 ![GitHub License](https://img.shields.io/github/license/wushuo894/ani-rss)
