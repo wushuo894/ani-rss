@@ -40,10 +40,10 @@ public class LoginAction implements BaseAction {
         myLogin.setIp(ip);
 
         if (username.equals(myUsername) && password.equals(myPassword)) {
+            AuthUtil.resetKey();
             log.info("登录成功 {} ip: {}", username, ip);
             String s = AuthUtil.getAuth(myLogin);
             resultSuccess(s);
-            AuthUtil.resetKey();
             return;
         }
         log.warn("登陆失败 {} ip: {}", myUsername, ip);
