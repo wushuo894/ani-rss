@@ -11,7 +11,7 @@ public class Main {
         try {
             ConfigUtil.load();
             AniUtil.load();
-            ThreadUtil.execute(() -> ServerUtil.create().start());
+            ThreadUtil.execute(() -> ServerUtil.create(args).start());
             TaskUtil.start();
             String version = MavenUtil.getVersion();
             log.info("version {}", version);
