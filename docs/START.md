@@ -22,5 +22,5 @@
 
 [使用文档](DOCS.md)
 
-[Docker 部署](../DOCKER.md)
+[Docker 部署](DOCKER.md)
 

@@ -59,4 +59,4 @@ jobs:
           DOCKERHUB_USERNAME: ${{ secrets.DOCKER_USERNAME }}
           DOCKERHUB_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
           DOCKERHUB_REPOSITORY: wushuo894/ani-rss
-          README_FILEPATH: ./DOCKER.md
+          README_FILEPATH: ./docs/DOCKER.md
