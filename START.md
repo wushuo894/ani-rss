@@ -2,7 +2,7 @@
 
 ## 安装 java
 
-推荐使用 jdk11 与 jdk17
+推荐使用 jdk11 或 jdk17
 如果已经有了可以跳过
 
 #### windows 命令行安装 java11
