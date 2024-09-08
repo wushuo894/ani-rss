@@ -50,7 +50,11 @@ public class UpdateUtil {
         if (!update) {
             return;
         }
-        File file = new File("ani-rss-jar-with-dependencies.jar.tmp");
+        File jar = getJar();
+        if (!"jar".equals(FileUtil.extName(jar))) {
+            throw new RuntimeException("非jar启动 不支持更新");
+        }
+        File file = new File(jar + ".tmp");
         String downloadUrl = about.getDownloadUrl();
         HttpReq.get(downloadUrl)
                 .then(res -> {
@@ -60,11 +64,15 @@ public class UpdateUtil {
                         throw new RuntimeException("下载出现问题");
                     }
                     ThreadUtil.execute(() -> {
-                        FileUtil.rename(file, "ani-rss-jar-with-dependencies.jar", true);
+                        FileUtil.rename(file, jar.getName(), true);
                         ThreadUtil.sleep(3000);
                         System.exit(0);
                     });
                 });
+    }
+
+    public static File getJar() {
+        return new File(System.getProperty("java.class.path").split(";")[0]);
     }
 
 }

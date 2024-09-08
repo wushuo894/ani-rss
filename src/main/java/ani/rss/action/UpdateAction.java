@@ -23,8 +23,8 @@ public class UpdateAction implements BaseAction {
         } catch (Exception e) {
             log.error(e.getMessage());
             log.debug(e.getMessage(), e);
-            log.info("更新失败 {}", about.getLatest());
-            resultErrorMsg("更新失败 {}", about.getLatest());
+            log.info("更新失败 {}, {}", about.getLatest(), e.getMessage());
+            resultErrorMsg("更新失败 {}, {}", about.getLatest(), e.getMessage());
         }
     }
 }
