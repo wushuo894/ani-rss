@@ -2,7 +2,7 @@
 <img alt="mikan-pic.png" height="80" src="https://docs.wushuo.top/image/mikan-pic.png"/>
 <h1 align="center" style="margin-top: 0">ani-rss</h1>
 <p align="center">
-<strong>自动订阅下载蜜柑RSS动漫</strong>
+<strong>自动追番、订阅、下载 蜜柑RSS动漫</strong>
 </p>
 
 [快速开始](https://docs.wushuo.top/start) | [使用文档](https://docs.wushuo.top/docs) | [Docker部署](https://docs.wushuo.top/docker)
