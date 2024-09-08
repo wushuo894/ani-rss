@@ -1,3 +1,5 @@
+<img alt="mikan-pic.png" height="80" src="https://docs.wushuo.top/image/mikan-pic.png"/>
+
 # 快速开始
 
 ## 安装 java

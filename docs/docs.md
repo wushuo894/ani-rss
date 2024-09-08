@@ -1,3 +1,7 @@
+
+
+<img alt="mikan-pic.png" height="80" src="https://docs.wushuo.top/image/mikan-pic.png"/>
+
 # 使用文档
 
 ## qBittorrent 设置
