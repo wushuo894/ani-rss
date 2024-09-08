@@ -13,7 +13,7 @@ public class LogsAction implements BaseAction {
 
     @Override
     public void doAction(HttpServerRequest req, HttpServerResponse res) {
-        List<Log> logs = LogUtil.getLogs();
+        List<Log> logs = LogUtil.LOGS;
         resultSuccess(logs);
     }
 }

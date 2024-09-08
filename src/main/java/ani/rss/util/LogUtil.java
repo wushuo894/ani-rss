@@ -15,7 +15,6 @@ import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.io.resource.ResourceUtil;
 import cn.hutool.core.text.StrFormatter;
-import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.LoggerFactory;
 
@@ -29,8 +28,7 @@ import java.util.List;
 @Slf4j
 public class LogUtil {
 
-    @Getter
-    private static final List<Log> logs = Collections.synchronizedList(new FixedSizeLinkedList<>(4096));
+    public static final List<Log> LOGS = Collections.synchronizedList(new FixedSizeLinkedList<>(4096));
 
     public static void loadLogback() {
         Config config = ConfigUtil.CONFIG;
@@ -65,7 +63,7 @@ public class LogUtil {
                     String loggerName = event.getLoggerName();
                     String formattedMessage = event.getFormattedMessage();
                     String log = StrFormatter.format("{} {} {} - {}", date, level, loggerName, formattedMessage);
-                    logs.add(new Log().setMessage(log).setLevel(level));
+                    LOGS.add(new Log().setMessage(log).setLevel(level));
                     return FilterReply.NEUTRAL;
                 }
             });
