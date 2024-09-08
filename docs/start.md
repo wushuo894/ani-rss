@@ -7,14 +7,19 @@
 推荐使用 jdk11 或 jdk17
 如果已经有了可以跳过
 
-#### windows 命令行安装 java11
+#### windows
 
     winget install 'OpenJDK 11'
 
-#### linux 命令行安装 java11
+#### linux
 
     sudo apt update
     sudo apt install openjdk-11-jdk
+
+### macOS
+
+    brew update
+    brew install openjdk@11
 
 ### 启动
 
