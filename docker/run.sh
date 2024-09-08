@@ -14,7 +14,6 @@ if [ ! -f $jar_path ]; then
         echo "$jar_path 下载成功！"
     else
         echo "$jar_path 下载失败。"
-        exit
     fi
 fi
 
