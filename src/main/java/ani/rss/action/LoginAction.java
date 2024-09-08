@@ -36,7 +36,7 @@ public class LoginAction implements BaseAction {
         String password = login.getPassword();
 
         // 一个令牌只能用于一个ip
-        String ip = request.getClientIP();
+        String ip = AuthUtil.getIp();
         myLogin.setIp(ip);
 
         if (username.equals(myUsername) && password.equals(myPassword)) {

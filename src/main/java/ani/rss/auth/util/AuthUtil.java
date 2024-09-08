@@ -14,6 +14,7 @@ import cn.hutool.crypto.digest.MD5;
 import cn.hutool.crypto.symmetric.AES;
 import cn.hutool.http.server.HttpServerRequest;
 import com.google.gson.Gson;
+import com.sun.net.httpserver.HttpExchange;
 
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
@@ -34,16 +35,26 @@ public class AuthUtil {
         AES = new AES(key.getBytes(StandardCharsets.UTF_8));
     }
 
-    public static String getAuth(Login login) {
+    public static synchronized String getAuth(Login login) {
         return MD5.digestHex(AES.encryptBase64(GSON.toJson(login)));
     }
 
     public static Login getLogin() {
-        HttpServerRequest request = ServerUtil.REQUEST.get();
         Config config = ConfigUtil.CONFIG;
         Login login = ObjectUtil.clone(config.getLogin());
-        login.setIp(request.getClientIP());
+        try {
+            login.setIp(getIp());
+            System.out.println(getIp());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return login;
+    }
+
+    public static String getIp() {
+        HttpServerRequest request = ServerUtil.REQUEST.get();
+        HttpExchange httpExchange = (HttpExchange) ReflectUtil.getFieldValue(request, "httpExchange");
+        return httpExchange.getRemoteAddress().getAddress().getHostAddress();
     }
 
     public static Boolean test(HttpServerRequest request, AuthType authType) {
