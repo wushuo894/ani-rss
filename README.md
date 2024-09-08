@@ -35,9 +35,11 @@
 
 ![Xnip2024-09-08_04-57-29.jpg](https://github.com/wushuo894/ani-rss/raw/master/image/Xnip2024-09-08_04-57-29.jpg)
 
+
+
 [使用文档](DOCS.md)
 
-[Docker 部署](https://github.com/wushuo894/ani-rss/blob/master/DOCKER.md)
+[Docker 部署](DOCKER.md)
 
 默认 用户名: admin 密码: admin
 
