@@ -1,8 +1,8 @@
 <div align="center">
 <img alt="mikan-pic.png" height="80" src="image/mikan-pic.png"/>
-<h2 align="center" style="margin-top: 0">
-<strong>ani-rss</strong>
-</h2>
+<p align="center" style="font-size: 2em;font-weight: 600;line-height: 1.25;margin-top: 24px;word-wrap: break-word;">
+ani-rss
+</p>
 <p align="center">
 自动追番、订阅、下载 蜜柑RSS动漫
 </p>
