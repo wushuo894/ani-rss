@@ -21,11 +21,17 @@
     brew update
     brew install openjdk@11
 
-### 启动
+### 运行
 
 下载最新的 **ani-rss-jar-with-dependencies.jar** [链接](https://github.com/wushuo894/ani-rss/releases/latest)
 
     java -jar -Xmx2g ./ani-rss-jar-with-dependencies.jar --port 7789
+
+#### 脚本运行 支持自动重启
+
+    wget https://github.com/wushuo894/ani-rss/raw/master/docker/run.sh
+    sudo chmod -R 777 ./run.sh
+    sudo bash ./run.sh
 
 通过 **http://[ip]:7789** 访问
 
