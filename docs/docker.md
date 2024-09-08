@@ -1,4 +1,4 @@
-<img alt="mikan-pic.png" height="80" src="https://github.com/wushuo894/ani-rss/raw/master/image/mikan-pic.png"/>
+<img alt="mikan-pic.png" height="80" src="https://docs.wushuo.top/image/mikan-pic.png"/>
 
 # ANI-RSS
 
@@ -9,7 +9,7 @@
 
 [使用文档](https://docs.wushuo.top/ani-rss/docs)
 
-![Xnip2024-09-08_04-57-29.jpg](https://github.com/wushuo894/ani-rss/raw/master/docs/image/Xnip2024-09-08_04-57-29.jpg)
+![Xnip2024-09-08_04-57-29.jpg](https://docs.wushuo.top/image/Xnip2024-09-08_04-57-29.jpg)
 
 默认 用户名: admin 密码: admin
 
