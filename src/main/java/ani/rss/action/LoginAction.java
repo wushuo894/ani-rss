@@ -2,13 +2,13 @@ package ani.rss.action;
 
 import ani.rss.annotation.Auth;
 import ani.rss.annotation.Path;
+import ani.rss.auth.util.AuthUtil;
 import ani.rss.entity.Config;
 import ani.rss.entity.Login;
 import ani.rss.util.ConfigUtil;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.core.util.RandomUtil;
-import cn.hutool.crypto.digest.MD5;
 import cn.hutool.http.server.HttpServerRequest;
 import cn.hutool.http.server.HttpServerResponse;
 import lombok.extern.slf4j.Slf4j;
@@ -35,11 +35,13 @@ public class LoginAction implements BaseAction {
         String username = login.getUsername();
         String password = login.getPassword();
 
+        // 一个令牌只能用于一个ip
         String ip = request.getClientIP();
+        myLogin.setIp(ip);
 
         if (username.equals(myUsername) && password.equals(myPassword)) {
             log.info("登录成功 {} ip: {}", username, ip);
-            String s = MD5.create().digestHex(username + ":" + password);
+            String s = AuthUtil.getAuth(myLogin);
             resultSuccess(s);
             return;
         }

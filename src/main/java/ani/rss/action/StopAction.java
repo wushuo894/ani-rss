@@ -1,5 +1,6 @@
 package ani.rss.action;
 
+import ani.rss.annotation.Auth;
 import ani.rss.annotation.Path;
 import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.http.server.HttpServerRequest;
@@ -10,6 +11,7 @@ import java.io.IOException;
 import java.util.List;
 
 @Slf4j
+@Auth
 @Path("/stop")
 public class StopAction implements BaseAction {
 

@@ -59,7 +59,8 @@
         <el-card shadow="never">
           <div style="display: flex;width: 100%;align-items: center;">
             <div style="height: 100%;">
-              <img :src="'/api/file?filename='+item['cover']" height="130" width="92" :alt="item.title"
+              <img :src="`/api/file?filename=${item['cover']}&s=${authorization()}`" height="130" width="92"
+                   :alt="item.title"
                    style="border-radius: 4px;">
             </div>
             <div style="flex-grow: 1;position: relative;">
@@ -299,6 +300,10 @@ const getList = () => {
 }
 
 getList()
+
+let authorization = () => {
+  return window.authorization;
+}
 
 const itemsPerRow = ref(1)
 
