@@ -4,7 +4,7 @@
 <strong>ani-rss</strong>
 </h2>
 <p align="center">
-<strong>自动追番、订阅、下载 蜜柑RSS动漫</strong>
+自动追番、订阅、下载 蜜柑RSS动漫
 </p>
 
 <a href="start">快速开始</a>
