@@ -24,13 +24,19 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class AuthUtil {
-    private static final AES AES;
+    private static AES AES;
     private static final MD5 MD5 = new MD5();
     private static final Gson GSON = new Gson();
     private static final Map<String, Class<Function<HttpServerRequest, Boolean>>> authTypeClassMap = new HashMap<>();
 
     static {
-        // 每次重新启动之前的令牌都会失效
+        resetKey();
+    }
+
+    /**
+     * 刷新密钥
+     */
+    public static synchronized void resetKey() {
         String key = RandomUtil.randomString(32);
         AES = new AES(key.getBytes(StandardCharsets.UTF_8));
     }
@@ -42,12 +48,7 @@ public class AuthUtil {
     public static Login getLogin() {
         Config config = ConfigUtil.CONFIG;
         Login login = ObjectUtil.clone(config.getLogin());
-        try {
-            login.setIp(getIp());
-            System.out.println(getIp());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        login.setIp(getIp());
         return login;
     }
 
