@@ -11,6 +11,8 @@
 |
 <a href="docker">Docker部署</a>
 
+<hr>
+
 <p><a href="https://github.com/wushuo894/ani-rss"><img src="https://img.shields.io/badge/-GitHub-181717?logo=github" alt="GitHub"></a>
 <img src="https://img.shields.io/github/license/wushuo894/ani-rss" alt="GitHub License">
 <a href="https://github.com/wushuo894/ani-rss/releases/latest"><img src="https://img.shields.io/github/v/release/wushuo894/ani-rss?color=blue&amp;label=download&amp;sort=semver" alt="GitHub release (latest SemVer)"></a>
