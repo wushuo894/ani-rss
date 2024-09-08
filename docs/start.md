@@ -20,7 +20,7 @@
 
     java -jar ./ani-rss-jar-with-dependencies.jar
 
-[使用文档](DOCS.md)
-
-[Docker 部署](DOCKER.md)
+<a href="docs">使用文档</a>
+|
+<a href="docker">Docker部署</a>
 
