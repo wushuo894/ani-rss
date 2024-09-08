@@ -21,3 +21,5 @@
 <img src="image/Xnip2024-09-08_04-57-29.jpg">
 
 </div>
+
+<meta name="google-site-verification" content="wIa0s0eQmJKh9cWzJM2DWoZv4Q84_vP5UliZiok6qB0" />
