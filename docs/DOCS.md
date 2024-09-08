@@ -157,4 +157,4 @@ QQ邮箱 - 常规 - 第三方服务 - IMAP/SMTP服务
 由于剧场版命名与文件结构各异, 故并不会使用重命名功能
 
 
-[快速开始](START.md) | [Docker 部署](../DOCKER.md)
+[快速开始](START.md) | [Docker 部署](DOCKER.md)
