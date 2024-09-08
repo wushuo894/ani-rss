@@ -278,7 +278,7 @@ public class AniUtil {
                     .setTorrent(torrent);
 
             // 进行过滤
-            if (exclude.stream().anyMatch(s -> ReUtil.contains(s, newItem.getTorrent()))) {
+            if (exclude.stream().anyMatch(s -> ReUtil.contains(s, newItem.getTitle()))) {
                 continue;
             }
             items.add(newItem);
