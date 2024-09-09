@@ -10,7 +10,8 @@
       </el-form-item>
       <el-form-item label="季">
         <div style="display: flex;justify-content: end;width: 100%;">
-          <el-input-number style="max-width: 200px" :min="0" v-model:model-value="ani.season" :disabled="ani.ova"></el-input-number>
+          <el-input-number style="max-width: 200px" :min="0" v-model:model-value="ani.season"
+                           :disabled="ani.ova"></el-input-number>
         </div>
       </el-form-item>
       <el-form-item label="集数偏移">
@@ -19,31 +20,10 @@
         </div>
       </el-form-item>
       <el-form-item label="排除">
-        <div class="flex gap-2">
-          <el-tag
-              v-for="tag in ani.exclude"
-              :key="tag"
-              closable
-              :disable-transitions="false"
-              @close="handleClose(tag)"
-              style="margin-right: 4px;"
-          >
-            {{ tag }}
-          </el-tag>
-          <el-input
-              style="max-width: 80px;"
-              v-if="excludeVisible"
-              ref="InputRef"
-              v-model="excludeValue"
-              class="w-20"
-              size="small"
-              @keyup.enter="handleInputConfirm"
-              @blur="handleInputConfirm"
-          />
-          <el-button v-else class="button-new-tag" size="small" @click="showInput">
-            +
-          </el-button>
-        </div>
+        <Exclude ref="exclude" v-model:exclude="ani.exclude"/>
+      </el-form-item>
+      <el-form-item label="全局排除">
+        <el-switch v-model:model-value="ani['globalExclude']"/>
       </el-form-item>
       <el-form-item label="剧场版">
         <el-switch v-model:model-value="ani.ova"></el-switch>
@@ -63,6 +43,9 @@
 import {ref} from "vue";
 import {ElMessage} from "element-plus";
 import api from "./api.js";
+import Exclude from "./Exclude.vue";
+
+let exclude = ref()
 
 const editDialogVisible = ref(false)
 const ani = ref({
@@ -74,29 +57,6 @@ const ani = ref({
   'enable': true,
   'ova': false
 })
-
-
-const excludeVisible = ref(false)
-const excludeValue = ref('')
-
-const handleClose = (tag) => {
-  ani.value.exclude.splice(ani.value.exclude.indexOf(tag), 1)
-}
-
-const InputRef = ref()
-
-const showInput = () => {
-  excludeVisible.value = true
-  InputRef.value?.input?.focus()
-}
-
-const handleInputConfirm = () => {
-  if (excludeValue.value) {
-    ani.value.exclude.push(excludeValue.value)
-  }
-  excludeVisible.value = false
-  excludeValue.value = ''
-}
 
 const editAniButtonLoading = ref(false)
 
@@ -113,11 +73,11 @@ const editAni = () => {
       })
 }
 
+
 const showEdit = (item) => {
   editDialogVisible.value = true
   ani.value = JSON.parse(JSON.stringify(item))
-  excludeVisible.value = false
-  excludeValue.value = ''
+  exclude.value?.init()
 }
 
 defineExpose({

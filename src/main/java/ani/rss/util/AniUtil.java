@@ -68,6 +68,7 @@ public class AniUtil {
             Ani newAni = new Ani();
             newAni.setEnable(true)
                     .setOva(false)
+                    .setGlobalExclude(false)
                     .setCurrentEpisodeNumber(0)
                     .setTotalEpisodeNumber(0);
             BeanUtil.copyProperties(ani, newAni, CopyOptions
@@ -191,6 +192,7 @@ public class AniUtil {
                 .setCurrentEpisodeNumber(0)
                 .setTotalEpisodeNumber(0)
                 .setOva(false)
+                .setGlobalExclude(true)
                 .setExclude(List.of("720"));
 
         AniUtil.getBangumiInfo(ani, true, true);
