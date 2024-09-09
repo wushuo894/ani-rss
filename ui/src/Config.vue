@@ -7,6 +7,14 @@
                    @submit="(event)=>{
                     event.preventDefault()
                    }">
+            <el-form-item label="下载工具">
+              <el-select v-model:model-value="config.download">
+                <el-option v-for="item in downloadSelect"
+                           :key="item"
+                           :label="item"
+                           :value="item"/>
+              </el-select>
+            </el-form-item>
             <el-form-item label="地址">
               <el-input v-model:model-value="config.host" placeholder="http://192.168.0.x:18080"></el-input>
             </el-form-item>
@@ -244,7 +252,13 @@ const configDialogVisible = ref(false)
 const configButtonLoading = ref(false)
 const loading = ref(true)
 
+const downloadSelect = ref([
+  'qBittorrent',
+  'Transmission'
+])
+
 const config = ref({
+  'download': 'qBittorrent',
   'exclude': [],
   'rename': true,
   'host': '',

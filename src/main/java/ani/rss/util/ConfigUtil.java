@@ -105,12 +105,14 @@ public class ConfigUtil {
         log.debug("加载配置文件 {}", configFile);
 
         String download = CONFIG.getDownload();
+
         ClassUtil.scanPackage("ani.rss.download")
                 .stream()
-                .filter(aClass -> aClass.getName().equals(download))
-                .map(ReflectUtil::newInstance)
-                .findAny()
-                .ifPresent(newDownload -> TorrentUtil.setBaseDownload((BaseDownload) newDownload));
+                .filter(aClass -> !aClass.isInterface())
+                .filter(aClass -> aClass.getSimpleName().equals(download))
+                .map(aClass -> (BaseDownload) ReflectUtil.newInstance(aClass))
+                .findFirst()
+                .ifPresent(TorrentUtil::setBaseDownload);
     }
 
     /**
