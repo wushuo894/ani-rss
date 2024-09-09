@@ -2,7 +2,7 @@
   <el-dialog v-model="configDialogVisible" title="设置" center>
     <div style="margin: 0 15px;" v-loading="loading">
       <el-tabs v-model:model-value="activeName">
-        <el-tab-pane label="qBittorrent 设置" name="qb">
+        <el-tab-pane label="下载设置" name="qb">
           <el-form label-width="auto"
                    @submit="(event)=>{
                     event.preventDefault()
@@ -78,7 +78,7 @@
                 <el-switch v-model:model-value="config.fileExist" :disabled="!config.rename"></el-switch>
                 <br>
                 <el-text class="mx-1" size="small">
-                  文件已下载自动跳过 此选项必须启用 自动重命名。确保 qBittorrent 与本程序 docker 映射挂载路径一致
+                  文件已下载自动跳过 此选项必须启用 自动重命名。确保 下载工具 与本程序 docker 映射挂载路径一致
                   <a href="https://docs.wushuo.top/docs#%E8%87%AA%E5%8A%A8%E8%B7%B3%E8%BF%87"
                      target="_blank">详细说明</a>
                 </el-text>
