@@ -249,6 +249,9 @@ public class AniUtil {
         Document document = XmlUtil.readXML(xml);
         Node channel = document.getElementsByTagName("channel").item(0);
         NodeList childNodes = channel.getChildNodes();
+        Config config = ConfigUtil.CONFIG;
+        List<String> globalExcludeList = config.getExclude();
+        Boolean globalExclude = ani.getGlobalExclude();
 
         for (int i = childNodes.getLength() - 1; i >= 0; i--) {
             Node item = childNodes.item(i);
@@ -280,6 +283,13 @@ public class AniUtil {
             // 进行过滤
             if (exclude.stream().anyMatch(s -> ReUtil.contains(s, newItem.getTitle()))) {
                 continue;
+            }
+
+            // 全局排除
+            if (globalExclude) {
+                if (globalExcludeList.stream().anyMatch(s -> ReUtil.contains(s, newItem.getTitle()))) {
+                    continue;
+                }
             }
             items.add(newItem);
         }
