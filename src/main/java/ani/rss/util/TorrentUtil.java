@@ -373,4 +373,16 @@ public class TorrentUtil {
         baseDownload.rename(torrentsInfo, reName);
     }
 
+    public static void load() {
+        Config config = ConfigUtil.CONFIG;
+        String download = config.getDownload();
+        ClassUtil.scanPackage("ani.rss.download")
+                .stream()
+                .filter(aClass -> !aClass.isInterface())
+                .filter(aClass -> aClass.getSimpleName().equals(download))
+                .map(aClass -> (BaseDownload) ReflectUtil.newInstance(aClass))
+                .findFirst()
+                .ifPresent(TorrentUtil::setBaseDownload);
+    }
+
 }

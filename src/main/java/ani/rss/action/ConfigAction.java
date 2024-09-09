@@ -6,6 +6,7 @@ import ani.rss.entity.Config;
 import ani.rss.entity.Login;
 import ani.rss.util.ConfigUtil;
 import ani.rss.util.TaskUtil;
+import ani.rss.util.TorrentUtil;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.ReUtil;
@@ -38,6 +39,7 @@ public class ConfigAction implements BaseAction {
         String password = login.getPassword();
         Integer renameSleep = config.getRenameSleep();
         Integer sleep = config.getSleep();
+        String download = config.getDownload();
         BeanUtil.copyProperties(gson.fromJson(req.getBody(), Config.class), config);
         String host = config.getHost();
         if (StrUtil.isNotBlank(host) && !ReUtil.contains("http(s*)://", host)) {
@@ -67,6 +69,10 @@ public class ConfigAction implements BaseAction {
         if (!Objects.equals(newSleep, sleep) ||
                 !Objects.equals(newRenameSleep, renameSleep)) {
             TaskUtil.restart();
+        }
+
+        if (!download.equals(config.getDownload())) {
+            TorrentUtil.load();
         }
 
 
