@@ -13,13 +13,6 @@
 
 默认 用户名: admin 密码: admin
 
-<div>
-<img src="https://docs.wushuo.top/image/qb.png" alt="qbittorrent" width="60">
-<img src="https://docs.wushuo.top/image/tr.png" alt="transmission" width="60">
-
-<p>支持 <strong>Transmission</strong> 与 <strong>qBittorrent</strong></p>
-</div>
-
 | 参数     | 作用       | 默认值           |
 |--------|----------|---------------|
 | PORT   | 端口号      | 7789          |
@@ -58,3 +51,12 @@ services:
 ```shell
 docker compose up -d
 ```
+
+
+<hr>
+<div>
+<img src="https://docs.wushuo.top/image/qb.png" alt="qbittorrent" width="60">
+<img src="https://docs.wushuo.top/image/tr.png" alt="transmission" width="60">
+
+<p>支持 <strong>Transmission</strong> 与 <strong>qBittorrent</strong></p>
+</div>
