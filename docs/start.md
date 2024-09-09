@@ -2,6 +2,10 @@
 
 ## 快速开始
 
+### 群晖 NAS
+
+可以在套件中心使用矿神套件源 `https://spk7.imnks.com` 后搜索 `ani-rss` 安装
+
 ### 安装 java
 
 推荐使用 jdk11 或 jdk17
