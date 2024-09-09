@@ -4,7 +4,10 @@ import ani.rss.entity.Config;
 import ani.rss.entity.TorrentsInfo;
 import ani.rss.util.ConfigUtil;
 import ani.rss.util.HttpReq;
+import cn.hutool.cache.Cache;
+import cn.hutool.cache.CacheUtil;
 import cn.hutool.core.codec.Base64;
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.text.StrFormatter;
 import cn.hutool.core.thread.ThreadUtil;
@@ -20,13 +23,13 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Slf4j
 public class Transmission implements BaseDownload {
     private String host = "";
     private String authorization = "";
     private String sessionId = "";
+    private static final Cache<String, String> RENAME_CACHE = CacheUtil.newFIFOCache(40960);
 
     @Override
     public Boolean login() {
@@ -92,9 +95,15 @@ public class Transmission implements BaseDownload {
                             continue;
                         }
                         JsonArray asJsonArray = torrents.get(i).getAsJsonArray();
+
+                        List<String> tags = asJsonArray.get(1).getAsJsonArray().asList().stream().map(JsonElement::getAsString).toList();
+                        if (!tags.contains(tag)) {
+                            continue;
+                        }
+
                         TorrentsInfo torrentsInfo = new TorrentsInfo();
                         torrentsInfo.setName(asJsonArray.get(0).getAsString());
-                        torrentsInfo.setTags(asJsonArray.get(1).getAsJsonArray().asList().stream().map(JsonElement::getAsString).collect(Collectors.joining(",")));
+                        torrentsInfo.setTags(CollUtil.join(tags, ","));
                         torrentsInfo.setHash(asJsonArray.get(2).getAsString());
                         torrentsInfo.setState(asJsonArray.get(4).getAsBoolean() ? TorrentsInfo.State.pausedUP : TorrentsInfo.State.downloading);
                         torrentsInfo.setId(asJsonArray.get(6).getAsString());
@@ -126,6 +135,9 @@ public class Transmission implements BaseDownload {
                 .body(body)
                 .then(HttpResponse::isOk);
 
+        Config config = ConfigUtil.CONFIG;
+        Integer renameSleep = config.getRenameSleep();
+
         List<TorrentsInfo> torrentsInfos = getTorrentsInfos();
         for (int i = 0; i < 10; i++) {
             ThreadUtil.sleep(3000);
@@ -136,8 +148,7 @@ public class Transmission implements BaseDownload {
             if (optionalTorrentsInfo.isEmpty()) {
                 continue;
             }
-            TorrentsInfo torrentsInfo = optionalTorrentsInfo.get();
-            rename(torrentsInfo, name);
+            RENAME_CACHE.put(hash, name, renameSleep * (1000 * 60) * 3);
             return true;
         }
 
@@ -163,32 +174,42 @@ public class Transmission implements BaseDownload {
 
     @Override
     public void rename(TorrentsInfo torrentsInfo, String reName) {
-        String body = """
-                {
-                    "arguments": {
-                        "ids": [
-                            {}
-                        ],
-                        "name": "{}",
-                        "path": "{}"
-                    },
-                    "method": "torrent-rename-path"
-                }
-                """;
-
         String id = torrentsInfo.getId();
         String name = torrentsInfo.getName();
+        String hash = torrentsInfo.getHash();
+
+        reName = RENAME_CACHE.get(hash);
+        if (StrUtil.isBlank(reName)) {
+            return;
+        }
+
+        String body = """
+                    {
+                        "method": "torrent-rename-path",
+                        "arguments": {
+                            "ids": [
+                                {}
+                            ],
+                            "path": "{}",
+                            "name": "{}"
+                        },
+                        "tag": ""
+                    }
+                """;
 
         body = StrFormatter.format(body, id, name, reName);
-        HttpReq.post(host + "/transmission/rpc", false)
+
+        log.info("重命名 {} ==> {}", name, reName);
+
+        Boolean ok = HttpReq.post(host + "/transmission/rpc", false)
                 .header(Header.AUTHORIZATION, authorization)
                 .header("X-Transmission-Session-Id", sessionId)
                 .body(body)
-                .then(res -> {
-                    if (res.isOk()) {
-                        log.info("修改完成");
-                    }
-                });
-
+                .thenFunction(HttpResponse::isOk);
+        if (ok) {
+            RENAME_CACHE.remove(hash);
+            return;
+        }
+        log.error("重命名失败 {} ==> {}", name, reName);
     }
 }

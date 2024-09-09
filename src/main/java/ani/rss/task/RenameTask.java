@@ -5,6 +5,7 @@ import ani.rss.entity.TorrentsInfo;
 import ani.rss.util.ConfigUtil;
 import ani.rss.util.TorrentUtil;
 import cn.hutool.core.thread.ThreadUtil;
+import cn.hutool.core.util.EnumUtil;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
@@ -25,6 +26,7 @@ public class RenameTask extends Thread {
         super.setName("rename-task-thread");
         Config config = ConfigUtil.CONFIG;
         Integer renameSleep = config.getRenameSleep();
+
         log.info("{} 当前设置间隔为 {} 分钟", getName(), renameSleep);
         while (loop.get()) {
             if (!TorrentUtil.login()) {
@@ -35,8 +37,16 @@ public class RenameTask extends Thread {
                 List<TorrentsInfo> torrentsInfos = TorrentUtil.getTorrentsInfos();
                 for (TorrentsInfo torrentsInfo : torrentsInfos) {
                     String name = torrentsInfo.getName();
+                    TorrentsInfo.State state = torrentsInfo.getState();
                     TorrentUtil.rename(torrentsInfo, name);
-                    TorrentUtil.delete(torrentsInfo);
+                    Boolean delete = config.getDelete();
+                    if (!EnumUtil.equalsIgnoreCase(state, TorrentsInfo.State.pausedUP.name())) {
+                        continue;
+                    }
+                    if (delete) {
+                        log.info("删除已完成任务 {}", name);
+                        TorrentUtil.delete(torrentsInfo);
+                    }
                 }
             } catch (Exception e) {
                 log.error(e.getMessage());
