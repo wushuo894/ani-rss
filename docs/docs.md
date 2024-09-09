@@ -10,11 +10,12 @@
 
 #### 下载工具
 
-<img src="image/qb.png" alt="qbittorrent" width="60">
-
-<img src="image/tr.png" alt="transmission" width="60">
+<div>
+<img src="https://docs.wushuo.top/image/qb.png" alt="qbittorrent" width="60">
+<img src="https://docs.wushuo.top/image/tr.png" alt="transmission" width="60">
 
 <p>支持 <strong>Transmission</strong> 与 <strong>qBittorrent</strong></p>
+</div>
 
 #### 自动删除已完成任务
 
