@@ -6,7 +6,6 @@ import ani.rss.annotation.Auth;
 import ani.rss.annotation.Path;
 import ani.rss.auth.util.AuthUtil;
 import ani.rss.entity.Result;
-import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.util.ClassUtil;
 import cn.hutool.core.util.ReflectUtil;
@@ -16,23 +15,26 @@ import cn.hutool.http.server.HttpServerResponse;
 import cn.hutool.http.server.SimpleServer;
 import cn.hutool.log.Log;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
 
 public class ServerUtil {
     public static final ThreadLocal<HttpServerRequest> REQUEST = new ThreadLocal<>();
     public static final ThreadLocal<HttpServerResponse> RESPONSE = new ThreadLocal<>();
+    public static String PORT = "7789";
 
     public static SimpleServer create(String... args) {
         Map<String, String> env = System.getenv();
-        String port = env.getOrDefault("PORT", "7789");
+        PORT = env.getOrDefault("PORT", "7789");
 
         int i = Arrays.asList(args).indexOf("--port");
 
         if (i > -1) {
-            port = args[i + 1];
+            PORT = args[i + 1];
         }
-
-        SimpleServer server = HttpUtil.createServer(Integer.parseInt(port));
+        SimpleServer server = HttpUtil.createServer(Integer.parseInt(PORT));
 
         server.addAction("/", new RootAction());
         Set<Class<?>> classes = ClassUtil.scanPackage("ani.rss.action");
