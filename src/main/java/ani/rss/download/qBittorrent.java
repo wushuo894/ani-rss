@@ -9,7 +9,6 @@ import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.text.StrFormatter;
 import cn.hutool.core.thread.ThreadUtil;
-import cn.hutool.core.util.EnumUtil;
 import cn.hutool.core.util.ReUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.HttpResponse;
@@ -127,21 +126,11 @@ public class qBittorrent implements BaseDownload {
     public void delete(TorrentsInfo torrentsInfo) {
         Config config = ConfigUtil.CONFIG;
         String host = config.getHost();
-        Boolean delete = config.getDelete();
-        if (!delete) {
-            return;
-        }
         String hash = torrentsInfo.getHash();
-        TorrentsInfo.State state = torrentsInfo.getState();
-        String name = torrentsInfo.getName();
-        // 下载完成后自动删除任务
-        if (EnumUtil.equalsIgnoreCase(state, TorrentsInfo.State.pausedUP.name())) {
-            log.info("删除已完成任务 {}", name);
-            HttpReq.post(host + "/api/v2/torrents/delete", false)
-                    .form("hashes", hash)
-                    .form("deleteFiles", false)
-                    .thenFunction(HttpResponse::isOk);
-        }
+        HttpReq.post(host + "/api/v2/torrents/delete", false)
+                .form("hashes", hash)
+                .form("deleteFiles", false)
+                .thenFunction(HttpResponse::isOk);
     }
 
     @Override
