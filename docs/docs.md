@@ -4,13 +4,21 @@
 
 ## 使用文档
 
-### qBittorrent 设置
+### 下载设置
 
 ![Xnip2024-09-08_04-57-51.jpg](image/Xnip2024-09-08_04-57-51.jpg)
 
+#### 下载工具
+
+<img src="image/qb.png" alt="qbittorrent" width="60">
+
+<img src="image/tr.png" alt="transmission" width="60">
+
+<p>支持 <strong>Transmission</strong> 与 <strong>qBittorrent</strong></p>
+
 #### 自动删除已完成任务
 
-当qb中已下载并完成做种后删除任务，不会删除本地文件
+当下载器中已下载并完成做种后删除任务，不会删除本地文件
 
 #### 拼音首字母
 
@@ -91,7 +99,7 @@ RSS更新检查的间隔，单位 分钟
     │              安达与岛村(2020) S1E5.mp4
     │              安达与岛村(2020) S01E06.mp4
 
-PS: 此选项必须启用 自动重命名。确保 qBittorrent 与 ani-rss 的 docker 映射挂载路径一致
+PS: 此选项必须启用 自动重命名。确保 下载工具 与 ani-rss 的 docker 映射挂载路径一致
 
 示例：
 
@@ -99,7 +107,7 @@ PS: 此选项必须启用 自动重命名。确保 qBittorrent 与 ani-rss 的 d
 
 ![Xnip2024-09-07_13-40-08.jpg](image/Xnip2024-09-07_13-40-08.jpg)
 
-确保 qBittorrent 与 ani-rss 的 docker 映射挂载路径一致
+确保 下载工具 与 ani-rss 的 docker 映射挂载路径一致
 
 #### 自动推断剧集偏移
 
