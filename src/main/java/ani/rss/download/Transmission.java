@@ -54,14 +54,14 @@ public class Transmission implements BaseDownload {
                 .thenFunction(HttpResponse::isOk);
         if (!isOk) {
             log.error("登录 Transmission 失败");
+            return false;
         }
-        return isOk;
+        getTorrentsInfos();
+        return true;
     }
 
     @Override
     public List<TorrentsInfo> getTorrentsInfos() {
-        ThreadUtil.sleep(1000);
-
         String body = ResourceUtil.readUtf8Str("transmission/torrent-get.json");
 
         return HttpReq.post(host + "/transmission/rpc", false)

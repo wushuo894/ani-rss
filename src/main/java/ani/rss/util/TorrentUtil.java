@@ -195,6 +195,7 @@ public class TorrentUtil {
      * @return
      */
     public static synchronized List<TorrentsInfo> getTorrentsInfos() {
+        ThreadUtil.sleep(1000);
         return baseDownload.getTorrentsInfos();
     }
 
