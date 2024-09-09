@@ -10,22 +10,27 @@ import java.util.List;
 @Accessors(chain = true)
 public class Config implements Serializable {
     /**
-     * qBittorrent 地址
+     * 下载工具
+     */
+    private String download;
+
+    /**
+     * 地址
      */
     private String host;
 
     /**
-     * qBittorrent 用户名
+     * 用户名
      */
     private String username;
 
     /**
-     * qBittorrent 密码
+     * 密码
      */
     private String password;
 
     /**
-     * qBittorrent 下载路径
+     * 下载路径
      */
     private String downloadPath;
 
