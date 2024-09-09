@@ -39,14 +39,10 @@ public class RenameTask extends Thread {
                     String name = torrentsInfo.getName();
                     TorrentsInfo.State state = torrentsInfo.getState();
                     TorrentUtil.rename(torrentsInfo, name);
-                    Boolean delete = config.getDelete();
                     if (!EnumUtil.equalsIgnoreCase(state, TorrentsInfo.State.pausedUP.name())) {
                         continue;
                     }
-                    if (delete) {
-                        log.info("删除已完成任务 {}", name);
-                        TorrentUtil.delete(torrentsInfo);
-                    }
+                    TorrentUtil.delete(torrentsInfo);
                 }
             } catch (Exception e) {
                 log.error(e.getMessage());
