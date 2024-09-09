@@ -1,6 +1,7 @@
 package ani.rss;
 
 import ani.rss.util.*;
+import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.resource.ResourceUtil;
 import cn.hutool.core.thread.ThreadUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -10,13 +11,31 @@ import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.geom.AffineTransform;
+import java.io.File;
+import java.io.IOException;
 import java.net.URL;
+import java.nio.file.Files;
 import java.util.Arrays;
 
 @Slf4j
 public class Main {
 
     public static void main(String[] args) {
+
+        // 仅在添加--gui参数时启动托盘
+        if (Arrays.asList(args).contains("--gui")) {
+            try {
+                // 检查是否有其他实例在运行
+                if (!Arrays.asList(args).contains("--multi"))
+                    checkSingleRun();
+                showSystemTray();
+                // 直接输出到控制台，不使用logger
+                System.out.println("启动系统托盘已启动");
+            } catch (Exception e) {
+                log.error("启动系统托盘失败", e);
+                System.exit(1);
+            }
+        }
 
         try {
             ConfigUtil.load();
@@ -29,17 +48,36 @@ public class Main {
             log.error(e.getMessage(), e);
             System.exit(1);
         }
+    }
 
-        // 仅在添加--gui参数时启动托盘
-        if (Arrays.asList(args).contains("--gui")) {
-            try {
-                showSystemTray();
-                // 直接输出到控制台，不使用logger
-                System.out.println("启动系统托盘已启动");
-            } catch (AWTException e) {
-                log.error("启动系统托盘失败", e);
-            }
+    /**
+     * 检查是否有其他实例在运行
+     * 如果有，抛出异常
+     */
+    private static void checkSingleRun() throws Exception {
+        File file = new File(System.getProperty("user.home"), "ani-rss.lock");
+        if (file.exists()) {
+            // 有其他实例在运行
+            // 删除锁文件，排除异常退出的情况
+            FileUtil.del(file);
+            throw new Exception("另一个ani-rss实例正在运行");
         }
+        Files.createFile(file.toPath());
+
+        // 每隔1秒检查文件是否存在，如果不存在则创建
+        // NOTE: 没有文件锁的丑陋做法
+        ThreadUtil.schedule(ThreadUtil.createScheduledExecutor(1), () -> {
+            if (!file.exists()) {
+                try {
+                    file.createNewFile();
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        }, 0, 1000, true);
+
+        // 退出时删除锁文件
+        Runtime.getRuntime().addShutdownHook(new Thread(file::delete));
     }
 
     /**
@@ -49,6 +87,8 @@ public class Main {
     private static void showSystemTray() throws AWTException {
         if (!SystemTray.isSupported()) {
             log.error("系统托盘不支持, 将以命令行方式启动");
+            // 直接输出到控制台，不使用logger
+            System.out.print("系统托盘不支持, 将以命令行方式启动");
             return;
         }
 
@@ -103,7 +143,6 @@ public class Main {
             log.info("使用系统托盘退出");
             System.exit(0);
         });
-
 
         // 给托盘图标添加鼠标监听
         trayIcon.addMouseListener(new MouseAdapter() {
