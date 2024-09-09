@@ -39,7 +39,7 @@
 
 ### 群晖NAS
 
-可以在套件中心使用矿神套件源 `https://spk7.imnks.com` 后搜索 `ani-rss` 安装
+套件中心使用矿神套件源 `https://spk7.imnks.com` , 搜索 `ani-rss` 安装
 
 ![Xnip2024-09-09_08-15-17.jpg](image/Xnip2024-09-09_08-15-17.jpg)
 
