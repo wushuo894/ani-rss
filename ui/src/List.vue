@@ -177,13 +177,9 @@ const updatePageSize = (size) => {
 }
 
 const searchList = () => {
-  if (!props) {
-    return list.value;
-  }
-
   const text = props.title.trim()
   if (text.length < 1) {
-    return list.value
+    return list.value.filter(props.filter)
   }
   return list.value
       .filter(props.filter)

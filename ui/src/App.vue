@@ -13,11 +13,12 @@
     </div>
     <div style="margin: 10px;display: flex;justify-content: flex-end;">
       <div style="min-width: 120px;width:100%;margin-right: 15px;">
-        <el-select v-model:model-value="enable">
+        <el-select v-model:model-value="enable"  @change="enableSelectChange">
           <el-option v-for="selectItem in enableSelect"
                      :key="selectItem.label"
                      :label="selectItem.label"
                      :value="selectItem.label"
+
           >
           </el-option>
         </el-select>
@@ -52,7 +53,7 @@
       </el-button>
     </div>
   </div>
-  <List ref="list" v-model:title="title" v-model:current-page="currentPage" v-model:filter="enableSelect.filter(it => it.label === enable)[0].fun"/>
+  <List ref="list" v-model:title="title" v-model:current-page="currentPage" v-model:filter="filter"/>
   <div style="height: 10px;"></div>
 </template>
 
@@ -81,6 +82,11 @@ const enableSelect = ref([
     fun: item => !item.enable
   }
 ])
+const filter = ref(() => true)
+
+const enableSelectChange = () => {
+  filter.value = enableSelect.value.filter(it => it.label === enable.value)[0].fun
+}
 
 const config = ref()
 const add = ref()
