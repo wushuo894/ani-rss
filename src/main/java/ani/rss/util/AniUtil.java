@@ -263,6 +263,7 @@ public class AniUtil {
             }
             String itemTitle = "";
             String torrent = "";
+            String length = "";
 
             NodeList itemChildNodes = item.getChildNodes();
             for (int j = 0; j < itemChildNodes.getLength(); j++) {
@@ -274,13 +275,25 @@ public class AniUtil {
                 if (itemChildNodeName.equals("enclosure")) {
                     NamedNodeMap attributes = itemChild.getAttributes();
                     torrent = attributes.getNamedItem("url").getNodeValue();
+                    length = attributes.getNamedItem("length").getNodeValue();
                 }
+            }
+
+            String size = "0MB";
+            try {
+                if (StrUtil.isNotBlank(length)) {
+                    Double l = Long.parseLong(length) / 1024.0 / 1024;
+                    size = NumberUtil.decimalFormat("0.00", l) + "MB";
+                }
+            } catch (Exception e) {
+                log.warn(e.getMessage());
             }
 
             Item newItem = new Item()
                     .setTitle(itemTitle)
                     .setReName(itemTitle)
-                    .setTorrent(torrent);
+                    .setTorrent(torrent)
+                    .setSize(size);
 
             // 进行过滤
             if (exclude.stream().anyMatch(s -> ReUtil.contains(s, newItem.getTitle()))) {
