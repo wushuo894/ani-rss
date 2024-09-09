@@ -136,13 +136,7 @@ public class qBittorrent implements BaseDownload {
     public void rename(TorrentsInfo torrentsInfo, String reName) {
         Config config = ConfigUtil.CONFIG;
         String host = config.getHost();
-        Boolean rename = config.getRename();
-        if (!rename) {
-            return;
-        }
-        if (!ReUtil.contains("S\\d+E\\d+$", reName)) {
-            return;
-        }
+
         String hash = torrentsInfo.getHash();
         List<String> nameList = HttpReq.get(host + "/api/v2/torrents/files", false)
                 .form("hash", hash)

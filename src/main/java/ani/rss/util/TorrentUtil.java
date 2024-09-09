@@ -361,7 +361,18 @@ public class TorrentUtil {
      * @param torrentsInfo
      */
     public static void delete(TorrentsInfo torrentsInfo) {
-        baseDownload.delete(torrentsInfo);
+        Config config = ConfigUtil.CONFIG;
+        Boolean delete = config.getDelete();
+
+        TorrentsInfo.State state = torrentsInfo.getState();
+        String name = torrentsInfo.getName();
+        if (!EnumUtil.equalsIgnoreCase(state, TorrentsInfo.State.pausedUP.name())) {
+            return;
+        }
+        if (delete) {
+            log.info("删除已完成任务 {}", name);
+            baseDownload.delete(torrentsInfo);
+        }
     }
 
     /**
@@ -371,7 +382,14 @@ public class TorrentUtil {
      * @param reName
      */
     public static void rename(TorrentsInfo torrentsInfo, String reName) {
-        baseDownload.rename(torrentsInfo, reName);
+        if (!ReUtil.contains("S\\d+E\\d+$", reName)) {
+            return;
+        }
+        Config config = ConfigUtil.CONFIG;
+        Boolean rename = config.getRename();
+        if (rename) {
+            baseDownload.rename(torrentsInfo, reName);
+        }
     }
 
     public static void load() {
