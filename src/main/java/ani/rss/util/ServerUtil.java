@@ -9,7 +9,6 @@ import ani.rss.entity.Result;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.util.ClassUtil;
-import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.ReflectUtil;
 import cn.hutool.http.HttpUtil;
 import cn.hutool.http.server.HttpServerRequest;
@@ -27,13 +26,10 @@ public class ServerUtil {
         Map<String, String> env = System.getenv();
         String port = env.getOrDefault("PORT", "7789");
 
-        args = ObjectUtil.defaultIfNull(args, new String[]{});
-        for (List<String> strings : CollUtil.split(Arrays.asList(args), 2)) {
-            String k = strings.get(0);
-            String v = strings.get(1);
-            if (k.equals("--port")) {
-                port = v;
-            }
+        int i = Arrays.asList(args).indexOf("--port");
+
+        if (i > -1) {
+            port = args[i + 1];
         }
 
         SimpleServer server = HttpUtil.createServer(Integer.parseInt(port));
