@@ -1,8 +1,6 @@
 {
   "arguments": {
-    "labels": [
-      "{}"
-    ],
+    "labels":["{}"],
     "download-dir": "{}",
     "metainfo": "{}",
     "paused": false
