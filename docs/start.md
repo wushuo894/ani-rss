@@ -2,9 +2,7 @@
 
 ## 快速开始
 
-### 群晖 NAS
-
-可以在套件中心使用矿神套件源 `https://spk7.imnks.com` 后搜索 `ani-rss` 安装
+[群晖NAS](#群晖NAS)
 
 ### 安装 java
 
@@ -38,6 +36,12 @@
     sudo bash ./run.sh
 
 通过 **http://[ip]:7789** 访问
+
+### 群晖NAS
+
+可以在套件中心使用矿神套件源 `https://spk7.imnks.com` 后搜索 `ani-rss` 安装
+
+![Xnip2024-09-09_08-15-17.jpg](image/Xnip2024-09-09_08-15-17.jpg)
 
 <a href="docs">使用文档</a>
 |
