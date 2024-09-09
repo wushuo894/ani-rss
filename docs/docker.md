@@ -32,18 +32,18 @@ ps: 如果需要开启 文件已下载自动跳过 功能 请确保 qBittorrent 
 ```yaml
 version: "3"
 services:
-    ani-rss:
-        container_name: ani-rss
-        volumes:
-            - /volume1/docker/ani-rss/config:/config
-        ports:
-            - 7789:7789
-        environment:
-            - PORT=7789
-            - CONFIG=/config
-            - TZ=Asia/Shanghai
-        restart: always
-        image: wushuo894/ani-rss
+  ani-rss:
+    container_name: ani-rss
+    volumes:
+      - /volume1/docker/ani-rss/config:/config
+    ports:
+      - 7789:7789
+    environment:
+      - PORT=7789
+      - CONFIG=/config
+      - TZ=Asia/Shanghai
+    restart: always
+    image: wushuo894/ani-rss
 ```
 
 启动容器

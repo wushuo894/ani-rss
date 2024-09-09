@@ -1,6 +1,5 @@
 package ani.rss.util;
 
-import ani.rss.download.BaseDownload;
 import ani.rss.entity.Config;
 import ani.rss.entity.Login;
 import ani.rss.entity.MyMailAccount;
@@ -9,8 +8,6 @@ import cn.hutool.core.bean.copier.CopyOptions;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.lang.Validator;
-import cn.hutool.core.util.ClassUtil;
-import cn.hutool.core.util.ReflectUtil;
 import cn.hutool.crypto.digest.MD5;
 import cn.hutool.json.JSONUtil;
 import com.google.gson.Gson;

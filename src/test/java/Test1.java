@@ -1,5 +1,3 @@
-import ani.rss.entity.Ani;
-import ani.rss.util.AniUtil;
 import ani.rss.util.ConfigUtil;
 
 public class Test1 {
