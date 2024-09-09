@@ -1,6 +1,6 @@
 <template>
   <el-dialog v-model="configDialogVisible" title="设置" center>
-    <div style="margin: 0 15px;" @keydown.enter="editConfig" v-loading="loading">
+    <div style="margin: 0 15px;" v-loading="loading">
       <el-tabs v-model:model-value="activeName">
         <el-tab-pane label="qBittorrent 设置" name="qb">
           <el-form label-width="auto"
@@ -22,12 +22,22 @@
             <el-form-item label="剧场版保存位置">
               <el-input v-model:model-value="config.ovaDownloadPath" placeholder="/downloads/media/ova"></el-input>
             </el-form-item>
+            <el-form-item label="自动删除">
+              <div>
+                <el-switch v-model:model-value="config.delete"></el-switch>
+                <br>
+                <el-text class="mx-1" size="small">
+                  自动删除已完成的任务, 不会删除本地文件
+                </el-text>
+              </div>
+            </el-form-item>
             <el-form-item label="拼音首字母">
               <div>
                 <el-switch v-model:model-value="config.acronym"></el-switch>
-                <div>
-                  存放为 #,0,A-Z 文件夹下
-                </div>
+                <br>
+                <el-text class="mx-1" size="small">
+                  存放到 #,0,A-Z 文件夹下
+                </el-text>
               </div>
             </el-form-item>
             <el-form-item label="同时下载数量限制">
@@ -61,16 +71,8 @@
                 <br>
                 <el-text class="mx-1" size="small">
                   文件已下载自动跳过 此选项必须启用 自动重命名。确保 qBittorrent 与本程序 docker 映射挂载路径一致
-                  <a href="https://docs.wushuo.top/docs#%E8%87%AA%E5%8A%A8%E8%B7%B3%E8%BF%87" target="_blank">详细说明</a>
-                </el-text>
-              </div>
-            </el-form-item>
-            <el-form-item label="自动删除">
-              <div>
-                <el-switch v-model:model-value="config.delete"></el-switch>
-                <br>
-                <el-text class="mx-1" size="small">
-                  自动删除已完成的任务
+                  <a href="https://docs.wushuo.top/docs#%E8%87%AA%E5%8A%A8%E8%B7%B3%E8%BF%87"
+                     target="_blank">详细说明</a>
                 </el-text>
               </div>
             </el-form-item>
@@ -90,6 +92,9 @@
               <el-switch v-model:model-value="config.debug"></el-switch>
             </el-form-item>
           </el-form>
+        </el-tab-pane>
+        <el-tab-pane label="全局排除">
+          <Exclude ref="exclude" v-model:exclude="config.exclude"/>
         </el-tab-pane>
         <el-tab-pane label="代理设置">
           <el-form label-width="auto"
@@ -233,12 +238,14 @@ import {ref} from "vue";
 import {ElMessage} from "element-plus";
 import CryptoJS from "crypto-js";
 import api from "./api.js";
+import Exclude from "./Exclude.vue";
 
 const configDialogVisible = ref(false)
 const configButtonLoading = ref(false)
 const loading = ref(true)
 
 const config = ref({
+  'exclude': [],
   'rename': true,
   'host': '',
   'username': '',
@@ -280,7 +287,11 @@ const about = ref({
 })
 
 const activeName = ref('qb')
+
+const exclude = ref()
+
 const showConfig = (ab) => {
+  exclude.value?.init()
   about.value = ab
   if (!ab.update) {
     activeName.value = 'qb'
@@ -352,6 +363,7 @@ const update = () => {
 defineExpose({
   showConfig
 })
+
 </script>
 
 
