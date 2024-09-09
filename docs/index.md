@@ -24,9 +24,8 @@ ani-rss
 
 <hr/>
 
-<img src="image/qb.png" alt="qbittorrent" width="60" height="60">
-
 <img src="image/tr.png" alt="transmission" width="60" height="60">
+<img src="image/qb.png" alt="qbittorrent" width="60" height="60">
 
 <p>支持 <strong>Transmission</strong> 与 <strong>qBittorrent</strong></p>
 
