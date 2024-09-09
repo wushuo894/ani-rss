@@ -40,31 +40,10 @@
           </div>
         </el-form-item>
         <el-form-item label="排除">
-          <div class="flex gap-2">
-            <el-tag
-                v-for="tag in ani.exclude"
-                :key="tag"
-                closable
-                :disable-transitions="false"
-                @close="handleClose(tag)"
-                style="margin-right: 4px;"
-            >
-              {{ tag }}
-            </el-tag>
-            <el-input
-                style="max-width: 80px;"
-                v-if="excludeVisible"
-                ref="InputRef"
-                v-model="excludeValue"
-                class="w-20"
-                size="small"
-                @keyup.enter="handleInputConfirm"
-                @blur="handleInputConfirm"
-            />
-            <el-button v-else class="button-new-tag" size="small" @click="showInput">
-              +
-            </el-button>
-          </div>
+          <Exclude ref="exclude" v-model:exclude="ani.exclude"/>
+        </el-form-item>
+        <el-form-item label="全局排除">
+          <el-switch v-model:model-value="ani['globalExclude']"/>
         </el-form-item>
         <el-form-item label="剧场版">
           <el-switch v-model:model-value="ani.ova"></el-switch>
@@ -87,10 +66,12 @@ import {ElMessage} from "element-plus";
 import api from "./api.js";
 import Mikan from "./Mikan.vue";
 import Items from "./Items.vue";
+import Exclude from "./Exclude.vue";
 
 const showRss = ref(true)
 const mikan = ref()
 const items = ref()
+const exclude = ref()
 
 const addDialogVisible = ref(false)
 
@@ -103,29 +84,6 @@ const ani = ref({
   'enable': true,
   'ova': false
 })
-
-const excludeVisible = ref(false)
-const excludeValue = ref('')
-
-const handleClose = (tag) => {
-  ani.value.exclude.splice(ani.value.exclude.indexOf(tag), 1)
-}
-
-const InputRef = ref()
-
-const showInput = () => {
-  excludeVisible.value = true
-  InputRef.value?.input?.focus()
-}
-
-
-const handleInputConfirm = () => {
-  if (excludeValue.value) {
-    ani.value.exclude.push(excludeValue.value)
-  }
-  excludeVisible.value = false
-  excludeValue.value = ''
-}
 
 const rssButtonLoading = ref(false)
 
@@ -167,10 +125,9 @@ const showAdd = () => {
   }
   showRss.value = true
   addDialogVisible.value = true
-  excludeVisible.value = false
-  excludeValue.value = ''
   addAniButtonLoading.value = false
   rssButtonLoading.value = false
+  exclude.value?.init()
 }
 
 defineExpose({showAdd})
