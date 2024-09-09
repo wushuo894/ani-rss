@@ -1,5 +1,5 @@
 <template>
-  <el-dialog v-model="logDialogVisible" title="日志" center>
+  <el-dialog v-model="logDialogVisible" title="日志" center @close="close">
     <div>
       <el-select v-model="selectValue" @change="()=>{getHtmlLogs()}">
         <el-option v-for="item in options"
@@ -51,19 +51,27 @@ const getHtmlLogs = async () => {
   })
 }
 
+let interval = null
+
 const showLogs = () => {
   logs.value = []
   logDialogVisible.value = true
   loading.value = true
   htmlLogs.value = ''
-  api.get('/api/logs')
-      .then(async res => {
-        logs.value = res.data
-        getHtmlLogs()
-      })
-      .finally(() => {
-        loading.value = false
-      })
+  interval = setInterval(async () => {
+    await api.get('/api/logs')
+        .then(async res => {
+          logs.value = res.data
+          getHtmlLogs()
+        })
+        .finally(() => {
+          loading.value = false
+        })
+  }, 3000)
+}
+
+const close = () => {
+  clearInterval(interval)
 }
 
 defineExpose({showLogs})
