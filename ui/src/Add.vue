@@ -1,5 +1,6 @@
 <template>
-  <Mikan ref="mikan" @add="args => ani.url = args"></Mikan>
+  <Items ref="items"/>
+  <Mikan ref="mikan" @add="args => ani.url = args"/>
   <el-dialog v-model="addDialogVisible" title="添加订阅" center>
     <div v-if="showRss" @keydown.enter="getRss">
       <el-form label-width="auto"
@@ -72,6 +73,7 @@
           <el-switch v-model:model-value="ani.enable"></el-switch>
         </el-form-item>
         <div style="display: flex;justify-content: end;width: 100%;margin-top: 10px;">
+          <el-button @click="items.show(ani)" bg text>预览</el-button>
           <el-button :loading="addAniButtonLoading" @click="addAni" bg text>确定</el-button>
         </div>
       </el-form>
@@ -84,9 +86,11 @@ import {ref} from "vue";
 import {ElMessage} from "element-plus";
 import api from "./api.js";
 import Mikan from "./Mikan.vue";
+import Items from "./Items.vue";
 
 const showRss = ref(true)
 const mikan = ref()
+const items = ref()
 
 const addDialogVisible = ref(false)
 
