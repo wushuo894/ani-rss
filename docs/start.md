@@ -27,7 +27,7 @@
 
 下载最新的 **ani-rss-jar-with-dependencies.jar** [链接](https://github.com/wushuo894/ani-rss/releases/latest)
 
-    java -jar -Xmx2g ./ani-rss-jar-with-dependencies.jar --port 7789
+    java -jar -Xmx2g ./ani-rss-jar-with-dependencies.jar --port 7789 --gui
 
 #### 脚本运行 支持自动重启
 
