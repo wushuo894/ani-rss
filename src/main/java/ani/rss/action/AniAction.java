@@ -9,6 +9,7 @@ import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.comparator.PinyinComparator;
 import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.extra.pinyin.PinyinUtil;
 import cn.hutool.http.server.HttpServerRequest;
 import cn.hutool.http.server.HttpServerResponse;
@@ -50,9 +51,11 @@ public class AniAction implements BaseAction {
 
                 AniUtil.ANI_LIST.add(ani);
                 AniUtil.sync();
-                if (TorrentUtil.login()) {
-                    TorrentUtil.downloadAni(ani);
-                }
+                ThreadUtil.execute(() -> {
+                    if (TorrentUtil.login()) {
+                        TorrentUtil.downloadAni(ani);
+                    }
+                });
                 resultSuccessMsg("添加订阅成功");
                 log.info("添加订阅 {} {}", ani.getTitle(), ani.getUrl());
                 return;
