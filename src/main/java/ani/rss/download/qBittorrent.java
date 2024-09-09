@@ -58,7 +58,6 @@ public class qBittorrent implements BaseDownload {
     public List<TorrentsInfo> getTorrentsInfos() {
         Config config = ConfigUtil.CONFIG;
         String host = config.getHost();
-        ThreadUtil.sleep(1000);
         return HttpReq.get(host + "/api/v2/torrents/info", false)
                 .thenFunction(res -> {
                     List<TorrentsInfo> torrentsInfoList = new ArrayList<>();
