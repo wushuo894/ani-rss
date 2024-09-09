@@ -384,6 +384,7 @@ public class TorrentUtil {
                 .map(aClass -> (BaseDownload) ReflectUtil.newInstance(aClass))
                 .findFirst()
                 .ifPresent(TorrentUtil::setBaseDownload);
+        log.info("下载工具 {}", download);
     }
 
 }
