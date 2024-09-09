@@ -54,6 +54,16 @@ RSS更新检查的间隔，单位 分钟
     2024-09-01 13:29:46.365 [rename-task-thread] INFO  ani.rss.util.TorrentUtil - 重命名 [FLsnow][Wonderful_Precure！][31][1080P]/[FLsnow][Wonderful_Precure！][31][1080P].chs.ass ==> Wonderful 光之美少女！ S01E31.chs.ass
     2024-09-01 13:38:49.392 [rename-task-thread] INFO  ani.rss.util.TorrentUtil - 删除已完成任务 Wonderful 光之美少女！ S01E31
 
+##### 重命名影响做种吗？
+
+蜜柑是BT站, 重命名不会影响做种
+
+如图上传流量所示
+
+![Xnip2024-09-09_15-25-56.jpg](image%2FXnip2024-09-09_15-25-56.jpg)
+
+![Xnip2024-09-09_15-25-27.jpg](image%2FXnip2024-09-09_15-25-27.jpg)
+
 #### 重命名间隔(分钟)
 
 单位 分钟
