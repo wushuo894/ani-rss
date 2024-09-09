@@ -125,6 +125,14 @@ PS: 此选项必须启用 自动重命名。确保 qBittorrent 与 ani-rss 的 d
     "episode": 3
     }
 
+### 全局排除
+
+支持 <a href="https://www.runoob.com/regexp/regexp-syntax.html" target="_blank">正则表达式</a>
+
+推荐排除规则
+
+https://www.bilibili.com/read/cv36327276
+
 ### 代理设置
 
 主要用与访问 mikan
