@@ -37,7 +37,7 @@ public class TorrentUtil {
      *
      * @return
      */
-    public static Boolean login() {
+    public static synchronized Boolean login() {
         return baseDownload.login();
     }
 
@@ -177,7 +177,7 @@ public class TorrentUtil {
      * @param savePath
      * @param torrentFile
      */
-    public static void download(String name, String savePath, File torrentFile) {
+    public static synchronized void download(String name, String savePath, File torrentFile) {
         savePath = savePath.replace("\\", "/");
         MailUtils.send(StrFormatter.format("{} 已更新", name));
         if (baseDownload.download(name, savePath, torrentFile)) {
@@ -360,7 +360,7 @@ public class TorrentUtil {
      *
      * @param torrentsInfo
      */
-    public static void delete(TorrentsInfo torrentsInfo) {
+    public static synchronized void delete(TorrentsInfo torrentsInfo) {
         Config config = ConfigUtil.CONFIG;
         Boolean delete = config.getDelete();
 
@@ -381,7 +381,7 @@ public class TorrentUtil {
      * @param torrentsInfo
      * @param reName
      */
-    public static void rename(TorrentsInfo torrentsInfo, String reName) {
+    public static synchronized void rename(TorrentsInfo torrentsInfo, String reName) {
         if (!ReUtil.contains("S\\d+E\\d+$", reName)) {
             return;
         }
