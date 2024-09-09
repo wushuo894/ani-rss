@@ -12,6 +12,7 @@ import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.resource.ResourceUtil;
 import cn.hutool.core.text.StrFormatter;
 import cn.hutool.core.thread.ThreadUtil;
+import cn.hutool.core.util.ReUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.Header;
 import cn.hutool.http.HttpResponse;
@@ -151,6 +152,12 @@ public class Transmission implements BaseDownload {
         String id = torrentsInfo.getId();
         String name = torrentsInfo.getName();
         String hash = torrentsInfo.getHash();
+
+        String mainName = FileUtil.mainName(name);
+
+        if (ReUtil.contains("S\\d+E\\d+$", mainName)) {
+            return;
+        }
 
         reName = RENAME_CACHE.get(hash);
         if (StrUtil.isBlank(reName)) {
