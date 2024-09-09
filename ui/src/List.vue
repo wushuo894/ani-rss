@@ -1,8 +1,9 @@
 <template>
   <Edit ref="edit" @load="getList"></Edit>
   <div style="margin: 0 10px;min-height: 500px" v-loading="loading">
-    <div class="grid-container">
-      <div v-for="(item,index) in searchList().slice((props.currentPage-1)*pageSize,(props.currentPage-1)*pageSize+pageSize)">
+    <el-empty v-if="!getPage().length" style="min-height: 500px"></el-empty>
+    <div class="grid-container" v-show="getPage().length">
+      <div v-for="(item,index) in getPage()">
         <el-card shadow="never">
           <div style="display: flex;width: 100%;align-items: center;">
             <div style="height: 100%;">
@@ -160,7 +161,7 @@
 <script setup>
 import {onMounted, ref} from "vue";
 import {ElMessage} from 'element-plus'
-import {Back, Edit as EditIcon, Plus} from "@element-plus/icons-vue"
+import {Back, Edit as EditIcon} from "@element-plus/icons-vue"
 import Edit from "./Edit.vue";
 import api from "./api.js";
 
@@ -182,7 +183,7 @@ const searchList = () => {
 
   const text = props.title.trim()
   if (text.length < 1) {
-    return list.value.filter(props.filter)
+    return list.value
   }
   return list.value
       .filter(props.filter)
@@ -199,6 +200,15 @@ const searchList = () => {
         }
         return pinyin.split(' ').map(s => s.substring(0, 1)).join('').indexOf(text) > -1;
       });
+}
+
+const getPage = () => {
+  if (!props) {
+    return searchList();
+  }
+  let start = (props?.currentPage - 1) * pageSize.value
+  let end = (props?.currentPage - 1) * pageSize.value + pageSize.value
+  return searchList().slice(start, end);
 }
 
 const delAni = (ani) => {
@@ -269,7 +279,7 @@ defineExpose({
   getList
 })
 
-let props = defineProps(['title','currentPage','filter'])
+let props = defineProps(['title', 'currentPage', 'filter'])
 
 </script>
 
