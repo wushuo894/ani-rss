@@ -1,5 +1,6 @@
 package ani.rss.util;
 
+import ani.rss.download.BaseDownload;
 import ani.rss.entity.Config;
 import ani.rss.entity.Login;
 import ani.rss.entity.MyMailAccount;
@@ -8,6 +9,8 @@ import cn.hutool.core.bean.copier.CopyOptions;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.lang.Validator;
+import cn.hutool.core.util.ClassUtil;
+import cn.hutool.core.util.ReflectUtil;
 import cn.hutool.crypto.digest.MD5;
 import cn.hutool.json.JSONUtil;
 import com.google.gson.Gson;
@@ -38,6 +41,7 @@ public class ConfigUtil {
                 .setAutoDisabled(false)
                 .setDownloadPath("")
                 .setHost("")
+                .setDownload("qBittorrent")
                 .setUsername("")
                 .setPassword("")
                 .setDebug(false)
@@ -99,6 +103,14 @@ public class ConfigUtil {
                 .setIgnoreNullValue(true));
         LogUtil.loadLogback();
         log.debug("加载配置文件 {}", configFile);
+
+        String download = CONFIG.getDownload();
+        ClassUtil.scanPackage("ani.rss.download")
+                .stream()
+                .filter(aClass -> aClass.getName().equals(download))
+                .map(ReflectUtil::newInstance)
+                .findAny()
+                .ifPresent(newDownload -> TorrentUtil.setBaseDownload((BaseDownload) newDownload));
     }
 
     /**
