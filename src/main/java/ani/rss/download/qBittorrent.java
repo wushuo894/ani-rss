@@ -36,7 +36,6 @@ public class qBittorrent implements BaseDownload {
             return false;
         }
 
-        ThreadUtil.sleep(1000);
         try {
             return HttpReq.post(host + "/api/v2/auth/login", false)
                     .form("username", username)

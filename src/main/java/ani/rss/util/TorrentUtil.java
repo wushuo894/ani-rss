@@ -7,6 +7,7 @@ import ani.rss.entity.Item;
 import ani.rss.entity.TorrentsInfo;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.text.StrFormatter;
+import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.core.util.*;
 import cn.hutool.extra.pinyin.PinyinUtil;
 import cn.hutool.json.JSONUtil;
@@ -38,6 +39,7 @@ public class TorrentUtil {
      * @return
      */
     public static synchronized Boolean login() {
+        ThreadUtil.sleep(1000);
         return baseDownload.login();
     }
 
@@ -371,6 +373,7 @@ public class TorrentUtil {
         }
         if (delete) {
             log.info("删除已完成任务 {}", name);
+            ThreadUtil.sleep(1000);
             baseDownload.delete(torrentsInfo);
         }
     }
@@ -388,6 +391,7 @@ public class TorrentUtil {
         Config config = ConfigUtil.CONFIG;
         Boolean rename = config.getRename();
         if (rename) {
+            ThreadUtil.sleep(1000);
             baseDownload.rename(torrentsInfo, reName);
         }
     }
