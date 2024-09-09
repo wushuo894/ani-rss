@@ -40,13 +40,6 @@
 
 默认 用户名: admin 密码: admin
 
-<div>
-<img src="https://docs.wushuo.top/image/qb.png" alt="qbittorrent" width="60">
-<img src="https://docs.wushuo.top/image/tr.png" alt="transmission" width="60">
-
-<p>支持 <strong>Transmission</strong> 与 <strong>qBittorrent</strong></p>
-</div>
-
 ### 蜜柑
 
 已被墙
@@ -57,3 +50,10 @@
 
 [https://mikanime.tv/](https://mikanime.tv/)
 
+<hr>
+<div>
+<img src="https://docs.wushuo.top/image/qb.png" alt="qbittorrent" width="60">
+<img src="https://docs.wushuo.top/image/tr.png" alt="transmission" width="60">
+
+<p>支持 <strong>Transmission</strong> 与 <strong>qBittorrent</strong></p>
+</div>
