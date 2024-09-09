@@ -39,6 +39,8 @@
 
 ### 群晖NAS
 
+**请提前安装 Java 17 OpenJdk 套件**
+
 离线安装 [ani-rss_v1.0.89_noarch-DSM7.spk](https://github.com/wushuo894/ani-rss/releases/download/v1.0.89/ani-rss_v1.0.89_noarch-DSM7.spk)
 
 或者
