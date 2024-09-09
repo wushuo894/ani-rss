@@ -8,6 +8,8 @@ import java.io.Serializable;
 @Data
 @Accessors(chain = true)
 public class TorrentsInfo implements Serializable {
+    private String id;
+
     /**
      * hash
      */
@@ -27,11 +29,6 @@ public class TorrentsInfo implements Serializable {
      * 标签
      */
     private String tags;
-
-    /**
-     * 进度
-     */
-    private Long progress;
 
     /**
      * 大小

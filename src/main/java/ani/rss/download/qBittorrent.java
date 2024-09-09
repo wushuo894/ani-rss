@@ -21,6 +21,7 @@ import lombok.extern.slf4j.Slf4j;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 public class qBittorrent implements BaseDownload {
@@ -111,10 +112,12 @@ public class qBittorrent implements BaseDownload {
         for (int i = 0; i < 10; i++) {
             ThreadUtil.sleep(3000);
             List<TorrentsInfo> torrentsInfos = getTorrentsInfos();
-            for (TorrentsInfo torrentsInfo : torrentsInfos) {
-                if (hash.equals(torrentsInfo.getHash())) {
-                    return true;
-                }
+            Optional<TorrentsInfo> optionalTorrentsInfo = torrentsInfos
+                    .stream()
+                    .filter(torrentsInfo -> torrentsInfo.getHash().equals(hash))
+                    .findFirst();
+            if (optionalTorrentsInfo.isPresent()) {
+                return true;
             }
         }
         return false;
