@@ -25,10 +25,11 @@ public class MenuUtil {
         if (Arrays.asList(args).contains("--gui")) {
             try {
                 // 检查是否有其他实例在运行
-                if (!Arrays.asList(args).contains("--multi"))
+                if (!Arrays.asList(args).contains("--multi")) {
                     checkSingleRun();
+                }
                 showSystemTray();
-                // 直接输出到控制台，不使用logger
+                // 直接输出到控制台，不使用 logger
                 System.out.println("启动系统托盘已启动");
             } catch (Exception e) {
                 log.error("启动系统托盘失败", e);
@@ -140,7 +141,7 @@ public class MenuUtil {
                 if (e.getButton() == 1) {
                     // 直接打开webui
                     try {
-                        Desktop.getDesktop().browse(new URL("http://127.0.0.1:7789").toURI());
+                        Desktop.getDesktop().browse(new URL("http://127.0.0.1:" + ServerUtil.PORT).toURI());
                     } catch (Exception ex) {
                         log.error("打开webui失败", ex);
                     }
