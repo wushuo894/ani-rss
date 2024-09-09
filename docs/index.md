@@ -22,7 +22,7 @@ ani-rss
 
 <img src="image/Xnip2024-09-08_04-57-29.jpg" alt="ani-rss 截图">
 
-<hr/>
+<hr style="height: 1px;">
 
 <img src="image/tr.png" alt="transmission" width="60" height="60">
 <img src="image/qb.png" alt="qbittorrent" width="60" height="60">

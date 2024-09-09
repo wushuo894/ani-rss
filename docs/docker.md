@@ -53,7 +53,7 @@ docker compose up -d
 ```
 
 
-<hr>
+<hr style="height: 1px;">
 <div>
 <img src="https://docs.wushuo.top/image/qb.png" alt="qbittorrent" width="60">
 <img src="https://docs.wushuo.top/image/tr.png" alt="transmission" width="60">
