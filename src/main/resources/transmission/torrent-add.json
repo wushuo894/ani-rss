@@ -1,0 +1,9 @@
+{
+  "arguments": {
+    "labels":["{}"],
+    "download-dir": "{}",
+    "metainfo": "{}",
+    "paused": false
+  },
+  "method": "torrent-add"
+}

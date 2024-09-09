@@ -1,0 +1,15 @@
+{
+  "arguments": {
+    "fields": [
+      "name",
+      "labels",
+      "hashString",
+      "files",
+      "isFinished",
+      "isStalled",
+      "id"
+    ],
+    "format": "table"
+  },
+  "method": "torrent-get"
+}
