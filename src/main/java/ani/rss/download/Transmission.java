@@ -9,6 +9,7 @@ import cn.hutool.cache.CacheUtil;
 import cn.hutool.core.codec.Base64;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.io.resource.ResourceUtil;
 import cn.hutool.core.text.StrFormatter;
 import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.core.util.StrUtil;
@@ -23,6 +24,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Slf4j
 public class Transmission implements BaseDownload {
@@ -58,26 +60,13 @@ public class Transmission implements BaseDownload {
     @Override
     public List<TorrentsInfo> getTorrentsInfos() {
         ThreadUtil.sleep(1000);
+
+        String body = ResourceUtil.readUtf8Str("transmission/torrent-get.json");
+
         return HttpReq.post(host + "/transmission/rpc", false)
                 .header(Header.AUTHORIZATION, authorization)
                 .header("X-Transmission-Session-Id", sessionId)
-                .body("""
-                        {
-                            "arguments": {
-                                "fields": [
-                                    "name",
-                                    "labels",
-                                    "hashString",
-                                    "files",
-                                    "isFinished",
-                                    "isStalled",
-                                    "id"
-                                ],
-                                "format": "table"
-                            },
-                            "method": "torrent-get"
-                        }
-                        """)
+                .body(body)
                 .thenFunction(res -> {
                     String id = res.header("X-Transmission-Session-Id");
                     if (StrUtil.isNotBlank(id)) {
@@ -96,7 +85,8 @@ public class Transmission implements BaseDownload {
                         }
                         JsonArray asJsonArray = torrents.get(i).getAsJsonArray();
 
-                        List<String> tags = asJsonArray.get(1).getAsJsonArray().asList().stream().map(JsonElement::getAsString).toList();
+                        List<String> tags = asJsonArray.get(1).getAsJsonArray()
+                                .asList().stream().map(JsonElement::getAsString).collect(Collectors.toList());
                         if (!tags.contains(tag)) {
                             continue;
                         }
@@ -115,17 +105,7 @@ public class Transmission implements BaseDownload {
 
     @Override
     public Boolean download(String name, String savePath, File torrentFile) {
-        String body = """
-                {
-                    "arguments": {
-                        "labels":["{}"],
-                        "download-dir": "{}",
-                        "metainfo": "{}",
-                        "paused": false
-                    },
-                    "method": "torrent-add"
-                }
-                """;
+        String body = ResourceUtil.readUtf8Str("transmission/torrent-add.json");
         body = StrFormatter.format(body, tag, savePath, Base64.encode(torrentFile));
         String hash = FileUtil.mainName(torrentFile);
 
@@ -157,9 +137,7 @@ public class Transmission implements BaseDownload {
 
     @Override
     public void delete(TorrentsInfo torrentsInfo) {
-        String body = """
-                {"method":"torrent-remove","arguments":{"ids":[{}],"delete-local-data":false},"tag":""}
-                """;
+        String body = ResourceUtil.readUtf8Str("transmission/torrent-remove.json");
         body = StrFormatter.format(body, torrentsInfo.getId());
         HttpReq.post(host + "/transmission/rpc", false)
                 .header(Header.AUTHORIZATION, authorization)
@@ -184,20 +162,7 @@ public class Transmission implements BaseDownload {
             reName = reName + "." + extName;
         }
 
-        String body = """
-                    {
-                        "method": "torrent-rename-path",
-                        "arguments": {
-                            "ids": [
-                                {}
-                            ],
-                            "path": "{}",
-                            "name": "{}"
-                        },
-                        "tag": ""
-                    }
-                """;
-
+        String body = ResourceUtil.readUtf8Str("transmission/torrent-rename-path.json");
         body = StrFormatter.format(body, id, name, reName);
 
         log.info("重命名 {} ==> {}", name, reName);
