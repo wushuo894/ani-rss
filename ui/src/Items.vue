@@ -3,9 +3,9 @@
     <div style="width: 100%;" v-loading="loading">
       <el-scrollbar>
         <el-table :data="items" height="500">
-          <el-table-column prop="title" label="标题" width="400"/>
-          <el-table-column prop="reName" label="重命名" width="300"/>
-          <el-table-column prop="size" label="大小"/>
+          <el-table-column prop="title" label="标题" min-width="400"/>
+          <el-table-column prop="reName" label="重命名" min-width="280"/>
+          <el-table-column prop="size" label="大小" width="120"/>
           <el-table-column label="种子" width="90">
             <template #default="it">
               <el-button bg text @click="copy(items[it.$index])">复制</el-button>
