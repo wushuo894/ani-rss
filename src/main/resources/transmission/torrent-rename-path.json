@@ -1,0 +1,11 @@
+{
+  "method": "torrent-rename-path",
+  "arguments": {
+    "ids": [
+      {}
+    ],
+    "path": "{}",
+    "name": "{}"
+  },
+  "tag": ""
+}
