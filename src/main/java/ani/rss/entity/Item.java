@@ -27,4 +27,9 @@ public class Item implements Serializable {
      * 集数
      */
     private Integer episode;
+
+    /**
+     * 大小
+     */
+    private String size;
 }

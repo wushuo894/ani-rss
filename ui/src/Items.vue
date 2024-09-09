@@ -5,7 +5,12 @@
         <el-table :data="items" height="500">
           <el-table-column prop="title" label="标题" width="400"/>
           <el-table-column prop="reName" label="重命名" width="300"/>
-          <el-table-column prop="episode" label="集数"/>
+          <el-table-column prop="size" label="大小"/>
+          <el-table-column label="种子" width="90">
+            <template #default="it">
+              <el-button bg text @click="copy(items[it.$index])">复制</el-button>
+            </template>
+          </el-table-column>
         </el-table>
       </el-scrollbar>
     </div>
@@ -18,10 +23,16 @@
 <script setup>
 import {ref} from "vue";
 import api from "./api.js";
+import {ElMessage} from "element-plus";
 
 const dialogVisible = ref(false)
 const items = ref([])
 const loading = ref(true)
+
+let copy = (it) => {
+  navigator.clipboard.writeText(it['torrent'])
+  ElMessage.success('已复制')
+}
 
 let show = (ani) => {
   items.value = []

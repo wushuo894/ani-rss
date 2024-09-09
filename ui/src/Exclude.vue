@@ -7,12 +7,12 @@
           closable
           :disable-transitions="false"
           @close="handleClose(tag)"
-          style="margin-right: 4px;"
+          style="margin-right: 4px;margin-bottom: 4px;"
       >
         {{ tag }}
       </el-tag>
       <el-input
-          style="max-width: 80px;"
+          style="max-width: 120px;margin-right: 4px;margin-bottom: 4px;"
           v-if="excludeVisible"
           ref="InputRef"
           v-model="excludeValue"
@@ -21,7 +21,7 @@
           @keyup.enter="handleInputConfirm"
           @blur="handleInputConfirm"
       />
-      <el-button v-else class="button-new-tag" size="small" @click="showInput">
+      <el-button v-else class="button-new-tag" size="small" @click="showInput" bg text style="margin-right: 4px;margin-bottom: 4px;">
         +
       </el-button>
     </div>
