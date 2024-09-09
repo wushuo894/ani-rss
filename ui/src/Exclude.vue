@@ -21,7 +21,8 @@
           @keyup.enter="handleInputConfirm"
           @blur="handleInputConfirm"
       />
-      <el-button v-else class="button-new-tag" size="small" @click="showInput" bg text style="margin-right: 4px;margin-bottom: 4px;">
+      <el-button v-else class="button-new-tag" size="small" @click="showInput" bg text
+                 style="margin-right: 4px;margin-bottom: 4px;">
         +
       </el-button>
     </div>
