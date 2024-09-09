@@ -121,7 +121,7 @@ public class MenuUtil {
         webui.addActionListener(e -> {
             if (Desktop.isDesktopSupported()) {
                 try {
-                    Desktop.getDesktop().browse(new URL("http://127.0.0.1:7789").toURI());
+                    Desktop.getDesktop().browse(new URL("http://127.0.0.1:" + ServerUtil.PORT).toURI());
                 } catch (Exception ex) {
                     log.error("打开webui失败", ex);
                 }
