@@ -14,6 +14,10 @@ public interface BaseDownload {
 
     String tag = "ani-rss";
 
+    List<String> videoFormat = List.of("mp4", "mkv", "avi", "wmv");
+
+    List<String> subtitleFormat = List.of("ass", "ssa", "sub", "srt", "lyc");
+
     /**
      * 登录
      *

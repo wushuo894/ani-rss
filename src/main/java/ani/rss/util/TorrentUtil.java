@@ -179,6 +179,7 @@ public class TorrentUtil {
      */
     public static void download(String name, String savePath, File torrentFile) {
         savePath = savePath.replace("\\", "/");
+        MailUtils.send(StrFormatter.format("{} 已更新", name));
         if (baseDownload.download(name, savePath, torrentFile)) {
             return;
         }

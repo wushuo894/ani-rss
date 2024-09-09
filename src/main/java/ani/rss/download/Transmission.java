@@ -165,11 +165,7 @@ public class Transmission implements BaseDownload {
                 .header(Header.AUTHORIZATION, authorization)
                 .header("X-Transmission-Session-Id", sessionId)
                 .body(body)
-                .then(res -> {
-                    if (res.isOk()) {
-                        log.info("删除完成");
-                    }
-                });
+                .then(HttpResponse::isOk);
     }
 
     @Override
@@ -181,6 +177,11 @@ public class Transmission implements BaseDownload {
         reName = RENAME_CACHE.get(hash);
         if (StrUtil.isBlank(reName)) {
             return;
+        }
+
+        String extName = FileUtil.extName(name);
+        if (StrUtil.isNotBlank(extName)) {
+            reName = reName + "." + extName;
         }
 
         String body = """

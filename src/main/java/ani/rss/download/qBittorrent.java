@@ -105,7 +105,6 @@ public class qBittorrent implements BaseDownload {
                 .form("tags", "ani-rss")
                 .thenFunction(HttpResponse::isOk);
 
-        MailUtils.send(StrFormatter.format("{} 已更新", name));
         String hash = FileUtil.mainName(torrentFile);
         // 等待任务添加完成 最多等待10次检测 共30秒
         for (int i = 0; i < 10; i++) {
@@ -167,9 +166,9 @@ public class qBittorrent implements BaseDownload {
                 continue;
             }
             String newPath = reName;
-            if (List.of("mp4", "mkv", "avi", "wmv").contains(ext.toLowerCase())) {
+            if (videoFormat.contains(ext.toLowerCase())) {
                 newPath = newPath + "." + ext;
-            } else if (List.of("ass", "ssa", "sub", "srt", "lyc").contains(ext.toLowerCase())) {
+            } else if (subtitleFormat.contains(ext.toLowerCase())) {
                 String s = FileUtil.extName(FileUtil.mainName(name));
                 if (StrUtil.isNotBlank(s)) {
                     newPath = newPath + "." + s;
