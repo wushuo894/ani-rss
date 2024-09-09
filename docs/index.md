@@ -22,4 +22,15 @@ ani-rss
 
 <img src="image/Xnip2024-09-08_04-57-29.jpg" alt="ani-rss 截图">
 
+<hr/>
+
+<img src="image/qb.png" alt="qbittorrent" width="60" height="60">
+
+<img src="image/tr.png" alt="transmission" width="60" height="60">
+
+<p>支持 <strong>Transmission</strong> 与 <strong>qBittorrent</strong></p>
+
 </div>
+
+
+
