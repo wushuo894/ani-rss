@@ -42,8 +42,13 @@ public class ConfigAction implements BaseAction {
         String download = config.getDownload();
         BeanUtil.copyProperties(gson.fromJson(req.getBody(), Config.class), config);
         String host = config.getHost();
-        if (StrUtil.isNotBlank(host) && !ReUtil.contains("http(s*)://", host)) {
-            host = "http://" + host;
+        if (StrUtil.isNotBlank(host)) {
+            if (!ReUtil.contains("http(s*)://", host)) {
+                host = "http://" + host;
+            }
+            if (host.endsWith("/")) {
+                host = host.substring(0, host.length() - 1);
+            }
         }
         config.setHost(host);
 
