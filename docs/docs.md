@@ -24,12 +24,14 @@
 | Transmission | √    | √      | ×          | √        |
 | Aria2        | √    | ×      | ×          | √        |
 
+强烈推荐使用 **qBittorrent**
+
 不支持下载时重命名会导致:
 
 `在视频文件未重命名时已经有 emby 生成视频缩略图 .nfo 元数据,
-当重命名后还会再次生成一次。且重命名后的视频再次被刮削到时 emby 不会通过 webhooks 通知。`
+当重命名后还会再次生成一次。且重命名后的视频再次被刮削到时 emby 触发 Webhook 通知。`
 
-`个人喜欢使用Webhook通知让` [EmbyPinyin](https://github.com/wushuo894/EmbyPinyin) `(我的另一个项目) 处理中文拼音首字母索引`
+`个人喜欢使用 Webhook 通知让` [EmbyPinyin](https://github.com/wushuo894/EmbyPinyin) `(我的另一个项目) 处理中文拼音首字母索引`
 
 #### 自动删除已完成任务
 
