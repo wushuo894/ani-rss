@@ -47,6 +47,8 @@ if (authorization.value) {
 
 let login = () => {
   loading.value = true
+  user.value.password = user.value.password.trim()
+  user.value.username = user.value.username.trim()
   let my_user = JSON.parse(JSON.stringify(user.value))
   my_user.password = my_user.password ? CryptoJS.MD5(my_user.password).toString() : '';
   api.post('/api/login', my_user)
