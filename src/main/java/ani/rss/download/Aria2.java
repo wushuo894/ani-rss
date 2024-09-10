@@ -158,16 +158,17 @@ public class Aria2 implements BaseDownload {
         }
         List<String> files = torrentsInfo.getFiles();
         for (String file : files) {
-            String name = new File(file).getName();
-            File newPath = new File(downloadDir + "/" + name);
-            String fileReName = getFileReName(name, reName);
-            if (!name.equals(fileReName)) {
-                newPath = new File(downloadDir + "/" + fileReName);
-            }
-            if (FileUtil.equals(new File(file), newPath)) {
+            File src = new File(file);
+            if (!src.exists()) {
                 continue;
             }
-            FileUtil.move(new File(file), newPath, false);
+            String name = src.getName();
+            String fileReName = getFileReName(name, reName);
+            File newPath = new File(downloadDir + "/" + fileReName);
+            if (FileUtil.equals(src, newPath)) {
+                continue;
+            }
+            FileUtil.move(src, newPath, false);
             log.info("重命名 {} ==> {}", name, newPath);
         }
     }
