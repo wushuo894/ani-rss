@@ -214,8 +214,12 @@ public class TorrentUtil {
                 .collect(Collectors.toList());
 
         if (files.stream()
-                .filter(File::isFile)
-                .filter(file -> List.of("mp4", "mkv", "avi").contains(FileUtil.extName(file)))
+                .filter(file -> {
+                    if (file.isFile()) {
+                        return List.of("mp4", "mkv", "avi").contains(FileUtil.extName(file));
+                    }
+                    return false;
+                })
                 .anyMatch(file -> {
                     if (ova) {
                         return true;
