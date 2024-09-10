@@ -26,7 +26,7 @@
                 <el-input show-password v-model:model-value="config.password" placeholder="password"></el-input>
               </el-form-item>
             </template>
-            <el-form-item label="Aria2 RPC 密钥" v-else>
+            <el-form-item label="RPC 密钥" v-else>
               <el-input show-password v-model:model-value="config.password" placeholder=""></el-input>
             </el-form-item>
             <el-form-item>
