@@ -181,7 +181,7 @@ public class TorrentUtil {
 
         int i = count + 1;
         String hash = FileUtil.mainName(torrent);
-        return HttpReq.get(torrent)
+        return HttpReq.get(torrent, true)
                 .thenFunction(res -> {
                     if (!res.isOk()) {
                         return saveTorrent(ani, item, i);
