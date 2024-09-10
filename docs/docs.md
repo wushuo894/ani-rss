@@ -100,9 +100,38 @@ RSS更新检查的间隔，单位 分钟
     │              安达与岛村(2020) S1E5.mp4
     │              安达与岛村(2020) S01E06.mp4
 
-PS: 此选项必须启用 自动重命名。确保 下载工具 与 ani-rss 的 docker 映射挂载路径一致
+PS: 此选项 **必须启用自动重命名**。确保 **下载工具** 与 **ani-rss** 的 docker 映射挂载路径 **保持一致**
 
-示例：
+如:
+
+ani-rss:
+
+    docker run -d \
+    --name ani-rss \
+    -v /volume1/docker/ani-rss/config:/config \
+    -v /volume2/Media/:/Media \
+    -p 7789:7789 \
+    -e PORT="7789" \
+    -e CONFIG="/config" \
+    -e TZ=Asia/Shanghai \
+    --restart always \
+    wushuo894/ani-rss
+
+qbittorrent:
+
+    docker run -d --name qbittorrent \
+    -v /volume1/docker/qbittorrent/config:/config \
+    -v /volume2/downloads:/downloads \
+    -v /volume2/Media/:/Media \
+    -p 8080:8080 \
+    -p 6881:6881 \
+    linuxserver/qbittorrent
+
+其中 ani-rss 设置中的 **保存位置** 位于 /Media 下
+
+两者 `/Media` 挂载路径一致 `-v /volume2/Media/:/Media`
+
+截图示例：
 
 ![Xnip2024-09-07_13-40-34.jpg](image/Xnip2024-09-07_13-40-34.jpg)
 

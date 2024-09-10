@@ -23,7 +23,16 @@ ps: 如果需要开启 文件已下载自动跳过 功能 请确保 qBittorrent 
 
 ### Docker 部署
 
-    docker run -d --name ani-rss -v /volume1/docker/ani-rss/config:/config -p 7789:7789 -e PORT="7789" -e CONFIG="/config" -e TZ=Asia/Shanghai --restart always wushuo894/ani-rss
+    docker run -d \
+    --name ani-rss \
+    -v /volume1/docker/ani-rss/config:/config \
+    -v /volume2/Media/:/Media \
+    -p 7789:7789 \
+    -e PORT="7789" \
+    -e CONFIG="/config" \
+    -e TZ=Asia/Shanghai \
+    --restart always \
+    wushuo894/ani-rss
 
 ## Docker Compose部署
 
@@ -36,6 +45,7 @@ services:
     container_name: ani-rss
     volumes:
       - /volume1/docker/ani-rss/config:/config
+      - /volume2/Media/:/Media
     ports:
       - 7789:7789
     environment:
