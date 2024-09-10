@@ -33,15 +33,6 @@ public class TorrentUtil {
             .disableHtmlEscaping()
             .create();
 
-    /**
-     * 登录 qBittorrent
-     *
-     * @return
-     */
-    public static synchronized Boolean login() {
-        ThreadUtil.sleep(1000);
-        return baseDownload.login();
-    }
 
     /**
      * 下载动漫
@@ -52,6 +43,7 @@ public class TorrentUtil {
         Config config = ConfigUtil.CONFIG;
         Boolean autoDisabled = config.getAutoDisabled();
         Integer downloadCount = config.getDownloadCount();
+        Boolean ova = ani.getOva();
 
         String title = ani.getTitle();
         Integer season = ani.getSeason();
@@ -111,7 +103,7 @@ public class TorrentUtil {
             log.info("添加下载 {}", reName);
             File saveTorrent = saveTorrent(ani, item);
             String savePath = getDownloadPath(ani).get(0).toString();
-            download(reName, savePath, saveTorrent);
+            download(reName, savePath, saveTorrent, ova);
             currentDownloadCount++;
             count++;
         }
@@ -170,33 +162,6 @@ public class TorrentUtil {
         HttpReq.get(torrent)
                 .then(res -> FileUtil.writeFromStream(res.bodyStream(), saveTorrentFile, true));
         return saveTorrentFile;
-    }
-
-    /**
-     * 下载
-     *
-     * @param name
-     * @param savePath
-     * @param torrentFile
-     */
-    public static synchronized void download(String name, String savePath, File torrentFile) {
-        savePath = savePath.replace("\\", "/");
-        MailUtils.send(StrFormatter.format("{} 已更新", name));
-        if (baseDownload.download(name, savePath, torrentFile)) {
-            return;
-        }
-        log.warn("{} 添加失败，疑似为坏种", name);
-        MailUtils.send(StrFormatter.format("{} 添加失败，疑似为坏种", name));
-    }
-
-    /**
-     * 获取任务列表
-     *
-     * @return
-     */
-    public static synchronized List<TorrentsInfo> getTorrentsInfos() {
-        ThreadUtil.sleep(1000);
-        return baseDownload.getTorrentsInfos();
     }
 
     /**
@@ -359,6 +324,43 @@ public class TorrentUtil {
     }
 
     /**
+     * 登录 qBittorrent
+     *
+     * @return
+     */
+    public static synchronized Boolean login() {
+        ThreadUtil.sleep(1000);
+        return baseDownload.login();
+    }
+
+    /**
+     * 下载
+     *
+     * @param name
+     * @param savePath
+     * @param torrentFile
+     */
+    public static synchronized void download(String name, String savePath, File torrentFile, Boolean ova) {
+        savePath = savePath.replace("\\", "/");
+        MailUtils.send(StrFormatter.format("{} 已更新", name));
+        if (baseDownload.download(name, savePath, torrentFile, ova)) {
+            return;
+        }
+        log.warn("{} 添加失败，疑似为坏种", name);
+        MailUtils.send(StrFormatter.format("{} 添加失败，疑似为坏种", name));
+    }
+
+    /**
+     * 获取任务列表
+     *
+     * @return
+     */
+    public static synchronized List<TorrentsInfo> getTorrentsInfos() {
+        ThreadUtil.sleep(1000);
+        return baseDownload.getTorrentsInfos();
+    }
+
+    /**
      * 删除已完成任务
      *
      * @param torrentsInfo
@@ -386,9 +388,6 @@ public class TorrentUtil {
      * @param reName
      */
     public static synchronized void rename(TorrentsInfo torrentsInfo, String reName) {
-        if (!ReUtil.contains("S\\d+E\\d+$", reName)) {
-            return;
-        }
         Config config = ConfigUtil.CONFIG;
         Boolean rename = config.getRename();
         if (rename) {

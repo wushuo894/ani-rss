@@ -7,6 +7,7 @@ import ani.rss.util.HttpReq;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.thread.ThreadUtil;
+import cn.hutool.core.util.ReUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.HttpResponse;
 import com.google.gson.JsonArray;
@@ -79,7 +80,7 @@ public class qBittorrent implements BaseDownload {
     }
 
     @Override
-    public Boolean download(String name, String savePath, File torrentFile) {
+    public Boolean download(String name, String savePath, File torrentFile,Boolean ova) {
         Config config = ConfigUtil.CONFIG;
         String host = config.getHost();
         HttpReq.post(host + "/api/v2/torrents/add", false)
@@ -129,6 +130,9 @@ public class qBittorrent implements BaseDownload {
 
     @Override
     public void rename(TorrentsInfo torrentsInfo, String reName) {
+        if (!ReUtil.contains("S\\d+E\\d+$", reName)) {
+            return;
+        }
         Config config = ConfigUtil.CONFIG;
         String host = config.getHost();
 
