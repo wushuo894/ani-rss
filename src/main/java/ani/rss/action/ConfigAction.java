@@ -46,6 +46,8 @@ public class ConfigAction implements BaseAction {
             if (host.endsWith("/")) {
                 host = host.substring(0, host.length() - 1);
             }
+        }
+        if (StrUtil.isNotBlank(host)) {
             if (!ReUtil.contains("http(s*)://", host)) {
                 host = "http://" + host;
             }
