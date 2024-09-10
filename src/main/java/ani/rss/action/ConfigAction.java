@@ -43,11 +43,11 @@ public class ConfigAction implements BaseAction {
         BeanUtil.copyProperties(gson.fromJson(req.getBody(), Config.class), config);
         String host = config.getHost();
         if (StrUtil.isNotBlank(host)) {
-            if (!ReUtil.contains("http(s*)://", host)) {
-                host = "http://" + host;
-            }
             if (host.endsWith("/")) {
                 host = host.substring(0, host.length() - 1);
+            }
+            if (!ReUtil.contains("http(s*)://", host)) {
+                host = "http://" + host;
             }
         }
         config.setHost(host);
