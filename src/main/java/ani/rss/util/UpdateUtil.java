@@ -23,7 +23,7 @@ public class UpdateUtil {
                 .setLatest("")
                 .setMarkdownBody("");
         try {
-            HttpReq.get("https://github.com/wushuo894/ani-rss/releases/latest")
+            HttpReq.get("https://github.com/wushuo894/ani-rss/releases/latest", true)
                     .timeout(3000)
                     .then(response -> {
                         String body = response.body();
@@ -56,7 +56,7 @@ public class UpdateUtil {
         }
         File file = new File(jar + ".tmp");
         String downloadUrl = about.getDownloadUrl();
-        HttpReq.get(downloadUrl)
+        HttpReq.get(downloadUrl, true)
                 .then(res -> {
                     long contentLength = res.contentLength();
                     FileUtil.writeFromStream(res.bodyStream(), file, true);
