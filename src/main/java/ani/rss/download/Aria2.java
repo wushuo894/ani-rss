@@ -9,6 +9,7 @@ import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.resource.ResourceUtil;
 import cn.hutool.core.text.StrFormatter;
 import cn.hutool.core.thread.ThreadUtil;
+import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.HttpResponse;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -137,6 +138,9 @@ public class Aria2 implements BaseDownload {
         String id = torrentsInfo.getId();
         String downloadDir = torrentsInfo.getDownloadDir();
         String reName = renameCache.get(id);
+        if (StrUtil.isBlank(reName)) {
+            return;
+        }
         List<String> files = torrentsInfo.getFiles();
         for (String file : files) {
             String name = new File(file).getName();
