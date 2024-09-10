@@ -16,13 +16,18 @@
               </el-select>
             </el-form-item>
             <el-form-item label="地址">
-              <el-input v-model:model-value="config.host" placeholder="http://192.168.0.x:18080"></el-input>
+              <el-input v-model:model-value="config.host" placeholder="http://192.168.1.66:8080"></el-input>
             </el-form-item>
-            <el-form-item label="用户名">
-              <el-input v-model:model-value="config.username" placeholder="username"></el-input>
-            </el-form-item>
-            <el-form-item label="密码">
-              <el-input show-password v-model:model-value="config.password" placeholder="password"></el-input>
+            <template v-if="config.download !== 'Aria2'">
+              <el-form-item label="用户名">
+                <el-input v-model:model-value="config.username" placeholder="username"></el-input>
+              </el-form-item>
+              <el-form-item label="密码">
+                <el-input show-password v-model:model-value="config.password" placeholder="password"></el-input>
+              </el-form-item>
+            </template>
+            <el-form-item label="Aria2 RPC 密钥" v-else>
+              <el-input show-password v-model:model-value="config.password" placeholder=""></el-input>
             </el-form-item>
             <el-form-item label="保存位置">
               <el-input v-model:model-value="config.downloadPath" placeholder="/downloads/media/anime"></el-input>
