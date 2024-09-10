@@ -28,7 +28,7 @@ public class MikanUtil {
                 url = url + "/Home/BangumiCoverFlowByDayOfWeek?year=" + year + "&seasonStr=" + seasonStr;
             }
         }
-        return HttpReq.get(url)
+        return HttpReq.get(url, true)
                 .thenFunction(res -> {
                     Mikan mikan = new Mikan();
                     List<Mikan.Item> items = new ArrayList<>();
@@ -100,7 +100,7 @@ public class MikanUtil {
     }
 
     public static List<Mikan.Group> getGroups(String url) {
-        return HttpReq.get(url)
+        return HttpReq.get(url, true)
                 .thenFunction(res -> {
                     Document document = Jsoup.parse(res.body());
                     List<Mikan.Group> groups = new ArrayList<>();

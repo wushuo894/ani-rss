@@ -118,7 +118,7 @@ public class AniUtil {
         int season = 1;
         String title = "无";
 
-        String s = HttpReq.get(url)
+        String s = HttpReq.get(url, true)
                 .thenFunction(HttpResponse::body);
         Document document = XmlUtil.readXML(s);
         Node channel = document.getElementsByTagName("channel").item(0);
@@ -154,7 +154,7 @@ public class AniUtil {
         Ani ani = new Ani();
 
         String finalSubgroupid = subgroupid;
-        HttpReq.get(URLUtil.getHost(URLUtil.url(url)) + "/Home/Bangumi/" + bangumiId)
+        HttpReq.get(URLUtil.getHost(URLUtil.url(url)) + "/Home/Bangumi/" + bangumiId, true)
                 .then(res -> {
                     org.jsoup.nodes.Document html = Jsoup.parse(res.body());
 
@@ -227,7 +227,7 @@ public class AniUtil {
         if (file.exists()) {
             return dir + "/" + filename;
         }
-        HttpReq.get(coverUrl)
+        HttpReq.get(coverUrl, true)
                 .then(res -> FileUtil.writeFromStream(res.bodyStream(), file));
         return dir + "/" + filename;
     }
@@ -350,7 +350,7 @@ public class AniUtil {
      */
     public static synchronized List<Item> getItems(Ani ani) {
         String url = ani.getUrl();
-        String s = HttpReq.get(url)
+        String s = HttpReq.get(url, true)
                 .thenFunction(HttpResponse::body);
         return getItems(ani, s);
     }
@@ -395,7 +395,7 @@ public class AniUtil {
             }
         }
 
-        HttpReq.get(URLUtil.getHost(URLUtil.url(url)) + "/Home/Bangumi/" + bangumiId)
+        HttpReq.get(URLUtil.getHost(URLUtil.url(url)) + "/Home/Bangumi/" + bangumiId, true)
                 .then(res -> {
                     org.jsoup.nodes.Document document = Jsoup.parse(res.body());
                     Elements bangumiInfos = document.select(".bangumi-info");
@@ -410,7 +410,7 @@ public class AniUtil {
                         return;
                     }
 
-                    HttpReq.get(bgmUrl)
+                    HttpReq.get(bgmUrl, true)
                             .then(response -> {
                                 org.jsoup.nodes.Document parse = Jsoup.parse(response.body());
                                 Element inner = parse.selectFirst(".subject_tag_section");
