@@ -162,10 +162,10 @@ public class TorrentUtil {
             return saveTorrentFile;
         }
         String hash = FileUtil.mainName(torrent);
-        ThreadUtil.sleep(1000);
         return HttpReq.get(torrent)
                 .thenFunction(res -> {
                     if (!res.isOk()) {
+                        ThreadUtil.sleep(1000);
                         return saveTorrent(ani, item);
                     }
                     FileUtil.writeFromStream(res.bodyStream(), saveTorrentFile, true);
@@ -174,10 +174,12 @@ public class TorrentUtil {
                         String hexHash = torrentFile.getHexHash();
                         if (!hash.equals(hexHash)) {
                             FileUtil.del(saveTorrentFile);
+                            ThreadUtil.sleep(1000);
                             return saveTorrent(ani, item);
                         }
                     } catch (IOException e) {
                         FileUtil.del(saveTorrentFile);
+                        ThreadUtil.sleep(1000);
                         return saveTorrent(ani, item);
                     }
                     return saveTorrentFile;
