@@ -58,16 +58,19 @@ const showLogs = () => {
   logDialogVisible.value = true
   loading.value = true
   htmlLogs.value = ''
-  interval = setInterval(async () => {
-    await api.get('/api/logs')
-        .then(async res => {
-          logs.value = res.data
-          getHtmlLogs()
-        })
-        .finally(() => {
-          loading.value = false
-        })
-  }, 3000)
+  getLogs()
+  interval = setInterval(getLogs, 3000)
+}
+
+const getLogs = async () => {
+  await api.get('/api/logs')
+      .then(async res => {
+        logs.value = res.data
+        getHtmlLogs()
+      })
+      .finally(() => {
+        loading.value = false
+      })
 }
 
 const close = () => {
