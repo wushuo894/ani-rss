@@ -53,7 +53,12 @@ public class Transmission implements BaseDownload {
             log.error("登录 Transmission 失败");
             return false;
         }
-        getTorrentsInfos();
+        try {
+            getTorrentsInfos();
+        } catch (Exception e) {
+            log.error("登录 Transmission 失败");
+            return false;
+        }
         return true;
     }
 
