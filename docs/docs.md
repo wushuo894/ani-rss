@@ -1,5 +1,3 @@
-
-
 <img alt="mikan-pic.png" height="80" src="https://docs.wushuo.top/image/mikan-pic.png"/>
 
 ## 使用文档
@@ -13,9 +11,25 @@
 <div>
 <img src="https://docs.wushuo.top/image/tr.png" alt="transmission" width="60">
 <img src="https://docs.wushuo.top/image/qb.png" alt="qbittorrent" width="60">
+<img src="https://docs.wushuo.top/image/aria2.png" alt="qbittorrent" width="60">
 
-<p>支持 <strong>Transmission</strong> 与 <strong>qBittorrent</strong></p>
+<p>支持 <strong>Transmission</strong> <strong>qBittorrent</strong> <strong>Aria2</strong></p>
 </div>
+
+由于三种下载工具受 API 限制有各种不同的实现效果, 具体效果如下
+
+| 名称           | 自动下载 | 下载时重命名 | 下载时复杂解构重命名 |
+|--------------|------|--------|------------|
+| qBittorrent  | √    | √      | √          |
+| Transmission | √    | √      | ×          |
+| Aria2        | √    | ×      | √          |
+
+不支持下载时重命名会导致:
+
+`在视频文件未重命名时已经有 emby 生成视频缩略图 .nfo 元数据,
+当重命名后还会再次生成一次。且重命名后的视频再次被刮削到时 emby 不会通过 webhooks 通知。`
+
+`个人喜欢使用Webhook通知让` [EmbyPinyin](https://github.com/wushuo894/EmbyPinyin) `(我的另一个项目) 处理中文拼音首字母索引`
 
 #### 自动删除已完成任务
 
@@ -218,6 +232,5 @@ QQ邮箱 - 常规 - 第三方服务 - IMAP/SMTP服务
 若 `剧场版保存位置` 为空则使用 `保存位置`
 
 由于剧场版命名与文件结构各异, 故并不会使用重命名功能
-
 
 [快速开始](start) | [Docker 部署](docker)
