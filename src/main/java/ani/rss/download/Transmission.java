@@ -32,7 +32,6 @@ public class Transmission implements BaseDownload {
     private String host = "";
     private String authorization = "";
     private String sessionId = "";
-    private static final Cache<String, String> RENAME_CACHE = CacheUtil.newFIFOCache(40960);
 
     @Override
     public Boolean login() {
@@ -105,7 +104,7 @@ public class Transmission implements BaseDownload {
     }
 
     @Override
-    public Boolean download(String name, String savePath, File torrentFile) {
+    public Boolean download(String name, String savePath, File torrentFile, Boolean ova) {
         String body = ResourceUtil.readUtf8Str("transmission/torrent-add.json");
         body = StrFormatter.format(body, tag, savePath, Base64.encode(torrentFile));
         String hash = FileUtil.mainName(torrentFile);
@@ -129,7 +128,9 @@ public class Transmission implements BaseDownload {
             if (optionalTorrentsInfo.isEmpty()) {
                 continue;
             }
-            RENAME_CACHE.put(hash, name, renameSleep * (1000 * 60) * 3);
+            if (!ova) {
+                renameCache.put(hash, name, renameSleep * (1000 * 60) * 3);
+            }
             return true;
         }
 
@@ -159,7 +160,7 @@ public class Transmission implements BaseDownload {
             return;
         }
 
-        reName = RENAME_CACHE.get(hash);
+        reName = renameCache.get(hash);
         if (StrUtil.isBlank(reName)) {
             return;
         }
@@ -180,7 +181,7 @@ public class Transmission implements BaseDownload {
                 .body(body)
                 .thenFunction(HttpResponse::isOk);
         if (ok) {
-            RENAME_CACHE.remove(hash);
+            renameCache.remove(hash);
             return;
         }
         log.error("重命名失败 {} ==> {}", name, reName);

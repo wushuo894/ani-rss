@@ -1,6 +1,8 @@
 package ani.rss.download;
 
 import ani.rss.entity.TorrentsInfo;
+import cn.hutool.cache.Cache;
+import cn.hutool.cache.CacheUtil;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -11,6 +13,8 @@ public interface BaseDownload {
     Gson gson = new GsonBuilder()
             .disableHtmlEscaping()
             .create();
+
+    Cache<String, String> renameCache = CacheUtil.newFIFOCache(40960);
 
     String tag = "ani-rss";
 
@@ -39,7 +43,7 @@ public interface BaseDownload {
      * @param savePath
      * @param torrentFile
      */
-    Boolean download(String name, String savePath, File torrentFile);
+    Boolean download(String name, String savePath, File torrentFile, Boolean ova);
 
     /**
      * 删除已完成任务
