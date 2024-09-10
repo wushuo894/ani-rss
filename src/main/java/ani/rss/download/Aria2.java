@@ -4,7 +4,9 @@ import ani.rss.entity.Config;
 import ani.rss.entity.TorrentsInfo;
 import ani.rss.util.ConfigUtil;
 import ani.rss.util.HttpReq;
+import cn.hutool.cache.impl.CacheObj;
 import cn.hutool.core.codec.Base64;
+import cn.hutool.core.collection.IterUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.resource.ResourceUtil;
 import cn.hutool.core.text.StrFormatter;
@@ -41,6 +43,16 @@ public class Aria2 implements BaseDownload {
         torrentsInfos.addAll(getTorrentsInfos("aria2/tellActive.json"));
         ThreadUtil.sleep(1000);
         torrentsInfos.addAll(getTorrentsInfos("aria2/tellStopped.json"));
+        synchronized (renameCache) {
+            List<CacheObj<String, String>> cacheObjList = IterUtil.toList(renameCache.cacheObjIterator());
+            List<String> collect = torrentsInfos.stream().map(TorrentsInfo::getId).collect(Collectors.toList());
+            for (CacheObj<String, String> stringStringCacheObj : cacheObjList) {
+                if (collect.contains(stringStringCacheObj.getKey())) {
+                    continue;
+                }
+                renameCache.remove(stringStringCacheObj.getKey());
+            }
+        }
         return torrentsInfos;
     }
 
@@ -99,7 +111,6 @@ public class Aria2 implements BaseDownload {
         Config config = ConfigUtil.CONFIG;
         String host = config.getHost();
         String password = config.getPassword();
-        Integer renameSleep = config.getRenameSleep();
         String body = ResourceUtil.readUtf8Str("aria2/addTorrent.json");
         body = StrFormatter.format(body, password, Base64.encode(torrentFile), savePath);
 
@@ -111,7 +122,7 @@ public class Aria2 implements BaseDownload {
             List<TorrentsInfo> torrentsInfos = getTorrentsInfos();
             for (TorrentsInfo torrentsInfo : torrentsInfos) {
                 if (torrentsInfo.getId().equals(gid)) {
-                    renameCache.put(gid, name, renameSleep * (1000 * 60) * 3);
+                    renameCache.put(gid, name);
                     return true;
                 }
             }
