@@ -126,10 +126,13 @@ public class Aria2 implements BaseDownload {
             ThreadUtil.sleep(3000);
             List<TorrentsInfo> torrentsInfos = getTorrentsInfos();
             for (TorrentsInfo torrentsInfo : torrentsInfos) {
-                if (torrentsInfo.getId().equals(gid)) {
-                    renameCache.put(gid, name);
-                    return true;
+                if (!torrentsInfo.getId().equals(gid)) {
+                    continue;
                 }
+                if (!ova) {
+                    renameCache.put(gid, name);
+                }
+                return true;
             }
         }
         return false;
