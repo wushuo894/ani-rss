@@ -15,8 +15,10 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import org.eclipse.bittorrent.TorrentFile;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -159,9 +161,27 @@ public class TorrentUtil {
         if (saveTorrentFile.exists()) {
             return saveTorrentFile;
         }
-        HttpReq.get(torrent)
-                .then(res -> FileUtil.writeFromStream(res.bodyStream(), saveTorrentFile, true));
-        return saveTorrentFile;
+        String hash = FileUtil.mainName(torrent);
+        ThreadUtil.sleep(1000);
+        return HttpReq.get(torrent)
+                .thenFunction(res -> {
+                    if (!res.isOk()) {
+                        return saveTorrent(ani, item);
+                    }
+                    FileUtil.writeFromStream(res.bodyStream(), saveTorrentFile, true);
+                    try {
+                        TorrentFile torrentFile = new TorrentFile(saveTorrentFile);
+                        String hexHash = torrentFile.getHexHash();
+                        if (!hash.equals(hexHash)) {
+                            FileUtil.del(saveTorrentFile);
+                            return saveTorrent(ani, item);
+                        }
+                    } catch (IOException e) {
+                        FileUtil.del(saveTorrentFile);
+                        return saveTorrent(ani, item);
+                    }
+                    return saveTorrentFile;
+                });
     }
 
     /**

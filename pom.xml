@@ -16,6 +16,11 @@
 
     <dependencies>
         <dependency>
+            <groupId>org.eclipse</groupId>
+            <artifactId>bittorrent</artifactId>
+            <version>0.3.0-v20070627-1030</version>
+        </dependency>
+        <dependency>
             <groupId>com.sun.mail</groupId>
             <artifactId>javax.mail</artifactId>
             <version>1.6.2</version>
