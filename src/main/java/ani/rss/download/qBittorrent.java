@@ -2,7 +2,6 @@ package ani.rss.download;
 
 import ani.rss.entity.Config;
 import ani.rss.entity.TorrentsInfo;
-import ani.rss.util.ConfigUtil;
 import ani.rss.util.HttpReq;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.lang.Assert;
@@ -22,17 +21,17 @@ import java.util.Optional;
 
 @Slf4j
 public class qBittorrent implements BaseDownload {
+    private Config config;
 
     @Override
-    public Boolean login() {
-        Config config = ConfigUtil.CONFIG;
+    public Boolean login(Config config) {
+        this.config = config;
         String host = config.getHost();
         String username = config.getUsername();
         String password = config.getPassword();
-        String downloadPath = config.getDownloadPath();
 
         if (StrUtil.isBlank(host) || StrUtil.isBlank(username)
-                || StrUtil.isBlank(password) || StrUtil.isBlank(downloadPath)) {
+                || StrUtil.isBlank(password)) {
             log.warn("qBittorrent 未配置完成");
             return false;
         }
@@ -57,7 +56,6 @@ public class qBittorrent implements BaseDownload {
 
     @Override
     public List<TorrentsInfo> getTorrentsInfos() {
-        Config config = ConfigUtil.CONFIG;
         String host = config.getHost();
         return HttpReq.get(host + "/api/v2/torrents/info", false)
                 .thenFunction(res -> {
@@ -80,8 +78,7 @@ public class qBittorrent implements BaseDownload {
     }
 
     @Override
-    public Boolean download(String name, String savePath, File torrentFile,Boolean ova) {
-        Config config = ConfigUtil.CONFIG;
+    public Boolean download(String name, String savePath, File torrentFile, Boolean ova) {
         String host = config.getHost();
         HttpReq.post(host + "/api/v2/torrents/add", false)
                 .form("addToTopOfQueue", false)
@@ -119,7 +116,6 @@ public class qBittorrent implements BaseDownload {
 
     @Override
     public void delete(TorrentsInfo torrentsInfo) {
-        Config config = ConfigUtil.CONFIG;
         String host = config.getHost();
         String hash = torrentsInfo.getHash();
         HttpReq.post(host + "/api/v2/torrents/delete", false)
@@ -134,7 +130,6 @@ public class qBittorrent implements BaseDownload {
         if (!ReUtil.contains("S\\d+E\\d+$", reName)) {
             return;
         }
-        Config config = ConfigUtil.CONFIG;
         String host = config.getHost();
 
         String hash = torrentsInfo.getHash();

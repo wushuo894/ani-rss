@@ -2,7 +2,6 @@ package ani.rss.download;
 
 import ani.rss.entity.Config;
 import ani.rss.entity.TorrentsInfo;
-import ani.rss.util.ConfigUtil;
 import ani.rss.util.HttpReq;
 import cn.hutool.cache.impl.CacheObj;
 import cn.hutool.core.codec.Base64;
@@ -24,11 +23,19 @@ import java.util.stream.Collectors;
 
 @Slf4j
 public class Aria2 implements BaseDownload {
+    private Config config;
+
     @Override
-    public Boolean login() {
-        Config config = ConfigUtil.CONFIG;
+    public Boolean login(Config config) {
+        this.config = config;
         String host = config.getHost();
         String password = config.getPassword();
+
+        if (StrUtil.isBlank(host) || StrUtil.isBlank(password)) {
+            log.warn("Aria2 未配置完成");
+            return false;
+        }
+
         String body = ResourceUtil.readUtf8Str("aria2/getGlobalStat.json");
         body = StrFormatter.format(body, password);
         return HttpReq.post(host + "/jsonrpc", false)
@@ -57,7 +64,6 @@ public class Aria2 implements BaseDownload {
     }
 
     public List<TorrentsInfo> getTorrentsInfos(String type) {
-        Config config = ConfigUtil.CONFIG;
         String host = config.getHost();
         String password = config.getPassword();
         String body = ResourceUtil.readUtf8Str(type);
@@ -108,7 +114,6 @@ public class Aria2 implements BaseDownload {
 
     @Override
     public Boolean download(String name, String savePath, File torrentFile, Boolean ova) {
-        Config config = ConfigUtil.CONFIG;
         String host = config.getHost();
         String password = config.getPassword();
         String body = ResourceUtil.readUtf8Str("aria2/addTorrent.json");
@@ -132,7 +137,6 @@ public class Aria2 implements BaseDownload {
 
     @Override
     public void delete(TorrentsInfo torrentsInfo) {
-        Config config = ConfigUtil.CONFIG;
         String host = config.getHost();
         String password = config.getPassword();
         String id = torrentsInfo.getId();
@@ -160,7 +164,7 @@ public class Aria2 implements BaseDownload {
             if (!name.equals(fileReName)) {
                 newPath = new File(downloadDir + "/" + fileReName);
             }
-            if (file.equals(newPath.getAbsolutePath())) {
+            if (FileUtil.equals(new File(file), newPath)) {
                 continue;
             }
             FileUtil.move(new File(file), newPath, false);

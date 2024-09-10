@@ -30,17 +30,17 @@ public class Transmission implements BaseDownload {
     private String host = "";
     private String authorization = "";
     private String sessionId = "";
+    private Config config;
 
     @Override
-    public Boolean login() {
-        Config config = ConfigUtil.CONFIG;
+    public Boolean login(Config config) {
+        this.config = config;
         String username = config.getUsername();
         String password = config.getPassword();
         host = config.getHost();
-        String downloadPath = config.getDownloadPath();
 
         if (StrUtil.isBlank(host) || StrUtil.isBlank(username)
-                || StrUtil.isBlank(password) || StrUtil.isBlank(downloadPath)) {
+                || StrUtil.isBlank(password)) {
             log.warn("Transmission 未配置完成");
             return false;
         }
@@ -118,7 +118,6 @@ public class Transmission implements BaseDownload {
                 .body(body)
                 .then(HttpResponse::isOk);
 
-        Config config = ConfigUtil.CONFIG;
         Integer renameSleep = config.getRenameSleep();
 
         List<TorrentsInfo> torrentsInfos = getTorrentsInfos();

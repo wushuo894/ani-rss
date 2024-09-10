@@ -29,6 +29,11 @@
             <el-form-item label="Aria2 RPC 密钥" v-else>
               <el-input show-password v-model:model-value="config.password" placeholder=""></el-input>
             </el-form-item>
+            <el-form-item>
+              <div style="display:flex;width: 100%;justify-content: end;">
+                <el-button @click="downloadLoginTest" bg text :loading="downloadLoginTestLoading">登录测试</el-button>
+              </div>
+            </el-form-item>
             <el-form-item label="保存位置">
               <el-input v-model:model-value="config.downloadPath" placeholder="/downloads/media/anime"></el-input>
             </el-form-item>
@@ -379,6 +384,18 @@ const update = () => {
       })
       .finally(() => {
         actionLoading.value = false
+      })
+}
+
+const downloadLoginTestLoading = ref(false)
+const downloadLoginTest = () => {
+  downloadLoginTestLoading.value = true
+  api.post("/api/downloadLoginTestLoading", config.value)
+      .then(res => {
+        ElMessage.success(res.message)
+      })
+      .finally(() => {
+        downloadLoginTestLoading.value = false
       })
 }
 

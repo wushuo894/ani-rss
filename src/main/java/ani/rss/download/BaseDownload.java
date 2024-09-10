@@ -1,5 +1,6 @@
 package ani.rss.download;
 
+import ani.rss.entity.Config;
 import ani.rss.entity.TorrentsInfo;
 import cn.hutool.cache.Cache;
 import cn.hutool.cache.CacheUtil;
@@ -29,7 +30,7 @@ public interface BaseDownload {
      *
      * @return
      */
-    Boolean login();
+    Boolean login(Config config);
 
     /**
      * 获取任务列表
