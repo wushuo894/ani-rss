@@ -8,8 +8,7 @@
       "isFinished",
       "isStalled",
       "id"
-    ],
-    "format": "table"
+    ]
   },
   "method": "torrent-get"
 }

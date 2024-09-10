@@ -4,6 +4,7 @@ import lombok.Data;
 import lombok.experimental.Accessors;
 
 import java.io.Serializable;
+import java.util.List;
 
 @Data
 @Accessors(chain = true)
@@ -39,6 +40,16 @@ public class TorrentsInfo implements Serializable {
      * 时间
      */
     private String dateStr;
+
+    /**
+     * 下载位置
+     */
+    private String downloadDir;
+
+    /**
+     * 文件列表
+     */
+    private List<String> files;
 
     public enum State {
         /**
