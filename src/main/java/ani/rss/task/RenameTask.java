@@ -36,9 +36,8 @@ public class RenameTask extends Thread {
             try {
                 List<TorrentsInfo> torrentsInfos = TorrentUtil.getTorrentsInfos();
                 for (TorrentsInfo torrentsInfo : torrentsInfos) {
-                    String name = torrentsInfo.getName();
                     TorrentsInfo.State state = torrentsInfo.getState();
-                    TorrentUtil.rename(torrentsInfo, name);
+                    TorrentUtil.rename(torrentsInfo);
                     if (!EnumUtil.equalsIgnoreCase(state, TorrentsInfo.State.pausedUP.name())) {
                         continue;
                     }

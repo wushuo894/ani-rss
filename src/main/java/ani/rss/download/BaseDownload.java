@@ -3,6 +3,8 @@ package ani.rss.download;
 import ani.rss.entity.TorrentsInfo;
 import cn.hutool.cache.Cache;
 import cn.hutool.cache.CacheUtil;
+import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.util.StrUtil;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -56,7 +58,30 @@ public interface BaseDownload {
      * 重命名
      *
      * @param torrentsInfo
-     * @param reName
      */
-    void rename(TorrentsInfo torrentsInfo, String reName);
+    void rename(TorrentsInfo torrentsInfo);
+
+    default String getFileReName(String name,String reName) {
+        String ext = FileUtil.extName(name);
+        if (StrUtil.isBlank(ext)) {
+            return name;
+        }
+        String newPath = reName;
+        if (videoFormat.contains(ext.toLowerCase())) {
+            newPath = newPath + "." + ext;
+        } else if (subtitleFormat.contains(ext.toLowerCase())) {
+            String s = FileUtil.extName(FileUtil.mainName(name));
+            if (StrUtil.isNotBlank(s)) {
+                newPath = newPath + "." + s;
+            }
+            newPath = newPath + "." + ext;
+        } else {
+            return name;
+        }
+
+        if (name.equals(newPath)) {
+            return name;
+        }
+        return newPath;
+    }
 }

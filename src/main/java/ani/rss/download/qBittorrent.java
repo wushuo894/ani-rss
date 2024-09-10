@@ -129,7 +129,8 @@ public class qBittorrent implements BaseDownload {
     }
 
     @Override
-    public void rename(TorrentsInfo torrentsInfo, String reName) {
+    public void rename(TorrentsInfo torrentsInfo) {
+        String reName = torrentsInfo.getName();
         if (!ReUtil.contains("S\\d+E\\d+$", reName)) {
             return;
         }
@@ -154,22 +155,7 @@ public class qBittorrent implements BaseDownload {
         List<String> newNames = new ArrayList<>();
 
         for (String name : nameList) {
-            String ext = FileUtil.extName(name);
-            if (StrUtil.isBlank(ext)) {
-                continue;
-            }
-            String newPath = reName;
-            if (videoFormat.contains(ext.toLowerCase())) {
-                newPath = newPath + "." + ext;
-            } else if (subtitleFormat.contains(ext.toLowerCase())) {
-                String s = FileUtil.extName(FileUtil.mainName(name));
-                if (StrUtil.isNotBlank(s)) {
-                    newPath = newPath + "." + s;
-                }
-                newPath = newPath + "." + ext;
-            } else {
-                continue;
-            }
+            String newPath = getFileReName(name, reName);
 
             if (nameList.contains(newPath)) {
                 continue;

@@ -389,14 +389,13 @@ public class TorrentUtil {
      * 重命名
      *
      * @param torrentsInfo
-     * @param reName
      */
-    public static synchronized void rename(TorrentsInfo torrentsInfo, String reName) {
+    public static synchronized void rename(TorrentsInfo torrentsInfo) {
         Config config = ConfigUtil.CONFIG;
         Boolean rename = config.getRename();
         if (rename) {
             ThreadUtil.sleep(1000);
-            baseDownload.rename(torrentsInfo, reName);
+            baseDownload.rename(torrentsInfo);
         }
     }
 
