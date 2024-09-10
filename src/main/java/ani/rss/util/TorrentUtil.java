@@ -17,7 +17,6 @@ import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -87,7 +86,7 @@ public class TorrentUtil {
             }
 
             // 未开启rename不进行检测
-            if (itemDownloaded(ani, item)) {
+            if (itemDownloaded(ani, item, true)) {
                 log.debug("本地文件已存在 {}", reName);
                 currentDownloadCount++;
                 continue;
@@ -173,9 +172,10 @@ public class TorrentUtil {
      *
      * @param ani
      * @param item
+     * @param downloadList
      * @return
      */
-    public static Boolean itemDownloaded(Ani ani, Item item) {
+    public static Boolean itemDownloaded(Ani ani, Item item, Boolean downloadList) {
         Config config = ConfigUtil.CONFIG;
         Boolean rename = config.getRename();
         if (!rename) {
@@ -198,15 +198,18 @@ public class TorrentUtil {
         String reName = item.getReName();
         Integer episode = item.getEpisode();
 
-        List<TorrentsInfo> torrentsInfos = getTorrentsInfos();
-        for (TorrentsInfo torrentsInfo : torrentsInfos) {
-            String name = torrentsInfo.getName();
-            if (name.equalsIgnoreCase(reName)) {
-                log.info("已存在下载任务 {}", reName);
-                saveTorrent(ani, item);
-                return true;
+        if (downloadList) {
+            List<TorrentsInfo> torrentsInfos = getTorrentsInfos();
+            for (TorrentsInfo torrentsInfo : torrentsInfos) {
+                String name = torrentsInfo.getName();
+                if (name.equalsIgnoreCase(reName)) {
+                    log.info("已存在下载任务 {}", reName);
+                    saveTorrent(ani, item);
+                    return true;
+                }
             }
         }
+
         List<File> files = getDownloadPath(ani)
                 .stream()
                 .flatMap(file -> {
