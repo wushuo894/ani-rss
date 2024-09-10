@@ -334,7 +334,13 @@ public class TorrentUtil {
      */
     public static synchronized Boolean login() {
         ThreadUtil.sleep(1000);
-        return baseDownload.login();
+        Config config = ConfigUtil.CONFIG;
+        String downloadPath = config.getDownloadPath();
+        if (StrUtil.isBlank(downloadPath)) {
+            log.warn("下载位置未设置");
+            return false;
+        }
+        return baseDownload.login(ConfigUtil.CONFIG);
     }
 
     /**
