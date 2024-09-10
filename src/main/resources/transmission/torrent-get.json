@@ -7,7 +7,8 @@
       "files",
       "isFinished",
       "isStalled",
-      "id"
+      "id",
+      "downloadDir"
     ]
   },
   "method": "torrent-get"
