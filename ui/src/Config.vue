@@ -352,6 +352,7 @@ const stop = (status) => {
       .then(res => {
         ElMessage.success(res.message)
         setTimeout(() => {
+          localStorage.removeItem("authorization")
           location.reload()
         }, 5000)
       })
@@ -366,6 +367,7 @@ const update = () => {
       .then(res => {
         ElMessage.success(res.message)
         setTimeout(() => {
+          localStorage.removeItem("authorization")
           location.reload()
         }, 5000)
       })
