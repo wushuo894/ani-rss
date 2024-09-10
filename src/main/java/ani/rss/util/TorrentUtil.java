@@ -218,7 +218,7 @@ public class TorrentUtil {
                     if (file.isFile()) {
                         return List.of("mp4", "mkv", "avi").contains(FileUtil.extName(file));
                     }
-                    return false;
+                    return true;
                 })
                 .anyMatch(file -> {
                     if (ova) {
