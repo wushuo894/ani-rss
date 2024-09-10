@@ -59,8 +59,8 @@ const showLogs = () => {
   getLogs()
 }
 
-const getLogs = async () => {
-  await api.get('/api/logs')
+const getLogs = () => {
+  api.get('/api/logs')
       .then(async res => {
         logs.value = res.data
         getHtmlLogs()
