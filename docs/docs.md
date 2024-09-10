@@ -127,7 +127,7 @@ qbittorrent:
     -p 6881:6881 \
     linuxserver/qbittorrent
 
-其中 ani-rss 设置中的 **保存位置** 位于 /Media 下
+其中 ani-rss 设置中的 **保存位置** 位于 `/Media` 下
 
 两者 `/Media` 挂载路径一致 `-v /volume2/Media/:/Media`
 
