@@ -13,7 +13,7 @@ public class Test4 {
                 .setPassword("12345")
                 .setDownloadPath("1");
         BaseDownload baseDownload = new Aria2();
-        System.out.println(baseDownload.login());
+        System.out.println(baseDownload.login(ConfigUtil.CONFIG));
         List<TorrentsInfo> torrentsInfos = baseDownload.getTorrentsInfos();
         torrentsInfos.forEach(System.out::println);
     }
