@@ -251,9 +251,9 @@ public class TorrentUtil {
                     }
                     return season == Integer.parseInt(seasonStr) && episode == Integer.parseInt(episodeStr);
                 })) {
-            log.info("已下载 {}", reName);
             // 保存 torrent 下次只校验 torrent 是否存在 ， 可以将config设置到固态硬盘，防止一直唤醒机械硬盘
             saveTorrent(ani, item);
+            log.info("本地已存在 {}", reName);
             return true;
         }
 
