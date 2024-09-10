@@ -175,12 +175,15 @@ public class TorrentUtil {
             return saveTorrentFile;
         }
 
+        if (count > 0) {
+            ThreadUtil.sleep(1000);
+        }
+
         int i = count + 1;
         String hash = FileUtil.mainName(torrent);
         return HttpReq.get(torrent)
                 .thenFunction(res -> {
                     if (!res.isOk()) {
-                        ThreadUtil.sleep(1000);
                         return saveTorrent(ani, item, i);
                     }
                     FileUtil.writeFromStream(res.bodyStream(), saveTorrentFile, true);
@@ -189,12 +192,10 @@ public class TorrentUtil {
                         String hexHash = torrentFile.getHexHash();
                         if (!hash.equals(hexHash)) {
                             FileUtil.del(saveTorrentFile);
-                            ThreadUtil.sleep(1000);
                             return saveTorrent(ani, item, i);
                         }
                     } catch (IOException e) {
                         FileUtil.del(saveTorrentFile);
-                        ThreadUtil.sleep(1000);
                         return saveTorrent(ani, item, i);
                     }
                     return saveTorrentFile;
@@ -390,6 +391,7 @@ public class TorrentUtil {
     public static synchronized void download(String name, String savePath, File torrentFile, Boolean ova) {
         if (!torrentFile.exists()) {
             log.error("种子下载出现问题 {} {}", name, torrentFile.getAbsolutePath());
+            MailUtils.send(StrFormatter.format("种子下载出现问题 {} {}", name, torrentFile.getAbsolutePath()));
             return;
         }
         savePath = savePath.replace("\\", "/");
@@ -397,7 +399,7 @@ public class TorrentUtil {
         if (baseDownload.download(name, savePath, torrentFile, ova)) {
             return;
         }
-        log.warn("{} 添加失败，疑似为坏种", name);
+        log.error("{} 添加失败，疑似为坏种", name);
         MailUtils.send(StrFormatter.format("{} 添加失败，疑似为坏种", name));
     }
 
