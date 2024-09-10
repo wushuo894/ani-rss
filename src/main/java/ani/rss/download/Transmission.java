@@ -4,8 +4,6 @@ import ani.rss.entity.Config;
 import ani.rss.entity.TorrentsInfo;
 import ani.rss.util.ConfigUtil;
 import ani.rss.util.HttpReq;
-import cn.hutool.cache.Cache;
-import cn.hutool.cache.CacheUtil;
 import cn.hutool.core.codec.Base64;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.io.FileUtil;
@@ -79,24 +77,29 @@ public class Transmission implements BaseDownload {
                             .getAsJsonObject()
                             .get("torrents")
                             .getAsJsonArray();
-                    for (int i = 0; i < torrents.size(); i++) {
-                        if (i < 1) {
-                            continue;
-                        }
-                        JsonArray asJsonArray = torrents.get(i).getAsJsonArray();
-
-                        List<String> tags = asJsonArray.get(1).getAsJsonArray()
+                    for (JsonElement jsonElement : torrents.asList()) {
+                        JsonObject asJsonObject = jsonElement.getAsJsonObject();
+                        List<String> tags = asJsonObject.get("labels").getAsJsonArray()
                                 .asList().stream().map(JsonElement::getAsString).collect(Collectors.toList());
                         if (!tags.contains(tag)) {
                             continue;
                         }
+                        List<String> files = asJsonObject.get("files").getAsJsonArray().asList()
+                                .stream().map(JsonElement::getAsJsonObject)
+                                .map(o -> o.get("name").getAsString())
+                                .collect(Collectors.toList());
+
+                        TorrentsInfo.State state = asJsonObject.get("isFinished").getAsBoolean() ?
+                                TorrentsInfo.State.pausedUP : TorrentsInfo.State.downloading;
 
                         TorrentsInfo torrentsInfo = new TorrentsInfo();
-                        torrentsInfo.setName(asJsonArray.get(0).getAsString());
+                        torrentsInfo.setName(asJsonObject.get("name").getAsString());
                         torrentsInfo.setTags(CollUtil.join(tags, ","));
-                        torrentsInfo.setHash(asJsonArray.get(2).getAsString());
-                        torrentsInfo.setState(asJsonArray.get(4).getAsBoolean() ? TorrentsInfo.State.pausedUP : TorrentsInfo.State.downloading);
-                        torrentsInfo.setId(asJsonArray.get(6).getAsString());
+                        torrentsInfo.setHash(asJsonObject.get("hashString").getAsString());
+                        torrentsInfo.setState(state);
+                        torrentsInfo.setId(asJsonObject.get("id").getAsString());
+                        torrentsInfo.setDownloadDir(asJsonObject.get("downloadDir").getAsString());
+                        torrentsInfo.setFiles(files);
                         torrentsInfos.add(torrentsInfo);
                     }
                     return torrentsInfos;
