@@ -34,6 +34,7 @@ public class ConfigUtil {
                 .setFileExist(false)
                 .setDelete(false)
                 .setOffset(false)
+                .setTitleYear(false)
                 .setAcronym(false)
                 .setAutoDisabled(false)
                 .setDownloadPath("")

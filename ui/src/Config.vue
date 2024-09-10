@@ -99,15 +99,18 @@
             </el-form-item>
             <el-form-item label="自动禁用订阅">
               <div>
-                <el-switch v-model:model-value="config.autoDisabled"></el-switch>
+                <el-switch v-model:model-value="config.autoDisabled"/>
                 <br>
                 <el-text class="mx-1" size="small">
                   根据 Bangumi 获取总集数 当所有集数都已下载时自动禁用该订阅
                 </el-text>
               </div>
             </el-form-item>
+            <el-form-item label="获取标题时带上年份">
+              <el-switch v-model:model-value="config.titleYear"/>
+            </el-form-item>
             <el-form-item label="DEBUG">
-              <el-switch v-model:model-value="config.debug"></el-switch>
+              <el-switch v-model:model-value="config.debug"/>
             </el-form-item>
           </el-form>
         </el-tab-pane>
@@ -120,15 +123,15 @@
                       event.preventDefault()
                    }">
             <el-form-item label="启用">
-              <el-switch v-model:model-value="config.proxy"></el-switch>
+              <el-switch v-model:model-value="config.proxy"/>
             </el-form-item>
             <el-form-item label="IP">
               <el-input v-model:model-value="config.proxyHost" :disabled="!config.proxy"
-                        placeholder="192.168.0.x"></el-input>
+                        placeholder="192.168.0.x"/>
             </el-form-item>
             <el-form-item label="端口">
               <el-input-number v-model:model-value="config.proxyPort" :disabled="!config.proxy" min="1"
-                               max="65535"></el-input-number>
+                               max="65535"/>
             </el-form-item>
           </el-form>
         </el-tab-pane>
@@ -282,6 +285,7 @@ const config = ref({
   'delete': false,
   'offset': false,
   'acronym': false,
+  'titleYear': false,
   'autoDisabled': false,
   'debug': false,
   'proxy': false,

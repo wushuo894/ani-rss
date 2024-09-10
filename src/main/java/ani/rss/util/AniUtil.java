@@ -428,18 +428,33 @@ public class AniUtil {
                                     }
                                 }
                                 for (Element element : parse.select(".tip")) {
-                                    if (!element.ownText().equals("话数:")) {
-                                        continue;
-                                    }
-                                    try {
-                                        Integer ten = Integer.parseInt(element.parent().ownText());
-                                        AniUtil.sync();
-                                        if (totalEpisode) {
-                                            ani.setTotalEpisodeNumber(ten);
+                                    String s = element.ownText();
+                                    if (s.equals("话数:")) {
+                                        try {
+                                            Integer ten = Integer.parseInt(element.parent().ownText());
+                                            AniUtil.sync();
+                                            if (totalEpisode) {
+                                                ani.setTotalEpisodeNumber(ten);
+                                            }
+                                        } catch (Exception e) {
+                                            if (totalEpisode) {
+                                                ani.setTotalEpisodeNumber(totalEpisodeNumber);
+                                            }
                                         }
-                                    } catch (Exception e) {
-                                        if (totalEpisode) {
-                                            ani.setTotalEpisodeNumber(totalEpisodeNumber);
+                                    }
+                                    if (s.equals("放送开始:")) {
+                                        String title = ani.getTitle();
+                                        try {
+                                            String dateReg = "(\\d+)年(\\d+)月(\\d+)日";
+                                            String date = element.parent().ownText();
+                                            String year = ReUtil.get(dateReg, date, 1);
+                                            Config config = ConfigUtil.CONFIG;
+                                            Boolean titleYear = config.getTitleYear();
+                                            if (titleYear) {
+                                                ani.setTitle(StrFormatter.format("{} ({})", title, year));
+                                            }
+                                        } catch (Exception e) {
+                                            log.error(e.getMessage(), e);
                                         }
                                     }
                                 }
