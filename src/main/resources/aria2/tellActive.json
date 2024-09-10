@@ -1,0 +1,26 @@
+{
+  "jsonrpc": "2.0",
+  "method": "aria2.tellActive",
+  "id": "qwer",
+  "params": [
+    "token:{}",
+    [
+      "gid",
+      "totalLength",
+      "completedLength",
+      "uploadSpeed",
+      "downloadSpeed",
+      "connections",
+      "numSeeders",
+      "seeder",
+      "status",
+      "errorCode",
+      "verifiedLength",
+      "verifyIntegrityPending",
+      "files",
+      "bittorrent",
+      "infoHash",
+      "dir"
+    ]
+  ]
+}
