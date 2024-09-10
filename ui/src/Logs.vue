@@ -1,5 +1,5 @@
 <template>
-  <el-dialog v-model="logDialogVisible" title="日志" center @close="close">
+  <el-dialog v-model="logDialogVisible" title="日志" center>
     <div>
       <el-select v-model="selectValue" @change="()=>{getHtmlLogs()}">
         <el-option v-for="item in options"
@@ -51,15 +51,12 @@ const getHtmlLogs = async () => {
   })
 }
 
-let interval = null
-
 const showLogs = () => {
   logs.value = []
   logDialogVisible.value = true
   loading.value = true
   htmlLogs.value = ''
   getLogs()
-  interval = setInterval(getLogs, 3000)
 }
 
 const getLogs = async () => {
@@ -71,10 +68,6 @@ const getLogs = async () => {
       .finally(() => {
         loading.value = false
       })
-}
-
-const close = () => {
-  clearInterval(interval)
 }
 
 defineExpose({showLogs})
