@@ -32,4 +32,9 @@ public class Item implements Serializable {
      * 大小
      */
     private String size;
+
+    /**
+     * 本地已存在
+     */
+    private Boolean local;
 }
