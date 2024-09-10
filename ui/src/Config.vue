@@ -254,7 +254,8 @@ const loading = ref(true)
 
 const downloadSelect = ref([
   'qBittorrent',
-  'Transmission'
+  'Transmission',
+  'Aria2'
 ])
 
 const config = ref({

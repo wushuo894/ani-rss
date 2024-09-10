@@ -152,7 +152,7 @@ public class Transmission implements BaseDownload {
     }
 
     @Override
-    public void rename(TorrentsInfo torrentsInfo, String reName) {
+    public void rename(TorrentsInfo torrentsInfo) {
         String id = torrentsInfo.getId();
         String name = torrentsInfo.getName();
         String hash = torrentsInfo.getHash();
@@ -163,7 +163,7 @@ public class Transmission implements BaseDownload {
             return;
         }
 
-        reName = renameCache.get(hash);
+        String reName = renameCache.get(hash);
         if (StrUtil.isBlank(reName)) {
             return;
         }

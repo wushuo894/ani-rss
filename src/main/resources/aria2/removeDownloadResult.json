@@ -1,0 +1,9 @@
+{
+  "jsonrpc": "2.0",
+  "method": "aria2.removeDownloadResult",
+  "id": "qwer",
+  "params": [
+    "token:{}",
+    "{}"
+  ]
+}
