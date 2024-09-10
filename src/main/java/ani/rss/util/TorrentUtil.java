@@ -153,15 +153,6 @@ public class TorrentUtil {
      * @param item
      */
     public static File saveTorrent(Ani ani, Item item) {
-        return saveTorrent(ani, item, 0);
-    }
-
-    /**
-     * 下载种子文件
-     *
-     * @param item
-     */
-    public static File saveTorrent(Ani ani, Item item, Integer count) {
         String torrent = item.getTorrent();
         String reName = item.getReName();
 
@@ -171,30 +162,9 @@ public class TorrentUtil {
             return saveTorrentFile;
         }
 
-        if (count > 10) {
-            return saveTorrentFile;
-        }
-
-        if (count > 0) {
-            ThreadUtil.sleep(1000);
-        }
-
-        int i = count + 1;
-        String hash = FileUtil.mainName(torrent);
         return HttpReq.get(torrent, true)
                 .thenFunction(res -> {
                     FileUtil.writeFromStream(res.bodyStream(), saveTorrentFile, true);
-                    try {
-                        TorrentFile torrentFile = new TorrentFile(saveTorrentFile);
-                        String hexHash = torrentFile.getHexHash();
-                        if (!hash.equals(hexHash)) {
-                            FileUtil.del(saveTorrentFile);
-                            return saveTorrent(ani, item, i);
-                        }
-                    } catch (IOException e) {
-                        FileUtil.del(saveTorrentFile);
-                        return saveTorrent(ani, item, i);
-                    }
                     return saveTorrentFile;
                 });
     }
