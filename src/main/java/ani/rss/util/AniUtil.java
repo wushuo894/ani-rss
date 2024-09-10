@@ -401,10 +401,24 @@ public class AniUtil {
                     Elements bangumiInfos = document.select(".bangumi-info");
                     String bgmUrl = "";
                     for (Element bangumiInfo : bangumiInfos) {
-                        if (!bangumiInfo.ownText().equals("Bangumi番组计划链接：")) {
-                            continue;
+                        String string = bangumiInfo.ownText();
+                        if (string.equals("Bangumi番组计划链接：")) {
+                            bgmUrl = bangumiInfo.select("a").get(0).attr("href");
                         }
-                        bgmUrl = bangumiInfo.select("a").get(0).attr("href");
+                        if (string.startsWith("放送开始：")) {
+                            String title = ani.getTitle();
+                            try {
+                                String dateReg = "(\\d+)/(\\d+)/(\\d+)";
+                                String year = ReUtil.get(dateReg, string, 3);
+                                Config config = ConfigUtil.CONFIG;
+                                Boolean titleYear = config.getTitleYear();
+                                if (titleYear) {
+                                    ani.setTitle(StrFormatter.format("{} ({})", title, year));
+                                }
+                            } catch (Exception e) {
+                                log.error(e.getMessage(), e);
+                            }
+                        }
                     }
                     if (StrUtil.isBlank(bgmUrl) && !ova) {
                         return;
@@ -429,34 +443,21 @@ public class AniUtil {
                                 }
                                 for (Element element : parse.select(".tip")) {
                                     String s = element.ownText();
-                                    if (s.equals("话数:")) {
-                                        try {
-                                            Integer ten = Integer.parseInt(element.parent().ownText());
-                                            AniUtil.sync();
-                                            if (totalEpisode) {
-                                                ani.setTotalEpisodeNumber(ten);
-                                            }
-                                        } catch (Exception e) {
-                                            if (totalEpisode) {
-                                                ani.setTotalEpisodeNumber(totalEpisodeNumber);
-                                            }
+                                    if (!s.equals("话数:")) {
+                                        continue;
+                                    }
+                                    try {
+                                        Integer ten = Integer.parseInt(element.parent().ownText());
+                                        AniUtil.sync();
+                                        if (totalEpisode) {
+                                            ani.setTotalEpisodeNumber(ten);
+                                        }
+                                    } catch (Exception e) {
+                                        if (totalEpisode) {
+                                            ani.setTotalEpisodeNumber(totalEpisodeNumber);
                                         }
                                     }
-                                    if (s.equals("放送开始:")) {
-                                        String title = ani.getTitle();
-                                        try {
-                                            String dateReg = "(\\d+)年(\\d+)月(\\d+)日";
-                                            String date = element.parent().ownText();
-                                            String year = ReUtil.get(dateReg, date, 1);
-                                            Config config = ConfigUtil.CONFIG;
-                                            Boolean titleYear = config.getTitleYear();
-                                            if (titleYear) {
-                                                ani.setTitle(StrFormatter.format("{} ({})", title, year));
-                                            }
-                                        } catch (Exception e) {
-                                            log.error(e.getMessage(), e);
-                                        }
-                                    }
+
                                 }
                                 if (totalEpisode) {
                                     ani.setTotalEpisodeNumber(totalEpisodeNumber);
