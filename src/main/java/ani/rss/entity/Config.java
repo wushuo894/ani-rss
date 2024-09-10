@@ -70,6 +70,11 @@ public class Config implements Serializable {
     private Boolean offset;
 
     /**
+     * 获取标题时带上年份
+     */
+    private Boolean titleYear;
+
+    /**
      * 根据首字母存放
      */
     private Boolean acronym;
