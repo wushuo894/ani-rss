@@ -216,7 +216,7 @@ public class TorrentUtil {
         if (files.stream()
                 .filter(file -> {
                     if (file.isFile()) {
-                        return List.of("mp4", "mkv", "avi").contains(FileUtil.extName(file));
+                        return BaseDownload.videoFormat.contains(FileUtil.extName(file));
                     }
                     return true;
                 })
