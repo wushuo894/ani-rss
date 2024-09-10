@@ -1,12 +1,2 @@
-修复使用 Transmission 下载时 OVA 规则不生效的问题
-
-[支持系统托盘](https://github.com/wushuo894/ani-rss/pull/12)
-
-添加 `--gui` 参数启动   @lzw-723
-
-
-
-<img src="https://docs.wushuo.top/image/tr.png" alt="transmission" width="60">
-
-新增 <strong>Transmission</strong> 的支持
-
+优化自动跳过
+重启或关闭后自动清除令牌
