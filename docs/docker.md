@@ -13,11 +13,12 @@
 
 默认 用户名: admin 密码: admin
 
-| 参数     | 作用       | 默认值           |
-|--------|----------|---------------|
-| PORT   | 端口号      | 7789          |
-| CONFIG | 配置文件存放位置 | /config       |
-| TZ     | 时区       | Asia/Shanghai |
+| 参数          | 作用       | 默认值           |
+|-------------|----------|---------------|
+| PORT        | 端口号      | 7789          |
+| CONFIG      | 配置文件存放位置 | /config       |
+| TZ          | 时区       | Asia/Shanghai |
+| AUTO_UPDATE | 自动更新     | false         |
 
 ps: 如果需要开启 文件已下载自动跳过 功能 请确保 qBittorrent 与本程序 docker 映射挂载路径一致
 
