@@ -400,26 +400,28 @@ public class AniUtil {
                     org.jsoup.nodes.Document document = Jsoup.parse(res.body());
                     Elements bangumiInfos = document.select(".bangumi-info");
                     String bgmUrl = "";
+                    String year = "";
                     for (Element bangumiInfo : bangumiInfos) {
                         String string = bangumiInfo.ownText();
                         if (string.equals("Bangumi番组计划链接：")) {
                             bgmUrl = bangumiInfo.select("a").get(0).attr("href");
                         }
                         if (string.startsWith("放送开始：")) {
-                            String title = ani.getTitle();
                             try {
                                 String dateReg = "(\\d+)/(\\d+)/(\\d+)";
-                                String year = ReUtil.get(dateReg, string, 3);
-                                Config config = ConfigUtil.CONFIG;
-                                Boolean titleYear = config.getTitleYear();
-                                if (titleYear) {
-                                    ani.setTitle(StrFormatter.format("{} ({})", title, year));
-                                }
+                                year = ReUtil.get(dateReg, string, 3);
                             } catch (Exception e) {
                                 log.error(e.getMessage(), e);
                             }
                         }
                     }
+                    Config config = ConfigUtil.CONFIG;
+                    Boolean titleYear = config.getTitleYear();
+                    String title = ani.getTitle();
+                    if (titleYear && StrUtil.isNotBlank(year)) {
+                        ani.setTitle(StrFormatter.format("{} ({})", title, year));
+                    }
+
                     if (StrUtil.isBlank(bgmUrl) && !ova) {
                         return;
                     }
