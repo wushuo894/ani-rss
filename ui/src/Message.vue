@@ -150,7 +150,7 @@ const getUpdates = () => {
 }
 
 const chatIdChange = (k) => {
-  props.config.value.telegramChatId = chatIdMap.value[k]
+  props.config.telegramChatId = chatIdMap.value[k]
 }
 
 const messageTestLoading = ref(false)
