@@ -3,7 +3,7 @@ package ani.rss.action;
 import ani.rss.annotation.Auth;
 import ani.rss.annotation.Path;
 import ani.rss.entity.Config;
-import ani.rss.util.TelegramUtil;
+import ani.rss.msg.Telegram;
 import cn.hutool.http.server.HttpServerRequest;
 import cn.hutool.http.server.HttpServerResponse;
 
@@ -19,14 +19,8 @@ public class TelegramAction implements BaseAction {
         Config config = getBody(Config.class);
         String method = request.getParam("method");
 
-        if ("test".equals(method)) {
-            TelegramUtil.send(config,"test");
-            resultSuccess();
-            return;
-        }
-
         if ("getUpdates".equals(method)) {
-            Map<String, String> map = TelegramUtil.getUpdates(config);
+            Map<String, String> map = Telegram.getUpdates(config);
             resultSuccess(map);
         }
 

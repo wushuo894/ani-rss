@@ -154,4 +154,17 @@ public class Config implements Serializable {
      */
     private String telegramChatId;
 
+    /**
+     * telegram Api Host
+     */
+    private String telegramApiHost;
+
+    private String webHookMethod;
+
+    private String webHookUrl;
+
+    private String webHookBody;
+
+    private Boolean webHook;
+
 }
