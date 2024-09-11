@@ -418,7 +418,7 @@ public class AniUtil {
                     Config config = ConfigUtil.CONFIG;
                     Boolean titleYear = config.getTitleYear();
                     String title = ani.getTitle();
-                    if (titleYear && StrUtil.isNotBlank(year)) {
+                    if (titleYear && StrUtil.isNotBlank(year) && !ReUtil.contains(" (\\d+)$", title)) {
                         ani.setTitle(StrFormatter.format("{} ({})", title, year));
                     }
 
