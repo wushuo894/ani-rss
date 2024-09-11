@@ -22,68 +22,70 @@
           </el-select>
         </div>
       </div>
-      <div style="margin: 0 5px;min-height: 200px;" v-loading="loading">
-        <el-collapse v-model="activeName" accordion>
-          <el-collapse-item v-for="item in data.items" :title="item.label" :name="item.label">
-            <div style="margin-left: 15px;">
-              <el-collapse @change="collapseChange" accordion>
-                <el-collapse-item v-for="it in item.items" :name="it.url">
-                  <template #title>
-                    <img :src="img(it)" height="40" width="40">
-                    <div style="margin-left: 5px;
+      <div style="margin: 8px 0 4px 0;height: 600px;" v-loading="loading">
+        <el-scrollbar>
+          <el-collapse v-model="activeName" accordion>
+            <el-collapse-item v-for="item in data.items" :title="item.label" :name="item.label">
+              <div style="margin-left: 15px;">
+                <el-collapse @change="collapseChange" accordion>
+                  <el-collapse-item v-for="it in item.items" :name="it.url">
+                    <template #title>
+                      <img :src="img(it)" height="40" width="40">
+                      <div style="margin-left: 5px;
                                          max-width: 70%;
                                          overflow: hidden;
                                          white-space: nowrap;
                                          text-overflow: ellipsis;">
-                      {{ it.title }}
-                    </div>
-                  </template>
-                  <div style="margin-left: 15px;min-height: 50px;" v-if="selectName === it.url"
-                       v-loading="groupLoading">
-                    <el-collapse accordion>
-                      <el-collapse-item v-for="group in groups[it.url]">
-                        <template #title>
-                          <div style="width: 100%;display: flex;justify-content: space-between;">
-                            <div style="flex: 1;text-align: start;
+                        {{ it.title }}
+                      </div>
+                    </template>
+                    <div style="margin-left: 15px;min-height: 50px;" v-if="selectName === it.url"
+                         v-loading="groupLoading">
+                      <el-collapse accordion>
+                        <el-collapse-item v-for="group in groups[it.url]">
+                          <template #title>
+                            <div style="width: 100%;display: flex;justify-content: space-between;">
+                              <div style="flex: 1;text-align: start;
                                          overflow: hidden;
                                          white-space: nowrap;
                                          text-overflow: ellipsis;">
-                              {{ group.label }}
-                              <el-text class="mx-1" size="small">{{ group['updateDay'] }}</el-text>
-                            </div>
-                            <div style="display: flex;align-items: center;margin-right: 14px;margin-left: 4px;">
-                              <el-button text bg @click.stop="add(group['rss'])">
-                                <el-icon class="el-icon--left">
-                                  <Plus/>
-                                </el-icon>
-                                添加
-                              </el-button>
-                            </div>
-                          </div>
-                        </template>
-                        <div style="margin-left: 15px;">
-                          <div v-for="ti in group.items" style="margin-bottom: 4px;">
-                            <el-card shadow="never">
-                              <div>
-                                <h5>
-                                  {{ ti.name }}
-                                </h5>
-                                <div style="width: 100%;display: flex;justify-content: end;">
-                                  {{ ti['sizeStr'] }}
-                                  {{ ti['dateStr'] }}
-                                </div>
+                                {{ group.label }}
+                                <el-text class="mx-1" size="small">{{ group['updateDay'] }}</el-text>
                               </div>
-                            </el-card>
+                              <div style="display: flex;align-items: center;margin-right: 14px;margin-left: 4px;">
+                                <el-button text bg @click.stop="add(group['rss'])">
+                                  <el-icon class="el-icon--left">
+                                    <Plus/>
+                                  </el-icon>
+                                  添加
+                                </el-button>
+                              </div>
+                            </div>
+                          </template>
+                          <div style="margin-left: 15px;">
+                            <div v-for="ti in group.items" style="margin-bottom: 4px;">
+                              <el-card shadow="never">
+                                <div>
+                                  <h5>
+                                    {{ ti.name }}
+                                  </h5>
+                                  <div style="width: 100%;display: flex;justify-content: end;">
+                                    {{ ti['sizeStr'] }}
+                                    {{ ti['dateStr'] }}
+                                  </div>
+                                </div>
+                              </el-card>
+                            </div>
                           </div>
-                        </div>
-                      </el-collapse-item>
-                    </el-collapse>
-                  </div>
-                </el-collapse-item>
-              </el-collapse>
-            </div>
-          </el-collapse-item>
-        </el-collapse>
+                        </el-collapse-item>
+                      </el-collapse>
+                    </div>
+                  </el-collapse-item>
+                </el-collapse>
+              </div>
+            </el-collapse-item>
+          </el-collapse>
+        </el-scrollbar>
       </div>
     </div>
   </el-dialog>
