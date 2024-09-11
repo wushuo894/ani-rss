@@ -10,11 +10,11 @@
       <el-form label-width="auto"
                @keyup.enter="login"
                @submit="login">
-        <el-form-item label="用户名">
-          <el-input v-model:model-value="user.username"></el-input>
+        <el-form-item>
+          <el-input style="width: 200px;" v-model:model-value="user.username" placeholder="用户名"></el-input>
         </el-form-item>
-        <el-form-item label="密码">
-          <el-input v-model:model-value="user.password" show-password></el-input>
+        <el-form-item>
+          <el-input style="width: 200px;" v-model:model-value="user.password" show-password placeholder="密码"></el-input>
         </el-form-item>
         <div style="display: flex;width: 100%;align-items: flex-end;flex-flow: column;">
           <el-button @click="login" :loading="loading" text bg icon="Right">登录</el-button>
