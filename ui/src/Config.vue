@@ -178,7 +178,7 @@
                     <div v-if="about.markdownBody" v-html="about.markdownBody"></div>
                   </div>
                 </div>
-                <div v-loading="actionLoading" id="menu">
+                <div v-loading.fullscreen.lock="actionLoading" id="menu">
                   <el-badge class="item" v-if="about.update" value="new">
                     <el-button type="success" @click="update" text bg icon="Top">更新</el-button>
                   </el-badge>
