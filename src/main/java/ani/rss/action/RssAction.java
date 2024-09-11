@@ -32,7 +32,7 @@ public class RssAction implements BaseAction {
         } catch (Exception e) {
             log.error(e.getMessage());
             log.debug(e.getMessage(), e);
-            resultErrorMsg("RSS解析失败");
+            resultErrorMsg("RSS解析失败 {}", e.getMessage());
         }
     }
 }
