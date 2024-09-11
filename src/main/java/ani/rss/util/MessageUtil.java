@@ -5,6 +5,7 @@ import ani.rss.msg.Mail;
 import ani.rss.msg.Message;
 import ani.rss.msg.Telegram;
 import ani.rss.msg.WebHook;
+import cn.hutool.core.thread.ThreadUtil;
 
 public class MessageUtil {
     public static final Message mailMessage = new Mail();
@@ -14,17 +15,17 @@ public class MessageUtil {
     public static synchronized void send(Config config, String text) {
         Boolean mail = config.getMail();
         if (mail) {
-            mailMessage.send(config, text);
+            ThreadUtil.execute(() -> mailMessage.send(config, text));
         }
 
         Boolean telegram = config.getTelegram();
         if (telegram) {
-            telegramMessage.send(config, text);
+            ThreadUtil.execute(() -> telegramMessage.send(config, text));
         }
 
         Boolean webHook = config.getWebHook();
         if (webHook) {
-            webHookMessage.send(config, text);
+            ThreadUtil.execute(() -> webHookMessage.send(config, text));
         }
 
     }
