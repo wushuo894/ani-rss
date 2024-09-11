@@ -439,14 +439,18 @@ public class AniUtil {
                                 Element inner = parse.selectFirst(".subject_tag_section");
                                 if (Objects.nonNull(inner)) {
                                     Elements aa = inner.select("a");
+                                    List<String> tags = new ArrayList<>();
                                     for (Element a : aa) {
                                         Element span = a.selectFirst("span");
                                         if (Objects.isNull(span)) {
                                             continue;
                                         }
-                                        if (List.of("OVA", "剧场版").contains(span.ownText()) && ova) {
-                                            ani.setOva(true)
-                                                    .setSeason(0);
+                                        tags.add(span.ownText());
+                                    }
+
+                                    if (ova) {
+                                        if (!tags.contains("TV") && (tags.contains("OVA") || tags.contains("剧场版"))) {
+                                            ani.setOva(true);
                                         }
                                     }
                                 }
