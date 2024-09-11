@@ -363,6 +363,7 @@ public class TorrentUtil {
             MailUtils.send(StrFormatter.format("种子下载出现问题 {} {}", name, torrentFile.getAbsolutePath()));
             return;
         }
+        ThreadUtil.sleep(1000);
         savePath = savePath.replace("\\", "/");
         MailUtils.send(StrFormatter.format("{} 已更新", name));
         if (baseDownload.download(name, savePath, torrentFile, ova)) {

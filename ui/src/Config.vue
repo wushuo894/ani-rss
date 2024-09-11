@@ -66,6 +66,9 @@
                 </div>
               </div>
             </el-form-item>
+            <el-form-item label="检测是否死种">
+              <el-switch v-model:model-value="config.watchErrorTorrent"/>
+            </el-form-item>
           </el-form>
         </el-tab-pane>
         <el-tab-pane label="基本设置">
@@ -279,6 +282,7 @@ const config = ref({
   'username': '',
   'password': '',
   'sleep': 5,
+  'watchErrorTorrent': true,
   'downloadPath': '',
   'ovaDownloadPath': '',
   'fileExist': true,

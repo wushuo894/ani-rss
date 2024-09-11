@@ -124,10 +124,18 @@ public class Transmission implements BaseDownload {
                 .then(HttpResponse::isOk);
 
         Integer renameSleep = config.getRenameSleep();
+        Boolean watchErrorTorrent = config.getWatchErrorTorrent();
+
+        if (!watchErrorTorrent) {
+            if (!ova) {
+                renameCache.put(hash, name, renameSleep * (1000 * 60) * 3);
+            }
+            return true;
+        }
 
         List<TorrentsInfo> torrentsInfos = getTorrentsInfos();
         for (int i = 0; i < 10; i++) {
-            ThreadUtil.sleep(3000);
+            ThreadUtil.sleep(2000);
             Optional<TorrentsInfo> optionalTorrentsInfo = torrentsInfos
                     .stream()
                     .filter(torrentsInfo -> torrentsInfo.getHash().equals(hash))
