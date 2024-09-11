@@ -1,4 +1,5 @@
 <template>
+  <Items ref="items"/>
   <el-dialog v-model="editDialogVisible" title="修改订阅" center>
     <el-form label-width="auto"
              @submit="(event)=>{
@@ -32,6 +33,7 @@
         <el-switch v-model:model-value="ani.enable"></el-switch>
       </el-form-item>
       <div style="display: flex;justify-content: end;width: 100%;margin-top: 10px;">
+        <el-button @click="items.show(ani)" bg text>预览</el-button>
         <el-button :loading="editAniButtonLoading" @click="editAni" text bg>确定</el-button>
       </div>
     </el-form>
@@ -44,8 +46,10 @@ import {ref} from "vue";
 import {ElMessage} from "element-plus";
 import api from "./api.js";
 import Exclude from "./Exclude.vue";
+import Items from "./Items.vue";
 
 let exclude = ref()
+const items = ref()
 
 const editDialogVisible = ref(false)
 const ani = ref({
