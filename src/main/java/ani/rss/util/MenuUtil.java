@@ -24,10 +24,6 @@ public class MenuUtil {
         // 仅在添加--gui参数时启动托盘
         if (Arrays.asList(args).contains("--gui")) {
             try {
-                // 检查是否有其他实例在运行
-                if (!Arrays.asList(args).contains("--multi")) {
-                    checkSingleRun();
-                }
                 showSystemTray();
                 // 直接输出到控制台，不使用 logger
                 System.out.println("启动系统托盘已启动");
@@ -36,37 +32,6 @@ public class MenuUtil {
                 System.exit(1);
             }
         }
-    }
-
-
-    /**
-     * 检查是否有其他实例在运行
-     * 如果有，抛出异常
-     */
-    private static void checkSingleRun() throws Exception {
-        File file = new File(System.getProperty("user.home"), "ani-rss.lock");
-        if (file.exists()) {
-            // 有其他实例在运行
-            // 删除锁文件，排除异常退出的情况
-            FileUtil.del(file);
-            throw new Exception("另一个ani-rss实例正在运行");
-        }
-        Files.createFile(file.toPath());
-
-        // 每隔1秒检查文件是否存在，如果不存在则创建
-        // NOTE: 没有文件锁的丑陋做法
-        ThreadUtil.schedule(ThreadUtil.createScheduledExecutor(1), () -> {
-            if (!file.exists()) {
-                try {
-                    file.createNewFile();
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
-            }
-        }, 0, 1000, true);
-
-        // 退出时删除锁文件
-        Runtime.getRuntime().addShutdownHook(new Thread(file::delete));
     }
 
     /**
