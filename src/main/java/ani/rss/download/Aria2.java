@@ -121,8 +121,18 @@ public class Aria2 implements BaseDownload {
         String gid = HttpReq.post(host + "/jsonrpc", false)
                 .body(body)
                 .thenFunction(res -> gson.fromJson(res.body(), JsonObject.class).get("result").getAsString());
+
+        Boolean watchErrorTorrent = config.getWatchErrorTorrent();
+
+        if (!watchErrorTorrent) {
+            if (!ova) {
+                renameCache.put(gid, name);
+            }
+            return true;
+        }
+
         for (int i = 0; i < 10; i++) {
-            ThreadUtil.sleep(3000);
+            ThreadUtil.sleep(2000);
             List<TorrentsInfo> torrentsInfos = getTorrentsInfos();
             for (TorrentsInfo torrentsInfo : torrentsInfos) {
                 if (!torrentsInfo.getId().equals(gid)) {

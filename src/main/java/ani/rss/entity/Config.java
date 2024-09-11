@@ -40,6 +40,11 @@ public class Config implements Serializable {
     private String ovaDownloadPath;
 
     /**
+     * 检测是否死种
+     */
+    private Boolean watchErrorTorrent;
+
+    /**
      * 间隔/分钟
      */
     private Integer sleep;
