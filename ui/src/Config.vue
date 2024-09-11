@@ -150,6 +150,45 @@
             </el-form-item>
           </el-form>
         </el-tab-pane>
+        <el-tab-pane label="Telegram">
+          <el-form label-width="auto" @submit="(event)=>{
+                      event.preventDefault()
+                   }">
+            <el-form-item label="Token">
+              <el-input v-model:model-value="config.telegramBotToken" :disabled="!config.telegram"
+                        placeholder="123456:ABC-DEF1234ghIkl-zyx57W2v1u123ew11"/>
+            </el-form-item>
+            <el-form-item label="ChatId">
+              <div>
+                <div style="display: flex;justify-content: space-between;width: 100%;">
+                  <div style="margin: 4px 4px 4px 0;">
+                    <el-input v-model:model-value="config.telegramChatId" :disabled="!config.telegram"
+                              placeholder="123456789"/>
+                  </div>
+                  <div style="margin: 4px;">
+                    <el-select v-model:model-value="chatId" @change="chatIdChange" style="width: 160px"
+                               :disabled="!config.telegram">
+                      <el-option v-for="item in Object.keys(chatIdMap)"
+                                 :key="item"
+                                 :label="item"
+                                 :value="item"/>
+                    </el-select>
+                  </div>
+                  <div style="margin: 4px">
+                    <el-button icon="Refresh" bg text @click="getUpdates" :loading="getUpdatesLoading"
+                               :disabled="!config.telegram"/>
+                  </div>
+                </div>
+              </div>
+            </el-form-item>
+            <el-form-item label="开关">
+              <div style="width: 100%;display: flex;justify-content: space-between;">
+                <el-switch v-model:model-value="config.telegram"/>
+                <el-button bg text @click="telegramTest" :loading="telegramTestLoading">测试</el-button>
+              </div>
+            </el-form-item>
+          </el-form>
+        </el-tab-pane>
         <el-tab-pane label="邮件通知">
           <el-form label-width="auto" @submit="(event)=>{
                       event.preventDefault()
@@ -309,7 +348,10 @@ const config = ref({
   'login': {
     'username': '',
     'password': ''
-  }
+  },
+  'telegram': false,
+  'telegramBotToken': '',
+  'telegramChatId': ''
 })
 
 const about = ref({
@@ -404,6 +446,52 @@ const downloadLoginTest = () => {
       })
       .finally(() => {
         downloadLoginTestLoading.value = false
+      })
+}
+
+const chatIdMap = ref({})
+const chatId = ref('')
+const getUpdatesLoading = ref(false)
+
+const getUpdates = () => {
+  if (!config.value.telegramBotToken.length) {
+    ElMessage.error('Token 不能为空')
+    return
+  }
+
+  getUpdatesLoading.value = true
+  api.post("/api/telegram?method=getUpdates", config.value)
+      .then(res => {
+        chatIdMap.value = res.data
+        if (Object.keys(chatIdMap.value).length) {
+          chatId.value = Object.keys(chatIdMap.value)[0]
+          chatIdChange(chatId.value)
+        }
+      })
+      .finally(() => {
+        getUpdatesLoading.value = false
+      })
+}
+
+const chatIdChange = (k) => {
+  config.value.telegramChatId = chatIdMap.value[k]
+}
+
+const telegramTestLoading = ref(false)
+
+const telegramTest = () => {
+  if (!config.value.telegramBotToken.length || !config.value.telegramChatId.length) {
+    ElMessage.error('参数不完整')
+    return
+  }
+
+  telegramTestLoading.value = true
+  api.post("/api/telegram?method=test", config.value)
+      .then(res => {
+        ElMessage.success(res.message)
+      })
+      .finally(() => {
+        telegramTestLoading.value = false
       })
 }
 

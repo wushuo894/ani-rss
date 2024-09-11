@@ -13,8 +13,7 @@ import java.util.List;
 
 @Slf4j
 public class MailUtils {
-    public static synchronized void send(String text) {
-        Config config = ConfigUtil.CONFIG;
+    public static synchronized void send(Config config,String text) {
         Boolean mail = config.getMail();
         MyMailAccount myMailAccount = config.getMailAccount();
         String mailAddressee = config.getMailAddressee();

@@ -360,17 +360,17 @@ public class TorrentUtil {
     public static synchronized void download(String name, String savePath, File torrentFile, Boolean ova) {
         if (!torrentFile.exists()) {
             log.error("种子下载出现问题 {} {}", name, torrentFile.getAbsolutePath());
-            MailUtils.send(StrFormatter.format("种子下载出现问题 {} {}", name, torrentFile.getAbsolutePath()));
+            MessageUtil.send(ConfigUtil.CONFIG, StrFormatter.format("种子下载出现问题 {} {}", name, torrentFile.getAbsolutePath()));
             return;
         }
         ThreadUtil.sleep(1000);
         savePath = savePath.replace("\\", "/");
-        MailUtils.send(StrFormatter.format("{} 已更新", name));
+        MessageUtil.send(ConfigUtil.CONFIG, StrFormatter.format("{} 已更新", name));
         if (baseDownload.download(name, savePath, torrentFile, ova)) {
             return;
         }
         log.error("{} 添加失败，疑似为坏种", name);
-        MailUtils.send(StrFormatter.format("{} 添加失败，疑似为坏种", name));
+        MessageUtil.send(ConfigUtil.CONFIG, StrFormatter.format("{} 添加失败，疑似为坏种", name));
     }
 
     /**
