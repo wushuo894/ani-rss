@@ -7,7 +7,22 @@
              }"
     >
       <el-form-item label="标题">
-        <el-input v-model:model-value="ani.title"></el-input>
+        <div style="width: 100%;">
+          <div>
+            <el-input v-model:model-value="ani.title"></el-input>
+          </div>
+          <div style="width: 100%;justify-content: end;display: flex;margin-top: 8px;"
+               v-if="ani.title !== ani.themoviedbName && ani.themoviedbName.length">
+            <el-text class="mx-1" size="small">
+              标题与 TMDB 不一致!!! 刮削可能会出现问题
+            </el-text>
+            <div style="width: 8px;"></div>
+            <el-button @click="ani.title = ani.themoviedbName" bg text>使用TMDB</el-button>
+          </div>
+        </div>
+      </el-form-item>
+      <el-form-item label="TMDB">
+        <el-input v-model:model-value="ani.themoviedbName" disabled/>
       </el-form-item>
       <el-form-item label="季">
         <div style="display: flex;justify-content: end;width: 100%;">
@@ -57,6 +72,7 @@ const ani = ref({
   'season': 1,
   'offset': 0,
   'title': '',
+  'themoviedbName': '',
   'exclude': [],
   'enable': true,
   'ova': false
