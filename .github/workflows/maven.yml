@@ -36,6 +36,7 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           files: |
             ./target/ani-rss-jar-with-dependencies.jar
+            ./target/ani-rss-launcher.exe
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
       - name: Set up Docker Buildx
