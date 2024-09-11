@@ -5,3 +5,9 @@
 支持 **Telegram** 和 **WebHook** 通知
 
 干翻 **Auto_Bangumi**
+
+
+修复无法进行通知测试的问题
+
+
+
