@@ -60,7 +60,10 @@ public class ConfigUtil {
                                 .setSslEnable(false)
                 )
                 .setLogin(new Login().setUsername("admin").setPassword(password))
-                .setExclude(List.of("720"));
+                .setExclude(List.of("720"))
+                .setTelegram(false)
+                .setTelegramChatId("")
+                .setTelegramBotToken("");
     }
 
     private static final Gson GSON = new GsonBuilder()

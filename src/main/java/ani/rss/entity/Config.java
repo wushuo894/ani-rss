@@ -138,4 +138,20 @@ public class Config implements Serializable {
      * 全局排除
      */
     private List<String> exclude;
+
+    /**
+     * telegram
+     */
+    private Boolean telegram;
+
+    /**
+     * telegram bot token
+     */
+    private String telegramBotToken;
+
+    /**
+     * telegram chat_id
+     */
+    private String telegramChatId;
+
 }
