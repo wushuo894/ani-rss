@@ -42,7 +42,7 @@ jobs:
           file: ./docker/Dockerfile.tpl
           platforms: linux/amd64,linux/arm64
           push: true
-          tags: wushuo894/ani-rss:test
+          tags: wushuo894/ani-rss:test,wushuo894/ani-rss:test-${{ env.version }}
       - name: DockerHub Description
         uses: peter-evans/dockerhub-description@v4
         env:
