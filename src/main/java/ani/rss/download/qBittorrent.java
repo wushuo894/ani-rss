@@ -98,10 +98,15 @@ public class qBittorrent implements BaseDownload {
                 .form("tags", "ani-rss")
                 .thenFunction(HttpResponse::isOk);
 
+        Boolean watchErrorTorrent = config.getWatchErrorTorrent();
+
+        if (!watchErrorTorrent) {
+            return true;
+        }
+
         String hash = FileUtil.mainName(torrentFile);
-        // 等待任务添加完成 最多等待10次检测 共30秒
         for (int i = 0; i < 10; i++) {
-            ThreadUtil.sleep(3000);
+            ThreadUtil.sleep(2000);
             List<TorrentsInfo> torrentsInfos = getTorrentsInfos();
             Optional<TorrentsInfo> optionalTorrentsInfo = torrentsInfos
                     .stream()
