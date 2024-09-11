@@ -63,7 +63,12 @@ public class ConfigUtil {
                 .setExclude(List.of("720"))
                 .setTelegram(false)
                 .setTelegramChatId("")
-                .setTelegramBotToken("");
+                .setTelegramBotToken("")
+                .setTelegramApiHost("https://api.telegram.org")
+                .setWebHook(false)
+                .setWebHookBody("{}")
+                .setWebHookUrl("")
+                .setWebHookMethod("POST");
     }
 
     private static final Gson GSON = new GsonBuilder()
