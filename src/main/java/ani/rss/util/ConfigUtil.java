@@ -66,7 +66,7 @@ public class ConfigUtil {
                 .setTelegramBotToken("")
                 .setTelegramApiHost("https://api.telegram.org")
                 .setWebHook(false)
-                .setWebHookBody("{}")
+                .setWebHookBody("")
                 .setWebHookUrl("")
                 .setWebHookMethod("POST");
     }
