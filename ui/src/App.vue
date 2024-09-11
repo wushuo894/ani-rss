@@ -104,6 +104,8 @@ onMounted(() => {
 
   window.addEventListener('resize', updateGridLayout);
   updateGridLayout();
+
+  enableSelectChange()
 })
 
 let elIconClass = () => {
