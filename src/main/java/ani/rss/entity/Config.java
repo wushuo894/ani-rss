@@ -167,4 +167,6 @@ public class Config implements Serializable {
 
     private Boolean webHook;
 
+    private Boolean tmdb;
+
 }

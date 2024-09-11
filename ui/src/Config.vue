@@ -100,6 +100,15 @@
             <el-form-item label="自动推断剧集偏移">
               <el-switch v-model:model-value="config.offset"></el-switch>
             </el-form-item>
+            <el-form-item label="TMDB">
+              <div>
+                <el-switch v-model:model-value="config.tmdb"/>
+                <br>
+                <el-text class="mx-1" size="small">
+                  自动使用TMDB的标题
+                </el-text>
+              </div>
+            </el-form-item>
             <el-form-item label="自动禁用订阅">
               <div>
                 <el-switch v-model:model-value="config.autoDisabled"/>
@@ -255,6 +264,7 @@ const config = ref({
   'download': 'qBittorrent',
   'exclude': [],
   'rename': true,
+  'tmdb': false,
   'host': '',
   'username': '',
   'password': '',

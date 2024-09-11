@@ -28,7 +28,7 @@ public class ConfigUtil {
      */
     static {
         String password = MD5.create().digestHex("admin");
-        CONFIG.setSleep(5)
+        CONFIG.setSleep(15)
                 .setRenameSleep(1)
                 .setRename(true)
                 .setWatchErrorTorrent(true)
@@ -66,6 +66,7 @@ public class ConfigUtil {
                 .setTelegramBotToken("")
                 .setTelegramApiHost("https://api.telegram.org")
                 .setWebHook(false)
+                .setTmdb(false)
                 .setWebHookBody("")
                 .setWebHookUrl("")
                 .setWebHookMethod("POST");

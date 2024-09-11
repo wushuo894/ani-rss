@@ -132,8 +132,8 @@ public class AniUtil {
             }
         }
 
-        Assert.notBlank(bangumiId,"不支持的链接, 请使用mikan对应番剧的字幕组RSS");
-        Assert.notBlank(subgroupid,"不支持的链接, 请使用mikan对应番剧的字幕组RSS");
+        Assert.notBlank(bangumiId, "不支持的链接, 请使用mikan对应番剧的字幕组RSS");
+        Assert.notBlank(subgroupid, "不支持的链接, 请使用mikan对应番剧的字幕组RSS");
 
         String s = HttpReq.get(url, true)
                 .thenFunction(HttpResponse::body);
@@ -205,7 +205,13 @@ public class AniUtil {
 
         Config config = ConfigUtil.CONFIG;
         Boolean titleYear = config.getTitleYear();
+        Boolean tmdb = config.getTmdb();
+
         AniUtil.getBangumiInfo(ani, true, true, titleYear);
+
+        if (StrUtil.isNotBlank(themoviedbName) && tmdb) {
+            ani.setTitle(themoviedbName);
+        }
 
         log.debug("获取到动漫信息 {}", JSONUtil.formatJsonStr(GSON.toJson(ani)));
 
