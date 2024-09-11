@@ -73,4 +73,6 @@ public class Ani implements Serializable {
      * 总集数
      */
     private Integer totalEpisodeNumber;
+
+    private String themoviedbName;
 }
