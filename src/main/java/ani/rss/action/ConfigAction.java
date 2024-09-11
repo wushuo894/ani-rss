@@ -68,6 +68,25 @@ public class ConfigAction implements BaseAction {
         if (StrUtil.isBlank(loginPassword)) {
             config.getLogin().setPassword(password);
         }
+
+        // 下载地址后面不要带 斜杠
+        String downloadPath = config.getDownloadPath().replace("\\", "/");
+        String ovaDownloadPath = config.getOvaDownloadPath().replace("\\", "/");
+        if (downloadPath.endsWith("/")) {
+            downloadPath = downloadPath.substring(0, downloadPath.length() - 1);
+        }
+        if (ovaDownloadPath.endsWith("/")) {
+            ovaDownloadPath = ovaDownloadPath.substring(0, ovaDownloadPath.length() - 1);
+        }
+        config.setDownloadPath(downloadPath)
+                .setOvaDownloadPath(ovaDownloadPath);
+
+        String telegramApiHost = config.getTelegramApiHost();
+        if (telegramApiHost.endsWith("/")) {
+            telegramApiHost = telegramApiHost.substring(0, telegramApiHost.length() - 1);
+        }
+        config.setTelegramApiHost(telegramApiHost);
+
         ConfigUtil.sync();
         Integer newRenameSleep = config.getRenameSleep();
         Integer newSleep = config.getSleep();
@@ -77,7 +96,7 @@ public class ConfigAction implements BaseAction {
                 !Objects.equals(newRenameSleep, renameSleep)) {
             TaskUtil.restart();
         }
-
+        // 下载工具发生改变
         if (!download.equals(config.getDownload())) {
             TorrentUtil.load();
         }
