@@ -54,7 +54,7 @@ public class UpdateUtil {
         if (!"jar".equals(FileUtil.extName(jar))) {
             throw new RuntimeException("非jar启动 不支持更新");
         }
-        File file = new File(jar + ".tmp");
+        File file = new File(FileUtil.mainName(jar) + "_v" + about.getLatest() + ".jar");
         String downloadUrl = about.getDownloadUrl();
         HttpReq.get(downloadUrl, true)
                 .then(res -> {
