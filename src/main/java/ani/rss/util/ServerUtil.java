@@ -27,13 +27,14 @@ public class ServerUtil {
 
     public static SimpleServer create(String... args) {
         Map<String, String> env = System.getenv();
-        PORT = env.getOrDefault("PORT", "7789");
-
         int i = Arrays.asList(args).indexOf("--port");
 
         if (i > -1) {
             PORT = args[i + 1];
         }
+
+        PORT = env.getOrDefault("PORT", PORT);
+
         SimpleServer server = HttpUtil.createServer(Integer.parseInt(PORT));
 
         server.addAction("/", new RootAction());
