@@ -68,6 +68,7 @@ public class AniUtil {
             Ani newAni = new Ani();
             newAni.setEnable(true)
                     .setOva(false)
+                    .setThemoviedbName("")
                     .setGlobalExclude(false)
                     .setCurrentEpisodeNumber(0)
                     .setTotalEpisodeNumber(0);
@@ -196,6 +197,7 @@ public class AniUtil {
                 .setCurrentEpisodeNumber(0)
                 .setTotalEpisodeNumber(0)
                 .setOva(false)
+                .setThemoviedbName("")
                 .setGlobalExclude(true)
                 .setExclude(List.of("720"));
 
