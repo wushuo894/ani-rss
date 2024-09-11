@@ -195,7 +195,9 @@ public class AniUtil {
                 .setGlobalExclude(true)
                 .setExclude(List.of("720"));
 
-        AniUtil.getBangumiInfo(ani, true, true);
+        Config config = ConfigUtil.CONFIG;
+        Boolean titleYear = config.getTitleYear();
+        AniUtil.getBangumiInfo(ani, true, true, titleYear);
 
         log.debug("获取到动漫信息 {}", JSONUtil.formatJsonStr(GSON.toJson(ani)));
 
@@ -375,7 +377,7 @@ public class AniUtil {
         Assert.notNull(offset, "集数偏移不能为空");
     }
 
-    public static void getBangumiInfo(Ani ani, Boolean ova, Boolean totalEpisode) {
+    public static void getBangumiInfo(Ani ani, Boolean ova, Boolean totalEpisode, Boolean titleYear) {
         String url = ani.getUrl();
         Integer totalEpisodeNumber = ObjectUtil.defaultIfNull(ani.getTotalEpisodeNumber(), 0);
         ani.setTotalEpisodeNumber(totalEpisodeNumber);
@@ -415,10 +417,8 @@ public class AniUtil {
                             }
                         }
                     }
-                    Config config = ConfigUtil.CONFIG;
-                    Boolean titleYear = config.getTitleYear();
                     String title = ani.getTitle();
-                    if (titleYear && StrUtil.isNotBlank(year) && !ReUtil.contains(" (\\d+)$", title)) {
+                    if (titleYear && StrUtil.isNotBlank(year)) {
                         ani.setTitle(StrFormatter.format("{} ({})", title, year));
                     }
 
