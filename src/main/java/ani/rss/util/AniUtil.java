@@ -184,10 +184,14 @@ public class AniUtil {
                 });
 
         title = title.replace("剧场版", "").trim();
+
+        String themoviedbName = getThemoviedbName(title);
+
         ani.setOffset(0)
                 .setUrl(url.trim())
                 .setSeason(season)
                 .setTitle(title)
+                .setThemoviedbName(themoviedbName)
                 .setEnable(true)
                 .setCurrentEpisodeNumber(0)
                 .setTotalEpisodeNumber(0)
@@ -206,7 +210,6 @@ public class AniUtil {
         if (items.isEmpty() || ani.getOva()) {
             return ani;
         }
-        Config config = ConfigUtil.CONFIG;
         // 自动推断剧集偏移
         if (config.getOffset()) {
             int offset = -(items.stream()
@@ -418,8 +421,12 @@ public class AniUtil {
                         }
                     }
                     String title = ani.getTitle();
+                    String themoviedbName = ani.getThemoviedbName();
                     if (titleYear && StrUtil.isNotBlank(year)) {
                         ani.setTitle(StrFormatter.format("{} ({})", title, year));
+                        if (StrUtil.isNotBlank(themoviedbName)) {
+                            ani.setThemoviedbName(StrFormatter.format("{} ({})", themoviedbName, year));
+                        }
                     }
 
                     if (StrUtil.isBlank(bgmUrl) && !ova) {
@@ -465,6 +472,20 @@ public class AniUtil {
                                     ani.setTotalEpisodeNumber(totalEpisodeNumber);
                                 }
                             });
+                });
+    }
+
+    public static String getThemoviedbName(String name) {
+        return HttpReq.get("https://www.themoviedb.org/search", true)
+                .form("query", name)
+                .header("accept-language", "zh-CN")
+                .thenFunction(res -> {
+                    org.jsoup.nodes.Document document = Jsoup.parse(res.body());
+                    Element element = document.selectFirst(".title h2");
+                    if (Objects.isNull(element)) {
+                        return "";
+                    }
+                    return element.ownText();
                 });
     }
 
