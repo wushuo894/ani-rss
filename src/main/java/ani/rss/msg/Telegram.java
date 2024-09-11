@@ -55,9 +55,7 @@ public class Telegram implements Message{
                             .map(JsonElement::getAsJsonObject)
                             .map(o -> o.get("message").getAsJsonObject())
                             .map(o -> o.get("from").getAsJsonObject())
-                            .forEach(o -> {
-                                map.put(o.get("username").getAsString(), o.get("id").getAsString());
-                            });
+                            .forEach(o -> map.put(o.get("username").getAsString(), o.get("id").getAsString()));
                     return map;
                 });
     }
