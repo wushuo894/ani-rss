@@ -24,6 +24,9 @@ jobs:
       - name: Build with Maven
         run: |
           bash ./package.sh
+          wget https://github.com/ojdkbuild/ojdkbuild/releases/download/java-17-openjdk-17.0.3.0.6-1/java-17-openjdk-17.0.3.0.6-1.jre.win.x86_64.zip
+          mv java-17-openjdk-17.0.3.0.6-1.jre.win.x86_64 jre
+          zip ani-rss.win.x86_64.zip ani-rss-launcher.exe jre/
           version=$(cat pom.xml | grep -oPm1 '(?<=<version>).*?(?=</version>)')
           echo "version=v$version" >> $GITHUB_ENV
       - name: Release
@@ -37,6 +40,7 @@ jobs:
           files: |
             ./target/ani-rss-jar-with-dependencies.jar
             ./target/ani-rss-launcher.exe
+            ./target/ani-rss.win.x86_64.zip
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
       - name: Set up Docker Buildx
