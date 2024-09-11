@@ -24,9 +24,7 @@ jobs:
       - name: Build with Maven
         run: |
           bash ./package.sh
-          wget https://github.com/ojdkbuild/ojdkbuild/releases/download/java-17-openjdk-17.0.3.0.6-1/java-17-openjdk-17.0.3.0.6-1.jre.win.x86_64.zip
-          mv java-17-openjdk-17.0.3.0.6-1.jre.win.x86_64 jre
-          zip ani-rss.win.x86_64.zip ani-rss-launcher.exe jre/
+          bash ./package-win.sh
           version=$(cat pom.xml | grep -oPm1 '(?<=<version>).*?(?=</version>)')
           echo "version=v$version" >> $GITHUB_ENV
       - name: Release
