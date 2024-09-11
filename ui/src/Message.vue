@@ -1,5 +1,5 @@
 <template>
-  <el-collapse accordion>
+  <el-collapse v-model:model-value="messageActiveName" accordion>
     <el-collapse-item title="Telegram通知" name="1">
       <el-form label-width="auto" @submit="(event)=>{
                       event.preventDefault()
@@ -169,5 +169,13 @@ const messageTest = (type) => {
       })
 }
 
+const messageActiveName = ref('')
+
 let props = defineProps(['config'])
+
+const init = ()=>{
+  messageActiveName.value = ''
+}
+
+defineExpose({init})
 </script>

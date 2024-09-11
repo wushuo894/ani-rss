@@ -152,7 +152,7 @@
         </el-tab-pane>
         <el-tab-pane label="通知">
           <div style="margin: 4px;">
-            <Message v-model:config="config"/>
+            <Message ref="messageRef" v-model:config="config" v-model:message-active-name="messageActiveName"/>
           </div>
           <div style="height: 4px;"></div>
         </el-tab-pane>
@@ -308,8 +308,12 @@ const activeName = ref('qb')
 
 const exclude = ref()
 
+const messageActiveName = ref('')
+const messageRef = ref()
+
 const showConfig = (ab) => {
   exclude.value?.init()
+  messageRef.value?.init()
   about.value = ab
   if (!ab.update) {
     activeName.value = 'qb'
