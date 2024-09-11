@@ -119,6 +119,22 @@ public class AniUtil {
         int season = 1;
         String title = "无";
 
+        Map<String, String> decodeParamMap = HttpUtil.decodeParamMap(url, StandardCharsets.UTF_8);
+
+        String bangumiId = "", subgroupid = "";
+        for (String k : decodeParamMap.keySet()) {
+            String v = decodeParamMap.get(k);
+            if (k.equalsIgnoreCase("bangumiId")) {
+                bangumiId = v;
+            }
+            if (k.equalsIgnoreCase("subgroupid")) {
+                subgroupid = v;
+            }
+        }
+
+        Assert.notBlank(bangumiId,"不支持的链接, 请使用mikan对应番剧的字幕组RSS");
+        Assert.notBlank(subgroupid,"不支持的链接, 请使用mikan对应番剧的字幕组RSS");
+
         String s = HttpReq.get(url, true)
                 .thenFunction(HttpResponse::body);
         Document document = XmlUtil.readXML(s);
@@ -137,19 +153,6 @@ public class AniUtil {
         if (ReUtil.contains(seasonReg, title)) {
             season = Convert.chineseToNumber(ReUtil.get(seasonReg, title, 1));
             title = ReUtil.replaceAll(title, seasonReg, "").trim();
-        }
-
-        Map<String, String> decodeParamMap = HttpUtil.decodeParamMap(url, StandardCharsets.UTF_8);
-
-        String bangumiId = "", subgroupid = "";
-        for (String k : decodeParamMap.keySet()) {
-            String v = decodeParamMap.get(k);
-            if (k.equalsIgnoreCase("bangumiId")) {
-                bangumiId = v;
-            }
-            if (k.equalsIgnoreCase("subgroupid")) {
-                subgroupid = v;
-            }
         }
 
         Ani ani = new Ani();
@@ -487,17 +490,22 @@ public class AniUtil {
      * @return
      */
     public static String getThemoviedbName(String name) {
-        return HttpReq.get("https://www.themoviedb.org/search", true)
-                .form("query", name)
-                .header("accept-language", "zh-CN")
-                .thenFunction(res -> {
-                    org.jsoup.nodes.Document document = Jsoup.parse(res.body());
-                    Element element = document.selectFirst(".title h2");
-                    if (Objects.isNull(element)) {
-                        return "";
-                    }
-                    return StrUtil.blankToDefault(element.ownText(), "");
-                });
+        try {
+            return HttpReq.get("https://www.themoviedb.org/search", true)
+                    .form("query", name)
+                    .header("accept-language", "zh-CN")
+                    .thenFunction(res -> {
+                        org.jsoup.nodes.Document document = Jsoup.parse(res.body());
+                        Element element = document.selectFirst(".title h2");
+                        if (Objects.isNull(element)) {
+                            return "";
+                        }
+                        return StrUtil.blankToDefault(element.ownText(), "");
+                    });
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+            return "";
+        }
     }
 
 }

@@ -32,11 +32,15 @@
             </div>
             <div style="width: 100%;justify-content: end;display: flex;margin-top: 12px;"
                  v-if="ani.title !== ani.themoviedbName && ani.themoviedbName.length">
-              <el-text class="mx-1" size="small">
-                标题与 TMDB 不一致!!! 刮削可能会出现问题
-              </el-text>
-              <div style="width: 8px;"></div>
               <el-button @click="ani.title = ani.themoviedbName" bg text>使用TMDB</el-button>
+            </div>
+            <div v-if="!ani.themoviedbName.length"
+                 style="width: 100%;justify-content: end;display: flex;margin-top: 12px;">
+              <el-text class="mx-1" size="small">
+                无法获取到其在 TMDB 中的名称!!! 刮削可能会出现问题
+              </el-text>
+              <div style="width: 4px;"></div>
+              <a href="https://tmdb.org" target="_blank">https://tmdb.org</a>
             </div>
           </div>
         </el-form-item>
@@ -160,6 +164,7 @@ let getThemoviedbName = () => {
   getThemoviedbNameLoading.value = true
   api.get("/api/tmdb?method=getThemoviedbName&name=" + ani.value.title)
       .then(res => {
+        ElMessage.success(res.message)
         ani.value.themoviedbName = res.data
       })
       .finally(() => {
