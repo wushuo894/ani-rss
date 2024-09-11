@@ -339,7 +339,7 @@ public class AniUtil {
                     }
                     return false;
                 }).collect(Collectors.toList());
-        return CollUtil.distinct(items, Item::getReName, false);
+        return CollUtil.distinct(items, Item::getReName, true);
     }
 
     /**
