@@ -481,6 +481,12 @@ public class AniUtil {
                 });
     }
 
+    /**
+     * 获取番剧在tmdb的名称
+     *
+     * @param name
+     * @return
+     */
     public static String getThemoviedbName(String name) {
         return HttpReq.get("https://www.themoviedb.org/search", true)
                 .form("query", name)
