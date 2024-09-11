@@ -111,7 +111,7 @@ public class TorrentUtil {
         if (!autoDisabled) {
             return;
         }
-        AniUtil.getBangumiInfo(ani, false, true);
+        AniUtil.getBangumiInfo(ani, false, true,false);
         Integer totalEpisodeNumber = ani.getTotalEpisodeNumber();
         if (totalEpisodeNumber < 1) {
             return;
