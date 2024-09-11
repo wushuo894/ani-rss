@@ -23,7 +23,7 @@ public class ThemoviedbAction implements BaseAction {
             if (ReUtil.contains(yearReg, name)) {
                 themoviedbName = StrFormatter.format("{} ({})", themoviedbName, ReUtil.get(yearReg, name, 1));
             }
-            resultSuccessMsg(themoviedbName);
+            resultSuccess(themoviedbName);
         }
     }
 }

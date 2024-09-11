@@ -197,7 +197,6 @@ public class AniUtil {
                 .setCurrentEpisodeNumber(0)
                 .setTotalEpisodeNumber(0)
                 .setOva(false)
-                .setThemoviedbName("")
                 .setGlobalExclude(true)
                 .setExclude(List.of("720"));
 
@@ -497,7 +496,7 @@ public class AniUtil {
                     if (Objects.isNull(element)) {
                         return "";
                     }
-                    return element.ownText();
+                    return StrUtil.blankToDefault(element.ownText(), "");
                 });
     }
 

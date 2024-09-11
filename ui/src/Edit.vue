@@ -22,7 +22,11 @@
         </div>
       </el-form-item>
       <el-form-item label="TMDB">
-        <el-input v-model:model-value="ani.themoviedbName" disabled/>
+        <div style="display: flex;width: 100%;justify-content: space-between;">
+          <el-input v-model:model-value="ani.themoviedbName" disabled/>
+          <div style="width: 4px;"></div>
+          <el-button icon="Refresh" bg text @click="getThemoviedbName" :loading="getThemoviedbNameLoading"/>
+        </div>
       </el-form-item>
       <el-form-item label="季">
         <div style="display: flex;justify-content: end;width: 100%;">
@@ -98,6 +102,23 @@ const showEdit = (item) => {
   editDialogVisible.value = true
   ani.value = JSON.parse(JSON.stringify(item))
   exclude.value?.init()
+}
+
+let getThemoviedbNameLoading = ref(false)
+
+let getThemoviedbName = () => {
+  if (!ani.value.title.length) {
+    return
+  }
+
+  getThemoviedbNameLoading.value = true
+  api.get("/api/tmdb?method=getThemoviedbName&name=" + ani.value.title)
+      .then(res => {
+        ani.value.themoviedbName = res.data
+      })
+      .finally(() => {
+        getThemoviedbNameLoading.value = false
+      })
 }
 
 defineExpose({
