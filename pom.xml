@@ -106,7 +106,7 @@
                             <restartOnCrash>false</restartOnCrash>
                             <icon>ui/public/favicon.ico</icon>
                             <jre>
-                                <path>%JAVA_HOME%;%PATH%</path>
+                                <path>jre/bin;%JAVA_HOME%;%PATH%</path>
                                 <minVersion>11</minVersion>
                             </jre>
                         </configuration>
