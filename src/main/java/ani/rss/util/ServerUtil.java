@@ -6,6 +6,7 @@ import ani.rss.annotation.Auth;
 import ani.rss.annotation.Path;
 import ani.rss.auth.util.AuthUtil;
 import ani.rss.entity.Result;
+import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.core.util.ClassUtil;
@@ -16,6 +17,7 @@ import cn.hutool.http.server.HttpServerResponse;
 import cn.hutool.http.server.SimpleServer;
 import cn.hutool.log.Log;
 
+import java.io.File;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.Objects;
@@ -79,7 +81,11 @@ public class ServerUtil {
                 }
             });
         }
-        ThreadUtil.sleep(1000);
+        File jar = UpdateUtil.getJar();
+        String extName = FileUtil.extName(jar);
+        if ("exe".equals(extName)) {
+            ThreadUtil.sleep(1000);
+        }
         return server;
     }
 }

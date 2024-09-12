@@ -6,7 +6,6 @@ import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.text.StrFormatter;
 import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.core.util.RuntimeUtil;
-import cn.hutool.system.SystemUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -81,10 +80,13 @@ public class UpdateUtil {
                     }
                     ThreadUtil.execute(() -> {
                         FileUtil.rename(file, jar.getName(), true);
-                        ThreadUtil.sleep(3000);
                         if ("exe".equals(extName)) {
+                            ThreadUtil.sleep(1000);
                             RuntimeUtil.exec(file.getName());
+                            System.exit(0);
+                            return;
                         }
+                        ThreadUtil.sleep(3000);
                         System.exit(0);
                     });
                 });
