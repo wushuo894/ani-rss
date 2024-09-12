@@ -209,7 +209,11 @@ public class AniUtil {
         Boolean titleYear = config.getTitleYear();
         Boolean tmdb = config.getTmdb();
 
-        AniUtil.getBangumiInfo(ani, true, true, titleYear);
+        try {
+            AniUtil.getBangumiInfo(ani, true, true, titleYear);
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+        }
 
         if (StrUtil.isNotBlank(themoviedbName) && tmdb) {
             ani.setTitle(themoviedbName);
