@@ -4,7 +4,7 @@
 
 [群晖NAS](#群晖nas)
 
-### windows 启动
+### Windows
 
 分为两个版本
 
@@ -19,11 +19,11 @@
 推荐使用 jdk11 或 jdk17
 如果已经有了可以跳过
 
-##### windows
+##### Windows
 
     winget install 'OpenJDK 11'
 
-##### linux
+##### Linux
 
     sudo apt update
     sudo apt install openjdk-11-jdk
