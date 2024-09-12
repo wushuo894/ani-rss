@@ -32,6 +32,7 @@ import {ref} from "vue";
 import CryptoJS from "crypto-js"
 import App from "./App.vue";
 import api from "./api.js";
+import { useDark } from '@vueuse/core'
 
 let loading = ref(false)
 
@@ -62,6 +63,8 @@ let login = () => {
         loading.value = false
       })
 }
+
+useDark()
 </script>
 
 <style>
