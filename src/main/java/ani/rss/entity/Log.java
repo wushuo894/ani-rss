@@ -10,4 +10,5 @@ import java.io.Serializable;
 public class Log implements Serializable {
     private String message;
     private String level;
+    private String loggerName;
 }

@@ -15,7 +15,6 @@ public class HttpReq {
     }
 
     private static HttpRequest config(HttpRequest req) {
-        // TODO: 2024/9/7 修改超时时间
         return req.timeout(6000)
                 .setFollowRedirects(true);
     }
