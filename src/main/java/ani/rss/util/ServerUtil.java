@@ -7,6 +7,7 @@ import ani.rss.annotation.Path;
 import ani.rss.auth.util.AuthUtil;
 import ani.rss.entity.Result;
 import cn.hutool.core.io.IoUtil;
+import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.core.util.ClassUtil;
 import cn.hutool.core.util.ReflectUtil;
 import cn.hutool.http.HttpUtil;
@@ -78,6 +79,7 @@ public class ServerUtil {
                 }
             });
         }
+        ThreadUtil.sleep(1000);
         return server;
     }
 }
