@@ -77,6 +77,7 @@ const config = ref({
   'acronym': false,
   'titleYear': false,
   'autoDisabled': false,
+  'skip5': true,
   'debug': false,
   'proxy': false,
   'proxyHost': '',
