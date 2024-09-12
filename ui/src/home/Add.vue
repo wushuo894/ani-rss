@@ -12,16 +12,25 @@
                 event.preventDefault()
              }">
             <el-form-item label="RSS 地址">
-              <el-input
-                  v-model:model-value="ani.url"
-                  placeholder="https://mikanani.me/RSS/Bangumi?bangumiId=xxx&subgroupid=xxx"
-              />
+              <div style="width: 100%">
+                <el-input
+                    v-model:model-value="ani.url"
+                    placeholder="https://mikanani.me/RSS/Bangumi?bangumiId=xxx&subgroupid=xxx"
+                />
+                <br>
+                <div style="width: 100%;display: flex;justify-content: end;margin-top: 8px;">
+                  <el-button @click="mikan?.show" text bg>Mikan</el-button>
+                </div>
+                <div>
+                  <el-text class="mx-1" size="small">
+                    不支持聚合订阅，原因是如果一次过多更新会出现遗漏
+                    <br>
+                    不必在 mikan 网站添加订阅, 你可以通过上方👆 [Mikan] 按钮浏览字幕组订阅
+                  </el-text>
+                </div>
+              </div>
             </el-form-item>
           </el-form>
-          <div style="display: flex;justify-content: space-between;width: 100%;margin-top: 10px;">
-            <el-button @click="mikan?.show" text bg>Mikan</el-button>
-            <el-button :loading="rssButtonLoading" @click="getRss('mikan')" text bg>确定</el-button>
-          </div>
         </el-tab-pane>
         <el-tab-pane label="Nyaa" name="2">
           <el-form label-width="auto"
@@ -43,11 +52,11 @@
               />
             </el-form-item>
           </el-form>
-          <div style="display: flex;justify-content: end;width: 100%;margin-top: 10px;">
-            <el-button :loading="rssButtonLoading" @click="getRss('nyaa')" text bg>确定</el-button>
-          </div>
         </el-tab-pane>
       </el-tabs>
+      <div style="display: flex;justify-content: end;width: 100%;margin-top: 10px;">
+        <el-button :loading="rssButtonLoading" @click="getRss('nyaa')" text bg>确定</el-button>
+      </div>
     </div>
     <div v-else>
       <el-form label-width="auto"

@@ -59,8 +59,8 @@
 
 <script setup>
 import {onMounted, ref} from "vue";
-import {Plus} from "@element-plus/icons-vue"
-import Config from "./Config.vue";
+import {Plus, Setting, Tickets} from "@element-plus/icons-vue"
+import Config from "../config/Config.vue";
 import List from "./List.vue";
 import Add from "./Add.vue";
 import Logs from "./Logs.vue";
