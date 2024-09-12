@@ -32,7 +32,7 @@
                                     font-weight: 300;
                                     line-height: 1.667;
                                     -webkit-line-clamp: 2;
-                                    max-width: 260px;
+                                    max-width: 220px;
                                     overflow: hidden;
                                     text-overflow: ellipsis;
                                     letter-spacing: .0333333333em !important;
