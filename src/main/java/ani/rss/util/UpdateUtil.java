@@ -6,6 +6,7 @@ import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.text.StrFormatter;
 import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.core.util.RuntimeUtil;
+import cn.hutool.core.util.StrUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -59,7 +60,7 @@ public class UpdateUtil {
             return;
         }
         File jar = getJar();
-        String extName = FileUtil.extName(jar);
+        String extName = StrUtil.blankToDefault(FileUtil.extName(jar), "");
         String mainName = FileUtil.mainName(jar);
         if (!List.of("jar", "exe").contains(extName)) {
             throw new RuntimeException("不支持更新");
