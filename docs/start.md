@@ -4,6 +4,16 @@
 
 [群晖NAS](#群晖nas)
 
+### windows 启动
+
+分为两个版本
+
+[ani-rss.win.x86_64.zip](https://github.com/wushuo894/ani-rss/releases/latest) 自带jdk, 解压后即可运行
+
+[ani-rss-launcher.exe](https://github.com/wushuo894/ani-rss/releases/latest) 需要 [自行安装jdk](#windows)
+
+运行后 **右下角会出现托盘** 可通过其打开浏览器
+
 ### 安装 java
 
 推荐使用 jdk11 或 jdk17
