@@ -63,21 +63,26 @@ public class UpdateUtil {
         String extName = FileUtil.extName(jar);
         String mainName = FileUtil.mainName(jar);
         if (!List.of("jar", "exe").contains(extName)) {
-            throw new RuntimeException("非jar启动 不支持更新");
+            throw new RuntimeException("不支持更新");
+        }
+        if ("exe".equals(extName)) {
+            mainName = "ani-rss-launcher";
         }
         File file = new File(StrFormatter.format("{}_v{}.{}", mainName, latest, extName));
+        FileUtil.del(file);
         String downloadUrl = about.getDownloadUrl();
         HttpReq.get(downloadUrl, true)
                 .then(res -> {
                     long contentLength = res.contentLength();
                     FileUtil.writeFromStream(res.bodyStream(), file, true);
                     if (contentLength != file.length()) {
-                        throw new RuntimeException("下载出现问题");
+                        log.error("下载出现问题");
+                        return;
                     }
                     ThreadUtil.execute(() -> {
                         FileUtil.rename(file, jar.getName(), true);
                         ThreadUtil.sleep(3000);
-                        if (SystemUtil.getOsInfo().isWindows() && "exe".equals(extName)) {
+                        if ("exe".equals(extName)) {
                             RuntimeUtil.exec(file.getName());
                         }
                         System.exit(0);
