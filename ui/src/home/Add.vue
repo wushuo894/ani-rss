@@ -3,7 +3,7 @@
   <el-dialog v-model="dialogVisible" title="添加订阅" center>
     <div v-if="showRss" @keydown.enter="getRss">
       <el-tabs tab-position="left" v-model="activeName">
-        <el-tab-pane label="Mikan" name="1">
+        <el-tab-pane label="Mikan" name="mikan">
           <el-form label-width="auto"
                    style="height: 200px"
                    v-if="showRss" @keydown.enter="getRss('mikan')"
@@ -31,7 +31,7 @@
             </el-form-item>
           </el-form>
         </el-tab-pane>
-        <el-tab-pane label="Nyaa" name="2">
+        <el-tab-pane label="Nyaa" name="nyaa">
           <el-form label-width="auto"
                    style="height: 200px"
                    v-if="showRss" @keydown.enter="getRss('nyaa')"
@@ -54,7 +54,7 @@
         </el-tab-pane>
       </el-tabs>
       <div style="display: flex;justify-content: end;width: 100%;margin-top: 10px;">
-        <el-button :loading="rssButtonLoading" @click="getRss('nyaa')" text bg>确定</el-button>
+        <el-button :loading="rssButtonLoading" @click="getRss" text bg>确定</el-button>
       </div>
     </div>
     <div v-else>
@@ -88,9 +88,9 @@ const ani = ref({
 
 const rssButtonLoading = ref(false)
 
-const getRss = (type) => {
+const getRss = () => {
   rssButtonLoading.value = true
-  ani.value.type = type
+  ani.value.type = activeName.value
   api.post('/api/rss', ani.value)
       .then(res => {
         ani.value = res['data']
@@ -110,7 +110,7 @@ const addAni = (fun) => {
       }).finally(fun)
 }
 
-const activeName = ref('1')
+const activeName = ref('mikan')
 
 const showAdd = () => {
   ani.value = {
@@ -120,7 +120,7 @@ const showAdd = () => {
     'title': '',
     'exclude': []
   }
-  activeName.value = '1'
+  activeName.value = 'mikan'
   showRss.value = true
   dialogVisible.value = true
   rssButtonLoading.value = false
