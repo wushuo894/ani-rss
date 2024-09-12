@@ -21,14 +21,17 @@ public class RssAction implements BaseAction {
         if (!req.getMethod().equals("POST")) {
             return;
         }
-        String url = getBody(Ani.class).getUrl();
+        Ani ani = getBody(Ani.class);
+        String url = ani.getUrl();
+        String type = ani.getType();
+        String title = ani.getTitle();
         Assert.notBlank(url, "RSS地址 不能为空");
         if (!ReUtil.contains("http(s*)://", url)) {
             url = "https://" + url;
         }
         try {
-            Ani ani = AniUtil.getAni(url);
-            resultSuccess(ani);
+            Ani newAni = AniUtil.getAni(url,title, type);
+            resultSuccess(newAni);
         } catch (Exception e) {
             log.error(e.getMessage());
             log.debug(e.getMessage(), e);
