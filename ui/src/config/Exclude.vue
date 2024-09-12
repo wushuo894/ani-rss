@@ -27,7 +27,8 @@
       </el-button>
     </div>
     <div style="margin-top: 4px;width: 100%;display: flex; justify-content: space-between;">
-      <el-button bg text size="small" @click="importExclude" v-if="props.importExclude" :disabled="disabledImportExclude" :loading="importExcludeLoading">
+      <el-button bg text size="small" @click="importExclude" v-if="props.importExclude"
+                 :disabled="disabledImportExclude" :loading="importExcludeLoading">
         <el-icon>
           <Download/>
         </el-icon>
@@ -80,7 +81,12 @@ let importExclude = () => {
   api.get("/api/config")
       .then(res => {
         disabledImportExclude.value = true
-        props.exclude.push(...res.data.exclude)
+        for (let it of res.data.exclude) {
+          if (props.exclude.indexOf(it) > -1) {
+            continue
+          }
+          props.exclude.push(it)
+        }
       })
       .finally(() => {
         importExcludeLoading.value = false
