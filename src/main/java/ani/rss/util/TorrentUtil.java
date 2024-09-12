@@ -226,7 +226,11 @@ public class TorrentUtil {
         if (files.stream()
                 .filter(file -> {
                     if (file.isFile()) {
-                        return BaseDownload.videoFormat.contains(FileUtil.extName(file));
+                        String extName = FileUtil.extName(file);
+                        if (StrUtil.isBlank(extName)) {
+                            return false;
+                        }
+                        return BaseDownload.videoFormat.contains(extName);
                     }
                     return true;
                 })
