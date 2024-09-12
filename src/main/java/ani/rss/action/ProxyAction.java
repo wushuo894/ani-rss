@@ -4,6 +4,7 @@ import ani.rss.annotation.Auth;
 import ani.rss.annotation.Path;
 import ani.rss.entity.Config;
 import cn.hutool.core.codec.Base64;
+import cn.hutool.core.date.LocalDateTimeUtil;
 import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpResponse;
 import cn.hutool.http.server.HttpServerRequest;
@@ -11,6 +12,7 @@ import cn.hutool.http.server.HttpServerResponse;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
+import java.util.Map;
 
 @Slf4j
 @Auth
@@ -30,14 +32,18 @@ public class ProxyAction implements BaseAction {
         log.info(url);
 
         HttpRequest httpRequest = HttpRequest.get(url)
-                .setFollowRedirects(true);
-
+                .setFollowRedirects(true)
+                .timeout(6000);
+        long start = LocalDateTimeUtil.toEpochMilli(LocalDateTimeUtil.now());
         if (proxy) {
             httpRequest.setHttpProxy(proxyHost, proxyPort);
         }
 
         Integer status = httpRequest
                 .thenFunction(HttpResponse::getStatus);
-        resultSuccess(status);
+
+        long end = LocalDateTimeUtil.toEpochMilli(LocalDateTimeUtil.now());
+
+        resultSuccess(Map.of("status", status, "time", end - start));
     }
 }

@@ -1,19 +1,22 @@
 <template>
   <Edit ref="edit" @load="getList"></Edit>
-  <div style="margin: 0 10px;min-height: 500px" v-loading="loading">
-    <el-empty v-if="!getPage().length" style="min-height: 500px"></el-empty>
-    <div class="grid-container" v-show="getPage().length">
-      <div v-for="(item,index) in getPage()">
-        <el-card shadow="never">
-          <div style="display: flex;width: 100%;align-items: center;">
-            <div style="height: 100%;">
-              <img :src="`/api/file?filename=${item['cover']}&s=${authorization()}`" height="130" width="92"
-                   :alt="item.title"
-                   style="border-radius: 4px;">
-            </div>
-            <div style="flex-grow: 1;position: relative;">
-              <div style="margin-left: 10px;">
-                <div style="
+  <div style="height: 100%;overflow: hidden;">
+
+    <el-scrollbar>
+      <div style="margin: 0 10px;min-height: 500px" v-loading="loading">
+        <el-empty v-if="!getPage().length" style="min-height: 500px"></el-empty>
+        <div class="grid-container" v-show="getPage().length">
+          <div v-for="(item,index) in getPage()">
+            <el-card shadow="never">
+              <div style="display: flex;width: 100%;align-items: center;">
+                <div style="height: 100%;">
+                  <img :src="`/api/file?filename=${item['cover']}&s=${authorization()}`" height="130" width="92"
+                       :alt="item.title"
+                       style="border-radius: 4px;">
+                </div>
+                <div style="flex-grow: 1;position: relative;">
+                  <div style="margin-left: 10px;">
+                    <div style="
                           column-count: 1;
                           overflow: hidden;
                           white-space: nowrap;
@@ -24,9 +27,9 @@
                           font-weight: 500;
                           hyphens: auto;
                           letter-spacing: .0125em;">
-                  {{ item.title }}
-                </div>
-                <div style="
+                      {{ item.title }}
+                    </div>
+                    <div style="
                                     color: #9e9e9e !important;
                                     font-size: .75rem !important;
                                     font-weight: 300;
@@ -38,128 +41,132 @@
                                     letter-spacing: .0333333333em !important;
                                     font-family: Roboto, sans-serif;
                                     text-transform: none !important;">
-                  {{ item.url }}
-                </div>
-                <div style="
+                      {{ item.url }}
+                    </div>
+                    <div style="
                         width: 180px;
                         display: grid;
                         grid-gap: 4px;
                         "
-                     :class="itemsPerRow > 1 ? 'gtc3' : 'gtc2'"
-                >
-                  <el-tag>
-                    第 {{ item.season }} 季
-                  </el-tag>
-                  <el-tag type="success" v-if="item.enable">
-                    已启用
-                  </el-tag>
-                  <el-tag type="success" v-else>
-                    未启用
-                  </el-tag>
-                  <el-tag type="info" v-if="itemsPerRow > 1">
-                    {{ item['subgroup'] ? item['subgroup'] : '未知' }}
-                  </el-tag>
-                  <el-tag type="info" v-else>
-                    {{ (item['subgroup'] ? item['subgroup'] : '未知').substr(0, 6) }}
-                  </el-tag>
-                  <el-tag type="warning" v-if="item['currentEpisodeNumber']">
-                    {{ item['currentEpisodeNumber'] }} /
-                    {{ item['totalEpisodeNumber'] ? item['totalEpisodeNumber'] : '*' }}
-                  </el-tag>
-                  <el-tag type="danger" v-if="item.ova">
-                    ova
-                  </el-tag>
-                  <el-tag type="danger" v-else>
-                    tv
-                  </el-tag>
-                </div>
-              </div>
-              <div
-                  style="display: flex;align-items: flex-end;justify-content:flex-end; flex-direction: column;position: absolute;right: 0;bottom: 0;">
-                <el-button text @click="edit?.showEdit(item)" bg>
-                  <el-icon>
-                    <EditIcon/>
-                  </el-icon>
-                </el-button>
-                <div style="height: 5px;"></div>
-                <el-popconfirm title="你确定要删除吗?" @confirm="delAni(item)">
-                  <template #reference>
-                    <el-button type="danger" text :loading="item['deleteLoading']" bg>
+                         :class="itemsPerRow > 1 ? 'gtc3' : 'gtc2'"
+                    >
+                      <el-tag>
+                        第 {{ item.season }} 季
+                      </el-tag>
+                      <el-tag type="success" v-if="item.enable">
+                        已启用
+                      </el-tag>
+                      <el-tag type="success" v-else>
+                        未启用
+                      </el-tag>
+                      <el-tag type="info" v-if="itemsPerRow > 1">
+                        {{ item['subgroup'] ? item['subgroup'] : '未知' }}
+                      </el-tag>
+                      <el-tag type="info" v-else>
+                        {{ (item['subgroup'] ? item['subgroup'] : '未知').substr(0, 6) }}
+                      </el-tag>
+                      <el-tag type="warning" v-if="item['currentEpisodeNumber']">
+                        {{ item['currentEpisodeNumber'] }} /
+                        {{ item['totalEpisodeNumber'] ? item['totalEpisodeNumber'] : '*' }}
+                      </el-tag>
+                      <el-tag type="danger" v-if="item.ova">
+                        ova
+                      </el-tag>
+                      <el-tag type="danger" v-else>
+                        tv
+                      </el-tag>
+                    </div>
+                  </div>
+                  <div
+                      style="display: flex;align-items: flex-end;justify-content:flex-end; flex-direction: column;position: absolute;right: 0;bottom: 0;">
+                    <el-button text @click="edit?.showEdit(item)" bg>
                       <el-icon>
-                        <Delete/>
+                        <EditIcon/>
                       </el-icon>
                     </el-button>
-                  </template>
-                  <template #actions="{ confirm, cancel }">
-                    <el-button size="small" @click="cancel" bg text icon="Close">取消</el-button>
-                    <div style="margin: 4px;"></div>
-                    <el-button
-                        type="danger"
-                        size="small"
-                        @click="confirm"
-                        bg text
-                        icon="Check"
-                    >
-                      确定
-                    </el-button>
-                  </template>
-                </el-popconfirm>
+                    <div style="height: 5px;"></div>
+                    <el-popconfirm title="你确定要删除吗?" @confirm="delAni(item)">
+                      <template #reference>
+                        <el-button type="danger" text :loading="item['deleteLoading']" bg>
+                          <el-icon>
+                            <Delete/>
+                          </el-icon>
+                        </el-button>
+                      </template>
+                      <template #actions="{ confirm, cancel }">
+                        <el-button size="small" @click="cancel" bg text icon="Close">取消</el-button>
+                        <div style="margin: 4px;"></div>
+                        <el-button
+                            type="danger"
+                            size="small"
+                            @click="confirm"
+                            bg text
+                            icon="Check"
+                        >
+                          确定
+                        </el-button>
+                      </template>
+                    </el-popconfirm>
+                  </div>
+                </div>
               </div>
-            </div>
+            </el-card>
           </div>
-        </el-card>
+        </div>
       </div>
-    </div>
-  </div>
-  <div style="height: 8px;"></div>
-  <div style="margin: 0 10px;" id="page">
-    <div style="margin-bottom: 10px;">
-      <el-pagination background layout="prev, pager, next"
-                     :total="searchList().length"
-                     :pager-count="pagerCount"
-                     v-model:current-page="props.currentPage"
-                     v-model:page-size="pageSize"/>
-    </div>
-    <div style="display: flex;justify-content: space-between;width: 100%;">
-      <div style="width: 100px;" id="page-size">
-        <el-select v-model:model-value="pageSize" @change="updatePageSize">
-          <el-option v-for="page in [10, 20, 40, 80, 160]"
-                     :key="page"
-                     :label="page"
-                     :value="page"/>
-        </el-select>
-      </div>
-      <div style="margin-left: 5px;">
-        <el-popconfirm title="你确定要退出吗?" @confirm="logout">
-          <template #reference>
-            <el-button type="danger" bg text>
-              <el-icon :class="elIconClass()">
-                <Back/>
-              </el-icon>
-              <template v-if="itemsPerRow > 1">
-                退出登录
+    </el-scrollbar>
+    <el-affix position="bottom">
+      <div style="width: 100%;
+                                                      background: linear-gradient(to bottom,rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.01) );
+                                                      backdrop-filter: blur(2px);padding-top: 10px;z-index: 99999"
+           id="page">
+        <div style="margin-bottom: 10px;margin-left: 10px;">
+          <el-pagination background layout="prev, pager, next"
+                         :total="searchList().length"
+                         :pager-count="pagerCount"
+                         v-model:current-page="currentPage"
+                         v-model:page-size="pageSize"/>
+        </div>
+        <div style="display: flex;justify-content: space-between;width: 100%;">
+          <div style="width: 100px;margin-bottom: 10px;margin-left: 10px" id="page-size">
+            <el-select v-model:model-value="pageSize" @change="updatePageSize">
+              <el-option v-for="page in [10, 20, 40, 80, 160]"
+                         :key="page"
+                         :label="page"
+                         :value="page"/>
+            </el-select>
+          </div>
+          <div style="margin-right: 10px;margin-bottom: 10px;">
+            <el-popconfirm title="你确定要退出吗?" @confirm="logout">
+              <template #reference>
+                <el-button type="danger" bg text>
+                  <el-icon :class="elIconClass()">
+                    <Back/>
+                  </el-icon>
+                  <template v-if="itemsPerRow > 1">
+                    退出登录
+                  </template>
+                </el-button>
               </template>
-            </el-button>
-          </template>
-          <template #actions="{ confirm, cancel }">
-            <el-button size="small" @click="cancel" bg text icon="Close">取消</el-button>
-            <div style="margin: 4px;"></div>
-            <el-button
-                type="danger"
-                size="small"
-                @click="confirm"
-                bg text
-                icon="Check"
-            >
-              确定
-            </el-button>
-          </template>
-        </el-popconfirm>
-
+              <template #actions="{ confirm, cancel }">
+                <el-button size="small" @click="cancel" bg text icon="Close">取消</el-button>
+                <div style="margin: 4px;"></div>
+                <el-button
+                    type="danger"
+                    size="small"
+                    @click="confirm"
+                    bg text
+                    icon="Check"
+                >
+                  确定
+                </el-button>
+              </template>
+            </el-popconfirm>
+          </div>
+        </div>
       </div>
-    </div>
+    </el-affix>
   </div>
-  <div style="height: 10px;"></div>
 </template>
 
 <script setup>
@@ -177,7 +184,7 @@ const loading = ref(true)
 
 const updatePageSize = (size) => {
   window.localStorage.setItem('pageSize', size.toString())
-  props.currentPage = 1
+  currentPage.value = 1
 }
 
 const searchList = () => {
@@ -206,8 +213,8 @@ const getPage = () => {
   if (!props) {
     return searchList();
   }
-  let start = (props?.currentPage - 1) * pageSize.value
-  let end = (props?.currentPage - 1) * pageSize.value + pageSize.value
+  let start = (currentPage.value - 1) * pageSize.value
+  let end = (currentPage.value - 1) * pageSize.value + pageSize.value
   return searchList().slice(start, end);
 }
 
@@ -239,6 +246,7 @@ let authorization = () => {
   return window.authorization;
 }
 
+const currentPage = ref(1)
 const itemsPerRow = ref(1)
 
 onMounted(() => {
@@ -275,11 +283,15 @@ let elIconClass = () => {
   return itemsPerRow.value > 1 ? 'el-icon--left' : '';
 }
 
+let setCurrentPage = (page) => {
+  currentPage.value = page
+}
+
 defineExpose({
-  getList
+  getList, setCurrentPage
 })
 
-let props = defineProps(['title', 'currentPage', 'filter'])
+let props = defineProps(['title', 'filter'])
 
 </script>
 
