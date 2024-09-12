@@ -3,8 +3,8 @@
   <Mikan ref="mikan" @add="args => ani.url = args"/>
   <el-dialog v-model="addDialogVisible" title="添加订阅" center>
     <div v-if="showRss" @keydown.enter="getRss">
-      <el-tabs tab-position="left">
-        <el-tab-pane label="Mikan">
+      <el-tabs tab-position="left" v-model="activeName">
+        <el-tab-pane label="Mikan" name="1">
           <el-form label-width="auto"
                    style="height: 200px"
                    v-if="showRss" @keydown.enter="getRss('mikan')"
@@ -23,7 +23,7 @@
             <el-button :loading="rssButtonLoading" @click="getRss('mikan')" text bg>确定</el-button>
           </div>
         </el-tab-pane>
-        <el-tab-pane label="Nyaa">
+        <el-tab-pane label="Nyaa" name="2">
           <el-form label-width="auto"
                    style="height: 200px"
                    v-if="showRss" @keydown.enter="getRss('nyaa')"
@@ -169,6 +169,8 @@ const addAni = () => {
       })
 }
 
+const activeName = ref('1')
+
 const showAdd = () => {
   ani.value = {
     'url': '',
@@ -177,6 +179,7 @@ const showAdd = () => {
     'title': '',
     'exclude': []
   }
+  activeName.value = '1'
   showRss.value = true
   addDialogVisible.value = true
   addAniButtonLoading.value = false
