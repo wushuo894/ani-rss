@@ -12,12 +12,12 @@
     "@element-plus/icons-vue": "^2.3.1",
     "@vueuse/core": "^11.0.3",
     "crypto-js": "^4.2.0",
-    "element-plus": "^2.8.1",
-    "vue": "^3.4.38"
+    "element-plus": "^2.8.2",
+    "vue": "^3.5.4"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^5.1.3",
-    "shiki": "^1.16.1",
-    "vite": "^5.4.2"
+    "shiki": "^1.17.0",
+    "vite": "^5.4.4"
   }
 }

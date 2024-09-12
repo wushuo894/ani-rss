@@ -167,7 +167,7 @@ import {onMounted, ref} from "vue";
 import {ElMessage} from 'element-plus'
 import {Back, Edit as EditIcon} from "@element-plus/icons-vue"
 import Edit from "./Edit.vue";
-import api from "./api.js";
+import api from "../api.js";
 
 const pagerCount = ref(10)
 
