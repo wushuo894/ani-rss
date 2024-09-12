@@ -90,6 +90,11 @@ public class Config implements Serializable {
     private Boolean autoDisabled;
 
     /**
+     * 自动跳过 xx.5 集数
+     */
+    private Boolean skip5;
+
+    /**
      * DEBUG
      */
     private Boolean debug;
