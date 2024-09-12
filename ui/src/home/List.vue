@@ -262,6 +262,9 @@ onMounted(() => {
       return
     }
     const windowWidth = window.innerWidth;
+    if (windowWidth) {
+      document.querySelector('.el-affix').style['width'] = windowWidth+'px'
+    }
     itemsPerRow.value = Math.max(1, Math.floor(windowWidth / 400));
     gridContainer.style.gridTemplateColumns = `repeat(${itemsPerRow.value}, 1fr)`;
     if (itemsPerRow.value === 1) {
