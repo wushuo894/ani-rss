@@ -5,12 +5,15 @@ import cn.hutool.core.comparator.VersionComparator;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.text.StrFormatter;
 import cn.hutool.core.thread.ThreadUtil;
+import cn.hutool.core.util.RuntimeUtil;
+import cn.hutool.system.SystemUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 
 import java.io.File;
+import java.util.List;
 
 @Slf4j
 public class UpdateUtil {
@@ -35,7 +38,12 @@ public class UpdateUtil {
                                 .setLatest(latest);
                         Element markdownBody = box.selectFirst(".markdown-body");
                         about.setMarkdownBody(markdownBody.html());
-                        String downloadUrl = StrFormatter.format("https://github.com/wushuo894/ani-rss/releases/download/v{}/ani-rss-jar-with-dependencies.jar", latest);
+                        String filename = "ani-rss-jar-with-dependencies.jar";
+                        File jar = getJar();
+                        if (FileUtil.extName(jar).equals("exe")) {
+                            filename = "ani-rss-launcher.exe";
+                        }
+                        String downloadUrl = StrFormatter.format("https://github.com/wushuo894/ani-rss/releases/download/v{}/{}", latest, filename);
                         about.setDownloadUrl(downloadUrl);
                     });
         } catch (Exception e) {
@@ -47,14 +55,17 @@ public class UpdateUtil {
 
     public static void update(About about) {
         Boolean update = about.getUpdate();
+        String latest = about.getLatest();
         if (!update) {
             return;
         }
         File jar = getJar();
-        if (!"jar".equals(FileUtil.extName(jar))) {
+        String extName = FileUtil.extName(jar);
+        String mainName = FileUtil.mainName(jar);
+        if (!List.of("jar", "exe").contains(extName)) {
             throw new RuntimeException("非jar启动 不支持更新");
         }
-        File file = new File(FileUtil.mainName(jar) + "_v" + about.getLatest() + ".jar");
+        File file = new File(StrFormatter.format("{}_v{}.{}", mainName, latest, extName));
         String downloadUrl = about.getDownloadUrl();
         HttpReq.get(downloadUrl, true)
                 .then(res -> {
@@ -66,6 +77,9 @@ public class UpdateUtil {
                     ThreadUtil.execute(() -> {
                         FileUtil.rename(file, jar.getName(), true);
                         ThreadUtil.sleep(3000);
+                        if (SystemUtil.getOsInfo().isWindows() && "exe".equals(extName)) {
+                            RuntimeUtil.exec(file.getName());
+                        }
                         System.exit(0);
                     });
                 });

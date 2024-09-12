@@ -25,8 +25,7 @@ public class MenuUtil {
         if (Arrays.asList(args).contains("--gui")) {
             try {
                 showSystemTray();
-                // 直接输出到控制台，不使用 logger
-                System.out.println("启动系统托盘已启动");
+                log.info("启动系统托盘已启动");
             } catch (Exception e) {
                 log.error("启动系统托盘失败", e);
                 System.exit(1);
