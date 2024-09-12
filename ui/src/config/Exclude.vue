@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div style="width: 100%">
     <div class="flex gap-2">
       <el-tag
           v-for="tag in props.exclude"
@@ -26,7 +26,13 @@
         +
       </el-button>
     </div>
-    <div style="margin-top: 4px;">
+    <div style="margin-top: 4px;width: 100%;display: flex; justify-content: space-between;">
+      <el-button bg text size="small" @click="importExclude" v-if="props.importExclude" :disabled="disabledImportExclude" :loading="importExcludeLoading">
+        <el-icon>
+          <Download/>
+        </el-icon>
+        导入全局排除
+      </el-button>
       <el-text class="mx-1" size="small">
         支持 <a href="https://www.runoob.com/regexp/regexp-syntax.html" target="_blank">正则表达式</a>
       </el-text>
@@ -37,6 +43,7 @@
 <script setup>
 
 import {ref} from "vue";
+import api from "../api.js";
 
 const excludeVisible = ref(false)
 const excludeValue = ref('')
@@ -65,9 +72,25 @@ let init = () => {
   excludeValue.value = ''
 }
 
+let importExcludeLoading = ref(false)
+let disabledImportExclude = ref(false)
+
+let importExclude = () => {
+  importExcludeLoading.value = true
+  api.get("/api/config")
+      .then(res => {
+        disabledImportExclude.value = true
+        props.exclude.push(...res.data.exclude)
+      })
+      .finally(() => {
+        importExcludeLoading.value = false
+      })
+
+}
+
 defineExpose({
   init
 })
 
-let props = defineProps(['exclude'])
+let props = defineProps(['exclude', 'importExclude'])
 </script>

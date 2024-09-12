@@ -37,7 +37,7 @@
       </div>
     </el-form-item>
     <el-form-item label="排除">
-      <Exclude ref="exclude" v-model:exclude="props.ani.exclude"/>
+      <Exclude ref="exclude" v-model:exclude="props.ani.exclude" :import-exclude="true"/>
     </el-form-item>
     <el-form-item label="全局排除">
       <el-switch v-model:model-value="props.ani['globalExclude']"/>

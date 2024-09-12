@@ -202,7 +202,7 @@ public class AniUtil {
                 .setCurrentEpisodeNumber(0)
                 .setTotalEpisodeNumber(0)
                 .setOva(false)
-                .setGlobalExclude(true)
+                .setGlobalExclude(false)
                 .setExclude(List.of("720"));
 
         Config config = ConfigUtil.CONFIG;
