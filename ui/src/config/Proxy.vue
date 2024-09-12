@@ -23,8 +23,10 @@
           <div style="width: 4px;"></div>
           <el-button bg text :loading="testLoading" @click="test">测试</el-button>
         </div>
-        <div>
-          {{ status }}
+        <div v-if="status && time">
+          status: {{ status }}
+          <br>
+          time: {{ time }}ms
         </div>
       </div>
     </el-form-item>
@@ -45,6 +47,7 @@ let urls = ref([
 
 let url = ref('')
 let status = ref('')
+let time = ref('')
 
 onMounted(() => {
   url.value = urls.value[0]
@@ -55,9 +58,11 @@ let testLoading = ref(false)
 let test = () => {
   testLoading.value = true
   status.value = ''
+  time.value = ''
   api.post('/api/proxy?url=' + btoa(url.value), props.config)
       .then(res => {
-        status.value = res.data
+        status.value = res.data.status
+        time.value = res.data.time
       })
       .finally(() => {
         testLoading.value = false
