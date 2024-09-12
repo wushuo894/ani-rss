@@ -6,9 +6,7 @@ import ani.rss.annotation.Auth;
 import ani.rss.annotation.Path;
 import ani.rss.auth.util.AuthUtil;
 import ani.rss.entity.Result;
-import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IoUtil;
-import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.core.util.ClassUtil;
 import cn.hutool.core.util.ReflectUtil;
 import cn.hutool.http.HttpUtil;
@@ -17,7 +15,6 @@ import cn.hutool.http.server.HttpServerResponse;
 import cn.hutool.http.server.SimpleServer;
 import cn.hutool.log.Log;
 
-import java.io.File;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.Objects;
@@ -27,6 +24,7 @@ public class ServerUtil {
     public static final ThreadLocal<HttpServerRequest> REQUEST = new ThreadLocal<>();
     public static final ThreadLocal<HttpServerResponse> RESPONSE = new ThreadLocal<>();
     public static String PORT = "7789";
+    public static SimpleServer server;
 
     public static SimpleServer create(String... args) {
         Map<String, String> env = System.getenv();
@@ -38,7 +36,7 @@ public class ServerUtil {
 
         PORT = env.getOrDefault("PORT", PORT);
 
-        SimpleServer server = HttpUtil.createServer(Integer.parseInt(PORT));
+        server = HttpUtil.createServer(Integer.parseInt(PORT));
 
         server.addAction("/", new RootAction());
         Set<Class<?>> classes = ClassUtil.scanPackage("ani.rss.action");
@@ -81,11 +79,13 @@ public class ServerUtil {
                 }
             });
         }
-        File jar = UpdateUtil.getJar();
-        String extName = FileUtil.extName(jar);
-        if ("exe".equals(extName)) {
-            ThreadUtil.sleep(1000);
-        }
         return server;
+    }
+
+    public static void stop() {
+        if (Objects.isNull(server)) {
+            return;
+        }
+        server.getRawServer().stop(0);
     }
 }
