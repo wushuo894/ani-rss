@@ -43,5 +43,5 @@ ani.json
 files
 logs
 *.log
-config
+/config
 .git
