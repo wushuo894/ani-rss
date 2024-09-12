@@ -6,6 +6,7 @@ import ani.rss.entity.Ani;
 import ani.rss.util.AniUtil;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.ReUtil;
+import cn.hutool.core.util.URLUtil;
 import cn.hutool.http.server.HttpServerRequest;
 import cn.hutool.http.server.HttpServerResponse;
 import lombok.extern.slf4j.Slf4j;
@@ -29,8 +30,9 @@ public class RssAction implements BaseAction {
         if (!ReUtil.contains("http(s*)://", url)) {
             url = "https://" + url;
         }
+        url = URLUtil.decode(url, "utf-8");
         try {
-            Ani newAni = AniUtil.getAni(url,title, type);
+            Ani newAni = AniUtil.getAni(url, title, type);
             resultSuccess(newAni);
         } catch (Exception e) {
             log.error(e.getMessage());

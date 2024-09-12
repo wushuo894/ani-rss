@@ -167,7 +167,12 @@ public class AniUtil {
         Ani ani = new Ani();
 
         if ("nyaa".equals(type)) {
-            title = title.replaceAll("^Nyaa - \"", "").replaceAll("\" - Torrent File RSS$", "");
+            if (StrUtil.isNotBlank(text)) {
+                title = text;
+            } else {
+                title = HttpUtil.decodeParamMap(url, StandardCharsets.UTF_8).get("q");
+            }
+
             Mikan list = MikanUtil.list(title, new Mikan.Season());
             List<Mikan.Item> items = list.getItems();
             List<Ani> anis = new ArrayList<>();
