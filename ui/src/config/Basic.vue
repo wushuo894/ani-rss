@@ -49,6 +49,9 @@
       <el-form-item label="获取标题时带上年份">
         <el-switch v-model:model-value="props.config.titleYear"/>
       </el-form-item>
+      <el-form-item label="自动跳过xx.5集数">
+        <el-switch v-model:model-value="props.config.skip5"/>
+      </el-form-item>
       <el-form-item label="DEBUG">
         <el-switch v-model:model-value="props.config.debug"/>
       </el-form-item>

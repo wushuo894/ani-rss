@@ -44,6 +44,7 @@ public class ConfigUtil {
                 .setDownload("qBittorrent")
                 .setUsername("")
                 .setPassword("")
+                .setSkip5(true)
                 .setDebug(false)
                 .setProxy(false)
                 .setProxyHost("")
