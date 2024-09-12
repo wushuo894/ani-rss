@@ -29,8 +29,12 @@
                 <div style="
                                     color: #9e9e9e !important;
                                     font-size: .75rem !important;
-                                    font-weight: 400;
+                                    font-weight: 300;
                                     line-height: 1.667;
+                                    -webkit-line-clamp: 2;
+                                    width: 300px;
+                                    overflow: hidden;
+                                    text-overflow: ellipsis;
                                     letter-spacing: .0333333333em !important;
                                     font-family: Roboto, sans-serif;
                                     text-transform: none !important;">
@@ -53,10 +57,10 @@
                     未启用
                   </el-tag>
                   <el-tag type="info" v-if="itemsPerRow > 1">
-                    {{ item['subgroup'] }}
+                    {{ item['subgroup'] ? item['subgroup'] : '未知' }}
                   </el-tag>
                   <el-tag type="info" v-else>
-                    {{ item['subgroup'].substr(0, 6) }}
+                    {{ (item['subgroup'] ? item['subgroup'] : '未知').substr(0, 6) }}
                   </el-tag>
                   <el-tag type="warning" v-if="item['currentEpisodeNumber']">
                     {{ item['currentEpisodeNumber'] }} /

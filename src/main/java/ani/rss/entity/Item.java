@@ -24,6 +24,11 @@ public class Item implements Serializable {
     private String torrent;
 
     /**
+     * infoHash
+     */
+    private String infoHash;
+
+    /**
      * 集数
      */
     private Integer episode;

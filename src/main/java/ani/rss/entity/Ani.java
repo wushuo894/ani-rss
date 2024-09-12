@@ -75,4 +75,8 @@ public class Ani implements Serializable {
     private Integer totalEpisodeNumber;
 
     private String themoviedbName;
+
+    private String type;
+
+    private String bangumiId;
 }
