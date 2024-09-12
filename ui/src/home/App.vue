@@ -1,5 +1,5 @@
 <template>
-  <Config ref="config"></Config>
+  <Config ref="config"/>
   <Add ref="add" @load="list?.getList"/>
   <Logs ref="logs"/>
   <div id="header">
