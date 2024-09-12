@@ -102,7 +102,9 @@ public class TorrentUtil {
 
             log.info("添加下载 {}", reName);
             File saveTorrent = saveTorrent(ani, item);
-            String savePath = getDownloadPath(ani).get(0).toString();
+            String savePath = getDownloadPath(ani)
+                    .get(0)
+                    .toString();
             download(reName, savePath, saveTorrent, ova);
             currentDownloadCount++;
             count++;
@@ -274,6 +276,13 @@ public class TorrentUtil {
      * @return
      */
     public static List<File> getDownloadPath(Ani ani) {
+        Boolean customDownloadPath = ani.getCustomDownloadPath();
+        String aniDownloadPath = ani.getDownloadPath();
+
+        if (customDownloadPath && StrUtil.isNotBlank(aniDownloadPath)) {
+            return List.of(new File(aniDownloadPath));
+        }
+
         String title = ani.getTitle().trim();
         Integer season = ani.getSeason();
         Boolean ova = ani.getOva();

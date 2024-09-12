@@ -45,6 +45,16 @@
     <el-form-item label="剧场版">
       <el-switch v-model:model-value="props.ani.ova"></el-switch>
     </el-form-item>
+    <el-form-item label="自定义下载位置">
+      <div style="width: 100%;">
+        <div>
+          <el-switch v-model:model-value="props.ani.customDownloadPath"></el-switch>
+        </div>
+        <div>
+          <el-input type="textarea" style="width: 100%" :disabled="!props.ani.customDownloadPath" v-model:model-value="props.ani.downloadPath"/>
+        </div>
+      </div>
+    </el-form-item>
     <el-form-item label="启用">
       <el-switch v-model:model-value="props.ani.enable"></el-switch>
     </el-form-item>
