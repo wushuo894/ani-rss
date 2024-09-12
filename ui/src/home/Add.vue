@@ -101,13 +101,13 @@ const getRss = (type) => {
       })
 }
 
-const addAni = () => {
+const addAni = (fun) => {
   api.post('/api/ani', ani.value)
       .then(res => {
         ElMessage.success(res.message)
         emit('load')
         dialogVisible.value = false
-      })
+      }).finally(fun)
 }
 
 const activeName = ref('1')

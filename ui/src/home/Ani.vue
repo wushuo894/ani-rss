@@ -52,9 +52,9 @@
       <el-button @click="items.show(ani)" bg text>预览</el-button>
       <el-button :loading="okLoading" @click="async ()=>{
         okLoading = true
-        await emit('ok')
-        okLoading = false
-      }" text bg>确定</el-button>
+        emit('ok',()=>okLoading = false)
+      }" text bg>确定
+      </el-button>
     </div>
   </el-form>
 </template>
@@ -90,9 +90,10 @@ let getThemoviedbName = () => {
 
 let exclude = ref()
 
-onMounted(()=>{
+onMounted(() => {
   exclude.value?.init()
 })
+
 
 let props = defineProps(['ani'])
 const emit = defineEmits(['ok'])
