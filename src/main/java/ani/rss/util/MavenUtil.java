@@ -3,6 +3,7 @@ package ani.rss.util;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.util.ReUtil;
+import cn.hutool.core.util.StrUtil;
 import lombok.Cleanup;
 import lombok.extern.slf4j.Slf4j;
 
@@ -22,7 +23,7 @@ public class MavenUtil {
         }
         try {
             File jar = UpdateUtil.getJar();
-            String extName = FileUtil.extName(jar);
+            String extName = StrUtil.blankToDefault(FileUtil.extName(jar), "");
             if (jar.isFile() && List.of("exe", "jar").contains(extName)) {
                 @Cleanup
                 JarFile jarFile = new JarFile(jar);
