@@ -33,7 +33,7 @@
       </el-button>
       <div style="margin: 0 6px;">
         <el-badge :is-dot="about.update" class="item">
-          <el-button @click="config?.showConfig(about)" text bg>
+          <el-button @click="config?.showConfig(about.update)" text bg>
             <el-icon :class="elIconClass()">
               <Setting/>
             </el-icon>
@@ -64,7 +64,7 @@ import Config from "./Config.vue";
 import List from "./List.vue";
 import Add from "./Add.vue";
 import Logs from "./Logs.vue";
-import api from "./api.js";
+import api from "../api.js";
 
 const title = ref('')
 const enable = ref('已启用')

@@ -13,7 +13,7 @@
                   margin-top: 5px;"
          v-loading="loading">
       <el-scrollbar ref="scrollbarRef" height="450">
-        <div ref="innerRef" style="padding: 5px;min-height: 400px;" v-html="htmlLogs">
+        <div ref="innerRef" style="min-height: 400px;" v-html="htmlLogs">
         </div>
       </el-scrollbar>
     </div>
@@ -23,7 +23,7 @@
 <script setup>
 import {ref} from "vue";
 import {codeToHtml} from 'shiki'
-import api from "./api.js";
+import api from "../api.js";
 
 const logDialogVisible = ref(false)
 const loading = ref(true)
@@ -42,7 +42,8 @@ const getHtmlLogs = async () => {
   if (selectValue.value !== options[0]) {
     log = log.filter(it => it['level'] === selectValue.value)
   }
-  htmlLogs.value = await codeToHtml(log.map(it => it['message']).join('\r\n'), {
+  let code = log.map(it => it['message']).join('\r\n');
+  htmlLogs.value = await codeToHtml(code, {
     lang: 'log',
     theme: 'nord'
   })

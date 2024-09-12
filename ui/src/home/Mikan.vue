@@ -93,7 +93,7 @@
 
 <script setup>
 import {ref} from "vue";
-import api from "./api.js";
+import api from "../api.js";
 import {ElMessage, ElText} from "element-plus";
 
 let groupLoading = ref(false)
