@@ -79,14 +79,14 @@ public class UpdateUtil {
                         return;
                     }
                     ThreadUtil.execute(() -> {
-                        FileUtil.rename(file, jar.getName(), true);
+                        ThreadUtil.sleep(3000);
                         if ("exe".equals(extName)) {
-                            ThreadUtil.sleep(1000);
+                            ServerUtil.stop();
                             RuntimeUtil.exec(file.getName());
                             System.exit(0);
                             return;
                         }
-                        ThreadUtil.sleep(3000);
+                        FileUtil.rename(file, jar.getName(), true);
                         System.exit(0);
                     });
                 });
