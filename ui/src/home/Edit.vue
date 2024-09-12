@@ -25,13 +25,14 @@ const ani = ref({
   'ova': false
 })
 
-const editAni = async () => {
-  await api.put('/api/ani', ani.value)
+const editAni = (fun) => {
+  api.put('/api/ani', ani.value)
       .then(res => {
         ElMessage.success(res.message)
         emit('load')
         dialogVisible.value = false
       })
+      .finally(fun);
 }
 
 
