@@ -2,6 +2,7 @@ package ani.rss.action;
 
 import ani.rss.annotation.Auth;
 import ani.rss.annotation.Path;
+import ani.rss.util.ServerUtil;
 import ani.rss.util.UpdateUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.thread.ThreadUtil;
@@ -24,13 +25,15 @@ public class StopAction implements BaseAction {
         String statusStr = request.getParam("status");
         int status = Integer.parseInt(statusStr);
         String s = List.of("重启", "关闭").get(status);
-        log.info("正在 {}", s);
-        resultSuccessMsg("正在 {}", s);
+        log.info("正在{}", s);
+        resultSuccessMsg("正在{}", s);
         ThreadUtil.execute(() -> {
             ThreadUtil.sleep(3000);
             File jar = UpdateUtil.getJar();
             String extName = FileUtil.extName(jar);
+            ServerUtil.stop();
             if ("exe".equals(extName) && status == 0) {
+                log.info("正在重启 {}", jar.getName());
                 RuntimeUtil.exec(jar.getName());
                 System.exit(status);
                 return;
