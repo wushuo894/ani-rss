@@ -59,8 +59,8 @@
 
 import {ref} from "vue";
 import {ElMessage} from "element-plus";
-import api from "./api.js";
-import Exclude from "./Exclude.vue";
+import api from "../api.js";
+import Exclude from "../config/Exclude.vue";
 import Items from "./Items.vue";
 
 let exclude = ref()

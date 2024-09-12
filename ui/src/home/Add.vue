@@ -115,10 +115,10 @@
 <script setup>
 import {ref} from "vue";
 import {ElMessage} from "element-plus";
-import api from "./api.js";
+import api from "../api.js";
 import Mikan from "./Mikan.vue";
 import Items from "./Items.vue";
-import Exclude from "./Exclude.vue";
+import Exclude from "../config/Exclude.vue";
 
 const showRss = ref(true)
 const mikan = ref()

@@ -42,7 +42,7 @@
 
 <script setup>
 import {ref} from "vue";
-import api from "./api.js";
+import api from "../api.js";
 import {ElMessage, ElText} from "element-plus";
 
 const select = ref('全部')
