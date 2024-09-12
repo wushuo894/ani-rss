@@ -63,7 +63,7 @@ public class LogUtil {
                     String loggerName = event.getLoggerName();
                     String formattedMessage = event.getFormattedMessage();
                     String log = StrFormatter.format("{} {} {} - {}", date, level, loggerName, formattedMessage);
-                    LOGS.add(new Log().setMessage(log).setLevel(level));
+                    LOGS.add(new Log().setMessage(log).setLevel(level).setLoggerName(loggerName));
                     return FilterReply.NEUTRAL;
                 }
             });

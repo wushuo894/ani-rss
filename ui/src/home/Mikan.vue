@@ -24,7 +24,7 @@
       </div>
       <div style="margin: 8px 0 4px 0;height: 600px;" v-loading="loading">
         <el-scrollbar>
-          <el-collapse v-model="activeName" accordion>
+          <el-collapse v-model="activeName">
             <el-collapse-item v-for="item in data.items" :title="item.label" :name="item.label">
               <div style="margin-left: 15px;">
                 <el-collapse @change="collapseChange" accordion>
@@ -95,6 +95,7 @@
 import {ref} from "vue";
 import api from "../api.js";
 import {ElMessage, ElText} from "element-plus";
+import {Plus} from "@element-plus/icons-vue";
 
 let groupLoading = ref(false)
 let activeName = ref("")

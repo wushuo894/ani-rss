@@ -1,12 +1,28 @@
 <template>
   <el-dialog v-model="logDialogVisible" title="日志" center>
-    <div>
-      <el-select v-model="selectValue" @change="()=>{getHtmlLogs()}">
-        <el-option v-for="item in options"
-                   :key="item"
-                   :label="item"
-                   :value="item"/>
-      </el-select>
+    <div style="width: 100%;justify-content: space-between;align-items: center;" class="auto">
+      <el-checkbox-group v-model:model-value="selectLevels" @change="()=>getHtmlLogs()">
+        <el-checkbox v-for="item in levels" :label="item" size="large"/>
+      </el-checkbox-group>
+      <div style="display: flex;">
+        <el-select
+            v-model="selectLoggerNames"
+            multiple
+            collapse-tags
+            placeholder="类名"
+            style="width: 260px;"
+            @change="()=>getHtmlLogs()"
+        >
+          <el-option
+              v-for="item in loggerNames"
+              :key="item"
+              :label="item"
+              :value="item"
+          />
+        </el-select>
+        <div style="width: 4px;"></div>
+        <el-button icon="Refresh" bg text @click="getLogs" :loading="getLogsLoading"/>
+      </div>
     </div>
     <div id="#logs" style="background-color:#2e3440ff;
                   color:#d8dee9ff;
@@ -30,17 +46,18 @@ const loading = ref(true)
 const logs = ref([])
 const scrollbarRef = ref()
 const innerRef = ref()
-const maxHeight = ref(0)
 
-const options = ['All', 'DEBUG', 'INFO', 'WARN', 'ERROR']
-
-const selectValue = ref(options[0])
+const levels = ['DEBUG', 'INFO', 'WARN', 'ERROR']
+const selectLevels = ref([])
 const htmlLogs = ref('')
+const loggerNames = ref([])
+const selectLoggerNames = ref([])
 
 const getHtmlLogs = async () => {
   let log = logs.value
-  if (selectValue.value !== options[0]) {
-    log = log.filter(it => it['level'] === selectValue.value)
+  log = log.filter(it => selectLevels.value.indexOf(it['level']) > -1)
+  if (selectLoggerNames.value.length) {
+    log = log.filter(it => selectLoggerNames.value.indexOf(it['loggerName']) > -1)
   }
   let code = log.map(it => it['message']).join('\r\n');
   htmlLogs.value = await codeToHtml(code, {
@@ -58,18 +75,39 @@ const showLogs = () => {
   loading.value = true
   htmlLogs.value = ''
   getLogs()
+  selectLevels.value = levels
 }
 
+const getLogsLoading = ref(false)
+
 const getLogs = () => {
+  getLogsLoading.value = true
   api.get('/api/logs')
       .then(async res => {
         logs.value = res.data
+        for (let datum of res.data) {
+          if (loggerNames.value.indexOf(datum['loggerName']) > -1) {
+            continue
+          }
+          loggerNames.value.push(datum['loggerName'])
+        }
         getHtmlLogs()
       })
       .finally(() => {
         loading.value = false
+        getLogsLoading.value = false
       })
 }
 
 defineExpose({showLogs})
 </script>
+
+<style>
+@media (min-width: 1000px) {
+  .auto {
+    display: flex;
+  }
+}
+
+
+</style>
