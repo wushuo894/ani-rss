@@ -39,7 +39,7 @@ public class UpdateUtil {
                         about.setMarkdownBody(markdownBody.html());
                         String filename = "ani-rss-jar-with-dependencies.jar";
                         File jar = getJar();
-                        if (FileUtil.extName(jar).equals("exe")) {
+                        if ("exe".equals(FileUtil.extName(jar))) {
                             filename = "ani-rss-launcher.exe";
                         }
                         String downloadUrl = StrFormatter.format("https://github.com/wushuo894/ani-rss/releases/download/v{}/{}", latest, filename);

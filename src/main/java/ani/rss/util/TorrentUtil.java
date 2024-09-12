@@ -111,7 +111,7 @@ public class TorrentUtil {
         if (!autoDisabled) {
             return;
         }
-        AniUtil.getBangumiInfo(ani, false, true,false);
+        AniUtil.getBangumiInfo(ani, false, true, false);
         Integer totalEpisodeNumber = ani.getTotalEpisodeNumber();
         if (totalEpisodeNumber < 1) {
             return;
@@ -139,10 +139,9 @@ public class TorrentUtil {
     }
 
     public static File getTorrent(Ani ani, Item item) {
-        String torrent = item.getTorrent();
+        String infoHash = item.getInfoHash();
         File torrents = getTorrentDir(ani);
-        File torrentFile = new File(torrent);
-        return new File(torrents + File.separator + torrentFile.getName());
+        return new File(torrents + File.separator + infoHash + ".torrent");
     }
 
     /**

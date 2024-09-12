@@ -3,6 +3,7 @@ package ani.rss.util;
 import ani.rss.entity.Ani;
 import ani.rss.entity.Config;
 import ani.rss.entity.Item;
+import ani.rss.entity.Mikan;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.bean.copier.CopyOptions;
 import cn.hutool.core.collection.CollUtil;
@@ -11,7 +12,6 @@ import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.text.StrFormatter;
 import cn.hutool.core.util.*;
-import cn.hutool.http.HttpConnection;
 import cn.hutool.http.HttpResponse;
 import cn.hutool.http.HttpUtil;
 import cn.hutool.json.JSONUtil;
@@ -116,6 +116,17 @@ public class AniUtil {
      * @return
      */
     public static Ani getAni(String url) {
+        return getAni(url, "", "");
+    }
+
+    /**
+     * 获取动漫信息
+     *
+     * @param url
+     * @return
+     */
+    public static Ani getAni(String url, String text, String type) {
+        type = StrUtil.blankToDefault(type, "mikan");
         int season = 1;
         String title = "无";
 
@@ -131,9 +142,6 @@ public class AniUtil {
                 subgroupid = v;
             }
         }
-
-        Assert.notBlank(bangumiId, "不支持的链接, 请使用mikan对应番剧的字幕组RSS");
-        Assert.notBlank(subgroupid, "不支持的链接, 请使用mikan对应番剧的字幕组RSS");
 
         String s = HttpReq.get(url, true)
                 .thenFunction(HttpResponse::body);
@@ -154,40 +162,29 @@ public class AniUtil {
             season = Convert.chineseToNumber(ReUtil.get(seasonReg, title, 1));
             title = ReUtil.replaceAll(title, seasonReg, "").trim();
         }
+        title = title.replace("剧场版", "").trim();
 
         Ani ani = new Ani();
 
-        String finalSubgroupid = subgroupid;
-        HttpReq.get(URLUtil.getHost(URLUtil.url(url)) + "/Home/Bangumi/" + bangumiId, true)
-                .then(res -> {
-                    org.jsoup.nodes.Document html = Jsoup.parse(res.body());
+        if ("nyaa".equals(type)) {
+            title = title.replaceAll("^Nyaa - \"", "").replaceAll("\" - Torrent File RSS$", "");
+            Mikan list = MikanUtil.list(title, new Mikan.Season());
+            List<Mikan.Item> items = list.getItems();
+            List<Ani> anis = new ArrayList<>();
+            if (!items.isEmpty()) {
+                Mikan.Item item = items.get(0);
+                anis = item.getItems();
+            }
+            if (!anis.isEmpty()) {
+                title = anis.get(0).getTitle();
+                String url1 = anis.get(0).getUrl();
+                ani.setBangumiId(new File(url1).getName());
+            }
+        } else {
+            ani.setBangumiId(bangumiId);
+        }
 
-                    // 获取封面
-                    Elements elementsByClass = html.select(".bangumi-poster");
-                    Element element = elementsByClass.get(0);
-                    String style = element.attr("style");
-                    String image = style.replace("background-image: url('", "").replace("');", "");
-                    HttpConnection httpConnection = (HttpConnection) ReflectUtil.getFieldValue(res, "httpConnection");
-                    String saveJpg = saveJpg(URLUtil.getHost(httpConnection.getUrl()) + image);
-                    ani.setCover(saveJpg);
-
-                    // 获取字幕组
-                    Elements subgroupTexts = html.select(".subgroup-text");
-                    for (Element subgroupText : subgroupTexts) {
-                        String id = subgroupText.attr("id");
-                        if (!id.equalsIgnoreCase(finalSubgroupid)) {
-                            continue;
-                        }
-                        String ownText = subgroupText.ownText().trim();
-                        if (StrUtil.isNotBlank(ownText)) {
-                            ani.setSubgroup(ownText);
-                            continue;
-                        }
-                        ani.setSubgroup(subgroupText.selectFirst("a").text().trim());
-                    }
-                });
-
-        title = title.replace("剧场版", "").trim();
+        MikanUtil.getMikanInfo(ani, subgroupid);
 
         String themoviedbName = getThemoviedbName(title);
 
@@ -279,6 +276,7 @@ public class AniUtil {
             String itemTitle = "";
             String torrent = "";
             String length = "";
+            String infoHash = "";
 
             NodeList itemChildNodes = item.getChildNodes();
             for (int j = 0; j < itemChildNodes.getLength(); j++) {
@@ -287,10 +285,21 @@ public class AniUtil {
                 if (itemChildNodeName.equals("title")) {
                     itemTitle = itemChild.getTextContent();
                 }
+
                 if (itemChildNodeName.equals("enclosure")) {
                     NamedNodeMap attributes = itemChild.getAttributes();
                     torrent = attributes.getNamedItem("url").getNodeValue();
                     length = attributes.getNamedItem("length").getNodeValue();
+                    infoHash = FileUtil.mainName(torrent);
+                }
+                if (itemChildNodeName.equals("nyaa:infoHash")) {
+                    infoHash = itemChild.getTextContent();
+                }
+                if (itemChildNodeName.equals("link")) {
+                    if (!itemChild.getTextContent().endsWith(".torrent")) {
+                        continue;
+                    }
+                    torrent = itemChild.getTextContent();
                 }
             }
 
@@ -308,6 +317,7 @@ public class AniUtil {
                     .setTitle(itemTitle)
                     .setReName(itemTitle)
                     .setTorrent(torrent)
+                    .setInfoHash(infoHash)
                     .setSize(size);
 
             // 进行过滤
@@ -391,7 +401,6 @@ public class AniUtil {
     }
 
     public static void getBangumiInfo(Ani ani, Boolean ova, Boolean totalEpisode, Boolean titleYear) {
-        String url = ani.getUrl();
         Integer totalEpisodeNumber = ObjectUtil.defaultIfNull(ani.getTotalEpisodeNumber(), 0);
         ani.setTotalEpisodeNumber(totalEpisodeNumber);
         if (totalEpisode) {
@@ -400,17 +409,9 @@ public class AniUtil {
             }
         }
 
-        Map<String, String> decodeParamMap = HttpUtil.decodeParamMap(url, StandardCharsets.UTF_8);
+        String bangumiId = ani.getBangumiId();
 
-        String bangumiId = "";
-        for (String k : decodeParamMap.keySet()) {
-            String v = decodeParamMap.get(k);
-            if (k.equalsIgnoreCase("bangumiId")) {
-                bangumiId = v;
-            }
-        }
-
-        HttpReq.get(URLUtil.getHost(URLUtil.url(url)) + "/Home/Bangumi/" + bangumiId, true)
+        HttpReq.get(MikanUtil.HOST + "/Home/Bangumi/" + bangumiId, true)
                 .then(res -> {
                     org.jsoup.nodes.Document document = Jsoup.parse(res.body());
                     Elements bangumiInfos = document.select(".bangumi-info");
@@ -473,12 +474,12 @@ public class AniUtil {
                                         Integer ten = Integer.parseInt(element.parent().ownText());
                                         AniUtil.sync();
                                         if (totalEpisode) {
+                                            System.out.println(ten);
                                             ani.setTotalEpisodeNumber(ten);
+                                            break;
                                         }
                                     } catch (Exception e) {
-                                        if (totalEpisode) {
-                                            ani.setTotalEpisodeNumber(totalEpisodeNumber);
-                                        }
+                                        log.error(e.getMessage(), e);
                                     }
 
                                 }

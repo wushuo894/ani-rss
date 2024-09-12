@@ -3,7 +3,10 @@ package ani.rss.util;
 import ani.rss.entity.Ani;
 import ani.rss.entity.Mikan;
 import ani.rss.entity.TorrentsInfo;
+import cn.hutool.core.util.ReflectUtil;
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.util.URLUtil;
+import cn.hutool.http.HttpConnection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -14,11 +17,13 @@ import java.util.List;
 import java.util.Objects;
 import java.util.function.Function;
 
+import static ani.rss.util.AniUtil.saveJpg;
+
 public class MikanUtil {
-    private static final String host = "https://mikanime.tv";
+    public static final String HOST = "https://mikanime.tv";
 
     public static Mikan list(String text, Mikan.Season season) {
-        String url = host;
+        String url = HOST;
         if (StrUtil.isNotBlank(text)) {
             url = url + "/Home/Search?searchstr=" + text;
         } else {
@@ -58,13 +63,13 @@ public class MikanUtil {
                         List<Ani> anis = new ArrayList<>();
                         Elements lis = el.select("li");
                         for (Element li : lis) {
-                            String img = host + li.selectFirst("span")
+                            String img = HOST + li.selectFirst("span")
                                     .attr("data-src");
                             Elements aa = li.select("a");
                             if (aa.isEmpty()) {
                                 continue;
                             }
-                            String href = host + aa.get(0).attr("href");
+                            String href = HOST + aa.get(0).attr("href");
                             String title = aa.get(0).text();
                             anis.add(new Ani()
                                     .setCover(img)
@@ -117,7 +122,7 @@ public class MikanUtil {
                         String id = subgroupText.select("a.subgroup-name").attr("data-anchor");
                         String attr = document.selectFirst(id).selectFirst(".mikan-rss").attr("href");
                         group.setLabel(label)
-                                .setRss(host + attr);
+                                .setRss(HOST + attr);
                         groups.add(group);
                         // 字幕组更新日期
                         String day = subgroupText.select(".date").text().trim();
@@ -142,4 +147,39 @@ public class MikanUtil {
                 });
     }
 
+    public static void getMikanInfo(Ani ani, String subgroupId) {
+        String bangumiId = ani.getBangumiId();
+        HttpReq.get(URLUtil.getHost(URLUtil.url(HOST)) + "/Home/Bangumi/" + bangumiId, true)
+                .then(res -> {
+                    org.jsoup.nodes.Document html = Jsoup.parse(res.body());
+
+                    // 获取封面
+                    Elements elementsByClass = html.select(".bangumi-poster");
+                    Element element = elementsByClass.get(0);
+                    String style = element.attr("style");
+                    String image = style.replace("background-image: url('", "").replace("');", "");
+                    HttpConnection httpConnection = (HttpConnection) ReflectUtil.getFieldValue(res, "httpConnection");
+                    String saveJpg = saveJpg(URLUtil.getHost(httpConnection.getUrl()) + image);
+                    ani.setCover(saveJpg);
+
+                    if (StrUtil.isBlank(subgroupId)) {
+                        return;
+                    }
+
+                    // 获取字幕组
+                    Elements subgroupTexts = html.select(".subgroup-text");
+                    for (Element subgroupText : subgroupTexts) {
+                        String id = subgroupText.attr("id");
+                        if (!id.equalsIgnoreCase(subgroupId)) {
+                            continue;
+                        }
+                        String ownText = subgroupText.ownText().trim();
+                        if (StrUtil.isNotBlank(ownText)) {
+                            ani.setSubgroup(ownText);
+                            continue;
+                        }
+                        ani.setSubgroup(subgroupText.selectFirst("a").text().trim());
+                    }
+                });
+    }
 }
