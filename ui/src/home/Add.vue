@@ -1,7 +1,6 @@
 <template>
-  <Items ref="items"/>
   <Mikan ref="mikan" @add="args => ani.url = args"/>
-  <el-dialog v-model="addDialogVisible" title="添加订阅" center>
+  <el-dialog v-model="dialogVisible" title="添加订阅" center>
     <div v-if="showRss" @keydown.enter="getRss">
       <el-tabs tab-position="left" v-model="activeName">
         <el-tab-pane label="Mikan" name="1">
@@ -59,64 +58,7 @@
       </div>
     </div>
     <div v-else>
-      <el-form label-width="auto"
-               @submit="(event)=>{
-                event.preventDefault()
-             }">
-        <el-form-item label="标题">
-          <div style="width: 100%;">
-            <div>
-              <el-input v-model:model-value="ani.title"></el-input>
-            </div>
-            <div style="width: 100%;justify-content: end;display: flex;margin-top: 12px;"
-                 v-if="ani.title !== ani.themoviedbName && ani.themoviedbName.length">
-              <el-button @click="ani.title = ani.themoviedbName" bg text>使用TMDB</el-button>
-            </div>
-            <div v-if="!ani.themoviedbName.length"
-                 style="width: 100%;justify-content: end;display: flex;margin-top: 12px;">
-              <el-text class="mx-1" size="small">
-                无法获取到其在 TMDB 中的名称!!! 刮削可能会出现问题
-              </el-text>
-              <div style="width: 4px;"></div>
-              <a href="https://tmdb.org" target="_blank">https://tmdb.org</a>
-            </div>
-          </div>
-        </el-form-item>
-        <el-form-item label="TMDB">
-          <div style="display: flex;width: 100%;justify-content: space-between;">
-            <el-input v-model:model-value="ani.themoviedbName" disabled/>
-            <div style="width: 4px;"></div>
-            <el-button icon="Refresh" bg text @click="getThemoviedbName" :loading="getThemoviedbNameLoading"/>
-          </div>
-        </el-form-item>
-        <el-form-item label="季">
-          <div style="display: flex;justify-content: end;width: 100%;">
-            <el-input-number style="max-width: 200px" :min="0" v-model:model-value="ani.season"
-                             :disabled="ani.ova"></el-input-number>
-          </div>
-        </el-form-item>
-        <el-form-item label="集数偏移">
-          <div style="display: flex;justify-content: end;width: 100%;">
-            <el-input-number v-model:model-value="ani.offset" :disabled="ani.ova"></el-input-number>
-          </div>
-        </el-form-item>
-        <el-form-item label="排除">
-          <Exclude ref="exclude" v-model:exclude="ani.exclude"/>
-        </el-form-item>
-        <el-form-item label="全局排除">
-          <el-switch v-model:model-value="ani['globalExclude']"/>
-        </el-form-item>
-        <el-form-item label="剧场版">
-          <el-switch v-model:model-value="ani.ova"></el-switch>
-        </el-form-item>
-        <el-form-item label="启用">
-          <el-switch v-model:model-value="ani.enable"></el-switch>
-        </el-form-item>
-        <div style="display: flex;justify-content: end;width: 100%;margin-top: 10px;">
-          <el-button @click="items.show(ani)" bg text>预览</el-button>
-          <el-button :loading="addAniButtonLoading" @click="addAni" bg text>确定</el-button>
-        </div>
-      </el-form>
+      <Ani v-model:ani="ani" @ok="addAni"/>
     </div>
   </el-dialog>
 </template>
@@ -126,15 +68,12 @@ import {ref} from "vue";
 import {ElMessage} from "element-plus";
 import api from "../api.js";
 import Mikan from "./Mikan.vue";
-import Items from "./Items.vue";
-import Exclude from "../config/Exclude.vue";
+import Ani from "./Ani.vue";
 
 const showRss = ref(true)
 const mikan = ref()
-const items = ref()
-const exclude = ref()
 
-const addDialogVisible = ref(false)
+const dialogVisible = ref(false)
 
 const ani = ref({
   'url': '',
@@ -162,19 +101,12 @@ const getRss = (type) => {
       })
 }
 
-
-const addAniButtonLoading = ref(false)
-
 const addAni = () => {
-  addAniButtonLoading.value = true
   api.post('/api/ani', ani.value)
       .then(res => {
         ElMessage.success(res.message)
         emit('load')
-        addDialogVisible.value = false
-      })
-      .finally(() => {
-        addAniButtonLoading.value = false
+        dialogVisible.value = false
       })
 }
 
@@ -190,28 +122,8 @@ const showAdd = () => {
   }
   activeName.value = '1'
   showRss.value = true
-  addDialogVisible.value = true
-  addAniButtonLoading.value = false
+  dialogVisible.value = true
   rssButtonLoading.value = false
-  exclude.value?.init()
-}
-
-let getThemoviedbNameLoading = ref(false)
-
-let getThemoviedbName = () => {
-  if (!ani.value.title.length) {
-    return
-  }
-
-  getThemoviedbNameLoading.value = true
-  api.get("/api/tmdb?method=getThemoviedbName&name=" + ani.value.title)
-      .then(res => {
-        ElMessage.success(res.message)
-        ani.value.themoviedbName = res.data
-      })
-      .finally(() => {
-        getThemoviedbNameLoading.value = false
-      })
 }
 
 defineExpose({showAdd})
