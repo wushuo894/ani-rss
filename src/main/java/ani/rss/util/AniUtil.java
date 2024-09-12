@@ -65,13 +65,7 @@ public class AniUtil {
         JsonArray jsonElements = GSON.fromJson(s, JsonArray.class);
         for (JsonElement jsonElement : jsonElements) {
             Ani ani = GSON.fromJson(jsonElement, Ani.class);
-            Ani newAni = new Ani();
-            newAni.setEnable(true)
-                    .setOva(false)
-                    .setThemoviedbName("")
-                    .setGlobalExclude(false)
-                    .setCurrentEpisodeNumber(0)
-                    .setTotalEpisodeNumber(0);
+            Ani newAni = Ani.bulidAni();
             BeanUtil.copyProperties(ani, newAni, CopyOptions
                     .create()
                     .setIgnoreNullValue(true));
@@ -164,7 +158,7 @@ public class AniUtil {
         }
         title = title.replace("剧场版", "").trim();
 
-        Ani ani = new Ani();
+        Ani ani = Ani.bulidAni();
 
         if ("nyaa".equals(type)) {
             if (StrUtil.isNotBlank(text)) {
@@ -193,17 +187,11 @@ public class AniUtil {
 
         String themoviedbName = getThemoviedbName(title);
 
-        ani.setOffset(0)
+        ani
                 .setUrl(url.trim())
                 .setSeason(season)
                 .setTitle(title)
-                .setThemoviedbName(themoviedbName)
-                .setEnable(true)
-                .setCurrentEpisodeNumber(0)
-                .setTotalEpisodeNumber(0)
-                .setOva(false)
-                .setGlobalExclude(false)
-                .setExclude(List.of("720"));
+                .setThemoviedbName(themoviedbName);
 
         Config config = ConfigUtil.CONFIG;
         Boolean titleYear = config.getTitleYear();
@@ -215,9 +203,22 @@ public class AniUtil {
             log.error(e.getMessage(), e);
         }
 
+        Boolean ova = ani.getOva();
+        if (ova) {
+            String ovaDownloadPath = config.getOvaDownloadPath();
+            if (StrUtil.isNotBlank(ovaDownloadPath)) {
+                ani.setDownloadPath(ovaDownloadPath);
+            }
+        }
+
         if (StrUtil.isNotBlank(themoviedbName) && tmdb) {
             ani.setTitle(themoviedbName);
         }
+
+        String downloadPath = TorrentUtil.getDownloadPath(ani).get(0)
+                .toString()
+                .replace("\\","/");
+        ani.setDownloadPath(downloadPath);
 
         log.debug("获取到动漫信息 {}", JSONUtil.formatJsonStr(GSON.toJson(ani)));
 
@@ -494,7 +495,6 @@ public class AniUtil {
                                         Integer ten = Integer.parseInt(element.parent().ownText());
                                         AniUtil.sync();
                                         if (totalEpisode) {
-                                            System.out.println(ten);
                                             ani.setTotalEpisodeNumber(ten);
                                             break;
                                         }

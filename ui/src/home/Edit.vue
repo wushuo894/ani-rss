@@ -22,7 +22,9 @@ const ani = ref({
   'themoviedbName': '',
   'exclude': [],
   'enable': true,
-  'ova': false
+  'ova': false,
+  'customDownloadPath': false,
+  'downloadPath': ''
 })
 
 const editAni = (fun) => {

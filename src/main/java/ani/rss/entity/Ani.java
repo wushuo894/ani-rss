@@ -79,4 +79,30 @@ public class Ani implements Serializable {
     private String type;
 
     private String bangumiId;
+
+    /**
+     * 自定义下载位置
+     */
+    private Boolean customDownloadPath;
+
+    /**
+     * 自定义下载位置
+     */
+    private String downloadPath;
+
+    public static Ani bulidAni() {
+        Ani newAni = new Ani();
+        newAni
+                .setOffset(0)
+                .setEnable(true)
+                .setOva(false)
+                .setThemoviedbName("")
+                .setCustomDownloadPath(false)
+                .setDownloadPath("")
+                .setGlobalExclude(false)
+                .setCurrentEpisodeNumber(0)
+                .setTotalEpisodeNumber(0)
+                .setExclude(List.of("720"));
+        return newAni;
+    }
 }
