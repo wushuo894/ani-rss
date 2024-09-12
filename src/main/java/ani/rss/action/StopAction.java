@@ -2,11 +2,15 @@ package ani.rss.action;
 
 import ani.rss.annotation.Auth;
 import ani.rss.annotation.Path;
+import ani.rss.util.UpdateUtil;
+import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.thread.ThreadUtil;
+import cn.hutool.core.util.RuntimeUtil;
 import cn.hutool.http.server.HttpServerRequest;
 import cn.hutool.http.server.HttpServerResponse;
 import lombok.extern.slf4j.Slf4j;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
@@ -24,6 +28,13 @@ public class StopAction implements BaseAction {
         resultSuccessMsg("正在 {}", s);
         ThreadUtil.execute(() -> {
             ThreadUtil.sleep(3000);
+            File jar = UpdateUtil.getJar();
+            String extName = FileUtil.extName(jar);
+            if ("exe".equals(extName) && status == 0) {
+                RuntimeUtil.exec(jar.getName());
+                System.exit(status);
+                return;
+            }
             System.exit(status);
         });
     }
