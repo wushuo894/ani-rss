@@ -1,6 +1,5 @@
 package ani.rss.util;
 
-import ani.rss.Main;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.util.ReUtil;
@@ -9,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.io.File;
 import java.io.InputStream;
+import java.util.List;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
@@ -21,9 +21,9 @@ public class MavenUtil {
             return version;
         }
         try {
-            String path = Main.class.getProtectionDomain().getCodeSource().getLocation().getPath();
-            File jar = new File(path);
-            if (jar.isFile() && "jar".equals(FileUtil.extName(jar))) {
+            File jar = UpdateUtil.getJar();
+            String extName = FileUtil.extName(jar);
+            if (jar.isFile() && List.of("exe", "jar").contains(extName)) {
                 @Cleanup
                 JarFile jarFile = new JarFile(jar);
                 JarEntry jarEntry = jarFile.getJarEntry("META-INF/maven/ani.rss/ani-rss/pom.xml");
