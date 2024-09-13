@@ -9,7 +9,8 @@ import java.util.List;
 public class Test4 {
     public static void main(String[] args) {
         ConfigUtil.load();
-        Ani ani = AniUtil.getAni("https://mikanani.me/RSS/Bangumi?bangumiId=3387&subgroupid=578");
+        Ani ani = AniUtil.getAni("https://mikanime.tv/RSS/Bangumi?bangumiId=3394&subgroupid=370");
+        System.out.println(ani);
         List<Item> items = AniUtil.getItems(ani);
         ConsoleTable consoleTable = new ConsoleTable();
         consoleTable.setSBCMode(false);

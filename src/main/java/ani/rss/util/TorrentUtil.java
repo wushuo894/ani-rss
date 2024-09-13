@@ -246,7 +246,7 @@ public class TorrentUtil {
                         return false;
                     }
                     mainName = mainName.trim().toUpperCase();
-                    String s = "S(\\d+)E(\\d+)$";
+                    String s = "S(\\d+)E(\\d+)";
                     if (!ReUtil.contains(s, mainName)) {
                         return false;
                     }

@@ -47,7 +47,7 @@ public class UpdateUtil {
                         about.setDownloadUrl(downloadUrl);
                     });
         } catch (Exception e) {
-            log.error(e.getMessage());
+            log.error("检测更新失败 {}", e.getMessage());
             log.debug(e.getMessage(), e);
         }
         return about;
