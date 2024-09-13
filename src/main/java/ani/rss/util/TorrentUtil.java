@@ -284,6 +284,10 @@ public class TorrentUtil {
         }
 
         String title = ani.getTitle().trim();
+        Integer year = ani.getYear();
+        if (year != null) {
+            title = String.format("%s (%s)", title, year);
+        }
         Integer season = ani.getSeason();
         Boolean ova = ani.getOva();
 
