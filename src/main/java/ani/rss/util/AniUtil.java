@@ -198,21 +198,29 @@ public class AniUtil {
 
         String themoviedbName = getThemoviedbName(title);
 
+        Config config = ConfigUtil.CONFIG;
+        Boolean titleYear = config.getTitleYear();
+        Boolean tmdb = config.getTmdb();
+
+        try {
+            AniUtil.getBangumiInfo(ani, true, true);
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+        }
+
+        Integer year = ani.getYear();
+
+        if (titleYear && Objects.nonNull(year) && year > 0) {
+            title = StrFormatter.format("{} ({})", title, year);
+            themoviedbName = StrFormatter.format("{} ({})", themoviedbName, year);
+        }
+
         ani
                 .setUrl(url.trim())
                 .setSeason(season)
                 .setTitle(title)
                 .setThemoviedbName(themoviedbName);
 
-        Config config = ConfigUtil.CONFIG;
-        Boolean titleYear = config.getTitleYear();
-        Boolean tmdb = config.getTmdb();
-
-        try {
-            AniUtil.getBangumiInfo(ani, true, true, titleYear);
-        } catch (Exception e) {
-            log.error(e.getMessage(), e);
-        }
 
         Boolean ova = ani.getOva();
         if (ova) {
@@ -234,6 +242,7 @@ public class AniUtil {
         log.debug("获取到动漫信息 {}", JSONUtil.formatJsonStr(GSON.toJson(ani)));
 
         List<Item> items = getItems(ani, s);
+        ani.setCurrentEpisodeNumber(items.size());
         log.debug("获取到视频 共{}个", items.size());
         if (items.isEmpty() || ani.getOva()) {
             return ani;
@@ -273,13 +282,7 @@ public class AniUtil {
      * @return
      */
     public static List<Item> getItems(Ani ani, String xml) {
-        String title;
-        Integer year = ani.getYear();
-        if (year != null) {
-            title = String.format("%s (%s)", ani.getTitle(), year);
-        } else {
-            title = ani.getTitle();
-        }
+        String title = ani.getTitle();
 
         List<String> exclude = ani.getExclude();
         Boolean ova = ani.getOva();
@@ -453,7 +456,7 @@ public class AniUtil {
         Assert.notNull(offset, "集数偏移不能为空");
     }
 
-    public static void getBangumiInfo(Ani ani, Boolean ova, Boolean totalEpisode, Boolean titleYear) {
+    public static void getBangumiInfo(Ani ani, Boolean ova, Boolean totalEpisode) {
         Integer totalEpisodeNumber = ObjectUtil.defaultIfNull(ani.getTotalEpisodeNumber(), 0);
         ani.setTotalEpisodeNumber(totalEpisodeNumber);
         if (totalEpisode) {
@@ -470,6 +473,7 @@ public class AniUtil {
                     Elements bangumiInfos = document.select(".bangumi-info");
                     String bgmUrl = "";
                     String year = "";
+                    String month = "";
                     for (Element bangumiInfo : bangumiInfos) {
                         String string = bangumiInfo.ownText();
                         if (string.equals("Bangumi番组计划链接：")) {
@@ -479,18 +483,15 @@ public class AniUtil {
                             try {
                                 String dateReg = "(\\d+)/(\\d+)/(\\d+)";
                                 year = ReUtil.get(dateReg, string, 3);
+                                month = ReUtil.get(dateReg, string, 2);
                             } catch (Exception e) {
                                 log.error(e.getMessage(), e);
                             }
                         }
                     }
-                    String title = ani.getTitle();
-                    String themoviedbName = ani.getThemoviedbName();
-                    if (titleYear && StrUtil.isNotBlank(year)) {
-                        ani.setTitle(StrFormatter.format("{} ({})", title, year));
-                        if (StrUtil.isNotBlank(themoviedbName)) {
-                            ani.setThemoviedbName(StrFormatter.format("{} ({})", themoviedbName, year));
-                        }
+                    if (StrUtil.isNotBlank(year) && StrUtil.isNotBlank(month) && ani.getYear() == 1970) {
+                        ani.setYear(Integer.parseInt(year))
+                                .setMonth(Integer.valueOf(month));
                     }
 
                     if (StrUtil.isBlank(bgmUrl) && !ova) {

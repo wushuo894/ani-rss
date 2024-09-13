@@ -90,6 +90,11 @@ public class Config implements Serializable {
     private Boolean acronym;
 
     /**
+     * 根据季度存放
+     */
+    private Boolean quarter;
+
+    /**
      * 自动禁用已完结番剧的订阅
      */
     private Boolean autoDisabled;

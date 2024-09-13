@@ -65,7 +65,7 @@
                       <el-tag type="info" v-else>
                         {{ (item['subgroup'] ? item['subgroup'] : '未知').substr(0, 6) }}
                       </el-tag>
-                      <el-tag type="warning" v-if="item['currentEpisodeNumber']">
+                      <el-tag type="warning">
                         {{ item['currentEpisodeNumber'] }} /
                         {{ item['totalEpisodeNumber'] ? item['totalEpisodeNumber'] : '*' }}
                       </el-tag>
