@@ -32,7 +32,7 @@ import {ref} from "vue";
 import CryptoJS from "crypto-js"
 import App from "./home/App.vue";
 import api from "./api.js";
-import { useDark } from '@vueuse/core'
+import {useDark} from '@vueuse/core'
 
 let loading = ref(false)
 
@@ -64,13 +64,21 @@ let login = () => {
       })
 }
 
-let test = ()=>{
-  fetch('/api/test')
+let test = () => {
+  if (window.authorization) {
+    return
+  }
+  fetch('/api/test', {
+    'headers': {
+      'Authorization': window.authorization
+    }
+  })
+      .then(res => res.json())
       .then(res => {
         if (res.code === 200) {
           localStorage.setItem("authorization", '1')
           window.authorization = '1'
-          authorization.value = ''
+          authorization.value = '1'
           return
         }
         localStorage.removeItem("authorization")
