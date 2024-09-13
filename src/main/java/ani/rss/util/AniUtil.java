@@ -166,6 +166,7 @@ public class AniUtil {
             } else {
                 title = HttpUtil.decodeParamMap(url, StandardCharsets.UTF_8).get("q");
             }
+            Assert.notBlank(title, "标题获取失败，请手动填写");
 
             Mikan list = MikanUtil.list(title, new Mikan.Season());
             List<Mikan.Item> items = list.getItems();
@@ -217,7 +218,7 @@ public class AniUtil {
 
         String downloadPath = TorrentUtil.getDownloadPath(ani).get(0)
                 .toString()
-                .replace("\\","/");
+                .replace("\\", "/");
         ani.setDownloadPath(downloadPath);
 
         log.debug("获取到动漫信息 {}", JSONUtil.formatJsonStr(GSON.toJson(ani)));
@@ -288,6 +289,8 @@ public class AniUtil {
             String length = "";
             String infoHash = "";
 
+            String size = "0MB";
+
             NodeList itemChildNodes = item.getChildNodes();
             for (int j = 0; j < itemChildNodes.getLength(); j++) {
                 Node itemChild = itemChildNodes.item(j);
@@ -298,24 +301,36 @@ public class AniUtil {
 
                 if (itemChildNodeName.equals("enclosure")) {
                     NamedNodeMap attributes = itemChild.getAttributes();
-                    torrent = attributes.getNamedItem("url").getNodeValue();
-                    length = attributes.getNamedItem("length").getNodeValue();
-                    infoHash = FileUtil.mainName(torrent);
+                    String url = attributes.getNamedItem("url").getNodeValue();
+                    if (url.endsWith(".torrent")) {
+                        torrent = url;
+                        infoHash = FileUtil.mainName(torrent);
+                        length = attributes.getNamedItem("length").getNodeValue();
+                    }
                 }
                 if (itemChildNodeName.equals("nyaa:infoHash")) {
                     infoHash = itemChild.getTextContent();
                 }
+                if (itemChildNodeName.equals("nyaa:size")) {
+                    size = itemChild.getTextContent();
+                    size = ReUtil.get("[\\d\\.]+", size, 0) + "MB";
+                }
+
                 if (itemChildNodeName.equals("link")) {
-                    if (!itemChild.getTextContent().endsWith(".torrent")) {
+                    String link = itemChild.getTextContent();
+                    if (!link.endsWith(".torrent")) {
                         continue;
                     }
-                    torrent = itemChild.getTextContent();
+                    torrent = link;
                 }
             }
 
-            String size = "0MB";
+            if (StrUtil.isBlank(torrent)) {
+                continue;
+            }
+
             try {
-                if (StrUtil.isNotBlank(length)) {
+                if (StrUtil.isNotBlank(length) && size.equals("0MB")) {
                     Double l = Long.parseLong(length) / 1024.0 / 1024;
                     size = NumberUtil.decimalFormat("0.00", l) + "MB";
                 }
@@ -494,17 +509,12 @@ public class AniUtil {
                                     try {
                                         Integer ten = Integer.parseInt(element.parent().ownText());
                                         AniUtil.sync();
-                                        if (totalEpisode) {
-                                            ani.setTotalEpisodeNumber(ten);
-                                            break;
-                                        }
+                                        ani.setTotalEpisodeNumber(ten);
+                                        break;
                                     } catch (Exception e) {
                                         log.error(e.getMessage(), e);
                                     }
 
-                                }
-                                if (totalEpisode) {
-                                    ani.setTotalEpisodeNumber(totalEpisodeNumber);
                                 }
                             });
                 });
