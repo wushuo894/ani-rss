@@ -59,7 +59,7 @@ public class AniUtil {
         File configFile = getAniFile();
 
         if (!configFile.exists()) {
-            FileUtil.writeUtf8String(JSONUtil.formatJsonStr(GSON.toJson(ANI_LIST)), configFile);
+            FileUtil.writeUtf8String(GSON.toJson(ANI_LIST), configFile);
         }
         String s = FileUtil.readUtf8String(configFile);
         JsonArray jsonElements = GSON.fromJson(s, JsonArray.class);
@@ -98,9 +98,19 @@ public class AniUtil {
      */
     public static void sync() {
         File configFile = getAniFile();
-        String json = GSON.toJson(ANI_LIST);
-        FileUtil.writeUtf8String(JSONUtil.formatJsonStr(json), configFile);
-        log.debug("保存订阅 {}", configFile);
+        log.info("保存订阅 {}", configFile);
+        try {
+            String json = GSON.toJson(ANI_LIST);
+            JsonArray jsonArray = GSON.fromJson(json, JsonArray.class);
+            for (JsonElement jsonElement : jsonArray.asList()) {
+                GSON.fromJson(jsonElement, Ani.class);
+            }
+            FileUtil.writeUtf8String(json, configFile);
+            log.info("保存成功 {}", configFile);
+        } catch (Exception e) {
+            log.error("保存失败 {}", configFile);
+            log.error(e.getMessage(), e);
+        }
     }
 
     /**
