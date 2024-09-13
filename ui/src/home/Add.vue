@@ -13,6 +13,7 @@
             <el-form-item label="RSS 地址">
               <div style="width: 100%">
                 <el-input
+                    type="textarea"
                     v-model:model-value="ani.url"
                     placeholder="https://mikanani.me/RSS/Bangumi?bangumiId=xxx&subgroupid=xxx"
                 />
@@ -46,6 +47,7 @@
             </el-form-item>
             <el-form-item label="RSS 地址">
               <el-input
+                  type="textarea"
                   v-model:model-value="ani.url"
                   placeholder="https://nyaa.si/?page=rss&q=xxx"
               />
@@ -69,6 +71,7 @@
               <div style="width: 100%">
                 <el-input
                     v-model:model-value="ani.url"
+                    type="textarea"
                     placeholder="https://share.dmhy.org/topics/rss/rss.xml?keyword=xxx"
                 />
                 <div>
