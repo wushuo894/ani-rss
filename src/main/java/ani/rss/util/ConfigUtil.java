@@ -136,14 +136,14 @@ public class ConfigUtil {
         }
 
         File configFile = getConfigFile();
-        log.info("保存配置 {}", configFile);
+        log.debug("保存配置 {}", configFile);
         try {
             String json = GSON.toJson(CONFIG);
             // 校验json没有问题
             GSON.fromJson(json, Config.class);
             FileUtil.writeUtf8String(json, configFile);
             LogUtil.loadLogback();
-            log.info("保存成功 {}", configFile);
+            log.debug("保存成功 {}", configFile);
         } catch (JsonSyntaxException e) {
             log.error("保存失败 {}", configFile);
             log.error(e.getMessage(), e);
