@@ -46,7 +46,7 @@ public class Telegram implements Message {
         return HttpReq.post(url, true)
                 .contentType(ContentType.MULTIPART.getValue())
                 .form("chat_id", telegramChatId)
-                .form("text", text)
+                .form("caption", text)
                 .form("photo", new File(configDir+"/files/"+ani.getCover()))
                 .thenFunction(HttpResponse::isOk);
     }
