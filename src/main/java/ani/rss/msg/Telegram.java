@@ -31,7 +31,8 @@ public class Telegram implements Message {
             return false;
         }
         telegramApiHost = StrUtil.blankToDefault(telegramApiHost, "https://api.telegram.org");
-        String url = StrFormatter.format("{}/bot{}/sendPhoto", telegramApiHost, telegramBotToken);
+
+        String url = StrFormatter.format("{}/bot{}/sendMessage", telegramApiHost, telegramBotToken);
 
         if (Objects.isNull(ani)) {
             return HttpReq.post(url, true)
@@ -43,11 +44,17 @@ public class Telegram implements Message {
         }
 
         File configDir = ConfigUtil.getConfigDir();
+        File photo = new File(configDir + "/files/" + ani.getCover());
+        if (!photo.exists()) {
+            return send(config, null, text);
+        }
+
+        url = StrFormatter.format("{}/bot{}/sendPhoto", telegramApiHost, telegramBotToken);
         return HttpReq.post(url, true)
                 .contentType(ContentType.MULTIPART.getValue())
                 .form("chat_id", telegramChatId)
                 .form("caption", text)
-                .form("photo", new File(configDir+"/files/"+ani.getCover()))
+                .form("photo", photo)
                 .thenFunction(HttpResponse::isOk);
     }
 

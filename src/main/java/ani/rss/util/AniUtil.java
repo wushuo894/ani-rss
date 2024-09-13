@@ -170,11 +170,15 @@ public class AniUtil {
 
         Ani ani = Ani.bulidAni();
 
-        if ("nyaa".equals(type)) {
+        if (List.of("nyaa", "dmhy").equals(type)) {
             if (StrUtil.isNotBlank(text)) {
                 title = text;
             } else {
-                title = HttpUtil.decodeParamMap(url, StandardCharsets.UTF_8).get("q");
+                Map<String, String> paramMap = HttpUtil.decodeParamMap(url, StandardCharsets.UTF_8);
+                title = paramMap.get("q");
+                if (StrUtil.isBlank(text)) {
+                    title = paramMap.get("keyword");
+                }
             }
             Assert.notBlank(title, "标题获取失败，请手动填写");
 
@@ -327,6 +331,12 @@ public class AniUtil {
                         torrent = url;
                         infoHash = FileUtil.mainName(torrent);
                     }
+
+                    String magnetReg = "^magnet\\:\\?xt=urn:btih\\:(\\w+)";
+                    if (ReUtil.contains(magnetReg, url)) {
+                        torrent = url;
+                        infoHash = ReUtil.get(magnetReg, url, 1);
+                    }
                 }
                 if (itemChildNodeName.equals("nyaa:infoHash")) {
                     infoHash = itemChild.getTextContent();
@@ -356,6 +366,10 @@ public class AniUtil {
                 }
             } catch (Exception e) {
                 log.warn(e.getMessage());
+            }
+
+            if (StrUtil.isNotBlank(infoHash)) {
+                infoHash = infoHash.toLowerCase();
             }
 
             Item newItem = new Item()
