@@ -25,6 +25,11 @@
         <el-button icon="Refresh" bg text @click="getThemoviedbName" :loading="getThemoviedbNameLoading"/>
       </div>
     </el-form-item>
+    <el-form-item label="年度">
+      <div style="display: flex;justify-content: end;width: 100%;">
+        <el-input-number style="max-width: 200px" :min="0" v-model:model-value="props.ani.year"></el-input-number>
+      </div>
+    </el-form-item>
     <el-form-item label="季">
       <div style="display: flex;justify-content: end;width: 100%;">
         <el-input-number style="max-width: 200px" :min="0" v-model:model-value="props.ani.season"
