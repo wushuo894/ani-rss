@@ -1,5 +1,6 @@
 package ani.rss.msg;
 
+import ani.rss.entity.Ani;
 import ani.rss.entity.Config;
 import ani.rss.entity.MyMailAccount;
 import cn.hutool.core.bean.BeanUtil;
@@ -13,7 +14,7 @@ import java.util.List;
 @Slf4j
 public class Mail implements Message {
     @Override
-    public Boolean send(Config config, String text) {
+    public Boolean send(Config config, Ani ani, String text) {
         Boolean mail = config.getMail();
         MyMailAccount myMailAccount = config.getMailAccount();
         String mailAddressee = config.getMailAddressee();

@@ -1,5 +1,6 @@
 package ani.rss.msg;
 
+import ani.rss.entity.Ani;
 import ani.rss.entity.Config;
 import ani.rss.util.HttpReq;
 import cn.hutool.core.util.StrUtil;
@@ -9,7 +10,7 @@ import cn.hutool.http.Method;
 
 public class WebHook implements Message {
     @Override
-    public Boolean send(Config config, String text) {
+    public Boolean send(Config config, Ani ani, String text) {
         String webHookMethod = config.getWebHookMethod();
         String webHookUrl = config.getWebHookUrl();
         String webHookBody = config.getWebHookBody();
