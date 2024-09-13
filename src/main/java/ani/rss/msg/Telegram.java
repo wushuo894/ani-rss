@@ -35,8 +35,10 @@ public class Telegram implements Message {
 
         if (Objects.isNull(ani)) {
             return HttpReq.post(url, true)
-                    .form("chat_id", telegramChatId)
-                    .form("text", text)
+                    .body(gson.toJson(Map.of(
+                            "chat_id", telegramChatId,
+                            "text", text
+                    )))
                     .thenFunction(HttpResponse::isOk);
         }
 
@@ -45,7 +47,7 @@ public class Telegram implements Message {
                 .contentType(ContentType.MULTIPART.getValue())
                 .form("chat_id", telegramChatId)
                 .form("text", text)
-                .form("photo", new File(configDir + "/files/" + ani.getCover()))
+                .form("photo", new File(configDir+"/files/"+ani.getCover()))
                 .thenFunction(HttpResponse::isOk);
     }
 
