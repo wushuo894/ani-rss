@@ -380,7 +380,7 @@ public class AniUtil {
                             if (StrUtil.isNotBlank(string) && string.startsWith(".5")) {
                                 string = episode + string;
                                 if (itemTitle.endsWith(string)) {
-                                    log.info("{} 疑似 {} 剧集, 自动跳过", title, episode + ".5");
+                                    log.debug("{} 疑似 {} 剧集, 自动跳过", itemTitle, episode + ".5");
                                     return false;
                                 }
                             }
