@@ -65,6 +65,9 @@
     <el-form-item label="检测是否死种">
       <el-switch v-model:model-value="props.config.watchErrorTorrent"/>
     </el-form-item>
+    <el-form-item label="修改任务标题">
+      <el-switch v-model:model-value="props.config.qbRenameTitle" :disabled="config.download !== 'qBittorrent'"/>
+    </el-form-item>
   </el-form>
 </template>
 

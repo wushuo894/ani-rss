@@ -80,6 +80,8 @@ public class qBittorrent implements BaseDownload {
     @Override
     public Boolean download(String name, String savePath, File torrentFile, Boolean ova) {
         String host = config.getHost();
+        Integer renameSleep = config.getRenameSleep();
+        Boolean qbRenameTitle = config.getQbRenameTitle();
         HttpReq.post(host + "/api/v2/torrents/add", false)
                 .form("addToTopOfQueue", false)
                 .form("autoTMM", false)
@@ -87,7 +89,7 @@ public class qBittorrent implements BaseDownload {
                 .form("dlLimit", 0)
                 .form("firstLastPiecePrio", false)
                 .form("paused", false)
-                .form("rename", name)
+                .form("rename", qbRenameTitle ? name : "")
                 .form("savepath", savePath)
                 .form("sequentialDownload", false)
                 .form("skip_checking", false)
@@ -98,13 +100,18 @@ public class qBittorrent implements BaseDownload {
                 .form("tags", "ani-rss")
                 .thenFunction(HttpResponse::isOk);
 
+        String hash = FileUtil.mainName(torrentFile);
         Boolean watchErrorTorrent = config.getWatchErrorTorrent();
+
+        if (!qbRenameTitle) {
+            renameCache.put(hash, name,renameSleep * (1000 * 60) * 3);
+        }
 
         if (!watchErrorTorrent) {
             return true;
         }
 
-        String hash = FileUtil.mainName(torrentFile);
+
         for (int i = 0; i < 10; i++) {
             ThreadUtil.sleep(2000);
             List<TorrentsInfo> torrentsInfos = getTorrentsInfos();
@@ -131,13 +138,24 @@ public class qBittorrent implements BaseDownload {
 
     @Override
     public void rename(TorrentsInfo torrentsInfo) {
+        Boolean qbRenameTitle = config.getQbRenameTitle();
         String reName = torrentsInfo.getName();
-        if (!ReUtil.contains("S\\d+E\\d+$", reName)) {
+        if (!ReUtil.contains("S\\d+E\\d+$", reName) && qbRenameTitle) {
             return;
         }
-        String host = config.getHost();
 
         String hash = torrentsInfo.getHash();
+
+        if (!qbRenameTitle) {
+            reName = renameCache.get(hash);
+        }
+        if (StrUtil.isBlank(reName)) {
+            return;
+        }
+
+        String host = config.getHost();
+
+
         List<String> nameList = HttpReq.get(host + "/api/v2/torrents/files", false)
                 .form("hash", hash)
                 .thenFunction(res -> {
@@ -177,6 +195,7 @@ public class qBittorrent implements BaseDownload {
                     .form("newPath", newPath)
                     .thenFunction(HttpResponse::isOk);
             Assert.isTrue(b, "重命名失败 {} ==> {}", name, newPath);
+            renameCache.remove(hash);
         }
     }
 }
