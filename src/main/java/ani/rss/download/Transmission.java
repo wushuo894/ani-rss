@@ -134,12 +134,11 @@ public class Transmission implements BaseDownload {
                 .body(body)
                 .then(HttpResponse::isOk);
 
-        Integer renameSleep = config.getRenameSleep();
         Boolean watchErrorTorrent = config.getWatchErrorTorrent();
 
         if (!watchErrorTorrent) {
-            if (!ova) {
-                renameCache.put(hash, name, renameSleep * (1000 * 60) * 3);
+            if (!ova && !"txt".equals(extName)) {
+                renameCache.put(hash, name);
             }
             return true;
         }
@@ -154,8 +153,8 @@ public class Transmission implements BaseDownload {
             if (optionalTorrentsInfo.isEmpty()) {
                 continue;
             }
-            if (!ova) {
-                renameCache.put(hash, name, renameSleep * (1000 * 60) * 3);
+            if (!ova && !"txt".equals(extName)) {
+                renameCache.put(hash, name);
             }
             return true;
         }
