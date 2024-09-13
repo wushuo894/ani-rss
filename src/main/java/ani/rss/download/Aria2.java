@@ -115,7 +115,6 @@ public class Aria2 implements BaseDownload {
             return false;
         }
 
-        String hash = FileUtil.mainName(torrentFile);
         if ("txt".equals(extName)) {
             body = ResourceUtil.readUtf8Str("aria2/aria2.addUri.json");
             body = StrFormatter.format(body, password, FileUtil.readUtf8String(torrentFile), savePath);
