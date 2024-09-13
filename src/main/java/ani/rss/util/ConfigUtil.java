@@ -12,6 +12,7 @@ import cn.hutool.crypto.digest.MD5;
 import cn.hutool.json.JSONUtil;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonSyntaxException;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.File;
@@ -105,7 +106,7 @@ public class ConfigUtil {
         File configFile = getConfigFile();
 
         if (!configFile.exists()) {
-            FileUtil.writeUtf8String(JSONUtil.formatJsonStr(GSON.toJson(CONFIG)), configFile);
+            FileUtil.writeUtf8String(GSON.toJson(CONFIG), configFile);
         }
         String s = FileUtil.readUtf8String(configFile);
         BeanUtil.copyProperties(GSON.fromJson(s, Config.class), CONFIG, CopyOptions
@@ -134,10 +135,18 @@ public class ConfigUtil {
         }
 
         File configFile = getConfigFile();
-        String json = GSON.toJson(CONFIG);
-        FileUtil.writeUtf8String(JSONUtil.formatJsonStr(json), configFile);
-        LogUtil.loadLogback();
-        log.debug("保存配置 {}", configFile);
+        log.info("保存配置 {}", configFile);
+        try {
+            String json = GSON.toJson(CONFIG);
+            // 校验json没有问题
+            GSON.fromJson(json, Config.class);
+            FileUtil.writeUtf8String(json, configFile);
+            LogUtil.loadLogback();
+            log.info("保存成功 {}", configFile);
+        } catch (JsonSyntaxException e) {
+            log.error("保存失败 {}", configFile);
+            log.error(e.getMessage(), e);
+        }
     }
 
 }
