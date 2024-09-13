@@ -22,6 +22,8 @@
         </el-select>
         <div style="width: 4px;"></div>
         <el-button icon="Refresh" bg text @click="getLogs" :loading="getLogsLoading"/>
+        <div style="width: 4px;"></div>
+        <el-button icon="Delete" bg text @click="clear" :loading="clearLoading"/>
       </div>
     </div>
     <div id="#logs" style="background-color:#2e3440ff;
@@ -79,6 +81,18 @@ const showLogs = () => {
 }
 
 const getLogsLoading = ref(false)
+const clearLoading = ref(false)
+
+const clear = () => {
+  clearLoading.value = true
+  api.del('/api/logs')
+      .then(res => {
+        getLogs();
+      })
+      .finally(() => {
+        clearLoading.value = false
+      })
+}
 
 const getLogs = () => {
   getLogsLoading.value = true
