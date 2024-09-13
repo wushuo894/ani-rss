@@ -70,6 +70,8 @@ public class ConfigUtil {
                 .setTelegramApiHost("https://api.telegram.org")
                 .setWebHook(false)
                 .setTmdb(false)
+                .setIpWhitelist(false)
+                .setIpWhitelistStr("")
                 .setWebHookBody("")
                 .setWebHookUrl("")
                 .setWebHookMethod("POST");
