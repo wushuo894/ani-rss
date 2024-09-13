@@ -25,6 +25,11 @@ public class Ani implements Serializable {
     private Integer offset;
 
     /**
+     * 年度
+     */
+    private Integer year;
+
+    /**
      * 季度
      */
     private Integer season;
