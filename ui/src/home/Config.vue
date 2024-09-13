@@ -104,7 +104,8 @@ const config = ref({
   'webHookUrl': '',
   'webHookMethod': '',
   'webHookBody': '',
-  'webHook': false
+  'webHook': false,
+  'qbRenameTitle': true
 })
 
 const activeName = ref('download')
