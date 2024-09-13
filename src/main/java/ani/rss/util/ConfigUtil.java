@@ -37,6 +37,7 @@ public class ConfigUtil {
                 .setOffset(false)
                 .setTitleYear(false)
                 .setAcronym(false)
+                .setQuarter(false)
                 .setAutoDisabled(false)
                 .setDownloadPath("")
                 .setOvaDownloadPath("")

@@ -47,10 +47,19 @@
     </el-form-item>
     <el-form-item label="拼音首字母">
       <div>
-        <el-switch v-model:model-value="props.config.acronym"></el-switch>
+        <el-switch v-model:model-value="props.config.acronym" :disabled="props.config.quarter"></el-switch>
         <br>
         <el-text class="mx-1" size="small">
           存放到 #,0,A-Z 文件夹下
+        </el-text>
+      </div>
+    </el-form-item>
+    <el-form-item label="季度">
+      <div>
+        <el-switch v-model:model-value="props.config.quarter" :disabled="props.config.acronym"></el-switch>
+        <br>
+        <el-text class="mx-1" size="small">
+          按季度存放, 如 2024-09
         </el-text>
       </div>
     </el-form-item>
