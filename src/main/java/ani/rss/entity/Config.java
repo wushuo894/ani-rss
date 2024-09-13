@@ -30,6 +30,11 @@ public class Config implements Serializable {
     private String password;
 
     /**
+     * qb添加下载时修改任务标题
+     */
+    private Boolean qbRenameTitle;
+
+    /**
      * 下载路径
      */
     private String downloadPath;
