@@ -36,6 +36,11 @@
         <el-input-number v-model:model-value="props.ani.offset" :disabled="props.ani.ova"></el-input-number>
       </div>
     </el-form-item>
+    <el-form-item label="总集数">
+      <div style="display: flex;justify-content: end;width: 100%;">
+        <el-input-number v-model:model-value="props.ani.totalEpisodeNumber"></el-input-number>
+      </div>
+    </el-form-item>
     <el-form-item label="排除">
       <Exclude ref="exclude" v-model:exclude="props.ani.exclude" :import-exclude="true"/>
     </el-form-item>

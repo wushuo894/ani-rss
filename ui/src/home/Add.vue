@@ -118,7 +118,8 @@ const showAdd = () => {
     'season': 1,
     'offset': 0,
     'title': '',
-    'exclude': []
+    'exclude': [],
+    'totalEpisodeNumber': 0
   }
   activeName.value = 'mikan'
   showRss.value = true
