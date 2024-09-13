@@ -273,7 +273,14 @@ public class AniUtil {
      * @return
      */
     public static List<Item> getItems(Ani ani, String xml) {
-        String title = ani.getTitle();
+        String title;
+        Integer year = ani.getYear();
+        if (year != null) {
+            title = String.format("%s (%s)", ani.getTitle(), year);
+        } else {
+            title = ani.getTitle();
+        }
+
         List<String> exclude = ani.getExclude();
         Boolean ova = ani.getOva();
 
