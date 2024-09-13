@@ -25,7 +25,7 @@ public class MessageAction implements BaseAction {
         Config config = getBody(Config.class);
         Class<Object> loadClass = ClassUtil.loadClass("ani.rss.msg." + s);
         Message message = (Message) ReflectUtil.newInstance(loadClass);
-        Boolean test = message.send(config, "test");
+        Boolean test = message.send(config, null, "test");
         if (test) {
             resultSuccess();
             return;
