@@ -98,7 +98,7 @@ public class AniUtil {
      */
     public static synchronized void sync() {
         File configFile = getAniFile();
-        log.info("保存订阅 {}", configFile);
+        log.debug("保存订阅 {}", configFile);
         try {
             String json = GSON.toJson(ANI_LIST);
             JsonArray jsonArray = GSON.fromJson(json, JsonArray.class);
@@ -106,7 +106,7 @@ public class AniUtil {
                 GSON.fromJson(jsonElement, Ani.class);
             }
             FileUtil.writeUtf8String(json, configFile);
-            log.info("保存成功 {}", configFile);
+            log.debug("保存成功 {}", configFile);
         } catch (Exception e) {
             log.error("保存失败 {}", configFile);
             log.error(e.getMessage(), e);
