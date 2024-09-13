@@ -140,6 +140,10 @@ let dateChange = () => {
   console.log(`${props.ani.year} / ${props.ani.month}`)
 }
 
+defineExpose({
+  init
+})
+
 let props = defineProps(['ani'])
 const emit = defineEmits(['ok'])
 </script>

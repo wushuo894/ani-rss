@@ -58,7 +58,7 @@
       </div>
     </div>
     <div v-else>
-      <Ani v-model:ani="ani" @ok="addAni"/>
+      <Ani ref="aniRef" v-model:ani="ani" @ok="addAni"/>
     </div>
   </el-dialog>
 </template>
@@ -85,6 +85,8 @@ const ani = ref({
   'enable': true,
   'ova': false
 })
+
+const aniRef = ref()
 
 const rssButtonLoading = ref(false)
 
@@ -121,6 +123,7 @@ const showAdd = () => {
     'exclude': [],
     'totalEpisodeNumber': 0
   }
+  aniRef?.init()
   activeName.value = 'mikan'
   showRss.value = true
   dialogVisible.value = true
