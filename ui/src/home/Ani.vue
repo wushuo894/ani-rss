@@ -124,7 +124,7 @@ onMounted(() => {
   init()
 })
 
-let init = ()=>{
+let init = () => {
   date.value = new Date(props.ani.year, props.ani.month - 1, 1);
 }
 

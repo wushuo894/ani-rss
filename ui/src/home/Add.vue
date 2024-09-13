@@ -102,7 +102,7 @@ const getRss = () => {
       .then(res => {
         ani.value = res['data']
         showRss.value = false
-        aniRef?.init()
+        aniRef.value?.init()
       })
       .finally(() => {
         rssButtonLoading.value = false
@@ -126,15 +126,8 @@ const showAdd = () => {
     'season': 1,
     'offset': 0,
     'title': '',
-    'themoviedbName': '',
     'exclude': [],
-    'enable': true,
-    'ova': false,
-    'totalEpisodeNumber': '',
-    'customDownloadPath': false,
-    'downloadPath': '',
-    'year': 1970,
-    'month': 1
+    'totalEpisodeNumber': 0
   }
   activeName.value = 'mikan'
   showRss.value = true
