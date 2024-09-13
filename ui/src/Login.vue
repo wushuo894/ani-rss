@@ -70,10 +70,12 @@ let test = ()=>{
         if (res.code === 200) {
           localStorage.setItem("authorization", '1')
           window.authorization = '1'
+          authorization.value = ''
           return
         }
         localStorage.removeItem("authorization")
         window.authorization = ''
+        authorization.value = ''
       })
 }
 
