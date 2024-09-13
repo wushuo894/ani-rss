@@ -50,16 +50,6 @@ public class Aria2 implements BaseDownload {
         ThreadUtil.sleep(1000);
         torrentsInfos.addAll(getTorrentsInfos("aria2/tellActive.json"));
         torrentsInfos.addAll(getTorrentsInfos("aria2/tellStopped.json"));
-        synchronized (renameCache) {
-            List<CacheObj<String, String>> cacheObjList = IterUtil.toList(renameCache.cacheObjIterator());
-            List<String> collect = torrentsInfos.stream().map(TorrentsInfo::getHash).collect(Collectors.toList());
-            for (CacheObj<String, String> stringStringCacheObj : cacheObjList) {
-                if (collect.contains(stringStringCacheObj.getKey())) {
-                    continue;
-                }
-                renameCache.remove(stringStringCacheObj.getKey());
-            }
-        }
         return torrentsInfos;
     }
 
