@@ -109,12 +109,15 @@ public class TorrentUtil {
             currentDownloadCount++;
             count++;
         }
-        ani.setCurrentEpisodeNumber(items.size());
+        if (!items.isEmpty()) {
+            ani.setCurrentEpisodeNumber(items.size());
+        }
+        AniUtil.sync();
         if (!autoDisabled) {
             return;
         }
         try {
-            AniUtil.getBangumiInfo(ani, false, true, false);
+            AniUtil.getBangumiInfo(ani, false, true);
         } catch (Exception e) {
             log.error(e.getMessage(), e);
         }
@@ -284,17 +287,16 @@ public class TorrentUtil {
         }
 
         String title = ani.getTitle().trim();
-        Integer year = ani.getYear();
-        if (year != null) {
-            title = String.format("%s (%s)", title, year);
-        }
         Integer season = ani.getSeason();
         Boolean ova = ani.getOva();
 
         Config config = ConfigUtil.CONFIG;
         String downloadPath = config.getDownloadPath();
         String ovaDownloadPath = config.getOvaDownloadPath();
+        // 按拼音首字母存放
         Boolean acronym = config.getAcronym();
+        // 根据季度存放
+        Boolean quarter = config.getQuarter();
         Boolean fileExist = config.getFileExist();
         if (ova && StrUtil.isNotBlank(ovaDownloadPath)) {
             downloadPath = ovaDownloadPath;
@@ -308,6 +310,10 @@ public class TorrentUtil {
                 s = "#";
             }
             downloadPath += "/" + s;
+        } else if (quarter) {
+            Integer year = ani.getYear();
+            Integer month = ani.getMonth();
+            downloadPath = StrFormatter.format("{}/{}-{}", downloadPath, year, String.format("%02d", month));
         }
         if (ova) {
             return List.of(new File(downloadPath + "/" + title));

@@ -25,9 +25,15 @@
         <el-button icon="Refresh" bg text @click="getThemoviedbName" :loading="getThemoviedbNameLoading"/>
       </div>
     </el-form-item>
-    <el-form-item label="年度">
-      <div style="display: flex;justify-content: end;width: 100%;">
-        <el-input-number style="max-width: 200px" :min="0" v-model:model-value="props.ani.year"></el-input-number>
+    <el-form-item label="日期">
+      <div style="display: flex;width: 100%;justify-content: end;">
+        <el-date-picker
+            style="max-width: 150px;"
+            v-model="date"
+            type="month"
+            @change="dateChange"
+        >
+        </el-date-picker>
       </div>
     </el-form-item>
     <el-form-item label="季">
@@ -55,13 +61,14 @@
     <el-form-item label="剧场版">
       <el-switch v-model:model-value="props.ani.ova"></el-switch>
     </el-form-item>
-    <el-form-item label="自定义下载位置">
+    <el-form-item label="自定义下载">
       <div style="width: 100%;">
         <div>
           <el-switch v-model:model-value="props.ani.customDownloadPath"></el-switch>
         </div>
         <div>
-          <el-input type="textarea" style="width: 100%" :disabled="!props.ani.customDownloadPath" v-model:model-value="props.ani.downloadPath"/>
+          <el-input type="textarea" style="width: 100%" :disabled="!props.ani.customDownloadPath"
+                    v-model:model-value="props.ani.downloadPath"/>
         </div>
       </div>
     </el-form-item>
@@ -86,6 +93,8 @@ import Items from "./Items.vue";
 import {onMounted, ref} from "vue";
 import api from "../api.js";
 import {ElMessage} from "element-plus";
+
+let date = ref()
 
 let items = ref()
 let okLoading = ref(false)
@@ -112,8 +121,24 @@ let exclude = ref()
 
 onMounted(() => {
   exclude.value?.init()
+  init()
 })
 
+let init = ()=>{
+  date.value = new Date(props.ani.year, props.ani.month - 1, 1);
+}
+
+let dateChange = () => {
+  props.ani.year = date.value.getFullYear()
+  props.ani.month = date.value.getMonth() + 1
+  let minYear = 1970
+  if (props.ani.year < minYear) {
+    props.ani.year = minYear
+    init()
+    ElMessage.error(`最小年份为 ${minYear}`)
+  }
+  console.log(`${props.ani.year} / ${props.ani.month}`)
+}
 
 let props = defineProps(['ani'])
 const emit = defineEmits(['ok'])

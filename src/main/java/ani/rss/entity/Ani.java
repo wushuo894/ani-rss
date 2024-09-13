@@ -30,6 +30,11 @@ public class Ani implements Serializable {
     private Integer year;
 
     /**
+     * 月
+     */
+    private Integer month;
+
+    /**
      * 季度
      */
     private Integer season;
@@ -99,6 +104,8 @@ public class Ani implements Serializable {
         Ani newAni = new Ani();
         newAni
                 .setOffset(0)
+                .setYear(1970)
+                .setMonth(1)
                 .setEnable(true)
                 .setOva(false)
                 .setThemoviedbName("")
