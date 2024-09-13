@@ -110,8 +110,8 @@ public class qBittorrent implements BaseDownload {
         String hash = FileUtil.mainName(torrentFile);
         Boolean watchErrorTorrent = config.getWatchErrorTorrent();
 
-        if (!qbRenameTitle) {
-            renameCache.put(hash, name, renameSleep * (1000 * 60) * 3);
+        if (!qbRenameTitle && !"txt".equals(extName) && !ova) {
+            renameCache.put(hash, name);
         }
 
         if (!watchErrorTorrent) {

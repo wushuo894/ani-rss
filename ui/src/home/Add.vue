@@ -66,10 +66,17 @@
               />
             </el-form-item>
             <el-form-item label="RSS 地址">
-              <el-input
-                  v-model:model-value="ani.url"
-                  placeholder="https://share.dmhy.org/topics/rss/rss.xml?keyword=xxx"
-              />
+              <div style="width: 100%">
+                <el-input
+                    v-model:model-value="ani.url"
+                    placeholder="https://share.dmhy.org/topics/rss/rss.xml?keyword=xxx"
+                />
+                <div>
+                  <el-text class="mx-1" size="small">
+                    Dmhy 仅支持qb开启修改任务标题的情况下自动重命名
+                  </el-text>
+                </div>
+              </div>
             </el-form-item>
           </el-form>
         </el-tab-pane>
