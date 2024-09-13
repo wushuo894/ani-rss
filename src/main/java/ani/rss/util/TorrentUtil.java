@@ -151,6 +151,10 @@ public class TorrentUtil {
     public static File getTorrent(Ani ani, Item item) {
         String infoHash = item.getInfoHash();
         File torrents = getTorrentDir(ani);
+        String type = ani.getType();
+        if ("dmhy".equals(type)) {
+            return new File(torrents + File.separator + infoHash + ".txt");
+        }
         return new File(torrents + File.separator + infoHash + ".torrent");
     }
 
@@ -166,6 +170,12 @@ public class TorrentUtil {
         log.info("下载种子 {}", reName);
         File saveTorrentFile = getTorrent(ani, item);
         if (saveTorrentFile.exists()) {
+            return saveTorrentFile;
+        }
+
+        String type = ani.getType();
+        if ("dmhy".equals(type)) {
+            FileUtil.writeUtf8String(torrent, saveTorrentFile);
             return saveTorrentFile;
         }
 

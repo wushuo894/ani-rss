@@ -8,6 +8,7 @@ import cn.hutool.core.lang.Assert;
 import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.core.util.ReUtil;
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpResponse;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -82,7 +83,7 @@ public class qBittorrent implements BaseDownload {
         String host = config.getHost();
         Integer renameSleep = config.getRenameSleep();
         Boolean qbRenameTitle = config.getQbRenameTitle();
-        HttpReq.post(host + "/api/v2/torrents/add", false)
+        HttpRequest httpRequest = HttpReq.post(host + "/api/v2/torrents/add", false)
                 .form("addToTopOfQueue", false)
                 .form("autoTMM", false)
                 .form("contentLayout", "Original")
@@ -96,15 +97,21 @@ public class qBittorrent implements BaseDownload {
                 .form("stopCondition", "None")
                 .form("upLimit", 102400)
                 .form("useDownloadPath", false)
-                .form("torrents", torrentFile)
-                .form("tags", "ani-rss")
-                .thenFunction(HttpResponse::isOk);
+                .form("tags", "ani-rss");
+
+        String extName = FileUtil.extName(torrentFile);
+        if ("txt".equals(extName)) {
+            httpRequest.form("urls", FileUtil.readUtf8String(torrentFile));
+        } else {
+            httpRequest.form("torrents", torrentFile);
+        }
+        httpRequest.thenFunction(HttpResponse::isOk);
 
         String hash = FileUtil.mainName(torrentFile);
         Boolean watchErrorTorrent = config.getWatchErrorTorrent();
 
         if (!qbRenameTitle) {
-            renameCache.put(hash, name,renameSleep * (1000 * 60) * 3);
+            renameCache.put(hash, name, renameSleep * (1000 * 60) * 3);
         }
 
         if (!watchErrorTorrent) {
