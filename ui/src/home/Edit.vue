@@ -25,9 +25,7 @@ const ani = ref({
   'ova': false,
   'totalEpisodeNumber': '',
   'customDownloadPath': false,
-  'downloadPath': '',
-  'year': 1970,
-  'month': 1
+  'downloadPath': ''
 })
 
 const editAni = (fun) => {
@@ -44,7 +42,7 @@ let aniRef = ref()
 
 const showEdit = (item) => {
   ani.value = JSON.parse(JSON.stringify(item))
-  aniRef?.init()
+  aniRef.value?.init()
   dialogVisible.value = true
 }
 
