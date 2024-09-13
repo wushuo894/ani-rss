@@ -302,10 +302,10 @@ public class AniUtil {
                 if (itemChildNodeName.equals("enclosure")) {
                     NamedNodeMap attributes = itemChild.getAttributes();
                     String url = attributes.getNamedItem("url").getNodeValue();
-                    if (url.endsWith(".torrent")) {
+                    length = attributes.getNamedItem("length").getNodeValue();
+                    if (Long.parseLong(length) > 1) {
                         torrent = url;
                         infoHash = FileUtil.mainName(torrent);
-                        length = attributes.getNamedItem("length").getNodeValue();
                     }
                 }
                 if (itemChildNodeName.equals("nyaa:infoHash")) {
