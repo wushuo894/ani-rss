@@ -170,7 +170,7 @@ public class AniUtil {
 
         Ani ani = Ani.bulidAni();
 
-        if (List.of("nyaa", "dmhy").equals(type)) {
+        if (List.of("nyaa", "dmhy").contains(type)) {
             if (StrUtil.isNotBlank(text)) {
                 title = text;
             } else {
@@ -194,11 +194,16 @@ public class AniUtil {
                 String url1 = anis.get(0).getUrl();
                 ani.setBangumiId(new File(url1).getName());
             }
+            Assert.notBlank(ani.getBangumiId(), "标题获取失败，请手动填写");
         } else {
             ani.setBangumiId(bangumiId);
         }
 
-        MikanUtil.getMikanInfo(ani, subgroupid);
+        try {
+            MikanUtil.getMikanInfo(ani, subgroupid);
+        } catch (Exception e) {
+            throw new RuntimeException("获取失败");
+        }
 
         String themoviedbName = getThemoviedbName(title);
 
@@ -220,6 +225,7 @@ public class AniUtil {
         }
 
         ani
+                .setType(type)
                 .setUrl(url.trim())
                 .setSeason(season)
                 .setTitle(title)
