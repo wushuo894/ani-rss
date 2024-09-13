@@ -83,7 +83,12 @@ const ani = ref({
   'themoviedbName': '',
   'exclude': [],
   'enable': true,
-  'ova': false
+  'ova': false,
+  'totalEpisodeNumber': '',
+  'customDownloadPath': false,
+  'downloadPath': '',
+  'year': 1970,
+  'month': 1
 })
 
 const aniRef = ref()
@@ -97,6 +102,7 @@ const getRss = () => {
       .then(res => {
         ani.value = res['data']
         showRss.value = false
+        aniRef?.init()
       })
       .finally(() => {
         rssButtonLoading.value = false
@@ -120,10 +126,16 @@ const showAdd = () => {
     'season': 1,
     'offset': 0,
     'title': '',
+    'themoviedbName': '',
     'exclude': [],
-    'totalEpisodeNumber': 0
+    'enable': true,
+    'ova': false,
+    'totalEpisodeNumber': '',
+    'customDownloadPath': false,
+    'downloadPath': '',
+    'year': 1970,
+    'month': 1
   }
-  aniRef?.init()
   activeName.value = 'mikan'
   showRss.value = true
   dialogVisible.value = true
