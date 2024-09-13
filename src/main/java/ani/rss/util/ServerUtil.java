@@ -5,10 +5,14 @@ import ani.rss.action.RootAction;
 import ani.rss.annotation.Auth;
 import ani.rss.annotation.Path;
 import ani.rss.auth.util.AuthUtil;
+import ani.rss.entity.Config;
 import ani.rss.entity.Result;
 import cn.hutool.core.io.IoUtil;
+import cn.hutool.core.lang.PatternPool;
+import cn.hutool.core.net.Ipv4Util;
 import cn.hutool.core.util.ClassUtil;
 import cn.hutool.core.util.ReflectUtil;
+import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.HttpUtil;
 import cn.hutool.http.server.HttpServerRequest;
 import cn.hutool.http.server.HttpServerResponse;
@@ -56,7 +60,7 @@ public class ServerUtil {
                         REQUEST.set(req);
                         RESPONSE.set(res);
                         Auth auth = aClass.getAnnotation(Auth.class);
-                        if (auth.value()) {
+                        if (auth.value() && !isIpWhitelist(AuthUtil.getIp())) {
                             Boolean test = AuthUtil.test(req, auth.type());
                             if (!test) {
                                 return;
@@ -87,5 +91,36 @@ public class ServerUtil {
             return;
         }
         server.getRawServer().stop(0);
+    }
+
+    public static synchronized Boolean isIpWhitelist(String ip) {
+        Config config = ConfigUtil.CONFIG;
+        String ipWhitelistStr = config.getIpWhitelistStr();
+        Boolean ipWhitelist = config.getIpWhitelist();
+        if (!ipWhitelist) {
+            return false;
+        }
+        if (StrUtil.isBlank(ipWhitelistStr)) {
+            return false;
+        }
+        if (!PatternPool.IPV4.matcher(ip).matches()) {
+            return false;
+        }
+        String[] list = ipWhitelistStr.split("\n");
+        for (String string : list) {
+            if (StrUtil.isBlank(string)) {
+                continue;
+            }
+            if (ip.equals(string)) {
+                return true;
+            }
+            if (Ipv4Util.list(string, false).contains(ip)) {
+                return true;
+            }
+            if (Ipv4Util.matches(string, ip)) {
+                return true;
+            }
+        }
+        return false;
     }
 }

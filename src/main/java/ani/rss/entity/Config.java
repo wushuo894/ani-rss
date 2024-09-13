@@ -184,4 +184,8 @@ public class Config implements Serializable {
 
     private Boolean tmdb;
 
+    private Boolean ipWhitelist;
+
+    private String ipWhitelistStr;
+
 }
