@@ -67,8 +67,13 @@ let login = () => {
 let test = ()=>{
   fetch('/api/test')
       .then(res => {
-        localStorage.setItem("authorization", '1')
-        window.authorization = '1'
+        if (res.code === 200) {
+          localStorage.setItem("authorization", '1')
+          window.authorization = '1'
+          return
+        }
+        localStorage.removeItem("authorization")
+        window.authorization = ''
       })
 }
 
