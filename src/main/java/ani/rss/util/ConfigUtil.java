@@ -120,7 +120,7 @@ public class ConfigUtil {
     /**
      * 将设置保存到磁盘
      */
-    public static void sync() {
+    public static synchronized void sync() {
         Boolean mail = CONFIG.getMail();
         MyMailAccount mailAccount = CONFIG.getMailAccount();
         String from = mailAccount.getFrom();
