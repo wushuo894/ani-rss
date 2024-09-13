@@ -111,8 +111,9 @@ public class TorrentUtil {
         }
         if (!items.isEmpty()) {
             ani.setCurrentEpisodeNumber(items.size());
+            AniUtil.sync();
         }
-        AniUtil.sync();
+
         if (!autoDisabled) {
             return;
         }
