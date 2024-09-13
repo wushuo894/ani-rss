@@ -116,6 +116,9 @@ public class AniAction implements BaseAction {
                     if (file.isDirectory()) {
                         continue;
                     }
+                    if (file.getName().endsWith(".txt")) {
+                        FileUtil.del(file);
+                    }
                     if (file.getName().endsWith(".torrent")) {
                         FileUtil.del(file);
                     }
