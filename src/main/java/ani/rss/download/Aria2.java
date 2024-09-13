@@ -19,6 +19,7 @@ import lombok.extern.slf4j.Slf4j;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -51,7 +52,7 @@ public class Aria2 implements BaseDownload {
         torrentsInfos.addAll(getTorrentsInfos("aria2/tellStopped.json"));
         synchronized (renameCache) {
             List<CacheObj<String, String>> cacheObjList = IterUtil.toList(renameCache.cacheObjIterator());
-            List<String> collect = torrentsInfos.stream().map(TorrentsInfo::getId).collect(Collectors.toList());
+            List<String> collect = torrentsInfos.stream().map(TorrentsInfo::getHash).collect(Collectors.toList());
             for (CacheObj<String, String> stringStringCacheObj : cacheObjList) {
                 if (collect.contains(stringStringCacheObj.getKey())) {
                     continue;
@@ -79,8 +80,12 @@ public class Aria2 implements BaseDownload {
                         if (bittorrent.isJsonNull()) {
                             continue;
                         }
-                        String name = bittorrent.getAsJsonObject()
-                                .get("info").getAsJsonObject()
+                        JsonElement info = bittorrent.getAsJsonObject()
+                                .get("info");
+                        if (Objects.isNull(info)) {
+                            continue;
+                        }
+                        String name = info.getAsJsonObject()
                                 .get("name").getAsString();
                         String infoHash = asJsonObject.get("infoHash").getAsString();
                         String status = asJsonObject.get("status").getAsString();
@@ -115,10 +120,23 @@ public class Aria2 implements BaseDownload {
     public Boolean download(String name, String savePath, File torrentFile, Boolean ova) {
         String host = config.getHost();
         String password = config.getPassword();
-        String body = ResourceUtil.readUtf8Str("aria2/addTorrent.json");
-        body = StrFormatter.format(body, password, Base64.encode(torrentFile), savePath);
+        String body = "";
 
-        String gid = HttpReq.post(host + "/jsonrpc", false)
+        String extName = FileUtil.extName(torrentFile);
+        if (StrUtil.isBlank(extName)) {
+            return false;
+        }
+
+        String hash = FileUtil.mainName(torrentFile);
+        if ("txt".equals(extName)) {
+            body = ResourceUtil.readUtf8Str("aria2/aria2.addUri.json");
+            body = StrFormatter.format(body, password, FileUtil.readUtf8String(torrentFile), savePath);
+        } else {
+            body = ResourceUtil.readUtf8Str("aria2/addTorrent.json");
+            body = StrFormatter.format(body, password, Base64.encode(torrentFile), savePath);
+        }
+
+        HttpReq.post(host + "/jsonrpc", false)
                 .body(body)
                 .thenFunction(res -> gson.fromJson(res.body(), JsonObject.class).get("result").getAsString());
 
@@ -126,7 +144,7 @@ public class Aria2 implements BaseDownload {
 
         if (!watchErrorTorrent) {
             if (!ova) {
-                renameCache.put(gid, name);
+                renameCache.put(hash, name);
             }
             return true;
         }
@@ -135,11 +153,11 @@ public class Aria2 implements BaseDownload {
             ThreadUtil.sleep(2000);
             List<TorrentsInfo> torrentsInfos = getTorrentsInfos();
             for (TorrentsInfo torrentsInfo : torrentsInfos) {
-                if (!torrentsInfo.getId().equals(gid)) {
+                if (!torrentsInfo.getId().equals(hash)) {
                     continue;
                 }
                 if (!ova) {
-                    renameCache.put(gid, name);
+                    renameCache.put(hash, name);
                 }
                 return true;
             }
@@ -162,9 +180,9 @@ public class Aria2 implements BaseDownload {
 
     @Override
     public void rename(TorrentsInfo torrentsInfo) {
-        String id = torrentsInfo.getId();
+        String hash = torrentsInfo.getHash();
         String downloadDir = torrentsInfo.getDownloadDir();
-        String reName = renameCache.get(id);
+        String reName = renameCache.get(hash);
         if (StrUtil.isBlank(reName)) {
             return;
         }

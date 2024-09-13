@@ -6,7 +6,7 @@
         <el-tab-pane label="Mikan" name="mikan">
           <el-form label-width="auto"
                    style="height: 200px"
-                   v-if="showRss" @keydown.enter="getRss('mikan')"
+                   v-if="showRss" @keydown.enter="getRss"
                    @submit="(event)=>{
                 event.preventDefault()
              }">
@@ -34,7 +34,7 @@
         <el-tab-pane label="Nyaa" name="nyaa">
           <el-form label-width="auto"
                    style="height: 200px"
-                   v-if="showRss" @keydown.enter="getRss('nyaa')"
+                   v-if="showRss" @keydown.enter="getRss"
                    @submit="(event)=>{
                 event.preventDefault()
              }">
@@ -47,7 +47,28 @@
             <el-form-item label="RSS 地址">
               <el-input
                   v-model:model-value="ani.url"
-                  placeholder="https://nyaa.si/?page=rss&q=xx"
+                  placeholder="https://nyaa.si/?page=rss&q=xxx"
+              />
+            </el-form-item>
+          </el-form>
+        </el-tab-pane>
+        <el-tab-pane label="Dmhy" name="dmhy">
+          <el-form label-width="auto"
+                   style="height: 200px"
+                   v-if="showRss" @keydown.enter="getRss"
+                   @submit="(event)=>{
+                event.preventDefault()
+             }">
+            <el-form-item label="番剧名称">
+              <el-input
+                  v-model:model-value="ani.title"
+                  placeholder="可以为空 如果获取失败建议补全"
+              />
+            </el-form-item>
+            <el-form-item label="RSS 地址">
+              <el-input
+                  v-model:model-value="ani.url"
+                  placeholder="https://share.dmhy.org/topics/rss/rss.xml?keyword=xxx"
               />
             </el-form-item>
           </el-form>
