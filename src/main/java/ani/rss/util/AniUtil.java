@@ -96,7 +96,7 @@ public class AniUtil {
     /**
      * 将订阅配置保存到磁盘
      */
-    public static void sync() {
+    public static synchronized void sync() {
         File configFile = getAniFile();
         log.info("保存订阅 {}", configFile);
         try {
