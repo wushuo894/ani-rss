@@ -55,6 +55,16 @@
       <el-form-item label="DEBUG">
         <el-switch v-model:model-value="props.config.debug"/>
       </el-form-item>
+      <el-form-item label="对IP白名单跳过身份验证">
+        <div style="width: 100%;">
+          <div>
+            <el-switch v-model:model-value="config['ipWhitelist']"/>
+          </div>
+          <div style="width: 100%;">
+            <el-input style="width: 100%" type="textarea" placeholder="192.168.1.0/24" v-model:model-value="config['ipWhitelistStr']"/>
+          </div>
+        </div>
+      </el-form-item>
     </el-form>
   </div>
 </template>
