@@ -23,8 +23,11 @@ const ani = ref({
   'exclude': [],
   'enable': true,
   'ova': false,
+  'totalEpisodeNumber': '',
   'customDownloadPath': false,
-  'downloadPath': ''
+  'downloadPath': '',
+  'year': 1970,
+  'month': 1
 })
 
 const editAni = (fun) => {
