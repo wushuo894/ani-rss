@@ -2,7 +2,6 @@ package ani.rss.download;
 
 import ani.rss.entity.Config;
 import ani.rss.entity.TorrentsInfo;
-import ani.rss.util.ConfigUtil;
 import ani.rss.util.HttpReq;
 import cn.hutool.core.codec.Base64;
 import cn.hutool.core.collection.CollUtil;
@@ -114,7 +113,19 @@ public class Transmission implements BaseDownload {
     @Override
     public Boolean download(String name, String savePath, File torrentFile, Boolean ova) {
         String body = ResourceUtil.readUtf8Str("transmission/torrent-add.json");
-        body = StrFormatter.format(body, tag, savePath, Base64.encode(torrentFile));
+        String extName = FileUtil.extName(torrentFile);
+        if (StrUtil.isBlank(extName)) {
+            return false;
+        }
+        String torrent = "";
+        if ("txt".equals(extName)) {
+            torrent = FileUtil.readUtf8String(torrentFile);
+            body = StrFormatter.format(body, tag, savePath, "", torrent);
+        } else {
+            torrent = Base64.encode(torrentFile);
+            body = StrFormatter.format(body, tag, savePath, torrent, "");
+        }
+
         String hash = FileUtil.mainName(torrentFile);
 
         HttpReq.post(host + "/transmission/rpc", false)
