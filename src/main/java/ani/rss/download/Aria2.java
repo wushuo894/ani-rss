@@ -3,9 +3,7 @@ package ani.rss.download;
 import ani.rss.entity.Config;
 import ani.rss.entity.TorrentsInfo;
 import ani.rss.util.HttpReq;
-import cn.hutool.cache.impl.CacheObj;
 import cn.hutool.core.codec.Base64;
-import cn.hutool.core.collection.IterUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.resource.ResourceUtil;
 import cn.hutool.core.text.StrFormatter;
@@ -126,7 +124,7 @@ public class Aria2 implements BaseDownload {
             body = StrFormatter.format(body, password, Base64.encode(torrentFile), savePath);
         }
 
-        HttpReq.post(host + "/jsonrpc", false)
+        String id = HttpReq.post(host + "/jsonrpc", false)
                 .body(body)
                 .thenFunction(res -> gson.fromJson(res.body(), JsonObject.class).get("result").getAsString());
 
@@ -134,7 +132,7 @@ public class Aria2 implements BaseDownload {
 
         if (!watchErrorTorrent) {
             if (!ova) {
-                renameCache.put(hash, name);
+                renameCache.put(id, name);
             }
             return true;
         }
@@ -143,11 +141,11 @@ public class Aria2 implements BaseDownload {
             ThreadUtil.sleep(2000);
             List<TorrentsInfo> torrentsInfos = getTorrentsInfos();
             for (TorrentsInfo torrentsInfo : torrentsInfos) {
-                if (!torrentsInfo.getId().equals(hash)) {
+                if (!torrentsInfo.getId().equals(id)) {
                     continue;
                 }
                 if (!ova) {
-                    renameCache.put(hash, name);
+                    renameCache.put(id, name);
                 }
                 return true;
             }
@@ -170,9 +168,9 @@ public class Aria2 implements BaseDownload {
 
     @Override
     public void rename(TorrentsInfo torrentsInfo) {
-        String hash = torrentsInfo.getHash();
+        String id = torrentsInfo.getId();
         String downloadDir = torrentsInfo.getDownloadDir();
-        String reName = renameCache.get(hash);
+        String reName = renameCache.get(id);
         if (StrUtil.isBlank(reName)) {
             return;
         }
