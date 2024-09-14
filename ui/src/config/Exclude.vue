@@ -1,5 +1,5 @@
 <template>
-  <div style="width: 100%">
+  <div style="width: 100%;">
     <div class="flex gap-2">
       <el-tag
           v-for="tag in props.exclude"
@@ -34,7 +34,7 @@
         </el-icon>
         导入全局排除
       </el-button>
-      <el-text class="mx-1" size="small">
+      <el-text class="mx-1" size="small" v-if="props.showText">
         支持 <a href="https://www.runoob.com/regexp/regexp-syntax.html" target="_blank">正则表达式</a>
       </el-text>
     </div>
@@ -98,5 +98,5 @@ defineExpose({
   init
 })
 
-let props = defineProps(['exclude', 'importExclude'])
+let props = defineProps(['exclude', 'importExclude','showText'])
 </script>
