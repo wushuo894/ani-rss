@@ -18,36 +18,71 @@ import lombok.extern.slf4j.Slf4j;
 import java.io.File;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 @Auth
 @Slf4j
 @Path("/ani")
 public class AniAction implements BaseAction {
+    private static final AtomicBoolean download = new AtomicBoolean(false);
 
     @Override
     public void doAction(HttpServerRequest req, HttpServerResponse res) {
         String method = req.getMethod();
+        String s = req.getParam("download");
         switch (method) {
             case "POST": {
                 Ani ani = getBody(Ani.class);
                 ani.setTitle(ani.getTitle().trim())
                         .setUrl(ani.getUrl().trim());
                 AniUtil.verify(ani);
+
                 Optional<Ani> first = AniUtil.ANI_LIST.stream()
+                        .filter(it -> it.getUrl().equals(ani.getUrl()))
+                        .findFirst();
+
+                // 手动刷新下载
+                if (Boolean.parseBoolean(s)) {
+                    if (first.isEmpty()) {
+                        resultError();
+                        return;
+                    }
+                    synchronized (download) {
+                        if (download.get()) {
+                            resultErrorMsg("存在未完成任务，请等待...");
+                            return;
+                        }
+                        download.set(true);
+                        Ani downloadAni = first.get();
+                        ThreadUtil.execute(() -> {
+                            try {
+                                if (TorrentUtil.login()) {
+                                    TorrentUtil.downloadAni(downloadAni);
+                                }
+                            } catch (Exception e) {
+                                log.error(e.getMessage(), e);
+                            }
+                            download.set(false);
+                        });
+                        resultSuccessMsg("已开始刷新RSS {}", downloadAni.getTitle());
+                    }
+                    return;
+                }
+
+                if (first.isPresent()) {
+                    resultErrorMsg("此订阅已存在");
+                    return;
+                }
+
+                first = AniUtil.ANI_LIST.stream()
                         .filter(it -> it.getTitle().equals(ani.getTitle()) && it.getSeason().equals(ani.getSeason()))
                         .findFirst();
+
                 if (first.isPresent()) {
                     resultErrorMsg("名称重复");
                     return;
                 }
 
-                first = AniUtil.ANI_LIST.stream()
-                        .filter(it -> it.getUrl().equals(ani.getUrl()))
-                        .findFirst();
-                if (first.isPresent()) {
-                    resultErrorMsg("此订阅已存在");
-                    return;
-                }
 
                 AniUtil.ANI_LIST.add(ani);
                 AniUtil.sync();

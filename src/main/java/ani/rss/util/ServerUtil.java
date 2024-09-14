@@ -18,12 +18,14 @@ import cn.hutool.http.server.HttpServerRequest;
 import cn.hutool.http.server.HttpServerResponse;
 import cn.hutool.http.server.SimpleServer;
 import cn.hutool.log.Log;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.Arrays;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
+@Slf4j
 public class ServerUtil {
     public static final ThreadLocal<HttpServerRequest> REQUEST = new ThreadLocal<>();
     public static final ThreadLocal<HttpServerResponse> RESPONSE = new ThreadLocal<>();
@@ -94,32 +96,37 @@ public class ServerUtil {
     }
 
     public static synchronized Boolean isIpWhitelist(String ip) {
-        Config config = ConfigUtil.CONFIG;
-        String ipWhitelistStr = config.getIpWhitelistStr();
-        Boolean ipWhitelist = config.getIpWhitelist();
-        if (!ipWhitelist) {
-            return false;
-        }
-        if (StrUtil.isBlank(ipWhitelistStr)) {
-            return false;
-        }
-        if (!PatternPool.IPV4.matcher(ip).matches()) {
-            return false;
-        }
-        String[] list = ipWhitelistStr.split("\n");
-        for (String string : list) {
-            if (StrUtil.isBlank(string)) {
-                continue;
+        try {
+            Config config = ConfigUtil.CONFIG;
+            String ipWhitelistStr = config.getIpWhitelistStr();
+            Boolean ipWhitelist = config.getIpWhitelist();
+            if (!ipWhitelist) {
+                return false;
             }
-            if (ip.equals(string)) {
-                return true;
+            if (StrUtil.isBlank(ipWhitelistStr)) {
+                return false;
             }
-            if (Ipv4Util.list(string, false).contains(ip)) {
-                return true;
+            if (!PatternPool.IPV4.matcher(ip).matches()) {
+                return false;
             }
-            if (Ipv4Util.matches(string, ip)) {
-                return true;
+            String[] list = ipWhitelistStr.split("\n");
+            for (String string : list) {
+                if (StrUtil.isBlank(string)) {
+                    continue;
+                }
+                if (ip.equals(string)) {
+                    return true;
+                }
+                if (Ipv4Util.list(string, false).contains(ip)) {
+                    return true;
+                }
+                if (Ipv4Util.matches(string, ip)) {
+                    return true;
+                }
             }
+        } catch (Exception e) {
+            log.error("ip白名单存在问题");
+            log.error(e.getMessage(), e);
         }
         return false;
     }

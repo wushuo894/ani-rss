@@ -3,16 +3,18 @@
     <div style="margin: 0 15px;" v-loading="loading">
       <el-tabs v-model:model-value="activeName">
         <el-tab-pane label="下载设置" name="download" :lazy="true">
-          <div style="height: 650px;">
-            <el-scrollbar :always="true">
-              <div style="margin-right: 14px;">
-                <Download v-model:config="config"/>
-              </div>
+          <div style="height: 500px;">
+            <el-scrollbar>
+              <Download v-model:config="config"/>
             </el-scrollbar>
           </div>
         </el-tab-pane>
         <el-tab-pane label="基本设置" :lazy="true">
-          <Basic v-model:config="config"/>
+          <div style="height: 500px;">
+            <el-scrollbar>
+              <Basic v-model:config="config"/>
+            </el-scrollbar>
+          </div>
         </el-tab-pane>
         <el-tab-pane label="全局排除" :lazy="true">
           <Exclude ref="exclude" v-model:exclude="config.exclude"/>
