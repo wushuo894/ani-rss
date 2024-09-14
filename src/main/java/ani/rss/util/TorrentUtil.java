@@ -173,17 +173,23 @@ public class TorrentUtil {
             return saveTorrentFile;
         }
 
-        String type = ani.getType();
-        if ("dmhy".equals(type)) {
-            FileUtil.writeUtf8String(torrent, saveTorrentFile);
-            return saveTorrentFile;
-        }
+        try {
+            String type = ani.getType();
+            if ("dmhy".equals(type)) {
+                FileUtil.writeUtf8String(torrent, saveTorrentFile);
+                return saveTorrentFile;
+            }
 
-        return HttpReq.get(torrent, true)
-                .thenFunction(res -> {
-                    FileUtil.writeFromStream(res.bodyStream(), saveTorrentFile, true);
-                    return saveTorrentFile;
-                });
+            return HttpReq.get(torrent, true)
+                    .thenFunction(res -> {
+                        FileUtil.writeFromStream(res.bodyStream(), saveTorrentFile, true);
+                        return saveTorrentFile;
+                    });
+        } catch (Exception e) {
+            log.error("下载种子时出现问题 {}", e.getMessage());
+            log.error(e.getMessage(), e);
+        }
+        return saveTorrentFile;
     }
 
     /**
@@ -403,8 +409,12 @@ public class TorrentUtil {
         ThreadUtil.sleep(1000);
         savePath = savePath.replace("\\", "/");
         MessageUtil.send(ConfigUtil.CONFIG, ani, StrFormatter.format("{} 已更新", name));
-        if (baseDownload.download(name, savePath, torrentFile, ova)) {
-            return;
+        try {
+            if (baseDownload.download(name, savePath, torrentFile, ova)) {
+                return;
+            }
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
         }
         log.error("{} 添加失败，疑似为坏种", name);
         MessageUtil.send(ConfigUtil.CONFIG, ani, StrFormatter.format("{} 添加失败，疑似为坏种", name));
