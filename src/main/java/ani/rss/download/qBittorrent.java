@@ -83,6 +83,7 @@ public class qBittorrent implements BaseDownload {
         String host = config.getHost();
         Integer renameSleep = config.getRenameSleep();
         Boolean qbRenameTitle = config.getQbRenameTitle();
+        Boolean qbUseDownloadPath = config.getQbUseDownloadPath();
         HttpRequest httpRequest = HttpReq.post(host + "/api/v2/torrents/add", false)
                 .form("addToTopOfQueue", false)
                 .form("autoTMM", false)
@@ -96,7 +97,7 @@ public class qBittorrent implements BaseDownload {
                 .form("skip_checking", false)
                 .form("stopCondition", "None")
                 .form("upLimit", 102400)
-                .form("useDownloadPath", false)
+                .form("useDownloadPath", Boolean.TRUE.equals(qbUseDownloadPath))
                 .form("tags", "ani-rss");
 
         String extName = FileUtil.extName(torrentFile);
