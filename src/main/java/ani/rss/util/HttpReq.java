@@ -14,13 +14,13 @@ public class HttpReq {
         return post(url, true);
     }
 
-    private static HttpRequest config(HttpRequest req) {
-        return req.timeout(6000)
+    private static void config(HttpRequest req) {
+        req.timeout(6000)
                 .setFollowRedirects(true);
     }
 
     public static HttpRequest post(String url, Boolean proxy) {
-        HttpRequest req = HttpRequest.post(url);
+        HttpRequest req = HttpRequestPlus.post(url);
         config(req);
         if (proxy) {
             setProxy(req);
@@ -33,7 +33,7 @@ public class HttpReq {
     }
 
     public static HttpRequest get(String url, Boolean proxy) {
-        HttpRequest req = HttpRequest.get(url);
+        HttpRequest req = HttpRequestPlus.get(url);
         config(req);
         if (proxy) {
             setProxy(req);
