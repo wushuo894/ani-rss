@@ -500,6 +500,19 @@ public class AniUtil {
         }
 
         String bangumiId = ani.getBangumiId();
+        Map<String, String> decodeParamMap = HttpUtil.decodeParamMap(ani.getUrl(), StandardCharsets.UTF_8);
+        if (StrUtil.isBlank(bangumiId)) {
+            for (String k : decodeParamMap.keySet()) {
+                String v = decodeParamMap.get(k);
+                if (k.equalsIgnoreCase("bangumiId")) {
+                    bangumiId = v;
+                }
+            }
+            if (StrUtil.isNotBlank(bangumiId)) {
+                ani.setBangumiId(bangumiId);
+                AniUtil.sync();
+            }
+        }
 
         HttpReq.get(MikanUtil.getMikanHost() + "/Home/Bangumi/" + bangumiId, true)
                 .then(res -> {
