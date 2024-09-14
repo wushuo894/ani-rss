@@ -35,6 +35,11 @@ public class Config implements Serializable {
     private Boolean qbRenameTitle;
 
     /**
+     * qb下载时，使用qb自身的保存路径配置(未下载完成的使用临时目录，复制种子文件)
+     */
+    private Boolean qbUseDownloadPath;
+
+    /**
      * 下载路径
      */
     private String downloadPath;

@@ -46,6 +46,7 @@ public class ConfigUtil {
                 .setUsername("")
                 .setPassword("")
                 .setQbRenameTitle(true)
+                .setQbUseDownloadPath(false)
                 .setSkip5(true)
                 .setDebug(false)
                 .setProxy(false)
