@@ -46,24 +46,30 @@
           </el-text>
         </div>
       </el-form-item>
-      <el-form-item label="获取标题时带上年份">
+      <el-form-item label="标题添加年份">
         <el-switch v-model:model-value="props.config.titleYear"/>
       </el-form-item>
-      <el-form-item label="自动跳过xx.5集数">
+      <el-form-item label="自动跳过X.5集">
         <el-switch v-model:model-value="props.config.skip5"/>
       </el-form-item>
-      <el-form-item label="DEBUG">
-        <el-switch v-model:model-value="props.config.debug"/>
-      </el-form-item>
-      <el-form-item label="对IP白名单跳过身份验证">
+      <el-form-item label="IP白名单">
         <div style="width: 100%;">
           <div>
             <el-switch v-model:model-value="config['ipWhitelist']"/>
           </div>
           <div style="width: 100%;">
-            <el-input style="width: 100%" type="textarea" placeholder="192.168.1.0/24" v-model:model-value="config['ipWhitelistStr']"/>
+            <el-input style="width: 100%" type="textarea"
+                      :disabled="!config['ipWhitelist']"
+                      :placeholder="'127.0.0.1\n192.168.1.0/24'" v-model:model-value="config['ipWhitelistStr']"/>
+            <br>
+            <el-text class="mx-1" size="small">
+              对IP白名单跳过身份验证, 换行可填写多个
+            </el-text>
           </div>
         </div>
+      </el-form-item>
+      <el-form-item label="DEBUG">
+        <el-switch v-model:model-value="props.config.debug"/>
       </el-form-item>
     </el-form>
   </div>

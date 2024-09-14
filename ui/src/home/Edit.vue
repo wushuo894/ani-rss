@@ -42,6 +42,7 @@ let aniRef = ref()
 
 const showEdit = (item) => {
   ani.value = JSON.parse(JSON.stringify(item))
+  ani.value.showDownlaod = true
   setTimeout(() => {
     aniRef.value?.init()
     dialogVisible.value = true
