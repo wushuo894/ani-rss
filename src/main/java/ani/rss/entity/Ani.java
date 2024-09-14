@@ -50,6 +50,11 @@ public class Ani implements Serializable {
     private String subgroup;
 
     /**
+     * 匹配
+     */
+    private List<String> match;
+
+    /**
      * 排除
      */
     private List<String> exclude;
@@ -114,6 +119,7 @@ public class Ani implements Serializable {
                 .setGlobalExclude(false)
                 .setCurrentEpisodeNumber(0)
                 .setTotalEpisodeNumber(0)
+                .setMatch(List.of())
                 .setExclude(List.of("720"));
         return newAni;
     }
