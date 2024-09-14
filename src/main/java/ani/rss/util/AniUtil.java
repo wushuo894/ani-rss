@@ -546,13 +546,14 @@ public class AniUtil {
                                     }
                                     try {
                                         Integer ten = Integer.parseInt(element.parent().ownText());
-                                        AniUtil.sync();
-                                        ani.setTotalEpisodeNumber(ten);
+                                        if (!totalEpisodeNumber.equals(ten)) {
+                                            ani.setTotalEpisodeNumber(ten);
+                                            AniUtil.sync();
+                                        }
                                         break;
                                     } catch (Exception e) {
                                         log.error(e.getMessage(), e);
                                     }
-
                                 }
                             });
                 });

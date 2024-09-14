@@ -70,6 +70,11 @@ public class Config implements Serializable {
     private Boolean rename;
 
     /**
+     * rss开关
+     */
+    private Boolean rss;
+
+    /**
      * 文件已下载自动跳过
      */
     private Boolean fileExist;

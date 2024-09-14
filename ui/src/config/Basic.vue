@@ -4,15 +4,18 @@
              @submit="(event)=>{
                       event.preventDefault()
                    }">
+      <el-form-item label="RSS开关">
+        <el-switch v-model:model-value="props.config.rss"/>
+      </el-form-item>
       <el-form-item label="RSS间隔(分钟)">
-        <el-input-number v-model:model-value="props.config.sleep" :min="1"/>
+        <el-input-number v-model:model-value="props.config.sleep" :min="1" :disabled="!props.config.rss"/>
       </el-form-item>
       <el-form-item label="自动重命名">
         <el-switch v-model:model-value="props.config.rename"/>
       </el-form-item>
       <el-form-item label="重命名间隔(分钟)">
         <el-input-number v-model:model-value="props.config.renameSleep" min="1"
-                         :disabled="!config.rename"></el-input-number>
+                         :disabled="!config.rename"/>
       </el-form-item>
       <el-form-item label="自动跳过">
         <div style="width: 100%">

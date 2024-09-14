@@ -11,7 +11,7 @@
     </el-form-item>
     <el-form-item label="版本号">
       <div>
-        <div v-loading="about.version.length < 1" style="min-height: 150px;">
+        <div v-loading="about.version.length < 1" style="min-height: 150px;margin-bottom: 16px;">
           v{{ about.version }}
           <div v-if="about.update">
             <a href="https://github.com/wushuo894/ani-rss/releases/latest" target="_blank">有更新 v{{

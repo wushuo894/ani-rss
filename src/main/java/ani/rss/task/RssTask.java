@@ -29,6 +29,11 @@ public class RssTask extends Thread {
         Integer sleep = config.getSleep();
         log.info("{} 当前设置间隔为 {} 分钟", getName(), sleep);
         while (loop.get()) {
+            if (!config.getRss()) {
+                log.debug("rss未启用");
+                ThreadUtil.sleep(sleep, TimeUnit.MINUTES);
+                continue;
+            }
             if (!TorrentUtil.login()) {
                 ThreadUtil.sleep(sleep, TimeUnit.MINUTES);
                 continue;
