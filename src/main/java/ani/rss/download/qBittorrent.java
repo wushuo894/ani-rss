@@ -97,7 +97,7 @@ public class qBittorrent implements BaseDownload {
                 .form("skip_checking", false)
                 .form("stopCondition", "None")
                 .form("upLimit", 102400)
-                .form("useDownloadPath", Boolean.TRUE.equals(qbUseDownloadPath))
+                .form("useDownloadPath", qbUseDownloadPath)
                 .form("tags", "ani-rss");
 
         String extName = FileUtil.extName(torrentFile);
