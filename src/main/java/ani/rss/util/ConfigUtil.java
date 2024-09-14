@@ -31,6 +31,7 @@ public class ConfigUtil {
         CONFIG.setSleep(15)
                 .setRenameSleep(1)
                 .setRename(true)
+                .setRss(true)
                 .setWatchErrorTorrent(true)
                 .setFileExist(false)
                 .setDelete(false)

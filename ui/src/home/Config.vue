@@ -71,6 +71,7 @@ const config = ref({
   'download': 'qBittorrent',
   'exclude': [],
   'rename': true,
+  'rss': false,
   'tmdb': false,
   'host': '',
   'username': '',

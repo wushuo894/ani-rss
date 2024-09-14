@@ -59,7 +59,7 @@
         <el-switch v-model:model-value="props.config.quarter" :disabled="props.config.acronym"></el-switch>
         <br>
         <el-text class="mx-1" size="small">
-          按季度存放, 如 2024-09
+          按季度存放, 如 2024-07
         </el-text>
       </div>
     </el-form-item>
