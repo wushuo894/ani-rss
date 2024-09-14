@@ -1,5 +1,6 @@
 <template>
   <el-form label-width="auto"
+           style="width: 100%"
            @submit="(event)=>{
                     event.preventDefault()
                    }">

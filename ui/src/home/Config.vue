@@ -4,14 +4,14 @@
       <el-tabs v-model:model-value="activeName">
         <el-tab-pane label="下载设置" name="download" :lazy="true">
           <div style="height: 500px;">
-            <el-scrollbar>
+            <el-scrollbar style="padding: 0 12px">
               <Download v-model:config="config"/>
             </el-scrollbar>
           </div>
         </el-tab-pane>
         <el-tab-pane label="基本设置" :lazy="true">
           <div style="height: 500px;">
-            <el-scrollbar>
+            <el-scrollbar style="padding: 0 12px">
               <Basic v-model:config="config"/>
             </el-scrollbar>
           </div>
@@ -68,6 +68,7 @@ const configButtonLoading = ref(false)
 const loading = ref(true)
 
 const config = ref({
+  'mikanHost': '',
   'download': 'qBittorrent',
   'exclude': [],
   'rename': true,

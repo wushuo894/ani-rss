@@ -2,7 +2,7 @@
   <Edit ref="edit" @load="getList"></Edit>
   <div style="height: 100%;overflow: hidden;">
 
-    <el-scrollbar>
+    <el-scrollbar style="padding: 0 12px">
       <div style="margin: 0 10px;min-height: 500px" v-loading="loading">
         <el-empty v-if="!getPage().length" style="min-height: 500px"></el-empty>
         <div class="grid-container" v-show="getPage().length">

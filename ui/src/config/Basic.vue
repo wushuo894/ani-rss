@@ -1,9 +1,12 @@
 <template>
   <div>
-    <el-form style="max-width: 600px" label-width="auto"
+    <el-form label-width="auto"
              @submit="(event)=>{
                       event.preventDefault()
                    }">
+      <el-form-item label="Mikan">
+        <el-input v-model:model-value="props.config.mikanHost" placeholder="https://mikanime.tv"/>
+      </el-form-item>
       <el-form-item label="RSS开关">
         <el-switch v-model:model-value="props.config.rss"/>
       </el-form-item>

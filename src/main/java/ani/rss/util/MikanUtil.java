@@ -1,6 +1,7 @@
 package ani.rss.util;
 
 import ani.rss.entity.Ani;
+import ani.rss.entity.Config;
 import ani.rss.entity.Mikan;
 import ani.rss.entity.TorrentsInfo;
 import cn.hutool.core.util.ReflectUtil;
@@ -20,10 +21,18 @@ import java.util.function.Function;
 import static ani.rss.util.AniUtil.saveJpg;
 
 public class MikanUtil {
-    public static final String HOST = "https://mikanime.tv";
+    public static String getMikanHost() {
+        Config config = ConfigUtil.CONFIG;
+        String mikanHost = config.getMikanHost();
+        mikanHost = StrUtil.blankToDefault(mikanHost, "https://mikanime.tv");
+        if (mikanHost.endsWith("/")) {
+            mikanHost = mikanHost.substring(0, mikanHost.length() - 1);
+        }
+        return mikanHost;
+    }
 
     public static Mikan list(String text, Mikan.Season season) {
-        String url = HOST;
+        String url = getMikanHost();
         if (StrUtil.isNotBlank(text)) {
             url = url + "/Home/Search?searchstr=" + text;
         } else {
@@ -63,13 +72,13 @@ public class MikanUtil {
                         List<Ani> anis = new ArrayList<>();
                         Elements lis = el.select("li");
                         for (Element li : lis) {
-                            String img = HOST + li.selectFirst("span")
+                            String img = getMikanHost() + li.selectFirst("span")
                                     .attr("data-src");
                             Elements aa = li.select("a");
                             if (aa.isEmpty()) {
                                 continue;
                             }
-                            String href = HOST + aa.get(0).attr("href");
+                            String href = getMikanHost() + aa.get(0).attr("href");
                             String title = aa.get(0).text();
                             anis.add(new Ani()
                                     .setCover(img)
@@ -122,7 +131,7 @@ public class MikanUtil {
                         String id = subgroupText.select("a.subgroup-name").attr("data-anchor");
                         String attr = document.selectFirst(id).selectFirst(".mikan-rss").attr("href");
                         group.setLabel(label)
-                                .setRss(HOST + attr);
+                                .setRss(getMikanHost() + attr);
                         groups.add(group);
                         // 字幕组更新日期
                         String day = subgroupText.select(".date").text().trim();
@@ -149,7 +158,7 @@ public class MikanUtil {
 
     public static void getMikanInfo(Ani ani, String subgroupId) {
         String bangumiId = ani.getBangumiId();
-        HttpReq.get(URLUtil.getHost(URLUtil.url(HOST)) + "/Home/Bangumi/" + bangumiId, true)
+        HttpReq.get(URLUtil.getHost(URLUtil.url(getMikanHost())) + "/Home/Bangumi/" + bangumiId, true)
                 .then(res -> {
                     org.jsoup.nodes.Document html = Jsoup.parse(res.body());
 
