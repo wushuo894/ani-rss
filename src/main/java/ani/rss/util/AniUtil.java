@@ -517,7 +517,7 @@ public class AniUtil {
                             try {
                                 String dateReg = "(\\d+)/(\\d+)/(\\d+)";
                                 year = ReUtil.get(dateReg, string, 3);
-                                month = ReUtil.get(dateReg, string, 2);
+                                month = ReUtil.get(dateReg, string, 1);
                             } catch (Exception e) {
                                 log.error(e.getMessage(), e);
                             }
