@@ -41,7 +41,7 @@ public class HttpRequestPlus extends HttpRequest {
         try {
             return super.execute(isAsync);
         } catch (Exception e) {
-            log.error("url ===> {} error===> {}", url, e.getMessage());
+            log.error("url ===> {}, error ===> {}", url, e.getMessage());
             throw new RuntimeException(e);
         }
     }
