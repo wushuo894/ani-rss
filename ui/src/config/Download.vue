@@ -77,6 +77,15 @@
     <el-form-item label="修改任务标题">
       <el-switch v-model:model-value="props.config.qbRenameTitle" :disabled="config.download !== 'qBittorrent'"/>
     </el-form-item>
+    <el-form-item label="QB保存路径配置">
+      <div>
+        <el-switch v-model:model-value="props.config.qbUseDownloadPath"></el-switch>
+        <br>
+        <el-text class="mx-1" size="small">
+          开启后将使用qBittorrent的保存路径配置(下载路径不受影响)
+        </el-text>
+      </div>
+    </el-form-item>
   </el-form>
 </template>
 
