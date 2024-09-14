@@ -10,6 +10,11 @@ import java.util.List;
 @Accessors(chain = true)
 public class Config implements Serializable {
     /**
+     * Mikan Host
+     */
+    private String mikanHost;
+
+    /**
      * 下载工具
      */
     private String download;

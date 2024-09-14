@@ -1,5 +1,5 @@
 <template>
-  <el-form style="max-width: 600px" label-width="auto"
+  <el-form label-width="auto"
            @submit="(event)=>{
                       event.preventDefault()
                    }">
@@ -9,9 +9,12 @@
     <el-form-item label="使用文档">
       <a href="https://docs.wushuo.top" target="_blank">https://docs.wushuo.top</a>
     </el-form-item>
+    <el-form-item label="投喂作者">
+      <a href="https://afdian.com/a/wushuo894" target="_blank">https://afdian.com/a/wushuo894</a>
+    </el-form-item>
     <el-form-item label="版本号">
       <div>
-        <div v-loading="about.version.length < 1" style="min-height: 150px;margin-bottom: 16px;">
+        <div v-loading="about.version.length < 1" style="min-height: 100px;margin-bottom: 16px;">
           v{{ about.version }}
           <div v-if="about.update">
             <a href="https://github.com/wushuo894/ani-rss/releases/latest" target="_blank">有更新 v{{

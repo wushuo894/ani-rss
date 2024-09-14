@@ -1,111 +1,115 @@
 <template>
   <Items ref="items"/>
-  <el-form label-width="auto"
-           @submit="(event)=>{
+  <div style="height: 500px;">
+    <el-scrollbar style="padding: 0 12px">
+      <el-form label-width="auto"
+               @submit="(event)=>{
                 event.preventDefault()
              }"
-  >
-    <el-form-item label="标题">
-      <div style="width: 100%;">
-        <div>
-          <el-input v-model:model-value="props.ani.title"></el-input>
-        </div>
-        <div style="width: 100%;justify-content: end;display: flex;margin-top: 12px;">
-          <el-button @click="props.ani.title = ani.themoviedbName"
-                     :disabled="props.ani.title === ani.themoviedbName || !ani.themoviedbName.length" bg text>
-            使用TMDB
-          </el-button>
-        </div>
-      </div>
-    </el-form-item>
-    <el-form-item label="TMDB">
-      <div style="display: flex;width: 100%;justify-content: space-between;">
-        <el-input v-model:model-value="props.ani.themoviedbName" disabled/>
-        <div style="width: 4px;"></div>
-        <el-button icon="Refresh" bg text @click="getThemoviedbName" :loading="getThemoviedbNameLoading"/>
-      </div>
-    </el-form-item>
-    <el-form-item label="日期">
-      <div style="display: flex;width: 100%;justify-content: end;">
-        <el-date-picker
-            style="max-width: 150px;"
-            v-model="date"
-            type="month"
-            @change="dateChange"
+      >
+        <el-form-item label="标题">
+          <div style="width: 100%;">
+            <div>
+              <el-input v-model:model-value="props.ani.title"></el-input>
+            </div>
+            <div style="width: 100%;justify-content: end;display: flex;margin-top: 12px;">
+              <el-button @click="props.ani.title = ani.themoviedbName"
+                         :disabled="props.ani.title === ani.themoviedbName || !ani.themoviedbName.length" bg text>
+                使用TMDB
+              </el-button>
+            </div>
+          </div>
+        </el-form-item>
+        <el-form-item label="TMDB">
+          <div style="display: flex;width: 100%;justify-content: space-between;">
+            <el-input v-model:model-value="props.ani.themoviedbName" disabled/>
+            <div style="width: 4px;"></div>
+            <el-button icon="Refresh" bg text @click="getThemoviedbName" :loading="getThemoviedbNameLoading"/>
+          </div>
+        </el-form-item>
+        <el-form-item label="日期">
+          <div style="display: flex;width: 100%;justify-content: end;">
+            <el-date-picker
+                style="max-width: 150px;"
+                v-model="date"
+                type="month"
+                @change="dateChange"
+            >
+            </el-date-picker>
+          </div>
+        </el-form-item>
+        <el-form-item label="季">
+          <div style="display: flex;justify-content: end;width: 100%;">
+            <el-input-number style="max-width: 200px" :min="0" v-model:model-value="props.ani.season"
+                             :disabled="props.ani.ova"></el-input-number>
+          </div>
+        </el-form-item>
+        <el-form-item label="集数偏移">
+          <div style="display: flex;justify-content: end;width: 100%;">
+            <el-input-number v-model:model-value="props.ani.offset" :disabled="props.ani.ova"></el-input-number>
+          </div>
+        </el-form-item>
+        <el-form-item label="总集数">
+          <div style="display: flex;justify-content: end;width: 100%;">
+            <el-input-number v-model:model-value="props.ani.totalEpisodeNumber"></el-input-number>
+          </div>
+        </el-form-item>
+        <el-form-item label="匹配">
+          <Exclude ref="match" v-model:exclude="props.ani.match" :import-exclude="false"/>
+        </el-form-item>
+        <el-form-item label="排除">
+          <Exclude ref="exclude" v-model:exclude="props.ani.exclude" :import-exclude="true"/>
+        </el-form-item>
+        <el-form-item label="全局排除">
+          <el-switch v-model:model-value="props.ani['globalExclude']"/>
+        </el-form-item>
+        <el-form-item label="剧场版">
+          <el-switch v-model:model-value="props.ani.ova"></el-switch>
+        </el-form-item>
+        <el-form-item label="自定义下载">
+          <div style="width: 100%;">
+            <div>
+              <el-switch v-model:model-value="props.ani.customDownloadPath"></el-switch>
+            </div>
+            <div>
+              <el-input type="textarea" style="width: 100%" :disabled="!props.ani.customDownloadPath"
+                        v-model:model-value="props.ani.downloadPath"/>
+            </div>
+          </div>
+        </el-form-item>
+        <el-form-item label="启用">
+          <el-switch v-model:model-value="props.ani.enable"></el-switch>
+        </el-form-item>
+      </el-form>
+    </el-scrollbar>
+  </div>
+  <div style="display: flex;justify-content: end;width: 100%;margin-top: 10px;">
+    <el-popconfirm title="检测并开始下载?" @confirm="download" v-if="props.ani.showDownlaod">
+      <template #reference>
+        <el-button bg text :loading="downloadLoading">检测并开始下载
+        </el-button>
+      </template>
+      <template #actions="{ confirm, cancel }">
+        <el-button size="small" @click="cancel" bg text icon="Close">取消</el-button>
+        <div style="margin: 4px;"></div>
+        <el-button
+            type="danger"
+            size="small"
+            @click="confirm"
+            bg text
+            icon="Check"
         >
-        </el-date-picker>
-      </div>
-    </el-form-item>
-    <el-form-item label="季">
-      <div style="display: flex;justify-content: end;width: 100%;">
-        <el-input-number style="max-width: 200px" :min="0" v-model:model-value="props.ani.season"
-                         :disabled="props.ani.ova"></el-input-number>
-      </div>
-    </el-form-item>
-    <el-form-item label="集数偏移">
-      <div style="display: flex;justify-content: end;width: 100%;">
-        <el-input-number v-model:model-value="props.ani.offset" :disabled="props.ani.ova"></el-input-number>
-      </div>
-    </el-form-item>
-    <el-form-item label="总集数">
-      <div style="display: flex;justify-content: end;width: 100%;">
-        <el-input-number v-model:model-value="props.ani.totalEpisodeNumber"></el-input-number>
-      </div>
-    </el-form-item>
-    <el-form-item label="匹配">
-      <Exclude ref="match" v-model:exclude="props.ani.match" :import-exclude="false"/>
-    </el-form-item>
-    <el-form-item label="排除">
-      <Exclude ref="exclude" v-model:exclude="props.ani.exclude" :import-exclude="true"/>
-    </el-form-item>
-    <el-form-item label="全局排除">
-      <el-switch v-model:model-value="props.ani['globalExclude']"/>
-    </el-form-item>
-    <el-form-item label="剧场版">
-      <el-switch v-model:model-value="props.ani.ova"></el-switch>
-    </el-form-item>
-    <el-form-item label="自定义下载">
-      <div style="width: 100%;">
-        <div>
-          <el-switch v-model:model-value="props.ani.customDownloadPath"></el-switch>
-        </div>
-        <div>
-          <el-input type="textarea" style="width: 100%" :disabled="!props.ani.customDownloadPath"
-                    v-model:model-value="props.ani.downloadPath"/>
-        </div>
-      </div>
-    </el-form-item>
-    <el-form-item label="启用">
-      <el-switch v-model:model-value="props.ani.enable"></el-switch>
-    </el-form-item>
-    <div style="display: flex;justify-content: end;width: 100%;margin-top: 10px;">
-      <el-popconfirm title="检测并开始下载?" @confirm="download" v-if="props.ani.showDownlaod">
-        <template #reference>
-          <el-button bg text :loading="downloadLoading">检测并开始下载
-          </el-button>
-        </template>
-        <template #actions="{ confirm, cancel }">
-          <el-button size="small" @click="cancel" bg text icon="Close">取消</el-button>
-          <div style="margin: 4px;"></div>
-          <el-button
-              type="danger"
-              size="small"
-              @click="confirm"
-              bg text
-              icon="Check"
-          >
-            确定
-          </el-button>
-        </template>
-      </el-popconfirm>
-      <el-button @click="items.show(ani)" bg text>预览</el-button>
-      <el-button :loading="okLoading" @click="async ()=>{
+          确定
+        </el-button>
+      </template>
+    </el-popconfirm>
+    <el-button @click="items.show(ani)" bg text>预览</el-button>
+    <el-button :loading="okLoading" @click="async ()=>{
         okLoading = true
         emit('ok',()=>okLoading = false)
       }" text bg>确定
-      </el-button>
-    </div>
-  </el-form>
+    </el-button>
+  </div>
 </template>
 
 <script setup>

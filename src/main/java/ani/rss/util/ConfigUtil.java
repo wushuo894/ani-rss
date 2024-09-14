@@ -29,6 +29,7 @@ public class ConfigUtil {
     static {
         String password = MD5.create().digestHex("admin");
         CONFIG.setSleep(15)
+                .setMikanHost("https://mikanime.tv")
                 .setRenameSleep(1)
                 .setRename(true)
                 .setRss(true)
