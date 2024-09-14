@@ -576,7 +576,7 @@ public class AniUtil {
                                         if (!NumberUtil.isNumber(string)) {
                                             continue;
                                         }
-                                        Integer ten = Integer.parseInt(element.parent().ownText());
+                                        Integer ten = Integer.parseInt(string);
                                         if (!totalEpisodeNumber.equals(ten)) {
                                             ani.setTotalEpisodeNumber(ten);
                                             AniUtil.sync();
