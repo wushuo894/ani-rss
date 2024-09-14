@@ -132,6 +132,7 @@ const getRss = () => {
   api.post('/api/rss', ani.value)
       .then(res => {
         ani.value = res['data']
+        ani.value.showDownlaod = false
         setTimeout(() => {
           showRss.value = false
           aniRef.value?.init()

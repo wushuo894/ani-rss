@@ -76,6 +76,8 @@
       <el-switch v-model:model-value="props.ani.enable"></el-switch>
     </el-form-item>
     <div style="display: flex;justify-content: end;width: 100%;margin-top: 10px;">
+      <el-button v-if="props.ani.showDownlaod" bg text @click="download" :loading="downloadLoading">检测并开始下载
+      </el-button>
       <el-button @click="items.show(ani)" bg text>预览</el-button>
       <el-button :loading="okLoading" @click="async ()=>{
         okLoading = true
@@ -138,6 +140,19 @@ let dateChange = () => {
     ElMessage.error(`最小年份为 ${minYear}`)
   }
   console.log(`${props.ani.year} / ${props.ani.month}`)
+}
+
+
+let downloadLoading = ref(false)
+let download = () => {
+  downloadLoading.value = true
+  api.post('/api/ani?download=true', props.ani)
+      .then(res => {
+        ElMessage.success(res.message)
+      })
+      .finally(() => {
+        downloadLoading.value = false
+      })
 }
 
 defineExpose({
