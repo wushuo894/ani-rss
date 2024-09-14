@@ -572,6 +572,10 @@ public class AniUtil {
                                         continue;
                                     }
                                     try {
+                                        String string = element.parent().ownText();
+                                        if (!NumberUtil.isNumber(string)) {
+                                            continue;
+                                        }
                                         Integer ten = Integer.parseInt(element.parent().ownText());
                                         if (!totalEpisodeNumber.equals(ten)) {
                                             ani.setTotalEpisodeNumber(ten);
