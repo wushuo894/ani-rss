@@ -501,7 +501,7 @@ public class AniUtil {
 
         String bangumiId = ani.getBangumiId();
 
-        HttpReq.get(MikanUtil.HOST + "/Home/Bangumi/" + bangumiId, true)
+        HttpReq.get(MikanUtil.getMikanHost() + "/Home/Bangumi/" + bangumiId, true)
                 .then(res -> {
                     org.jsoup.nodes.Document document = Jsoup.parse(res.body());
                     Elements bangumiInfos = document.select(".bangumi-info");
