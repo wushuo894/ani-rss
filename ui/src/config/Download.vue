@@ -79,7 +79,7 @@
     </el-form-item>
     <el-form-item label="QB保存路径配置">
       <div>
-        <el-switch v-model:model-value="props.config.qbUseDownloadPath"></el-switch>
+        <el-switch v-model:model-value="props.config.qbUseDownloadPath" :disabled="config.download !== 'qBittorrent'"/>
         <br>
         <el-text class="mx-1" size="small">
           开启后将使用qBittorrent的保存路径配置(下载路径不受影响)
