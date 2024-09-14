@@ -295,6 +295,7 @@ public class AniUtil {
         String title = ani.getTitle();
 
         List<String> exclude = ani.getExclude();
+        List<String> match = ani.getMatch();
         Boolean ova = ani.getOva();
 
         int offset = ani.getOffset();
@@ -398,6 +399,19 @@ public class AniUtil {
             }
             items.add(newItem);
         }
+
+        // 匹配规则
+        items = items.stream().filter(it -> {
+            if (match.isEmpty()) {
+                return true;
+            }
+            for (String string : match) {
+                if (ReUtil.contains(string, it.getTitle())) {
+                    return true;
+                }
+            }
+            return false;
+        }).collect(Collectors.toList());
 
         if (ova) {
             return items;

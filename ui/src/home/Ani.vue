@@ -52,6 +52,9 @@
         <el-input-number v-model:model-value="props.ani.totalEpisodeNumber"></el-input-number>
       </div>
     </el-form-item>
+    <el-form-item label="匹配">
+      <Exclude ref="match" v-model:exclude="props.ani.match" :import-exclude="false"/>
+    </el-form-item>
     <el-form-item label="排除">
       <Exclude ref="exclude" v-model:exclude="props.ani.exclude" :import-exclude="true"/>
     </el-form-item>
@@ -76,8 +79,25 @@
       <el-switch v-model:model-value="props.ani.enable"></el-switch>
     </el-form-item>
     <div style="display: flex;justify-content: end;width: 100%;margin-top: 10px;">
-      <el-button v-if="props.ani.showDownlaod" bg text @click="download" :loading="downloadLoading">检测并开始下载
-      </el-button>
+      <el-popconfirm title="检测并开始下载?" @confirm="download" v-if="props.ani.showDownlaod">
+        <template #reference>
+          <el-button bg text :loading="downloadLoading">检测并开始下载
+          </el-button>
+        </template>
+        <template #actions="{ confirm, cancel }">
+          <el-button size="small" @click="cancel" bg text icon="Close">取消</el-button>
+          <div style="margin: 4px;"></div>
+          <el-button
+              type="danger"
+              size="small"
+              @click="confirm"
+              bg text
+              icon="Check"
+          >
+            确定
+          </el-button>
+        </template>
+      </el-popconfirm>
       <el-button @click="items.show(ani)" bg text>预览</el-button>
       <el-button :loading="okLoading" @click="async ()=>{
         okLoading = true
@@ -120,8 +140,10 @@ let getThemoviedbName = () => {
 }
 
 let exclude = ref()
+let match = ref()
 
 onMounted(() => {
+  match.value?.init()
   exclude.value?.init()
   init()
 })

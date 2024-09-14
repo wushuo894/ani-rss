@@ -17,7 +17,7 @@
           </div>
         </el-tab-pane>
         <el-tab-pane label="全局排除" :lazy="true">
-          <Exclude ref="exclude" v-model:exclude="config.exclude"/>
+          <Exclude ref="exclude" v-model:exclude="config.exclude" :show-text="true"/>
         </el-tab-pane>
         <el-tab-pane label="代理设置" :lazy="true">
           <Proxy v-model:config="config"/>
