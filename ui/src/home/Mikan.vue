@@ -1,5 +1,5 @@
 <template>
-  <el-dialog v-model="dialogVisible" title="Mikan" center>
+  <el-dialog v-model="dialogVisible" title="Mikan" center v-if="dialogVisible">
     <div style="min-height: 300px;">
       <div style="margin: 4px;">
         <div style="display: flex;justify-content: space-between;">
