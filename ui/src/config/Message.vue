@@ -16,13 +16,13 @@
         <el-form-item label="ChatId">
           <div>
             <div style="justify-content: space-between;width: 100%;" class="auto">
-              <div style="margin: 4px 4px 4px 0;">
+              <div style="margin-top: 4px;margin-right: 4px;">
                 <el-input v-model:model-value="props.config.telegramChatId" :disabled="!config.telegram"
                           placeholder="123456789"/>
               </div>
-              <div style="display: flex;margin-top: 4px">
+              <div style="display: flex;margin-top: 4px;align-items: center;">
                 <div>
-                  <el-select v-model:model-value="chatId" @change="chatIdChange" style="width: 160px"
+                  <el-select v-model:model-value="chatId" @change="chatIdChange" style="width: 150px"
                              :disabled="!config.telegram">
                     <el-option v-for="item in Object.keys(chatIdMap)"
                                :key="item"
@@ -30,7 +30,7 @@
                                :value="item"/>
                   </el-select>
                 </div>
-                <div style="margin: 4px">
+                <div style="margin-left: 4px;">
                   <el-button icon="Refresh" bg text @click="getUpdates" :loading="getUpdatesLoading"
                              :disabled="!config.telegram"/>
                 </div>
