@@ -1,5 +1,5 @@
 <template>
-  <el-dialog v-model="configDialogVisible" title="设置" center>
+  <el-dialog v-model="configDialogVisible" title="设置" center v-if="configDialogVisible">
     <div style="margin: 0 15px;" v-loading="loading">
       <el-tabs v-model:model-value="activeName">
         <el-tab-pane label="下载设置" name="download" :lazy="true">
