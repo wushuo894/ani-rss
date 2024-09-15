@@ -465,7 +465,7 @@ public class TorrentUtil {
         }
     }
 
-    public static void load() {
+    public static synchronized void load() {
         Config config = ConfigUtil.CONFIG;
         String download = config.getDownload();
         ClassUtil.scanPackage("ani.rss.download")
