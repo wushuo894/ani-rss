@@ -36,19 +36,7 @@
           </el-button>
         </div>
         <div style="margin: 0 4px;">
-          <el-badge :is-dot="about.update" class="item">
-            <el-button @click="config?.showConfig(about.update)" text bg>
-              <el-icon :class="elIconClass()">
-                <Setting/>
-              </el-icon>
-              <template v-if="itemsPerRow > 1">
-                设置
-              </template>
-            </el-button>
-          </el-badge>
-        </div>
-        <div style="margin: 0 4px;">
-          <el-popconfirm title="立即刷新全部订阅?" @confirm="download">
+          <popconfirm  title="立即刷新全部订阅?" @confirm="download">
             <template #reference>
               <el-button text bg :loading="downloadLoading">
                 <el-icon :class="elIconClass()">
@@ -59,20 +47,19 @@
                 </template>
               </el-button>
             </template>
-            <template #actions="{ confirm, cancel }">
-              <el-button size="small" @click="cancel" bg text icon="Close">取消</el-button>
-              <div style="margin: 4px;"></div>
-              <el-button
-                  type="danger"
-                  size="small"
-                  @click="confirm"
-                  bg text
-                  icon="Check"
-              >
-                确定
-              </el-button>
-            </template>
-          </el-popconfirm>
+          </popconfirm>
+        </div>
+        <div style="margin: 0 4px;">
+          <el-badge :is-dot="about.update" class="item">
+            <el-button @click="config?.showConfig(about.update)" text bg>
+              <el-icon :class="elIconClass()">
+                <Setting/>
+              </el-icon>
+              <template v-if="itemsPerRow > 1">
+                设置
+              </template>
+            </el-button>
+          </el-badge>
         </div>
         <div style="margin-left: 4px;">
           <el-button @click="logs?.showLogs" text bg>
@@ -101,6 +88,7 @@ import Add from "./Add.vue";
 import Logs from "./Logs.vue";
 import api from "../api.js";
 import {ElMessage} from "element-plus";
+import Popconfirm from "../other/Popconfirm.vue";
 
 const title = ref('')
 const enable = ref('已启用')
