@@ -8,7 +8,7 @@
         <el-input v-model:model-value="props.config.mikanHost" placeholder="https://mikanime.tv"/>
       </el-form-item>
       <el-form-item label="季命名">
-        <el-select v-model:model-value="props.config.seasonName">
+        <el-select v-model:model-value="props.config.seasonName" style="width: 150px">
           <el-option :value="it" :key="it" :label="it" v-for="it in ['Season 1','S01','None']"/>
         </el-select>
       </el-form-item>
