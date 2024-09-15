@@ -28,43 +28,17 @@
             <el-button type="success" @click="update" text bg icon="Top">更新</el-button>
           </el-badge>
           <div style="margin: 6px;" v-if="about.update"></div>
-          <el-popconfirm title="你确定重启吗?" @confirm="stop(0)">
+          <popconfirm title="你确定重启吗?" @confirm="stop(0)">
             <template #reference>
               <el-button type="warning" text bg icon="RefreshRight">重启 ani-rss</el-button>
             </template>
-            <template #actions="{ confirm, cancel }">
-              <el-button size="small" @click="cancel" bg text icon="Close">取消</el-button>
-              <div style="margin: 4px;"></div>
-              <el-button
-                  type="danger"
-                  size="small"
-                  @click="confirm"
-                  bg text
-                  icon="Check"
-              >
-                确定
-              </el-button>
-            </template>
-          </el-popconfirm>
+          </popconfirm>
           <div style="margin: 6px;"></div>
-          <el-popconfirm title="你确定关闭吗?" @confirm="stop(1)">
+          <popconfirm title="你确定关闭吗?" @confirm="stop(1)">
             <template #reference>
               <el-button type="danger" text bg icon="SwitchButton">关闭 ani-rss</el-button>
             </template>
-            <template #actions="{ confirm, cancel }">
-              <el-button size="small" @click="cancel" bg text icon="Close">取消</el-button>
-              <div style="margin: 4px;"></div>
-              <el-button
-                  type="danger"
-                  size="small"
-                  @click="confirm"
-                  bg text
-                  icon="Check"
-              >
-                确定
-              </el-button>
-            </template>
-          </el-popconfirm>
+          </popconfirm>
         </div>
       </div>
     </el-form-item>
@@ -77,6 +51,7 @@
 import {onMounted, ref} from "vue";
 import api from "../api.js";
 import {ElMessage} from "element-plus";
+import Popconfirm from "../other/Popconfirm.vue";
 
 const actionLoading = ref(false)
 

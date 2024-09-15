@@ -53,8 +53,6 @@
 
 <hr style="height: 1px;">
 
-[猫猫博客 Docker 部署 ani-rss 实现自动追番](https://catcat.blog/docker-ani-rss.html)
-
 <div>
 <img src="https://docs.wushuo.top/image/tr.png" alt="transmission" width="60">
 <img src="https://docs.wushuo.top/image/qb.png" alt="qbittorrent" width="60">
@@ -62,3 +60,7 @@
 
 <p>支持 <strong>Transmission</strong> <strong>qBittorrent</strong> <strong>Aria2</strong></p>
 </div>
+
+[投喂作者](https://afdian.com/a/wushuo894)
+|
+[猫猫博客 Docker 部署 ani-rss 实现自动追番](https://catcat.blog/docker-ani-rss.html)

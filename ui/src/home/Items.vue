@@ -15,7 +15,7 @@
         <el-table :data="data.items.filter(selectItems.filter(it => it.label === select)[0].fun)" height="500">
           <el-table-column label="本地是否存在" min-width="100">
             <template #default="it">
-              {{ data.items[it.$index].local ? '是' : '否'}}
+              {{ data.items[it.$index].local ? '是' : '否' }}
             </template>
           </el-table-column>
           <el-table-column prop="title" label="标题" min-width="400"/>
@@ -35,7 +35,7 @@
       </div>
     </div>
     <div style="margin-top: 12px;display: flex;justify-content: end;">
-      <el-button bg text @click="dialogVisible = false">关闭</el-button>
+      <el-button bg text @click="dialogVisible = false" icon="Close">关闭</el-button>
     </div>
   </el-dialog>
 </template>
@@ -68,7 +68,12 @@ const data = ref({
 const loading = ref(true)
 
 let copy = (it) => {
-  navigator.clipboard.writeText(it['torrent'])
+  const input = document.createElement('input');
+  input.value = it['torrent'];
+  document.body.appendChild(input);
+  input.select();
+  document.execCommand('copy');
+  document.body.removeChild(input);
   ElMessage.success('已复制')
 }
 

@@ -21,7 +21,7 @@
             <el-option :value="it" :label="it" :key="it" v-for="it in urls"/>
           </el-select>
           <div style="width: 4px;"></div>
-          <el-button bg text :loading="testLoading" @click="test">测试</el-button>
+          <el-button bg text :loading="testLoading" @click="test" icon="Odometer">测试</el-button>
         </div>
         <div v-if="status && time">
           status: {{ status }}

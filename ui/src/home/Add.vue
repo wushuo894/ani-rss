@@ -19,7 +19,7 @@
                 />
                 <br>
                 <div style="width: 100%;display: flex;justify-content: end;margin-top: 8px;">
-                  <el-button @click="mikan?.show" text bg>Mikan</el-button>
+                  <el-button @click="mikan?.show" text bg icon="VideoCamera">Mikan</el-button>
                 </div>
                 <div>
                   <el-text class="mx-1" size="small">
@@ -85,7 +85,7 @@
         </el-tab-pane>
       </el-tabs>
       <div style="display: flex;justify-content: end;width: 100%;margin-top: 10px;">
-        <el-button :loading="rssButtonLoading" @click="getRss" text bg>确定</el-button>
+        <el-button :loading="rssButtonLoading" @click="getRss" text bg icon="Check">确定</el-button>
       </div>
     </div>
     <div v-else>

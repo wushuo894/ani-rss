@@ -9,8 +9,6 @@
 
 [使用文档](https://docs.wushuo.top/docs)
 
-[猫猫博客 Docker 部署 ani-rss 实现自动追番](https://catcat.blog/docker-ani-rss.html)
-
 ![Xnip2024-09-08_04-57-29.jpg](https://docs.wushuo.top/image/Xnip2024-09-08_04-57-29.jpg)
 
 默认 用户名: admin 密码: admin
@@ -73,3 +71,5 @@ docker compose up -d
 
 <p>支持 <strong>Transmission</strong> <strong>qBittorrent</strong> <strong>Aria2</strong></p>
 </div>
+
+[猫猫博客 Docker 部署 ani-rss 实现自动追番](https://catcat.blog/docker-ani-rss.html)

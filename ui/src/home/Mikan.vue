@@ -11,9 +11,9 @@
             search()
           }"></el-input>
           <div style="width: 4px;"></div>
-          <el-button @click="search" :loading="searchLoading" text bg>搜索</el-button>
+          <el-button @click="search" :loading="searchLoading" text bg icon="Search">搜索</el-button>
         </div>
-        <div style="max-width: 280px;margin-top: 4px;">
+        <div style="max-width: 140px;margin-top: 4px;">
           <el-select v-if="data.seasons.length" v-model:model-value="season" @change="change"
                      :disabled="text.length > 0 || loading">
             <el-option :label="item.year+' '+item.season" :key="item.year+' '+item.season"
@@ -53,10 +53,7 @@
                                 <el-text class="mx-1" size="small">{{ group['updateDay'] }}</el-text>
                               </div>
                               <div style="display: flex;align-items: center;margin-right: 14px;margin-left: 4px;">
-                                <el-button text bg @click.stop="add(group['rss'])">
-                                  <el-icon class="el-icon--left">
-                                    <Plus/>
-                                  </el-icon>
+                                <el-button text bg @click.stop="add(group['rss'])" icon="Plus">
                                   添加
                                 </el-button>
                               </div>

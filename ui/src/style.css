@@ -10,7 +10,7 @@ html, body, #app {
 
 @media (max-width: 450px) {
     .el-dialog {
-        --el-dialog-width: 95%;
+        --el-dialog-width: 100%;
     }
 }
 
