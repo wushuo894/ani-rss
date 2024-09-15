@@ -1,7 +1,7 @@
 <template>
-  <Edit ref="edit" @load="getList"></Edit>
+  <Edit ref="edit" @load="getList"/>
+  <PlayList ref="playList"/>
   <div style="height: 100%;overflow: hidden;">
-
     <el-scrollbar>
       <div style="margin: 0 10px;min-height: 500px" v-loading="loading">
         <el-empty v-if="!getPage().length" style="min-height: 500px"></el-empty>
@@ -79,6 +79,12 @@
                   </div>
                   <div
                       style="display: flex;align-items: flex-end;justify-content:flex-end; flex-direction: column;position: absolute;right: 0;bottom: 0;">
+                    <el-button text @click="playList?.show(item)" bg>
+                      <el-icon>
+                        <Files/>
+                      </el-icon>
+                    </el-button>
+                    <div style="height: 5px;"></div>
                     <el-button text @click="edit?.showEdit(item)" bg>
                       <el-icon>
                         <EditIcon/>
@@ -147,16 +153,18 @@
 <script setup>
 import {onMounted, ref} from "vue";
 import {ElMessage} from 'element-plus'
-import {Back, Delete, Edit as EditIcon} from "@element-plus/icons-vue"
+import {Back, Delete, Edit as EditIcon, Files} from "@element-plus/icons-vue"
 import Edit from "./Edit.vue";
 import api from "../api.js";
 import Popconfirm from "../other/Popconfirm.vue";
+import PlayList from "../play/PlayList.vue";
 
 const pagerCount = ref(10)
 
 const edit = ref()
 const pageSize = ref(40)
 const loading = ref(true)
+const playList = ref()
 
 const updatePageSize = (size) => {
   window.localStorage.setItem('pageSize', size.toString())
