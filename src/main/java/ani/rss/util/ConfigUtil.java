@@ -77,7 +77,8 @@ public class ConfigUtil {
                 .setIpWhitelistStr("")
                 .setWebHookBody("")
                 .setWebHookUrl("")
-                .setWebHookMethod("POST");
+                .setWebHookMethod("POST")
+                .setSeasonName("Season 1");
     }
 
     private static final Gson GSON = new GsonBuilder()
@@ -108,7 +109,7 @@ public class ConfigUtil {
     /**
      * 加载设置
      */
-    public static void load() {
+    public synchronized static void load() {
         File configFile = getConfigFile();
 
         if (!configFile.exists()) {
