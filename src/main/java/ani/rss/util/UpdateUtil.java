@@ -7,6 +7,7 @@ import cn.hutool.core.text.StrFormatter;
 import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.core.util.RuntimeUtil;
 import cn.hutool.core.util.StrUtil;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -95,6 +96,22 @@ public class UpdateUtil {
 
     public static File getJar() {
         return new File(System.getProperty("java.class.path").split(";")[0]);
+    }
+
+    /**
+     * 管理windows的exe更新
+     */
+    @SneakyThrows
+    public static void manageWindows() {
+        File jar = getJar();
+        String extName = FileUtil.extName(jar);
+        if (!"exe".equals(extName)) {
+            return;
+        }
+        if (jar.getName().equals("ani-rss-launcher.exe")) {
+            return;
+        }
+        FileUtil.copy(jar, new File("ani-rss-launcher.exe"), true);
     }
 
 }

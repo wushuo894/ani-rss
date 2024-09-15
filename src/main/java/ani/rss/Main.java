@@ -8,6 +8,7 @@ public class Main {
 
     public static void main(String[] args) {
         try {
+            UpdateUtil.manageWindows();
             ConfigUtil.load();
             AniUtil.load();
             TaskUtil.start();
