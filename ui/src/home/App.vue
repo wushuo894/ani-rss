@@ -51,7 +51,7 @@
           <el-popconfirm title="立即刷新全部订阅?" @confirm="download">
             <template #reference>
               <el-button text bg :loading="downloadLoading">
-                <el-icon>
+                <el-icon :class="elIconClass()">
                   <Refresh/>
                 </el-icon>
                 <template v-if="itemsPerRow > 1">
