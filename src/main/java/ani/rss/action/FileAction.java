@@ -5,6 +5,7 @@ import ani.rss.annotation.Path;
 import ani.rss.auth.enums.AuthType;
 import ani.rss.util.ConfigUtil;
 import ani.rss.util.HttpReq;
+import cn.hutool.core.codec.Base64;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.util.ReflectUtil;
@@ -19,8 +20,6 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.io.*;
 import java.net.URI;
-import java.nio.charset.StandardCharsets;
-import java.util.Base64;
 import java.util.function.Consumer;
 
 @Slf4j
@@ -32,7 +31,7 @@ public class FileAction implements BaseAction {
     public void doAction(HttpServerRequest request, HttpServerResponse response) throws IOException {
         String img = request.getParam("img");
         if (StrUtil.isNotBlank(img)) {
-            img = new String(Base64.getDecoder().decode(img), StandardCharsets.UTF_8);
+            img = Base64.decodeStr(img);
             response.setContentType(FileUtil.getMimeType(URLUtil.getPath(img)));
 
             File configDir = ConfigUtil.getConfigDir();
@@ -67,10 +66,15 @@ public class FileAction implements BaseAction {
 
 
         String filename = request.getParam("filename");
+        String s = request.getParam("config");
         if (StrUtil.isBlank(filename)) {
             response.send404("404 Not Found !");
             return;
         }
+        if (Base64.isBase64(filename)) {
+            filename = Base64.decodeStr(filename);
+        }
+
         String mimeType = FileUtil.getMimeType(filename);
         if (StrUtil.isBlank(mimeType)) {
             response.setContentType(mimeType);
@@ -78,14 +82,27 @@ public class FileAction implements BaseAction {
             response.setContentType(ContentType.OCTET_STREAM.getValue());
         }
 
-        response.setHeader("Content-Disposition", "attachment; filename=\"" + filename + "\"");
-
-        File configDir = ConfigUtil.getConfigDir();
-        @Cleanup
-        FileInputStream inputStream = IoUtil.toStream(new File(configDir + "/files/" + filename));
-        @Cleanup
-        OutputStream out = response.getOut();
-        IoUtil.copy(inputStream, out);
+        FileInputStream inputStream = null;
+        OutputStream out = null;
+        try {
+            out = response.getOut();
+            if ("false".equals(s)) {
+                System.out.println(new File(filename).exists());
+                response.setHeader("Accept-Ranges", "bytes");
+                response.setHeader("Content-Type", "video/mp4");
+                response.setHeader("Content-Disposition", "inline;filename=temp." + FileUtil.extName(filename));
+                response.setHeader("Content-Length", String.valueOf(new File(filename).length()));
+                inputStream = IoUtil.toStream(new File(filename));
+            } else {
+                response.setHeader("Content-Disposition", "attachment; filename=\"" + new File(filename).getName() + "\"");
+                File configDir = ConfigUtil.getConfigDir();
+                inputStream = IoUtil.toStream(new File(configDir + "/files/" + filename));
+            }
+            IoUtil.copy(inputStream, out, 40960);
+        } finally {
+            IoUtil.close(inputStream);
+            IoUtil.close(out);
+        }
     }
 
     public static void getImg(String url, Consumer<InputStream> consumer) {
