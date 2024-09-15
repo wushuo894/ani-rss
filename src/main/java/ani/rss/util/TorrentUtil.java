@@ -335,7 +335,17 @@ public class TorrentUtil {
         if (ova) {
             return List.of(new File(downloadPath + "/" + title));
         }
-        File file = new File(StrFormatter.format("{}/{}/Season {}", downloadPath, title, season));
+
+        String seasonFileName = "";
+        String seasonName = config.getSeasonName();
+        if ("Season 1".equals(seasonName)) {
+            seasonFileName = StrFormatter.format("Season {}", season);
+        }
+        if ("S01".equals(seasonName)) {
+            seasonFileName = StrFormatter.format("S{}", String.format("%02d", season));
+        }
+
+        File file = new File(StrFormatter.format("{}/{}/{}", downloadPath, title, seasonFileName));
         List<File> files = new ArrayList<>();
         if (!fileExist) {
             files.add(file);
@@ -465,7 +475,7 @@ public class TorrentUtil {
         }
     }
 
-    public static synchronized void load() {
+    public synchronized static void load() {
         Config config = ConfigUtil.CONFIG;
         String download = config.getDownload();
         ClassUtil.scanPackage("ani.rss.download")

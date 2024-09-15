@@ -116,7 +116,8 @@ const config = ref({
   'webHookBody': '',
   'webHook': false,
   'qbRenameTitle': true,
-  'qbUseDownloadPath': false
+  'qbUseDownloadPath': false,
+  'seasonName': 'Season 1'
 })
 
 const activeName = ref('download')

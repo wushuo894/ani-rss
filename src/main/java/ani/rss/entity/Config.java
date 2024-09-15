@@ -189,18 +189,44 @@ public class Config implements Serializable {
      */
     private String telegramApiHost;
 
+    /**
+     * webHookMethod
+     */
     private String webHookMethod;
 
+    /**
+     * webHookUrl
+     */
     private String webHookUrl;
 
+    /**
+     * webHookBody
+     */
     private String webHookBody;
 
+    /**
+     * webHook
+     */
     private Boolean webHook;
 
+    /**
+     * tmdb
+     */
     private Boolean tmdb;
 
+    /**
+     * 开启ip白名单
+     */
     private Boolean ipWhitelist;
 
+    /**
+     * ip白名单
+     */
     private String ipWhitelistStr;
+
+    /**
+     * 季命名方式
+     */
+    private String seasonName;
 
 }
