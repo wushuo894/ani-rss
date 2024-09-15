@@ -14,6 +14,7 @@
             </div>
             <div style="width: 100%;justify-content: end;display: flex;margin-top: 12px;">
               <el-button @click="props.ani.title = ani.themoviedbName"
+                         icon="DocumentAdd"
                          :disabled="props.ani.title === ani.themoviedbName || !ani.themoviedbName.length" bg text>
                 使用TMDB
               </el-button>
@@ -83,32 +84,23 @@
       </el-form>
     </el-scrollbar>
   </div>
-  <div style="display: flex;justify-content: end;width: 100%;margin-top: 10px;">
-    <el-popconfirm title="检测并开始下载?" @confirm="download" v-if="props.ani.showDownlaod">
-      <template #reference>
-        <el-button bg text :loading="downloadLoading">检测并开始下载
-        </el-button>
-      </template>
-      <template #actions="{ confirm, cancel }">
-        <el-button size="small" @click="cancel" bg text icon="Close">取消</el-button>
-        <div style="margin: 4px;"></div>
-        <el-button
-            type="danger"
-            size="small"
-            @click="confirm"
-            bg text
-            icon="Check"
-        >
-          确定
-        </el-button>
-      </template>
-    </el-popconfirm>
-    <el-button @click="items.show(ani)" bg text>预览</el-button>
-    <el-button :loading="okLoading" @click="async ()=>{
+  <div style="display: flex;justify-content: space-between;width: 100%;margin-top: 10px;">
+    <div>
+      <popconfirm title="立即刷新订阅?" @confirm="download" v-if="props.ani.showDownlaod">
+        <template #reference>
+          <el-button bg text :loading="downloadLoading" icon="Refresh">刷新
+          </el-button>
+        </template>
+      </popconfirm>
+    </div>
+    <div>
+      <el-button @click="items.show(ani)" bg text icon="Grid">预览</el-button>
+      <el-button icon="Check" :loading="okLoading" @click="async ()=>{
         okLoading = true
         emit('ok',()=>okLoading = false)
       }" text bg>确定
-    </el-button>
+      </el-button>
+    </div>
   </div>
 </template>
 
@@ -119,6 +111,7 @@ import Items from "./Items.vue";
 import {onMounted, ref} from "vue";
 import api from "../api.js";
 import {ElMessage} from "element-plus";
+import Popconfirm from "../other/Popconfirm.vue";
 
 let date = ref()
 

@@ -85,7 +85,7 @@
                       </el-icon>
                     </el-button>
                     <div style="height: 5px;"></div>
-                    <el-popconfirm title="你确定要删除吗?" @confirm="delAni(item)">
+                    <popconfirm title="你确定要删除吗?" @confirm="delAni(item)">
                       <template #reference>
                         <el-button type="danger" text :loading="item['deleteLoading']" bg>
                           <el-icon>
@@ -93,20 +93,7 @@
                           </el-icon>
                         </el-button>
                       </template>
-                      <template #actions="{ confirm, cancel }">
-                        <el-button size="small" @click="cancel" bg text icon="Close">取消</el-button>
-                        <div style="margin: 4px;"></div>
-                        <el-button
-                            type="danger"
-                            size="small"
-                            @click="confirm"
-                            bg text
-                            icon="Check"
-                        >
-                          确定
-                        </el-button>
-                      </template>
-                    </el-popconfirm>
+                    </popconfirm>
                   </div>
                 </div>
               </div>
@@ -138,7 +125,7 @@
             </el-select>
           </div>
           <div style="margin-right: 10px;margin-bottom: 10px;">
-            <el-popconfirm title="你确定要退出吗?" @confirm="logout">
+            <popconfirm title="你确定要退出吗?" @confirm="logout">
               <template #reference>
                 <el-button type="danger" bg text>
                   <el-icon :class="elIconClass()">
@@ -149,20 +136,7 @@
                   </template>
                 </el-button>
               </template>
-              <template #actions="{ confirm, cancel }">
-                <el-button size="small" @click="cancel" bg text icon="Close">取消</el-button>
-                <div style="margin: 4px;"></div>
-                <el-button
-                    type="danger"
-                    size="small"
-                    @click="confirm"
-                    bg text
-                    icon="Check"
-                >
-                  确定
-                </el-button>
-              </template>
-            </el-popconfirm>
+            </popconfirm>
           </div>
         </div>
       </div>
@@ -173,14 +147,15 @@
 <script setup>
 import {onMounted, ref} from "vue";
 import {ElMessage} from 'element-plus'
-import {Back, Edit as EditIcon} from "@element-plus/icons-vue"
+import {Back, Delete, Edit as EditIcon} from "@element-plus/icons-vue"
 import Edit from "./Edit.vue";
 import api from "../api.js";
+import Popconfirm from "../other/Popconfirm.vue";
 
 const pagerCount = ref(10)
 
 const edit = ref()
-const pageSize = ref(10)
+const pageSize = ref(40)
 const loading = ref(true)
 
 const updatePageSize = (size) => {
@@ -263,7 +238,7 @@ onMounted(() => {
     }
     const windowWidth = window.innerWidth;
     if (windowWidth) {
-      document.querySelector('.el-affix').style['width'] = windowWidth+'px'
+      document.querySelector('.el-affix').style['width'] = windowWidth + 'px'
     }
     itemsPerRow.value = Math.max(1, Math.floor(windowWidth / 400));
     gridContainer.style.gridTemplateColumns = `repeat(${itemsPerRow.value}, 1fr)`;

@@ -1,6 +1,11 @@
 <template>
   <div style="width: 100%;">
     <div class="flex gap-2">
+      <el-tag v-if="!props.exclude.length"
+              type="info"
+              style="margin-right: 4px;margin-bottom: 4px;">
+        无
+      </el-tag>
       <el-tag
           v-for="tag in props.exclude"
           :key="tag"
@@ -98,5 +103,5 @@ defineExpose({
   init
 })
 
-let props = defineProps(['exclude', 'importExclude','showText'])
+let props = defineProps(['exclude', 'importExclude', 'showText'])
 </script>

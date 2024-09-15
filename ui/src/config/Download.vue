@@ -28,7 +28,7 @@
     </el-form-item>
     <el-form-item>
       <div style="display:flex;width: 100%;justify-content: end;">
-        <el-button @click="downloadLoginTest" bg text :loading="downloadLoginTestLoading">测试</el-button>
+        <el-button @click="downloadLoginTest" bg text :loading="downloadLoginTestLoading" icon="Odometer">测试</el-button>
       </div>
     </el-form-item>
     <el-form-item label="保存位置">
@@ -68,7 +68,7 @@
       <div>
         <el-input-number v-model:model-value="props.config.downloadCount" min="0"></el-input-number>
         <div>
-          设置为时 0 不做限制
+          设置为时 0 不做限制, 在 做种 完成后添加新任务
         </div>
       </div>
     </el-form-item>
@@ -78,12 +78,12 @@
     <el-form-item label="修改任务标题">
       <el-switch v-model:model-value="props.config.qbRenameTitle" :disabled="config.download !== 'qBittorrent'"/>
     </el-form-item>
-    <el-form-item label="QB保存路径配置">
+    <el-form-item label="qb保存路径">
       <div>
         <el-switch v-model:model-value="props.config.qbUseDownloadPath" :disabled="config.download !== 'qBittorrent'"/>
         <br>
         <el-text class="mx-1" size="small">
-          开启后将使用qBittorrent的保存路径配置(下载路径不受影响)
+          开启后将使用qBittorrent的保存路径配置 (下载路径不受影响)
         </el-text>
       </div>
     </el-form-item>
