@@ -34,9 +34,32 @@ public class RssTask extends Thread {
                 ThreadUtil.sleep(sleep, TimeUnit.MINUTES);
                 continue;
             }
+            try {
+                sync();
+                download();
+            } catch (Exception e) {
+                log.error(e.getMessage(), e);
+            }
+            ThreadUtil.sleep(sleep, TimeUnit.MINUTES);
+        }
+        log.info("{} 任务已停止", getName());
+    }
+
+    public static final AtomicBoolean download = new AtomicBoolean(false);
+
+    public static void sync() {
+        synchronized (download) {
+            if (download.get()) {
+                throw new RuntimeException("存在未完成任务，请等待...");
+            }
+            download.set(true);
+        }
+    }
+
+    public static void download() {
+        try {
             if (!TorrentUtil.login()) {
-                ThreadUtil.sleep(sleep, TimeUnit.MINUTES);
-                continue;
+                return;
             }
             List<Ani> aniList = ObjectUtil.clone(AniUtil.ANI_LIST);
             for (Ani ani : aniList) {
@@ -56,8 +79,10 @@ public class RssTask extends Thread {
                 // 避免短时间频繁请求导致流控
                 ThreadUtil.sleep(500);
             }
-            ThreadUtil.sleep(sleep, TimeUnit.MINUTES);
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+        } finally {
+            download.set(false);
         }
-        log.info("{} 任务已停止", getName());
     }
 }

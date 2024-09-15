@@ -3,6 +3,7 @@ package ani.rss.action;
 import ani.rss.annotation.Auth;
 import ani.rss.annotation.Path;
 import ani.rss.entity.Ani;
+import ani.rss.task.RssTask;
 import ani.rss.util.AniUtil;
 import ani.rss.util.TorrentUtil;
 import cn.hutool.core.bean.BeanUtil;
@@ -17,6 +18,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.io.File;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -24,13 +26,22 @@ import java.util.concurrent.atomic.AtomicBoolean;
 @Slf4j
 @Path("/ani")
 public class AniAction implements BaseAction {
-    private static final AtomicBoolean download = new AtomicBoolean(false);
+
+    public static final AtomicBoolean download = new AtomicBoolean(false);
 
     /**
      * 手动刷新订阅
      */
     private void download() {
         Ani ani = getBody(Ani.class);
+
+        if (Objects.isNull(ani)) {
+            RssTask.sync();
+            ThreadUtil.execute(RssTask::download);
+            resultSuccessMsg("已开始刷新RSS");
+            return;
+        }
+
         Optional<Ani> first = AniUtil.ANI_LIST.stream()
                 .filter(it -> it.getUrl().equals(ani.getUrl()))
                 .findFirst();
@@ -44,19 +55,20 @@ public class AniAction implements BaseAction {
                 return;
             }
             download.set(true);
-            Ani downloadAni = first.get();
-            ThreadUtil.execute(() -> {
-                try {
-                    if (TorrentUtil.login()) {
-                        TorrentUtil.downloadAni(downloadAni);
-                    }
-                } catch (Exception e) {
-                    log.error(e.getMessage(), e);
-                }
-                download.set(false);
-            });
-            resultSuccessMsg("已开始刷新RSS {}", downloadAni.getTitle());
         }
+        Ani downloadAni = first.get();
+        ThreadUtil.execute(() -> {
+            try {
+                if (TorrentUtil.login()) {
+                    TorrentUtil.downloadAni(downloadAni);
+                }
+            } catch (Exception e) {
+                log.error(e.getMessage(), e);
+            }
+            download.set(false);
+        });
+        resultSuccessMsg("已开始刷新RSS {}", downloadAni.getTitle());
+
     }
 
     /**
