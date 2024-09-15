@@ -1,7 +1,7 @@
 <template>
   <Items ref="items"/>
   <div style="height: 500px;">
-    <el-scrollbar style="padding: 0 12px">
+    <el-scrollbar style="padding: 0 12px;" height="500px;" ref="scrollbar">
       <el-form label-width="auto"
                @submit="(event)=>{
                 event.preventDefault()
@@ -152,8 +152,11 @@ onMounted(() => {
   init()
 })
 
+let scrollbar = ref()
+
 let init = () => {
   date.value = new Date(props.ani.year, props.ani.month - 1, 1);
+  scrollbar.value?.setScrollTop(0)
 }
 
 let dateChange = () => {

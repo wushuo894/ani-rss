@@ -15,7 +15,7 @@
       <el-switch v-model:model-value="props.config.proxy"/>
     </el-form-item>
     <el-form-item label="Test">
-      <div style="display: flex;justify-content: space-between;width: 100%;">
+      <div style="justify-content: space-between;width: 100%;" class="auto">
         <div style="display: flex;">
           <el-select v-model:model-value="url" style="width: 240px;">
             <el-option :value="it" :label="it" :key="it" v-for="it in urls"/>
@@ -73,3 +73,11 @@ let test = () => {
 let props = defineProps(['config'])
 
 </script>
+
+<style>
+@media (min-width: 1000px) {
+  .auto {
+    display: flex;
+  }
+}
+</style>

@@ -1,6 +1,6 @@
 <template>
   <Mikan ref="mikan" @add="args => ani.url = args"/>
-  <el-dialog v-model="dialogVisible" title="添加订阅" center>
+  <el-dialog v-model="dialogVisible" title="添加订阅" center @close="aniShow = false">
     <div v-if="showRss" @keydown.enter="getRss">
       <el-tabs tab-position="left" v-model="activeName">
         <el-tab-pane label="Mikan" name="mikan">
@@ -131,12 +131,11 @@ const getRss = () => {
   ani.value.type = activeName.value
   api.post('/api/rss', ani.value)
       .then(res => {
+        aniShow.value = true
         ani.value = res['data']
         ani.value.showDownlaod = false
-        setTimeout(() => {
-          showRss.value = false
-          aniRef.value?.init()
-        }, 100)
+        showRss.value = false
+        aniRef.value?.init()
       })
       .finally(() => {
         rssButtonLoading.value = false
@@ -168,6 +167,8 @@ const showAdd = () => {
   dialogVisible.value = true
   rssButtonLoading.value = false
 }
+
+const aniShow = ref(false)
 
 defineExpose({showAdd})
 const emit = defineEmits(['load'])

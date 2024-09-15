@@ -122,6 +122,4 @@ defineExpose({showLogs})
     display: flex;
   }
 }
-
-
 </style>
