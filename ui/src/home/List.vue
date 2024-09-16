@@ -274,8 +274,12 @@ let setCurrentPage = (page) => {
   currentPage.value = page
 }
 
+let yearMonth = () => {
+  return new Set(list.value.map(it => `${it.year}-${it.month}`));
+}
+
 defineExpose({
-  getList, setCurrentPage
+  getList, setCurrentPage, yearMonth
 })
 
 let props = defineProps(['title', 'filter'])
