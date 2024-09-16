@@ -5,6 +5,7 @@ import ani.rss.auth.enums.AuthType;
 import ani.rss.entity.Config;
 import ani.rss.entity.Login;
 import ani.rss.util.ConfigUtil;
+import ani.rss.util.ExceptionUtil;
 import ani.rss.util.ServerUtil;
 import cn.hutool.core.util.ClassUtil;
 import cn.hutool.core.util.ObjectUtil;
@@ -58,7 +59,8 @@ public class AuthUtil {
             HttpExchange httpExchange = (HttpExchange) ReflectUtil.getFieldValue(request, "httpExchange");
             return httpExchange.getRemoteAddress().getAddress().getHostAddress();
         } catch (Exception e) {
-            log.error(e.getMessage(), e);
+            String message = ExceptionUtil.getMessage(e);
+            log.error(message, e);
         }
         return "未知";
     }

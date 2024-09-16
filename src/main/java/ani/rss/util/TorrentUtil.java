@@ -120,7 +120,8 @@ public class TorrentUtil {
         try {
             AniUtil.getBangumiInfo(ani, false, true);
         } catch (Exception e) {
-            log.error(e.getMessage(), e);
+            String message = ExceptionUtil.getMessage(e);
+            log.error(message, e);
         }
         Integer totalEpisodeNumber = ani.getTotalEpisodeNumber();
         if (totalEpisodeNumber < 1) {
@@ -186,8 +187,9 @@ public class TorrentUtil {
                         return saveTorrentFile;
                     });
         } catch (Exception e) {
-            log.error("下载种子时出现问题 {}", e.getMessage());
-            log.error(e.getMessage(), e);
+            String message = ExceptionUtil.getMessage(e);
+            log.error("下载种子时出现问题 {}", message);
+            log.error(message, e);
         }
         return saveTorrentFile;
     }
@@ -424,7 +426,8 @@ public class TorrentUtil {
                 return;
             }
         } catch (Exception e) {
-            log.error(e.getMessage(), e);
+            String message = ExceptionUtil.getMessage(e);
+            log.error(message, e);
         }
         log.error("{} 添加失败，疑似为坏种", name);
         MessageUtil.send(ConfigUtil.CONFIG, ani, StrFormatter.format("{} 添加失败，疑似为坏种", name));

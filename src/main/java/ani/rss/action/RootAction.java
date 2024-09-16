@@ -1,6 +1,7 @@
 package ani.rss.action;
 
 import ani.rss.annotation.Auth;
+import ani.rss.util.ExceptionUtil;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.EnumerationIter;
 import cn.hutool.core.io.FileUtil;
@@ -99,7 +100,8 @@ public class RootAction implements BaseAction {
                 }
             }
         } catch (Exception e) {
-            log.error(e.getMessage(), e);
+            String message = ExceptionUtil.getMessage(e);
+            log.error(message, e);
         }
         return false;
     }

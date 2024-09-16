@@ -87,8 +87,9 @@ public class AniUtil {
                 ani.setCover(cover);
                 AniUtil.sync();
             } catch (Exception e) {
-                log.error(e.getMessage());
-                log.debug(e.getMessage(), e);
+                String message = ExceptionUtil.getMessage(e);
+                log.error(message);
+                log.debug(message, e);
             }
         }
     }
@@ -214,7 +215,8 @@ public class AniUtil {
         try {
             AniUtil.getBangumiInfo(ani, true, true);
         } catch (Exception e) {
-            log.error(e.getMessage(), e);
+            String message = ExceptionUtil.getMessage(e);
+            log.error(message, e);
         }
 
         Integer year = ani.getYear();
@@ -610,7 +612,8 @@ public class AniUtil {
                         return StrUtil.blankToDefault(element.ownText(), "");
                     });
         } catch (Exception e) {
-            log.error(e.getMessage(), e);
+            String message = ExceptionUtil.getMessage(e);
+            log.error(message, e);
             return "";
         }
     }

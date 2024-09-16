@@ -150,7 +150,7 @@ public class ConfigUtil {
             FileUtil.writeUtf8String(json, configFile);
             LogUtil.loadLogback();
             log.debug("保存成功 {}", configFile);
-        } catch (JsonSyntaxException e) {
+        } catch (Exception e) {
             log.error("保存失败 {}", configFile);
             log.error(e.getMessage(), e);
         }
