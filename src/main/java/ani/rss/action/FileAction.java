@@ -104,7 +104,8 @@ public class FileAction implements BaseAction {
             @Cleanup
             InputStream inputStream = FileUtil.getInputStream(file);
             IoUtil.copy(inputStream, out, 40960);
-        } catch (Exception ignored) {
+        } catch (Exception e) {
+            log.debug(e.getMessage(), e);
         }
     }
 
