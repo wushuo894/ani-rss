@@ -6,17 +6,30 @@
   <div style="height: 100%;    display: flex;
     flex-direction: column;">
     <div id="header">
-      <div style="margin: 10px;">
+      <div style="margin: 10px;display: flex;">
         <el-input
             v-model:model-value="title"
             placeholder="搜索"
             @input="list.value?.setCurrentPage(1)"
+            style="min-width: 210px"
             prefix-icon="Search"
             clearable/>
+        <div style="width: 16px;"></div>
+        <el-select
+            v-model:model-value="yearMonth"
+            @change="enableSelectChange"
+            style="min-width: 120px"
+            clearable
+        >
+          <el-option v-for="it in list?.yearMonth()"
+                     :value="it" :label="it" :key="it"
+          />
+        </el-select>
       </div>
       <div style="margin: 10px;display: flex;justify-content: flex-end;">
         <div style="min-width: 100px;width:100%;margin-right: 4px;">
-          <el-select v-model:model-value="enable" @change="enableSelectChange">
+          <el-select v-model:model-value="enable"
+                     @change="enableSelectChange">
             <el-option v-for="selectItem in enableSelect"
                        :key="selectItem.label"
                        :label="selectItem.label"
@@ -121,9 +134,21 @@ const enableSelect = ref([
   }
 ])
 const filter = ref(() => true)
+const yearMonth = ref('')
 
 const enableSelectChange = () => {
-  filter.value = enableSelect.value.filter(it => it.label === enable.value)[0].fun
+  filter.value = (it) => {
+    if (!enableSelect.value.filter(it => it.label === enable.value)[0].fun(it)) {
+      return false
+    }
+    if (!yearMonth.value) {
+      return true
+    }
+    if (yearMonth.value !== `${it.year}-${it.month}`) {
+      return false
+    }
+    return true
+  }
 }
 
 const config = ref()
