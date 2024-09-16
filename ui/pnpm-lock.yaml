@@ -14,6 +14,12 @@ importers:
       '@vueuse/core':
         specifier: ^11.0.3
         version: 11.0.3(vue@3.5.4)
+      artplayer:
+        specifier: ^5.1.7
+        version: 5.1.7
+      artplayer-plugin-multiple-subtitles:
+        specifier: ^1.0.0
+        version: 1.0.0
       crypto-js:
         specifier: ^4.2.0
         version: 4.2.0
@@ -391,6 +397,12 @@ packages:
   '@vueuse/shared@9.13.0':
     resolution: {integrity: sha512-UrnhU+Cnufu4S6JLCPZnkWh0WwZGUp72ktOF2DFptMlOs3TOdVv8xJN53zhHGARmVOsz5KqOls09+J1NR6sBKw==}
 
+  artplayer-plugin-multiple-subtitles@1.0.0:
+    resolution: {integrity: sha512-BF3nQDkXtFXt+TnGZSXM711Sc9b1lIUQEzMjp1YGnI8p+CFbiDW7EJDmRNy3psZXqRoUXVmpZ86FtZjqra8UPw==}
+
+  artplayer@5.1.7:
+    resolution: {integrity: sha512-N/QdNlTwsIHUsWOHMPj0pq97v3qmgXZHfhy1q7I+8YN3/XakJiJJyVJgGaeBjU+y/fUIrzBhwpBaX+NFwK9/qw==}
+
   async-validator@4.2.5:
     resolution: {integrity: sha512-7HhHjtERjqlNbZtqNqy2rckN/SpOOlmDliet+lP7k+eKZEjPk3DgyeU9lIXLdeLz0uBbbVp+9Qdow9wJWgwwfg==}
 
@@ -456,6 +468,10 @@ packages:
   html-void-elements@3.0.0:
     resolution: {integrity: sha512-bEqo66MRXsUGxWHV5IP0PUiAWwoEjba4VCzg0LjFJBpchPaTfyfCKTG6bc5F8ucKec3q5y6qOdGyYTSBEvhCrg==}
 
+  kind-of@6.0.3:
+    resolution: {integrity: sha512-dcS1ul+9tmeD95T+x28/ehLgd9mENa3LsvDTtzm3vyBEO7RPptvAD+t44WVXaUjTBRcrpFeFlC8WCruUR456hw==}
+    engines: {node: '>=0.10.0'}
+
   lodash-es@4.17.21:
     resolution: {integrity: sha512-mKnC+QJ9pWVzv+C4/U3rRsHapFfHvQFoFB92e52xeyGMcX6/OlIl78je1u8vePzYZSkkogMPJ2yjxxsb89cxyw==}
 
@@ -503,6 +519,9 @@ packages:
 
   oniguruma-to-js@0.3.3:
     resolution: {integrity: sha512-m90/WEhgs8g4BxG37+Nu3YrMfJDs2YXtYtIllhsEPR+wP3+K4EZk6dDUvy2v2K4MNFDDOYKL4/yqYPXDqyozTQ==}
+
+  option-validator@2.0.6:
+    resolution: {integrity: sha512-tmZDan2LRIRQyhUGvkff68/O0R8UmF+Btmiiz0SmSw2ng3CfPZB9wJlIjHpe/MKUZqyIZkVIXCrwr1tIN+0Dzg==}
 
   picocolors@1.0.1:
     resolution: {integrity: sha512-anP1Z8qwhkbmu7MFP5iTt+wQKXgwzf7zTyGlcdzabySa9vd0Xt392U0rVmz9poOaBj0uHJKyyo9/upk0HrEQew==}
@@ -918,6 +937,12 @@ snapshots:
       - '@vue/composition-api'
       - vue
 
+  artplayer-plugin-multiple-subtitles@1.0.0: {}
+
+  artplayer@5.1.7:
+    dependencies:
+      option-validator: 2.0.6
+
   async-validator@4.2.5: {}
 
   ccount@2.0.1: {}
@@ -1016,6 +1041,8 @@ snapshots:
 
   html-void-elements@3.0.0: {}
 
+  kind-of@6.0.3: {}
+
   lodash-es@4.17.21: {}
 
   lodash-unified@1.0.3(@types/lodash-es@4.17.12)(lodash-es@4.17.21)(lodash@4.17.21):
@@ -1066,6 +1093,10 @@ snapshots:
   normalize-wheel-es@1.2.0: {}
 
   oniguruma-to-js@0.3.3: {}
+
+  option-validator@2.0.6:
+    dependencies:
+      kind-of: 6.0.3
 
   picocolors@1.0.1: {}
 
