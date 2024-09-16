@@ -20,7 +20,6 @@ let show = (i, pi) => {
   ani.value = i
   playItem.value = pi
   dialogVisible.value = true
-  console.log(pi.filename);
   src.value = `/api/files?filename=${pi.filename}&s=${window.authorization}&config=false`
 }
 
