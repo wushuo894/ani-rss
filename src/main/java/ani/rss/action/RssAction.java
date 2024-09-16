@@ -4,6 +4,7 @@ import ani.rss.annotation.Auth;
 import ani.rss.annotation.Path;
 import ani.rss.entity.Ani;
 import ani.rss.util.AniUtil;
+import ani.rss.util.ExceptionUtil;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.ReUtil;
 import cn.hutool.core.util.URLUtil;
@@ -35,9 +36,10 @@ public class RssAction implements BaseAction {
             Ani newAni = AniUtil.getAni(url, title, type);
             resultSuccess(newAni);
         } catch (Exception e) {
-            log.error(e.getMessage());
-            log.debug(e.getMessage(), e);
-            resultErrorMsg("RSS解析失败 {}", e.getMessage());
+            String message = ExceptionUtil.getMessage(e);
+            log.error(message);
+            log.debug(message, e);
+            resultErrorMsg("RSS解析失败 {}", message);
         }
     }
 }

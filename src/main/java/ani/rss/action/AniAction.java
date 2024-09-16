@@ -5,6 +5,7 @@ import ani.rss.annotation.Path;
 import ani.rss.entity.Ani;
 import ani.rss.task.RssTask;
 import ani.rss.util.AniUtil;
+import ani.rss.util.ExceptionUtil;
 import ani.rss.util.TorrentUtil;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollUtil;
@@ -63,7 +64,8 @@ public class AniAction implements BaseAction {
                     TorrentUtil.downloadAni(downloadAni);
                 }
             } catch (Exception e) {
-                log.error(e.getMessage(), e);
+                String message = ExceptionUtil.getMessage(e);
+                log.error(message, e);
             }
             download.set(false);
         });

@@ -3,6 +3,7 @@ package ani.rss.msg;
 import ani.rss.entity.Ani;
 import ani.rss.entity.Config;
 import ani.rss.entity.MyMailAccount;
+import ani.rss.util.ExceptionUtil;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.text.StrFormatter;
 import cn.hutool.extra.mail.MailAccount;
@@ -32,7 +33,8 @@ public class Mail implements Message {
             MailUtil.send(mailAccount, List.of(mailAddressee), "ani-rss", text, false);
             return true;
         } catch (Exception e) {
-            log.error(e.getMessage(), e);
+            String message = ExceptionUtil.getMessage(e);
+            log.error(message, e);
             return false;
         }
     }

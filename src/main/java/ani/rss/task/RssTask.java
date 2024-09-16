@@ -38,7 +38,8 @@ public class RssTask extends Thread {
                 sync();
                 download();
             } catch (Exception e) {
-                log.error(e.getMessage(), e);
+                String message = ExceptionUtil.getMessage(e);
+                log.error(message, e);
             }
             ThreadUtil.sleep(sleep, TimeUnit.MINUTES);
         }
@@ -74,13 +75,14 @@ public class RssTask extends Thread {
                 } catch (Exception e) {
                     String message = ExceptionUtil.getMessage(e);
                     log.error("{} {}", title, message);
-                    log.debug(e.getMessage(), e);
+                    log.debug(message, e);
                 }
                 // 避免短时间频繁请求导致流控
                 ThreadUtil.sleep(500);
             }
         } catch (Exception e) {
-            log.error(e.getMessage(), e);
+            String message = ExceptionUtil.getMessage(e);
+            log.error(message, e);
         } finally {
             download.set(false);
         }

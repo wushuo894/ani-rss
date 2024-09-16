@@ -3,6 +3,7 @@ package ani.rss.action;
 import ani.rss.annotation.Auth;
 import ani.rss.annotation.Path;
 import ani.rss.entity.About;
+import ani.rss.util.ExceptionUtil;
 import ani.rss.util.UpdateUtil;
 import cn.hutool.http.server.HttpServerRequest;
 import cn.hutool.http.server.HttpServerResponse;
@@ -21,10 +22,9 @@ public class UpdateAction implements BaseAction {
             UpdateUtil.update(about);
             resultSuccessMsg("更新成功, 正在重启...");
         } catch (Exception e) {
-            log.error(e.getMessage());
-            log.debug(e.getMessage(), e);
-            log.info("更新失败 {}, {}", about.getLatest(), e.getMessage());
-            resultErrorMsg("更新失败 {}, {}", about.getLatest(), e.getMessage());
+            String message = ExceptionUtil.getMessage(e);
+            log.info("更新失败 {}, {}", about.getLatest(), message);
+            resultErrorMsg("更新失败 {}, {}", about.getLatest(), message);
         }
     }
 }
