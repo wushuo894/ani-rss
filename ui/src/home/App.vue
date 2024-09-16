@@ -2,6 +2,7 @@
   <Config ref="config"/>
   <Add ref="add" @load="list?.getList"/>
   <Logs ref="logs"/>
+  <Manage ref="manage" @load="list?.getList"/>
   <div style="height: 100%;    display: flex;
     flex-direction: column;">
     <div id="header">
@@ -14,7 +15,7 @@
             clearable/>
       </div>
       <div style="margin: 10px;display: flex;justify-content: flex-end;">
-        <div style="min-width: 120px;width:100%;margin-right: 4px;">
+        <div style="min-width: 100px;width:100%;margin-right: 4px;">
           <el-select v-model:model-value="enable" @change="enableSelectChange">
             <el-option v-for="selectItem in enableSelect"
                        :key="selectItem.label"
@@ -36,7 +37,7 @@
           </el-button>
         </div>
         <div style="margin: 0 4px;">
-          <popconfirm  title="立即刷新全部订阅?" @confirm="download">
+          <popconfirm title="立即刷新全部订阅?" @confirm="download">
             <template #reference>
               <el-button text bg :loading="downloadLoading">
                 <el-icon :class="elIconClass()">
@@ -48,6 +49,16 @@
               </el-button>
             </template>
           </popconfirm>
+        </div>
+        <div style="margin: 0 4px;">
+          <el-button text bg @click="manage?.show">
+            <el-icon :class="elIconClass()">
+              <Fold/>
+            </el-icon>
+            <template v-if="itemsPerRow > 1">
+              管理
+            </template>
+          </el-button>
         </div>
         <div style="margin: 0 4px;">
           <el-badge :is-dot="about.update" class="item">
@@ -81,7 +92,7 @@
 
 <script setup>
 import {onMounted, ref} from "vue";
-import {Plus, Refresh, Setting, Tickets} from "@element-plus/icons-vue"
+import {Fold, Plus, Refresh, Setting, Tickets} from "@element-plus/icons-vue"
 import Config from "./Config.vue";
 import List from "./List.vue";
 import Add from "./Add.vue";
@@ -89,6 +100,9 @@ import Logs from "./Logs.vue";
 import api from "../api.js";
 import {ElMessage} from "element-plus";
 import Popconfirm from "../other/Popconfirm.vue";
+import Manage from "./Manage.vue";
+
+const manage = ref()
 
 const title = ref('')
 const enable = ref('已启用')
