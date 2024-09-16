@@ -275,7 +275,7 @@ let setCurrentPage = (page) => {
 }
 
 let yearMonth = () => {
-  return new Set(list.value.map(it => `${it.year}-${it.month}`));
+  return new Set(list.value.map(it => `${it.year}-${it.month < 10 ? '0' + it.month : it.month}`).sort((a, b) => a > b ? -1 : 1));
 }
 
 defineExpose({
