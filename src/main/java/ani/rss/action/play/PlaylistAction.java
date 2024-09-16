@@ -19,10 +19,7 @@ import cn.hutool.http.server.HttpServerResponse;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Auth
@@ -70,7 +67,20 @@ public class PlaylistAction implements BaseAction {
         if (!ReUtil.contains(s, file.getName())) {
             return playItems;
         }
+        File[] files = ObjectUtil.defaultIfNull(file.getParentFile().listFiles(), new File[]{});
+        List<PlayItem.Subtitles> subtitles = Arrays.stream(files)
+                .filter(f -> List.of("ass", "srt").contains(ObjectUtil.defaultIfNull(FileUtil.extName(f), "")))
+                .filter(f -> f.getName().startsWith(FileUtil.mainName(file.getName())))
+                .map(f -> {
+                    String name = StrUtil.blankToDefault(FileUtil.extName(FileUtil.mainName(f.getName())), "ass");
+                    return new PlayItem.Subtitles()
+                            .setName(name)
+                            .setHtml(name.toUpperCase())
+                            .setUrl(Base64.encode(f.getAbsolutePath().replace("\\", "/")))
+                            .setType(FileUtil.extName(f));
+                }).collect(Collectors.toList());
         PlayItem playItem = new PlayItem();
+        playItem.setSubtitles(subtitles);
         playItem.setFilename(Base64.encode(file.getAbsolutePath().replace("\\", "/")))
                 .setTitle(ReUtil.get(s, file.getName(), 0));
         playItems.add(playItem);
