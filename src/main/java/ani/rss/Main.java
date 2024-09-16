@@ -18,7 +18,8 @@ public class Main {
             MenuUtil.start(args);
             ServerUtil.create(args).start();
         } catch (Exception e) {
-            log.error(e.getMessage(), e);
+            String message = ExceptionUtil.getMessage(e);
+            log.error(message, e);
             System.exit(1);
         }
     }

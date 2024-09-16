@@ -4,6 +4,7 @@ import ani.rss.annotation.Auth;
 import ani.rss.annotation.Path;
 import ani.rss.auth.enums.AuthType;
 import ani.rss.util.ConfigUtil;
+import ani.rss.util.ExceptionUtil;
 import ani.rss.util.HttpReq;
 import cn.hutool.core.codec.Base64;
 import cn.hutool.core.io.FileUtil;
@@ -105,7 +106,8 @@ public class FileAction implements BaseAction {
             InputStream inputStream = FileUtil.getInputStream(file);
             IoUtil.copy(inputStream, out, 40960);
         } catch (Exception e) {
-            log.debug(e.getMessage(), e);
+            String message = ExceptionUtil.getMessage(e);
+            log.debug(message, e);
         }
     }
 

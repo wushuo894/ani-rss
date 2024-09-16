@@ -3,6 +3,7 @@ package ani.rss.task;
 import ani.rss.entity.Config;
 import ani.rss.entity.TorrentsInfo;
 import ani.rss.util.ConfigUtil;
+import ani.rss.util.ExceptionUtil;
 import ani.rss.util.TorrentUtil;
 import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.core.util.EnumUtil;
@@ -44,8 +45,9 @@ public class RenameTask extends Thread {
                     TorrentUtil.delete(torrentsInfo);
                 }
             } catch (Exception e) {
-                log.error(e.getMessage());
-                log.debug(e.getMessage(), e);
+                String message = ExceptionUtil.getMessage(e);
+                log.error(message);
+                log.debug(message, e);
             }
             ThreadUtil.sleep(renameSleep, TimeUnit.MINUTES);
         }
