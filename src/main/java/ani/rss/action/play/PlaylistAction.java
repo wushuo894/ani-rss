@@ -20,6 +20,7 @@ import cn.hutool.http.server.HttpServerResponse;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -45,6 +46,7 @@ public class PlaylistAction implements BaseAction {
         List<PlayItem> collect = downloadPath.stream()
                 .flatMap(file -> getPlayItem(file).stream()).collect(Collectors.toList());
         collect = CollUtil.distinct(collect, PlayItem::getTitle, false);
+        collect = CollUtil.sort(collect, Comparator.comparingInt(it -> Integer.parseInt(ReUtil.get(s, it.getTitle(), 2))));
         resultSuccess(collect);
     }
 
@@ -69,7 +71,7 @@ public class PlaylistAction implements BaseAction {
             return playItems;
         }
         PlayItem playItem = new PlayItem();
-        playItem.setFilename(Base64.encode(file.getAbsolutePath().replace("\\","/")))
+        playItem.setFilename(Base64.encode(file.getAbsolutePath().replace("\\", "/")))
                 .setTitle(ReUtil.get(s, file.getName(), 0));
         playItems.add(playItem);
         return playItems;
