@@ -15,6 +15,8 @@ import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.extra.pinyin.PinyinUtil;
 import cn.hutool.http.server.HttpServerRequest;
 import cn.hutool.http.server.HttpServerResponse;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.File;
@@ -22,6 +24,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.stream.Collectors;
 
 @Auth
 @Slf4j
@@ -160,30 +163,35 @@ public class AniAction implements BaseAction {
      * 删除订阅
      */
     public void delete() {
-        Ani ani = getBody(Ani.class);
-        Optional<Ani> first = AniUtil.ANI_LIST.stream()
-                .filter(it -> gson.toJson(it).equals(gson.toJson(ani)))
-                .findFirst();
-        if (first.isEmpty()) {
+        JsonArray jsonArray = getBody(JsonArray.class);
+        List<String> urls = jsonArray.asList()
+                .stream().map(JsonElement::getAsString)
+                .collect(Collectors.toList());
+        List<Ani> anis = AniUtil.ANI_LIST.stream()
+                .filter(it -> urls.contains(it.getUrl()))
+                .collect(Collectors.toList());
+        if (anis.isEmpty()) {
             resultError();
             return;
         }
-        AniUtil.ANI_LIST.remove(first.get());
+        AniUtil.ANI_LIST.removeAll(anis);
         AniUtil.sync();
         resultSuccessMsg("删除订阅成功");
-        File torrentDir = TorrentUtil.getTorrentDir(first.get());
-        for (File file : FileUtil.loopFiles(torrentDir)) {
-            if (file.isDirectory()) {
-                continue;
+        for (Ani ani : anis) {
+            File torrentDir = TorrentUtil.getTorrentDir(ani);
+            for (File file : FileUtil.loopFiles(torrentDir)) {
+                if (file.isDirectory()) {
+                    continue;
+                }
+                if (file.getName().endsWith(".txt")) {
+                    FileUtil.del(file);
+                }
+                if (file.getName().endsWith(".torrent")) {
+                    FileUtil.del(file);
+                }
             }
-            if (file.getName().endsWith(".txt")) {
-                FileUtil.del(file);
-            }
-            if (file.getName().endsWith(".torrent")) {
-                FileUtil.del(file);
-            }
+            log.info("删除订阅 {} {}", ani.getTitle(), ani.getUrl());
         }
-        log.info("删除订阅 {} {}", ani.getTitle(), ani.getUrl());
     }
 
     @Override
