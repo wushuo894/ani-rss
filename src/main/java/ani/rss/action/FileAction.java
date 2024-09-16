@@ -78,10 +78,8 @@ public class FileAction implements BaseAction {
         String mimeType = FileUtil.getMimeType(filename);
 
         if (StrUtil.isBlank(mimeType)) {
-            log.debug("MimeType is null ,{}", filename);
             response.setContentType(ContentType.OCTET_STREAM.getValue());
             response.setHeader("Content-Disposition", "inline; filename=\"" + new File(filename).getName() + "\"");
-
         } else if (mimeType.startsWith("video/")) {
             String extName = FileUtil.extName(filename);
             response.setHeader("Content-Type", "video/" + extName);
