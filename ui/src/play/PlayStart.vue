@@ -2,7 +2,7 @@
   <el-dialog v-model="dialogVisible" :title="ani.title+' '+playItem.title" center v-if="dialogVisible">
     <div
         style="display: flex;width: 100%;justify-content: center;align-items: center;max-height: 500px;min-height: 200px;">
-      <video :src="src" autoplay controls style="max-height: 500px;max-width: 700px">
+      <video :src="src" controls style="max-height: 500px;max-width: 700px">
       </video>
     </div>
   </el-dialog>
