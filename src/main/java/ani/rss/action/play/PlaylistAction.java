@@ -79,6 +79,7 @@ public class PlaylistAction implements BaseAction {
                             .setUrl(Base64.encode(f.getAbsolutePath().replace("\\", "/")))
                             .setType(FileUtil.extName(f));
                 }).collect(Collectors.toList());
+        subtitles = CollUtil.distinct(subtitles, PlayItem.Subtitles::getName, true);
         PlayItem playItem = new PlayItem();
         playItem.setSubtitles(subtitles);
         playItem.setFilename(Base64.encode(file.getAbsolutePath().replace("\\", "/")))
