@@ -3,7 +3,7 @@
   <el-dialog v-model="dialogVisible" :title="ani.title" center v-if="dialogVisible">
     <div style="max-height: 500px;min-height: 200px;" v-loading="listLoading">
       <el-scrollbar>
-        <div class="i-grid-container">
+        <div class="i-grid-container" style="max-height: 500px;">
           <div v-for="it in list">
             <el-card shadow="never">
               <div style="width: 100%;display: flex;justify-content: space-between;align-items: center;">
@@ -35,7 +35,6 @@ let ani = ref({})
 let playStart = ref()
 
 const show = (it) => {
-  console.log(it);
   ani.value = it
   listLoading.value = true
   list.value = []

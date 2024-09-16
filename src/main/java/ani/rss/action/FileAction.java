@@ -76,32 +76,35 @@ public class FileAction implements BaseAction {
         }
 
         String mimeType = FileUtil.getMimeType(filename);
-        if (StrUtil.isBlank(mimeType)) {
-            response.setContentType(mimeType);
+
+        if ("video/mp4".equals(mimeType)) {
+            response.setHeader("Accept-Ranges", "bytes");
+            response.setHeader("Content-Type", "video/mp4");
+            response.setHeader("Content-Disposition", "inline;filename=1.mp4");
+            response.setHeader("Content-Length", String.valueOf(new File(filename).length()));
         } else {
-            response.setContentType(ContentType.OCTET_STREAM.getValue());
+            if (StrUtil.isBlank(mimeType)) {
+                response.setContentType(mimeType);
+            } else {
+                response.setContentType(ContentType.OCTET_STREAM.getValue());
+            }
+            response.setHeader("Content-Disposition", "inline; filename=\"" + new File(filename).getName() + "\"");
         }
 
-        FileInputStream inputStream = null;
-        OutputStream out = null;
         try {
-            out = response.getOut();
+            File file;
             if ("false".equals(s)) {
-                System.out.println(new File(filename).exists());
-                response.setHeader("Accept-Ranges", "bytes");
-                response.setHeader("Content-Type", "video/mp4");
-                response.setHeader("Content-Disposition", "inline;filename=temp." + FileUtil.extName(filename));
-                response.setHeader("Content-Length", String.valueOf(new File(filename).length()));
-                inputStream = IoUtil.toStream(new File(filename));
+                file = new File(filename);
             } else {
-                response.setHeader("Content-Disposition", "attachment; filename=\"" + new File(filename).getName() + "\"");
                 File configDir = ConfigUtil.getConfigDir();
-                inputStream = IoUtil.toStream(new File(configDir + "/files/" + filename));
+                file = new File(configDir + "/files/" + filename);
             }
+            @Cleanup
+            OutputStream out = response.getOut();
+            @Cleanup
+            InputStream inputStream = FileUtil.getInputStream(file);
             IoUtil.copy(inputStream, out, 40960);
-        } finally {
-            IoUtil.close(inputStream);
-            IoUtil.close(out);
+        } catch (Exception ignored) {
         }
     }
 
