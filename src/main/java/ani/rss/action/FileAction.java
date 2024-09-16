@@ -80,7 +80,7 @@ public class FileAction implements BaseAction {
         if ("video/mp4".equals(mimeType)) {
             response.setHeader("Accept-Ranges", "bytes");
             response.setHeader("Content-Type", "video/mp4");
-            response.setHeader("Content-Disposition", "inline;filename=1.mp4");
+            response.setHeader("Content-Disposition", "inline;filename=1." + FileUtil.extName(filename));
             response.setHeader("Content-Length", String.valueOf(new File(filename).length()));
         } else {
             if (StrUtil.isBlank(mimeType)) {
