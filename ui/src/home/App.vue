@@ -144,7 +144,7 @@ const enableSelectChange = () => {
     if (!yearMonth.value) {
       return true
     }
-    if (yearMonth.value !== `${it.year}-${it.month}`) {
+    if (yearMonth.value !== `${it.year}-${it.month < 10 ? '0' + it.month : it.month}`) {
       return false
     }
     return true
