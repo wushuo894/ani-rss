@@ -151,6 +151,9 @@ let init = () => {
 }
 
 let dateChange = () => {
+  if (!date.value) {
+    return
+  }
   props.ani.year = date.value.getFullYear()
   props.ani.month = date.value.getMonth() + 1
   let minYear = 1970
@@ -159,7 +162,6 @@ let dateChange = () => {
     init()
     ElMessage.error(`最小年份为 ${minYear}`)
   }
-  console.log(`${props.ani.year} / ${props.ani.month}`)
 }
 
 
@@ -174,10 +176,6 @@ let download = () => {
         downloadLoading.value = false
       })
 }
-
-defineExpose({
-  init
-})
 
 let props = defineProps(['ani'])
 const emit = defineEmits(['ok'])
