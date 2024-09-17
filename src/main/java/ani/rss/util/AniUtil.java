@@ -221,6 +221,10 @@ public class AniUtil {
 
         Integer year = ani.getYear();
 
+        if (StrUtil.isNotBlank(themoviedbName) && tmdb) {
+            title = themoviedbName;
+        }
+
         if (titleYear && Objects.nonNull(year) && year > 0) {
             title = StrFormatter.format("{} ({})", title, year);
             themoviedbName = StrFormatter.format("{} ({})", themoviedbName, year);
@@ -240,10 +244,6 @@ public class AniUtil {
             if (StrUtil.isNotBlank(ovaDownloadPath)) {
                 ani.setDownloadPath(ovaDownloadPath);
             }
-        }
-
-        if (StrUtil.isNotBlank(themoviedbName) && tmdb) {
-            ani.setTitle(themoviedbName);
         }
 
         String downloadPath = TorrentUtil.getDownloadPath(ani).get(0)
