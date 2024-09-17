@@ -1,26 +1,32 @@
 <template>
-  <div style="display: flex;align-items: center;justify-content: center;height: 100%;width: 100%;"
-       v-if="!authorization">
-    <div id="form" style="max-width: 200px;">
-      <div style="text-align: center;">
-        <img src="../public/mikan-pic.png" height="80" width="80"/>
-      </div>
-      <h2 style="text-align: center">ANI-RSS</h2>
-      <div style="height: 30px;"></div>
-      <el-form label-width="auto"
-               @keyup.enter="login"
-               @submit="login">
-        <el-form-item>
-          <el-input style="width: 200px;" v-model:model-value="user.username" placeholder="用户名"></el-input>
-        </el-form-item>
-        <el-form-item>
-          <el-input style="width: 200px;" v-model:model-value="user.password" show-password
-                    placeholder="密码"></el-input>
-        </el-form-item>
-        <div style="display: flex;width: 100%;align-items: flex-end;flex-flow: column;">
-          <el-button @click="login" :loading="loading" text bg icon="Right">登录</el-button>
+  <div
+      style="display: flex;align-items: center;justify-content: space-between;flex-flow: column; height: 100%;width: 100%;"
+      v-if="!authorization">
+    <div style="justify-content: center;align-items: center;display: flex;flex: 1">
+      <div id="form" style="max-width: 200px;">
+        <div style="text-align: center;">
+          <img src="../public/mikan-pic.png" height="80" width="80"/>
         </div>
-      </el-form>
+        <h2 style="text-align: center">ANI-RSS</h2>
+        <div style="height: 30px;"></div>
+        <el-form label-width="auto"
+                 @keyup.enter="login"
+                 @submit="login">
+          <el-form-item>
+            <el-input style="width: 200px;" v-model:model-value="user.username" placeholder="用户名"></el-input>
+          </el-form-item>
+          <el-form-item>
+            <el-input style="width: 200px;" v-model:model-value="user.password" show-password
+                      placeholder="密码"></el-input>
+          </el-form-item>
+          <div style="display: flex;width: 100%;align-items: flex-end;flex-flow: column;">
+            <el-button @click="login" :loading="loading" text bg icon="Right">登录</el-button>
+          </div>
+        </el-form>
+      </div>
+    </div>
+    <div style="margin-bottom: 16px;">
+      <a href="https://docs.wushuo.top" target="_blank">ani-rss</a> | <a href="https://github.com/wushuo894/ani-rss" target="_blank">github</a>
     </div>
   </div>
   <App v-else></App>
