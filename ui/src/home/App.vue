@@ -3,8 +3,7 @@
   <Add ref="add" @load="list?.getList"/>
   <Logs ref="logs"/>
   <Manage ref="manage" @load="list?.getList"/>
-  <div style="height: 100%;    display: flex;
-    flex-direction: column;">
+  <div style="height: 100%;display: flex;flex-direction: column;">
     <div id="header">
       <div style="margin: 10px;display: flex;">
         <el-input
@@ -40,7 +39,7 @@
           </el-select>
         </div>
         <div style="margin: 0 4px;">
-          <el-button type="primary" @click="add?.showAdd" bg text>
+          <el-button type="primary" @click="add?.show" bg text>
             <el-icon :class="elIconClass()">
               <Plus/>
             </el-icon>
@@ -75,7 +74,7 @@
         </div>
         <div style="margin: 0 4px;">
           <el-badge :is-dot="about.update" class="item">
-            <el-button @click="config?.showConfig(about.update)" text bg>
+            <el-button @click="config?.show(about.update)" text bg>
               <el-icon :class="elIconClass()">
                 <Setting/>
               </el-icon>
@@ -86,7 +85,7 @@
           </el-badge>
         </div>
         <div style="margin-left: 4px;">
-          <el-button @click="logs?.showLogs" text bg>
+          <el-button @click="logs?.show" text bg>
             <el-icon :class="elIconClass()">
               <Tickets/>
             </el-icon>

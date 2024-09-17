@@ -140,8 +140,6 @@ let exclude = ref()
 let match = ref()
 
 onMounted(() => {
-  match.value?.init()
-  exclude.value?.init()
   init()
 })
 

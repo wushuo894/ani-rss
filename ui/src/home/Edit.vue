@@ -1,6 +1,6 @@
 <template>
-  <el-dialog v-model="dialogVisible" title="修改订阅" center @close="aniShow = false">
-    <Ani ref="aniRef" v-model:ani="ani" @ok="editAni" v-if="aniShow"/>
+  <el-dialog v-model="dialogVisible" title="修改订阅" center v-if="dialogVisible">
+    <Ani v-model:ani="ani" @ok="editAni"/>
   </el-dialog>
 </template>
 
@@ -38,19 +38,14 @@ const editAni = (fun) => {
       .finally(fun);
 }
 
-let aniRef = ref()
-
-const aniShow = ref(false)
-
-const showEdit = (item) => {
+const show = (item) => {
   ani.value = JSON.parse(JSON.stringify(item))
   ani.value.showDownlaod = true
-  aniShow.value = true
   dialogVisible.value = true
 }
 
 defineExpose({
-  showEdit
+  show
 })
 
 const emit = defineEmits(['load'])

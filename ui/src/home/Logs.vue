@@ -1,5 +1,5 @@
 <template>
-  <el-dialog v-model="logDialogVisible" title="日志" center>
+  <el-dialog v-model="dialogVisible" title="日志" center v-if="dialogVisible">
     <div style="width: 100%;justify-content: space-between;align-items: center;" class="auto">
       <el-checkbox-group v-model:model-value="selectLevels" @change="()=>getHtmlLogs()">
         <el-checkbox v-for="item in levels" :label="item" size="large"/>
@@ -43,7 +43,7 @@ import {ref} from "vue";
 import {codeToHtml} from 'shiki'
 import api from "../api.js";
 
-const logDialogVisible = ref(false)
+const dialogVisible = ref(false)
 const loading = ref(true)
 const logs = ref([])
 const scrollbarRef = ref()
@@ -71,9 +71,9 @@ const getHtmlLogs = async () => {
   })
 }
 
-const showLogs = () => {
+const show = () => {
   logs.value = []
-  logDialogVisible.value = true
+  dialogVisible.value = true
   loading.value = true
   htmlLogs.value = ''
   getLogs()
@@ -113,7 +113,7 @@ const getLogs = () => {
       })
 }
 
-defineExpose({showLogs})
+defineExpose({show})
 </script>
 
 <style>

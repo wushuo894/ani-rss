@@ -73,11 +73,6 @@ const handleInputConfirm = () => {
   excludeValue.value = ''
 }
 
-let init = () => {
-  excludeVisible.value = false
-  excludeValue.value = ''
-}
-
 let importExcludeLoading = ref(false)
 let disabledImportExclude = ref(false)
 
@@ -98,10 +93,6 @@ let importExclude = () => {
       })
 
 }
-
-defineExpose({
-  init
-})
 
 let props = defineProps(['exclude', 'importExclude', 'showText'])
 </script>
