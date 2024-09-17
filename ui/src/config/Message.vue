@@ -174,11 +174,6 @@ const messageActiveName = ref('')
 
 let props = defineProps(['config'])
 
-const init = ()=>{
-  messageActiveName.value = ''
-}
-
-defineExpose({init})
 </script>
 
 <style>

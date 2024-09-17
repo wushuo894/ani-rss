@@ -85,7 +85,7 @@
                       </el-icon>
                     </el-button>
                     <div style="height: 5px;"></div>
-                    <el-button text @click="edit?.showEdit(item)" bg>
+                    <el-button text @click="edit?.show(item)" bg>
                       <el-icon>
                         <EditIcon/>
                       </el-icon>
