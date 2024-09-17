@@ -81,7 +81,6 @@ public class qBittorrent implements BaseDownload {
     @Override
     public Boolean download(String name, String savePath, File torrentFile, Boolean ova) {
         String host = config.getHost();
-        Integer renameSleep = config.getRenameSleep();
         Boolean qbRenameTitle = config.getQbRenameTitle();
         Boolean qbUseDownloadPath = config.getQbUseDownloadPath();
         HttpRequest httpRequest = HttpReq.post(host + "/api/v2/torrents/add", false)
@@ -125,7 +124,10 @@ public class qBittorrent implements BaseDownload {
             List<TorrentsInfo> torrentsInfos = getTorrentsInfos();
             Optional<TorrentsInfo> optionalTorrentsInfo = torrentsInfos
                     .stream()
-                    .filter(torrentsInfo -> torrentsInfo.getHash().equals(hash))
+                    .filter(torrentsInfo ->
+                            torrentsInfo.getHash().equals(hash) ||
+                                    torrentsInfo.getName().equals(name)
+                    )
                     .findFirst();
             if (optionalTorrentsInfo.isPresent()) {
                 return true;
