@@ -43,7 +43,7 @@ public class HttpRequestPlus extends HttpRequest {
         } catch (Exception e) {
             String message = ExceptionUtil.getMessage(e);
             log.debug("url: {}, error: {}", url, message);
-            throw new RuntimeException(e);
+            throw e;
         }
     }
 }
