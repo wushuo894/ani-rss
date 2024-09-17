@@ -76,7 +76,7 @@
                 />
                 <div>
                   <el-text class="mx-1" size="small">
-                    Dmhy 仅支持qb开启修改任务标题的情况下自动重命名
+                    Dmhy 仅支持qb开启修改任务标题的情况下自动重命名与坏种检测
                   </el-text>
                 </div>
               </div>
