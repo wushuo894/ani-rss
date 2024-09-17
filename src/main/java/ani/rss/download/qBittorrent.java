@@ -2,6 +2,7 @@ package ani.rss.download;
 
 import ani.rss.entity.Config;
 import ani.rss.entity.TorrentsInfo;
+import ani.rss.util.ExceptionUtil;
 import ani.rss.util.HttpReq;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.lang.Assert;
@@ -50,7 +51,8 @@ public class qBittorrent implements BaseDownload {
                         return true;
                     });
         } catch (Exception e) {
-            log.error("登录 qBittorrent 失败 {}", e.getMessage());
+            String message = ExceptionUtil.getMessage(e);
+            log.error("登录 qBittorrent 失败 {}", message);
         }
         return false;
     }
