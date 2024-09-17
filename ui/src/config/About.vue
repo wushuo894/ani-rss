@@ -12,6 +12,12 @@
     <el-form-item label="投喂作者">
       <a href="https://afdian.com/a/wushuo894" target="_blank">https://afdian.com/a/wushuo894</a>
     </el-form-item>
+    <el-form-item label="TG群">
+      <a href="https://t.me/ani_rss" target="_blank">https://t.me/ani_rss</a>
+    </el-form-item>
+    <el-form-item label="QQ群">
+      <a href="http://qm.qq.com/cgi-bin/qm/qr?_wv=1027&amp;k=_EKAkxs6Ld4fWcMNAbUQzcp4tv20vjVH&amp;authKey=KG3GAsZfKQosbAWkks%2FbEj0LCGwxoeLJ3DTU0loHkGdHLqHYgJNv3%2BmSERmYt47b&amp;noverify=0&amp;group_code=171563627" target="_blank">171563627</a>
+    </el-form-item>
     <el-form-item label="版本号">
       <div>
         <div v-loading="about.version.length < 1" style="min-height: 100px;margin-bottom: 16px;">
