@@ -1,6 +1,6 @@
 <template>
   <Mikan ref="mikan" @add="args => ani.url = args"/>
-  <el-dialog v-model="dialogVisible" title="添加订阅" center @close="aniShow = false">
+  <el-dialog v-model="dialogVisible" title="添加订阅" center v-if="dialogVisible">
     <div v-if="showRss" @keydown.enter="getRss">
       <el-tabs tab-position="left" v-model="activeName">
         <el-tab-pane label="Mikan" name="mikan">
@@ -89,7 +89,7 @@
       </div>
     </div>
     <div v-else>
-      <Ani ref="aniRef" v-model:ani="ani" @ok="addAni"/>
+      <Ani v-model:ani="ani" @ok="addAni"/>
     </div>
   </el-dialog>
 </template>
@@ -122,8 +122,6 @@ const ani = ref({
   'month': 1
 })
 
-const aniRef = ref()
-
 const rssButtonLoading = ref(false)
 
 const getRss = () => {
@@ -135,7 +133,6 @@ const getRss = () => {
         ani.value = res['data']
         ani.value.showDownlaod = false
         showRss.value = false
-        aniRef.value?.init()
       })
       .finally(() => {
         rssButtonLoading.value = false
@@ -153,7 +150,7 @@ const addAni = (fun) => {
 
 const activeName = ref('mikan')
 
-const showAdd = () => {
+const show = () => {
   ani.value = {
     'url': '',
     'season': 1,
@@ -170,7 +167,7 @@ const showAdd = () => {
 
 const aniShow = ref(false)
 
-defineExpose({showAdd})
+defineExpose({show})
 const emit = defineEmits(['load'])
 
 </script>

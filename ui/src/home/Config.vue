@@ -1,5 +1,5 @@
 <template>
-  <el-dialog v-model="configDialogVisible" title="设置" center v-if="configDialogVisible">
+  <el-dialog v-model="dialogVisible" title="设置" center v-if="dialogVisible">
     <div style="margin: 0 15px;" v-loading="loading">
       <el-tabs v-model:model-value="activeName">
         <el-tab-pane label="下载设置" name="download" :lazy="true">
@@ -63,7 +63,7 @@ import Download from "../config/Download.vue";
 import Basic from "../config/Basic.vue";
 import About from "../config/About.vue";
 
-const configDialogVisible = ref(false)
+const dialogVisible = ref(false)
 const configButtonLoading = ref(false)
 const loading = ref(true)
 
@@ -127,11 +127,9 @@ const exclude = ref()
 const messageActiveName = ref('')
 const messageRef = ref()
 
-const showConfig = (update) => {
-  exclude.value?.init()
-  messageRef.value?.init()
+const show = (update) => {
   activeName.value = update ? 'about' : 'download'
-  configDialogVisible.value = true
+  dialogVisible.value = true
   loading.value = true
   api.get('/api/config')
       .then(res => {
@@ -151,7 +149,7 @@ const editConfig = () => {
   api.post('/api/config', my_config)
       .then(res => {
         ElMessage.success(res.message)
-        configDialogVisible.value = false
+        dialogVisible.value = false
       })
       .finally(() => {
         configButtonLoading.value = false
@@ -159,7 +157,7 @@ const editConfig = () => {
 }
 
 defineExpose({
-  showConfig
+  show
 })
 
 </script>
