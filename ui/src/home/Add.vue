@@ -129,7 +129,6 @@ const getRss = () => {
   ani.value.type = activeName.value
   api.post('/api/rss', ani.value)
       .then(res => {
-        aniShow.value = true
         ani.value = res['data']
         ani.value.showDownlaod = false
         showRss.value = false
@@ -164,8 +163,6 @@ const show = () => {
   dialogVisible.value = true
   rssButtonLoading.value = false
 }
-
-const aniShow = ref(false)
 
 defineExpose({show})
 const emit = defineEmits(['load'])
