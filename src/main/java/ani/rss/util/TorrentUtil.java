@@ -48,7 +48,15 @@ public class TorrentUtil {
         String title = ani.getTitle();
         Integer season = ani.getSeason();
 
-        Set<String> hashList = getTorrentsInfos()
+        List<TorrentsInfo> torrentsInfos = getTorrentsInfos();
+
+        Set<String> downloadNameList = torrentsInfos.stream()
+                .map(TorrentsInfo::getName)
+                .map(String::trim)
+                .map(String::toLowerCase)
+                .collect(Collectors.toSet());
+
+        Set<String> hashList = torrentsInfos
                 .stream().map(TorrentsInfo::getHash)
                 .map(String::trim)
                 .map(String::toLowerCase)
@@ -72,7 +80,7 @@ public class TorrentUtil {
                     .trim().toLowerCase();
 
             // 已经下载过
-            if (hashList.contains(hash)) {
+            if (hashList.contains(hash) || downloadNameList.contains(reName)) {
                 log.debug("已有下载任务 {}", reName);
                 currentDownloadCount++;
                 continue;

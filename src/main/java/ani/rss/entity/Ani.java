@@ -4,6 +4,7 @@ import lombok.Data;
 import lombok.experimental.Accessors;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -13,6 +14,11 @@ public class Ani implements Serializable {
      * RSS URL
      */
     private String url;
+
+    /**
+     * 备用rss
+     */
+    private List<String> backRss;
 
     /**
      * 标题
@@ -108,6 +114,7 @@ public class Ani implements Serializable {
     public static Ani bulidAni() {
         Ani newAni = new Ani();
         newAni
+                .setBackRss(new ArrayList<>())
                 .setOffset(0)
                 .setYear(1970)
                 .setMonth(1)
