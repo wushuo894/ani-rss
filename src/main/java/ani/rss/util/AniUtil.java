@@ -482,9 +482,17 @@ public class AniUtil {
      */
     public static synchronized List<Item> getItems(Ani ani) {
         String url = ani.getUrl();
+
         String s = HttpReq.get(url, true)
                 .thenFunction(HttpResponse::body);
-        return getItems(ani, s);
+        List<Item> items = new ArrayList<>(getItems(ani, s));
+        List<String> backRss = ani.getBackRss();
+        for (String rss : backRss) {
+            s = HttpReq.get(rss, true)
+                    .thenFunction(HttpResponse::body);
+            items.addAll(getItems(ani, s));
+        }
+        return CollUtil.distinct(items, Item::getReName, false);
     }
 
     /**
