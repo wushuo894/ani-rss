@@ -36,7 +36,7 @@ public class AniAction implements BaseAction {
     /**
      * 手动刷新订阅
      */
-    private void download() {
+    private synchronized void download() {
         Ani ani = getBody(Ani.class);
 
         if (Objects.isNull(ani)) {
@@ -47,10 +47,10 @@ public class AniAction implements BaseAction {
         }
 
         Optional<Ani> first = AniUtil.ANI_LIST.stream()
-                .filter(it -> it.getUrl().equals(ani.getUrl()))
+                .filter(it -> it.getId().equals(ani.getId()))
                 .findFirst();
         if (first.isEmpty()) {
-            resultError();
+            resultErrorMsg("修改失败");
             return;
         }
         synchronized (download) {
@@ -72,21 +72,21 @@ public class AniAction implements BaseAction {
             }
             download.set(false);
         });
-        resultSuccessMsg("已开始刷新RSS {}", downloadAni.getTitle());
+        resultSuccessMsg("已开始刷新RSS {} {} {}", downloadAni.getTitle(), downloadAni.getUrl(), downloadAni.getId());
 
     }
 
     /**
      * 添加订阅
      */
-    private void post() {
+    private synchronized void post() {
         Ani ani = getBody(Ani.class);
         ani.setTitle(ani.getTitle().trim())
                 .setUrl(ani.getUrl().trim());
         AniUtil.verify(ani);
 
         Optional<Ani> first = AniUtil.ANI_LIST.stream()
-                .filter(it -> it.getUrl().equals(ani.getUrl()))
+                .filter(it -> it.getId().equals(ani.getId()))
                 .findFirst();
 
         if (first.isPresent()) {
@@ -111,19 +111,19 @@ public class AniAction implements BaseAction {
             }
         });
         resultSuccessMsg("添加订阅成功");
-        log.info("添加订阅 {} {}", ani.getTitle(), ani.getUrl());
+        log.info("添加订阅 {} {} {}", ani.getTitle(), ani.getUrl(), ani.getId());
     }
 
     /**
      * 修改订阅
      */
-    private void put() {
+    private synchronized void put() {
         Ani ani = getBody(Ani.class);
         ani.setTitle(ani.getTitle().trim())
                 .setUrl(ani.getUrl().trim());
         AniUtil.verify(ani);
         Optional<Ani> first = AniUtil.ANI_LIST.stream()
-                .filter(it -> !it.getUrl().equals(ani.getUrl()))
+                .filter(it -> !it.getId().equals(ani.getId()))
                 .filter(it -> it.getTitle().equals(ani.getTitle()) && it.getSeason().equals(ani.getSeason()))
                 .findFirst();
         if (first.isPresent()) {
@@ -132,7 +132,7 @@ public class AniAction implements BaseAction {
         }
 
         first = AniUtil.ANI_LIST.stream()
-                .filter(it -> it.getUrl().equals(ani.getUrl()))
+                .filter(it -> it.getId().equals(ani.getId()))
                 .findFirst();
         if (first.isEmpty()) {
             resultErrorMsg("修改失败");
@@ -141,7 +141,7 @@ public class AniAction implements BaseAction {
         BeanUtil.copyProperties(ani, first.get());
         AniUtil.sync();
         resultSuccessMsg("修改成功");
-        log.info("修改订阅 {} {}", ani.getTitle(), ani.getUrl());
+        log.info("修改订阅 {} {} {}", ani.getTitle(), ani.getUrl(), ani.getId());
     }
 
     /**
@@ -162,16 +162,16 @@ public class AniAction implements BaseAction {
     /**
      * 删除订阅
      */
-    public void delete() {
+    public synchronized void delete() {
         JsonArray jsonArray = getBody(JsonArray.class);
-        List<String> urls = jsonArray.asList()
+        List<String> ids = jsonArray.asList()
                 .stream().map(JsonElement::getAsString)
                 .collect(Collectors.toList());
         List<Ani> anis = AniUtil.ANI_LIST.stream()
-                .filter(it -> urls.contains(it.getUrl()))
+                .filter(it -> ids.contains(it.getId()))
                 .collect(Collectors.toList());
         if (anis.isEmpty()) {
-            resultError();
+            resultErrorMsg("修改失败");
             return;
         }
         AniUtil.ANI_LIST.removeAll(anis);
@@ -190,7 +190,7 @@ public class AniAction implements BaseAction {
                     FileUtil.del(file);
                 }
             }
-            log.info("删除订阅 {} {}", ani.getTitle(), ani.getUrl());
+            log.info("删除订阅 {} {} {}", ani.getTitle(), ani.getUrl(), ani.getId());
         }
     }
 
