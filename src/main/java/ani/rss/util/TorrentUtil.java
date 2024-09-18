@@ -77,27 +77,34 @@ public class TorrentUtil {
             log.debug(JSONUtil.formatJsonStr(GSON.toJson(item)));
             String reName = item.getReName();
             File torrent = getTorrent(ani, item);
+            Boolean master = item.getMaster();
             String hash = FileUtil.mainName(torrent)
                     .trim().toLowerCase();
 
             // 已经下载过
             if (hashList.contains(hash) || downloadNameList.contains(reName)) {
                 log.debug("已有下载任务 {}", reName);
-                currentDownloadCount++;
+                if (master) {
+                    currentDownloadCount++;
+                }
                 continue;
             }
 
             // 已经下载过
             if (torrent.exists()) {
                 log.debug("种子记录已存在 {}", reName);
-                currentDownloadCount++;
+                if (master) {
+                    currentDownloadCount++;
+                }
                 continue;
             }
 
             // 未开启rename不进行检测
             if (itemDownloaded(ani, item, true)) {
                 log.debug("本地文件已存在 {}", reName);
-                currentDownloadCount++;
+                if (master) {
+                    currentDownloadCount++;
+                }
                 continue;
             }
 
@@ -115,7 +122,9 @@ public class TorrentUtil {
                     .get(0)
                     .toString();
             // 开启备用rss会自动删除本地已存在视频
-            if (backRss && ReUtil.contains("S\\d+E\\d+(\\.5)?$", reName)) {
+            if (backRss &&
+                    ReUtil.contains("S\\d+E\\d+(\\.5)?$", reName) &&
+                    new File(savePath).exists() && new File(savePath).isDirectory()) {
                 for (File file : ObjectUtil.defaultIfNull(FileUtil.ls(savePath), new File[]{})) {
                     if (!FileUtil.mainName(file).equals(reName)) {
                         continue;
@@ -143,7 +152,9 @@ public class TorrentUtil {
                 }
             }
             download(ani, reName, savePath, saveTorrent, ova);
-            currentDownloadCount++;
+            if (master) {
+                currentDownloadCount++;
+            }
             count++;
         }
         if (!items.isEmpty() && ani.getCurrentEpisodeNumber() != items.size()) {
