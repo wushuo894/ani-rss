@@ -63,6 +63,22 @@
       <el-form-item label="自动跳过X.5集">
         <el-switch v-model:model-value="props.config.skip5"/>
       </el-form-item>
+      <el-form-item label="备用RSS">
+        <div>
+          <el-switch v-model:model-value="props.config.backRss"/>
+          <div style="display: flex;width: 100%;justify-content: end;padding-top: 6px;">
+            <el-text class="mx-1" size="small">
+              请勿将动漫花园的rss用作 <strong>其他</strong> rss的备用
+              <br>
+              使用备用rss请同时开启qb的 <strong>修改任务标题</strong>, 对tr兼容性 <strong>不太稳定</strong>, 且此功能
+              <strong>不支持
+                aria2</strong>
+              <br>
+              若开启了 <strong>自动删除</strong> 将会 <strong>自动替换</strong> 备用rss 为 主rss 版本
+            </el-text>
+          </div>
+        </div>
+      </el-form-item>
       <el-form-item label="IP白名单">
         <div style="width: 100%;">
           <div>
@@ -87,5 +103,7 @@
 </template>
 
 <script setup>
+import {ElText} from "element-plus";
+
 let props = defineProps(['config'])
 </script>

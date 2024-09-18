@@ -119,7 +119,8 @@ const ani = ref({
   'customDownloadPath': false,
   'downloadPath': '',
   'year': 1970,
-  'month': 1
+  'month': 1,
+  'backRss': []
 })
 
 const rssButtonLoading = ref(false)

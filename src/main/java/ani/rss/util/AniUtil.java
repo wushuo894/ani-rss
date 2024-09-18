@@ -11,6 +11,7 @@ import cn.hutool.core.convert.Convert;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.text.StrFormatter;
+import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.core.util.*;
 import cn.hutool.http.HttpResponse;
 import cn.hutool.http.HttpUtil;
@@ -483,14 +484,32 @@ public class AniUtil {
     public static synchronized List<Item> getItems(Ani ani) {
         String url = ani.getUrl();
 
-        String s = HttpReq.get(url, true)
-                .thenFunction(HttpResponse::body);
-        List<Item> items = new ArrayList<>(getItems(ani, s));
-        List<String> backRss = ani.getBackRss();
-        for (String rss : backRss) {
-            s = HttpReq.get(rss, true)
+        List<Item> items = new ArrayList<>();
+
+        try {
+            String s = HttpReq.get(url, true)
                     .thenFunction(HttpResponse::body);
             items.addAll(getItems(ani, s));
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+        }
+
+        Config config = ConfigUtil.CONFIG;
+        Boolean qbRenameTitle = config.getQbRenameTitle();
+        if (!qbRenameTitle || !config.getBackRss()) {
+            return items;
+        }
+
+        List<String> backRss = ani.getBackRss();
+        for (String rss : backRss) {
+            ThreadUtil.sleep(1000);
+            try {
+                String s = HttpReq.get(rss, true)
+                        .thenFunction(HttpResponse::body);
+                items.addAll(getItems(ani, s));
+            } catch (Exception e) {
+                log.error(e.getMessage(), e);
+            }
         }
         return CollUtil.distinct(items, Item::getReName, false);
     }

@@ -50,6 +50,7 @@ public class ConfigUtil {
                 .setQbRenameTitle(true)
                 .setQbUseDownloadPath(false)
                 .setSkip5(true)
+                .setBackRss(false)
                 .setDebug(false)
                 .setProxy(false)
                 .setProxyHost("")
