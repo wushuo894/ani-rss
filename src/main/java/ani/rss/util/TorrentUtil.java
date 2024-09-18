@@ -44,6 +44,7 @@ public class TorrentUtil {
         Boolean autoDisabled = config.getAutoDisabled();
         Integer downloadCount = config.getDownloadCount();
         Boolean ova = ani.getOva();
+        Boolean backRss = config.getBackRss();
 
         String title = ani.getTitle();
         Integer season = ani.getSeason();
@@ -76,27 +77,34 @@ public class TorrentUtil {
             log.debug(JSONUtil.formatJsonStr(GSON.toJson(item)));
             String reName = item.getReName();
             File torrent = getTorrent(ani, item);
+            Boolean master = item.getMaster();
             String hash = FileUtil.mainName(torrent)
                     .trim().toLowerCase();
 
             // 已经下载过
             if (hashList.contains(hash) || downloadNameList.contains(reName)) {
                 log.debug("已有下载任务 {}", reName);
-                currentDownloadCount++;
+                if (master) {
+                    currentDownloadCount++;
+                }
                 continue;
             }
 
             // 已经下载过
             if (torrent.exists()) {
                 log.debug("种子记录已存在 {}", reName);
-                currentDownloadCount++;
+                if (master) {
+                    currentDownloadCount++;
+                }
                 continue;
             }
 
             // 未开启rename不进行检测
             if (itemDownloaded(ani, item, true)) {
                 log.debug("本地文件已存在 {}", reName);
-                currentDownloadCount++;
+                if (master) {
+                    currentDownloadCount++;
+                }
                 continue;
             }
 
@@ -110,11 +118,57 @@ public class TorrentUtil {
 
             log.info("添加下载 {}", reName);
             File saveTorrent = saveTorrent(ani, item);
-            String savePath = getDownloadPath(ani)
+            List<File> downloadPathList = getDownloadPath(ani);
+
+            // 开启备用rss会自动删除本地已存在视频
+            if (backRss &&
+                    ReUtil.contains("S\\d+E\\d+(\\.5)?$", reName)) {
+                for (File downloadPath : downloadPathList) {
+                    if (!downloadPath.exists()) {
+                        continue;
+                    }
+                    if (!downloadPath.isDirectory()) {
+                        continue;
+                    }
+                    for (File file : ObjectUtil.defaultIfNull(downloadPath.listFiles(), new File[]{})) {
+                        // 文件名不匹配，跳过
+                        if (!FileUtil.mainName(file).equals(reName)) {
+                            continue;
+                        }
+                        boolean isDel = false;
+                        // 文件在删除前先判断其格式
+                        if (file.isFile()) {
+                            String extName = FileUtil.extName(file);
+                            // 没有后缀 跳过
+                            if (StrUtil.isBlank(extName)) {
+                                continue;
+                            }
+                            for (String en : BaseDownload.videoFormat) {
+                                // 后缀匹配不上 跳过
+                                if (!extName.equalsIgnoreCase(en)) {
+                                    continue;
+                                }
+                                isDel = true;
+                                break;
+                            }
+                        }
+                        if (file.isDirectory()) {
+                            isDel = true;
+                        }
+                        if (isDel) {
+                            FileUtil.del(file);
+                            log.info("已开启备用RSS, 自动删除 {}", file.getAbsolutePath());
+                        }
+                    }
+                }
+            }
+            String savePath = downloadPathList
                     .get(0)
                     .toString();
             download(ani, reName, savePath, saveTorrent, ova);
-            currentDownloadCount++;
+            if (master) {
+                currentDownloadCount++;
+            }
             count++;
         }
         if (!items.isEmpty() && ani.getCurrentEpisodeNumber() != items.size()) {

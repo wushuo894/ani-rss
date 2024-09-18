@@ -102,7 +102,7 @@ const delLoading = ref(false)
 
 const del = () => {
   delLoading.value = true
-  api.del('/api/ani', list.value.filter(it => it.ok).map(it => it.url))
+  api.del('/api/ani', list.value.filter(it => it.ok).map(it => it.id))
       .then(res => {
         ElMessage.success(res.message)
         emit('load')
