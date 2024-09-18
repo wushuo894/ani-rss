@@ -36,6 +36,23 @@
 - [x] 适配移动端
 - [x] 支持拼音排序与搜索
 - [x] 支持自定义代理
+- [x] 自动洗码
+- [x] 支持X.5集
+- [x] 支持动漫花园
+- [x] 支持windows端exe
+- [x] 季命名方式可选
+- [x] 支持自定义mikan地址
+- [x] IP白名单登录校验
+- [x] 订阅可设置自定义下载位置
+- [x] 支持自动切换暗黑模式
+- [x] 支持代理测试
+- [x] 支持nyaa订阅
+- [x] 自动使用TMDB的标题
+- [x] 支持ova
+- [x] 支持 Telegram 和 WebHook 通知
+- [x] 支持RSS订阅预览
+- [x] 获取标题时带上年份
+- [x] 支持 Transmission qBittorrent Aria2
 
 ![Xnip2024-09-08_04-57-29.jpg](https://docs.wushuo.top/image/Xnip2024-09-08_04-57-29.jpg)
 
