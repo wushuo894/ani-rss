@@ -181,7 +181,7 @@ public class Transmission implements BaseDownload {
 
         String mainName = FileUtil.mainName(name);
 
-        if (ReUtil.contains("S\\d+E\\d+$", mainName)) {
+        if (ReUtil.contains("S\\d+E\\d+(\\.5)?$", mainName)) {
             return;
         }
 

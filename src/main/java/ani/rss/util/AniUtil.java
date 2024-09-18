@@ -268,12 +268,12 @@ public class AniUtil {
         }
         // 自动推断剧集偏移
         if (config.getOffset()) {
-            int offset = -(items.stream()
+            double offset = -(items.stream()
                     .map(Item::getEpisode)
-                    .min(Comparator.comparingInt(i -> i))
+                    .min(Comparator.comparingDouble(i -> i))
                     .get() - 1);
             log.debug("自动获取到剧集偏移为 {}", offset);
-            ani.setOffset(offset);
+            ani.setOffset((int) offset);
         }
         return ani;
     }
@@ -426,14 +426,14 @@ public class AniUtil {
             return items;
         }
 
-        String s = "(.*|\\[.*])( -? \\d+|\\[\\d+]|\\[\\d+.?[vV]\\d]|第\\d+[话話集]|\\[第?\\d+[话話集]]|\\[\\d+.?END]|[Ee][Pp]?\\d+)(.*)";
+        String s = "(.*|\\[.*])( -? \\d+(\\.5)?|\\[\\d+(\\.5)?]|\\[\\d+(\\.5)?.?[vV]\\d]|第\\d+(\\.5)?[话話集]|\\[第?\\d+(\\.5)?[话話集]]|\\[\\d+(\\.5)?.?END]|[Ee][Pp]?\\d+(\\.5)?)(.*)";
 
         items = items.stream()
                 .filter(item -> {
                     try {
                         String itemTitle = item.getTitle();
                         String e = ReUtil.get(s, itemTitle, 2);
-                        String episode = ReUtil.get("\\d+", e, 0);
+                        String episode = ReUtil.get("\\d+(\\.5)?", e, 0);
                         if (StrUtil.isBlank(episode)) {
                             return false;
                         }
@@ -448,14 +448,26 @@ public class AniUtil {
                                 }
                             }
                         }
-                        item.setEpisode(Integer.parseInt(episode) + offset);
+
+                        boolean is5 = Double.parseDouble(episode) - 0.5 == Double.valueOf(episode).intValue();
+
+                        if (is5) {
+                            item.setEpisode(Double.parseDouble(episode) + offset);
+                        } else {
+                            item.setEpisode(Double.parseDouble(episode));
+                        }
+
+                        String reName = StrFormatter.format("{} S{}E{}",
+                                title,
+                                String.format("%02d", season),
+                                String.format("%02d", item.getEpisode().intValue()));
+
+                        if (is5) {
+                            reName = reName + ".5";
+                        }
+
                         item
-                                .setReName(
-                                        StrFormatter.format("{} S{}E{}",
-                                                title,
-                                                String.format("%02d", season),
-                                                String.format("%02d", item.getEpisode()))
-                                );
+                                .setReName(reName);
                         return true;
                     } catch (Exception e) {
                         log.error("解析rss视频集次出现问题");
