@@ -24,7 +24,6 @@
 <script setup>
 
 import {ref} from "vue";
-import {ElText} from "element-plus";
 
 const dialogVisible = ref(false)
 
