@@ -204,7 +204,7 @@ const getPage = () => {
 
 const delAni = (ani) => {
   ani['deleteLoading'] = true
-  api.del('/api/ani', [ani.url])
+  api.del('/api/ani', [ani.id])
       .then(res => {
         ElMessage.success(res.message)
         getList()
