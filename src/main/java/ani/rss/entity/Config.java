@@ -120,6 +120,11 @@ public class Config implements Serializable {
     private Boolean skip5;
 
     /**
+     * 备用RSS
+     */
+    private Boolean backRss;
+
+    /**
      * DEBUG
      */
     private Boolean debug;

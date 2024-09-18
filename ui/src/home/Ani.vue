@@ -1,5 +1,6 @@
 <template>
   <Items ref="items"/>
+  <BackRss ref="backRss" :ani="props.ani"/>
   <div style="height: 500px;">
     <el-scrollbar style="padding: 0 12px;" height="500px;" ref="scrollbar">
       <el-form label-width="auto"
@@ -53,6 +54,11 @@
         <el-form-item label="总集数">
           <div style="display: flex;justify-content: end;width: 100%;">
             <el-input-number v-model:model-value="props.ani.totalEpisodeNumber"></el-input-number>
+          </div>
+        </el-form-item>
+        <el-form-item label="备用RSS">
+          <div style="display: flex;justify-content: end;width: 100%;">
+            <el-button text bg @click="backRss?.show">管理</el-button>
           </div>
         </el-form-item>
         <el-form-item label="匹配">
@@ -112,7 +118,9 @@ import {onMounted, ref} from "vue";
 import api from "../api.js";
 import {ElMessage} from "element-plus";
 import Popconfirm from "../other/Popconfirm.vue";
+import BackRss from "./BackRss.vue";
 
+let backRss = ref()
 let date = ref()
 
 let items = ref()
