@@ -44,6 +44,7 @@ public class TorrentUtil {
         Boolean autoDisabled = config.getAutoDisabled();
         Integer downloadCount = config.getDownloadCount();
         Boolean ova = ani.getOva();
+        Boolean backRss = config.getBackRss();
 
         String title = ani.getTitle();
         Integer season = ani.getSeason();
@@ -113,6 +114,34 @@ public class TorrentUtil {
             String savePath = getDownloadPath(ani)
                     .get(0)
                     .toString();
+            // 开启备用rss会自动删除本地已存在视频
+            if (backRss && ReUtil.contains("S\\d+E\\d+(\\.5)?$", reName)) {
+                for (File file : ObjectUtil.defaultIfNull(FileUtil.ls(savePath), new File[]{})) {
+                    if (!FileUtil.mainName(file).equals(reName)) {
+                        continue;
+                    }
+                    boolean isDel = false;
+                    // 文件在删除前先判断其格式
+                    if (file.isFile()) {
+                        String extName = FileUtil.extName(file);
+                        if (StrUtil.isBlank(extName)) {
+                            continue;
+                        }
+                        for (String en : BaseDownload.videoFormat) {
+                            if (!extName.equals(en)) {
+                                continue;
+                            }
+                            isDel = true;
+                        }
+                    } else {
+                        isDel = true;
+                    }
+                    if (isDel) {
+//                        FileUtil.del(file);
+                        log.info("已开启备用RSS, 自动删除 {}", file.getAbsolutePath());
+                    }
+                }
+            }
             download(ani, reName, savePath, saveTorrent, ova);
             currentDownloadCount++;
             count++;
