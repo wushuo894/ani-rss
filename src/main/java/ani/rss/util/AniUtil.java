@@ -489,7 +489,10 @@ public class AniUtil {
         try {
             String s = HttpReq.get(url, true)
                     .thenFunction(HttpResponse::body);
-            items.addAll(getItems(ani, s));
+            items.addAll(getItems(ani, s)
+                    .stream()
+                    .peek(item -> item.setMaster(true))
+                    .collect(Collectors.toList()));
         } catch (Exception e) {
             log.error(e.getMessage(), e);
         }
@@ -506,7 +509,10 @@ public class AniUtil {
             try {
                 String s = HttpReq.get(rss, true)
                         .thenFunction(HttpResponse::body);
-                items.addAll(getItems(ani, s));
+                items.addAll(getItems(ani, s)
+                        .stream()
+                        .peek(item -> item.setMaster(false))
+                        .collect(Collectors.toList()));
             } catch (Exception e) {
                 log.error(e.getMessage(), e);
             }

@@ -42,4 +42,9 @@ public class Item implements Serializable {
      * 本地已存在
      */
     private Boolean local;
+
+    /**
+     * 主 rss
+     */
+    private Boolean master;
 }
