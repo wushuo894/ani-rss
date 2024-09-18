@@ -126,6 +126,7 @@ public class TorrentUtil {
                     ReUtil.contains("S\\d+E\\d+(\\.5)?$", reName) &&
                     new File(savePath).exists() && new File(savePath).isDirectory()) {
                 for (File file : ObjectUtil.defaultIfNull(FileUtil.ls(savePath), new File[]{})) {
+                    // 文件名不匹配，跳过
                     if (!FileUtil.mainName(file).equals(reName)) {
                         continue;
                     }
@@ -133,16 +134,19 @@ public class TorrentUtil {
                     // 文件在删除前先判断其格式
                     if (file.isFile()) {
                         String extName = FileUtil.extName(file);
+                        // 没有后缀 跳过
                         if (StrUtil.isBlank(extName)) {
                             continue;
                         }
                         for (String en : BaseDownload.videoFormat) {
-                            if (!extName.equals(en)) {
+                            // 后缀匹配不上 跳过
+                            if (!extName.equalsIgnoreCase(en)) {
                                 continue;
                             }
                             isDel = true;
                         }
-                    } else {
+                    }
+                    if (file.isDirectory()) {
                         isDel = true;
                     }
                     if (isDel) {
