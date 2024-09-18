@@ -449,9 +449,9 @@ public class AniUtil {
                         boolean is5 = Double.parseDouble(episode) - 0.5 == Double.valueOf(episode).intValue();
 
                         if (is5) {
-                            item.setEpisode(Double.parseDouble(episode) + offset);
-                        } else {
                             item.setEpisode(Double.parseDouble(episode));
+                        } else {
+                            item.setEpisode(Double.parseDouble(episode) + offset);
                         }
 
                         String reName = StrFormatter.format("{} S{}E{}",
