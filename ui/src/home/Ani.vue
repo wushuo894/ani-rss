@@ -29,6 +29,18 @@
             <el-button icon="Refresh" bg text @click="getThemoviedbName" :loading="getThemoviedbNameLoading"/>
           </div>
         </el-form-item>
+        <el-form-item label="主 RSS">
+          <div style="width: 100%;display: flex;">
+            <el-input v-model:model-value="ani.subgroup" style="width: 140px" placeholder="字幕组"/>
+            <div style="width: 6px;"></div>
+            <el-input v-model:model-value="ani.url" placeholder="https://xxx.xxx"/>
+          </div>
+        </el-form-item>
+        <el-form-item label="备用 RSS">
+          <div style="display: flex;justify-content: end;width: 100%;">
+            <el-button text bg @click="backRss?.show">管理</el-button>
+          </div>
+        </el-form-item>
         <el-form-item label="日期">
           <div style="display: flex;width: 100%;justify-content: end;">
             <el-date-picker
@@ -54,11 +66,6 @@
         <el-form-item label="总集数">
           <div style="display: flex;justify-content: end;width: 100%;">
             <el-input-number v-model:model-value="props.ani.totalEpisodeNumber"></el-input-number>
-          </div>
-        </el-form-item>
-        <el-form-item label="备用RSS">
-          <div style="display: flex;justify-content: end;width: 100%;">
-            <el-button text bg @click="backRss?.show">管理</el-button>
           </div>
         </el-form-item>
         <el-form-item label="匹配">
