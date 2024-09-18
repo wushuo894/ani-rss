@@ -261,7 +261,7 @@ public class AniUtil {
         log.debug("获取到动漫信息 {}", JSONUtil.formatJsonStr(GSON.toJson(ani)));
 
         List<Item> items = getItems(ani, s);
-        ani.setCurrentEpisodeNumber(items.size());
+        ani.setCurrentEpisodeNumber((int) items.stream().filter(it -> !it.getReName().endsWith(".5")).count());
         log.debug("获取到视频 共{}个", items.size());
         if (items.isEmpty() || ani.getOva()) {
             return ani;
