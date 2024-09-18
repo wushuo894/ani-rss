@@ -1,5 +1,6 @@
 package ani.rss.entity;
 
+import cn.hutool.core.lang.UUID;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
@@ -10,6 +11,11 @@ import java.util.List;
 @Data
 @Accessors(chain = true)
 public class Ani implements Serializable {
+    /**
+     * id
+     */
+    private String id;
+
     /**
      * RSS URL
      */
@@ -114,6 +120,7 @@ public class Ani implements Serializable {
     public static Ani bulidAni() {
         Ani newAni = new Ani();
         newAni
+                .setId(UUID.fastUUID().toString())
                 .setBackRss(new ArrayList<>())
                 .setOffset(0)
                 .setYear(1970)
