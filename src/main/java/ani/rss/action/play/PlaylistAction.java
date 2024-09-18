@@ -47,7 +47,7 @@ public class PlaylistAction implements BaseAction {
         resultSuccess(collect);
     }
 
-    private final String s = "S(\\d+)E(\\d+)";
+    private final String s = "S(\\d+)E(\\d+(\\.5)?)";
 
     public List<PlayItem> getPlayItem(File file) {
         List<PlayItem> playItems = new ArrayList<>();

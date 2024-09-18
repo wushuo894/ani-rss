@@ -31,7 +31,7 @@ public class Item implements Serializable {
     /**
      * 集数
      */
-    private Integer episode;
+    private Double episode;
 
     /**
      * 大小
