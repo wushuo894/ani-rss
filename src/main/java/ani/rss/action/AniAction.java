@@ -72,7 +72,7 @@ public class AniAction implements BaseAction {
             }
             download.set(false);
         });
-        resultSuccessMsg("已开始刷新RSS {} {} {}", downloadAni.getTitle(), downloadAni.getUrl(), downloadAni.getId());
+        resultSuccessMsg("已开始刷新RSS {} {}", downloadAni.getTitle(), downloadAni.getUrl());
 
     }
 
