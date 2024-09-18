@@ -1,14 +1,14 @@
 <template>
-  <el-dialog v-model="dialogVisible" title="备用订阅" center v-if="dialogVisible" @close="close">
+  <el-dialog v-model="dialogVisible" title="备用订阅" center v-if="dialogVisible">
     <div style="display: flex;width: 100%;justify-content: end;">
       <el-button text bg icon="Plus" @click="plus">添加
       </el-button>
     </div>
     <el-scrollbar>
-      <el-table v-model:data="props.ani.backRss" height="400px">
-        <el-table-column label="url" min-width="400px">
+      <el-table v-model:data="backRss" height="400px">
+        <el-table-column label="RSS" min-width="400px">
           <template #default="it">
-            <el-input v-model:model-value="props.ani.backRss[it.$index]" placeholder="https://xxx.xxx"/>
+            <el-input v-model:model-value="backRss[it.$index]" placeholder="https://xxx.xxx"/>
           </template>
         </el-table-column>
         <el-table-column label="操作" width="80">
@@ -18,6 +18,9 @@
         </el-table-column>
       </el-table>
     </el-scrollbar>
+    <div style="display: flex;width: 100%;justify-content: end;margin-top: 10px">
+      <el-button icon="Check" bg text @click="ok">确定</el-button>
+    </div>
   </el-dialog>
 </template>
 
@@ -26,30 +29,33 @@
 import {ref} from "vue";
 
 const dialogVisible = ref(false)
+const backRss = ref()
 
 
 let show = () => {
   dialogVisible.value = true
+  backRss.value = JSON.parse(JSON.stringify(props.ani.backRss))
 }
 
 let plus = () => {
-  if (!props.ani.backRss.length) {
-    props.ani.backRss.push('')
+  if (!backRss.value.length) {
+    backRss.value.push('')
     return
   }
-  if (props.ani.backRss[props.ani.backRss.length - 1].trim()) {
-    props.ani.backRss.push('')
+  if (backRss.value[backRss.value.length - 1].trim()) {
+    backRss.value.push('')
   }
 }
 
 let del = (index) => {
-  props.ani.backRss = props.ani.backRss.filter((s, i) => i !== index)
+  backRss.value = backRss.value.filter((s, i) => i !== index)
 }
 
-let close = () => {
-  props.ani.backRss = props.ani.backRss
+let ok = () => {
+  props.ani.backRss = backRss.value
       .map(s => s.trim())
       .filter((s, i) => s !== '')
+  dialogVisible.value = false
 }
 
 defineExpose({show})
