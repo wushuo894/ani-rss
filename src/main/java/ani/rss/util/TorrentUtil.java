@@ -137,7 +137,7 @@ public class TorrentUtil {
                         isDel = true;
                     }
                     if (isDel) {
-//                        FileUtil.del(file);
+                        FileUtil.del(file);
                         log.info("已开启备用RSS, 自动删除 {}", file.getAbsolutePath());
                     }
                 }
