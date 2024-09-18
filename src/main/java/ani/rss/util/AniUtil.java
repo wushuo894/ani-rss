@@ -230,6 +230,13 @@ public class AniUtil {
             themoviedbName = StrFormatter.format("{} ({})", themoviedbName, year);
         }
 
+        title = title.replace("1/2", "½");
+        var ls = List.of("/", "\\", ":", "?", "*", "|", ">", "<", "\"");
+        for (String l : ls) {
+            title = title.replace(l, " ");
+        }
+        title = title.trim();
+
         ani
                 .setType(type)
                 .setUrl(url.trim())
@@ -609,7 +616,14 @@ public class AniUtil {
                         if (Objects.isNull(element)) {
                             return "";
                         }
-                        return StrUtil.blankToDefault(element.ownText(), "");
+                        String title = element.ownText();
+                        title = title.replace("1/2", "½");
+                        var ls = List.of("/", "\\", ":", "?", "*", "|", ">", "<", "\"");
+                        for (String l : ls) {
+                            title = title.replace(l, " ");
+                        }
+                        title = title.trim();
+                        return StrUtil.blankToDefault(title, "");
                     });
         } catch (Exception e) {
             String message = ExceptionUtil.getMessage(e);
