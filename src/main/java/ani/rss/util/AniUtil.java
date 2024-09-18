@@ -268,12 +268,12 @@ public class AniUtil {
         }
         // 自动推断剧集偏移
         if (config.getOffset()) {
-            double offset = -(items.stream()
+            Double offset = -(items.stream()
                     .map(Item::getEpisode)
                     .min(Comparator.comparingDouble(i -> i))
                     .get() - 1);
             log.debug("自动获取到剧集偏移为 {}", offset);
-            ani.setOffset((int) offset);
+            ani.setOffset(offset.intValue());
         }
         return ani;
     }
@@ -439,13 +439,9 @@ public class AniUtil {
                         }
                         Boolean skip5 = config.getSkip5();
                         if (skip5) {
-                            String string = ReUtil.get(s, itemTitle, 3);
-                            if (StrUtil.isNotBlank(string) && string.startsWith(".5")) {
-                                string = episode + string;
-                                if (itemTitle.endsWith(string)) {
-                                    log.debug("{} 疑似 {} 剧集, 自动跳过", itemTitle, episode + ".5");
-                                    return false;
-                                }
+                            if (episode.endsWith(".5")) {
+                                log.debug("{} 疑似 {} 剧集, 自动跳过", itemTitle, episode + ".5");
+                                return false;
                             }
                         }
 
