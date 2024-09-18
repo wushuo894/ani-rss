@@ -118,43 +118,53 @@ public class TorrentUtil {
 
             log.info("添加下载 {}", reName);
             File saveTorrent = saveTorrent(ani, item);
-            String savePath = getDownloadPath(ani)
-                    .get(0)
-                    .toString();
+            List<File> downloadPathList = getDownloadPath(ani);
+
             // 开启备用rss会自动删除本地已存在视频
             if (backRss &&
-                    ReUtil.contains("S\\d+E\\d+(\\.5)?$", reName) &&
-                    new File(savePath).exists() && new File(savePath).isDirectory()) {
-                for (File file : ObjectUtil.defaultIfNull(FileUtil.ls(savePath), new File[]{})) {
-                    // 文件名不匹配，跳过
-                    if (!FileUtil.mainName(file).equals(reName)) {
+                    ReUtil.contains("S\\d+E\\d+(\\.5)?$", reName)) {
+                for (File downloadPath : downloadPathList) {
+                    if (!downloadPath.exists()) {
                         continue;
                     }
-                    boolean isDel = false;
-                    // 文件在删除前先判断其格式
-                    if (file.isFile()) {
-                        String extName = FileUtil.extName(file);
-                        // 没有后缀 跳过
-                        if (StrUtil.isBlank(extName)) {
+                    if (!downloadPath.isDirectory()) {
+                        continue;
+                    }
+                    for (File file : ObjectUtil.defaultIfNull(downloadPath.listFiles(), new File[]{})) {
+                        // 文件名不匹配，跳过
+                        if (!FileUtil.mainName(file).equals(reName)) {
                             continue;
                         }
-                        for (String en : BaseDownload.videoFormat) {
-                            // 后缀匹配不上 跳过
-                            if (!extName.equalsIgnoreCase(en)) {
+                        boolean isDel = false;
+                        // 文件在删除前先判断其格式
+                        if (file.isFile()) {
+                            String extName = FileUtil.extName(file);
+                            // 没有后缀 跳过
+                            if (StrUtil.isBlank(extName)) {
                                 continue;
                             }
+                            for (String en : BaseDownload.videoFormat) {
+                                // 后缀匹配不上 跳过
+                                if (!extName.equalsIgnoreCase(en)) {
+                                    continue;
+                                }
+                                isDel = true;
+                                break;
+                            }
+                        }
+                        if (file.isDirectory()) {
                             isDel = true;
                         }
-                    }
-                    if (file.isDirectory()) {
-                        isDel = true;
-                    }
-                    if (isDel) {
-                        FileUtil.del(file);
-                        log.info("已开启备用RSS, 自动删除 {}", file.getAbsolutePath());
+                        if (isDel) {
+                            FileUtil.del(file);
+                            log.info("已开启备用RSS, 自动删除 {}", file.getAbsolutePath());
+                        }
                     }
                 }
             }
+            String savePath = downloadPathList
+                    .get(0)
+                    .toString();
             download(ani, reName, savePath, saveTorrent, ova);
             if (master) {
                 currentDownloadCount++;
