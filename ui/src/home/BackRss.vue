@@ -1,7 +1,17 @@
 <template>
+  <Mikan ref="mikan" @add="url => backRss[editIndex] = url"/>
   <el-dialog v-model="dialogVisible" title="备用订阅" center v-if="dialogVisible">
-    <div style="display: flex;width: 100%;justify-content: end;">
-      <el-button text bg icon="Plus" @click="plus"/>
+    <div style="display: flex;width: 100%;">
+      <div>
+        <el-button text bg icon="Plus" @click="plus" type="primary"/>
+      </div>
+      <div style="margin: 3px;"></div>
+      <div>
+        <el-button @click="()=>{
+        plus()
+        mikan?.show()
+      }" text bg icon="VideoCamera"/>
+      </div>
     </div>
     <el-scrollbar>
       <el-table v-model:data="backRss" height="400px">
@@ -24,7 +34,7 @@
               </div>
               <div style="margin: 3px;"></div>
               <div>
-                <el-button bg text @click="del(it.$index)" icon="Delete"/>
+                <el-button bg text @click="del(it.$index)" icon="Delete" type="danger"/>
               </div>
             </div>
           </template>
@@ -40,12 +50,13 @@
 <script setup>
 
 import {ref} from "vue";
+import Mikan from "./Mikan.vue";
 
 const editIndex = ref(-1)
 
 const dialogVisible = ref(false)
 const backRss = ref()
-
+const mikan = ref()
 
 let show = () => {
   editIndex.value = -1
