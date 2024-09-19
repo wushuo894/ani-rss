@@ -43,7 +43,6 @@ public class TorrentUtil {
         Config config = ConfigUtil.CONFIG;
         Boolean autoDisabled = config.getAutoDisabled();
         Integer downloadCount = config.getDownloadCount();
-        Boolean ova = ani.getOva();
         Boolean backRss = config.getBackRss();
 
         String title = ani.getTitle();
@@ -165,7 +164,7 @@ public class TorrentUtil {
             String savePath = downloadPathList
                     .get(0)
                     .toString();
-            download(ani, reName, savePath, saveTorrent, ova);
+            download(ani, item, savePath, saveTorrent);
             if (master) {
                 currentDownloadCount++;
             }
@@ -470,11 +469,16 @@ public class TorrentUtil {
     /**
      * 下载
      *
-     * @param name
+     * @param ani
+     * @param item
      * @param savePath
      * @param torrentFile
      */
-    public static synchronized void download(Ani ani, String name, String savePath, File torrentFile, Boolean ova) {
+    public static synchronized void download(Ani ani, Item item, String savePath, File torrentFile) {
+        String name = item.getReName();
+        Boolean ova = ani.getOva();
+        Boolean master = item.getMaster();
+        String subgroup = StrUtil.blankToDefault(ani.getSubgroup(), "未知字幕组");
         if (!torrentFile.exists()) {
             log.error("种子下载出现问题 {} {}", name, torrentFile.getAbsolutePath());
             MessageUtil.send(ConfigUtil.CONFIG, ani, StrFormatter.format("种子下载出现问题 {} {}", name, torrentFile.getAbsolutePath()));
@@ -482,7 +486,9 @@ public class TorrentUtil {
         }
         ThreadUtil.sleep(1000);
         savePath = savePath.replace("\\", "/");
-        MessageUtil.send(ConfigUtil.CONFIG, ani, StrFormatter.format("{} 已更新", name));
+        MessageUtil.send(ConfigUtil.CONFIG, ani,
+                StrFormatter.format("[{}] {} 已更新", master ? subgroup : "备用RSS", name)
+        );
         try {
             if (baseDownload.download(name, savePath, torrentFile, ova)) {
                 return;

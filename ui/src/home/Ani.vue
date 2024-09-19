@@ -38,7 +38,7 @@
         </el-form-item>
         <el-form-item label="备用 RSS">
           <div style="display: flex;justify-content: end;width: 100%;">
-            <el-button text bg @click="backRss?.show">管理</el-button>
+            <el-button text bg @click="backRss?.show" icon="EditPen">管理</el-button>
           </div>
         </el-form-item>
         <el-form-item label="日期">

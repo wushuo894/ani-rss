@@ -13,7 +13,7 @@
         <div>
           <popconfirm title="删除选中项?" @confirm="del">
             <template #reference>
-              <el-button icon="Remove" bg text :disabled="!list.filter(it => it.ok).length">删除</el-button>
+              <el-button icon="Remove" bg text :disabled="!list.filter(it => it.ok).length" type="danger">删除</el-button>
             </template>
           </popconfirm>
         </div>
