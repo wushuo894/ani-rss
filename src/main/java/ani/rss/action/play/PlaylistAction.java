@@ -43,7 +43,7 @@ public class PlaylistAction implements BaseAction {
         List<PlayItem> collect = downloadPath.stream()
                 .flatMap(file -> getPlayItem(file).stream()).collect(Collectors.toList());
         collect = CollUtil.distinct(collect, PlayItem::getTitle, false);
-        collect = CollUtil.sort(collect, Comparator.comparingInt(it -> Integer.parseInt(ReUtil.get(s, it.getTitle(), 2))));
+        collect = CollUtil.sort(collect, Comparator.comparingDouble(it -> Double.parseDouble(ReUtil.get(s, it.getTitle(), 2))));
         resultSuccess(collect);
     }
 
