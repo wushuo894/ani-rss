@@ -486,16 +486,12 @@ public class AniUtil {
 
         List<Item> items = new ArrayList<>();
 
-        try {
-            String s = HttpReq.get(url, true)
-                    .thenFunction(HttpResponse::body);
-            items.addAll(getItems(ani, s)
-                    .stream()
-                    .peek(item -> item.setMaster(true))
-                    .collect(Collectors.toList()));
-        } catch (Exception e) {
-            log.error(e.getMessage(), e);
-        }
+        String s = HttpReq.get(url, true)
+                .thenFunction(HttpResponse::body);
+        items.addAll(getItems(ani, s)
+                .stream()
+                .peek(item -> item.setMaster(true))
+                .collect(Collectors.toList()));
 
         Config config = ConfigUtil.CONFIG;
         Boolean qbRenameTitle = config.getQbRenameTitle();
@@ -506,16 +502,12 @@ public class AniUtil {
         List<String> backRss = ani.getBackRss();
         for (String rss : backRss) {
             ThreadUtil.sleep(1000);
-            try {
-                String s = HttpReq.get(rss, true)
-                        .thenFunction(HttpResponse::body);
-                items.addAll(getItems(ani, s)
-                        .stream()
-                        .peek(item -> item.setMaster(false))
-                        .collect(Collectors.toList()));
-            } catch (Exception e) {
-                log.error(e.getMessage(), e);
-            }
+            s = HttpReq.get(rss, true)
+                    .thenFunction(HttpResponse::body);
+            items.addAll(getItems(ani, s)
+                    .stream()
+                    .peek(item -> item.setMaster(false))
+                    .collect(Collectors.toList()));
         }
         return CollUtil.distinct(items, Item::getReName, false);
     }
