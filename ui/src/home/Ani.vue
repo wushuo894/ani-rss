@@ -29,6 +29,9 @@
             <el-button icon="Refresh" bg text @click="getThemoviedbName" :loading="getThemoviedbNameLoading"/>
           </div>
         </el-form-item>
+        <el-form-item label="bgmUrl">
+          <el-input v-model:model-value="ani.bgmUrl" placeholder="https://xxx.xxx"/>
+        </el-form-item>
         <el-form-item label="主 RSS">
           <div style="width: 100%;display: flex;">
             <el-input v-model:model-value="ani.subgroup" style="width: 140px" placeholder="字幕组"/>

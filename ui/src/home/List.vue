@@ -12,7 +12,8 @@
                 <div style="height: 100%;">
                   <img :src="`/api/file?filename=${item['cover']}&s=${authorization()}`" height="130" width="92"
                        :alt="item.title"
-                       style="border-radius: 4px;">
+                       @click="openBgmUrl(item)"
+                       style="border-radius: 4px;cursor: pointer;">
                 </div>
                 <div style="flex-grow: 1;position: relative;">
                   <div style="margin-left: 10px;">
@@ -276,6 +277,16 @@ let setCurrentPage = (page) => {
 
 let yearMonth = () => {
   return new Set(list.value.map(it => `${it.year}-${it.month < 10 ? '0' + it.month : it.month}`).sort((a, b) => a > b ? -1 : 1));
+}
+
+let openBgmUrl = (it)=>{
+  if (it.bgmUrl.length) {
+    window.open(it.bgmUrl)
+    return
+  }
+  if (it.title.length) {
+    window.open(`https://bgm.tv/subject_search/${it.title}?cat=2`)
+  }
 }
 
 defineExpose({
