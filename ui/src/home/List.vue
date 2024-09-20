@@ -80,12 +80,12 @@
                   </div>
                   <div
                       style="display: flex;align-items: flex-end;justify-content:flex-end; flex-direction: column;position: absolute;right: 0;bottom: 0;">
-                    <el-button text @click="playList?.show(item)" bg>
+                    <el-button text @click="playList?.show(item)" bg v-if="showPlaylist">
                       <el-icon>
                         <Files/>
                       </el-icon>
                     </el-button>
-                    <div style="height: 5px;"></div>
+                    <div style="height: 5px;" v-if="showPlaylist"></div>
                     <el-button text @click="edit?.show(item)" bg>
                       <el-icon>
                         <EditIcon/>
@@ -166,6 +166,7 @@ const edit = ref()
 const pageSize = ref(40)
 const loading = ref(true)
 const playList = ref()
+const showPlaylist = ref(false)
 
 const updatePageSize = (size) => {
   window.localStorage.setItem('pageSize', size.toString())
@@ -218,12 +219,16 @@ const delAni = (ani) => {
 const list = ref([])
 
 const getList = () => {
-  api.get('/api/ani')
+  api.get('/api/config')
       .then(res => {
-        list.value = res.data
-      })
-      .finally(() => {
-        loading.value = false
+        showPlaylist.value = res.data.showPlaylist
+        api.get('/api/ani')
+            .then(res => {
+              list.value = res.data
+            })
+            .finally(() => {
+              loading.value = false
+            })
       })
 }
 
@@ -279,13 +284,14 @@ let yearMonth = () => {
   return new Set(list.value.map(it => `${it.year}-${it.month < 10 ? '0' + it.month : it.month}`).sort((a, b) => a > b ? -1 : 1));
 }
 
-let openBgmUrl = (it)=>{
+let openBgmUrl = (it) => {
   if (it.bgmUrl.length) {
     window.open(it.bgmUrl)
     return
   }
   if (it.title.length) {
-    window.open(`https://bgm.tv/subject_search/${it.title}?cat=2`)
+    let title = it.title.replace(/\(\d{4}\)$/g, "").trim()
+    window.open(`https://bgm.tv/subject_search/${title}?cat=2`)
   }
 }
 

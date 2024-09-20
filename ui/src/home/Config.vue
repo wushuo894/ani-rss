@@ -17,22 +17,21 @@
           </div>
         </el-tab-pane>
         <el-tab-pane label="全局排除" :lazy="true">
+          <el-form>
+            <el-form-item label="默认开启全局排除">
+              <el-switch v-model:model-value="config.enabledExclude" :disabled="config.importExclude"/>
+            </el-form-item>
+            <el-form-item label="默认导入全局排除">
+              <el-switch v-model:model-value="config.importExclude" :disabled="config.enabledExclude"/>
+            </el-form-item>
+          </el-form>
           <Exclude ref="exclude" v-model:exclude="config.exclude" :show-text="true"/>
         </el-tab-pane>
         <el-tab-pane label="代理设置" :lazy="true">
           <Proxy v-model:config="config"/>
         </el-tab-pane>
         <el-tab-pane label="登录设置" :lazy="true">
-          <el-form label-width="auto" @submit="(event)=>{
-                      event.preventDefault()
-                   }">
-            <el-form-item label="用户名">
-              <el-input v-model:model-value="config.login.username"/>
-            </el-form-item>
-            <el-form-item label="密码">
-              <el-input v-model:model-value="config.login.password"/>
-            </el-form-item>
-          </el-form>
+          <LoginConfig :config="config"/>
         </el-tab-pane>
         <el-tab-pane label="通知" :lazy="true">
           <div style="margin: 4px;">
@@ -62,6 +61,7 @@ import Proxy from "../config/Proxy.vue";
 import Download from "../config/Download.vue";
 import Basic from "../config/Basic.vue";
 import About from "../config/About.vue";
+import LoginConfig from "../config/LoginConfig.vue";
 
 const dialogVisible = ref(false)
 const configButtonLoading = ref(false)
@@ -117,7 +117,10 @@ const config = ref({
   'webHook': false,
   'qbRenameTitle': true,
   'qbUseDownloadPath': false,
-  'seasonName': 'Season 1'
+  'seasonName': 'Season 1',
+  'showPlaylist': false,
+  'enabledExclude': false,
+  'importExclude': false
 })
 
 const activeName = ref('download')
