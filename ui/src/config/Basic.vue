@@ -63,6 +63,9 @@
       <el-form-item label="自动跳过X.5集">
         <el-switch v-model:model-value="props.config.skip5"/>
       </el-form-item>
+      <el-form-item label="显示视频列表">
+        <el-switch v-model:model-value="props.config.showPlaylist"/>
+      </el-form-item>
       <el-form-item label="备用RSS">
         <div>
           <el-switch v-model:model-value="props.config.backRss"/>
@@ -76,22 +79,6 @@
               <br>
               若开启了 <strong>自动删除</strong> 将会 <strong>自动替换</strong> 备用rss 为 主rss 版本
               (需要映射路径与下载器一致，否则若旧视频为mp4新视频为mkv时无法完成自动删除旧视频)
-            </el-text>
-          </div>
-        </div>
-      </el-form-item>
-      <el-form-item label="IP白名单">
-        <div style="width: 100%;">
-          <div>
-            <el-switch v-model:model-value="config['ipWhitelist']"/>
-          </div>
-          <div style="width: 100%;">
-            <el-input style="width: 100%" type="textarea"
-                      :disabled="!config['ipWhitelist']"
-                      :placeholder="'127.0.0.1\n192.168.1.0/24'" v-model:model-value="config['ipWhitelistStr']"/>
-            <br>
-            <el-text class="mx-1" size="small">
-              对IP白名单跳过身份验证, 换行可填写多个
             </el-text>
           </div>
         </div>

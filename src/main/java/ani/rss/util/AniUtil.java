@@ -212,6 +212,9 @@ public class AniUtil {
         Config config = ConfigUtil.CONFIG;
         Boolean titleYear = config.getTitleYear();
         Boolean tmdb = config.getTmdb();
+        Boolean enabledExclude = config.getEnabledExclude();
+        Boolean importExclude = config.getImportExclude();
+        List<String> exclude = config.getExclude();
 
         try {
             AniUtil.getBangumiInfo(ani, true, true);
@@ -231,6 +234,13 @@ public class AniUtil {
             themoviedbName = StrFormatter.format("{} ({})", themoviedbName, year);
         }
 
+        if (importExclude) {
+            exclude = new ArrayList<>(exclude);
+            exclude.addAll(ani.getExclude());
+            exclude = exclude.stream().distinct().collect(Collectors.toList());
+            ani.setExclude(exclude);
+        }
+
         title = title.replace("1/2", "½");
         var ls = List.of("/", "\\", ":", "?", "*", "|", ">", "<", "\"");
         for (String l : ls) {
@@ -239,6 +249,7 @@ public class AniUtil {
         title = title.trim();
 
         ani
+                .setGlobalExclude(enabledExclude)
                 .setType(type)
                 .setUrl(url.trim())
                 .setSeason(season)

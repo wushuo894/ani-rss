@@ -175,6 +175,16 @@ public class Config implements Serializable {
     private List<String> exclude;
 
     /**
+     * 默认导入全局排除
+     */
+    private Boolean importExclude;
+
+    /**
+     * 默认启用全局排除
+     */
+    private Boolean enabledExclude;
+
+    /**
      * telegram
      */
     private Boolean telegram;
@@ -233,5 +243,10 @@ public class Config implements Serializable {
      * 季命名方式
      */
     private String seasonName;
+
+    /**
+     * 显示已下载视频列表
+     */
+    private Boolean showPlaylist;
 
 }
