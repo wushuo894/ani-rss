@@ -1,6 +1,5 @@
-package ani.rss.action.play;
+package ani.rss.action;
 
-import ani.rss.action.BaseAction;
 import ani.rss.annotation.Auth;
 import ani.rss.annotation.Path;
 import ani.rss.download.BaseDownload;

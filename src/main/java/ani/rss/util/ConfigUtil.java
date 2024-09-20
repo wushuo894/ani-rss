@@ -68,6 +68,8 @@ public class ConfigUtil {
                 )
                 .setLogin(new Login().setUsername("admin").setPassword(password))
                 .setExclude(List.of("720"))
+                .setImportExclude(false)
+                .setEnabledExclude(false)
                 .setTelegram(false)
                 .setTelegramChatId("")
                 .setTelegramBotToken("")
@@ -79,7 +81,8 @@ public class ConfigUtil {
                 .setWebHookBody("")
                 .setWebHookUrl("")
                 .setWebHookMethod("POST")
-                .setSeasonName("Season 1");
+                .setSeasonName("Season 1")
+                .setShowPlaylist(true);
     }
 
     private static final Gson GSON = new GsonBuilder()
