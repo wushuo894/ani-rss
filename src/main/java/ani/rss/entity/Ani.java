@@ -107,6 +107,8 @@ public class Ani implements Serializable {
 
     private String bangumiId;
 
+    private String bgmUrl;
+
     /**
      * 自定义下载位置
      */
@@ -134,7 +136,8 @@ public class Ani implements Serializable {
                 .setCurrentEpisodeNumber(0)
                 .setTotalEpisodeNumber(0)
                 .setMatch(List.of())
-                .setExclude(List.of("720"));
+                .setExclude(List.of("720"))
+                .setBgmUrl("");
         return newAni;
     }
 }

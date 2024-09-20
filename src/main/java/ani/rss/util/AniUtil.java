@@ -587,6 +587,8 @@ public class AniUtil {
                         return;
                     }
 
+                    ani.setBgmUrl(bgmUrl);
+
                     HttpReq.get(bgmUrl, true)
                             .then(response -> {
                                 org.jsoup.nodes.Document parse = Jsoup.parse(response.body());

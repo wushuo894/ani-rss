@@ -121,7 +121,8 @@ const ani = ref({
   'year': 1970,
   'month': 1,
   'subgroup': '',
-  'backRss': []
+  'backRss': [],
+  'bgmUrl': ''
 })
 
 const rssButtonLoading = ref(false)
