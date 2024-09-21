@@ -53,7 +53,11 @@
                                 <el-text class="mx-1" size="small">{{ group['updateDay'] }}</el-text>
                               </div>
                               <div style="display: flex;align-items: center;margin-right: 14px;margin-left: 4px;">
-                                <el-button text bg @click.stop="add(group['rss'])" icon="Plus">
+                                <el-button text bg @click.stop="add({
+                                  'title':it.title,
+                                  'group':group.label,
+                                  'url':group['rss']
+                                })" icon="Plus">
                                   添加
                                 </el-button>
                               </div>
@@ -92,7 +96,6 @@
 import {ref} from "vue";
 import api from "../api.js";
 import {ElMessage, ElText} from "element-plus";
-import {Plus} from "@element-plus/icons-vue";
 
 let groupLoading = ref(false)
 let activeName = ref("")

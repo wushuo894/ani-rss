@@ -1,7 +1,7 @@
 <template>
-  <Mikan ref="mikan" @add="url => {
+  <Mikan ref="mikan" @add="args => {
     plus()
-    backRss[editIndex] = url
+    backRss[editIndex] = args.url
   }"/>
   <el-dialog v-model="dialogVisible" title="备用订阅" center v-if="dialogVisible">
     <div style="display: flex;width: 100%;">
@@ -21,7 +21,7 @@
               {{ backRss[it.$index] }}
             </div>
             <div v-else>
-              <el-input v-model:model-value="backRss[it.$index]" placeholder="https://xxx.xxx"/>
+              <el-input v-model:model-value="backRss[it.$index]" placeholder="https://xxx.xxx" type="textarea"/>
             </div>
           </template>
         </el-table-column>

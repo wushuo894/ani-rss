@@ -1,6 +1,10 @@
 <template>
   <Items ref="items"/>
   <BackRss ref="backRss" :ani="props.ani"/>
+  <Mikan ref="mikanRef" @add="args => {
+    ani.subgroup = args.group
+    ani.url = args.url
+  }"/>
   <div style="height: 500px;">
     <el-scrollbar style="padding: 0 12px;" height="500px;" ref="scrollbar">
       <el-form label-width="auto"
@@ -37,6 +41,8 @@
             <el-input v-model:model-value="ani.subgroup" style="width: 140px" placeholder="字幕组"/>
             <div style="width: 6px;"></div>
             <el-input v-model:model-value="ani.url" placeholder="https://xxx.xxx"/>
+            <div style="width: 6px;"></div>
+            <el-button bg text @click="mikanRef?.show" icon="VideoCamera"/>
           </div>
         </el-form-item>
         <el-form-item label="备用 RSS">
@@ -129,6 +135,9 @@ import api from "../api.js";
 import {ElMessage} from "element-plus";
 import Popconfirm from "../other/Popconfirm.vue";
 import BackRss from "./BackRss.vue";
+import Mikan from "./Mikan.vue";
+
+const mikanRef = ref()
 
 let backRss = ref()
 let date = ref()

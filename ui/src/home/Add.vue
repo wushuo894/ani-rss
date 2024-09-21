@@ -1,5 +1,5 @@
 <template>
-  <Mikan ref="mikan" @add="args => ani.url = args"/>
+  <Mikan ref="mikan" @add="args => ani.url = args.url"/>
   <el-dialog v-model="dialogVisible" title="添加订阅" center v-if="dialogVisible">
     <div v-if="showRss" @keydown.enter="getRss">
       <el-tabs tab-position="left" v-model="activeName">
