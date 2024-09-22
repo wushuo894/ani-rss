@@ -47,4 +47,9 @@ public class Item implements Serializable {
      * 主 rss
      */
     private Boolean master;
+
+    /**
+     * 字幕组
+     */
+    private String subgroup;
 }
