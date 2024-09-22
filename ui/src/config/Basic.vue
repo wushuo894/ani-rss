@@ -77,7 +77,7 @@
         </div>
       </el-form-item>
       <el-form-item label="BgmToken">
-        <div>
+        <div style="width: 100%;">
           <el-input v-model:model-value="props.config.bgmToken"/>
           <div>
             <el-text class="mx-1" size="small">
