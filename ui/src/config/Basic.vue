@@ -76,6 +76,19 @@
           </el-text>
         </div>
       </el-form-item>
+      <el-form-item label="BgmToken">
+        <div>
+          <el-input v-model:model-value="props.config.bgmToken"/>
+          <div>
+            <el-text class="mx-1" size="small">
+              你可以在 <a target="_blank" href="https://next.bgm.tv/demo/access-token">https://next.bgm.tv/demo/access-token</a>
+              生成一个 Access Token
+              <br>
+              <a target="_blank" href="http://docs.wushuo.top/docs#emby-webhook通知设置">支持自动点格子</a>
+            </el-text>
+          </div>
+        </div>
+      </el-form-item>
       <el-form-item label="备用RSS">
         <div>
           <el-switch v-model:model-value="props.config.backRss"/>
