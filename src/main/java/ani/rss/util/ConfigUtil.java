@@ -82,7 +82,8 @@ public class ConfigUtil {
                 .setWebHookUrl("")
                 .setWebHookMethod("POST")
                 .setSeasonName("Season 1")
-                .setShowPlaylist(true);
+                .setShowPlaylist(true)
+                .setOmit(false);
     }
 
     private static final Gson GSON = new GsonBuilder()
