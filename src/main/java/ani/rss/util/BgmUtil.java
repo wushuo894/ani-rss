@@ -1,5 +1,6 @@
 package ani.rss.util;
 
+import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.ContentType;
 import cn.hutool.http.HttpResponse;
 import com.google.gson.Gson;
@@ -29,12 +30,17 @@ public class BgmUtil {
                 .form("type", 2)
                 .form("responseGroup", "small")
                 .thenFunction(res -> {
+                    if (!res.isOk()) {
+                        return "";
+                    }
+
                     JsonObject jsonObject = gson.fromJson(res.body(), JsonObject.class);
                     List<JsonElement> list = jsonObject.get("list").getAsJsonArray().asList();
                     if (list.isEmpty()) {
                         return "";
                     }
 
+                    // 优先使用名称完全匹配的
                     for (JsonElement jsonElement : list) {
                         JsonObject itemObject = jsonElement.getAsJsonObject();
                         String nameCn = itemObject.get("name_cn").getAsString();
@@ -42,6 +48,7 @@ public class BgmUtil {
                             return itemObject.get("id").getAsString();
                         }
                     }
+                    // 次之使用第一个
                     return list.get(0).getAsJsonObject().get("id").getAsString();
                 });
     }
@@ -74,14 +81,22 @@ public class BgmUtil {
                 .form("subject_id", subjectId)
                 .thenFunction(res -> {
                     List<JsonElement> list = gson.fromJson(res.body(), JsonObject.class).get("data").getAsJsonArray().asList();
+                    String epId = "";
+                    String sortId = "";
                     for (JsonElement jsonElement : list) {
                         JsonObject itemObject = jsonElement.getAsJsonObject();
                         double ep = itemObject.get("ep").getAsDouble();
+                        double sort = itemObject.get("sort").getAsDouble();
                         if (ep == e) {
-                            return itemObject.get("id").getAsString();
+                            epId = itemObject.get("id").getAsString();
+                            break;
+                        }
+                        if (sort == e) {
+                            sortId = itemObject.get("id").getAsString();
+                            break;
                         }
                     }
-                    return "";
+                    return StrUtil.blankToDefault(epId, sortId);
                 });
     }
 

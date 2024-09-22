@@ -17,6 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
 
 @Slf4j
 @Auth(value = false)
@@ -53,20 +54,34 @@ public class WebHookAction implements BaseAction {
 
         response.sendOk();
 
-        if (s > 1) {
-            seriesName = StrFormatter.format("{} 第{}季", ReUtil.get(regStr, fileName, 1), Convert.numberToChinese(s, false));
-        }
-
         int type = "item.markunplayed".equalsIgnoreCase(body.get("Event").getAsString()) ? 0 : 2;
 
-        String finalSeriesName = seriesName;
+        AtomicReference<String> seriesNameAtomic = new AtomicReference<>(seriesName);
         ThreadUtil.execute(new Runnable() {
             @Override
             public synchronized void run() {
                 log.info("{} 标记为 [{}]", fileName, List.of("未看过", "想看", "看过").get(type));
-                String subjectId = BgmUtil.getSubjectId(finalSeriesName);
+                String episodeId = "";
+                String subjectId = "";
+
+                // 往后查三季 如果没有则停止
+                for (int i = s; i <= s + 3; i++) {
+                    if (i > 1) {
+                        seriesNameAtomic.set(StrFormatter.format("{} 第{}季", seriesName, Convert.numberToChinese(i, false)));
+                    }
+                    subjectId = BgmUtil.getSubjectId(seriesNameAtomic.get());
+                    episodeId = BgmUtil.getEpisodeId(subjectId, e);
+                    if (StrUtil.isNotBlank(episodeId)) {
+                        break;
+                    }
+                }
+                if (StrUtil.isBlank(episodeId)) {
+                    log.info("获取bgm对应剧集失败");
+                    return;
+                }
+                log.debug("subjectId: {}", subjectId);
+                log.debug("episodeId: {}", episodeId);
                 BgmUtil.collections(subjectId);
-                String episodeId = BgmUtil.getEpisodeId(subjectId, e);
                 BgmUtil.collectionsEpisodes(episodeId, type);
             }
         });
