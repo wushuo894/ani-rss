@@ -23,6 +23,7 @@ public class Ani implements Serializable {
 
     /**
      * 备用rss
+     * @deprecated
      */
     private List<String> backRss;
 
