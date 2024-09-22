@@ -7,6 +7,7 @@ import ani.rss.util.BgmUtil;
 import ani.rss.util.ConfigUtil;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.text.StrFormatter;
+import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.core.util.ReUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.server.HttpServerRequest;
@@ -22,6 +23,10 @@ import java.io.IOException;
 public class WebHookAction implements BaseAction {
     @Override
     public synchronized void doAction(HttpServerRequest request, HttpServerResponse response) throws IOException {
+        JsonObject body = getBody(JsonObject.class);
+
+        log.debug("webhook: {}", body.toString());
+
         Config config = ConfigUtil.CONFIG;
         String bgmToken = config.getBgmToken();
         if (StrUtil.isBlank(bgmToken)) {
@@ -30,7 +35,7 @@ public class WebHookAction implements BaseAction {
             return;
         }
 
-        JsonObject item = getBody(JsonObject.class).getAsJsonObject("Item");
+        JsonObject item = body.getAsJsonObject("Item");
         String seriesName = item.get("SeriesName").getAsString();
         String fileName = item.get("FileName").getAsString();
         String regStr = "S(\\d+)E(\\d+(\\.5)?)";
@@ -48,12 +53,18 @@ public class WebHookAction implements BaseAction {
         if (s > 1) {
             seriesName = StrFormatter.format("{} 第{}季", ReUtil.get(regStr, fileName, 1), Convert.numberToChinese(s, false));
         }
+        response.sendOk();
 
-        log.info("打格子 {}", fileName);
-
-        String subjectId = BgmUtil.getSubjectId(seriesName);
-        BgmUtil.collections(subjectId);
-        String episodeId = BgmUtil.getEpisodeId(subjectId, e);
-        BgmUtil.collectionsEpisodes(episodeId);
+        String finalSeriesName = seriesName;
+        ThreadUtil.execute(new Runnable() {
+            @Override
+            public synchronized void run() {
+                log.info("打格子 {}", fileName);
+                String subjectId = BgmUtil.getSubjectId(finalSeriesName);
+                BgmUtil.collections(subjectId);
+                String episodeId = BgmUtil.getEpisodeId(subjectId, e);
+                BgmUtil.collectionsEpisodes(episodeId);
+            }
+        });
     }
 }
