@@ -46,6 +46,14 @@ public class WebHookAction implements BaseAction {
             return;
         }
         int s = Integer.parseInt(ReUtil.get(regStr, fileName, 1));
+
+        // 番外
+        if (s < 1) {
+            response.sendOk();
+            return;
+        }
+
+        // x.5
         double e = Double.parseDouble(ReUtil.get(regStr, fileName, 2));
         if ((int) e == e - 0.5) {
             response.sendOk();
@@ -64,8 +72,8 @@ public class WebHookAction implements BaseAction {
                 String episodeId = "";
                 String subjectId = "";
 
-                // 往后查三季 如果没有则停止
-                for (int i = s; i <= s + 3; i++) {
+                // 往后查两季 如果没有则停止
+                for (int i = s; i <= s + 2; i++) {
                     if (i > 1) {
                         seriesNameAtomic.set(StrFormatter.format("{} 第{}季", seriesName, Convert.numberToChinese(i, false)));
                     }
@@ -74,6 +82,7 @@ public class WebHookAction implements BaseAction {
                     if (StrUtil.isNotBlank(episodeId)) {
                         break;
                     }
+                    ThreadUtil.sleep(1000L);
                 }
                 if (StrUtil.isBlank(episodeId)) {
                     log.info("获取bgm对应剧集失败");
