@@ -240,6 +240,7 @@ qbittorrent:
     url: http://[IP]:7789/api/web_hook
     请求内容类型: application/json
     勾选: 播放
+    将媒体库事件限制为：番剧
 
 ### ip白名单
 
