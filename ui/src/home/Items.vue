@@ -1,5 +1,5 @@
-<template>
-  <el-dialog v-model="dialogVisible" title="预览" center v-if="dialogVisible">
+<template class="items">
+  <el-dialog v-model="dialogVisible" title="预览" center v-if="dialogVisible" class="items-dialog">
     <div style="width: 100%;" v-loading="loading">
       <div style="margin: 4px 0;display: flex;">
         <el-select v-model:model-value="select" style="max-width: 120px;">
@@ -101,3 +101,11 @@ let show = (ani) => {
 
 defineExpose({show})
 </script>
+
+<style>
+@media (min-width: 900px) {
+  .items-dialog {
+    width: 1000px;
+  }
+}
+</style>
