@@ -239,7 +239,7 @@ qbittorrent:
     名称: bgm
     url: http://[IP]:7789/api/web_hook
     请求内容类型: application/json
-    勾选: 播放
+    勾选: 播放, 用户-标记为已播放
     将媒体库事件限制为：番剧
 
 ### ip白名单
