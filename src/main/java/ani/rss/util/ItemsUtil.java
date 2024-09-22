@@ -7,10 +7,12 @@ import cn.hutool.cache.Cache;
 import cn.hutool.cache.CacheUtil;
 import cn.hutool.core.text.StrFormatter;
 import cn.hutool.core.util.ArrayUtil;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+@Slf4j
 public class ItemsUtil {
 
     static Cache<String, String> messageCache = CacheUtil.newFIFOCache(40960);
@@ -47,6 +49,7 @@ public class ItemsUtil {
             if (messageCache.containsKey(s)) {
                 continue;
             }
+            log.info(s);
             // 缓存一天 不重复发送
             messageCache.put(s, "1", TimeUnit.DAYS.toDays(1));
             MessageUtil.send(config, ani, s);
