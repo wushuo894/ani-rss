@@ -520,7 +520,9 @@ public class AniUtil {
                     .peek(item -> item.setMaster(false))
                     .collect(Collectors.toList()));
         }
-        return CollUtil.distinct(items, Item::getReName, false);
+        items = CollUtil.distinct(items, Item::getReName, false);
+        items.sort(Comparator.comparingDouble(Item::getEpisode));
+        return items;
     }
 
     /**
