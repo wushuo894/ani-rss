@@ -1,5 +1,5 @@
 <template>
-  <el-dialog v-model="dialogVisible" title="日志" center v-if="dialogVisible" @close="close">
+  <el-dialog v-model="dialogVisible" title="日志" center v-if="dialogVisible" @close="close" class="logs-dialog">
     <div style="width: 100%;justify-content: space-between;align-items: center;" class="auto">
       <el-checkbox-group v-model:model-value="selectLevels" @change="()=>getHtmlLogs()">
         <el-checkbox v-for="item in levels" :label="item" size="large"/>
@@ -127,6 +127,11 @@ defineExpose({show})
 @media (min-width: 1000px) {
   .auto {
     display: flex;
+  }
+}
+@media (min-width: 900px) {
+  .logs-dialog {
+    width: 1000px;
   }
 }
 </style>
