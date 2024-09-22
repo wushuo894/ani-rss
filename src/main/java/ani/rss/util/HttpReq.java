@@ -41,6 +41,32 @@ public class HttpReq {
         return req;
     }
 
+    public static HttpRequest put(String url) {
+        return put(url, false);
+    }
+
+    public static HttpRequest put(String url, Boolean proxy) {
+        HttpRequest req = HttpRequestPlus.put(url);
+        config(req);
+        if (proxy) {
+            setProxy(req);
+        }
+        return req;
+    }
+
+    public static HttpRequest delete(String url) {
+        return delete(url, false);
+    }
+
+    public static HttpRequest delete(String url, Boolean proxy) {
+        HttpRequest req = HttpRequestPlus.delete(url);
+        config(req);
+        if (proxy) {
+            setProxy(req);
+        }
+        return req;
+    }
+
     /**
      * 设置代理
      *

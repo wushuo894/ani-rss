@@ -11,7 +11,6 @@ import cn.hutool.core.lang.Validator;
 import cn.hutool.crypto.digest.MD5;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.JsonSyntaxException;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.File;
@@ -83,7 +82,8 @@ public class ConfigUtil {
                 .setWebHookMethod("POST")
                 .setSeasonName("Season 1")
                 .setShowPlaylist(true)
-                .setOmit(false);
+                .setOmit(false)
+                .setBgmToken("");
     }
 
     private static final Gson GSON = new GsonBuilder()

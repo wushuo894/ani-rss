@@ -120,7 +120,8 @@ const config = ref({
   'seasonName': 'Season 1',
   'showPlaylist': false,
   'enabledExclude': false,
-  'importExclude': false
+  'importExclude': false,
+  'bgmToken': ''
 })
 
 const activeName = ref('download')
