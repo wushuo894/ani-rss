@@ -1,5 +1,5 @@
 <template>
-  <el-dialog v-model="dialogVisible" title="管理" center v-if="dialogVisible">
+  <el-dialog v-model="dialogVisible" title="管理" center v-if="dialogVisible" class="manage-dialog">
     <div style="min-height: 300px;" v-loading="loading">
       <div style="display: flex;justify-content: space-between;width: 100%;">
         <dev>
@@ -116,3 +116,11 @@ const del = () => {
 defineExpose({show})
 const emit = defineEmits(['load'])
 </script>
+
+<style>
+@media (min-width: 900px) {
+  .manage-dialog {
+    width: 1000px;
+  }
+}
+</style>
