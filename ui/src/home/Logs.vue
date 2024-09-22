@@ -129,7 +129,7 @@ defineExpose({show})
     display: flex;
   }
 }
-@media (min-width: 900px) {
+@media (min-width: 1400px) {
   .logs-dialog {
     width: 1000px;
   }

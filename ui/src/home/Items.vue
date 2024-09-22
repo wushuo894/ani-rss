@@ -103,7 +103,7 @@ defineExpose({show})
 </script>
 
 <style>
-@media (min-width: 900px) {
+@media (min-width: 1400px) {
   .items-dialog {
     width: 1000px;
   }
