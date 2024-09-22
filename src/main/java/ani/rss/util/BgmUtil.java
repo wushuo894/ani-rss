@@ -3,6 +3,7 @@ package ani.rss.util;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.ContentType;
 import cn.hutool.http.HttpResponse;
+import cn.hutool.json.JSONUtil;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -33,8 +34,17 @@ public class BgmUtil {
                     if (!res.isOk()) {
                         return "";
                     }
+                    String body = res.body();
+                    if (!JSONUtil.isTypeJSON(body)) {
+                        return "";
+                    }
 
-                    JsonObject jsonObject = gson.fromJson(res.body(), JsonObject.class);
+                    JsonObject jsonObject = gson.fromJson(body, JsonObject.class);
+                    if (Objects.nonNull(jsonObject.get("code"))) {
+                        if (jsonObject.get("code").getAsInt() == 404) {
+                            return "";
+                        }
+                    }
                     List<JsonElement> list = jsonObject.get("list").getAsJsonArray().asList();
                     if (list.isEmpty()) {
                         return "";
@@ -80,11 +90,26 @@ public class BgmUtil {
                 .header("Authorization", "Bearer " + ConfigUtil.CONFIG.getBgmToken())
                 .form("subject_id", subjectId)
                 .thenFunction(res -> {
-                    List<JsonElement> list = gson.fromJson(res.body(), JsonObject.class).get("data").getAsJsonArray().asList();
+                    if (!res.isOk()) {
+                        return "";
+                    }
+
+                    String body = res.body();
+                    if (!JSONUtil.isTypeJSON(body)) {
+                        return "";
+                    }
+
+                    List<JsonElement> list = gson.fromJson(body, JsonObject.class).get("data").getAsJsonArray().asList();
                     String epId = "";
                     String sortId = "";
                     for (JsonElement jsonElement : list) {
                         JsonObject itemObject = jsonElement.getAsJsonObject();
+
+                        int type = itemObject.get("type").getAsInt();
+                        if (type > 0) {
+                            continue;
+                        }
+
                         double ep = itemObject.get("ep").getAsDouble();
                         double sort = itemObject.get("sort").getAsDouble();
                         if (ep == e) {
