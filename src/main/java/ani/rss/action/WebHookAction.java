@@ -16,6 +16,7 @@ import com.google.gson.JsonObject;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
+import java.util.List;
 
 @Slf4j
 @Auth(value = false)
@@ -50,20 +51,23 @@ public class WebHookAction implements BaseAction {
             return;
         }
 
+        response.sendOk();
+
         if (s > 1) {
             seriesName = StrFormatter.format("{} 第{}季", ReUtil.get(regStr, fileName, 1), Convert.numberToChinese(s, false));
         }
-        response.sendOk();
+
+        int type = "item.markunplayed".equalsIgnoreCase(body.get("Event").getAsString()) ? 0 : 2;
 
         String finalSeriesName = seriesName;
         ThreadUtil.execute(new Runnable() {
             @Override
             public synchronized void run() {
-                log.info("打格子 {}", fileName);
+                log.info("{} 标记为 [{}]", fileName, List.of("未看过", "想看", "看过").get(type));
                 String subjectId = BgmUtil.getSubjectId(finalSeriesName);
                 BgmUtil.collections(subjectId);
                 String episodeId = BgmUtil.getEpisodeId(subjectId, e);
-                BgmUtil.collectionsEpisodes(episodeId);
+                BgmUtil.collectionsEpisodes(episodeId, type);
             }
         });
     }
