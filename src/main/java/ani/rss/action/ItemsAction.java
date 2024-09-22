@@ -30,6 +30,7 @@ public class ItemsAction implements BaseAction {
             File torrent = TorrentUtil.getTorrent(ani, item);
             if (torrent.exists()) {
                 item.setLocal(true);
+                continue;
             }
             if (TorrentUtil.itemDownloaded(ani, item, false)) {
                 item.setLocal(true);

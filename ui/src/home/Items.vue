@@ -13,13 +13,20 @@
       </div>
       <el-scrollbar style="padding: 0 12px">
         <el-table :data="data.items.filter(selectItems.filter(it => it.label === select)[0].fun)" height="500">
-          <el-table-column label="本地是否存在" min-width="100">
+          <el-table-column label="本地存在" min-width="100">
             <template #default="it">
               {{ data.items[it.$index].local ? '是' : '否' }}
             </template>
           </el-table-column>
+          <el-table-column label="主RSS" min-width="80">
+            <template #default="it">
+              {{ data.items[it.$index]['master'] ? '是' : '否' }}
+            </template>
+          </el-table-column>
+          <el-table-column prop="subgroup" label="字幕组" min-width="120"/>
           <el-table-column prop="title" label="标题" min-width="400"/>
           <el-table-column prop="reName" label="重命名" min-width="280"/>
+          <el-table-column prop="infoHash" label="InfoHash" min-width="360"/>
           <el-table-column prop="size" label="大小" width="120"/>
           <el-table-column label="种子" width="90">
             <template #default="it">
