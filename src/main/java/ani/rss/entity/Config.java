@@ -254,4 +254,9 @@ public class Config implements Serializable {
      */
     private Boolean omit;
 
+    /**
+     * BgmToken
+     */
+    private String bgmToken;
+
 }
