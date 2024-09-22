@@ -40,10 +40,10 @@ public class ItemsUtil {
         String title = ani.getTitle();
 
         for (int i = min; i <= max; i++) {
-            if (ArrayUtil.contains(array, i + 1)) {
+            if (ArrayUtil.contains(array, i)) {
                 continue;
             }
-            String s = StrFormatter.format("{} 缺少 S{}E{}", title, String.format("%02d", season), String.format("%02d", i));
+            String s = StrFormatter.format("缺少集数 {} S{}E{}", title, String.format("%02d", season), String.format("%02d", i));
             if (messageCache.containsKey(s)) {
                 continue;
             }
