@@ -10,6 +10,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+/**
+ * BGM
+ */
 public class BgmUtil {
     private static final String host = "https://api.bgm.tv";
     private static final Gson gson = new Gson();
@@ -17,8 +20,8 @@ public class BgmUtil {
     /**
      * 查找番剧id
      *
-     * @param name
-     * @return
+     * @param name 名称
+     * @return 番剧id
      */
     public static String getSubjectId(String name) {
         return HttpReq.get(host + "/search/subject/" + name, true)
@@ -46,7 +49,7 @@ public class BgmUtil {
     /**
      * 收藏番剧
      *
-     * @param subjectId
+     * @param subjectId 番剧id
      */
     public static void collections(String subjectId) {
         Objects.requireNonNull(subjectId);
@@ -60,9 +63,9 @@ public class BgmUtil {
     /**
      * 获取 EpisodeId
      *
-     * @param subjectId
-     * @param e
-     * @return
+     * @param subjectId 番剧id
+     * @param e         集数
+     * @return 集id
      */
     public static String getEpisodeId(String subjectId, Double e) {
         Objects.requireNonNull(subjectId);
@@ -83,20 +86,18 @@ public class BgmUtil {
     }
 
     /**
-     * 标记为看过
+     * 标记
      *
-     * @param episodeId
+     * @param episodeId 集id
+     * @param type      0 未看过, 1 想看, 2 看过
      */
-    public static void collectionsEpisodes(String episodeId) {
+    public static void collectionsEpisodes(String episodeId, Integer type) {
         Objects.requireNonNull(episodeId);
         HttpReq.put(host + "/v0/users/-/collections/-/episodes/" + episodeId, true)
                 .header("Authorization", "Bearer " + ConfigUtil.CONFIG.getBgmToken())
                 .contentType(ContentType.JSON.getValue())
-                .body(gson.toJson(Map.of("type", 2)))
-                .thenFunction(res -> {
-                    System.out.println(res.body());
-                    return "";
-                });
+                .body(gson.toJson(Map.of("type", type)))
+                .thenFunction(HttpResponse::isOk);
     }
 
 
