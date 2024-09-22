@@ -27,6 +27,11 @@ public class Ani implements Serializable {
     private List<String> backRss;
 
     /**
+     * 备用rss
+     */
+    private List<BackRss> backRssList;
+
+    /**
      * 标题
      */
     private String title;
@@ -121,9 +126,10 @@ public class Ani implements Serializable {
 
     public static Ani bulidAni() {
         Ani newAni = new Ani();
-        newAni
+        return newAni
                 .setId(UUID.fastUUID().toString())
                 .setBackRss(new ArrayList<>())
+                .setBackRssList(new ArrayList<>())
                 .setOffset(0)
                 .setYear(1970)
                 .setMonth(1)
@@ -137,7 +143,14 @@ public class Ani implements Serializable {
                 .setTotalEpisodeNumber(0)
                 .setMatch(List.of())
                 .setExclude(List.of("720"))
-                .setBgmUrl("");
-        return newAni;
+                .setBgmUrl("")
+                .setSubgroup("");
+    }
+
+    @Data
+    @Accessors(chain = true)
+    public static class BackRss {
+        private String label;
+        private String url;
     }
 }

@@ -479,7 +479,11 @@ public class TorrentUtil {
         String name = item.getReName();
         Boolean ova = ani.getOva();
         Boolean master = item.getMaster();
-        String subgroup = StrUtil.blankToDefault(ani.getSubgroup(), "未知字幕组");
+        String subgroup = item.getSubgroup();
+
+        Config config = ConfigUtil.CONFIG;
+        Boolean backRss = config.getBackRss();
+
         if (!torrentFile.exists()) {
             log.error("种子下载出现问题 {} {}", name, torrentFile.getAbsolutePath());
             MessageUtil.send(ConfigUtil.CONFIG, ani, StrFormatter.format("种子下载出现问题 {} {}", name, torrentFile.getAbsolutePath()));
@@ -487,9 +491,14 @@ public class TorrentUtil {
         }
         ThreadUtil.sleep(1000);
         savePath = savePath.replace("\\", "/");
-        MessageUtil.send(ConfigUtil.CONFIG, ani,
-                StrFormatter.format("[{}] {} 已更新", master ? subgroup : "备用RSS", name)
-        );
+
+
+        String text = StrFormatter.format("[{}] {} 已更新", subgroup, name);
+        if (backRss && !ani.getBackRssList().isEmpty()) {
+            text = StrFormatter.format("({}) {}", master ? "主RSS" : "备用RSS", text);
+        }
+        MessageUtil.send(ConfigUtil.CONFIG, ani, text);
+
         try {
             if (baseDownload.download(name, savePath, torrentFile, ova)) {
                 return;

@@ -121,7 +121,7 @@ const ani = ref({
   'year': 1970,
   'month': 1,
   'subgroup': '',
-  'backRss': [],
+  'backRssList': [],
   'bgmUrl': ''
 })
 

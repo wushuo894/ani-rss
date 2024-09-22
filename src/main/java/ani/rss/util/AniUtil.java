@@ -77,22 +77,31 @@ public class AniUtil {
 
         // 处理旧数据
         for (Ani ani : ANI_LIST) {
-            String subgroup = StrUtil.blankToDefault(ani.getSubgroup(), "");
-            ani.setSubgroup(subgroup);
             try {
                 String cover = ani.getCover();
-                if (!ReUtil.contains("http(s*)://", cover)) {
-                    continue;
+                if (ReUtil.contains("http(s*)://", cover)) {
+                    cover = AniUtil.saveJpg(cover);
+                    ani.setCover(cover);
                 }
-                cover = AniUtil.saveJpg(cover);
-                ani.setCover(cover);
-                AniUtil.sync();
             } catch (Exception e) {
                 String message = ExceptionUtil.getMessage(e);
                 log.error(message);
                 log.debug(message, e);
             }
+            // 备用rss数据结构改变
+            List<Ani.BackRss> backRssList = ani.getBackRssList();
+            List<String> backRss = ani.getBackRss();
+            if (backRssList.isEmpty() && !backRss.isEmpty()) {
+                for (String rss : backRss) {
+                    backRssList.add(
+                            new Ani.BackRss()
+                                    .setLabel("未知字幕组")
+                                    .setUrl(rss)
+                    );
+                }
+            }
         }
+        AniUtil.sync();
     }
 
     /**
@@ -501,7 +510,10 @@ public class AniUtil {
                 .thenFunction(HttpResponse::body);
         items.addAll(getItems(ani, s)
                 .stream()
-                .peek(item -> item.setMaster(true))
+                .peek(item -> {
+                    item.setMaster(true)
+                            .setSubgroup(ani.getSubgroup());
+                })
                 .collect(Collectors.toList()));
 
         Config config = ConfigUtil.CONFIG;
@@ -510,14 +522,17 @@ public class AniUtil {
             return items;
         }
 
-        List<String> backRss = ani.getBackRss();
-        for (String rss : backRss) {
+        List<Ani.BackRss> backRss = ani.getBackRssList();
+        for (Ani.BackRss rss : backRss) {
             ThreadUtil.sleep(1000);
-            s = HttpReq.get(rss, true)
+            s = HttpReq.get(rss.getUrl(), true)
                     .thenFunction(HttpResponse::body);
             items.addAll(getItems(ani, s)
                     .stream()
-                    .peek(item -> item.setMaster(false))
+                    .peek(item -> {
+                        item.setMaster(false)
+                                .setSubgroup(StrUtil.blankToDefault(rss.getLabel(), "未知字幕组"));
+                    })
                     .collect(Collectors.toList()));
         }
         items = CollUtil.distinct(items, Item::getReName, false);
