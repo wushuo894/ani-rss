@@ -80,5 +80,7 @@
 </div>
 
 [投喂作者](https://afdian.com/a/wushuo894)
-|
+
 [猫猫博客 Docker 部署 ani-rss 实现自动追番](https://catcat.blog/docker-ani-rss.html)
+|
+[从零开始的NAS生活 第四回：ANI-RSS，自动追番！](https://www.wtsss.fun/archives/cong-ling-kai-shi-de-nassheng-huo-di-si-hui-ani-rss-zi-dong-zhui-fan)
