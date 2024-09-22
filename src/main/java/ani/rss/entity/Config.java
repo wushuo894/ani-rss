@@ -249,4 +249,9 @@ public class Config implements Serializable {
      */
     private Boolean showPlaylist;
 
+    /**
+     * 检测遗漏集数
+     */
+    private Boolean omit;
+
 }
