@@ -84,7 +84,7 @@
               你可以在 <a target="_blank" href="https://next.bgm.tv/demo/access-token">https://next.bgm.tv/demo/access-token</a>
               生成一个 Access Token
               <br>
-              <a target="_blank" href="http://docs.wushuo.top/docs#Emby-Webhook通知设置">支持自动点格子</a>
+              <a target="_blank" href="http://docs.wushuo.top/docs#emby-webhook通知设置">支持自动点格子</a>
             </el-text>
           </div>
         </div>
