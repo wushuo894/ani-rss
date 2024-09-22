@@ -10,16 +10,16 @@
   },
   "dependencies": {
     "@element-plus/icons-vue": "^2.3.1",
-    "@vueuse/core": "^11.0.3",
+    "@vueuse/core": "^11.1.0",
     "artplayer": "^5.1.7",
     "artplayer-plugin-multiple-subtitles": "^1.0.0",
     "crypto-js": "^4.2.0",
-    "element-plus": "^2.8.2",
-    "vue": "^3.5.4"
+    "element-plus": "^2.8.3",
+    "vue": "^3.5.8"
   },
   "devDependencies": {
-    "@vitejs/plugin-vue": "^5.1.3",
-    "shiki": "^1.17.0",
-    "vite": "^5.4.4"
+    "@vitejs/plugin-vue": "^5.1.4",
+    "shiki": "^1.18.0",
+    "vite": "^5.4.7"
   }
 }
