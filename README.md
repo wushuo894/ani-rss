@@ -53,6 +53,7 @@
 - [x] 支持RSS订阅预览
 - [x] 获取标题时带上年份
 - [x] 支持 Transmission qBittorrent Aria2
+- [x] 支持BGM自动点格子
 
 ![Xnip2024-09-08_04-57-29.jpg](https://docs.wushuo.top/image/Xnip2024-09-08_04-57-29.jpg)
 

@@ -22,6 +22,7 @@ public class BgmUtil {
      */
     public static String getSubjectId(String name) {
         return HttpReq.get(host + "/search/subject/" + name, true)
+                .header("Authorization", "Bearer " + ConfigUtil.CONFIG.getBgmToken())
                 .form("type", 2)
                 .form("responseGroup", "small")
                 .thenFunction(res -> {
@@ -66,6 +67,7 @@ public class BgmUtil {
     public static String getEpisodeId(String subjectId, Double e) {
         Objects.requireNonNull(subjectId);
         return HttpReq.get(host + "/v0/episodes", true)
+                .header("Authorization", "Bearer " + ConfigUtil.CONFIG.getBgmToken())
                 .form("subject_id", subjectId)
                 .thenFunction(res -> {
                     List<JsonElement> list = gson.fromJson(res.body(), JsonObject.class).get("data").getAsJsonArray().asList();
