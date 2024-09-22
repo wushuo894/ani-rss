@@ -223,6 +223,24 @@ qbittorrent:
 
 若开启了 **自动删除** 将会 **自动替换** 备用rss 为 **主rss** 版本 (需要映射路径与下载器一致，否则若旧视频为mp4新视频为mkv时无法完成自动删除旧视频)
 
+### 遗漏检测
+
+若检测到RSS中集数出现遗漏会发送通知
+
+### BgmToken
+
+你可以在 <a target="_blank" href="https://next.bgm.tv/demo/access-token">https://next.bgm.tv/demo/access-token</a>
+生成一个 Access Token
+
+设置 BgmToken 后支持自动点格子
+
+#### Emby-Webhook通知设置
+
+    名称: bgm
+    url: http://[IP]:7789/api/web_hook
+    请求内容类型: application/json
+    勾选: 播放
+
 ### ip白名单
 
 名单中的ip将不会校验登录
