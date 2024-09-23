@@ -4,9 +4,9 @@
   <div style="height: 100%;overflow: hidden;">
     <el-scrollbar>
       <div style="margin: 0 10px;min-height: 500px" v-loading="loading">
-        <template v-for="(weekItem,index) in weekList">
+        <template v-for="weekItem in weekList">
           <div v-show="searchList(weekItem.i).length">
-            <h2 style="margin: 16px 0 8px 4px;">
+            <h2 style="margin: 16px 0 8px 4px;" v-if="weekItem.label.length">
               {{ weekItem.label }}
             </h2>
             <div class="grid-container">
@@ -233,6 +233,12 @@ const getList = () => {
       .then(res => {
         showPlaylist.value = res.data.showPlaylist
         weekShow.value = res.data.weekShow
+        if (!weekShow.value) {
+          weekList.value = [{
+            i: 1,
+            label: ''
+          }]
+        }
         api.get('/api/ani')
             .then(res => {
               list.value = res.data
