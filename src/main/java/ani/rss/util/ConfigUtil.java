@@ -116,7 +116,7 @@ public class ConfigUtil {
     /**
      * 加载设置
      */
-    public synchronized static void load() {
+    public static synchronized void load() {
         File configFile = getConfigFile();
 
         if (!configFile.exists()) {
