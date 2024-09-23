@@ -9,12 +9,12 @@ import ani.rss.util.ConfigUtil;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.text.StrFormatter;
 import cn.hutool.core.thread.ExecutorBuilder;
-import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.core.util.ReUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.server.HttpServerRequest;
 import cn.hutool.http.server.HttpServerResponse;
 import com.google.gson.JsonObject;
+import lombok.Synchronized;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
@@ -35,9 +35,9 @@ public class WebHookAction implements BaseAction {
             .build();
 
     @Override
-    public synchronized void doAction(HttpServerRequest request, HttpServerResponse response) throws IOException {
+    @Synchronized("EXECUTOR")
+    public void doAction(HttpServerRequest request, HttpServerResponse response) throws IOException {
         JsonObject body = getBody(JsonObject.class);
-
 
         log.debug("webhook: {}", body.toString());
 
