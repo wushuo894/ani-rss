@@ -9,7 +9,6 @@
         <el-input
             v-model:model-value="title"
             placeholder="搜索"
-            @input="list.value?.setCurrentPage(1)"
             style="min-width: 210px"
             prefix-icon="Search"
             clearable/>

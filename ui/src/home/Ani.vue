@@ -55,7 +55,6 @@
             <el-date-picker
                 style="max-width: 150px;"
                 v-model="date"
-                type="month"
                 @change="dateChange"
             >
             </el-date-picker>
@@ -173,7 +172,7 @@ onMounted(() => {
 let scrollbar = ref()
 
 let init = () => {
-  date.value = new Date(props.ani.year, props.ani.month - 1, 1);
+  date.value = new Date(props.ani.year, props.ani.month - 1, props.ani.day);
   scrollbar.value?.setScrollTop(0)
 }
 
@@ -183,6 +182,7 @@ let dateChange = () => {
   }
   props.ani.year = date.value.getFullYear()
   props.ani.month = date.value.getMonth() + 1
+  props.ani.day = date.value.getDay()
   let minYear = 1970
   if (props.ani.year < minYear) {
     props.ani.year = minYear

@@ -23,6 +23,7 @@ public class Ani implements Serializable {
 
     /**
      * 备用rss
+     *
      * @deprecated
      */
     private List<String> backRss;
@@ -51,6 +52,16 @@ public class Ani implements Serializable {
      * 月
      */
     private Integer month;
+
+    /**
+     * 日
+     */
+    private Integer day;
+
+    /**
+     * 星期 1表示周日，2表示周一
+     */
+    private Integer week;
 
     /**
      * 季度
@@ -134,6 +145,7 @@ public class Ani implements Serializable {
                 .setOffset(0)
                 .setYear(1970)
                 .setMonth(1)
+                .setDay(1)
                 .setEnable(true)
                 .setOva(false)
                 .setThemoviedbName("")
