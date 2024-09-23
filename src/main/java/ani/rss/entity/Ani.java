@@ -56,7 +56,7 @@ public class Ani implements Serializable {
     /**
      * 日
      */
-    private Integer day;
+    private Integer date;
 
     /**
      * 星期 1表示周日，2表示周一
@@ -145,7 +145,7 @@ public class Ani implements Serializable {
                 .setOffset(0)
                 .setYear(1970)
                 .setMonth(1)
-                .setDay(1)
+                .setDate(1)
                 .setEnable(true)
                 .setOva(false)
                 .setThemoviedbName("")

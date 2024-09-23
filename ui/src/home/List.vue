@@ -5,13 +5,13 @@
     <el-scrollbar>
       <div style="margin: 0 10px;min-height: 500px" v-loading="loading">
         <template v-for="(weekItem,index) in weekList">
-          <div v-if="searchList(index+1).length">
-            <h2 style="margin: 8px;">
+          <div v-show="searchList(index+1).length">
+            <h2 style="margin: 16px 0 8px 4px;">
               {{ weekItem }}
             </h2>
             <div class="grid-container">
-              <div v-for="item in searchList(index+1)">
-                <el-card shadow="never">
+              <div v-for="item in searchList(index+1)" v-if="searchList(index+1).length">
+                <el-card shadow="hover">
                   <div style="display: flex;width: 100%;align-items: center;">
                     <div style="height: 100%;">
                       <img :src="`/api/file?filename=${item['cover']}&s=${authorization()}`" height="130" width="92"
@@ -143,7 +143,7 @@
 </template>
 
 <script setup>
-import {onMounted, ref} from "vue";
+import {onMounted, ref, watch} from "vue";
 import {ElMessage} from 'element-plus'
 import {Back, Delete, Edit as EditIcon, Files} from "@element-plus/icons-vue"
 import Edit from "./Edit.vue";
@@ -208,6 +208,7 @@ const getList = () => {
             })
             .finally(() => {
               loading.value = false
+              updateGridLayout()
             })
       })
 }
@@ -218,36 +219,36 @@ let authorization = () => {
 
 const itemsPerRow = ref(1)
 
+let updateGridLayout = () => {
+  const gridContainer = document.querySelectorAll('.grid-container');
+  if (!gridContainer.length) {
+    return
+  }
+  const windowWidth = window.innerWidth;
+  if (windowWidth) {
+    document.querySelector('.el-affix').style['width'] = windowWidth + 'px'
+  }
+  itemsPerRow.value = Math.max(1, Math.floor(windowWidth / 400));
+
+  for (let gridContainerElement of gridContainer) {
+    gridContainerElement.style.gridTemplateColumns = `repeat(${itemsPerRow.value}, 1fr)`;
+  }
+
+  if (itemsPerRow.value === 1) {
+    pagerCount.value = 4
+  }
+}
+
 onMounted(() => {
   let size = window.localStorage.getItem('pageSize')
   if (size) {
     pageSize.value = Number.parseInt(size)
   }
-
-  function updateGridLayout() {
-    const gridContainer = document.querySelectorAll('.grid-container');
-    if (!gridContainer.length) {
-      return
-    }
-    const windowWidth = window.innerWidth;
-    if (windowWidth) {
-      document.querySelector('.el-affix').style['width'] = windowWidth + 'px'
-    }
-    itemsPerRow.value = Math.max(1, Math.floor(windowWidth / 400));
-
-    for (let gridContainerElement of gridContainer) {
-      gridContainerElement.style.gridTemplateColumns = `repeat(${itemsPerRow.value}, 1fr)`;
-    }
-
-    if (itemsPerRow.value === 1) {
-      pagerCount.value = 4
-    }
-  }
-
   window.addEventListener('resize', updateGridLayout);
-  updateGridLayout();
-
   getList()
+
+  let day = new Date().getDay();
+  // weekList.value = weekList.value[day];
 })
 
 let logout = () => {
