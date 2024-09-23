@@ -32,6 +32,12 @@ public class ItemsUtil {
         if (items.isEmpty()) {
             return;
         }
+
+        Boolean ova = ani.getOva();
+        if (ova) {
+            return;
+        }
+
         int[] array = items.stream().mapToInt(o -> o.getEpisode().intValue()).distinct().toArray();
         int max = ArrayUtil.max(array);
         int min = ArrayUtil.min(array);
