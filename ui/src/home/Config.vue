@@ -121,7 +121,8 @@ const config = ref({
   'showPlaylist': false,
   'enabledExclude': false,
   'importExclude': false,
-  'bgmToken': ''
+  'bgmToken': '',
+  'apiKey': ''
 })
 
 const activeName = ref('download')

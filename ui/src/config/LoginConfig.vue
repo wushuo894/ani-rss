@@ -24,12 +24,33 @@
         </div>
       </div>
     </el-form-item>
+    <el-form-item label="Api Key">
+      <div style="display: flex;width: 100%;">
+        <el-input v-model:model-value="props.config.apiKey" clearable/>
+        <div style="width: 4px;"></div>
+        <el-button bg text @click="createApiKey">生成</el-button>
+      </div>
+    </el-form-item>
   </el-form>
 </template>
 
 <script setup>
 
 import {ElText} from "element-plus";
+
+let generateRandomString = (length) => {
+  const charset = 'abcdefghijklmnopqrstuvwxyz0123456789';
+  let randomString = '';
+  for (let i = 0; i < length; i++) {
+    const randomIndex = Math.floor(Math.random() * charset.length);
+    randomString += charset[randomIndex];
+  }
+  return randomString;
+}
+
+let createApiKey = () => {
+  props.config.apiKey = generateRandomString(32);
+}
 
 let props = defineProps(['config'])
 </script>
