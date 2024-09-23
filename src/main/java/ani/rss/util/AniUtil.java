@@ -410,6 +410,7 @@ public class AniUtil {
             }
 
             Item newItem = new Item()
+                    .setEpisode(1.0)
                     .setTitle(itemTitle)
                     .setReName(itemTitle)
                     .setTorrent(torrent)
