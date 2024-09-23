@@ -92,7 +92,6 @@ public class WebHookAction implements BaseAction {
                 if (StrUtil.isNotBlank(episodeId)) {
                     break;
                 }
-                ThreadUtil.sleep(1000L);
             }
             if (StrUtil.isBlank(episodeId)) {
                 log.info("获取bgm对应剧集失败");
