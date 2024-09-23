@@ -453,6 +453,7 @@ public class AniUtil {
                 .filter(item -> {
                     try {
                         String itemTitle = item.getTitle();
+                        itemTitle = itemTitle.replace("+NCOPED", "");
                         String e = ReUtil.get(s, itemTitle, 2);
                         String episode = ReUtil.get("\\d+(\\.5)?", e, 0);
                         if (StrUtil.isBlank(episode)) {

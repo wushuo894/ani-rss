@@ -2,10 +2,12 @@ package ani.rss.action;
 
 import ani.rss.annotation.Auth;
 import ani.rss.annotation.Path;
+import ani.rss.auth.util.AuthUtil;
 import ani.rss.entity.Config;
 import ani.rss.util.BgmUtil;
 import ani.rss.util.ConfigUtil;
 import cn.hutool.core.convert.Convert;
+import cn.hutool.core.net.Ipv4Util;
 import cn.hutool.core.text.StrFormatter;
 import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.core.util.ReUtil;
@@ -25,6 +27,13 @@ import java.util.concurrent.atomic.AtomicReference;
 public class WebHookAction implements BaseAction {
     @Override
     public synchronized void doAction(HttpServerRequest request, HttpServerResponse response) throws IOException {
+        String ip = AuthUtil.getIp();
+        // 非内网 ip
+        if (!Ipv4Util.isInnerIP(ip)) {
+            response.send404("404");
+            return;
+        }
+
         JsonObject body = getBody(JsonObject.class);
 
         log.debug("webhook: {}", body.toString());
