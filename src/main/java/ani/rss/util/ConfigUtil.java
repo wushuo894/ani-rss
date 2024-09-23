@@ -83,7 +83,8 @@ public class ConfigUtil {
                 .setSeasonName("Season 1")
                 .setShowPlaylist(true)
                 .setOmit(false)
-                .setBgmToken("");
+                .setBgmToken("")
+                .setApiKey("");
     }
 
     private static final Gson GSON = new GsonBuilder()

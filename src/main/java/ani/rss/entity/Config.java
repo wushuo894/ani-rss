@@ -259,4 +259,9 @@ public class Config implements Serializable {
      */
     private String bgmToken;
 
+    /**
+     * api key
+     */
+    private String apiKey;
+
 }
