@@ -85,6 +85,7 @@ public class BgmUtil {
      * @param subjectId 番剧id
      */
     public static void collections(String subjectId) {
+        ThreadUtil.sleep(500);
         Objects.requireNonNull(subjectId);
         HttpReq.post(host + "/v0/users/-/collections/" + subjectId, true)
                 .header("Authorization", "Bearer " + ConfigUtil.CONFIG.getBgmToken())
@@ -101,6 +102,7 @@ public class BgmUtil {
      * @return 集id
      */
     public static String getEpisodeId(String subjectId, Double e) {
+        ThreadUtil.sleep(500);
         Objects.requireNonNull(subjectId);
         return HttpReq.get(host + "/v0/episodes", true)
                 .header("Authorization", "Bearer " + ConfigUtil.CONFIG.getBgmToken())
@@ -148,6 +150,7 @@ public class BgmUtil {
      * @param type      0 未看过, 1 想看, 2 看过
      */
     public static void collectionsEpisodes(String episodeId, Integer type) {
+        ThreadUtil.sleep(500);
         Objects.requireNonNull(episodeId);
         HttpReq.put(host + "/v0/users/-/collections/-/episodes/" + episodeId, true)
                 .header("Authorization", "Bearer " + ConfigUtil.CONFIG.getBgmToken())
