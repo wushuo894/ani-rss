@@ -11,7 +11,7 @@
             </h2>
             <div class="grid-container">
               <div v-for="item in searchList(index+1)" v-if="searchList(index+1).length">
-                <el-card shadow="hover">
+                <el-card shadow="never">
                   <div style="display: flex;width: 100%;align-items: center;">
                     <div style="height: 100%;">
                       <img :src="`/api/file?filename=${item['cover']}&s=${authorization()}`" height="130" width="92"
@@ -247,8 +247,8 @@ onMounted(() => {
   window.addEventListener('resize', updateGridLayout);
   getList()
 
-  let day = new Date().getDay();
-  // weekList.value = weekList.value[day];
+  let day = new Date().getDay()
+  weekList.value = weekList.value.slice(day,weekList.value.length).concat(weekList.value.slice(0,day))
 })
 
 let logout = () => {
