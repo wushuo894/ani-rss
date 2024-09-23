@@ -264,4 +264,9 @@ public class Config implements Serializable {
      */
     private String apiKey;
 
+    /**
+     * 按星期展示
+     */
+    private Boolean weekShow;
+
 }
