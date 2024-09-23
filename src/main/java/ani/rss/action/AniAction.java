@@ -161,7 +161,7 @@ public class AniAction implements BaseAction {
 
             Integer year = ani.getYear();
             Integer month = ani.getMonth();
-            Integer day = ani.getDay();
+            Integer day = ani.getDate();
             DateTime dateTime = DateUtil.parseDate(StrFormatter.format("{}-{}-{}", year, month, day));
             // 1表示周日，2表示周一
             ani.setWeek(DateUtil.dayOfWeek(dateTime));
