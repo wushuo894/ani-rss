@@ -10,7 +10,10 @@ import ani.rss.util.TorrentUtil;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.comparator.PinyinComparator;
+import cn.hutool.core.date.DateTime;
+import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.text.StrFormatter;
 import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.extra.pinyin.PinyinUtil;
 import cn.hutool.http.server.HttpServerRequest;
@@ -155,6 +158,13 @@ public class AniAction implements BaseAction {
             String title = ani.getTitle();
             String pinyin = PinyinUtil.getPinyin(title);
             ani.setPinyin(pinyin);
+
+            Integer year = ani.getYear();
+            Integer month = ani.getMonth();
+            Integer day = ani.getDay();
+            DateTime dateTime = DateUtil.parseDate(StrFormatter.format("{}-{}-{}", year, month, day));
+            // 1表示周日，2表示周一
+            ani.setWeek(DateUtil.dayOfWeek(dateTime));
         }
         resultSuccess(list);
     }

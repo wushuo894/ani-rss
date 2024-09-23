@@ -120,6 +120,8 @@ const ani = ref({
   'downloadPath': '',
   'year': 1970,
   'month': 1,
+  'day': 1,
+  'week': 1,
   'subgroup': '',
   'backRssList': [],
   'bgmUrl': ''
