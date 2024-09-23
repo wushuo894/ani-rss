@@ -592,6 +592,7 @@ public class AniUtil {
                     String bgmUrl = "";
                     String year = "";
                     String month = "";
+                    String date = "";
                     for (Element bangumiInfo : bangumiInfos) {
                         String string = bangumiInfo.ownText();
                         if (string.equals("Bangumi番组计划链接：")) {
@@ -602,6 +603,7 @@ public class AniUtil {
                                 String dateReg = "(\\d+)/(\\d+)/(\\d+)";
                                 year = ReUtil.get(dateReg, string, 3);
                                 month = ReUtil.get(dateReg, string, 1);
+                                date = ReUtil.get(dateReg, string, 2);
                             } catch (Exception e) {
                                 log.error(e.getMessage(), e);
                             }
@@ -609,7 +611,8 @@ public class AniUtil {
                     }
                     if (StrUtil.isNotBlank(year) && StrUtil.isNotBlank(month) && ani.getYear() == 1970) {
                         ani.setYear(Integer.parseInt(year))
-                                .setMonth(Integer.valueOf(month));
+                                .setMonth(Integer.valueOf(month))
+                                .setDate(Integer.parseInt(date));
                     }
 
                     if (StrUtil.isBlank(bgmUrl) && !ova) {
