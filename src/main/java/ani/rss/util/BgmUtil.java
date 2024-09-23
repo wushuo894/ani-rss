@@ -1,5 +1,8 @@
 package ani.rss.util;
 
+import cn.hutool.cache.Cache;
+import cn.hutool.cache.CacheUtil;
+import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.ContentType;
 import cn.hutool.http.HttpResponse;
@@ -11,6 +14,7 @@ import com.google.gson.JsonObject;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.concurrent.TimeUnit;
 
 /**
  * BGM
@@ -18,6 +22,7 @@ import java.util.Objects;
 public class BgmUtil {
     private static final String host = "https://api.bgm.tv";
     private static final Gson gson = new Gson();
+    private static final Cache<String, String> nameCache = CacheUtil.newFIFOCache(64);
 
     /**
      * 查找番剧id
@@ -26,7 +31,15 @@ public class BgmUtil {
      * @return 番剧id
      */
     public static String getSubjectId(String name) {
-        return HttpReq.get(host + "/search/subject/" + name, true)
+        if (StrUtil.isBlank(name)) {
+            return "";
+        }
+
+        if (nameCache.containsKey(name)) {
+            return nameCache.get(name);
+        }
+
+        String id = HttpReq.get(host + "/search/subject/" + name, true)
                 .header("Authorization", "Bearer " + ConfigUtil.CONFIG.getBgmToken())
                 .form("type", 2)
                 .form("responseGroup", "small")
@@ -61,6 +74,9 @@ public class BgmUtil {
                     // 次之使用第一个
                     return list.get(0).getAsJsonObject().get("id").getAsString();
                 });
+        ThreadUtil.sleep(1000);
+        nameCache.put(name, id, TimeUnit.DAYS.toDays(1));
+        return id;
     }
 
     /**
