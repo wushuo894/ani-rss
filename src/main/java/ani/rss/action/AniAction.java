@@ -34,12 +34,12 @@ import java.util.stream.Collectors;
 @Path("/ani")
 public class AniAction implements BaseAction {
 
-    public static final AtomicBoolean download = new AtomicBoolean(false);
+    public static final AtomicBoolean DOWNLOAD = new AtomicBoolean(false);
 
     /**
      * 手动刷新订阅
      */
-    private synchronized void download() {
+    private void download() {
         Ani ani = getBody(Ani.class);
 
         if (Objects.isNull(ani)) {
@@ -56,12 +56,12 @@ public class AniAction implements BaseAction {
             resultErrorMsg("修改失败");
             return;
         }
-        synchronized (download) {
-            if (download.get()) {
+        synchronized (DOWNLOAD) {
+            if (DOWNLOAD.get()) {
                 resultErrorMsg("存在未完成任务，请等待...");
                 return;
             }
-            download.set(true);
+            DOWNLOAD.set(true);
         }
         Ani downloadAni = first.get();
         ThreadUtil.execute(() -> {
@@ -73,7 +73,7 @@ public class AniAction implements BaseAction {
                 String message = ExceptionUtil.getMessage(e);
                 log.error(message, e);
             }
-            download.set(false);
+            DOWNLOAD.set(false);
         });
         resultSuccessMsg("已开始刷新RSS {} {}", downloadAni.getTitle(), downloadAni.getUrl());
 
@@ -82,7 +82,7 @@ public class AniAction implements BaseAction {
     /**
      * 添加订阅
      */
-    private synchronized void post() {
+    private void post() {
         Ani ani = getBody(Ani.class);
         ani.setTitle(ani.getTitle().trim())
                 .setUrl(ani.getUrl().trim());
@@ -120,7 +120,7 @@ public class AniAction implements BaseAction {
     /**
      * 修改订阅
      */
-    private synchronized void put() {
+    private void put() {
         Ani ani = getBody(Ani.class);
         ani.setTitle(ani.getTitle().trim())
                 .setUrl(ani.getUrl().trim());
@@ -172,7 +172,7 @@ public class AniAction implements BaseAction {
     /**
      * 删除订阅
      */
-    public synchronized void delete() {
+    public void delete() {
         JsonArray jsonArray = getBody(JsonArray.class);
         List<String> ids = jsonArray.asList()
                 .stream().map(JsonElement::getAsString)
