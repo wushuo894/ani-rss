@@ -25,6 +25,9 @@
         <el-input-number v-model:model-value="props.config.renameSleep" min="1"
                          :disabled="!config.rename"/>
       </el-form-item>
+      <el-form-item label="按星期展示">
+        <el-switch v-model:model-value="props.config.weekShow"/>
+      </el-form-item>
       <el-form-item label="自动跳过">
         <div style="width: 100%">
           <el-switch v-model:model-value="props.config.fileExist" :disabled="!config.rename"/>

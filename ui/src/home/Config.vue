@@ -122,7 +122,8 @@ const config = ref({
   'enabledExclude': false,
   'importExclude': false,
   'bgmToken': '',
-  'apiKey': ''
+  'apiKey': '',
+  'weekShow': false
 })
 
 const activeName = ref('download')
