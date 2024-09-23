@@ -5,12 +5,12 @@
     <el-scrollbar>
       <div style="margin: 0 10px;min-height: 500px" v-loading="loading">
         <template v-for="(weekItem,index) in weekList">
-          <div v-show="searchList(index+1).length">
+          <div v-show="searchList(weekItem.i).length">
             <h2 style="margin: 16px 0 8px 4px;">
-              {{ weekItem }}
+              {{ weekItem.label }}
             </h2>
             <div class="grid-container">
-              <div v-for="item in searchList(index+1)" v-if="searchList(index+1).length">
+              <div v-for="item in searchList(weekItem.i)" v-if="searchList(weekItem.i).length">
                 <el-card shadow="never">
                   <div style="display: flex;width: 100%;align-items: center;">
                     <div style="height: 100%;">
@@ -143,7 +143,7 @@
 </template>
 
 <script setup>
-import {onMounted, ref, watch} from "vue";
+import {onMounted, ref} from "vue";
 import {ElMessage} from 'element-plus'
 import {Back, Delete, Edit as EditIcon, Files} from "@element-plus/icons-vue"
 import Edit from "./Edit.vue";
@@ -152,7 +152,36 @@ import Popconfirm from "../other/Popconfirm.vue";
 import PlayList from "../play/PlayList.vue";
 
 
-const weekList = ref(['星期日', '星期一', '星期二', '星期三', '星期四', '星期五', '星期六'])
+const weekList = ref([
+  {
+    i: 1,
+    label: '星期日'
+  },
+  {
+    i: 2,
+    label: '星期一'
+  },
+  {
+    i: 3,
+    label: '星期二'
+  },
+  {
+    i: 4,
+    label: '星期三'
+  },
+  {
+    i: 5,
+    label: '星期四'
+  },
+  {
+    i: 6,
+    label: '星期五'
+  },
+  {
+    i: 7,
+    label: '星期六'
+  }]
+)
 
 const pagerCount = ref(10)
 const edit = ref()
@@ -164,11 +193,11 @@ const showPlaylist = ref(false)
 const searchList = (week) => {
   const text = props.title.trim()
   if (text.length < 1) {
-    return list.value.filter(props.filter).filter(it => week === it.week)
+    return list.value.filter(props.filter).filter(it => !weekShow.value || week === it.week)
   }
   return list.value
       .filter(props.filter)
-      .filter(it => week === it.week)
+      .filter(it => !weekShow.value || week === it.week)
       .filter(it => {
         if (it['title'].toString().indexOf(text) > -1) {
           return true
@@ -197,11 +226,13 @@ const delAni = (ani) => {
 }
 
 const list = ref([])
+const weekShow = ref(false)
 
 const getList = () => {
   api.get('/api/config')
       .then(res => {
         showPlaylist.value = res.data.showPlaylist
+        weekShow.value = res.data.weekShow
         api.get('/api/ani')
             .then(res => {
               list.value = res.data
@@ -248,7 +279,7 @@ onMounted(() => {
   getList()
 
   let day = new Date().getDay()
-  weekList.value = weekList.value.slice(day,weekList.value.length).concat(weekList.value.slice(0,day))
+  weekList.value = weekList.value.slice(day, weekList.value.length).concat(weekList.value.slice(0, day))
 })
 
 let logout = () => {

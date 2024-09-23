@@ -84,7 +84,8 @@ public class ConfigUtil {
                 .setShowPlaylist(true)
                 .setOmit(false)
                 .setBgmToken("")
-                .setApiKey("");
+                .setApiKey("")
+                .setWeekShow(true);
     }
 
     private static final Gson GSON = new GsonBuilder()
