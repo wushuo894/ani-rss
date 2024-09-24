@@ -150,6 +150,16 @@ public class Config implements Serializable {
     private Integer proxyPort;
 
     /**
+     * 代理用户名
+     */
+    private String proxyUsername;
+
+    /**
+     * 代理密码
+     */
+    private String proxyPassword;
+
+    /**
      * 同时下载数量限制
      */
     private Integer downloadCount;

@@ -87,8 +87,14 @@ public class HttpReq {
             log.debug("代理参数不全 {}", url);
             return req;
         }
+
+        String proxyUsername = config.getProxyUsername();
+        String proxyPassword = config.getProxyPassword();
         try {
             req.setHttpProxy(proxyHost, proxyPort);
+            if (StrUtil.isAllNotBlank(proxyUsername, proxyPassword)) {
+                req.basicProxyAuth(proxyUsername, proxyPassword);
+            }
             log.debug("使用代理 {}", url);
         } catch (Exception e) {
             log.error("设置代理出现问题 {}", url);

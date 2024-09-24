@@ -91,6 +91,8 @@ const config = ref({
   'debug': false,
   'proxy': false,
   'proxyHost': '',
+  'proxyUsername':'',
+  'proxyPassword':'',
   'proxyPort': 8080,
   'renameSleep': 1,
   'downloadCount': 0,
