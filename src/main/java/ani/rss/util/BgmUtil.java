@@ -179,8 +179,8 @@ public class BgmUtil {
         String bgmUrl = ani.getBgmUrl();
         if (StrUtil.isBlank(bgmUrl)) {
             String bangumiId = ani.getBangumiId();
-            Map<String, String> decodeParamMap = HttpUtil.decodeParamMap(ani.getUrl(), StandardCharsets.UTF_8);
             if (StrUtil.isBlank(bangumiId)) {
+                Map<String, String> decodeParamMap = HttpUtil.decodeParamMap(ani.getUrl(), StandardCharsets.UTF_8);
                 for (String k : decodeParamMap.keySet()) {
                     String v = decodeParamMap.get(k);
                     if (k.equalsIgnoreCase("bangumiId")) {
