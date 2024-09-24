@@ -456,16 +456,32 @@ public class AniUtil {
 
         String s = "(.*|\\[.*])( -? \\d+(\\.5)?|\\[\\d+(\\.5)?]|\\[\\d+(\\.5)?.?[vV]\\d]|第\\d+(\\.5)?[话話集]|\\[第?\\d+(\\.5)?[话話集]]|\\[\\d+(\\.5)?.?END]|[Ee][Pp]?\\d+(\\.5)?)(.*)";
 
+        Boolean customEpisode = ani.getCustomEpisode();
+        String customEpisodeStr = ani.getCustomEpisodeStr();
+        Integer customEpisodeGroupIndex = ani.getCustomEpisodeGroupIndex();
+
         items = items.stream()
                 .filter(item -> {
                     try {
                         String itemTitle = item.getTitle();
                         itemTitle = itemTitle.replace("+NCOPED", "");
-                        String e = ReUtil.get(s, itemTitle, 2);
+
+                        String e = "";
+                        if (customEpisode) {
+                            e = ReUtil.get(customEpisodeStr, itemTitle, customEpisodeGroupIndex);
+                        } else {
+                            e = ReUtil.get(s, itemTitle, 2);
+                        }
+
+                        if (StrUtil.isBlank(e)) {
+                            return false;
+                        }
+
                         String episode = ReUtil.get("\\d+(\\.5)?", e, 0);
                         if (StrUtil.isBlank(episode)) {
                             return false;
                         }
+
                         Boolean skip5 = config.getSkip5();
                         if (skip5) {
                             if (episode.endsWith(".5")) {

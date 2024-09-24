@@ -141,6 +141,21 @@ public class Ani implements Serializable {
      */
     private Double score;
 
+    /**
+     * 自定义集数获取规则
+     */
+    private Boolean customEpisode;
+
+    /**
+     * 自定义集数获取规则
+     */
+    private String customEpisodeStr;
+
+    /**
+     * 自定义集数获取规则 groupIndex
+     */
+    private Integer customEpisodeGroupIndex;
+
     public static Ani bulidAni() {
         Ani newAni = new Ani();
         return newAni
@@ -161,9 +176,12 @@ public class Ani implements Serializable {
                 .setCurrentEpisodeNumber(0)
                 .setTotalEpisodeNumber(0)
                 .setMatch(List.of())
-                .setExclude(List.of("720","\\[\\d+-\\d+([ 合集总集]+)?\\]"))
+                .setExclude(List.of("720", "\\[\\d+-\\d+([ 合集总集]+)?\\]"))
                 .setBgmUrl("")
-                .setSubgroup("");
+                .setSubgroup("")
+                .setCustomEpisode(false)
+                .setCustomEpisodeStr("\\[\\d{1,3}(\\.5)?\\]")
+                .setCustomEpisodeGroupIndex(0);
     }
 
     @Data
