@@ -17,14 +17,6 @@
           </div>
         </el-tab-pane>
         <el-tab-pane label="全局排除" :lazy="true">
-          <el-form>
-            <el-form-item label="默认开启全局排除">
-              <el-switch v-model:model-value="config.enabledExclude" :disabled="config.importExclude"/>
-            </el-form-item>
-            <el-form-item label="默认导入全局排除">
-              <el-switch v-model:model-value="config.importExclude" :disabled="config.enabledExclude"/>
-            </el-form-item>
-          </el-form>
           <Exclude ref="exclude" v-model:exclude="config.exclude" :show-text="true"/>
         </el-tab-pane>
         <el-tab-pane label="代理设置" :lazy="true">
