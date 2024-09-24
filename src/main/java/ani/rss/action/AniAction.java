@@ -160,7 +160,7 @@ public class AniAction implements BaseAction {
 
         List<Ani> list = AniUtil.ANI_LIST;
         if (scoreShow) {
-            list = CollUtil.sort(list, Comparator.comparingDouble(Ani::getScore));
+            list = CollUtil.sort(list, Comparator.comparingDouble(Ani::getScore).reversed());
         } else {
             PinyinComparator pinyinComparator = new PinyinComparator();
             list = CollUtil.sort(list, (a, b) -> pinyinComparator.compare(a.getTitle(), b.getTitle()));
