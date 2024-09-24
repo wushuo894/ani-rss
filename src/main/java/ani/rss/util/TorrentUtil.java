@@ -1,10 +1,7 @@
 package ani.rss.util;
 
 import ani.rss.download.BaseDownload;
-import ani.rss.entity.Ani;
-import ani.rss.entity.Config;
-import ani.rss.entity.Item;
-import ani.rss.entity.TorrentsInfo;
+import ani.rss.entity.*;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.text.StrFormatter;
 import cn.hutool.core.thread.ThreadUtil;
@@ -180,7 +177,12 @@ public class TorrentUtil {
             return;
         }
         try {
-            AniUtil.getBangumiInfo(ani, false, true);
+            BigInfo bgmInfo = BgmUtil.getBgmInfo(ani);
+            ani.setScore(bgmInfo.getScore());
+            if (ani.getTotalEpisodeNumber() < 1) {
+                Integer eps = bgmInfo.getEps();
+                ani.setTotalEpisodeNumber(eps);
+            }
         } catch (Exception e) {
             String message = ExceptionUtil.getMessage(e);
             log.error(message, e);

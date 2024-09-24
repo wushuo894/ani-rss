@@ -1,9 +1,6 @@
 package ani.rss.util;
 
-import ani.rss.entity.Ani;
-import ani.rss.entity.Config;
-import ani.rss.entity.Item;
-import ani.rss.entity.Mikan;
+import ani.rss.entity.*;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.bean.copier.CopyOptions;
 import cn.hutool.core.collection.CollUtil;
@@ -23,7 +20,6 @@ import com.google.gson.JsonElement;
 import lombok.extern.slf4j.Slf4j;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
@@ -31,6 +27,7 @@ import org.w3c.dom.NodeList;
 
 import java.io.File;
 import java.nio.charset.StandardCharsets;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -226,7 +223,16 @@ public class AniUtil {
         List<String> exclude = config.getExclude();
 
         try {
-            AniUtil.getBangumiInfo(ani, true, true);
+            BigInfo bgmInfo = BgmUtil.getBgmInfo(ani);
+
+            LocalDateTime date = bgmInfo.getDate();
+
+            ani.setTotalEpisodeNumber(bgmInfo.getEps())
+                    .setOva(bgmInfo.getOva())
+                    .setScore(bgmInfo.getScore())
+                    .setYear(date.getYear())
+                    .setMonth(date.getMonthValue())
+                    .setDate(date.getDayOfMonth());
         } catch (Exception e) {
             String message = ExceptionUtil.getMessage(e);
             log.error(message, e);
@@ -560,111 +566,6 @@ public class AniUtil {
         Assert.notNull(season, "季不能为空");
         Assert.notBlank(title, "标题不能为空");
         Assert.notNull(offset, "集数偏移不能为空");
-    }
-
-    public static void getBangumiInfo(Ani ani, Boolean ova, Boolean totalEpisode) {
-        Integer totalEpisodeNumber = ObjectUtil.defaultIfNull(ani.getTotalEpisodeNumber(), 0);
-        ani.setTotalEpisodeNumber(totalEpisodeNumber);
-        if (totalEpisode) {
-            if (totalEpisodeNumber > 0 && !ova) {
-                return;
-            }
-        }
-
-        String bangumiId = ani.getBangumiId();
-        Map<String, String> decodeParamMap = HttpUtil.decodeParamMap(ani.getUrl(), StandardCharsets.UTF_8);
-        if (StrUtil.isBlank(bangumiId)) {
-            for (String k : decodeParamMap.keySet()) {
-                String v = decodeParamMap.get(k);
-                if (k.equalsIgnoreCase("bangumiId")) {
-                    bangumiId = v;
-                }
-            }
-            if (StrUtil.isNotBlank(bangumiId)) {
-                ani.setBangumiId(bangumiId);
-                AniUtil.sync();
-            }
-        }
-
-        HttpReq.get(MikanUtil.getMikanHost() + "/Home/Bangumi/" + bangumiId, true)
-                .then(res -> {
-                    org.jsoup.nodes.Document document = Jsoup.parse(res.body());
-                    Elements bangumiInfos = document.select(".bangumi-info");
-                    String bgmUrl = "";
-                    String year = "";
-                    String month = "";
-                    String date = "";
-                    for (Element bangumiInfo : bangumiInfos) {
-                        String string = bangumiInfo.ownText();
-                        if (string.equals("Bangumi番组计划链接：")) {
-                            bgmUrl = bangumiInfo.select("a").get(0).attr("href");
-                        }
-                        if (string.startsWith("放送开始：")) {
-                            try {
-                                String dateReg = "(\\d+)/(\\d+)/(\\d+)";
-                                year = ReUtil.get(dateReg, string, 3);
-                                month = ReUtil.get(dateReg, string, 1);
-                                date = ReUtil.get(dateReg, string, 2);
-                            } catch (Exception e) {
-                                log.error(e.getMessage(), e);
-                            }
-                        }
-                    }
-                    if (StrUtil.isNotBlank(year) && StrUtil.isNotBlank(month) && ani.getYear() == 1970) {
-                        ani.setYear(Integer.parseInt(year))
-                                .setMonth(Integer.valueOf(month))
-                                .setDate(Integer.parseInt(date));
-                    }
-
-                    if (StrUtil.isBlank(bgmUrl) && !ova) {
-                        return;
-                    }
-
-                    ani.setBgmUrl(bgmUrl);
-
-                    HttpReq.get(bgmUrl, true)
-                            .then(response -> {
-                                org.jsoup.nodes.Document parse = Jsoup.parse(response.body());
-                                Element inner = parse.selectFirst(".subject_tag_section");
-                                if (Objects.nonNull(inner)) {
-                                    Elements aa = inner.select("a");
-                                    List<String> tags = new ArrayList<>();
-                                    for (Element a : aa) {
-                                        Element span = a.selectFirst("span");
-                                        if (Objects.isNull(span)) {
-                                            continue;
-                                        }
-                                        tags.add(span.ownText());
-                                    }
-
-                                    if (ova) {
-                                        if (!tags.contains("TV") && (tags.contains("OVA") || tags.contains("剧场版"))) {
-                                            ani.setOva(true);
-                                        }
-                                    }
-                                }
-                                for (Element element : parse.select(".tip")) {
-                                    String s = element.ownText();
-                                    if (!s.equals("话数:")) {
-                                        continue;
-                                    }
-                                    try {
-                                        String string = element.parent().ownText();
-                                        if (!NumberUtil.isNumber(string)) {
-                                            continue;
-                                        }
-                                        Integer ten = Integer.parseInt(string);
-                                        if (!totalEpisodeNumber.equals(ten)) {
-                                            ani.setTotalEpisodeNumber(ten);
-                                            AniUtil.sync();
-                                        }
-                                        break;
-                                    } catch (Exception e) {
-                                        log.error(e.getMessage(), e);
-                                    }
-                                }
-                            });
-                });
     }
 
     /**

@@ -136,6 +136,11 @@ public class Ani implements Serializable {
      */
     private String downloadPath;
 
+    /**
+     * 评分
+     */
+    private Double score;
+
     public static Ani bulidAni() {
         Ani newAni = new Ani();
         return newAni
@@ -148,6 +153,7 @@ public class Ani implements Serializable {
                 .setDate(1)
                 .setEnable(true)
                 .setOva(false)
+                .setScore(0.0)
                 .setThemoviedbName("")
                 .setCustomDownloadPath(false)
                 .setDownloadPath("")

@@ -1,16 +1,28 @@
 package ani.rss.util;
 
+import ani.rss.entity.Ani;
+import ani.rss.entity.BigInfo;
 import cn.hutool.cache.Cache;
 import cn.hutool.cache.CacheUtil;
+import cn.hutool.core.date.DatePattern;
+import cn.hutool.core.date.LocalDateTimeUtil;
+import cn.hutool.core.lang.Assert;
 import cn.hutool.core.thread.ThreadUtil;
+import cn.hutool.core.util.ReUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.ContentType;
+import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpResponse;
+import cn.hutool.http.HttpUtil;
 import cn.hutool.json.JSONUtil;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -38,9 +50,11 @@ public class BgmUtil {
         if (nameCache.containsKey(name)) {
             return nameCache.get(name);
         }
+        HttpRequest httpRequest = HttpReq.get(host + "/search/subject/" + name, true);
 
-        String id = HttpReq.get(host + "/search/subject/" + name, true)
-                .header("Authorization", "Bearer " + ConfigUtil.CONFIG.getBgmToken())
+        setToken(httpRequest);
+
+        String id = httpRequest
                 .form("type", 2)
                 .form("responseGroup", "small")
                 .thenFunction(res -> {
@@ -104,8 +118,10 @@ public class BgmUtil {
     public static String getEpisodeId(String subjectId, Double e) {
         ThreadUtil.sleep(500);
         Objects.requireNonNull(subjectId);
-        return HttpReq.get(host + "/v0/episodes", true)
-                .header("Authorization", "Bearer " + ConfigUtil.CONFIG.getBgmToken())
+        HttpRequest httpRequest = HttpReq.get(host + "/v0/episodes", true);
+        setToken(httpRequest);
+
+        return httpRequest
                 .form("subject_id", subjectId)
                 .thenFunction(res -> {
                     if (!res.isOk()) {
@@ -157,6 +173,78 @@ public class BgmUtil {
                 .contentType(ContentType.JSON.getValue())
                 .body(gson.toJson(Map.of("type", type)))
                 .thenFunction(HttpResponse::isOk);
+    }
+
+    public static BigInfo getBgmInfo(Ani ani) {
+        String bgmUrl = ani.getBgmUrl();
+        if (StrUtil.isBlank(bgmUrl)) {
+            String bangumiId = ani.getBangumiId();
+            Map<String, String> decodeParamMap = HttpUtil.decodeParamMap(ani.getUrl(), StandardCharsets.UTF_8);
+            if (StrUtil.isBlank(bangumiId)) {
+                for (String k : decodeParamMap.keySet()) {
+                    String v = decodeParamMap.get(k);
+                    if (k.equalsIgnoreCase("bangumiId")) {
+                        bangumiId = v;
+                    }
+                }
+                if (StrUtil.isNotBlank(bangumiId)) {
+                    ani.setBangumiId(bangumiId);
+                    AniUtil.sync();
+                }
+            }
+            bgmUrl = HttpReq.get(MikanUtil.getMikanHost() + "/Home/Bangumi/" + bangumiId, true)
+                    .thenFunction(res -> {
+                        org.jsoup.nodes.Document document = Jsoup.parse(res.body());
+                        Elements bangumiInfos = document.select(".bangumi-info");
+                        for (Element bangumiInfo : bangumiInfos) {
+                            String string = bangumiInfo.ownText();
+                            if (string.equals("Bangumi番组计划链接：")) {
+                                return bangumiInfo.select("a").get(0).attr("href");
+                            }
+                        }
+                        return "";
+                    });
+            ani.setBgmUrl(bgmUrl);
+        }
+        Assert.notBlank(bgmUrl);
+        String regStr = "^http(s)?://.+\\/(\\d+)(\\/)?$";
+        Assert.isTrue(ReUtil.contains(regStr, bgmUrl));
+        String subjectId = ReUtil.get(regStr, bgmUrl, 2);
+        return getBgmInfo(subjectId);
+    }
+
+    public static BigInfo getBgmInfo(String subjectId) {
+        HttpRequest httpRequest = HttpReq.get(host + "/v0/subjects/" + subjectId, true);
+        setToken(httpRequest);
+        return httpRequest
+                .thenFunction(res -> {
+                    JsonObject jsonObject = gson.fromJson(res.body(), JsonObject.class);
+                    BigInfo bigInfo = new BigInfo();
+
+                    String nameCn = jsonObject.get("name_cn").getAsString();
+                    String date = jsonObject.get("date").getAsString();
+                    String platform = jsonObject.get("platform").getAsString();
+                    int eps = jsonObject.get("eps").getAsInt();
+
+                    double score = 0.0;
+                    JsonObject rating = jsonObject.getAsJsonObject("rating");
+                    if (Objects.nonNull(rating)) {
+                        score = rating.get("score").getAsDouble();
+                    }
+
+                    return bigInfo.setNameCn(nameCn)
+                            .setDate(LocalDateTimeUtil.parse(date, DatePattern.NORM_DATE_PATTERN))
+                            .setEps(eps)
+                            .setScore(score)
+                            .setOva("OVA".equalsIgnoreCase(platform));
+                });
+    }
+
+    public static void setToken(HttpRequest httpRequest) {
+        String bgmToken = ConfigUtil.CONFIG.getBgmToken();
+        if (StrUtil.isNotBlank(bgmToken)) {
+            httpRequest.header("Authorization", "Bearer " + bgmToken);
+        }
     }
 
 
