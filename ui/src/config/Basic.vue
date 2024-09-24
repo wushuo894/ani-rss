@@ -31,6 +31,12 @@
               </el-text>
             </div>
           </el-form-item>
+          <el-form-item label="默认开启全局排除">
+            <el-switch v-model:model-value="config.enabledExclude" :disabled="config.importExclude"/>
+          </el-form-item>
+          <el-form-item label="默认导入全局排除">
+            <el-switch v-model:model-value="config.importExclude" :disabled="config.enabledExclude"/>
+          </el-form-item>
         </el-form>
       </el-collapse-item>
       <el-collapse-item title="重命名设置" name="3">
