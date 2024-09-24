@@ -124,7 +124,10 @@ const ani = ref({
   'week': 1,
   'subgroup': '',
   'backRssList': [],
-  'bgmUrl': ''
+  'bgmUrl': '',
+  'customEpisode': false,
+  'customEpisodeStr': '',
+  'customEpisodeGroupIndex': 0
 })
 
 const rssButtonLoading = ref(false)

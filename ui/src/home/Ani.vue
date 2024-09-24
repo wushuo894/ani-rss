@@ -68,7 +68,7 @@
         </el-form-item>
         <el-form-item label="集数偏移">
           <div style="display: flex;justify-content: end;width: 100%;">
-            <el-input-number v-model:model-value="props.ani.offset" :disabled="props.ani.ova"></el-input-number>
+            <el-input-number v-model:model-value="props.ani.offset" :disabled="props.ani.ova"/>
           </div>
         </el-form-item>
         <el-form-item label="总集数">
@@ -87,6 +87,20 @@
         </el-form-item>
         <el-form-item label="剧场版">
           <el-switch v-model:model-value="props.ani.ova"></el-switch>
+        </el-form-item>
+        <el-form-item label="自定义集数规则">
+          <div style="width: 100%;">
+            <div>
+              <el-switch v-model:model-value="props.ani.customEpisode"></el-switch>
+            </div>
+            <div style="display: flex;width: 100%;">
+              <el-input style="width: 100%"
+                        :disabled="!props.ani.customEpisode"
+                        v-model:model-value="props.ani.customEpisodeStr"/>
+              <div style="width: 4px;"></div>
+              <el-input-number v-model:model-value="props.ani.customEpisodeGroupIndex" :disabled="!props.ani.customEpisode"/>
+            </div>
+          </div>
         </el-form-item>
         <el-form-item label="自定义下载">
           <div style="width: 100%;">
