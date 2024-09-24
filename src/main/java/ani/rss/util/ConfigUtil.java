@@ -22,8 +22,8 @@ public class ConfigUtil {
 
     public static final Config CONFIG = new Config();
 
-    /**
-     * 默认配置
+    /*
+      默认配置
      */
     static {
         String password = MD5.create().digestHex("admin");
