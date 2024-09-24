@@ -201,17 +201,7 @@ public class AniAction implements BaseAction {
         resultSuccessMsg("删除订阅成功");
         for (Ani ani : anis) {
             File torrentDir = TorrentUtil.getTorrentDir(ani);
-            for (File file : FileUtil.loopFiles(torrentDir)) {
-                if (file.isDirectory()) {
-                    continue;
-                }
-                if (file.getName().endsWith(".txt")) {
-                    FileUtil.del(file);
-                }
-                if (file.getName().endsWith(".torrent")) {
-                    FileUtil.del(file);
-                }
-            }
+            FileUtil.del(torrentDir);
             log.info("删除订阅 {} {} {}", ani.getTitle(), ani.getUrl(), ani.getId());
         }
     }
