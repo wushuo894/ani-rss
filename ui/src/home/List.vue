@@ -34,19 +34,10 @@
                           letter-spacing: .0125em;">
                           {{ item.title }}
                         </div>
-                        <div style="
-                                    color: #9e9e9e !important;
-                                    font-size: .75rem !important;
-                                    font-weight: 300;
-                                    line-height: 1.667;
-                                    -webkit-line-clamp: 2;
-                                    max-width: 220px;
-                                    overflow: hidden;
-                                    text-overflow: ellipsis;
-                                    letter-spacing: .0333333333em !important;
-                                    font-family: Roboto, sans-serif;
-                                    text-transform: none !important;">
-                          {{ item.url }}
+                        <div style="margin-bottom: 8px;">
+                          <h4 style="color: #E800A4;">
+                            {{ item['score']}}
+                          </h4>
                         </div>
                         <div style="
                         width: 180px;
