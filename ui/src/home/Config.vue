@@ -83,8 +83,8 @@ const config = ref({
   'debug': false,
   'proxy': false,
   'proxyHost': '',
-  'proxyUsername':'',
-  'proxyPassword':'',
+  'proxyUsername': '',
+  'proxyPassword': '',
   'proxyPort': 8080,
   'renameSleep': 1,
   'downloadCount': 0,
@@ -118,7 +118,8 @@ const config = ref({
   'bgmToken': '',
   'apiKey': '',
   'weekShow': false,
-  'scoreShow': false
+  'scoreShow': false,
+  'backRss': false
 })
 
 const activeName = ref('download')
