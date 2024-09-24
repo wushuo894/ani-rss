@@ -34,10 +34,26 @@
                           letter-spacing: .0125em;">
                           {{ item.title }}
                         </div>
-                        <div style="margin-bottom: 8px;">
+                        <div style="margin-bottom: 8px;" v-if="scoreShow">
                           <h4 style="color: #E800A4;">
-                            {{ item['score']}}
+                            {{ item['score'] }}
                           </h4>
+                        </div>
+                        <div style="
+                                    color: #9e9e9e !important;
+                                    font-size: .75rem !important;
+                                    font-weight: 300;
+                                    line-height: 1.667;
+                                    -webkit-line-clamp: 2;
+                                    max-width: 220px;
+                                    overflow: hidden;
+                                    text-overflow: ellipsis;
+                                    letter-spacing: .0333333333em !important;
+                                    font-family: Roboto, sans-serif;
+                                    text-transform: none !important;"
+                             v-else
+                        >
+                          {{ item.url }}
                         </div>
                         <div style="
                         width: 180px;
@@ -179,6 +195,7 @@ const edit = ref()
 const pageSize = ref(40)
 const loading = ref(true)
 const playList = ref()
+const scoreShow = ref(false)
 const showPlaylist = ref(false)
 
 const searchList = (week) => {
@@ -224,6 +241,7 @@ const getList = () => {
       .then(res => {
         showPlaylist.value = res.data.showPlaylist
         weekShow.value = res.data.weekShow
+        scoreShow.value = res.data.scoreShow
         if (!weekShow.value) {
           weekList.value = [{
             i: 1,

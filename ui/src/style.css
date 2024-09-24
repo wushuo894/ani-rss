@@ -28,7 +28,7 @@ html, body, #app {
 
 .grid-container {
     display: grid;
-    grid-gap: 5px;
+    grid-gap: 8px;
     width: 100%;
 }
 
