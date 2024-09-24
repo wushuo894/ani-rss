@@ -36,7 +36,7 @@
                         </div>
                         <div style="margin-bottom: 8px;" v-if="scoreShow">
                           <h4 style="color: #E800A4;">
-                            {{ item['score'] }}
+                            {{ item['score'].toFixed(1) }}
                           </h4>
                         </div>
                         <div style="
