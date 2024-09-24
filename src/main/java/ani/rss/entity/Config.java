@@ -60,6 +60,11 @@ public class Config implements Serializable {
     private Boolean watchErrorTorrent;
 
     /**
+     * 显示评分
+     */
+    private Boolean scoreShow;
+
+    /**
      * 间隔/分钟
      */
     private Integer sleep;
