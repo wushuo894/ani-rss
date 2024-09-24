@@ -32,10 +32,10 @@
             </div>
           </el-form-item>
           <el-form-item label="默认开启全局排除">
-            <el-switch v-model:model-value="config.enabledExclude" :disabled="config.importExclude"/>
+            <el-switch v-model:model-value="props.config.enabledExclude" :disabled="props.config.importExclude"/>
           </el-form-item>
           <el-form-item label="默认导入全局排除">
-            <el-switch v-model:model-value="config.importExclude" :disabled="config.enabledExclude"/>
+            <el-switch v-model:model-value="props.config.importExclude" :disabled="props.config.enabledExclude"/>
           </el-form-item>
         </el-form>
       </el-collapse-item>
