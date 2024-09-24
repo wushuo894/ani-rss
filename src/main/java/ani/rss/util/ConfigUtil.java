@@ -54,6 +54,8 @@ public class ConfigUtil {
                 .setProxy(false)
                 .setProxyHost("")
                 .setProxyPort(8080)
+                .setProxyUsername("")
+                .setProxyPassword("")
                 .setDownloadCount(0)
                 .setMail(false)
                 .setMailAddressee("")
