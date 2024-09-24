@@ -66,7 +66,7 @@ public class ConfigUtil {
                                 .setSslEnable(false)
                 )
                 .setLogin(new Login().setUsername("admin").setPassword(password))
-                .setExclude(List.of("720"))
+                .setExclude(List.of("720","\\[\\d+-\\d+([ 合集总集]+)?\\]"))
                 .setImportExclude(false)
                 .setEnabledExclude(false)
                 .setTelegram(false)
@@ -85,7 +85,8 @@ public class ConfigUtil {
                 .setOmit(false)
                 .setBgmToken("")
                 .setApiKey("")
-                .setWeekShow(true);
+                .setWeekShow(true)
+                .setScoreShow(false);
     }
 
     private static final Gson GSON = new GsonBuilder()

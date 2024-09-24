@@ -123,7 +123,8 @@ const config = ref({
   'importExclude': false,
   'bgmToken': '',
   'apiKey': '',
-  'weekShow': false
+  'weekShow': false,
+  'scoreShow': false
 })
 
 const activeName = ref('download')
