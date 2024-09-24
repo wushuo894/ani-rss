@@ -54,6 +54,7 @@
 - [x] 获取标题时带上年份
 - [x] 支持 Transmission qBittorrent Aria2
 - [x] 支持BGM自动点格子
+- [x] 支持自定义集数规则
 
 ![Xnip2024-09-08_04-57-29.jpg](https://docs.wushuo.top/image/Xnip2024-09-08_04-57-29.jpg)
 
@@ -81,6 +82,10 @@
 
 [投喂作者](https://afdian.com/a/wushuo894)
 
+### 相关文章:
+
 [猫猫博客 Docker 部署 ani-rss 实现自动追番](https://catcat.blog/docker-ani-rss.html)
-|
+
 [从零开始的NAS生活 第四回：ANI-RSS，自动追番！](https://www.wtsss.fun/archives/qhaQ3M7v)
+
+[自动化追番计划](http://jinghuashang.cn/posts/8f622332.html)
