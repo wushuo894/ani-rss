@@ -3,8 +3,10 @@ package ani.rss.action;
 import ani.rss.annotation.Auth;
 import ani.rss.annotation.Path;
 import ani.rss.entity.Ani;
+import ani.rss.entity.Config;
 import ani.rss.task.RssTask;
 import ani.rss.util.AniUtil;
+import ani.rss.util.ConfigUtil;
 import ani.rss.util.ExceptionUtil;
 import ani.rss.util.TorrentUtil;
 import cn.hutool.core.bean.BeanUtil;
@@ -23,6 +25,7 @@ import com.google.gson.JsonElement;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.File;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -151,9 +154,18 @@ public class AniAction implements BaseAction {
      * 返回订阅列表
      */
     private void get() {
+        Config config = ConfigUtil.CONFIG;
+        Boolean scoreShow = config.getScoreShow();
         // 按拼音排序
-        PinyinComparator pinyinComparator = new PinyinComparator();
-        List<Ani> list = CollUtil.sort(AniUtil.ANI_LIST, (a, b) -> pinyinComparator.compare(a.getTitle(), b.getTitle()));
+
+        List<Ani> list = AniUtil.ANI_LIST;
+        if (scoreShow) {
+            list = CollUtil.sort(list, Comparator.comparingDouble(Ani::getScore));
+        } else {
+            PinyinComparator pinyinComparator = new PinyinComparator();
+            list = CollUtil.sort(list, (a, b) -> pinyinComparator.compare(a.getTitle(), b.getTitle()));
+        }
+
         for (Ani ani : list) {
             String title = ani.getTitle();
             String pinyin = PinyinUtil.getPinyin(title);
