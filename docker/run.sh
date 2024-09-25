@@ -39,3 +39,5 @@ do
         break
     fi
 done
+
+exit 0
