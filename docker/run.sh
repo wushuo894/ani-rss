@@ -18,19 +18,18 @@ if [ ! -f $jar_path ]; then
 fi
 
 stop() {
-  pid=$(ps -ef | grep java |  grep "$jar" | awk '{print $2}')
+  pid=$(ps -ef | grep java | grep "$jar" | awk '{print $2}')
   if [ -n "$pid" ]; then
       echo "Stopping process $pid - $jar"
       kill "$pid"
   fi
 }
 
-stop()
-
 sigterm_handler() {
-    stop()
-    exit 143;
+    stop
+    exit 143
 }
+
 trap 'sigterm_handler' SIGTERM
 
 while :
