@@ -17,6 +17,12 @@ public class Main {
 
             MenuUtil.start(args);
             ServerUtil.create(args).start();
+            Runtime.getRuntime()
+                    .addShutdownHook(new Thread(() -> {
+                        ServerUtil.stop();
+                        // 直接退出
+                        System.exit(3);
+                    }));
         } catch (Exception e) {
             String message = ExceptionUtil.getMessage(e);
             log.error(message, e);
