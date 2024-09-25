@@ -92,7 +92,7 @@
                 <el-switch v-model:model-value="props.config.omit"/>
               </div>
               <el-text class="mx-1" size="small">
-                若检测到RSS中集数出现遗漏会发送通知
+                总开关 若检测到RSS中集数出现遗漏会发送通知
               </el-text>
             </div>
           </el-form-item>
