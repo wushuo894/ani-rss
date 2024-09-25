@@ -34,7 +34,8 @@ trap 'sigterm_handler' SIGTERM
 
 while :
 do
-    java -jar -Xmx2g $jar_path --port $port
+    java -jar -Xmx2g $jar_path --port $port &
+    wait $!
     if [ $? -ne 0 ]; then
         break
     fi
