@@ -3,7 +3,7 @@
     <div style="min-height: 300px;" v-loading="loading">
       <div style="display: flex;justify-content: space-between;width: 100%;">
         <div style="width: 120px">
-          <el-select v-model:model-value="selectFilter">
+          <el-select v-model:model-value="selectFilter" @change="selectChange">
             <el-option v-for="filter in selectFilters"
                        :label="filter.label"
                        :key="filter.label"
@@ -22,7 +22,7 @@
       <el-scrollbar>
         <el-table
             @selection-change="handleSelectionChange"
-            :data="searchList()"
+            v-model:data="searchList"
             height="400px"
         >
           <el-table-column type="selection" width="55"/>
@@ -63,8 +63,10 @@ let selectFilters = ref([
   },
 ])
 
-let searchList = ()=>{
-  return list.value.filter(selectFilters.value.filter(item => selectFilter.value === item.label)[0].fun);
+let searchList = ref([])
+
+let selectChange = () => {
+  searchList.value = list.value.filter(selectFilters.value.filter(item => selectFilter.value === item.label)[0].fun)
 }
 
 let dialogVisible = ref(false)
@@ -83,6 +85,7 @@ const getList = () => {
   api.get('api/ani')
       .then(res => {
         list.value = res.data
+        selectChange()
       })
       .finally(() => {
         loading.value = false
