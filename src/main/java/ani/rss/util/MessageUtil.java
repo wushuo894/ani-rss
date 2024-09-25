@@ -7,7 +7,6 @@ import ani.rss.msg.Message;
 import ani.rss.msg.Telegram;
 import ani.rss.msg.WebHook;
 import cn.hutool.core.thread.ExecutorBuilder;
-import cn.hutool.core.thread.ThreadUtil;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.concurrent.ExecutorService;

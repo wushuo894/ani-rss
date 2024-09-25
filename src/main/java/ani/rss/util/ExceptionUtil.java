@@ -8,7 +8,7 @@ public class ExceptionUtil {
     public static final Map<String, String> messageMap = Map.of(
             "SocketTimeoutException", "网络连接超时",
             "UnknownHostException", "DNS 解析出错",
-            "SSLHandshakeException","SSL握手异常"
+            "SSLHandshakeException", "SSL握手异常"
     );
 
     public static synchronized String getMessage(Exception e) {

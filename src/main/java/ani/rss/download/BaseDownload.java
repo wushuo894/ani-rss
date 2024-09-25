@@ -62,7 +62,7 @@ public interface BaseDownload {
      */
     void rename(TorrentsInfo torrentsInfo);
 
-    default String getFileReName(String name,String reName) {
+    default String getFileReName(String name, String reName) {
         String ext = FileUtil.extName(name);
         if (StrUtil.isBlank(ext)) {
             return name;

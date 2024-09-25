@@ -9,7 +9,7 @@ import java.io.IOException;
 
 @Auth
 @Path("/test")
-public class TestAction implements BaseAction{
+public class TestAction implements BaseAction {
     @Override
     public void doAction(HttpServerRequest request, HttpServerResponse response) throws IOException {
         resultSuccess();
