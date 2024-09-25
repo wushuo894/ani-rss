@@ -33,6 +33,10 @@ public class ItemsUtil {
             return;
         }
 
+        if (!ani.getOmit()) {
+            return;
+        }
+
         Boolean ova = ani.getOva();
         if (ova) {
             return;

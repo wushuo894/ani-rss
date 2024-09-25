@@ -15,7 +15,7 @@
         <el-form-item label="标题">
           <div style="width: 100%;">
             <div>
-              <el-input v-model:model-value="props.ani.title"></el-input>
+              <el-input v-model:model-value="props.ani.title"/>
             </div>
             <div style="width: 100%;justify-content: end;display: flex;margin-top: 12px;">
               <el-button @click="props.ani.title = ani.themoviedbName"
@@ -56,14 +56,13 @@
                 style="max-width: 150px;"
                 v-model="date"
                 @change="dateChange"
-            >
-            </el-date-picker>
+            />
           </div>
         </el-form-item>
         <el-form-item label="季">
           <div style="display: flex;justify-content: end;width: 100%;">
             <el-input-number style="max-width: 200px" :min="0" v-model:model-value="props.ani.season"
-                             :disabled="props.ani.ova"></el-input-number>
+                             :disabled="props.ani.ova"/>
           </div>
         </el-form-item>
         <el-form-item label="集数偏移">
@@ -73,7 +72,7 @@
         </el-form-item>
         <el-form-item label="总集数">
           <div style="display: flex;justify-content: end;width: 100%;">
-            <el-input-number v-model:model-value="props.ani.totalEpisodeNumber"></el-input-number>
+            <el-input-number v-model:model-value="props.ani.totalEpisodeNumber"/>
           </div>
         </el-form-item>
         <el-form-item label="匹配">
@@ -86,12 +85,12 @@
           <el-switch v-model:model-value="props.ani['globalExclude']"/>
         </el-form-item>
         <el-form-item label="剧场版">
-          <el-switch v-model:model-value="props.ani.ova"></el-switch>
+          <el-switch v-model:model-value="props.ani.ova"/>
         </el-form-item>
         <el-form-item label="自定义集数规则">
           <div style="width: 100%;">
             <div>
-              <el-switch v-model:model-value="props.ani.customEpisode"></el-switch>
+              <el-switch v-model:model-value="props.ani.customEpisode"/>
             </div>
             <div style="display: flex;width: 100%;">
               <el-input style="width: 100%"
@@ -105,7 +104,7 @@
         <el-form-item label="自定义下载">
           <div style="width: 100%;">
             <div>
-              <el-switch v-model:model-value="props.ani.customDownloadPath"></el-switch>
+              <el-switch v-model:model-value="props.ani.customDownloadPath"/>
             </div>
             <div>
               <el-input type="textarea" style="width: 100%" :disabled="!props.ani.customDownloadPath"
@@ -113,8 +112,11 @@
             </div>
           </div>
         </el-form-item>
+        <el-form-item label="遗漏检测">
+          <el-switch v-model:model-value="props.ani.omit"/>
+        </el-form-item>
         <el-form-item label="启用">
-          <el-switch v-model:model-value="props.ani.enable"></el-switch>
+          <el-switch v-model:model-value="props.ani.enable"/>
         </el-form-item>
       </el-form>
     </el-scrollbar>
