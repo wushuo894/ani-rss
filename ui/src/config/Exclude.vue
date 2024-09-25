@@ -78,7 +78,7 @@ let disabledImportExclude = ref(false)
 
 let importExclude = () => {
   importExcludeLoading.value = true
-  api.get("/api/config")
+  api.get("api/config")
       .then(res => {
         disabledImportExclude.value = true
         for (let it of res.data.exclude) {

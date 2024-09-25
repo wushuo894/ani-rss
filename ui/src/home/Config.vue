@@ -133,7 +133,7 @@ const show = (update) => {
   activeName.value = update ? 'about' : 'download'
   dialogVisible.value = true
   loading.value = true
-  api.get('/api/config')
+  api.get('api/config')
       .then(res => {
         config.value = res.data
       })
@@ -148,7 +148,7 @@ const editConfig = () => {
   if (my_config.login.password) {
     my_config.login.password = CryptoJS.MD5(my_config.login.password).toString();
   }
-  api.post('/api/config', my_config)
+  api.post('api/config', my_config)
       .then(res => {
         ElMessage.success(res.message)
         dialogVisible.value = false

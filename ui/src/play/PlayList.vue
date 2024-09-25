@@ -39,7 +39,7 @@ const show = (it) => {
   listLoading.value = true
   list.value = []
   dialogVisible.value = true
-  api.post('/api/playlist', it)
+  api.post('api/playlist', it)
       .then(res => {
         list.value = res.data
       })
