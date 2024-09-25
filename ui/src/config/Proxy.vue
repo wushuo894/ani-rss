@@ -66,7 +66,7 @@ let test = () => {
   testLoading.value = true
   status.value = ''
   time.value = ''
-  api.post('/api/proxy?url=' + btoa(url.value), props.config)
+  api.post('api/proxy?url=' + btoa(url.value), props.config)
       .then(res => {
         status.value = res.data.status
         time.value = res.data.time

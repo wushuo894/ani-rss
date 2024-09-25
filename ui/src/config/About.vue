@@ -63,7 +63,7 @@ const actionLoading = ref(false)
 
 const stop = (status) => {
   actionLoading.value = true
-  api.post("/api/stop?status=" + status)
+  api.post("api/stop?status=" + status)
       .then(res => {
         ElMessage.success(res.message)
         setTimeout(() => {
@@ -78,7 +78,7 @@ const stop = (status) => {
 
 const update = () => {
   actionLoading.value = true
-  api.post("/api/update")
+  api.post("api/update")
       .then(res => {
         ElMessage.success(res.message)
         setTimeout(() => {
@@ -99,7 +99,7 @@ const about = ref({
 })
 
 onMounted(()=>{
-  api.get('/api/about')
+  api.get('api/about')
       .then(res => {
         about.value = res.data
       })

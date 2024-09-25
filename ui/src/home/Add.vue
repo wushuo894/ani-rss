@@ -135,7 +135,7 @@ const rssButtonLoading = ref(false)
 const getRss = () => {
   rssButtonLoading.value = true
   ani.value.type = activeName.value
-  api.post('/api/rss', ani.value)
+  api.post('api/rss', ani.value)
       .then(res => {
         ani.value = res['data']
         ani.value.showDownlaod = false
@@ -147,7 +147,7 @@ const getRss = () => {
 }
 
 const addAni = (fun) => {
-  api.post('/api/ani', ani.value)
+  api.post('api/ani', ani.value)
       .then(res => {
         ElMessage.success(res.message)
         emit('load')
