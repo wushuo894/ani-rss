@@ -25,6 +25,8 @@ stop() {
   fi
 }
 
+stop
+
 sigterm_handler() {
     stop
     exit 0
