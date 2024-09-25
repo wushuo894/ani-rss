@@ -18,7 +18,7 @@ public class PlayItem implements Serializable {
 
     @Data
     @Accessors(chain = true)
-    public static class Subtitles{
+    public static class Subtitles {
         private String html;
         private String name;
         private String url;

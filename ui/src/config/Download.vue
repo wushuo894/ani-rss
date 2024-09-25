@@ -28,7 +28,8 @@
     </el-form-item>
     <el-form-item>
       <div style="display:flex;width: 100%;justify-content: end;">
-        <el-button @click="downloadLoginTest" bg text :loading="downloadLoginTestLoading" icon="Odometer">测试</el-button>
+        <el-button @click="downloadLoginTest" bg text :loading="downloadLoginTestLoading" icon="Odometer">测试
+        </el-button>
       </div>
     </el-form-item>
     <el-form-item label="保存位置">

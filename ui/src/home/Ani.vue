@@ -97,7 +97,8 @@
                         :disabled="!props.ani.customEpisode"
                         v-model:model-value="props.ani.customEpisodeStr"/>
               <div style="width: 4px;"></div>
-              <el-input-number v-model:model-value="props.ani.customEpisodeGroupIndex" :disabled="!props.ani.customEpisode"/>
+              <el-input-number v-model:model-value="props.ani.customEpisodeGroupIndex"
+                               :disabled="!props.ani.customEpisode"/>
             </div>
           </div>
         </el-form-item>

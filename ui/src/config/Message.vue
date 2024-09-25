@@ -41,7 +41,8 @@
         <el-form-item label="开关">
           <div style="width: 100%;display: flex;justify-content: space-between;">
             <el-switch v-model:model-value="props.config.telegram"/>
-            <el-button bg text @click="messageTest('Telegram')" :loading="messageTestLoading && messageTestType === 'Telegram'"
+            <el-button bg text @click="messageTest('Telegram')"
+                       :loading="messageTestLoading && messageTestType === 'Telegram'"
                        :disabled="!config.telegram" icon="Odometer">测试
             </el-button>
           </div>
@@ -107,7 +108,8 @@
         <el-form-item label="开关">
           <div style="display: flex;width: 100%;justify-content: space-between;">
             <el-switch v-model:model-value="props.config.webHook"/>
-            <el-button bg text @click="messageTest('WebHook')" :loading="messageTestLoading && messageTestType === 'WebHook'"
+            <el-button bg text @click="messageTest('WebHook')"
+                       :loading="messageTestLoading && messageTestType === 'WebHook'"
                        :disabled="!config.webHook" icon="Odometer">测试
             </el-button>
           </div>

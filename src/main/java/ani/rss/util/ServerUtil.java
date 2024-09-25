@@ -44,6 +44,16 @@ public class ServerUtil {
 
         server = HttpUtil.createServer(Integer.parseInt(PORT));
 
+        server.addFilter((req, res, chain) -> {
+            REQUEST.set(req);
+            RESPONSE.set(res);
+            try {
+                chain.doFilter(req.getHttpExchange());
+            } finally {
+                REQUEST.remove();
+                RESPONSE.remove();
+            }
+        });
         server.addAction("/", new RootAction());
         Set<Class<?>> classes = ClassUtil.scanPackage("ani.rss.action");
         for (Class<?> aClass : classes) {
@@ -59,8 +69,6 @@ public class ServerUtil {
                 @Override
                 public void doAction(HttpServerRequest req, HttpServerResponse res) {
                     try {
-                        REQUEST.set(req);
-                        RESPONSE.set(res);
                         Auth auth = aClass.getAnnotation(Auth.class);
                         if (auth.value() && !isIpWhitelist(AuthUtil.getIp())) {
                             Boolean test = AuthUtil.test(req, auth.type());
@@ -78,9 +86,6 @@ public class ServerUtil {
                             log.error("{} {}", urlPath, e.getMessage());
                             log.debug(e);
                         }
-                    } finally {
-                        REQUEST.remove();
-                        RESPONSE.remove();
                     }
                 }
             });

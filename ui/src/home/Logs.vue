@@ -113,7 +113,7 @@ const getLogs = () => {
       })
 }
 
-let close = ()=>{
+let close = () => {
   htmlLogs.value = ''
   loggerNames.value = []
   selectLoggerNames.value = []
@@ -129,6 +129,7 @@ defineExpose({show})
     display: flex;
   }
 }
+
 @media (min-width: 1400px) {
   .logs-dialog {
     width: 1000px;

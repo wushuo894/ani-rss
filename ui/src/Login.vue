@@ -26,7 +26,8 @@
       </div>
     </div>
     <div style="margin-bottom: 16px;">
-      <a href="https://docs.wushuo.top" target="_blank">ani-rss</a> | <a href="https://github.com/wushuo894/ani-rss" target="_blank">github</a>
+      <a href="https://docs.wushuo.top" target="_blank">ani-rss</a> | <a href="https://github.com/wushuo894/ani-rss"
+                                                                         target="_blank">github</a>
     </div>
   </div>
   <App v-else></App>
