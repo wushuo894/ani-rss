@@ -28,7 +28,7 @@
           <el-table-column type="selection" width="55"/>
           <el-table-column label="状态" width="80">
             <template #default="it">
-              {{ list[it.$index].enable ? '已启用' : '未启用' }}
+              {{ searchList[it.$index].enable ? '已启用' : '未启用' }}
             </template>
           </el-table-column>
           <el-table-column label="标题" prop="title" width="200"/>
