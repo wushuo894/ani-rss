@@ -27,7 +27,7 @@ stop() {
 
 sigterm_handler() {
     stop
-    exit 143
+    exit 0
 }
 
 trap 'sigterm_handler' SIGTERM
