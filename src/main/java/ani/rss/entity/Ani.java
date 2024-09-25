@@ -156,6 +156,11 @@ public class Ani implements Serializable {
      */
     private Integer customEpisodeGroupIndex;
 
+    /**
+     * 遗漏检测
+     */
+    private Boolean omit;
+
     public static Ani bulidAni() {
         Ani newAni = new Ani();
         return newAni
@@ -181,7 +186,8 @@ public class Ani implements Serializable {
                 .setSubgroup("")
                 .setCustomEpisode(false)
                 .setCustomEpisodeStr("\\d{1,2}(\\.5)?")
-                .setCustomEpisodeGroupIndex(0);
+                .setCustomEpisodeGroupIndex(0)
+                .setOmit(true);
     }
 
     @Data

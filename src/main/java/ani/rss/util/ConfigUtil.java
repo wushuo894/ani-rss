@@ -84,7 +84,7 @@ public class ConfigUtil {
                 .setWebHookMethod("POST")
                 .setSeasonName("Season 1")
                 .setShowPlaylist(true)
-                .setOmit(false)
+                .setOmit(true)
                 .setBgmToken("")
                 .setApiKey("")
                 .setWeekShow(true)
