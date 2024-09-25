@@ -45,6 +45,10 @@
                                     font-weight: 300;
                                     line-height: 1.667;
                                     -webkit-line-clamp: 2;
+                                    display: -webkit-flex;
+                                    display: -ms-flexbox;
+                                    display: -webkit-box;
+                                    -webkit-box-orient: vertical;
                                     max-width: 220px;
                                     overflow: hidden;
                                     text-overflow: ellipsis;
