@@ -62,7 +62,6 @@ services:
 docker compose up -d
 ```
 
-
 <hr style="height: 1px;">
 <div>
 <img src="https://docs.wushuo.top/image/tr.png" alt="transmission" width="60">

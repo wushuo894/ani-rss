@@ -14,11 +14,11 @@ public class Test4 {
         List<Item> items = AniUtil.getItems(ani);
         ConsoleTable consoleTable = new ConsoleTable();
         consoleTable.setSBCMode(false);
-        consoleTable.addHeader("标题","重命名");
+        consoleTable.addHeader("标题", "重命名");
         for (Item item : items) {
             String title = item.getTitle();
             String reName = item.getReName();
-            consoleTable.addBody(title,reName);
+            consoleTable.addBody(title, reName);
         }
         consoleTable.print();
     }

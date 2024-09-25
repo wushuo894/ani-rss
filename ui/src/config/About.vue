@@ -16,7 +16,8 @@
       <a href="https://t.me/ani_rss" target="_blank">https://t.me/ani_rss</a>
     </el-form-item>
     <el-form-item label="QQ群">
-      <a href="http://qm.qq.com/cgi-bin/qm/qr?_wv=1027&amp;k=_EKAkxs6Ld4fWcMNAbUQzcp4tv20vjVH&amp;authKey=KG3GAsZfKQosbAWkks%2FbEj0LCGwxoeLJ3DTU0loHkGdHLqHYgJNv3%2BmSERmYt47b&amp;noverify=0&amp;group_code=171563627" target="_blank">171563627</a>
+      <a href="http://qm.qq.com/cgi-bin/qm/qr?_wv=1027&amp;k=_EKAkxs6Ld4fWcMNAbUQzcp4tv20vjVH&amp;authKey=KG3GAsZfKQosbAWkks%2FbEj0LCGwxoeLJ3DTU0loHkGdHLqHYgJNv3%2BmSERmYt47b&amp;noverify=0&amp;group_code=171563627"
+         target="_blank">171563627</a>
     </el-form-item>
     <el-form-item label="版本号">
       <div>
@@ -98,7 +99,7 @@ const about = ref({
   'markdownBody': ''
 })
 
-onMounted(()=>{
+onMounted(() => {
   api.get('api/about')
       .then(res => {
         about.value = res.data

@@ -12,10 +12,12 @@
                        max="65535"/>
     </el-form-item>
     <el-form-item label="用户名">
-      <el-input v-model:model-value="props.config.proxyUsername" :disabled="!props.config.proxy" placeholder="可以为空"/>
+      <el-input v-model:model-value="props.config.proxyUsername" :disabled="!props.config.proxy"
+                placeholder="可以为空"/>
     </el-form-item>
     <el-form-item label="密码">
-      <el-input v-model:model-value="props.config.proxyPassword" :disabled="!props.config.proxy" placeholder="可以为空"/>
+      <el-input v-model:model-value="props.config.proxyPassword" :disabled="!props.config.proxy"
+                placeholder="可以为空"/>
     </el-form-item>
     <el-form-item label="启用">
       <el-switch v-model:model-value="props.config.proxy"/>
