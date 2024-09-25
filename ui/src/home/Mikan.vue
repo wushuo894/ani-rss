@@ -137,7 +137,7 @@ let list = async (body, text) => {
   loading.value = true
   text = text ? text : ''
   body = body ? body : {}
-  return api.post('/api/mikan?text=' + text, body)
+  return api.post('api/mikan?text=' + text, body)
       .then(res => {
         let seasons = res.data['seasons']
         let items = res.data['items']
@@ -183,7 +183,7 @@ let collapseChange = (v) => {
     return;
   }
   groupLoading.value = true
-  api.get('/api/mikan/group?url=' + v)
+  api.get('api/mikan/group?url=' + v)
       .then(res => {
         groups.value[v] = res.data
       })
@@ -199,7 +199,7 @@ let add = (v) => {
 
 
 let img = (it) => {
-  return `/api/file?img=${btoa(it['cover'])}&s=${window.authorization}`;
+  return `api/file?img=${btoa(it['cover'])}&s=${window.authorization}`;
 }
 
 defineExpose({show})

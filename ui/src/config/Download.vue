@@ -106,7 +106,7 @@ const downloadSelect = ref([
 const downloadLoginTestLoading = ref(false)
 const downloadLoginTest = () => {
   downloadLoginTestLoading.value = true
-  api.post("/api/downloadLoginTestLoading", props.config)
+  api.post("api/downloadLoginTestLoading", props.config)
       .then(res => {
         ElMessage.success(res.message)
       })

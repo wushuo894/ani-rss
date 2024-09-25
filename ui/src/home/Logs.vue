@@ -85,7 +85,7 @@ const clearLoading = ref(false)
 
 const clear = () => {
   clearLoading.value = true
-  api.del('/api/logs')
+  api.del('api/logs')
       .then(res => {
         getLogs();
       })
@@ -96,7 +96,7 @@ const clear = () => {
 
 const getLogs = () => {
   getLogsLoading.value = true
-  api.get('/api/logs')
+  api.get('api/logs')
       .then(async res => {
         logs.value = res.data
         for (let datum of res.data) {

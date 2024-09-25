@@ -72,7 +72,7 @@ const list = ref([])
 
 const getList = () => {
   loading.value = true
-  api.get('/api/ani')
+  api.get('api/ani')
       .then(res => {
         for (let datum of res.data) {
           datum.ok = false
@@ -102,7 +102,7 @@ const delLoading = ref(false)
 
 const del = () => {
   delLoading.value = true
-  api.del('/api/ani', list.value.filter(it => it.ok).map(it => it.id))
+  api.del('api/ani', list.value.filter(it => it.ok).map(it => it.id))
       .then(res => {
         ElMessage.success(res.message)
         emit('load')

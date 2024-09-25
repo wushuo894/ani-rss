@@ -14,7 +14,7 @@
                 <el-card shadow="never">
                   <div style="display: flex;width: 100%;align-items: center;">
                     <div style="height: 100%;">
-                      <img :src="`/api/file?filename=${item['cover']}&s=${authorization()}`" height="130" width="92"
+                      <img :src="`api/file?filename=${item['cover']}&s=${authorization()}`" height="130" width="92"
                            :alt="item.title"
                            @click="openBgmUrl(item)"
                            style="border-radius: 4px;cursor: pointer;">
@@ -223,7 +223,7 @@ const searchList = (week) => {
 
 const delAni = (ani) => {
   ani['deleteLoading'] = true
-  api.del('/api/ani', [ani.id])
+  api.del('api/ani', [ani.id])
       .then(res => {
         ElMessage.success(res.message)
         getList()
@@ -237,7 +237,7 @@ const list = ref([])
 const weekShow = ref(false)
 
 const getList = () => {
-  api.get('/api/config')
+  api.get('api/config')
       .then(res => {
         showPlaylist.value = res.data.showPlaylist
         weekShow.value = res.data.weekShow
@@ -248,7 +248,7 @@ const getList = () => {
             label: ''
           }]
         }
-        api.get('/api/ani')
+        api.get('api/ani')
             .then(res => {
               list.value = res.data
             })

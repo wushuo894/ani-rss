@@ -90,7 +90,7 @@ let show = (ani) => {
   select.value = '全部'
   dialogVisible.value = true
   loading.value = true
-  api.post('/api/items', ani)
+  api.post('api/items', ani)
       .then(res => {
         data.value = res.data
       })

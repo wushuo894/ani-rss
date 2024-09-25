@@ -29,7 +29,7 @@ const ani = ref({
 })
 
 const editAni = (fun) => {
-  api.put('/api/ani', ani.value)
+  api.put('api/ani', ani.value)
       .then(res => {
         ElMessage.success(res.message)
         emit('load')

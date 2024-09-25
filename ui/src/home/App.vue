@@ -181,7 +181,7 @@ const about = ref({
   'markdownBody': ''
 })
 
-api.get('/api/about')
+api.get('api/about')
     .then(res => {
       about.value = res.data
     })
@@ -190,7 +190,7 @@ let downloadLoading = ref(false)
 
 let download = () => {
   downloadLoading.value = true
-  api.post('/api/ani?download=true')
+  api.post('api/ani?download=true')
       .then(res => {
         ElMessage.success(res.message)
       })

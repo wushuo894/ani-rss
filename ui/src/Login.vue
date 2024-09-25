@@ -59,7 +59,7 @@ let login = () => {
   user.value.username = user.value.username.trim()
   let my_user = JSON.parse(JSON.stringify(user.value))
   my_user.password = my_user.password ? CryptoJS.MD5(my_user.password).toString() : '';
-  api.post('/api/login', my_user)
+  api.post('api/login', my_user)
       .then(res => {
         localStorage.setItem("authorization", res.data)
         window.authorization = res.data
@@ -74,7 +74,7 @@ let test = () => {
   if (window.authorization) {
     return
   }
-  fetch('/api/test', {
+  fetch('api/test', {
     'headers': {
       'Authorization': window.authorization
     }

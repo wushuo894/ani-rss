@@ -138,7 +138,7 @@ const getUpdates = () => {
   }
 
   getUpdatesLoading.value = true
-  api.post("/api/telegram?method=getUpdates", props.config)
+  api.post("api/telegram?method=getUpdates", props.config)
       .then(res => {
         chatIdMap.value = res.data
         if (Object.keys(chatIdMap.value).length) {
@@ -161,7 +161,7 @@ const messageTestType = ref('')
 const messageTest = (type) => {
   messageTestType.value = type
   messageTestLoading.value = true
-  api.post("/api/message?type=" + type, props.config)
+  api.post("api/message?type=" + type, props.config)
       .then(res => {
         ElMessage.success(res.message)
       })
