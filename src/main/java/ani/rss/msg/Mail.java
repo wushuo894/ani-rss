@@ -5,6 +5,7 @@ import ani.rss.entity.Config;
 import ani.rss.entity.MyMailAccount;
 import ani.rss.util.ExceptionUtil;
 import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.lang.Assert;
 import cn.hutool.core.text.StrFormatter;
 import cn.hutool.extra.mail.MailAccount;
 import cn.hutool.extra.mail.MailUtil;
@@ -24,6 +25,13 @@ public class Mail implements Message {
             return false;
         }
         String from = myMailAccount.getFrom();
+        String host = myMailAccount.getHost();
+        String pass = myMailAccount.getPass();
+        Assert.notBlank(from, "发件人邮箱 为空");
+        Assert.notBlank(host, "SMTP地址 为空");
+        Assert.notBlank(pass, "密码 为空");
+        Assert.notBlank(mailAddressee, "收件人为空");
+
         MailAccount mailAccount = new MailAccount();
         BeanUtil.copyProperties(myMailAccount, mailAccount);
         mailAccount.setUser(from)
