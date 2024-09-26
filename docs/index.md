@@ -12,6 +12,8 @@ ani-rss
 <a href="docs">使用文档</a>
 |
 <a href="docker">Docker部署</a>
+|
+<a href="faq">常见问题</a>
 
 <p></p>
 
