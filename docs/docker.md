@@ -71,6 +71,34 @@ docker compose up -d
 <p>支持 <strong>Transmission</strong> <strong>qBittorrent</strong> <strong>Aria2</strong></p>
 </div>
 
+### Container Manager
+
+![Xnip2024-09-26_20-25-16.jpg](https://docs.wushuo.top/image/Xnip2024-09-26_20-25-16.jpg)
+
+在注册表搜索 **ani-rss** 选择第一个 wushuo894/ani-rss 并下载
+
+![Xnip2024-09-26_20-26-21.jpg](https://docs.wushuo.top/image/Xnip2024-09-26_20-26-21.jpg)
+
+下载后点击运行
+
+![Xnip2024-09-26_20-38-32.jpg](https://docs.wushuo.top/image/Xnip2024-09-26_20-38-32.jpg)
+
+修改容器名
+
+![Xnip2024-09-26_20-28-32.jpg](https://docs.wushuo.top/image/Xnip2024-09-26_20-28-32.jpg)
+
+配置端口 默认7789
+设置 配置文件存放位置 /config
+设置 番剧存放位置(和你的QB保持一致,/Media 仅作示例) /Media
+
+![Xnip2024-09-26_20-39-43.jpg](https://docs.wushuo.top/image/Xnip2024-09-26_20-39-43.jpg)
+
+确认配置无误后点击完成
+
+通过 **http://[ip]:7789** 即可访问
+
+默认 用户名:admin 密码:admin
+
 ### 相关文章:
 
 [猫猫博客 Docker 部署 ani-rss 实现自动追番](https://catcat.blog/docker-ani-rss.html)
