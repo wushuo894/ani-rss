@@ -62,7 +62,7 @@ services:
 docker compose up -d
 ```
 
-### Container Manager
+### Container Manager 部署
 
 ![Xnip2024-09-26_20-25-16.jpg](https://docs.wushuo.top/image/Xnip2024-09-26_20-25-16.jpg)
 
