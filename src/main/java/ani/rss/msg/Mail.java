@@ -30,7 +30,7 @@ public class Mail implements Message {
         Assert.notBlank(from, "发件人邮箱 为空");
         Assert.notBlank(host, "SMTP地址 为空");
         Assert.notBlank(pass, "密码 为空");
-        Assert.notBlank(mailAddressee, "收件人为空");
+        Assert.notBlank(mailAddressee, "收件人 为空");
 
         MailAccount mailAccount = new MailAccount();
         BeanUtil.copyProperties(myMailAccount, mailAccount);
