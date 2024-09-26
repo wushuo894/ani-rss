@@ -34,7 +34,7 @@ ps: 如果需要开启 文件已下载自动跳过 功能 请确保 qBittorrent 
     --restart always \
     wushuo894/ani-rss
 
-## Docker Compose部署
+## Docker Compose 部署
 
 创建docker-compose.yml文件，内容如下
 
