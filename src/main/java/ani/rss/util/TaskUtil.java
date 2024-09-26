@@ -1,5 +1,6 @@
 package ani.rss.util;
 
+import ani.rss.task.BgmTask;
 import ani.rss.task.RenameTask;
 import ani.rss.task.RssTask;
 import cn.hutool.core.thread.ThreadUtil;
@@ -41,6 +42,7 @@ public class TaskUtil {
         LOOP.set(true);
         THREADS.add(new RenameTask(LOOP));
         THREADS.add(new RssTask(LOOP));
+        THREADS.add(new BgmTask(LOOP));
         for (Thread thread : THREADS) {
             thread.start();
         }

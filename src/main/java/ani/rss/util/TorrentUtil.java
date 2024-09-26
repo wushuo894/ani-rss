@@ -176,17 +176,6 @@ public class TorrentUtil {
         if (!autoDisabled) {
             return;
         }
-        try {
-            BigInfo bgmInfo = BgmUtil.getBgmInfo(ani);
-            ani.setScore(bgmInfo.getScore());
-            if (ani.getTotalEpisodeNumber() < 1) {
-                Integer eps = bgmInfo.getEps();
-                ani.setTotalEpisodeNumber(eps);
-            }
-        } catch (Exception e) {
-            String message = ExceptionUtil.getMessage(e);
-            log.error(message, e);
-        }
         Integer totalEpisodeNumber = ani.getTotalEpisodeNumber();
         if (totalEpisodeNumber < 1) {
             return;
