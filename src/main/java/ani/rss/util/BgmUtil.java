@@ -218,7 +218,10 @@ public class BgmUtil {
         setToken(httpRequest);
         return httpRequest
                 .thenFunction(res -> {
-                    JsonObject jsonObject = gson.fromJson(res.body(), JsonObject.class);
+                    Assert.isTrue(res.isOk(), "status: {}", res.getStatus());
+                    String body = res.body();
+                    Assert.isTrue(JSONUtil.isTypeJSON(body), "no json");
+                    JsonObject jsonObject = gson.fromJson(body, JsonObject.class);
                     BigInfo bigInfo = new BigInfo();
 
                     String nameCn = jsonObject.get("name_cn").getAsString();
