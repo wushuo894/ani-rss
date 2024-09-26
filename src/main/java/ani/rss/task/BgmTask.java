@@ -31,7 +31,7 @@ public class BgmTask extends Thread {
             for (Ani ani : aniList) {
                 Boolean enable = ani.getEnable();
                 Integer totalEpisodeNumber = ani.getTotalEpisodeNumber();
-                if (enable || totalEpisodeNumber < 1) {
+                if (enable || ani.getScore() < 1) {
                     try {
                         BigInfo bgmInfo = BgmUtil.getBgmInfo(ani);
                         double score = bgmInfo.getScore();
