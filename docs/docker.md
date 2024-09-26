@@ -62,15 +62,6 @@ services:
 docker compose up -d
 ```
 
-<hr style="height: 1px;">
-<div>
-<img src="https://docs.wushuo.top/image/tr.png" alt="transmission" width="60">
-<img src="https://docs.wushuo.top/image/qb.png" alt="qbittorrent" width="60">
-<img src="https://docs.wushuo.top/image/aria2.png" alt="qbittorrent" width="60">
-
-<p>支持 <strong>Transmission</strong> <strong>qBittorrent</strong> <strong>Aria2</strong></p>
-</div>
-
 ### Container Manager
 
 ![Xnip2024-09-26_20-25-16.jpg](https://docs.wushuo.top/image/Xnip2024-09-26_20-25-16.jpg)
@@ -98,6 +89,15 @@ docker compose up -d
 通过 **http://[ip]:7789** 即可访问
 
 默认 用户名:admin 密码:admin
+
+<hr style="height: 1px;">
+<div>
+<img src="https://docs.wushuo.top/image/tr.png" alt="transmission" width="60">
+<img src="https://docs.wushuo.top/image/qb.png" alt="qbittorrent" width="60">
+<img src="https://docs.wushuo.top/image/aria2.png" alt="qbittorrent" width="60">
+
+<p>支持 <strong>Transmission</strong> <strong>qBittorrent</strong> <strong>Aria2</strong></p>
+</div>
 
 ### 相关文章:
 
