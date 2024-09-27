@@ -34,13 +34,14 @@ public class BgmTask extends Thread {
                 if (enable || ani.getScore() < 1) {
                     try {
                         BigInfo bgmInfo = BgmUtil.getBgmInfo(ani);
-                        String subjectId = bgmInfo.getSubjectId();
-                        int eps = BgmUtil.getEpisodes(subjectId, 0).size();
                         double score = bgmInfo.getScore();
+                        ani.setScore(score);
+
                         if (totalEpisodeNumber < 1) {
+                            String subjectId = bgmInfo.getSubjectId();
+                            int eps = BgmUtil.getEpisodes(subjectId, 0).size();
                             ani.setTotalEpisodeNumber(eps);
                         }
-                        ani.setScore(score);
                     } catch (Exception e) {
                         String message = ExceptionUtil.getMessage(e);
                         log.error(message, e);
