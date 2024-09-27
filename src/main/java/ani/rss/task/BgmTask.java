@@ -34,8 +34,9 @@ public class BgmTask extends Thread {
                 if (enable || ani.getScore() < 1) {
                     try {
                         BigInfo bgmInfo = BgmUtil.getBgmInfo(ani);
+                        String subjectId = bgmInfo.getSubjectId();
+                        int eps = BgmUtil.getEpisodes(subjectId, 0).size();
                         double score = bgmInfo.getScore();
-                        Integer eps = bgmInfo.getEps();
                         if (totalEpisodeNumber < 1) {
                             ani.setTotalEpisodeNumber(eps);
                         }

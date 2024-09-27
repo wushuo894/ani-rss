@@ -4,6 +4,7 @@ import ani.rss.annotation.Auth;
 import ani.rss.annotation.Path;
 import ani.rss.entity.Ani;
 import ani.rss.entity.Config;
+import ani.rss.entity.Item;
 import ani.rss.task.RssTask;
 import ani.rss.util.AniUtil;
 import ani.rss.util.ConfigUtil;
@@ -108,6 +109,9 @@ public class AniAction implements BaseAction {
             resultErrorMsg("名称重复");
             return;
         }
+
+        List<Item> items = AniUtil.getItems(ani);
+        ani.setCurrentEpisodeNumber((int) items.stream().filter(it -> !it.getReName().endsWith(".5")).count());
 
         AniUtil.ANI_LIST.add(ani);
         AniUtil.sync();

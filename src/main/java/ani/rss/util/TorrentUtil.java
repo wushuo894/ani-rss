@@ -168,8 +168,10 @@ public class TorrentUtil {
             }
             count++;
         }
-        if (!items.isEmpty() && ani.getCurrentEpisodeNumber() != items.size()) {
-            ani.setCurrentEpisodeNumber(items.size());
+
+        long size = items.stream().filter(it -> !it.getReName().endsWith(".5")).count();
+        if (size > 0 && ani.getCurrentEpisodeNumber() != size) {
+            ani.setCurrentEpisodeNumber((int) size);
             AniUtil.sync();
         }
 

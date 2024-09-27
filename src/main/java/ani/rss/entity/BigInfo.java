@@ -8,6 +8,8 @@ import java.time.LocalDateTime;
 @Data
 @Accessors(chain = true)
 public class BigInfo {
+    private String subjectId;
+
     /**
      * 名称
      */
