@@ -4,17 +4,13 @@
   <div style="height: 100%;overflow: hidden;">
     <el-scrollbar>
       <div style="margin: 0 10px;min-height: 500px" v-loading="loading">
-        <div class="grid-container">
-          <template v-for="weekItem in weekList">
-            <template v-if="searchList(weekItem.i).length">
-              <el-card shadow="never" v-if="weekItem.label.length">
-                <div style="display: flex;width: 100%;align-items: center;height: 100%;padding-left: 5%">
-                  <h2 style="margin: 16px 0 8px 4px;" v-if="weekItem.label.length">
-                    {{ weekItem.label }} ｜
-                  </h2>
-                </div>
-              </el-card>
-              <template v-for="item in searchList(weekItem.i)" v-if="searchList(weekItem.i).length">
+        <template v-for="weekItem in weekList">
+          <div v-show="searchList(weekItem.i).length">
+            <h2 style="margin: 16px 0 8px 4px;" v-if="weekItem.label.length">
+              {{ weekItem.label }}
+            </h2>
+            <div class="grid-container">
+              <div v-for="item in searchList(weekItem.i)" v-if="searchList(weekItem.i).length">
                 <el-card shadow="never">
                   <div style="display: flex;width: 100%;align-items: center;">
                     <div style="height: 100%;">
@@ -124,10 +120,10 @@
                     </div>
                   </div>
                 </el-card>
-              </template>
-            </template>
-          </template>
-        </div>
+              </div>
+            </div>
+          </div>
+        </template>
         <div style="height: 80px;"></div>
       </div>
     </el-scrollbar>
