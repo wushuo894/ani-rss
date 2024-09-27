@@ -27,6 +27,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 /**
  * BGM
@@ -109,13 +110,13 @@ public class BgmUtil {
     }
 
     /**
-     * 获取 EpisodeId
+     * 获取视频列表
      *
      * @param subjectId 番剧id
-     * @param e         集数
-     * @return 集id
+     * @param type      0正常 1番外
+     * @return
      */
-    public static String getEpisodeId(String subjectId, Double e) {
+    public static List<JsonObject> getEpisodes(String subjectId, Integer type) {
         ThreadUtil.sleep(500);
         Objects.requireNonNull(subjectId);
         HttpRequest httpRequest = HttpReq.get(host + "/v0/episodes", true);
@@ -125,38 +126,56 @@ public class BgmUtil {
                 .form("subject_id", subjectId)
                 .thenFunction(res -> {
                     if (!res.isOk()) {
-                        return "";
+                        return List.of();
                     }
 
                     String body = res.body();
                     if (!JSONUtil.isTypeJSON(body)) {
-                        return "";
+                        return List.of();
                     }
 
-                    List<JsonElement> list = gson.fromJson(body, JsonObject.class).get("data").getAsJsonArray().asList();
-                    String epId = "";
-                    String sortId = "";
-                    for (JsonElement jsonElement : list) {
-                        JsonObject itemObject = jsonElement.getAsJsonObject();
-
-                        int type = itemObject.get("type").getAsInt();
-                        if (type > 0) {
-                            continue;
-                        }
-
-                        double ep = itemObject.get("ep").getAsDouble();
-                        double sort = itemObject.get("sort").getAsDouble();
-                        if (ep == e) {
-                            epId = itemObject.get("id").getAsString();
-                            break;
-                        }
-                        if (sort == e) {
-                            sortId = itemObject.get("id").getAsString();
-                            break;
-                        }
-                    }
-                    return StrUtil.blankToDefault(epId, sortId);
+                    return gson.fromJson(body, JsonObject.class)
+                            .get("data")
+                            .getAsJsonArray()
+                            .asList()
+                            .stream()
+                            .map(JsonElement::getAsJsonObject)
+                            .filter(itemObject -> {
+                                if (Objects.nonNull(type)) {
+                                    return type == itemObject.get("type").getAsInt();
+                                }
+                                return true;
+                            })
+                            .collect(Collectors.toList());
                 });
+    }
+
+    /**
+     * 获取 EpisodeId
+     *
+     * @param subjectId 番剧id
+     * @param e         集数
+     * @return 集id
+     */
+    public static String getEpisodeId(String subjectId, Double e) {
+        String epId = "";
+        String sortId = "";
+
+        List<JsonObject> episodes = getEpisodes(subjectId, 0);
+        for (JsonObject itemObject : episodes) {
+            double ep = itemObject.get("ep").getAsDouble();
+            double sort = itemObject.get("sort").getAsDouble();
+            if (ep == e) {
+                epId = itemObject.get("id").getAsString();
+                break;
+            }
+            if (sort == e) {
+                sortId = itemObject.get("id").getAsString();
+                break;
+            }
+        }
+
+        return StrUtil.blankToDefault(epId, sortId);
     }
 
     /**
@@ -235,7 +254,9 @@ public class BgmUtil {
                         score = rating.get("score").getAsDouble();
                     }
 
-                    return bigInfo.setNameCn(nameCn)
+                    return bigInfo
+                            .setSubjectId(subjectId)
+                            .setNameCn(nameCn)
                             .setDate(LocalDateTimeUtil.parse(date, DatePattern.NORM_DATE_PATTERN))
                             .setEps(eps)
                             .setScore(score)

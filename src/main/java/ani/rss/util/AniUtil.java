@@ -225,9 +225,11 @@ public class AniUtil {
         try {
             BigInfo bgmInfo = BgmUtil.getBgmInfo(ani);
 
-            LocalDateTime date = bgmInfo.getDate();
+            String subjectId = bgmInfo.getSubjectId();
+            int eps = BgmUtil.getEpisodes(subjectId, 0).size();
 
-            ani.setTotalEpisodeNumber(bgmInfo.getEps())
+            LocalDateTime date = bgmInfo.getDate();
+            ani.setTotalEpisodeNumber(eps)
                     .setOva(bgmInfo.getOva())
                     .setScore(bgmInfo.getScore())
                     .setYear(date.getYear())
@@ -288,7 +290,6 @@ public class AniUtil {
         log.debug("获取到动漫信息 {}", JSONUtil.formatJsonStr(GSON.toJson(ani)));
 
         List<Item> items = getItems(ani, s);
-        ani.setCurrentEpisodeNumber((int) items.stream().filter(it -> !it.getReName().endsWith(".5")).count());
         log.debug("获取到视频 共{}个", items.size());
         if (items.isEmpty() || ani.getOva()) {
             return ani;
