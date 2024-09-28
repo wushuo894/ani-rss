@@ -1,7 +1,10 @@
 package ani.rss.util;
 
 import ani.rss.download.BaseDownload;
-import ani.rss.entity.*;
+import ani.rss.entity.Ani;
+import ani.rss.entity.Config;
+import ani.rss.entity.Item;
+import ani.rss.entity.TorrentsInfo;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.text.StrFormatter;
 import cn.hutool.core.thread.ThreadUtil;
