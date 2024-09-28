@@ -18,8 +18,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.function.Function;
 
-import static ani.rss.util.AniUtil.saveJpg;
-
 public class MikanUtil {
     public static String getMikanHost() {
         Config config = ConfigUtil.CONFIG;
@@ -162,14 +160,14 @@ public class MikanUtil {
                 .then(res -> {
                     org.jsoup.nodes.Document html = Jsoup.parse(res.body());
 
-                    // 获取封面
-                    Elements elementsByClass = html.select(".bangumi-poster");
-                    Element element = elementsByClass.get(0);
-                    String style = element.attr("style");
-                    String image = style.replace("background-image: url('", "").replace("');", "");
-                    HttpConnection httpConnection = (HttpConnection) ReflectUtil.getFieldValue(res, "httpConnection");
-                    String saveJpg = saveJpg(URLUtil.getHost(httpConnection.getUrl()) + image);
-                    ani.setCover(saveJpg);
+                    Elements bangumiInfos = html.select(".bangumi-info");
+                    for (Element bangumiInfo : bangumiInfos) {
+                        String string = bangumiInfo.ownText();
+                        if (string.equals("Bangumi番组计划链接：")) {
+                            String bgmUrl = bangumiInfo.select("a").get(0).attr("href");
+                            ani.setBgmUrl(bgmUrl);
+                        }
+                    }
 
                     if (StrUtil.isBlank(subgroupId)) {
                         return;

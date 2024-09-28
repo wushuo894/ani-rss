@@ -74,17 +74,6 @@ public class AniUtil {
 
         // 处理旧数据
         for (Ani ani : ANI_LIST) {
-            try {
-                String cover = ani.getCover();
-                if (ReUtil.contains("http(s*)://", cover)) {
-                    cover = AniUtil.saveJpg(cover);
-                    ani.setCover(cover);
-                }
-            } catch (Exception e) {
-                String message = ExceptionUtil.getMessage(e);
-                log.error(message);
-                log.debug(message, e);
-            }
             // 备用rss数据结构改变
             List<Ani.BackRss> backRssList = ani.getBackRssList();
             List<String> backRss = ani.getBackRss();
@@ -155,27 +144,6 @@ public class AniUtil {
             }
         }
 
-        String s = HttpReq.get(url, true)
-                .thenFunction(HttpResponse::body);
-        Document document = XmlUtil.readXML(s);
-        Node channel = document.getElementsByTagName("channel").item(0);
-        NodeList childNodes = channel.getChildNodes();
-
-        for (int i = childNodes.getLength() - 1; i >= 0; i--) {
-            Node item = childNodes.item(i);
-            String nodeName = item.getNodeName();
-            if (nodeName.equals("title")) {
-                title = ReUtil.replaceAll(item.getTextContent(), "^Mikan Project - ", "").trim();
-            }
-        }
-
-        String seasonReg = "第(.+)季";
-        if (ReUtil.contains(seasonReg, title)) {
-            season = Convert.chineseToNumber(ReUtil.get(seasonReg, title, 1));
-            title = ReUtil.replaceAll(title, seasonReg, "").trim();
-        }
-        title = title.replace("剧场版", "").trim();
-
         Ani ani = Ani.bulidAni();
 
         if (List.of("nyaa", "dmhy").contains(type)) {
@@ -184,49 +152,33 @@ public class AniUtil {
             } else {
                 Map<String, String> paramMap = HttpUtil.decodeParamMap(url, StandardCharsets.UTF_8);
                 title = paramMap.get("q");
-                if (StrUtil.isBlank(text)) {
+                if (StrUtil.isBlank(title)) {
                     title = paramMap.get("keyword");
                 }
             }
             Assert.notBlank(title, "标题获取失败，请手动填写");
-
-            Mikan list = MikanUtil.list(title, new Mikan.Season());
-            List<Mikan.Item> items = list.getItems();
-            List<Ani> anis = new ArrayList<>();
-            if (!items.isEmpty()) {
-                Mikan.Item item = items.get(0);
-                anis = item.getItems();
-            }
-            if (!anis.isEmpty()) {
-                title = anis.get(0).getTitle();
-                String url1 = anis.get(0).getUrl();
-                ani.setBangumiId(new File(url1).getName());
-            }
-            Assert.notBlank(ani.getBangumiId(), "标题获取失败，请手动填写");
+            String subjectId = BgmUtil.getSubjectId(title);
+            log.info("subjectId: {}", subjectId);
+            Assert.notBlank(subjectId, "标题获取失败，请手动填写");
+            ani.setBgmUrl("https://bgm.tv/subject/" + subjectId);
         } else {
             ani.setBangumiId(bangumiId);
+            try {
+                MikanUtil.getMikanInfo(ani, subgroupid);
+            } catch (Exception e) {
+                throw new RuntimeException("获取失败");
+            }
         }
-
-        try {
-            MikanUtil.getMikanInfo(ani, subgroupid);
-        } catch (Exception e) {
-            throw new RuntimeException("获取失败");
-        }
-
-        String themoviedbName = getThemoviedbName(title);
-
-        Config config = ConfigUtil.CONFIG;
-        Boolean titleYear = config.getTitleYear();
-        Boolean tmdb = config.getTmdb();
-        Boolean enabledExclude = config.getEnabledExclude();
-        Boolean importExclude = config.getImportExclude();
-        List<String> exclude = config.getExclude();
 
         try {
             BigInfo bgmInfo = BgmUtil.getBgmInfo(ani);
 
+            title = bgmInfo.getNameCn();
+
             String subjectId = bgmInfo.getSubjectId();
             int eps = BgmUtil.getEpisodes(subjectId, 0).size();
+
+            String image = bgmInfo.getImage();
 
             LocalDateTime date = bgmInfo.getDate();
             ani.setTotalEpisodeNumber(eps)
@@ -234,13 +186,34 @@ public class AniUtil {
                     .setScore(bgmInfo.getScore())
                     .setYear(date.getYear())
                     .setMonth(date.getMonthValue())
-                    .setDate(date.getDayOfMonth());
+                    .setDate(date.getDayOfMonth())
+                    .setImage(image);
         } catch (Exception e) {
             String message = ExceptionUtil.getMessage(e);
             log.error(message, e);
+            throw new RuntimeException("获取bgm信息失败");
         }
 
+        String image = ani.getImage();
+        ani.setCover(saveJpg(image));
+
+        String seasonReg = "第(.+)季";
+        if (ReUtil.contains(seasonReg, title)) {
+            season = Convert.chineseToNumber(ReUtil.get(seasonReg, title, 1));
+            title = ReUtil.replaceAll(title, seasonReg, "").trim();
+        }
+        title = title.replace("剧场版", "").trim();
+
+        String themoviedbName = getThemoviedbName(title);
+
         Integer year = ani.getYear();
+
+        Config config = ConfigUtil.CONFIG;
+        Boolean titleYear = config.getTitleYear();
+        Boolean tmdb = config.getTmdb();
+        Boolean enabledExclude = config.getEnabledExclude();
+        Boolean importExclude = config.getImportExclude();
+        List<String> exclude = config.getExclude();
 
         if (StrUtil.isNotBlank(themoviedbName) && tmdb) {
             title = themoviedbName;
@@ -289,6 +262,8 @@ public class AniUtil {
 
         log.debug("获取到动漫信息 {}", JSONUtil.formatJsonStr(GSON.toJson(ani)));
 
+        String s = HttpReq.get(url, true)
+                .thenFunction(HttpResponse::body);
         List<Item> items = getItems(ani, s);
         log.debug("获取到视频 共{}个", items.size());
         if (items.isEmpty() || ani.getOva()) {
@@ -308,7 +283,7 @@ public class AniUtil {
 
     public static String saveJpg(String coverUrl) {
         File jpgFile = new File(URLUtil.toURI(coverUrl).getPath());
-        String dir = jpgFile.getParentFile().getName();
+        String dir = jpgFile.getParentFile().getAbsolutePath();
         String filename = jpgFile.getName();
         File configDir = ConfigUtil.getConfigDir();
         FileUtil.mkdir(configDir + "/files/" + dir);
