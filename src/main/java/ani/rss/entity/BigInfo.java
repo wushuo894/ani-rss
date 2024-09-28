@@ -34,4 +34,9 @@ public class BigInfo {
      * 时间
      */
     private LocalDateTime date;
+
+    /**
+     * 图片
+     */
+    private String image;
 }

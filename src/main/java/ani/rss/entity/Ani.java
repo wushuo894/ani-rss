@@ -69,9 +69,14 @@ public class Ani implements Serializable {
     private Integer season;
 
     /**
-     * 封面
+     * 封面本地保存位置
      */
     private String cover;
+
+    /**
+     * 图片 https://
+     */
+    private String image;
 
     /**
      * 字幕组
