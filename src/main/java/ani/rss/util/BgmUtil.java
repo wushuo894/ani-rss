@@ -211,7 +211,9 @@ public class BgmUtil {
                     AniUtil.sync();
                 }
             }
+            Assert.notBlank(bangumiId);
             MikanUtil.getMikanInfo(ani, "");
+            bgmUrl = ani.getUrl();
         }
         Assert.notBlank(bgmUrl);
         String regStr = "^http(s)?://.+\\/(\\d+)(\\/)?$";
