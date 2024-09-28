@@ -117,6 +117,8 @@
         <div style="display: flex;justify-content: end;">
           <el-text class="mx-1" size="small">
             ${message} 会自动替换为信息
+            <br>
+            ${image} 会自动替换为图片链接
           </el-text>
         </div>
       </el-form>
