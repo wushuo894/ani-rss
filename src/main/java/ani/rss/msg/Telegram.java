@@ -26,6 +26,7 @@ public class Telegram implements Message {
         String telegramBotToken = config.getTelegramBotToken();
         String telegramChatId = config.getTelegramChatId();
         String telegramApiHost = config.getTelegramApiHost();
+        Boolean telegramImage = config.getTelegramImage();
         if (StrUtil.isBlank(telegramChatId) || StrUtil.isBlank(telegramBotToken)) {
             log.warn("telegram 通知的参数不完整");
             return false;
@@ -34,7 +35,7 @@ public class Telegram implements Message {
 
         String url = StrFormatter.format("{}/bot{}/sendMessage", telegramApiHost, telegramBotToken);
 
-        if (Objects.isNull(ani)) {
+        if (Objects.isNull(ani) || !telegramImage) {
             return HttpReq.post(url, true)
                     .body(gson.toJson(Map.of(
                             "chat_id", telegramChatId,
@@ -74,9 +75,16 @@ public class Telegram implements Message {
                             .asList()
                             .stream()
                             .map(JsonElement::getAsJsonObject)
-                            .map(o -> o.get("message").getAsJsonObject())
-                            .map(o -> o.get("from").getAsJsonObject())
-                            .forEach(o -> map.put(o.get("username").getAsString(), o.get("id").getAsString()));
+                            .map(o -> o.getAsJsonObject("message"))
+                            .filter(Objects::nonNull)
+                            .map(o -> o.getAsJsonObject("chat"))
+                            .filter(Objects::nonNull)
+                            .forEach(o ->
+                                    map.put(
+                                            o.get("type").getAsString() + ": " + o.get("username").getAsString(),
+                                            o.get("id").getAsString()
+                                    )
+                            );
                     return map;
                 });
     }
