@@ -120,7 +120,8 @@ const config = ref({
   'weekShow': false,
   'scoreShow': false,
   'backRss': false,
-  'downloadNew': false
+  'downloadNew': false,
+  'telegramImage': true
 })
 
 const activeName = ref('download')

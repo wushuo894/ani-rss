@@ -220,6 +220,11 @@ public class Config implements Serializable {
     private String telegramApiHost;
 
     /**
+     * telegram 发送图片
+     */
+    private Boolean telegramImage;
+
+    /**
      * webHookMethod
      */
     private String webHookMethod;
