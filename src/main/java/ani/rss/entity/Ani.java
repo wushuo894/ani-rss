@@ -166,6 +166,11 @@ public class Ani implements Serializable {
      */
     private Boolean omit;
 
+    /**
+     * 只下载最新集
+     */
+    private Boolean downloadNew;
+
     public static Ani bulidAni() {
         Ani newAni = new Ani();
         return newAni
@@ -192,7 +197,8 @@ public class Ani implements Serializable {
                 .setCustomEpisode(false)
                 .setCustomEpisodeStr("\\d{1,2}(\\.5)?")
                 .setCustomEpisodeGroupIndex(0)
-                .setOmit(true);
+                .setOmit(true)
+                .setDownloadNew(false);
     }
 
     @Data

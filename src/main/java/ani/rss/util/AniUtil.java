@@ -212,6 +212,7 @@ public class AniUtil {
         Integer year = ani.getYear();
 
         Config config = ConfigUtil.CONFIG;
+        Boolean downloadNew = config.getDownloadNew();
         Boolean titleYear = config.getTitleYear();
         Boolean tmdb = config.getTmdb();
         Boolean enabledExclude = config.getEnabledExclude();
@@ -242,6 +243,7 @@ public class AniUtil {
         title = title.trim();
 
         ani
+                .setDownloadNew(downloadNew)
                 .setGlobalExclude(enabledExclude)
                 .setType(type)
                 .setUrl(url.trim())
@@ -263,7 +265,6 @@ public class AniUtil {
         ani.setDownloadPath(downloadPath);
 
         log.debug("获取到动漫信息 {}", JSONUtil.formatJsonStr(GSON.toJson(ani)));
-
         if (ani.getOva()) {
             return ani;
         }

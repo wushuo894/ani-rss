@@ -88,7 +88,8 @@ public class ConfigUtil {
                 .setBgmToken("")
                 .setApiKey("")
                 .setWeekShow(true)
-                .setScoreShow(false);
+                .setScoreShow(false)
+                .setDownloadNew(false);
     }
 
     private static final Gson GSON = new GsonBuilder()
