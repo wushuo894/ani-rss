@@ -22,7 +22,7 @@
               </div>
               <div style="display: flex;margin-top: 4px;align-items: center;">
                 <div>
-                  <el-select v-model:model-value="chatId" @change="chatIdChange" style="width: 150px"
+                  <el-select v-model:model-value="chatId" @change="chatIdChange" style="width: 160px"
                              :disabled="!config.telegram">
                     <el-option v-for="item in Object.keys(chatIdMap)"
                                :key="item"
@@ -37,6 +37,9 @@
               </div>
             </div>
           </div>
+        </el-form-item>
+        <el-form-item label="图片">
+          <el-switch v-model:model-value="props.config.telegramImage" :disabled="!config.telegram"/>
         </el-form-item>
         <el-form-item label="开关">
           <div style="width: 100%;display: flex;justify-content: space-between;">
