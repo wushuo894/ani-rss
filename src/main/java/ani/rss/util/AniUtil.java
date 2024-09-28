@@ -246,7 +246,6 @@ public class AniUtil {
                 .setTitle(title)
                 .setThemoviedbName(themoviedbName);
 
-
         Boolean ova = ani.getOva();
         if (ova) {
             String ovaDownloadPath = config.getOvaDownloadPath();
