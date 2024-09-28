@@ -2,11 +2,14 @@ package ani.rss.msg;
 
 import ani.rss.entity.Ani;
 import ani.rss.entity.Config;
+import ani.rss.util.BgmUtil;
 import ani.rss.util.HttpReq;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpResponse;
 import cn.hutool.http.Method;
+
+import java.util.Objects;
 
 public class WebHook implements Message {
     @Override
@@ -21,6 +24,17 @@ public class WebHook implements Message {
 
         webHookUrl = webHookUrl.replace("${message}", text);
         webHookBody = webHookBody.replace("${message}", text);
+
+        if (Objects.nonNull(ani)) {
+            String image = ani.getImage();
+            if (StrUtil.isBlank(image)) {
+                image = BgmUtil.getBgmInfo(ani).getImage();
+            }
+            if (StrUtil.isNotBlank(image)) {
+                webHookUrl = webHookUrl.replace("${image}", image);
+                webHookBody = webHookBody.replace("${image}", image);
+            }
+        }
 
         HttpRequest httpRequest = HttpReq.get(webHookUrl)
                 .method(Method.valueOf(webHookMethod));
