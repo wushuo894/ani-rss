@@ -211,19 +211,7 @@ public class BgmUtil {
                     AniUtil.sync();
                 }
             }
-            bgmUrl = HttpReq.get(MikanUtil.getMikanHost() + "/Home/Bangumi/" + bangumiId, true)
-                    .thenFunction(res -> {
-                        org.jsoup.nodes.Document document = Jsoup.parse(res.body());
-                        Elements bangumiInfos = document.select(".bangumi-info");
-                        for (Element bangumiInfo : bangumiInfos) {
-                            String string = bangumiInfo.ownText();
-                            if (string.equals("Bangumi番组计划链接：")) {
-                                return bangumiInfo.select("a").get(0).attr("href");
-                            }
-                        }
-                        return "";
-                    });
-            ani.setBgmUrl(bgmUrl);
+            MikanUtil.getMikanInfo(ani, "");
         }
         Assert.notBlank(bgmUrl);
         String regStr = "^http(s)?://.+\\/(\\d+)(\\/)?$";
@@ -253,14 +241,19 @@ public class BgmUtil {
                     if (Objects.nonNull(rating)) {
                         score = rating.get("score").getAsDouble();
                     }
-
-                    return bigInfo
+                    bigInfo
                             .setSubjectId(subjectId)
                             .setNameCn(nameCn)
                             .setDate(LocalDateTimeUtil.parse(date, DatePattern.NORM_DATE_PATTERN))
                             .setEps(eps)
                             .setScore(score)
                             .setOva("OVA".equalsIgnoreCase(platform));
+
+                    JsonObject images = jsonObject.getAsJsonObject("images");
+                    if (Objects.nonNull(images)) {
+                        bigInfo.setImage(images.get("large").getAsString());
+                    }
+                    return bigInfo;
                 });
     }
 
