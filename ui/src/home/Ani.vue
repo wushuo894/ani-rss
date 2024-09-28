@@ -116,6 +116,9 @@
         <el-form-item label="遗漏检测">
           <el-switch v-model:model-value="props.ani.omit"/>
         </el-form-item>
+        <el-form-item label="只下载最新集">
+          <el-switch v-model:model-value="props.ani.downloadNew"/>
+        </el-form-item>
         <el-form-item label="启用">
           <el-switch v-model:model-value="props.ani.enable"/>
         </el-form-item>

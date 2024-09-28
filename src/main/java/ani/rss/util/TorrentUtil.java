@@ -5,6 +5,7 @@ import ani.rss.entity.Ani;
 import ani.rss.entity.Config;
 import ani.rss.entity.Item;
 import ani.rss.entity.TorrentsInfo;
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.text.StrFormatter;
 import cn.hutool.core.thread.ThreadUtil;
@@ -47,6 +48,7 @@ public class TorrentUtil {
 
         String title = ani.getTitle();
         Integer season = ani.getSeason();
+        Boolean downloadNew = ani.getDownloadNew();
 
         List<TorrentsInfo> torrentsInfos = getTorrentsInfos();
 
@@ -64,9 +66,13 @@ public class TorrentUtil {
 
         int currentDownloadCount = 0;
         List<Item> items = AniUtil.getItems(ani);
+
+        if (downloadNew && !items.isEmpty()) {
+            items = List.of(items.get(items.size() - 1));
+        }
+
         ItemsUtil.omit(ani, items);
         log.debug("{} 共 {} 个", title, items.size());
-
 
         long count = getTorrentsInfos()
                 .stream()

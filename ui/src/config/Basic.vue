@@ -16,6 +16,9 @@
       </el-collapse-item>
       <el-collapse-item title="添加订阅" name="2">
         <el-form label-width="auto">
+          <el-form-item label="只下载最新集">
+            <el-switch v-model:model-value="props.config.downloadNew"/>
+          </el-form-item>
           <el-form-item label="标题添加年份">
             <el-switch v-model:model-value="props.config.titleYear"/>
           </el-form-item>
