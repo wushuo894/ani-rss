@@ -25,7 +25,8 @@ public class WebHook implements Message {
         webHookUrl = webHookUrl.replace("${message}", text);
         webHookBody = webHookBody.replace("${message}", text);
 
-        if (Objects.nonNull(ani)) {
+        if (Objects.nonNull(ani) &&
+                (webHookBody.contains("${image}") || webHookUrl.contains("${image}"))) {
             String image = ani.getImage();
             if (StrUtil.isBlank(image)) {
                 image = BgmUtil.getBgmInfo(ani).getImage();
