@@ -295,7 +295,6 @@ public class AniUtil {
         File configDir = ConfigUtil.getConfigDir();
         FileUtil.mkdir(configDir + "/files/" + dir);
         File file = new File(configDir + "/files/" + dir + "/" + filename);
-        log.info(file.toString());
         if (file.exists()) {
             return dir + "/" + filename;
         }
