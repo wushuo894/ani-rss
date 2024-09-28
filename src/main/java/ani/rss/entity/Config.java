@@ -284,4 +284,9 @@ public class Config implements Serializable {
      */
     private Boolean weekShow;
 
+    /**
+     * 只下载最新集
+     */
+    private Boolean downloadNew;
+
 }

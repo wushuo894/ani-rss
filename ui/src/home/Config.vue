@@ -119,7 +119,8 @@ const config = ref({
   'apiKey': '',
   'weekShow': false,
   'scoreShow': false,
-  'backRss': false
+  'backRss': false,
+  'downloadNew': false
 })
 
 const activeName = ref('download')
