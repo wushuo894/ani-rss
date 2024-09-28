@@ -67,12 +67,13 @@ public class TorrentUtil {
         int currentDownloadCount = 0;
         List<Item> items = AniUtil.getItems(ani);
 
-        if (downloadNew && !items.isEmpty()) {
-            items = List.of(items.get(items.size() - 1));
-        }
-
         ItemsUtil.omit(ani, items);
         log.debug("{} 共 {} 个", title, items.size());
+
+        if (downloadNew && !items.isEmpty()) {
+            log.debug("{} 已开启只下载最新集", title);
+            items = List.of(items.get(items.size() - 1));
+        }
 
         long count = getTorrentsInfos()
                 .stream()
