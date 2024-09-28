@@ -288,7 +288,7 @@ public class AniUtil {
 
     public static String saveJpg(String coverUrl) {
         File jpgFile = new File(URLUtil.toURI(coverUrl).getPath());
-        String dir = jpgFile.getParentFile().getAbsolutePath();
+        String dir = jpgFile.getParentFile().getAbsolutePath().replace("\\","/");
         String filename = jpgFile.getName();
         File configDir = ConfigUtil.getConfigDir();
         FileUtil.mkdir(configDir + "/files/" + dir);
