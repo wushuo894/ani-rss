@@ -1,6 +1,9 @@
 package ani.rss.util;
 
-import ani.rss.entity.*;
+import ani.rss.entity.Ani;
+import ani.rss.entity.BigInfo;
+import ani.rss.entity.Config;
+import ani.rss.entity.Item;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.bean.copier.CopyOptions;
 import cn.hutool.core.collection.CollUtil;
