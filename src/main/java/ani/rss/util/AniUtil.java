@@ -264,15 +264,17 @@ public class AniUtil {
 
         log.debug("获取到动漫信息 {}", JSONUtil.formatJsonStr(GSON.toJson(ani)));
 
-        String s = HttpReq.get(url, true)
-                .thenFunction(HttpResponse::body);
-        List<Item> items = getItems(ani, s);
-        log.debug("获取到视频 共{}个", items.size());
-        if (items.isEmpty() || ani.getOva()) {
+        if (ani.getOva()) {
             return ani;
         }
         // 自动推断剧集偏移
         if (config.getOffset()) {
+            String s = HttpReq.get(url, true)
+                    .thenFunction(HttpResponse::body);
+            List<Item> items = getItems(ani, s);
+            if (items.isEmpty()) {
+                return ani;
+            }
             Double offset = -(items.stream()
                     .map(Item::getEpisode)
                     .min(Comparator.comparingDouble(i -> i))
