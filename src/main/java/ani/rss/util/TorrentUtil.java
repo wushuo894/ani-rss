@@ -91,7 +91,7 @@ public class TorrentUtil {
             // 已经下载过
             if (hashList.contains(hash) || downloadNameList.contains(reName)) {
                 log.debug("已有下载任务 {}", reName);
-                if (master) {
+                if (master && !reName.endsWith(".5")) {
                     currentDownloadCount++;
                 }
                 continue;
@@ -100,7 +100,7 @@ public class TorrentUtil {
             // 已经下载过
             if (torrent.exists()) {
                 log.debug("种子记录已存在 {}", reName);
-                if (master) {
+                if (master && !reName.endsWith(".5")) {
                     currentDownloadCount++;
                 }
                 continue;
@@ -109,7 +109,7 @@ public class TorrentUtil {
             // 未开启rename不进行检测
             if (itemDownloaded(ani, item, true)) {
                 log.debug("本地文件已存在 {}", reName);
-                if (master) {
+                if (master && !reName.endsWith(".5")) {
                     currentDownloadCount++;
                 }
                 continue;
@@ -173,15 +173,14 @@ public class TorrentUtil {
                     .get(0)
                     .toString();
             download(ani, item, savePath, saveTorrent);
-            if (master) {
+            if (master && !reName.endsWith(".5")) {
                 currentDownloadCount++;
             }
             count++;
         }
 
-        long size = items.stream().filter(it -> !it.getReName().endsWith(".5")).count();
-        if (size > 0 && ani.getCurrentEpisodeNumber() != size) {
-            ani.setCurrentEpisodeNumber((int) size);
+        if (currentDownloadCount > 0 && ani.getCurrentEpisodeNumber() != currentDownloadCount) {
+            ani.setCurrentEpisodeNumber(currentDownloadCount);
             AniUtil.sync();
         }
 
