@@ -38,7 +38,7 @@ public class Mail implements Message {
                 .setFrom(StrFormatter.format("ani-rss <{}>", from))
                 .setAuth(true);
         try {
-            MailUtil.send(mailAccount, List.of(mailAddressee), "ani-rss", text, false);
+            MailUtil.send(mailAccount, List.of(mailAddressee), text, text, false);
             return true;
         } catch (Exception e) {
             String message = ExceptionUtil.getMessage(e);

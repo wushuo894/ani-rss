@@ -43,10 +43,10 @@ public class Telegram implements Message {
                     )))
                     .thenFunction(HttpResponse::isOk);
         }
-
+        String cover = ani.getCover();
         File configDir = ConfigUtil.getConfigDir();
-        File photo = new File(configDir + "/files/" + ani.getCover());
-        if (!photo.exists()) {
+        File photo = new File(configDir + "/files/" + cover);
+        if (StrUtil.isBlank(cover) || !photo.exists()) {
             return send(config, null, text);
         }
 
