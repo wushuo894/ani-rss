@@ -179,8 +179,9 @@ public class TorrentUtil {
             count++;
         }
 
-        if (currentDownloadCount > 0 && ani.getCurrentEpisodeNumber() != currentDownloadCount) {
-            ani.setCurrentEpisodeNumber(currentDownloadCount);
+        long size = items.stream().filter(it -> !it.getReName().endsWith(".5")).count();
+        if (size > 0 && ani.getCurrentEpisodeNumber() != size) {
+            ani.setCurrentEpisodeNumber((int) size);
             AniUtil.sync();
         }
 
