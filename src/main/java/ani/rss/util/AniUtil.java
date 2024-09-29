@@ -177,10 +177,11 @@ public class AniUtil {
             BigInfo bgmInfo = BgmUtil.getBgmInfo(ani);
 
             title = bgmInfo.getNameCn();
-
+            int eps = bgmInfo.getEps();
             String subjectId = bgmInfo.getSubjectId();
-            int eps = BgmUtil.getEpisodes(subjectId, 0).size();
-
+            if (eps > 0) {
+                eps = BgmUtil.getEpisodes(subjectId, 0).size();
+            }
             String image = bgmInfo.getImage();
 
             LocalDateTime date = bgmInfo.getDate();

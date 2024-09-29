@@ -3,6 +3,7 @@
     plus()
     backRss[editIndex].url = args.url
     backRss[editIndex].label = args.group
+    editIndex = -1
   }"/>
   <el-dialog v-model="dialogVisible" title="备用订阅" center v-if="dialogVisible">
     <div style="display: flex;width: 100%;">
