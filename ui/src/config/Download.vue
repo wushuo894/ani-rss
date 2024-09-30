@@ -13,7 +13,7 @@
       </el-select>
     </el-form-item>
     <el-form-item label="地址">
-      <el-input v-model:model-value="props.config.host" placeholder="http://192.168.1.66:8080"></el-input>
+      <el-input v-model:model-value="props.config.host" placeholder="http://192.168.1.x:8080"></el-input>
     </el-form-item>
     <template v-if="props.config.download !== 'Aria2'">
       <el-form-item label="用户名">
@@ -33,10 +33,10 @@
       </div>
     </el-form-item>
     <el-form-item label="保存位置">
-      <el-input v-model:model-value="props.config.downloadPath" placeholder="/downloads/media/anime"></el-input>
+      <el-input v-model:model-value="props.config.downloadPath" placeholder="/Media/anime"></el-input>
     </el-form-item>
     <el-form-item label="剧场版保存位置">
-      <el-input v-model:model-value="props.config.ovaDownloadPath" placeholder="/downloads/media/ova"></el-input>
+      <el-input v-model:model-value="props.config.ovaDownloadPath" placeholder="/Media/ova"></el-input>
     </el-form-item>
     <el-form-item label="自动删除">
       <div>
