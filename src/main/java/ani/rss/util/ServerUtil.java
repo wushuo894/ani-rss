@@ -55,9 +55,11 @@ public class ServerUtil {
                 String ip = getIp();
                 if (isInnerIP) {
                     if (!PatternPool.IPV4.matcher(ip).matches()) {
+                        res.send404("404 Not Found");
                         return;
                     }
                     if (!Ipv4Util.isInnerIP(ip)) {
+                        res.send404("404 Not Found");
                         return;
                     }
                 }
