@@ -90,7 +90,8 @@ public class ConfigUtil {
                 .setApiKey("")
                 .setWeekShow(true)
                 .setScoreShow(false)
-                .setDownloadNew(false);
+                .setDownloadNew(false)
+                .setInnerIP(false);
     }
 
     private static final Gson GSON = new GsonBuilder()
