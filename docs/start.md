@@ -37,7 +37,7 @@
 
 下载最新的 **ani-rss-jar-with-dependencies.jar** [链接](https://github.com/wushuo894/ani-rss/releases/latest)
 
-    java -jar -Xmx2g ./ani-rss-jar-with-dependencies.jar --port 7789
+    java -jar -Xmx1g ./ani-rss-jar-with-dependencies.jar --port 7789
 
 使用 `--gui` 参数使 桌面端 显示托盘
 
