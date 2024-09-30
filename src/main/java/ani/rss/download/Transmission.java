@@ -2,6 +2,7 @@ package ani.rss.download;
 
 import ani.rss.entity.Config;
 import ani.rss.entity.TorrentsInfo;
+import ani.rss.util.ExceptionUtil;
 import ani.rss.util.HttpReq;
 import cn.hutool.core.codec.Base64;
 import cn.hutool.core.collection.CollUtil;
@@ -55,7 +56,9 @@ public class Transmission implements BaseDownload {
         try {
             getTorrentsInfos();
         } catch (Exception e) {
-            log.error("登录 Transmission 失败");
+            String message = ExceptionUtil.getMessage(e);
+            log.debug(message, e);
+            log.error("登录 Transmission 失败 {}", message);
             return false;
         }
         return true;
