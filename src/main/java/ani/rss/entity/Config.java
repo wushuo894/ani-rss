@@ -294,4 +294,9 @@ public class Config implements Serializable {
      */
     private Boolean downloadNew;
 
+    /**
+     * 仅允许内网ip访问
+     */
+    private Boolean innerIP;
+
 }

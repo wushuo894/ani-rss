@@ -25,6 +25,8 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
+import static ani.rss.auth.util.AuthUtil.getIp;
+
 @Slf4j
 public class ServerUtil {
     public static final ThreadLocal<HttpServerRequest> REQUEST = new ThreadLocal<>();
@@ -47,7 +49,18 @@ public class ServerUtil {
         server.addFilter((req, res, chain) -> {
             REQUEST.set(req);
             RESPONSE.set(res);
+            Config config = ConfigUtil.CONFIG;
+            Boolean isInnerIP = config.getInnerIP();
             try {
+                String ip = getIp();
+                if (isInnerIP) {
+                    if (!PatternPool.IPV4.matcher(ip).matches()) {
+                        return;
+                    }
+                    if (!Ipv4Util.isInnerIP(ip)) {
+                        return;
+                    }
+                }
                 chain.doFilter(req.getHttpExchange());
             } finally {
                 REQUEST.remove();
@@ -70,7 +83,7 @@ public class ServerUtil {
                 public void doAction(HttpServerRequest req, HttpServerResponse res) {
                     try {
                         Auth auth = aClass.getAnnotation(Auth.class);
-                        if (auth.value() && !isIpWhitelist(AuthUtil.getIp())) {
+                        if (auth.value() && !isIpWhitelist(getIp())) {
                             Boolean test = AuthUtil.test(req, auth.type());
                             if (!test) {
                                 return;
