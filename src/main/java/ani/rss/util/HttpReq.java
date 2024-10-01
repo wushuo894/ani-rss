@@ -106,17 +106,18 @@ public class HttpReq {
         String proxyPassword = config.getProxyPassword();
         try {
             req.setHttpProxy(proxyHost, proxyPort);
-            if (StrUtil.isAllNotBlank(proxyUsername, proxyPassword)) {
-                System.setProperty("jdk.http.auth.tunneling.disabledSchemes", "");
-                Authenticator.setDefault(
-                        new Authenticator() {
-                            @Override
-                            public PasswordAuthentication getPasswordAuthentication() {
+            System.setProperty("jdk.http.auth.tunneling.disabledSchemes", "");
+            Authenticator.setDefault(
+                    new Authenticator() {
+                        @Override
+                        public PasswordAuthentication getPasswordAuthentication() {
+                            if (StrUtil.isAllNotBlank(proxyUsername, proxyPassword)) {
                                 return new PasswordAuthentication(proxyUsername, proxyPassword.toCharArray());
                             }
+                            return null;
                         }
-                );
-            }
+                    }
+            );
             log.debug("使用代理 {}", url);
         } catch (Exception e) {
             log.error("设置代理出现问题 {}", url);
