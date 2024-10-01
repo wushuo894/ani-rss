@@ -108,7 +108,14 @@ public class HttpReq {
             req.setHttpProxy(proxyHost, proxyPort);
             if (StrUtil.isAllNotBlank(proxyUsername, proxyPassword)) {
                 System.setProperty("jdk.http.auth.tunneling.disabledSchemes", "");
-                req.basicProxyAuth(proxyUsername, proxyPassword);
+                Authenticator.setDefault(
+                        new Authenticator() {
+                            @Override
+                            public PasswordAuthentication getPasswordAuthentication() {
+                                return new PasswordAuthentication(proxyUsername, proxyPassword.toCharArray());
+                            }
+                        }
+                );
             }
             log.debug("使用代理 {}", url);
         } catch (Exception e) {
