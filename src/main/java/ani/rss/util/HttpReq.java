@@ -106,7 +106,6 @@ public class HttpReq {
         String proxyPassword = config.getProxyPassword();
         try {
             req.setHttpProxy(proxyHost, proxyPort);
-            System.setProperty("jdk.http.auth.tunneling.disabledSchemes", "");
             Authenticator.setDefault(
                     new Authenticator() {
                         @Override
