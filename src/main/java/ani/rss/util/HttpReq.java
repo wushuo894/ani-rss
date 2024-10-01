@@ -4,8 +4,11 @@ import ani.rss.entity.Config;
 import cn.hutool.core.text.StrFormatter;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.HttpRequest;
+import cn.hutool.http.HttpUtil;
 import lombok.extern.slf4j.Slf4j;
 
+import java.net.Authenticator;
+import java.net.PasswordAuthentication;
 import java.util.Objects;
 
 @Slf4j
@@ -102,16 +105,16 @@ public class HttpReq {
         String proxyUsername = config.getProxyUsername();
         String proxyPassword = config.getProxyPassword();
         try {
-            if (StrUtil.isAllNotBlank(proxyUsername, proxyPassword)) {
-                proxyHost = StrFormatter.format("{}:{}@{}", proxyUsername, proxyPassword, proxyHost);
-            }
             req.setHttpProxy(proxyHost, proxyPort);
+            if (StrUtil.isAllNotBlank(proxyUsername, proxyPassword)) {
+                System.setProperty("jdk.http.auth.tunneling.disabledSchemes", "");
+                req.basicProxyAuth(proxyUsername, proxyPassword);
+            }
             log.debug("使用代理 {}", url);
         } catch (Exception e) {
             log.error("设置代理出现问题 {}", url);
             log.error(e.getMessage(), e);
         }
-
         return req;
     }
 }
