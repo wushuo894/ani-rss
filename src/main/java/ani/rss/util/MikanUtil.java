@@ -4,6 +4,8 @@ import ani.rss.entity.Ani;
 import ani.rss.entity.Config;
 import ani.rss.entity.Mikan;
 import ani.rss.entity.TorrentsInfo;
+import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.core.util.ReUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.core.util.URLUtil;
 import org.jsoup.Jsoup;
@@ -11,10 +13,13 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 public class MikanUtil {
     public static String getMikanHost() {
@@ -28,6 +33,10 @@ public class MikanUtil {
     }
 
     public static Mikan list(String text, Mikan.Season season) {
+        Set<String> bangumiIdSet = ObjectUtil.clone(AniUtil.ANI_LIST).stream()
+                .map(AniUtil::getBangumiId)
+                .filter(StrUtil::isNotBlank)
+                .collect(Collectors.toSet());
         String url = getMikanHost();
         if (StrUtil.isNotBlank(text)) {
             url = url + "/Home/Search?searchstr=" + text;
@@ -76,10 +85,15 @@ public class MikanUtil {
                             }
                             String href = getMikanHost() + aa.get(0).attr("href");
                             String title = aa.get(0).text();
+
+                            String id = ReUtil.get("\\d+(/)?$", href, 0);
+                            id = StrUtil.blankToDefault(id, "");
+
                             anis.add(new Ani()
                                     .setCover(img)
                                     .setTitle(title)
-                                    .setUrl(href));
+                                    .setUrl(href)
+                                    .setExists(bangumiIdSet.contains(id)));
                         }
                         return anis;
                     };
@@ -153,7 +167,10 @@ public class MikanUtil {
     }
 
     public static void getMikanInfo(Ani ani, String subgroupId) {
-        String bangumiId = ani.getBangumiId();
+        String bangumiId = AniUtil.getBangumiId(ani);
+        if (StrUtil.isBlank(bangumiId)) {
+            return;
+        }
         HttpReq.get(URLUtil.getHost(URLUtil.url(getMikanHost())) + "/Home/Bangumi/" + bangumiId, true)
                 .then(res -> {
                     org.jsoup.nodes.Document html = Jsoup.parse(res.body());

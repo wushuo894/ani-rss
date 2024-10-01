@@ -3,6 +3,7 @@ package ani.rss.action;
 import ani.rss.annotation.Auth;
 import ani.rss.annotation.Path;
 import ani.rss.entity.Config;
+import ani.rss.util.HttpReq;
 import cn.hutool.core.codec.Base64;
 import cn.hutool.core.date.LocalDateTimeUtil;
 import cn.hutool.http.HttpRequest;
@@ -23,22 +24,14 @@ public class ProxyAction implements BaseAction {
     public void doAction(HttpServerRequest request, HttpServerResponse response) throws IOException {
         String url = request.getParam("url");
         Config config = getBody(Config.class);
-        String proxyHost = config.getProxyHost();
-        int proxyPort = config.getProxyPort();
-        Boolean proxy = config.getProxy();
-
         url = Base64.decodeStr(url);
 
         log.info(url);
 
-        HttpRequest httpRequest = HttpRequest.get(url)
-                .setFollowRedirects(true)
-                .timeout(6000);
-        long start = LocalDateTimeUtil.toEpochMilli(LocalDateTimeUtil.now());
-        if (proxy) {
-            httpRequest.setHttpProxy(proxyHost, proxyPort);
-        }
+        HttpRequest httpRequest = HttpReq.get(url, false);
+        HttpReq.setProxy(httpRequest, config);
 
+        long start = LocalDateTimeUtil.toEpochMilli(LocalDateTimeUtil.now());
         Integer status = httpRequest
                 .thenFunction(HttpResponse::getStatus);
 
