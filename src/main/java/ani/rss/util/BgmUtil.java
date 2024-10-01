@@ -194,20 +194,7 @@ public class BgmUtil {
     public static BigInfo getBgmInfo(Ani ani) {
         String bgmUrl = ani.getBgmUrl();
         if (StrUtil.isBlank(bgmUrl)) {
-            String bangumiId = ani.getBangumiId();
-            if (StrUtil.isBlank(bangumiId)) {
-                Map<String, String> decodeParamMap = HttpUtil.decodeParamMap(ani.getUrl(), StandardCharsets.UTF_8);
-                for (String k : decodeParamMap.keySet()) {
-                    String v = decodeParamMap.get(k);
-                    if (k.equalsIgnoreCase("bangumiId")) {
-                        bangumiId = v;
-                    }
-                }
-                if (StrUtil.isNotBlank(bangumiId)) {
-                    ani.setBangumiId(bangumiId);
-                    AniUtil.sync();
-                }
-            }
+            String bangumiId = AniUtil.getBangumiId(ani);
             Assert.notBlank(bangumiId);
             MikanUtil.getMikanInfo(ani, "");
             bgmUrl = ani.getUrl();

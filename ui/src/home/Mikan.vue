@@ -38,6 +38,7 @@
                                          text-overflow: ellipsis;">
                         {{ it.title }}
                       </div>
+                      <el-badge value="已订阅" class="item" type="primary" v-if="it['exists']"/>
                     </template>
                     <div style="margin-left: 15px;min-height: 50px;" v-if="selectName === it.url"
                          v-loading="groupLoading">

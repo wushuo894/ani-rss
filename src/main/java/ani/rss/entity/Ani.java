@@ -21,6 +21,8 @@ public class Ani implements Serializable {
      */
     private String url;
 
+    private Boolean exists;
+
     /**
      * 备用rss
      *
@@ -126,8 +128,6 @@ public class Ani implements Serializable {
     private String themoviedbName;
 
     private String type;
-
-    private String bangumiId;
 
     private String bgmUrl;
 
