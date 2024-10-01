@@ -1,6 +1,7 @@
 package ani.rss.util;
 
 import ani.rss.entity.Config;
+import cn.hutool.core.text.StrFormatter;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.HttpRequest;
 import lombok.extern.slf4j.Slf4j;
@@ -74,8 +75,18 @@ public class HttpReq {
      * @return
      */
     public static HttpRequest setProxy(HttpRequest req) {
+        return setProxy(req, ConfigUtil.CONFIG);
+    }
+
+    /**
+     * 设置代理
+     *
+     * @param req
+     * @param config
+     * @return
+     */
+    public static HttpRequest setProxy(HttpRequest req, Config config) {
         String url = req.getUrl();
-        Config config = ConfigUtil.CONFIG;
         Boolean proxy = config.getProxy();
         if (!proxy) {
             log.debug("代理未开启 {}", url);
@@ -91,10 +102,12 @@ public class HttpReq {
         String proxyUsername = config.getProxyUsername();
         String proxyPassword = config.getProxyPassword();
         try {
-            req.setHttpProxy(proxyHost, proxyPort);
             if (StrUtil.isAllNotBlank(proxyUsername, proxyPassword)) {
-                req.basicProxyAuth(proxyUsername, proxyPassword);
+                proxyHost = proxyHost.replaceAll(proxyHost,
+                        StrFormatter.format("{}:{}@{}", proxyUsername, proxyPassword, proxyHost)
+                );
             }
+            req.setHttpProxy(proxyHost, proxyPort);
             log.debug("使用代理 {}", url);
         } catch (Exception e) {
             log.error("设置代理出现问题 {}", url);

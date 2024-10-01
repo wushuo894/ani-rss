@@ -148,6 +148,7 @@ public class AniUtil {
         }
 
         Ani ani = Ani.bulidAni();
+        ani.setUrl(url.trim());
 
         if (List.of("nyaa", "dmhy").contains(type)) {
             if (StrUtil.isNotBlank(text)) {
@@ -165,7 +166,6 @@ public class AniUtil {
             Assert.notBlank(subjectId, "标题获取失败，请手动填写");
             ani.setBgmUrl("https://bgm.tv/subject/" + subjectId);
         } else {
-            ani.setBangumiId(bangumiId);
             try {
                 MikanUtil.getMikanInfo(ani, subgroupid);
             } catch (Exception e) {
@@ -247,7 +247,6 @@ public class AniUtil {
                 .setDownloadNew(downloadNew)
                 .setGlobalExclude(enabledExclude)
                 .setType(type)
-                .setUrl(url.trim())
                 .setSeason(season)
                 .setTitle(title)
                 .setThemoviedbName(themoviedbName);
@@ -599,6 +598,15 @@ public class AniUtil {
             log.error(message, e);
             return "";
         }
+    }
+
+    public static String getBangumiId(Ani ani) {
+        String url = ani.getUrl();
+        if (StrUtil.isBlank(url)) {
+            return "";
+        }
+        Map<String, String> decodeParamMap = HttpUtil.decodeParamMap(url, StandardCharsets.UTF_8);
+        return decodeParamMap.get("bangumiId");
     }
 
 }
