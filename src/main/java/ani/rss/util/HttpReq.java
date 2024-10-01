@@ -103,9 +103,7 @@ public class HttpReq {
         String proxyPassword = config.getProxyPassword();
         try {
             if (StrUtil.isAllNotBlank(proxyUsername, proxyPassword)) {
-                proxyHost = proxyHost.replaceAll(proxyHost,
-                        StrFormatter.format("{}:{}@{}", proxyUsername, proxyPassword, proxyHost)
-                );
+                proxyHost = StrFormatter.format("{}:{}@{}", proxyUsername, proxyPassword, proxyHost);
             }
             req.setHttpProxy(proxyHost, proxyPort);
             log.debug("使用代理 {}", url);
