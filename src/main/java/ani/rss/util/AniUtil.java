@@ -136,12 +136,9 @@ public class AniUtil {
 
         Map<String, String> decodeParamMap = HttpUtil.decodeParamMap(url, StandardCharsets.UTF_8);
 
-        String bangumiId = "", subgroupid = "";
+        String subgroupid = "";
         for (String k : decodeParamMap.keySet()) {
             String v = decodeParamMap.get(k);
-            if (k.equalsIgnoreCase("bangumiId")) {
-                bangumiId = v;
-            }
             if (k.equalsIgnoreCase("subgroupid")) {
                 subgroupid = v;
             }
@@ -176,6 +173,7 @@ public class AniUtil {
         try {
             BigInfo bgmInfo = BgmUtil.getBgmInfo(ani);
 
+            season = bgmInfo.getSeason();
             title = bgmInfo.getNameCn();
             int eps = bgmInfo.getEps();
             String subjectId = bgmInfo.getSubjectId();
@@ -201,7 +199,7 @@ public class AniUtil {
         String image = ani.getImage();
         ani.setCover(saveJpg(image));
 
-        String seasonReg = "第(.+)季";
+        String seasonReg = StrFormatter.format("第({}{1,2})季", ReUtil.RE_CHINESE);
         if (ReUtil.contains(seasonReg, title)) {
             season = Convert.chineseToNumber(ReUtil.get(seasonReg, title, 1));
             title = ReUtil.replaceAll(title, seasonReg, "").trim();
