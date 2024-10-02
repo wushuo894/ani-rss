@@ -39,4 +39,9 @@ public class BigInfo {
      * 图片
      */
     private String image;
+
+    /**
+     * 季度
+     */
+    private Integer season;
 }

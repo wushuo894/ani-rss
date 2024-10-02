@@ -4,25 +4,26 @@ import ani.rss.entity.Ani;
 import ani.rss.entity.BigInfo;
 import cn.hutool.cache.Cache;
 import cn.hutool.cache.CacheUtil;
+import cn.hutool.core.convert.Convert;
 import cn.hutool.core.date.DatePattern;
 import cn.hutool.core.date.LocalDateTimeUtil;
 import cn.hutool.core.lang.Assert;
+import cn.hutool.core.text.StrFormatter;
 import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.core.util.ReUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.ContentType;
 import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpResponse;
-import cn.hutool.http.HttpUtil;
 import cn.hutool.json.JSONUtil;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
-import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
@@ -239,6 +240,24 @@ public class BgmUtil {
                     if (Objects.nonNull(images)) {
                         bigInfo.setImage(images.get("large").getAsString());
                     }
+
+                    Set<String> tags = jsonObject.getAsJsonArray("tags")
+                            .asList()
+                            .stream().map(JsonElement::getAsJsonObject)
+                            .map(o -> o.get("name").getAsString())
+                            .filter(StrUtil::isNotBlank)
+                            .collect(Collectors.toSet());
+
+                    int season = 1;
+                    for (String tag : tags) {
+                        String seasonReg = StrFormatter.format("^第({}{1,2})季$", ReUtil.RE_CHINESE);
+                        if (!ReUtil.contains(seasonReg, tag)) {
+                            continue;
+                        }
+                        season = Convert.chineseToNumber(ReUtil.get(seasonReg, tag, 1));
+                    }
+
+                    bigInfo.setSeason(season);
                     return bigInfo;
                 });
     }
