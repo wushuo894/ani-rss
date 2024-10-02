@@ -191,7 +191,7 @@ public class Ani implements Serializable {
                 .setCurrentEpisodeNumber(0)
                 .setTotalEpisodeNumber(0)
                 .setMatch(List.of())
-                .setExclude(List.of("720", "\\d{1,2}-\\d{1,2}", "合集"))
+                .setExclude(List.of("720", "\\d{1,2}-\\d{1,2}", "合集", "特别篇"))
                 .setBgmUrl("")
                 .setSubgroup("")
                 .setCustomEpisode(false)
