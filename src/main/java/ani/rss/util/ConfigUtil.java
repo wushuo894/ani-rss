@@ -68,7 +68,7 @@ public class ConfigUtil {
                                 .setSslEnable(false)
                 )
                 .setLogin(new Login().setUsername("admin").setPassword(password))
-                .setExclude(List.of("720", "\\d{1,2}-\\d{1,2}", "合集"))
+                .setExclude(List.of("720", "\\d{1,2}-\\d{1,2}", "合集", "特别篇"))
                 .setImportExclude(false)
                 .setEnabledExclude(false)
                 .setTelegram(false)
