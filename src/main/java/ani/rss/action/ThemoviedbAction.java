@@ -21,11 +21,7 @@ public class ThemoviedbAction implements BaseAction {
         String s = request.getParam("method");
         if ("getThemoviedbName".equals(s)) {
             String name = request.getParam("name");
-            String yearReg = " \\((\\d{4})\\)$";
-            String themoviedbName = AniUtil.getThemoviedbName(ReUtil.replaceAll(name, yearReg, ""));
-            if (ReUtil.contains(yearReg, name)) {
-                themoviedbName = StrFormatter.format("{} ({})", themoviedbName, ReUtil.get(yearReg, name, 1));
-            }
+            String themoviedbName = AniUtil.getThemoviedbName(name);
             Result<String> result = new Result<String>()
                     .setCode(HttpStatus.HTTP_OK)
                     .setMessage("获取TMDB成功")

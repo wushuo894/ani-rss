@@ -206,8 +206,6 @@ public class AniUtil {
         }
         title = title.replace("剧场版", "").trim();
 
-        String themoviedbName = getThemoviedbName(title);
-
         Integer year = ani.getYear();
 
         Config config = ConfigUtil.CONFIG;
@@ -218,13 +216,14 @@ public class AniUtil {
         Boolean importExclude = config.getImportExclude();
         List<String> exclude = config.getExclude();
 
-        if (StrUtil.isNotBlank(themoviedbName) && tmdb) {
-            title = themoviedbName;
-        }
-
         if (titleYear && Objects.nonNull(year) && year > 0) {
             title = StrFormatter.format("{} ({})", title, year);
-            themoviedbName = StrFormatter.format("{} ({})", themoviedbName, year);
+        }
+
+        String themoviedbName = getThemoviedbName(title);
+
+        if (StrUtil.isNotBlank(themoviedbName) && tmdb) {
+            title = themoviedbName;
         }
 
         if (importExclude) {
@@ -572,8 +571,21 @@ public class AniUtil {
      * @return
      */
     public static String getThemoviedbName(String name) {
+        if (StrUtil.isBlank(name)) {
+            return "";
+        }
+        String year = "";
+        String yearReg = " \\((\\d{4})\\)$";
+        if (ReUtil.contains(yearReg, name)) {
+            year = ReUtil.get(yearReg, name, 1);
+            name = name.replaceAll(yearReg, "");
+        }
+        if (StrUtil.isBlank(name)) {
+            return "";
+        }
+        String themoviedbName;
         try {
-            return HttpReq.get("https://www.themoviedb.org/search", true)
+            themoviedbName = HttpReq.get("https://www.themoviedb.org/search", true)
                     .form("query", name)
                     .header("accept-language", "zh-CN")
                     .thenFunction(res -> {
@@ -596,6 +608,13 @@ public class AniUtil {
             log.error(message, e);
             return "";
         }
+        if (StrUtil.isBlank(themoviedbName)) {
+            return "";
+        }
+        if (StrUtil.isNotBlank(year)) {
+            themoviedbName = StrFormatter.format("{} ({})", themoviedbName, year);
+        }
+        return themoviedbName;
     }
 
     public static String getBangumiId(Ani ani) {
