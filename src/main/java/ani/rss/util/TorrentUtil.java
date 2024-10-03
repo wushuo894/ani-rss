@@ -20,6 +20,7 @@ import lombok.extern.slf4j.Slf4j;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -535,9 +536,17 @@ public class TorrentUtil {
 
         TorrentsInfo.State state = torrentsInfo.getState();
         String name = torrentsInfo.getName();
-        if (!EnumUtil.equalsIgnoreCase(state, TorrentsInfo.State.pausedUP.name())) {
+
+        if (Objects.isNull(state)) {
             return;
         }
+        if (!List.of(
+                TorrentsInfo.State.pausedUP.name(),
+                TorrentsInfo.State.stoppedUP.name()
+        ).contains(state.name())) {
+            return;
+        }
+
         if (delete) {
             log.info("删除已完成任务 {}", name);
             ThreadUtil.sleep(1000);
