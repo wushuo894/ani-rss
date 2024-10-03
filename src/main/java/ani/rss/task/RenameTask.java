@@ -6,10 +6,10 @@ import ani.rss.util.ConfigUtil;
 import ani.rss.util.ExceptionUtil;
 import ani.rss.util.TorrentUtil;
 import cn.hutool.core.thread.ThreadUtil;
-import cn.hutool.core.util.EnumUtil;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -39,7 +39,13 @@ public class RenameTask extends Thread {
                 for (TorrentsInfo torrentsInfo : torrentsInfos) {
                     TorrentsInfo.State state = torrentsInfo.getState();
                     TorrentUtil.rename(torrentsInfo);
-                    if (!EnumUtil.equalsIgnoreCase(state, TorrentsInfo.State.pausedUP.name())) {
+                    if (Objects.isNull(state)) {
+                        continue;
+                    }
+                    if (!List.of(
+                            TorrentsInfo.State.pausedUP.name(),
+                            TorrentsInfo.State.stoppedUP.name()
+                    ).contains(state.name())) {
                         continue;
                     }
                     TorrentUtil.delete(torrentsInfo);
