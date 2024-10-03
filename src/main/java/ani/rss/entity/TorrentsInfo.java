@@ -96,6 +96,7 @@ public class TorrentsInfo implements Serializable {
          * 已完成
          */
         pausedUP,
+        stoppedUP,
         /**
          * [F]元数据
          */
