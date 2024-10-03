@@ -37,17 +37,7 @@ public class RenameTask extends Thread {
             try {
                 List<TorrentsInfo> torrentsInfos = TorrentUtil.getTorrentsInfos();
                 for (TorrentsInfo torrentsInfo : torrentsInfos) {
-                    TorrentsInfo.State state = torrentsInfo.getState();
                     TorrentUtil.rename(torrentsInfo);
-                    if (Objects.isNull(state)) {
-                        continue;
-                    }
-                    if (!List.of(
-                            TorrentsInfo.State.pausedUP.name(),
-                            TorrentsInfo.State.stoppedUP.name()
-                    ).contains(state.name())) {
-                        continue;
-                    }
                     TorrentUtil.delete(torrentsInfo);
                 }
             } catch (Exception e) {
