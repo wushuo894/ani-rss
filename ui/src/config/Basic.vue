@@ -61,11 +61,13 @@
               <el-input v-model:model-value="props.config.renameTemplate"/>
               <br>
               <el-text class="mx-1" size="small">
-                ${title} 为标题 , ${subgroup} 字幕组 <br>
+                ${title} 标题 , ${subgroup} 字幕组 <br>
                 ${seasonFormat} 季 01 ,
                 ${episodeFormat} 集 01 <br>
                 ${season} 季 1 ,
                 ${episode} 集 1
+                <br>
+                如非必要请勿去除或更改 S${seasonFormat}E${episodeFormat}
               </el-text>
             </div>
           </el-form-item>
