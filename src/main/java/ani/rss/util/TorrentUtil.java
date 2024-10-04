@@ -130,7 +130,7 @@ public class TorrentUtil {
 
             // 开启备用rss会自动删除本地已存在视频
             if (backRss &&
-                    ReUtil.contains("S\\d+E\\d+(\\.5)?$", reName)) {
+                    ReUtil.contains("S\\d+E\\d+(\\.5)?", reName)) {
                 for (File downloadPath : downloadPathList) {
                     if (!downloadPath.exists()) {
                         continue;

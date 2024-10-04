@@ -153,7 +153,7 @@ public class qBittorrent implements BaseDownload {
     public void rename(TorrentsInfo torrentsInfo) {
         Boolean qbRenameTitle = config.getQbRenameTitle();
         String reName = torrentsInfo.getName();
-        if (!ReUtil.contains("S\\d+E\\d+(\\.5)?$", reName) && qbRenameTitle) {
+        if (!ReUtil.contains("S\\d+E\\d+(\\.5)?", reName) && qbRenameTitle) {
             return;
         }
 
