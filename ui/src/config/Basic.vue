@@ -56,6 +56,19 @@
               <el-option :value="it" :key="it" :label="it" v-for="it in ['Season 1','S01','None']"/>
             </el-select>
           </el-form-item>
+          <el-form-item label="重命名模版">
+            <div style="width: 100%">
+              <el-input v-model:model-value="props.config.renameTemplate"/>
+              <br>
+              <el-text class="mx-1" size="small">
+                ${title} 为标题 , ${subgroup} 字幕组 <br>
+                ${seasonFormat} 季 01 ,
+                ${episodeFormat} 集 01 <br>
+                ${season} 季 1 ,
+                ${episode} 集 1
+              </el-text>
+            </div>
+          </el-form-item>
         </el-form>
       </el-collapse-item>
       <el-collapse-item title="RSS设置" name="4">

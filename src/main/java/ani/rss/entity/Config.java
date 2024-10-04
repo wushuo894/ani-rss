@@ -299,4 +299,9 @@ public class Config implements Serializable {
      */
     private Boolean innerIP;
 
+    /**
+     * 重命名模版
+     */
+    private String renameTemplate;
+
 }
