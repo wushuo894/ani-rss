@@ -69,7 +69,9 @@ public class RenameUtil {
         renameTemplate = renameTemplate.replace("${episodeFormat}", episodeFormat);
         renameTemplate = renameTemplate.replace("${season}", String.valueOf(season));
         renameTemplate = renameTemplate.replace("${episode}", episode);
-        renameTemplate = renameTemplate.replace("${subgroup}", subgroup);
+        if (StrUtil.isNotBlank(subgroup)) {
+            renameTemplate = renameTemplate.replace("${subgroup}", subgroup);
+        }
 
         String reName = renameTemplate;
 
