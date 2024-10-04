@@ -91,7 +91,8 @@ public class ConfigUtil {
                 .setWeekShow(true)
                 .setScoreShow(false)
                 .setDownloadNew(false)
-                .setInnerIP(false);
+                .setInnerIP(false)
+                .setRenameTemplate("${title} S${seasonFormat}E${episodeFormat}");
     }
 
     private static final Gson GSON = new GsonBuilder()

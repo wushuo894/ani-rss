@@ -308,14 +308,10 @@ public class AniUtil {
      * @return
      */
     public static List<Item> getItems(Ani ani, String xml) {
-        String title = ani.getTitle();
-
         List<String> exclude = ani.getExclude();
         List<String> match = ani.getMatch();
         Boolean ova = ani.getOva();
 
-        int offset = ani.getOffset();
-        int season = ani.getSeason();
         List<Item> items = new ArrayList<>();
 
         Document document = XmlUtil.readXML(xml);
@@ -433,63 +429,10 @@ public class AniUtil {
         if (ova) {
             return items;
         }
-
-        String s = "(.*|\\[.*])( -? \\d+(\\.5)?|\\[\\d+(\\.5)?]|\\[\\d+(\\.5)?.?[vV]\\d]|第\\d+(\\.5)?[话話集]|\\[第?\\d+(\\.5)?[话話集]]|\\[\\d+(\\.5)?.?END]|[Ee][Pp]?\\d+(\\.5)?)(.*)";
-
-        Boolean customEpisode = ani.getCustomEpisode();
-        String customEpisodeStr = ani.getCustomEpisodeStr();
-        Integer customEpisodeGroupIndex = ani.getCustomEpisodeGroupIndex();
-
         items = items.stream()
                 .filter(item -> {
                     try {
-                        String itemTitle = item.getTitle();
-                        itemTitle = itemTitle.replace("+NCOPED", "");
-
-                        String e = "";
-                        if (customEpisode) {
-                            e = ReUtil.get(customEpisodeStr, itemTitle, customEpisodeGroupIndex);
-                        } else {
-                            e = ReUtil.get(s, itemTitle, 2);
-                        }
-
-                        if (StrUtil.isBlank(e)) {
-                            return false;
-                        }
-
-                        String episode = ReUtil.get("\\d+(\\.5)?", e, 0);
-                        if (StrUtil.isBlank(episode)) {
-                            return false;
-                        }
-
-                        Boolean skip5 = config.getSkip5();
-                        if (skip5) {
-                            if (episode.endsWith(".5")) {
-                                log.debug("{} 疑似 {} 剧集, 自动跳过", itemTitle, episode + ".5");
-                                return false;
-                            }
-                        }
-
-                        boolean is5 = Double.parseDouble(episode) - 0.5 == Double.valueOf(episode).intValue();
-
-                        if (is5) {
-                            item.setEpisode(Double.parseDouble(episode));
-                        } else {
-                            item.setEpisode(Double.parseDouble(episode) + offset);
-                        }
-
-                        String reName = StrFormatter.format("{} S{}E{}",
-                                title,
-                                String.format("%02d", season),
-                                String.format("%02d", item.getEpisode().intValue()));
-
-                        if (is5) {
-                            reName = reName + ".5";
-                        }
-
-                        item
-                                .setReName(reName);
-                        return true;
+                        return RenameUtil.rename(ani, item);
                     } catch (Exception e) {
                         log.error("解析rss视频集次出现问题");
                         log.debug(e.getMessage(), e);

@@ -5,7 +5,7 @@
       <el-tabs tab-position="left" v-model="activeName">
         <el-tab-pane label="Mikan" name="mikan">
           <el-form label-width="auto"
-                   style="height: 200px"
+                   style="height: 260px"
                    v-if="showRss" @keydown.enter="getRss"
                    @submit="(event)=>{
                 event.preventDefault()

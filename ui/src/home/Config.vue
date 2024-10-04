@@ -122,7 +122,8 @@ const config = ref({
   'backRss': false,
   'downloadNew': false,
   'telegramImage': true,
-  'innerIP': false
+  'innerIP': false,
+  'renameTemplate': ''
 })
 
 const activeName = ref('download')
