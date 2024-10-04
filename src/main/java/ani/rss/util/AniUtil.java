@@ -269,7 +269,7 @@ public class AniUtil {
         if (config.getOffset()) {
             String s = HttpReq.get(url, true)
                     .thenFunction(HttpResponse::body);
-            List<Item> items = getItems(ani, s);
+            List<Item> items = getItems(ani, s, new Item());
             if (items.isEmpty()) {
                 return ani;
             }
@@ -307,7 +307,7 @@ public class AniUtil {
      * @param xml
      * @return
      */
-    public static List<Item> getItems(Ani ani, String xml) {
+    public static List<Item> getItems(Ani ani, String xml, Item newItem) {
         List<String> exclude = ani.getExclude();
         List<String> match = ani.getMatch();
         Boolean ova = ani.getOva();
@@ -391,7 +391,9 @@ public class AniUtil {
                 infoHash = infoHash.toLowerCase();
             }
 
-            Item newItem = new Item()
+            Item addNewItem = ObjectUtil.clone(newItem);
+
+            addNewItem
                     .setEpisode(1.0)
                     .setTitle(itemTitle)
                     .setReName(itemTitle)
@@ -400,17 +402,17 @@ public class AniUtil {
                     .setSize(size);
 
             // 进行过滤
-            if (exclude.stream().anyMatch(s -> ReUtil.contains(s, newItem.getTitle()))) {
+            if (exclude.stream().anyMatch(s -> ReUtil.contains(s, addNewItem.getTitle()))) {
                 continue;
             }
 
             // 全局排除
             if (globalExclude) {
-                if (globalExcludeList.stream().anyMatch(s -> ReUtil.contains(s, newItem.getTitle()))) {
+                if (globalExcludeList.stream().anyMatch(s -> ReUtil.contains(s, addNewItem.getTitle()))) {
                     continue;
                 }
             }
-            items.add(newItem);
+            items.add(addNewItem);
         }
 
         // 匹配规则
@@ -455,7 +457,7 @@ public class AniUtil {
 
         String s = HttpReq.get(url, true)
                 .thenFunction(HttpResponse::body);
-        items.addAll(getItems(ani, s)
+        items.addAll(getItems(ani, s, new Item().setSubgroup(ani.getSubgroup()))
                 .stream()
                 .peek(item -> {
                     item.setMaster(true)
@@ -474,7 +476,7 @@ public class AniUtil {
             ThreadUtil.sleep(1000);
             s = HttpReq.get(rss.getUrl(), true)
                     .thenFunction(HttpResponse::body);
-            items.addAll(getItems(ani, s)
+            items.addAll(getItems(ani, s, new Item().setSubgroup(ani.getSubgroup()))
                     .stream()
                     .peek(item -> {
                         item.setMaster(false)
