@@ -92,6 +92,20 @@ public class BgmUtil {
         return id;
     }
 
+    public static String getSubjectId(Ani ani) {
+        String bgmUrl = ani.getBgmUrl();
+        if (StrUtil.isBlank(bgmUrl)) {
+            String bangumiId = AniUtil.getBangumiId(ani);
+            Assert.notBlank(bangumiId);
+            MikanUtil.getMikanInfo(ani, "");
+            bgmUrl = ani.getUrl();
+        }
+        Assert.notBlank(bgmUrl);
+        String regStr = "^http(s)?://.+\\/(\\d+)(\\/)?$";
+        Assert.isTrue(ReUtil.contains(regStr, bgmUrl));
+        return ReUtil.get(regStr, bgmUrl, 2);
+    }
+
     /**
      * 收藏番剧
      *
@@ -193,17 +207,7 @@ public class BgmUtil {
     }
 
     public static BigInfo getBgmInfo(Ani ani) {
-        String bgmUrl = ani.getBgmUrl();
-        if (StrUtil.isBlank(bgmUrl)) {
-            String bangumiId = AniUtil.getBangumiId(ani);
-            Assert.notBlank(bangumiId);
-            MikanUtil.getMikanInfo(ani, "");
-            bgmUrl = ani.getUrl();
-        }
-        Assert.notBlank(bgmUrl);
-        String regStr = "^http(s)?://.+\\/(\\d+)(\\/)?$";
-        Assert.isTrue(ReUtil.contains(regStr, bgmUrl));
-        String subjectId = ReUtil.get(regStr, bgmUrl, 2);
+        String subjectId = getSubjectId(ani);
         return getBgmInfo(subjectId);
     }
 
