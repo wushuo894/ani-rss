@@ -57,6 +57,7 @@ public class WebHookAction implements BaseAction {
 
         JsonObject item = body.getAsJsonObject("Item");
         String path = item.get("Path").getAsString();
+        String parent = new File(path).getParent();
         String seriesName = item.get("SeriesName").getAsString();
         String fileName = item.get("FileName").getAsString();
         String regStr = "S(\\d+)E(\\d+(\\.5)?)";
@@ -96,7 +97,6 @@ public class WebHookAction implements BaseAction {
                             if (!file.exists()) {
                                 continue;
                             }
-                            String parent = new File(path).getParent();
                             if (file.toString().equals(parent)) {
                                 return true;
                             }
