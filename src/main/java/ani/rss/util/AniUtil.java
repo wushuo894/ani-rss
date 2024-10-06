@@ -286,8 +286,8 @@ public class AniUtil {
     }
 
     public static String saveJpg(String coverUrl) {
-        File jpgFile = new File(URLUtil.toURI(coverUrl).getPath());
-        String filename = MD5.create().digestHex(jpgFile.toString());
+        String filename = MD5.create().digestHex(coverUrl);
+        filename = filename + "." + FileUtil.extName(coverUrl);
         File configDir = ConfigUtil.getConfigDir();
         FileUtil.mkdir(configDir + "/files/");
         File file = new File(configDir + "/files/" + filename);
