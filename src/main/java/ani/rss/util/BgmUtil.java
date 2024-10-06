@@ -51,7 +51,7 @@ public class BgmUtil {
         if (nameCache.containsKey(name)) {
             return nameCache.get(name);
         }
-        HttpRequest httpRequest = HttpReq.get(host + "/search/subject/" + URLUtil.encodeAll(name, StandardCharsets.UTF_8), true);
+        HttpRequest httpRequest = HttpReq.get(host + "/search/subject/" + name.replace("1/2", "½"), true);
 
         setToken(httpRequest);
 

@@ -122,7 +122,7 @@ public class AniUtil {
      * @return
      */
     public static Ani getAni(String url) {
-        return getAni(url, "", "");
+        return getAni(url, "", "", "");
     }
 
     /**
@@ -131,7 +131,7 @@ public class AniUtil {
      * @param url
      * @return
      */
-    public static Ani getAni(String url, String text, String type) {
+    public static Ani getAni(String url, String text, String type, String bgmUrl) {
         type = StrUtil.blankToDefault(type, "mikan");
         int season = 1;
         String title = "无";
@@ -159,8 +159,14 @@ public class AniUtil {
                     title = paramMap.get("keyword");
                 }
             }
-            Assert.notBlank(title, "标题获取失败，请手动填写");
-            String subjectId = BgmUtil.getSubjectId(title);
+            String subjectId;
+            if (StrUtil.isBlank(bgmUrl)) {
+                Assert.notBlank(title, "标题获取失败，请手动填写");
+                subjectId = BgmUtil.getSubjectId(title);
+            } else {
+                subjectId = BgmUtil.getSubjectId(new Ani().setBgmUrl(bgmUrl));
+            }
+
             log.info("subjectId: {}", subjectId);
             Assert.notBlank(subjectId, "标题获取失败，请手动填写");
             ani.setBgmUrl("https://bgm.tv/subject/" + subjectId);
