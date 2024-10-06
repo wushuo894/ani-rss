@@ -168,7 +168,12 @@ public class TorrentUtil {
     public static void deleteBackRss(Ani ani, Item item) {
         Config config = ConfigUtil.CONFIG;
         Boolean backRss = config.getBackRss();
+        Boolean delete = config.getDelete();
         String reName = item.getReName();
+
+        if (!delete) {
+            return;
+        }
 
         if (!backRss) {
             return;
