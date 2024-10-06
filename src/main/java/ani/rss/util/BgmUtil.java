@@ -244,7 +244,7 @@ public class BgmUtil {
 
                     JsonObject images = jsonObject.getAsJsonObject("images");
                     if (Objects.nonNull(images)) {
-                        bigInfo.setImage(images.get("large").getAsString());
+                        bigInfo.setImage(images.get("common").getAsString());
                     }
 
                     Set<String> tags = jsonObject.getAsJsonArray("tags")
