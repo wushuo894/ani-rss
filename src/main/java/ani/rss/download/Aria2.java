@@ -1,6 +1,7 @@
 package ani.rss.download;
 
 import ani.rss.entity.Config;
+import ani.rss.entity.Item;
 import ani.rss.entity.TorrentsInfo;
 import ani.rss.util.HttpReq;
 import cn.hutool.core.codec.Base64;
@@ -105,7 +106,8 @@ public class Aria2 implements BaseDownload {
 
 
     @Override
-    public Boolean download(String name, String savePath, File torrentFile, Boolean ova) {
+    public Boolean download(Item item, String savePath, File torrentFile, Boolean ova) {
+        String name = item.getReName();
         String host = config.getHost();
         String password = config.getPassword();
         String body = "";
