@@ -12,6 +12,7 @@ import cn.hutool.core.text.StrFormatter;
 import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.core.util.ReUtil;
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.util.URLUtil;
 import cn.hutool.http.ContentType;
 import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpResponse;
@@ -20,6 +21,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -49,7 +51,7 @@ public class BgmUtil {
         if (nameCache.containsKey(name)) {
             return nameCache.get(name);
         }
-        HttpRequest httpRequest = HttpReq.get(host + "/search/subject/" + name, true);
+        HttpRequest httpRequest = HttpReq.get(host + "/search/subject/" + URLUtil.encodeAll(name, StandardCharsets.UTF_8), true);
 
         setToken(httpRequest);
 

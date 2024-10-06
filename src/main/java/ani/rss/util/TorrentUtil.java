@@ -5,7 +5,7 @@ import ani.rss.entity.Ani;
 import ani.rss.entity.Config;
 import ani.rss.entity.Item;
 import ani.rss.entity.TorrentsInfo;
-import cn.hutool.core.collection.CollUtil;
+import ani.rss.enums.StringEnum;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.text.StrFormatter;
 import cn.hutool.core.thread.ThreadUtil;
@@ -45,7 +45,6 @@ public class TorrentUtil {
         Config config = ConfigUtil.CONFIG;
         Boolean autoDisabled = config.getAutoDisabled();
         Integer downloadCount = config.getDownloadCount();
-        Boolean backRss = config.getBackRss();
 
         String title = ani.getTitle();
         Integer season = ani.getSeason();
@@ -128,48 +127,8 @@ public class TorrentUtil {
             File saveTorrent = saveTorrent(ani, item);
             List<File> downloadPathList = getDownloadPath(ani);
 
-            // 开启备用rss会自动删除本地已存在视频
-            if (backRss &&
-                    ReUtil.contains("S\\d+E\\d+(\\.5)?", reName)) {
-                for (File downloadPath : downloadPathList) {
-                    if (!downloadPath.exists()) {
-                        continue;
-                    }
-                    if (!downloadPath.isDirectory()) {
-                        continue;
-                    }
-                    for (File file : ObjectUtil.defaultIfNull(downloadPath.listFiles(), new File[]{})) {
-                        // 文件名不匹配，跳过
-                        if (!FileUtil.mainName(file).equals(reName)) {
-                            continue;
-                        }
-                        boolean isDel = false;
-                        // 文件在删除前先判断其格式
-                        if (file.isFile()) {
-                            String extName = FileUtil.extName(file);
-                            // 没有后缀 跳过
-                            if (StrUtil.isBlank(extName)) {
-                                continue;
-                            }
-                            for (String en : BaseDownload.videoFormat) {
-                                // 后缀匹配不上 跳过
-                                if (!extName.equalsIgnoreCase(en)) {
-                                    continue;
-                                }
-                                isDel = true;
-                                break;
-                            }
-                        }
-                        if (file.isDirectory()) {
-                            isDel = true;
-                        }
-                        if (isDel) {
-                            FileUtil.del(file);
-                            log.info("已开启备用RSS, 自动删除 {}", file.getAbsolutePath());
-                        }
-                    }
-                }
-            }
+            deleteBackRss(ani, item);
+
             String savePath = downloadPathList
                     .get(0)
                     .toString();
@@ -197,6 +156,71 @@ public class TorrentUtil {
             ani.setEnable(false);
             log.info("{} 第 {} 季 共 {} 集 已全部下载完成, 自动停止订阅", title, season, totalEpisodeNumber);
             AniUtil.sync();
+        }
+    }
+
+    /**
+     * 删除备用rss
+     *
+     * @param ani
+     * @param item
+     */
+    public static void deleteBackRss(Ani ani, Item item) {
+        Config config = ConfigUtil.CONFIG;
+        Boolean backRss = config.getBackRss();
+        String reName = item.getReName();
+
+        if (!backRss) {
+            return;
+        }
+        if (!ReUtil.contains(StringEnum.SEASON_REG, reName)) {
+            return;
+        }
+        reName = ReUtil.get(StringEnum.SEASON_REG, reName, 0);
+
+        List<File> downloadPathList = getDownloadPath(ani);
+
+        List<File> files = downloadPathList.stream()
+                .filter(File::exists)
+                .filter(File::isDirectory)
+                .flatMap(downloadPath -> Stream.of(ObjectUtil.defaultIfNull(downloadPath.listFiles(), new File[]{})))
+                .collect(Collectors.toList());
+        for (File file : files) {
+            String fileMainName = FileUtil.mainName(file);
+            if (StrUtil.isBlank(fileMainName)) {
+                continue;
+            }
+            if (!ReUtil.contains(StringEnum.SEASON_REG, fileMainName)) {
+                continue;
+            }
+            fileMainName = ReUtil.get(StringEnum.SEASON_REG, fileMainName, 0);
+            if (!fileMainName.equals(reName)) {
+                continue;
+            }
+            boolean isDel = false;
+            // 文件在删除前先判断其格式
+            if (file.isFile()) {
+                String extName = FileUtil.extName(file);
+                // 没有后缀 跳过
+                if (StrUtil.isBlank(extName)) {
+                    continue;
+                }
+                for (String en : BaseDownload.videoFormat) {
+                    // 后缀匹配不上 跳过
+                    if (!extName.equalsIgnoreCase(en)) {
+                        continue;
+                    }
+                    isDel = true;
+                    break;
+                }
+            }
+            if (file.isDirectory()) {
+                isDel = true;
+            }
+            if (isDel) {
+                FileUtil.del(file);
+                log.info("已开启备用RSS, 自动删除 {}", file.getAbsolutePath());
+            }
         }
     }
 
@@ -334,14 +358,13 @@ public class TorrentUtil {
                         return false;
                     }
                     mainName = mainName.trim().toUpperCase();
-                    String s = "S(\\d+)E(\\d+(\\.5)?)";
-                    if (!ReUtil.contains(s, mainName)) {
+                    if (!ReUtil.contains(StringEnum.SEASON_REG, mainName)) {
                         return false;
                     }
 
-                    String seasonStr = ReUtil.get(s, mainName, 1);
+                    String seasonStr = ReUtil.get(StringEnum.SEASON_REG, mainName, 1);
 
-                    String episodeStr = ReUtil.get(s, mainName, 2);
+                    String episodeStr = ReUtil.get(StringEnum.SEASON_REG, mainName, 2);
 
                     if (StrUtil.isBlank(seasonStr) || StrUtil.isBlank(episodeStr)) {
                         return false;
