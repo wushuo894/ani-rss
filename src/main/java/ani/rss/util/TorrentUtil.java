@@ -245,13 +245,33 @@ public class TorrentUtil {
     }
 
     public static File getTorrent(Ani ani, Item item) {
+        String title = ani.getTitle();
+        String pinyin = PinyinUtil.getPinyin(title);
+        String s = pinyin.toUpperCase().substring(0, 1);
+        if (ReUtil.isMatch("^\\d$", s)) {
+            s = "0";
+        } else if (!ReUtil.isMatch("^[a-zA-Z]$", s)) {
+            s = "#";
+        }
         String infoHash = item.getInfoHash();
         File torrents = getTorrentDir(ani);
         String type = ani.getType();
         if ("dmhy".equals(type)) {
-            return new File(torrents + File.separator + infoHash + ".txt");
+            File file = new File(torrents + "/" + infoHash + ".txt");
+            if (!file.exists()) {
+                torrents = new File(torrents + "/" + s);
+                FileUtil.mkdir(torrents);
+                file = new File(torrents + "/" + infoHash + ".txt");
+            }
+            return file;
         }
-        return new File(torrents + File.separator + infoHash + ".torrent");
+        File file = new File(torrents + "/" + infoHash + ".torrent");
+        if (!file.exists()) {
+            torrents = new File(torrents + "/" + s);
+            FileUtil.mkdir(torrents);
+            file = new File(torrents + "/" + infoHash + ".torrent");
+        }
+        return file;
     }
 
     /**
