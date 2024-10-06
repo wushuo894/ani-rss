@@ -2,6 +2,7 @@ package ani.rss.download;
 
 import ani.rss.entity.Config;
 import ani.rss.entity.TorrentsInfo;
+import ani.rss.enums.StringEnum;
 import ani.rss.util.ExceptionUtil;
 import ani.rss.util.HttpReq;
 import cn.hutool.core.codec.Base64;
@@ -184,7 +185,7 @@ public class Transmission implements BaseDownload {
 
         String mainName = FileUtil.mainName(name);
 
-        if (ReUtil.contains("S\\d+E\\d+(\\.5)?", mainName)) {
+        if (ReUtil.contains(StringEnum.SEASON_REG, mainName)) {
             return;
         }
 

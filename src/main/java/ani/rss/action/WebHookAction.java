@@ -5,6 +5,7 @@ import ani.rss.annotation.Path;
 import ani.rss.auth.enums.AuthType;
 import ani.rss.entity.Ani;
 import ani.rss.entity.Config;
+import ani.rss.enums.StringEnum;
 import ani.rss.util.AniUtil;
 import ani.rss.util.BgmUtil;
 import ani.rss.util.ConfigUtil;
@@ -60,12 +61,11 @@ public class WebHookAction implements BaseAction {
         String parent = new File(path).getParent();
         String seriesName = item.get("SeriesName").getAsString();
         String fileName = item.get("FileName").getAsString();
-        String regStr = "S(\\d+)E(\\d+(\\.5)?)";
-        if (!ReUtil.contains(regStr, fileName)) {
+        if (!ReUtil.contains(StringEnum.SEASON_REG, fileName)) {
             response.sendOk();
             return;
         }
-        int s = Integer.parseInt(ReUtil.get(regStr, fileName, 1));
+        int s = Integer.parseInt(ReUtil.get(StringEnum.SEASON_REG, fileName, 1));
 
         // 番外
         if (s < 1) {
@@ -74,7 +74,7 @@ public class WebHookAction implements BaseAction {
         }
 
         // x.5
-        double e = Double.parseDouble(ReUtil.get(regStr, fileName, 2));
+        double e = Double.parseDouble(ReUtil.get(StringEnum.SEASON_REG, fileName, 2));
         if ((int) e == e - 0.5) {
             response.sendOk();
             return;
