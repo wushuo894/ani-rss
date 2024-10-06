@@ -13,6 +13,7 @@ import cn.hutool.core.lang.Assert;
 import cn.hutool.core.text.StrFormatter;
 import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.core.util.*;
+import cn.hutool.crypto.digest.MD5;
 import cn.hutool.http.HttpResponse;
 import cn.hutool.http.HttpUtil;
 import cn.hutool.json.JSONUtil;
@@ -286,19 +287,16 @@ public class AniUtil {
 
     public static String saveJpg(String coverUrl) {
         File jpgFile = new File(URLUtil.toURI(coverUrl).getPath());
-        String dir = jpgFile.getParentFile()
-                .getPath()
-                .replace("\\", "/");
-        String filename = jpgFile.getName();
+        String filename = MD5.create().digestHex(jpgFile.toString());
         File configDir = ConfigUtil.getConfigDir();
-        FileUtil.mkdir(configDir + "/files/" + dir);
-        File file = new File(configDir + "/files/" + dir + "/" + filename);
+        FileUtil.mkdir(configDir + "/files/");
+        File file = new File(configDir + "/files/" + filename);
         if (file.exists()) {
-            return dir + "/" + filename;
+            return filename;
         }
         HttpReq.get(coverUrl, true)
                 .then(res -> FileUtil.writeFromStream(res.bodyStream(), file));
-        return dir + "/" + filename;
+        return filename;
     }
 
     /**
