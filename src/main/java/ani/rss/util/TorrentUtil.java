@@ -532,7 +532,7 @@ public class TorrentUtil {
         MessageUtil.send(ConfigUtil.CONFIG, ani, text);
 
         try {
-            if (baseDownload.download(name, savePath, torrentFile, ova)) {
+            if (baseDownload.download(item, savePath, torrentFile, ova)) {
                 return;
             }
         } catch (Exception e) {
