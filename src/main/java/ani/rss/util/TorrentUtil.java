@@ -236,16 +236,6 @@ public class TorrentUtil {
 
         File configDir = ConfigUtil.getConfigDir();
 
-        File torrents = new File(StrFormatter.format("{}/torrents/{}/Season {}", configDir, title, season));
-        if (ova) {
-            torrents = new File(StrFormatter.format("{}/torrents/{}", configDir, title));
-        }
-        FileUtil.mkdir(torrents);
-        return torrents;
-    }
-
-    public static File getTorrent(Ani ani, Item item) {
-        String title = ani.getTitle();
         String pinyin = PinyinUtil.getPinyin(title);
         String s = pinyin.toUpperCase().substring(0, 1);
         if (ReUtil.isMatch("^\\d$", s)) {
@@ -253,25 +243,29 @@ public class TorrentUtil {
         } else if (!ReUtil.isMatch("^[a-zA-Z]$", s)) {
             s = "#";
         }
+
+        File torrents = new File(StrFormatter.format("{}/torrents/{}/Season {}", configDir, title, season));
+        if (!torrents.exists()) {
+            torrents = new File(StrFormatter.format("{}/torrents/{}/{}/Season {}", configDir, s, title, season));
+        }
+        if (ova) {
+            torrents = new File(StrFormatter.format("{}/torrents/{}", configDir, title));
+            if (!torrents.exists()) {
+                torrents = new File(StrFormatter.format("{}/torrents/{}/{}", configDir, s, title));
+            }
+        }
+        FileUtil.mkdir(torrents);
+        return torrents;
+    }
+
+    public static File getTorrent(Ani ani, Item item) {
         String infoHash = item.getInfoHash();
         File torrents = getTorrentDir(ani);
         String type = ani.getType();
         if ("dmhy".equals(type)) {
-            File file = new File(torrents + "/" + infoHash + ".txt");
-            if (!file.exists()) {
-                torrents = new File(torrents + "/" + s);
-                FileUtil.mkdir(torrents);
-                file = new File(torrents + "/" + infoHash + ".txt");
-            }
-            return file;
+            return new File(torrents + "/" + infoHash + ".txt");
         }
-        File file = new File(torrents + "/" + infoHash + ".torrent");
-        if (!file.exists()) {
-            torrents = new File(torrents + "/" + s);
-            FileUtil.mkdir(torrents);
-            file = new File(torrents + "/" + infoHash + ".torrent");
-        }
-        return file;
+        return new File(torrents + "/" + infoHash + ".torrent");
     }
 
     /**
