@@ -45,6 +45,12 @@
                   placeholder="可以为空 如果获取失败建议补全"
               />
             </el-form-item>
+            <el-form-item label="BgmUrl">
+              <el-input
+                  v-model:model-value="ani.bgmUrl"
+                  placeholder="https://bgm.tv/subject/123456"
+              />
+            </el-form-item>
             <el-form-item label="RSS 地址">
               <el-input
                   type="textarea"
@@ -65,6 +71,12 @@
               <el-input
                   v-model:model-value="ani.title"
                   placeholder="可以为空 如果获取失败建议补全"
+              />
+            </el-form-item>
+            <el-form-item label="BgmUrl">
+              <el-input
+                  v-model:model-value="ani.bgmUrl"
+                  placeholder="https://bgm.tv/subject/123456"
               />
             </el-form-item>
             <el-form-item label="RSS 地址">
