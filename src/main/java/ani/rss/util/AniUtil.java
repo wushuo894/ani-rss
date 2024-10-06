@@ -32,6 +32,7 @@ import java.io.File;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -519,10 +520,10 @@ public class AniUtil {
         if (StrUtil.isBlank(name)) {
             return "";
         }
-        String year = "";
+        AtomicReference<String> year = new AtomicReference<>("");
         String yearReg = " \\((\\d{4})\\)$";
         if (ReUtil.contains(yearReg, name)) {
-            year = ReUtil.get(yearReg, name, 1);
+            year.set(ReUtil.get(yearReg, name, 1));
             name = name.replaceAll(yearReg, "");
         }
         if (StrUtil.isBlank(name)) {
@@ -538,6 +539,14 @@ public class AniUtil {
                         Element element = document.selectFirst(".title h2");
                         if (Objects.isNull(element)) {
                             return "";
+                        }
+                        Element releaseDate = document.selectFirst(".release_date");
+                        if (Objects.nonNull(releaseDate) && StrUtil.isNotBlank(year.get())) {
+                            String s = "(\\d{4}) 年 \\d{2} 月 \\d{2} 日";
+                            String text = releaseDate.text();
+                            if (ReUtil.contains(s, text)) {
+                                year.set(ReUtil.get(s, text, 1));
+                            }
                         }
                         String title = element.ownText();
                         title = title.replace("1/2", "½");
@@ -556,7 +565,7 @@ public class AniUtil {
         if (StrUtil.isBlank(themoviedbName)) {
             return "";
         }
-        if (StrUtil.isNotBlank(year)) {
+        if (StrUtil.isNotBlank(year.get())) {
             themoviedbName = StrFormatter.format("{} ({})", themoviedbName, year);
         }
         return themoviedbName;
