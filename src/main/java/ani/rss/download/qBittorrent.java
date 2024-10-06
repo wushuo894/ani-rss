@@ -2,6 +2,7 @@ package ani.rss.download;
 
 import ani.rss.entity.Config;
 import ani.rss.entity.TorrentsInfo;
+import ani.rss.enums.StringEnum;
 import ani.rss.util.ExceptionUtil;
 import ani.rss.util.HttpReq;
 import cn.hutool.core.io.FileUtil;
@@ -153,7 +154,7 @@ public class qBittorrent implements BaseDownload {
     public void rename(TorrentsInfo torrentsInfo) {
         Boolean qbRenameTitle = config.getQbRenameTitle();
         String reName = torrentsInfo.getName();
-        if (!ReUtil.contains("S\\d+E\\d+(\\.5)?", reName) && qbRenameTitle) {
+        if (!ReUtil.contains(StringEnum.SEASON_REG, reName) && qbRenameTitle) {
             return;
         }
 
