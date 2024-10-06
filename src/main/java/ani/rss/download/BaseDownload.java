@@ -1,6 +1,7 @@
 package ani.rss.download;
 
 import ani.rss.entity.Config;
+import ani.rss.entity.Item;
 import ani.rss.entity.TorrentsInfo;
 import cn.hutool.cache.Cache;
 import cn.hutool.cache.CacheUtil;
@@ -42,11 +43,11 @@ public interface BaseDownload {
     /**
      * 下载
      *
-     * @param name
+     * @param item
      * @param savePath
      * @param torrentFile
      */
-    Boolean download(String name, String savePath, File torrentFile, Boolean ova);
+    Boolean download(Item item, String savePath, File torrentFile, Boolean ova);
 
     /**
      * 删除已完成任务
