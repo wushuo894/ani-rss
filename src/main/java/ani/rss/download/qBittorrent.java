@@ -1,6 +1,7 @@
 package ani.rss.download;
 
 import ani.rss.entity.Config;
+import ani.rss.entity.Item;
 import ani.rss.entity.TorrentsInfo;
 import ani.rss.enums.StringEnum;
 import ani.rss.util.ExceptionUtil;
@@ -83,7 +84,10 @@ public class qBittorrent implements BaseDownload {
     }
 
     @Override
-    public Boolean download(String name, String savePath, File torrentFile, Boolean ova) {
+    public Boolean download(Item item, String savePath, File torrentFile, Boolean ova) {
+        String name = item.getReName();
+        String subgroup = item.getSubgroup();
+        subgroup = StrUtil.blankToDefault(subgroup, "未知字幕组");
         String host = config.getHost();
         Boolean qbRenameTitle = config.getQbRenameTitle();
         Boolean qbUseDownloadPath = config.getQbUseDownloadPath();
@@ -101,7 +105,7 @@ public class qBittorrent implements BaseDownload {
                 .form("stopCondition", "None")
                 .form("upLimit", 102400)
                 .form("useDownloadPath", qbUseDownloadPath)
-                .form("tags", "ani-rss");
+                .form("tags", "ani-rss," + subgroup);
 
         String extName = FileUtil.extName(torrentFile);
         if ("txt".equals(extName)) {
