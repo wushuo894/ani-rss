@@ -33,6 +33,7 @@ public class RssAction implements BaseAction {
         }
         url = URLUtil.decode(url, "utf-8");
         try {
+            title = title.replace("/", " ");
             Ani newAni = AniUtil.getAni(url, title, type);
             resultSuccess(newAni);
         } catch (Exception e) {
