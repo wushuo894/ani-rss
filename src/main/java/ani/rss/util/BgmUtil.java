@@ -12,7 +12,6 @@ import cn.hutool.core.text.StrFormatter;
 import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.core.util.ReUtil;
 import cn.hutool.core.util.StrUtil;
-import cn.hutool.core.util.URLUtil;
 import cn.hutool.http.ContentType;
 import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpResponse;
@@ -21,11 +20,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
-import java.nio.charset.StandardCharsets;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
@@ -37,13 +32,43 @@ public class BgmUtil {
     private static final Gson gson = new Gson();
     private static final Cache<String, String> nameCache = CacheUtil.newFIFOCache(64);
 
+    public static List<JsonObject> search(String name) {
+        name = name.replace("1/2", "½");
+        HttpRequest httpRequest = HttpReq.get(host + "/search/subject/" + name, true);
+
+        setToken(httpRequest);
+        return httpRequest
+                .form("type", 2)
+                .form("responseGroup", "small")
+                .thenFunction(res -> {
+                    if (!res.isOk()) {
+                        return new ArrayList<>();
+                    }
+                    String body = res.body();
+                    if (!JSONUtil.isTypeJSON(body)) {
+                        return new ArrayList<>();
+                    }
+
+                    JsonObject jsonObject = gson.fromJson(body, JsonObject.class);
+                    JsonElement code = jsonObject.get("code");
+                    if (Objects.nonNull(code)) {
+                        if (code.getAsInt() == 404) {
+                            return new ArrayList<>();
+                        }
+                    }
+                    return jsonObject.get("list").getAsJsonArray()
+                            .asList()
+                            .stream().map(JsonElement::getAsJsonObject).collect(Collectors.toList());
+                });
+    }
+
     /**
      * 查找番剧id
      *
      * @param name 名称
      * @return 番剧id
      */
-    public static String getSubjectId(String name) {
+    public static synchronized String getSubjectId(String name) {
         if (StrUtil.isBlank(name)) {
             return "";
         }
@@ -51,44 +76,23 @@ public class BgmUtil {
         if (nameCache.containsKey(name)) {
             return nameCache.get(name);
         }
-        HttpRequest httpRequest = HttpReq.get(host + "/search/subject/" + name.replace("1/2", "½"), true);
+        List<JsonObject> list = search(name);
+        if (list.isEmpty()) {
+            return "";
+        }
 
-        setToken(httpRequest);
-
-        String id = httpRequest
-                .form("type", 2)
-                .form("responseGroup", "small")
-                .thenFunction(res -> {
-                    if (!res.isOk()) {
-                        return "";
-                    }
-                    String body = res.body();
-                    if (!JSONUtil.isTypeJSON(body)) {
-                        return "";
-                    }
-
-                    JsonObject jsonObject = gson.fromJson(body, JsonObject.class);
-                    if (Objects.nonNull(jsonObject.get("code"))) {
-                        if (jsonObject.get("code").getAsInt() == 404) {
-                            return "";
-                        }
-                    }
-                    List<JsonElement> list = jsonObject.get("list").getAsJsonArray().asList();
-                    if (list.isEmpty()) {
-                        return "";
-                    }
-
-                    // 优先使用名称完全匹配的
-                    for (JsonElement jsonElement : list) {
-                        JsonObject itemObject = jsonElement.getAsJsonObject();
-                        String nameCn = itemObject.get("name_cn").getAsString();
-                        if (nameCn.equalsIgnoreCase(name)) {
-                            return itemObject.get("id").getAsString();
-                        }
-                    }
-                    // 次之使用第一个
-                    return list.get(0).getAsJsonObject().get("id").getAsString();
-                });
+        String id = "";
+        // 优先使用名称完全匹配的
+        for (JsonObject itemObject : list) {
+            String nameCn = itemObject.get("name_cn").getAsString();
+            if (nameCn.equalsIgnoreCase(name)) {
+                id = itemObject.get("id").getAsString();
+            }
+        }
+        // 次之使用第一个
+        if (StrUtil.isBlank(id)) {
+            id = list.get(0).get("id").getAsString();
+        }
         ThreadUtil.sleep(1000);
         nameCache.put(name, id, TimeUnit.DAYS.toDays(1));
         return id;
