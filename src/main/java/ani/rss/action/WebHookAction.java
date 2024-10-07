@@ -92,6 +92,12 @@ public class WebHookAction implements BaseAction {
             List<Ani> anis = ObjectUtil.clone(AniUtil.ANI_LIST);
             Optional<String> first = anis.stream()
                     .filter(ani -> {
+                        String title = ani.getTitle();
+                        Integer season = ani.getSeason();
+                        if (title.equals(seriesName) && s == season) {
+                            return true;
+                        }
+
                         List<File> downloadPath = TorrentUtil.getDownloadPath(ani);
                         for (File file : downloadPath) {
                             if (!file.exists()) {

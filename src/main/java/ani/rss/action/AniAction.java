@@ -115,11 +115,14 @@ public class AniAction implements BaseAction {
 
         AniUtil.ANI_LIST.add(ani);
         AniUtil.sync();
-        ThreadUtil.execute(() -> {
-            if (TorrentUtil.login()) {
-                TorrentUtil.downloadAni(ani);
-            }
-        });
+        Boolean enable = ani.getEnable();
+        if (enable) {
+            ThreadUtil.execute(() -> {
+                if (TorrentUtil.login()) {
+                    TorrentUtil.downloadAni(ani);
+                }
+            });
+        }
         resultSuccessMsg("添加订阅成功");
         log.info("添加订阅 {} {} {}", ani.getTitle(), ani.getUrl(), ani.getId());
     }
