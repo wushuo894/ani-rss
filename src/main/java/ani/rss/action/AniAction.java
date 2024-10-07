@@ -155,7 +155,7 @@ public class AniAction implements BaseAction {
         BeanUtil.copyProperties(ani, first.get());
         File newTorrentDir = TorrentUtil.getTorrentDir(first.get());
         if (!torrentDir.toString().equals(newTorrentDir.toString())) {
-            FileUtil.move(torrentDir, newTorrentDir, true);
+            FileUtil.move(torrentDir, newTorrentDir.getParentFile(), true);
         }
         AniUtil.sync();
         resultSuccessMsg("修改成功");
