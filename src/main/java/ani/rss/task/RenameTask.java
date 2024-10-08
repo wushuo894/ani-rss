@@ -55,10 +55,10 @@ public class RenameTask extends Thread {
                         return;
                     }
                     Boolean b = TorrentUtil.addTags(torrentsInfo, "下载完成");
+                    TorrentUtil.delete(torrentsInfo);
                     if (!b) {
                         return;
                     }
-                    TorrentUtil.delete(torrentsInfo);
                     MessageUtil.send(ConfigUtil.CONFIG, null, name + " 下载完成", MessageEnum.DOWNLOAD_END);
                 }
             } catch (Exception e) {
