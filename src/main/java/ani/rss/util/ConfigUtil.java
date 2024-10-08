@@ -95,7 +95,11 @@ public class ConfigUtil {
                 .setDownloadNew(false)
                 .setInnerIP(false)
                 .setRenameTemplate("${title} S${seasonFormat}E${episodeFormat}")
-                .setMessageList(List.of(MessageEnum.values()));
+                .setMessageList(List.of(
+                        MessageEnum.DOWNLOAD_START,
+                        MessageEnum.OMIT,
+                        MessageEnum.ERROR
+                ));
     }
 
     private static final Gson GSON = new GsonBuilder()
