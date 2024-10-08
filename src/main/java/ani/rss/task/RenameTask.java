@@ -43,6 +43,10 @@ public class RenameTask extends Thread {
 
                     String name = torrentsInfo.getName();
                     TorrentsInfo.State state = torrentsInfo.getState();
+                    if (Objects.isNull(state)) {
+                        continue;
+                    }
+
                     if (!List.of(
                             TorrentsInfo.State.pausedUP.name(),
                             TorrentsInfo.State.stoppedUP.name()
