@@ -221,7 +221,7 @@ public class qBittorrent implements BaseDownload {
     public Boolean addTags(TorrentsInfo torrentsInfo, String tags) {
         String host = config.getHost();
         String hash = torrentsInfo.getHash();
-        return HttpReq.post(host + "/api/v2/torrents/renameFile", false)
+        return HttpReq.post(host + "/api/v2/torrents/addTags", false)
                 .form("hashes", hash)
                 .form("tags", tags)
                 .thenFunction(HttpResponse::isOk);
