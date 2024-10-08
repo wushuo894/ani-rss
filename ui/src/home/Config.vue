@@ -123,7 +123,8 @@ const config = ref({
   'downloadNew': false,
   'telegramImage': true,
   'innerIP': false,
-  'renameTemplate': ''
+  'renameTemplate': '',
+  'messageList': []
 })
 
 const activeName = ref('download')

@@ -1,5 +1,6 @@
 package ani.rss.entity;
 
+import ani.rss.enums.MessageEnum;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
@@ -303,5 +304,10 @@ public class Config implements Serializable {
      * 重命名模版
      */
     private String renameTemplate;
+
+    /**
+     * 通知类型
+     */
+    private List<MessageEnum> messageList;
 
 }

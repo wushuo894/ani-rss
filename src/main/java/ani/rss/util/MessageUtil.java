@@ -2,13 +2,17 @@ package ani.rss.util;
 
 import ani.rss.entity.Ani;
 import ani.rss.entity.Config;
+import ani.rss.enums.MessageEnum;
 import ani.rss.msg.Mail;
 import ani.rss.msg.Message;
 import ani.rss.msg.Telegram;
 import ani.rss.msg.WebHook;
 import cn.hutool.core.thread.ExecutorBuilder;
+import cn.hutool.core.util.EnumUtil;
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.LinkedBlockingQueue;
 
@@ -24,7 +28,13 @@ public class MessageUtil {
     public static final Message telegramMessage = new Telegram();
     public static final Message webHookMessage = new WebHook();
 
-    public static synchronized void send(Config config, Ani ani, String text) {
+    public static synchronized void send(Config config, Ani ani, String text, MessageEnum messageEnum) {
+        List<MessageEnum> messageList = config.getMessageList();
+        if (Objects.nonNull(messageEnum)) {
+            if (messageList.stream().noneMatch(it -> it.name().equalsIgnoreCase(messageEnum.name()))) {
+                return;
+            }
+        }
         try {
             Boolean mail = config.getMail();
             if (mail) {
