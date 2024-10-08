@@ -39,8 +39,7 @@ public class RssAction implements BaseAction {
             resultSuccess(newAni);
         } catch (Exception e) {
             String message = ExceptionUtil.getMessage(e);
-            log.error(message);
-            log.debug(message, e);
+            log.error(message, e);
             resultErrorMsg("RSS解析失败 {}", message);
         }
     }

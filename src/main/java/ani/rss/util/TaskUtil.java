@@ -26,8 +26,7 @@ public class TaskUtil {
                 }
                 thread.join();
             } catch (Exception e) {
-                log.error(e.getMessage());
-                log.debug(e.getMessage(), e);
+                log.error(e.getMessage(), e);
             }
         }
         THREADS.clear();

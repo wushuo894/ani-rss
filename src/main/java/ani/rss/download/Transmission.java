@@ -60,7 +60,7 @@ public class Transmission implements BaseDownload {
             getTorrentsInfos();
         } catch (Exception e) {
             String message = ExceptionUtil.getMessage(e);
-            log.debug(message, e);
+            log.error(message, e);
             log.error("登录 Transmission 失败 {}", message);
             return false;
         }
