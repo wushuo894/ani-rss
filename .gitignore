@@ -3,6 +3,8 @@ target/
 !**/src/main/**/target/
 !**/src/test/**/target/
 
+ui/package-lock.json
+
 ### IntelliJ IDEA ###
 .idea
 .idea/modules.xml
@@ -45,3 +47,5 @@ logs
 *.log
 /config
 .git
+
+java-17-openjdk-17.0.3.0.6-1.jre.win.x86_64.zip
