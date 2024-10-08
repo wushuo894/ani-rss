@@ -23,6 +23,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -218,5 +219,20 @@ public class Transmission implements BaseDownload {
             return;
         }
         log.error("重命名失败 {} ==> {}", name, reName);
+    }
+
+    @Override
+    public Boolean addTags(TorrentsInfo torrentsInfo, String tags) {
+        String id = torrentsInfo.getId();
+        List<String> strings = new ArrayList<>(List.of(torrentsInfo.getTags().split(",")));
+        strings.add(tags);
+
+        String body = ResourceUtil.readUtf8Str("transmission/torrent-set.json");
+        body = StrFormatter.format(body, gson.toJson(strings), id);
+        return HttpReq.post(host + "/transmission/rpc", false)
+                .header(Header.AUTHORIZATION, authorization)
+                .header("X-Transmission-Session-Id", sessionId)
+                .body(body)
+                .thenFunction(HttpResponse::isOk);
     }
 }

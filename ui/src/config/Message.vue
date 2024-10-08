@@ -1,5 +1,11 @@
 <template>
   <el-collapse v-model:model-value="messageActiveName" accordion>
+    <el-checkbox-group v-model:model-value="config.messageList">
+      <el-checkbox label="开始下载" value="DOWNLOAD_START"/>
+      <el-checkbox label="下载完成" value="DOWNLOAD_END"/>
+      <el-checkbox label="缺集" value="OMIT"/>
+      <el-checkbox label="错误" value="ERROR"/>
+    </el-checkbox-group>
     <el-collapse-item title="Telegram通知" name="1">
       <el-form label-width="auto" @submit="(event)=>{
                       event.preventDefault()

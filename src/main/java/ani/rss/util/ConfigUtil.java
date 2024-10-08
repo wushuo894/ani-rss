@@ -3,6 +3,7 @@ package ani.rss.util;
 import ani.rss.entity.Config;
 import ani.rss.entity.Login;
 import ani.rss.entity.MyMailAccount;
+import ani.rss.enums.MessageEnum;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.bean.copier.CopyOptions;
 import cn.hutool.core.io.FileUtil;
@@ -14,6 +15,7 @@ import com.google.gson.GsonBuilder;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -92,7 +94,8 @@ public class ConfigUtil {
                 .setScoreShow(false)
                 .setDownloadNew(false)
                 .setInnerIP(false)
-                .setRenameTemplate("${title} S${seasonFormat}E${episodeFormat}");
+                .setRenameTemplate("${title} S${seasonFormat}E${episodeFormat}")
+                .setMessageList(List.of(MessageEnum.values()));
     }
 
     private static final Gson GSON = new GsonBuilder()

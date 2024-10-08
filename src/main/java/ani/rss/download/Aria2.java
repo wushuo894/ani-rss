@@ -191,4 +191,9 @@ public class Aria2 implements BaseDownload {
             log.info("重命名 {} ==> {}", name, newPath);
         }
     }
+
+    @Override
+    public Boolean addTags(TorrentsInfo torrentsInfo, String tags) {
+        return false;
+    }
 }

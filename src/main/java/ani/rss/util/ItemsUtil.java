@@ -3,6 +3,7 @@ package ani.rss.util;
 import ani.rss.entity.Ani;
 import ani.rss.entity.Config;
 import ani.rss.entity.Item;
+import ani.rss.enums.MessageEnum;
 import cn.hutool.cache.Cache;
 import cn.hutool.cache.CacheUtil;
 import cn.hutool.core.text.StrFormatter;
@@ -62,7 +63,7 @@ public class ItemsUtil {
             log.info(s);
             // 缓存一天 不重复发送
             messageCache.put(s, "1", TimeUnit.DAYS.toDays(1));
-            MessageUtil.send(config, ani, s);
+            MessageUtil.send(config, ani, s, MessageEnum.OMIT);
         }
     }
 }
