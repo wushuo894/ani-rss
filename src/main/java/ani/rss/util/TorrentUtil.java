@@ -620,7 +620,12 @@ public class TorrentUtil {
         if (StrUtil.isBlank(tags)) {
             return false;
         }
-        return baseDownload.addTags(torrentsInfo, tags);
+        try {
+            return baseDownload.addTags(torrentsInfo, tags);
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+        }
+        return false;
     }
 
     public static synchronized void load() {
