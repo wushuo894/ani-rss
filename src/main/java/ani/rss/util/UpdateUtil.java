@@ -50,7 +50,7 @@ public class UpdateUtil {
         } catch (Exception e) {
             String message = ExceptionUtil.getMessage(e);
             log.error("检测更新失败 {}", message);
-            log.debug(message, e);
+            log.error(message, e);
         }
         return about;
     }
