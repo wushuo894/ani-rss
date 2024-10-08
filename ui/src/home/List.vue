@@ -21,21 +21,21 @@
                     </div>
                     <div style="flex-grow: 1;position: relative;">
                       <div style="margin-left: 10px;">
-                        <div style="
-                          column-count: 1;
-                          overflow: hidden;
-                          white-space: nowrap;
-                          text-overflow: ellipsis;
-                          width: 200px;
-                          font-size: 0.97em;
-                          line-height: 1.6;
-                          font-weight: 500;
-                          hyphens: auto;
-                          letter-spacing: .0125em;">
-                         <el-tooltip :content="item.title">
-                           {{ item.title }}
-                         </el-tooltip>
-                        </div>
+                        <el-tooltip :content="item.title" effect="customized" placement="top">
+                          <div style="
+                            column-count: 1;
+                            overflow: hidden;
+                            white-space: nowrap;
+                            text-overflow: ellipsis;
+                            width: 200px;
+                            font-size: 0.97em;
+                            line-height: 1.6;
+                            font-weight: 500;
+                            hyphens: auto;
+                            letter-spacing: .0125em;">
+                            {{ item.title }}
+                          </div>
+                        </el-tooltip>
                         <div style="margin-bottom: 8px;" v-if="scoreShow">
                           <h4 style="color: #E800A4;">
                             {{ item['score'].toFixed(1) }}
@@ -342,6 +342,17 @@ let props = defineProps(['title', 'filter'])
 
 .gtc2 {
   grid-template-columns: repeat(2, 1fr);
+}
+
+.el-popper.is-customized {
+  /* Set padding to ensure the height is 32px */
+  padding: 6px 12px;
+  background: linear-gradient(90deg, rgb(159, 229, 151), rgb(204, 229, 129));
+}
+
+.el-popper.is-customized .el-popper__arrow::before {
+  background: linear-gradient(45deg, #b2e68d, #bce689);
+  right: 0;
 }
 </style>
 
