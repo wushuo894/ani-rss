@@ -32,7 +32,9 @@
                           font-weight: 500;
                           hyphens: auto;
                           letter-spacing: .0125em;">
-                          {{ item.title }}
+                         <el-tooltip :content="item.title">
+                           {{ item.title }}
+                         </el-tooltip>
                         </div>
                         <div style="margin-bottom: 8px;" v-if="scoreShow">
                           <h4 style="color: #E800A4;">
