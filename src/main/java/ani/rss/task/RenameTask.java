@@ -40,7 +40,6 @@ public class RenameTask extends Thread {
                 List<TorrentsInfo> torrentsInfos = TorrentUtil.getTorrentsInfos();
                 for (TorrentsInfo torrentsInfo : torrentsInfos) {
                     TorrentUtil.rename(torrentsInfo);
-                    TorrentUtil.delete(torrentsInfo);
 
                     String name = torrentsInfo.getName();
                     TorrentsInfo.State state = torrentsInfo.getState();
@@ -52,12 +51,14 @@ public class RenameTask extends Thread {
                     }
                     String tags = torrentsInfo.getTags();
                     if (List.of(tags.split(",")).contains("下载完成")) {
+                        TorrentUtil.delete(torrentsInfo);
                         return;
                     }
                     Boolean b = TorrentUtil.addTags(torrentsInfo, "下载完成");
                     if (!b) {
                         return;
                     }
+                    TorrentUtil.delete(torrentsInfo);
                     MessageUtil.send(ConfigUtil.CONFIG, null, name + " 下载完成", MessageEnum.DOWNLOAD_END);
                 }
             } catch (Exception e) {
