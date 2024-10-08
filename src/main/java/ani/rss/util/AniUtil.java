@@ -442,7 +442,7 @@ public class AniUtil {
                         return RenameUtil.rename(ani, item);
                     } catch (Exception e) {
                         log.error("解析rss视频集次出现问题");
-                        log.debug(e.getMessage(), e);
+                        log.error(e.getMessage(), e);
                     }
                     return false;
                 }).collect(Collectors.toList());
