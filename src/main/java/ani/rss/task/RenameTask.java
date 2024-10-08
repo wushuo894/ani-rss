@@ -63,8 +63,7 @@ public class RenameTask extends Thread {
                 }
             } catch (Exception e) {
                 String message = ExceptionUtil.getMessage(e);
-                log.error(message);
-                log.debug(message, e);
+                log.error(message, e);
             }
             ThreadUtil.sleep(renameSleep, TimeUnit.MINUTES);
         }

@@ -75,7 +75,7 @@ public class RssTask extends Thread {
                 } catch (Exception e) {
                     String message = ExceptionUtil.getMessage(e);
                     log.error("{} {}", title, message);
-                    log.debug(message, e);
+                    log.error(message, e);
                 }
                 // 避免短时间频繁请求导致流控
                 ThreadUtil.sleep(500);

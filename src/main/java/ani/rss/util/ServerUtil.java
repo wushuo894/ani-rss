@@ -99,7 +99,7 @@ public class ServerUtil {
                         IoUtil.writeUtf8(res.getOut(), true, json);
                         if (!(e instanceof IllegalArgumentException)) {
                             log.error("{} {}", urlPath, e.getMessage());
-                            log.debug(e);
+                            log.error(e.getMessage(), e);
                         }
                     }
                 }
