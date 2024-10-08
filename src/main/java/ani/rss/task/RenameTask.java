@@ -47,17 +47,17 @@ public class RenameTask extends Thread {
                             TorrentsInfo.State.pausedUP.name(),
                             TorrentsInfo.State.stoppedUP.name()
                     ).contains(state.name())) {
-                        return;
+                        continue;
                     }
                     String tags = torrentsInfo.getTags();
                     if (List.of(tags.split(",")).contains("下载完成")) {
                         TorrentUtil.delete(torrentsInfo);
-                        return;
+                        continue;
                     }
                     Boolean b = TorrentUtil.addTags(torrentsInfo, "下载完成");
                     TorrentUtil.delete(torrentsInfo);
                     if (!b) {
-                        return;
+                        continue;
                     }
                     MessageUtil.send(ConfigUtil.CONFIG, null, name + " 下载完成", MessageEnum.DOWNLOAD_END);
                 }
