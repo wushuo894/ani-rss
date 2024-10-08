@@ -5,6 +5,7 @@ import ani.rss.entity.Ani;
 import ani.rss.entity.Config;
 import ani.rss.entity.Item;
 import ani.rss.entity.TorrentsInfo;
+import ani.rss.enums.MessageEnum;
 import ani.rss.enums.StringEnum;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.text.StrFormatter;
@@ -532,7 +533,10 @@ public class TorrentUtil {
 
         if (!torrentFile.exists()) {
             log.error("种子下载出现问题 {} {}", name, torrentFile.getAbsolutePath());
-            MessageUtil.send(ConfigUtil.CONFIG, ani, StrFormatter.format("种子下载出现问题 {} {}", name, torrentFile.getAbsolutePath()));
+            MessageUtil.send(ConfigUtil.CONFIG, ani,
+                    StrFormatter.format("种子下载出现问题 {} {}", name, torrentFile.getAbsolutePath()),
+                    MessageEnum.ERROR
+            );
             return;
         }
         ThreadUtil.sleep(1000);
@@ -543,7 +547,7 @@ public class TorrentUtil {
         if (backRss && !ani.getBackRssList().isEmpty()) {
             text = StrFormatter.format("({}) {}", master ? "主RSS" : "备用RSS", text);
         }
-        MessageUtil.send(ConfigUtil.CONFIG, ani, text);
+        MessageUtil.send(ConfigUtil.CONFIG, ani, text, MessageEnum.DOWNLOAD_START);
 
         try {
             if (baseDownload.download(item, savePath, torrentFile, ova)) {
@@ -554,7 +558,9 @@ public class TorrentUtil {
             log.error(message, e);
         }
         log.error("{} 添加失败，疑似为坏种", name);
-        MessageUtil.send(ConfigUtil.CONFIG, ani, StrFormatter.format("{} 添加失败，疑似为坏种", name));
+        MessageUtil.send(ConfigUtil.CONFIG, ani,
+                StrFormatter.format("{} 添加失败，疑似为坏种", name),
+                MessageEnum.ERROR);
     }
 
     /**
@@ -608,6 +614,13 @@ public class TorrentUtil {
             ThreadUtil.sleep(1000);
             baseDownload.rename(torrentsInfo);
         }
+    }
+
+    public static Boolean addTags(TorrentsInfo torrentsInfo, String tags) {
+        if (StrUtil.isBlank(tags)) {
+            return false;
+        }
+        return baseDownload.addTags(torrentsInfo, tags);
     }
 
     public static synchronized void load() {

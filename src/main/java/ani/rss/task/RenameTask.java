@@ -2,8 +2,10 @@ package ani.rss.task;
 
 import ani.rss.entity.Config;
 import ani.rss.entity.TorrentsInfo;
+import ani.rss.enums.MessageEnum;
 import ani.rss.util.ConfigUtil;
 import ani.rss.util.ExceptionUtil;
+import ani.rss.util.MessageUtil;
 import ani.rss.util.TorrentUtil;
 import cn.hutool.core.thread.ThreadUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -39,6 +41,24 @@ public class RenameTask extends Thread {
                 for (TorrentsInfo torrentsInfo : torrentsInfos) {
                     TorrentUtil.rename(torrentsInfo);
                     TorrentUtil.delete(torrentsInfo);
+
+                    String name = torrentsInfo.getName();
+                    TorrentsInfo.State state = torrentsInfo.getState();
+                    if (!List.of(
+                            TorrentsInfo.State.pausedUP.name(),
+                            TorrentsInfo.State.stoppedUP.name()
+                    ).contains(state.name())) {
+                        return;
+                    }
+                    String tags = torrentsInfo.getTags();
+                    if (List.of(tags.split(",")).contains("下载完成")) {
+                        return;
+                    }
+                    Boolean b = TorrentUtil.addTags(torrentsInfo, "下载完成");
+                    if (!b) {
+                        return;
+                    }
+                    MessageUtil.send(ConfigUtil.CONFIG, null, name + " 下载完成", MessageEnum.DOWNLOAD_END);
                 }
             } catch (Exception e) {
                 String message = ExceptionUtil.getMessage(e);
