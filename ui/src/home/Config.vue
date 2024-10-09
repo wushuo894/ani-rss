@@ -99,7 +99,8 @@ const config = ref({
   },
   'login': {
     'username': '',
-    'password': ''
+    'password': '',
+    'verifyIp': true
   },
   'telegram': false,
   'telegramBotToken': '',

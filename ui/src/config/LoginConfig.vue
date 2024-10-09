@@ -8,6 +8,16 @@
     <el-form-item label="密码">
       <el-input v-model:model-value="props.config.login.password"/>
     </el-form-item>
+    <el-form-item label="IP校验">
+      <div>
+        <el-switch v-model:model-value="props.config.login.verifyIp"/>
+      </div>
+      <div>
+        <el-text class="mx-1" size="small">
+          如果IP发生改变登录将失效
+        </el-text>
+      </div>
+    </el-form-item>
     <el-form-item label="IP白名单">
       <div style="width: 100%;">
         <div>
