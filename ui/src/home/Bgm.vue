@@ -42,7 +42,7 @@ let list = ref([])
 
 let search = () => {
   searchLoading.value = true
-  api.get('/api/bgm?name=' + name.value)
+  api.get('api/bgm?name=' + name.value)
       .then(res => {
         list.value = res.data
       })
