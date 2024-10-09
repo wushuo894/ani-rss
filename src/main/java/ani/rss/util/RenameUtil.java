@@ -16,7 +16,16 @@ import java.util.stream.Collectors;
 
 @Slf4j
 public class RenameUtil {
-    public static String regString = "";
+    public static final String REG_STR;
+
+    static {
+        String s = ResourceUtil.readUtf8Str("reg.json");
+        JsonArray jsonElements = new Gson().fromJson(s, JsonArray.class);
+        String ss = jsonElements.asList()
+                .stream().map(JsonElement::getAsString)
+                .collect(Collectors.joining("|"));
+        REG_STR = StrFormatter.format("(.*|\\[.*\\])({})(.*)", ss);
+    }
 
     public static Boolean rename(Ani ani, Item item) {
         Config config = ConfigUtil.CONFIG;
@@ -38,7 +47,7 @@ public class RenameUtil {
         if (customEpisode) {
             e = ReUtil.get(customEpisodeStr, itemTitle, customEpisodeGroupIndex);
         } else {
-            e = ReUtil.get(regStr(), itemTitle, 2);
+            e = ReUtil.get(REG_STR, itemTitle, 2);
         }
 
         if (StrUtil.isBlank(e)) {
@@ -83,19 +92,6 @@ public class RenameUtil {
         item
                 .setReName(reName);
         return true;
-    }
-
-    public synchronized static String regStr() {
-        if (StrUtil.isNotBlank(regString)) {
-            return regString;
-        }
-        String s = ResourceUtil.readUtf8Str("reg.json");
-        JsonArray jsonElements = new Gson().fromJson(s, JsonArray.class);
-        String ss = jsonElements.asList()
-                .stream().map(JsonElement::getAsString)
-                .collect(Collectors.joining("|"));
-        regString = StrFormatter.format("(.*|\\[.*\\])({})(.*)", ss);
-        return regString;
     }
 
 }
