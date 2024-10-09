@@ -10,12 +10,14 @@
     </el-form-item>
     <el-form-item label="IP校验">
       <div>
-        <el-switch v-model:model-value="props.config.login.verifyIp"/>
-      </div>
-      <div>
-        <el-text class="mx-1" size="small">
-          如果IP发生改变登录将失效
-        </el-text>
+        <div>
+          <el-switch v-model:model-value="props.config.verifyLoginIp"/>
+        </div>
+        <div>
+          <el-text class="mx-1" size="small">
+            如果IP发生改变登录将失效
+          </el-text>
+        </div>
       </div>
     </el-form-item>
     <el-form-item label="IP白名单">

@@ -99,8 +99,7 @@ const config = ref({
   },
   'login': {
     'username': '',
-    'password': '',
-    'verifyIp': true
+    'password': ''
   },
   'telegram': false,
   'telegramBotToken': '',
@@ -125,7 +124,8 @@ const config = ref({
   'telegramImage': true,
   'innerIP': false,
   'renameTemplate': '',
-  'messageList': []
+  'messageList': [],
+  'verifyLoginIp': true
 })
 
 const activeName = ref('download')
