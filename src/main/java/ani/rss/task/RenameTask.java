@@ -8,6 +8,7 @@ import ani.rss.util.ExceptionUtil;
 import ani.rss.util.MessageUtil;
 import ani.rss.util.TorrentUtil;
 import cn.hutool.core.thread.ThreadUtil;
+import cn.hutool.core.util.StrUtil;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
@@ -54,7 +55,7 @@ public class RenameTask extends Thread {
                         continue;
                     }
                     String tags = torrentsInfo.getTags();
-                    if (List.of(tags.split(",")).contains("下载完成")) {
+                    if (StrUtil.split(tags, ",", true, true).contains("下载完成")) {
                         TorrentUtil.delete(torrentsInfo);
                         continue;
                     }
