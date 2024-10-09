@@ -21,7 +21,7 @@ public class MessageUtil {
     private static final ExecutorService EXECUTOR = ExecutorBuilder.create()
             .setCorePoolSize(1)
             .setMaxPoolSize(1)
-            .setWorkQueue(new LinkedBlockingQueue<>(12))
+            .setWorkQueue(new LinkedBlockingQueue<>(128))
             .build();
 
     public static final Message mailMessage = new Mail();

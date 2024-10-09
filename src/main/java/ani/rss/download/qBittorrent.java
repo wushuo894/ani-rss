@@ -224,7 +224,12 @@ public class qBittorrent implements BaseDownload {
         return HttpReq.post(host + "/api/v2/torrents/addTags", false)
                 .form("hashes", hash)
                 .form("tags", tags)
-                .thenFunction(HttpResponse::isOk);
+                .thenFunction(res -> {
+                    if (res.getStatus() != 200) {
+                        return false;
+                    }
+                    return StrUtil.isBlank(res.body());
+                });
     }
 
 

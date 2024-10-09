@@ -53,6 +53,8 @@ public class AniAction implements BaseAction {
             return;
         }
 
+        AniUtil.saveJpg(ani.getImage(), true);
+
         Optional<Ani> first = AniUtil.ANI_LIST.stream()
                 .filter(it -> it.getId().equals(ani.getId()))
                 .findFirst();
