@@ -23,15 +23,15 @@ import org.slf4j.LoggerFactory;
 import java.io.ByteArrayInputStream;
 import java.nio.charset.StandardCharsets;
 import java.time.Instant;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 @Slf4j
 public class LogUtil {
 
-    public static final List<Log> LOGS = Collections.synchronizedList(new FixedSizeLinkedList<>(4096));
+    public static final List<Log> LOGS = new CopyOnWriteArrayList<>(new FixedSizeLinkedList<>(4096));
 
     public static void loadLogback() {
         Config config = ConfigUtil.CONFIG;
@@ -67,8 +67,8 @@ public class LogUtil {
                     String formattedMessage = event.getFormattedMessage();
                     StringBuilder log = new StringBuilder(StrFormatter.format("{} {} {} - {}", date, level, loggerName, formattedMessage));
                     IThrowableProxy throwableProxy = event.getThrowableProxy();
-                    if (Objects.nonNull(throwableProxy)) {
-                        try {
+                    try {
+                        if (Objects.nonNull(throwableProxy)) {
                             String className = throwableProxy.getClassName();
                             String message = throwableProxy.getMessage();
                             log.append(StrFormatter.format("\r\n{}: {}", className, message));
@@ -76,9 +76,10 @@ public class LogUtil {
                             for (StackTraceElementProxy stackTraceElementProxy : stackTraceElementProxyArray) {
                                 log.append("\r\n\t").append(stackTraceElementProxy.toString());
                             }
-                        } catch (Exception ignored) {
 
                         }
+                    } catch (Exception ignored) {
+
                     }
                     LOGS.add(new Log().setMessage(log.toString()).setLevel(level).setLoggerName(loggerName));
                     return FilterReply.NEUTRAL;

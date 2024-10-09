@@ -27,7 +27,7 @@ public class BgmTask extends Thread {
         super.setName("bgm-task-thread");
         log.info("{} 任务正在运行", getName());
         while (loop.get()) {
-            List<Ani> aniList = ObjectUtil.clone(AniUtil.ANI_LIST);
+            List<Ani> aniList = AniUtil.ANI_LIST;
             for (Ani ani : aniList) {
                 Boolean enable = ani.getEnable();
                 Integer totalEpisodeNumber = ani.getTotalEpisodeNumber();

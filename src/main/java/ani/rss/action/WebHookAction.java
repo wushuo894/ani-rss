@@ -89,7 +89,7 @@ public class WebHookAction implements BaseAction {
             log.info("{} 标记为 [{}]", fileName, List.of("未看过", "想看", "看过").get(type));
             String episodeId;
             String subjectId;
-            List<Ani> anis = ObjectUtil.clone(AniUtil.ANI_LIST);
+            List<Ani> anis = AniUtil.ANI_LIST;
             Optional<String> first = anis.stream()
                     .filter(ani -> {
                         String title = ani.getTitle();

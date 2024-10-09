@@ -33,6 +33,7 @@ import java.io.File;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
@@ -43,7 +44,7 @@ public class AniUtil {
             .disableHtmlEscaping()
             .create();
 
-    public static final List<Ani> ANI_LIST = new Vector<>();
+    public static final List<Ani> ANI_LIST = new CopyOnWriteArrayList<>();
 
     /**
      * 获取订阅配置文件
