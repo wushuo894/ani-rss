@@ -53,5 +53,6 @@ public class TorrentAction implements BaseAction {
                 FileUtil.del(file);
             }
         }
+        resultSuccessMsg("删除完成");
     }
 }
