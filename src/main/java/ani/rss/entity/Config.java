@@ -310,4 +310,9 @@ public class Config implements Serializable {
      */
     private List<MessageEnum> messageList;
 
+    /**
+     * 校验登录IP
+     */
+    private Boolean verifyLoginIp;
+
 }

@@ -49,7 +49,7 @@ public class AuthUtil {
     public static Login getLogin() {
         Config config = ConfigUtil.CONFIG;
         Login login = ObjectUtil.clone(config.getLogin());
-        if (login.getVerifyIp()) {
+        if (config.getVerifyLoginIp()) {
             login.setIp(getIp());
         } else {
             login.setIp("");

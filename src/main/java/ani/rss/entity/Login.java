@@ -12,5 +12,4 @@ public class Login implements Serializable {
     private String password;
     private String ip;
     private String key;
-    private Boolean verifyIp;
 }
