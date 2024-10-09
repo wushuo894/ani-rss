@@ -72,7 +72,6 @@ public class ConfigUtil {
                 .setLogin(new Login()
                         .setUsername("admin")
                         .setPassword(password)
-                        .setVerifyIp(true)
                 )
                 .setExclude(List.of("720", "\\d{1,2}-\\d{1,2}", "合集", "特别篇"))
                 .setImportExclude(false)
@@ -103,7 +102,8 @@ public class ConfigUtil {
                         MessageEnum.DOWNLOAD_START,
                         MessageEnum.OMIT,
                         MessageEnum.ERROR
-                ));
+                ))
+                .setVerifyLoginIp(true);
     }
 
     private static final Gson GSON = new GsonBuilder()
