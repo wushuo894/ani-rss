@@ -33,7 +33,7 @@
               <el-button bg text @click="copy(data.items[it.$index])">复制</el-button>
             </template>
           </el-table-column>
-          <el-table-column label="操作" width="90">
+          <el-table-column label="操作" width="120">
             <template #default="it">
               <popconfirm @confirm="delTorrent(data.items[it.$index])" title="删除种子缓存?">
                 <template #reference>
