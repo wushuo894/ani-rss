@@ -305,6 +305,9 @@ public class AniUtil {
      * @return
      */
     public static String saveJpg(String coverUrl, Boolean isOverride) {
+        if (StrUtil.isBlank(coverUrl)) {
+            return "";
+        }
         String filename = MD5.create().digestHex(coverUrl);
         filename = filename.charAt(0) + "/" + filename + "." + FileUtil.extName(coverUrl);
         File configDir = ConfigUtil.getConfigDir();
