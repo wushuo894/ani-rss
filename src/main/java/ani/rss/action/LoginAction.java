@@ -37,7 +37,12 @@ public class LoginAction implements BaseAction {
 
         // 一个令牌只能用于一个ip
         String ip = AuthUtil.getIp();
-        myLogin.setIp(ip);
+        if (login.getVerifyIp()) {
+            myLogin.setIp(ip);
+        } else {
+            myLogin.setIp("");
+        }
+
 
         if (username.equals(myUsername) && password.equals(myPassword)) {
             AuthUtil.resetKey();
