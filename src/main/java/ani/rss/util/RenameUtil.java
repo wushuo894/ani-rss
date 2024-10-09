@@ -3,15 +3,20 @@ package ani.rss.util;
 import ani.rss.entity.Ani;
 import ani.rss.entity.Config;
 import ani.rss.entity.Item;
+import cn.hutool.core.io.resource.ResourceUtil;
 import cn.hutool.core.text.StrFormatter;
 import cn.hutool.core.util.ReUtil;
 import cn.hutool.core.util.StrUtil;
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import lombok.extern.slf4j.Slf4j;
+
+import java.util.stream.Collectors;
 
 @Slf4j
 public class RenameUtil {
-    private static final String s = "(.*|\\[.*])( -? \\d+(\\.5)?|\\[\\d+(\\.5)?]|\\[\\d+(\\.5)?.?[vV]\\d]|第\\d+(\\.5)?[话話集]|\\[第?\\d+(\\.5)?[话話集]]|\\[\\d+(\\.5)?.?END]|[Ee][Pp]?\\d+(\\.5)?)(.*)";
-
+    public static String regString = "";
 
     public static Boolean rename(Ani ani, Item item) {
         Config config = ConfigUtil.CONFIG;
@@ -33,7 +38,7 @@ public class RenameUtil {
         if (customEpisode) {
             e = ReUtil.get(customEpisodeStr, itemTitle, customEpisodeGroupIndex);
         } else {
-            e = ReUtil.get(s, itemTitle, 2);
+            e = ReUtil.get(regStr(), itemTitle, 2);
         }
 
         if (StrUtil.isBlank(e)) {
@@ -79,4 +84,18 @@ public class RenameUtil {
                 .setReName(reName);
         return true;
     }
+
+    public synchronized static String regStr() {
+        if (StrUtil.isNotBlank(regString)) {
+            return regString;
+        }
+        String s = ResourceUtil.readUtf8Str("reg.json");
+        JsonArray jsonElements = new Gson().fromJson(s, JsonArray.class);
+        String ss = jsonElements.asList()
+                .stream().map(JsonElement::getAsString)
+                .collect(Collectors.joining("|"));
+        regString = StrFormatter.format("(.*|\\[.*\\])({})(.*)", ss);
+        return regString;
+    }
+
 }
