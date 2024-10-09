@@ -292,15 +292,28 @@ public class AniUtil {
         return ani;
     }
 
+
     public static String saveJpg(String coverUrl) {
+        return saveJpg(coverUrl, false);
+    }
+
+    /**
+     * 保存图片
+     *
+     * @param coverUrl
+     * @param isOverride 是否覆盖
+     * @return
+     */
+    public static String saveJpg(String coverUrl, Boolean isOverride) {
         String filename = MD5.create().digestHex(coverUrl);
         filename = filename.charAt(0) + "/" + filename + "." + FileUtil.extName(coverUrl);
         File configDir = ConfigUtil.getConfigDir();
         FileUtil.mkdir(configDir + "/files/" + filename.charAt(0));
         File file = new File(configDir + "/files/" + filename);
-        if (file.exists()) {
+        if (file.exists() && !isOverride) {
             return filename;
         }
+        FileUtil.del(file);
         HttpReq.get(coverUrl, true)
                 .then(res -> FileUtil.writeFromStream(res.bodyStream(), file));
         return filename;
