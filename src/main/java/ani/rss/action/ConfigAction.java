@@ -25,9 +25,9 @@ public class ConfigAction implements BaseAction {
     public void doAction(HttpServerRequest req, HttpServerResponse res) throws IOException {
         String method = req.getMethod();
         if (method.equals("GET")) {
-            Config clone = ObjectUtil.clone(ConfigUtil.CONFIG);
-            clone.getLogin().setPassword("");
-            resultSuccess(clone);
+            Config config = ObjectUtil.clone(ConfigUtil.CONFIG);
+            config.getLogin().setPassword("");
+            resultSuccess(config);
             return;
         }
 

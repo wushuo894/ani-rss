@@ -4,7 +4,6 @@ import ani.rss.entity.Ani;
 import ani.rss.entity.Config;
 import ani.rss.entity.Mikan;
 import ani.rss.entity.TorrentsInfo;
-import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.ReUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.core.util.URLUtil;
@@ -13,7 +12,6 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -33,7 +31,7 @@ public class MikanUtil {
     }
 
     public static Mikan list(String text, Mikan.Season season) {
-        Set<String> bangumiIdSet = ObjectUtil.clone(AniUtil.ANI_LIST).stream()
+        Set<String> bangumiIdSet = AniUtil.ANI_LIST.stream()
                 .map(AniUtil::getBangumiId)
                 .filter(StrUtil::isNotBlank)
                 .collect(Collectors.toSet());
