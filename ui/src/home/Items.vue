@@ -33,6 +33,18 @@
               <el-button bg text @click="copy(data.items[it.$index])">复制</el-button>
             </template>
           </el-table-column>
+          <el-table-column label="操作" width="90">
+            <template #default="it">
+              <popconfirm @confirm="delTorrent(data.items[it.$index])" title="删除种子缓存?">
+                <template #reference>
+                  <el-button bg text
+                             :disabled="!data.items[it.$index].local">
+                    删除种子
+                  </el-button>
+                </template>
+              </popconfirm>
+            </template>
+          </el-table-column>
         </el-table>
       </el-scrollbar>
       <div style="margin: 4px 0;display: flex;justify-content: end;">
@@ -51,6 +63,7 @@
 import {ref} from "vue";
 import api from "../api.js";
 import {ElMessage, ElText} from "element-plus";
+import Popconfirm from "../other/Popconfirm.vue";
 
 const select = ref('全部')
 const selectItems = ref([
@@ -84,11 +97,18 @@ let copy = (it) => {
   ElMessage.success('已复制')
 }
 
-let show = (ani) => {
+let ani = {}
+
+let show = (new_ani) => {
+  ani = new_ani
   data.value.downloadPath = ''
   data.value.items = []
   select.value = '全部'
   dialogVisible.value = true
+  load()
+}
+
+let load = () => {
   loading.value = true
   api.post('api/items', ani)
       .then(res => {
@@ -96,6 +116,14 @@ let show = (ani) => {
       })
       .finally(() => {
         loading.value = false
+      })
+}
+
+let delTorrent = (item) => {
+  api.del(`torrent?id=${id}&infoHash=${item['infoHash']}`)
+      .then(res => {
+        ElMessage.success(res.message)
+        load()
       })
 }
 
