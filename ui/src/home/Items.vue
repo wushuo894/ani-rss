@@ -120,7 +120,7 @@ let load = () => {
 }
 
 let delTorrent = (item) => {
-  api.del(`torrent?id=${ani.id}&infoHash=${item['infoHash']}`)
+  api.del(`api/torrent?id=${ani.id}&infoHash=${item['infoHash']}`)
       .then(res => {
         ElMessage.success(res.message)
         load()
