@@ -1,5 +1,8 @@
 <template>
-  <Mikan ref="mikan" @add="args => ani.url = args.url"/>
+  <Mikan ref="mikan" @add="args => {
+    ani.url = args.url
+    getRss()
+  }"/>
   <Bgm ref="bgmRef" @add="it => {
     ani.title = it['name_cn']
     ani.bgmUrl = it.url
@@ -23,7 +26,7 @@
                 />
                 <br>
                 <div style="width: 100%;display: flex;justify-content: end;margin-top: 8px;">
-                  <el-button @click="mikan?.show" text bg icon="VideoCamera">Mikan</el-button>
+                  <el-button @click="mikan?.show()" text bg icon="VideoCamera" type="primary">Mikan</el-button>
                 </div>
                 <div>
                   <el-text class="mx-1" size="small">

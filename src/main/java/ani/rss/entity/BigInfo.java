@@ -13,6 +13,11 @@ public class BigInfo {
     /**
      * 名称
      */
+    private String name;
+
+    /**
+     * 中文名称
+     */
     private String nameCn;
 
     /**
