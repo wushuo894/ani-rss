@@ -109,13 +109,18 @@ let data = ref({
 
 let season = ref('')
 
-let show = () => {
+let show = (name) => {
   season.value = ''
   dialogVisible.value = true
   text.value = ''
   data.value = {
     'seasons': [],
     'items': []
+  }
+  if (name && name.length > 2) {
+    text.value = name
+    search()
+    return
   }
   list({})
 }

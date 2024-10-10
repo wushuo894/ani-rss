@@ -34,15 +34,15 @@
           </div>
         </el-form-item>
         <el-form-item label="bgmUrl">
-          <el-input v-model:model-value="ani.bgmUrl" placeholder="https://xxx.xxx"/>
+          <el-input v-model:model-value="props.ani.bgmUrl" placeholder="https://xxx.xxx"/>
         </el-form-item>
         <el-form-item label="主 RSS">
           <div style="width: 100%;display: flex;">
-            <el-input v-model:model-value="ani.subgroup" style="width: 140px" placeholder="字幕组"/>
+            <el-input v-model:model-value="props.ani.subgroup" style="width: 140px" placeholder="字幕组"/>
             <div style="width: 6px;"></div>
-            <el-input v-model:model-value="ani.url" placeholder="https://xxx.xxx"/>
+            <el-input v-model:model-value="props.ani.url" placeholder="https://xxx.xxx"/>
             <div style="width: 6px;"></div>
-            <el-button bg text @click="mikanRef?.show" icon="VideoCamera"/>
+            <el-button bg text @click="mikanRef?.show(props.ani.title)" icon="VideoCamera" :disabled="ani.type === 'dmhy'"/>
           </div>
         </el-form-item>
         <el-form-item label="备用 RSS">
