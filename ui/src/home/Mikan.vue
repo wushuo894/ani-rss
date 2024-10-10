@@ -118,8 +118,9 @@ let show = (name) => {
     'items': []
   }
   if (name) {
-    text.value = name.replace(/\(\d{4}\)$/g, "").trim()
+    name = name.replace(/\(\d{4}\)$/g, "").trim()
     if (name.length > 2) {
+      text.value = name
       search()
       return
     }
