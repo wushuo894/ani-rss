@@ -501,7 +501,7 @@ public class AniUtil {
                     .peek(item -> item.setMaster(false))
                     .collect(Collectors.toList()));
         }
-        items = CollUtil.distinct(items, Item::getReName, false);
+        items = CollUtil.distinct(items, it -> it.getEpisode().toString(), false);
         items.sort(Comparator.comparingDouble(Item::getEpisode));
         return items;
     }
