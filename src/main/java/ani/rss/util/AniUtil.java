@@ -481,10 +481,7 @@ public class AniUtil {
                 .thenFunction(HttpResponse::body);
         items.addAll(getItems(ani, s, new Item().setSubgroup(ani.getSubgroup()))
                 .stream()
-                .peek(item -> {
-                    item.setMaster(true)
-                            .setSubgroup(ani.getSubgroup());
-                })
+                .peek(item -> item.setMaster(true))
                 .collect(Collectors.toList()));
 
         Config config = ConfigUtil.CONFIG;
@@ -498,12 +495,10 @@ public class AniUtil {
             ThreadUtil.sleep(1000);
             s = HttpReq.get(rss.getUrl(), true)
                     .thenFunction(HttpResponse::body);
-            items.addAll(getItems(ani, s, new Item().setSubgroup(ani.getSubgroup()))
+            String subgroup = StrUtil.blankToDefault(rss.getLabel(), "未知字幕组");
+            items.addAll(getItems(ani, s, new Item().setSubgroup(subgroup))
                     .stream()
-                    .peek(item -> {
-                        item.setMaster(false)
-                                .setSubgroup(StrUtil.blankToDefault(rss.getLabel(), "未知字幕组"));
-                    })
+                    .peek(item -> item.setMaster(false))
                     .collect(Collectors.toList()));
         }
         items = CollUtil.distinct(items, Item::getReName, false);
