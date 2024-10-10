@@ -12,7 +12,7 @@
       </div>
       <div style="margin: 3px;"></div>
       <div>
-        <el-button @click="mikan?.show" text bg icon="VideoCamera"/>
+        <el-button @click="mikan?.show(ani.title)" :disabled="ani.type === 'dmhy'" text bg icon="VideoCamera"/>
       </div>
     </div>
     <el-scrollbar>
