@@ -82,7 +82,7 @@ public class UpdateUtil {
                         return;
                     }
                     ThreadUtil.execute(() -> {
-                        ThreadUtil.sleep(3000);
+                        ThreadUtil.sleep(1000);
                         if ("exe".equals(extName)) {
                             ServerUtil.stop();
                             RuntimeUtil.exec(file.getName());
