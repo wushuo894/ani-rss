@@ -41,30 +41,8 @@ public class RenameTask extends Thread {
                 List<TorrentsInfo> torrentsInfos = TorrentUtil.getTorrentsInfos();
                 for (TorrentsInfo torrentsInfo : torrentsInfos) {
                     TorrentUtil.rename(torrentsInfo);
-
-                    String name = torrentsInfo.getName();
-                    TorrentsInfo.State state = torrentsInfo.getState();
-                    if (Objects.isNull(state)) {
-                        continue;
-                    }
-
-                    if (!List.of(
-                            TorrentsInfo.State.pausedUP.name(),
-                            TorrentsInfo.State.stoppedUP.name()
-                    ).contains(state.name())) {
-                        continue;
-                    }
-                    String tags = torrentsInfo.getTags();
-                    if (StrUtil.split(tags, ",", true, true).contains("下载完成")) {
-                        TorrentUtil.delete(torrentsInfo);
-                        continue;
-                    }
-                    Boolean b = TorrentUtil.addTags(torrentsInfo, "下载完成");
+                    TorrentUtil.notification(torrentsInfo);
                     TorrentUtil.delete(torrentsInfo);
-                    if (!b) {
-                        continue;
-                    }
-                    MessageUtil.send(ConfigUtil.CONFIG, null, name + " 下载完成", MessageEnum.DOWNLOAD_END);
                 }
             } catch (Exception e) {
                 String message = ExceptionUtil.getMessage(e);
