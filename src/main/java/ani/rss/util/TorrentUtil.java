@@ -586,6 +586,7 @@ public class TorrentUtil {
             return;
         }
         if (!List.of(
+                TorrentsInfo.State.uploading.name(),
                 TorrentsInfo.State.stalledUP.name(),
                 TorrentsInfo.State.pausedUP.name(),
                 TorrentsInfo.State.stoppedUP.name()
