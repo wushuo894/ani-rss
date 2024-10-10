@@ -161,7 +161,6 @@ let list = async (body, text) => {
       })
       .finally(() => {
         loading.value = false
-        groups.value = {}
       });
 }
 
