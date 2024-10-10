@@ -574,6 +574,38 @@ public class TorrentUtil {
     }
 
     /**
+     * 下载完成通知
+     *
+     * @param torrentsInfo
+     */
+    public static synchronized void notification(TorrentsInfo torrentsInfo) {
+        TorrentsInfo.State state = torrentsInfo.getState();
+        String name = torrentsInfo.getName();
+
+        if (Objects.isNull(state)) {
+            return;
+        }
+        if (!List.of(
+                TorrentsInfo.State.stalledUP.name(),
+                TorrentsInfo.State.pausedUP.name(),
+                TorrentsInfo.State.stoppedUP.name()
+        ).contains(state.name())) {
+            return;
+        }
+        // 添加下载完成标签，防止重复通知
+        String tags = torrentsInfo.getTags();
+        if (StrUtil.split(tags, ",", true, true)
+                .contains("下载完成")) {
+            return;
+        }
+        Boolean b = TorrentUtil.addTags(torrentsInfo, "下载完成");
+        if (!b) {
+            return;
+        }
+        MessageUtil.send(ConfigUtil.CONFIG, null, name + " 下载完成", MessageEnum.DOWNLOAD_END);
+    }
+
+    /**
      * 删除已完成任务
      *
      * @param torrentsInfo
