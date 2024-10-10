@@ -88,27 +88,39 @@ public class Transmission implements BaseDownload {
                             .get("torrents")
                             .getAsJsonArray();
                     for (JsonElement jsonElement : torrents.asList()) {
-                        JsonObject asJsonObject = jsonElement.getAsJsonObject();
-                        List<String> tags = asJsonObject.get("labels").getAsJsonArray()
+                        JsonObject item = jsonElement.getAsJsonObject();
+                        List<String> tags = item.get("labels").getAsJsonArray()
                                 .asList().stream().map(JsonElement::getAsString).collect(Collectors.toList());
                         if (!tags.contains(tag)) {
                             continue;
                         }
-                        List<String> files = asJsonObject.get("files").getAsJsonArray().asList()
+                        List<String> files = item.get("files").getAsJsonArray().asList()
                                 .stream().map(JsonElement::getAsJsonObject)
                                 .map(o -> o.get("name").getAsString())
                                 .collect(Collectors.toList());
 
-                        TorrentsInfo.State state = asJsonObject.get("isFinished").getAsBoolean() ?
-                                TorrentsInfo.State.pausedUP : TorrentsInfo.State.downloading;
+
+                        // 状态： https://github.com/jayzcoder/TrguiNG/blob/zh/src/rpc/transmission.ts
+
+                        TorrentsInfo.State state = TorrentsInfo.State.downloading;
+
+                        // 做种中
+                        if (item.get("status").getAsInt() == 6) {
+                            state = TorrentsInfo.State.stalledUP;
+                        }
+
+                        // 已完成
+                        if (item.get("isFinished").getAsBoolean()) {
+                            state = TorrentsInfo.State.pausedUP;
+                        }
 
                         TorrentsInfo torrentsInfo = new TorrentsInfo();
-                        torrentsInfo.setName(asJsonObject.get("name").getAsString());
+                        torrentsInfo.setName(item.get("name").getAsString());
                         torrentsInfo.setTags(CollUtil.join(tags, ","));
-                        torrentsInfo.setHash(asJsonObject.get("hashString").getAsString());
+                        torrentsInfo.setHash(item.get("hashString").getAsString());
                         torrentsInfo.setState(state);
-                        torrentsInfo.setId(asJsonObject.get("id").getAsString());
-                        torrentsInfo.setDownloadDir(asJsonObject.get("downloadDir").getAsString());
+                        torrentsInfo.setId(item.get("id").getAsString());
+                        torrentsInfo.setDownloadDir(item.get("downloadDir").getAsString());
                         torrentsInfo.setFiles(files);
                         torrentsInfos.add(torrentsInfo);
                     }
