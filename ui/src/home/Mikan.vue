@@ -117,10 +117,12 @@ let show = (name) => {
     'seasons': [],
     'items': []
   }
-  if (name && name.length > 2) {
-    text.value = name
-    search()
-    return
+  if (name) {
+    text.value = name.replace(/\(\d{4}\)$/g, "").trim()
+    if (name.length > 2) {
+      search()
+      return
+    }
   }
   list({})
 }
