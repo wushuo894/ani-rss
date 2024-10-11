@@ -23,15 +23,15 @@ import org.slf4j.LoggerFactory;
 import java.io.ByteArrayInputStream;
 import java.nio.charset.StandardCharsets;
 import java.time.Instant;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
-import java.util.concurrent.CopyOnWriteArrayList;
 
 @Slf4j
 public class LogUtil {
 
-    public static final List<Log> LOGS = new CopyOnWriteArrayList<>(new FixedSizeLinkedList<>(2048));
+    public static final List<Log> LOGS = Collections.synchronizedList(new FixedSizeLinkedList<>(2048));
 
     public static void loadLogback() {
         Config config = ConfigUtil.CONFIG;
