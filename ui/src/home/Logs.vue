@@ -99,6 +99,7 @@ const getLogs = () => {
   api.get('api/logs')
       .then(async res => {
         logs.value = res.data
+        loggerNames.value = []
         for (let datum of res.data) {
           if (loggerNames.value.indexOf(datum['loggerName']) > -1) {
             continue
