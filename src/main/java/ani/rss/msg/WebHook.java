@@ -25,17 +25,14 @@ public class WebHook implements Message {
         webHookUrl = webHookUrl.replace("${message}", text);
         webHookBody = webHookBody.replace("${message}", text);
 
-        if (Objects.nonNull(ani) &&
-                (webHookBody.contains("${image}") || webHookUrl.contains("${image}"))) {
-            String image = ani.getImage();
-            if (StrUtil.isBlank(image)) {
-                image = BgmUtil.getBgmInfo(ani).getImage();
-            }
-            if (StrUtil.isNotBlank(image)) {
-                webHookUrl = webHookUrl.replace("${image}", image);
-                webHookBody = webHookBody.replace("${image}", image);
-            }
+        String image = "https://docs.wushuo.top/image/null.png";
+
+        if (Objects.nonNull(ani) && StrUtil.isNotBlank(ani.getImage())) {
+            image = ani.getImage();
         }
+
+        webHookUrl = webHookUrl.replace("${image}", image);
+        webHookBody = webHookBody.replace("${image}", image);
 
         HttpRequest httpRequest = HttpReq.get(webHookUrl)
                 .method(Method.valueOf(webHookMethod));

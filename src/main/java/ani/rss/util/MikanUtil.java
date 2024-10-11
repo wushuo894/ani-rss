@@ -12,6 +12,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -37,7 +38,7 @@ public class MikanUtil {
                 .collect(Collectors.toSet());
         String url = getMikanHost();
         if (StrUtil.isNotBlank(text)) {
-            url = url + "/Home/Search?searchstr=" + text;
+            url = url + "/Home/Search?searchstr=" + URLUtil.encode(text, StandardCharsets.UTF_8);
         } else {
             Integer year = season.getYear();
             String seasonStr = season.getSeason();
@@ -73,6 +74,9 @@ public class MikanUtil {
 
                     Function<Element, List<Ani>> get = (el) -> {
                         List<Ani> anis = new ArrayList<>();
+                        if (Objects.isNull(el)) {
+                            return anis;
+                        }
                         Elements lis = el.select("li");
                         for (Element li : lis) {
                             String img = getMikanHost() + li.selectFirst("span")
