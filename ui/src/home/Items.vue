@@ -11,7 +11,7 @@
         <div style="width: 4px;"/>
         <el-input v-model:model-value="data.downloadPath" disabled></el-input>
       </div>
-      <el-scrollbar style="padding: 0 12px">
+      <div style="padding: 0 12px">
         <el-table :data="data.items.filter(selectItems.filter(it => it.label === select)[0].fun)" height="500">
           <el-table-column label="本地存在" min-width="100">
             <template #default="it">
@@ -46,7 +46,7 @@
             </template>
           </el-table-column>
         </el-table>
-      </el-scrollbar>
+      </div>
       <div style="margin: 4px 0;display: flex;justify-content: end;">
         <el-text class="mx-1" size="small">
           检测 <strong>本地是否存在</strong> 需要开启 <strong>文件已下载自动跳过</strong> 与 <strong>自动重命名</strong>
