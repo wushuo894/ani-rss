@@ -51,7 +51,7 @@ let urls = ref([
   'https://nyaa.si',
   'https://github.com',
   'https://www.google.com',
-  'http://bgm.tv'
+  'https://bgm.tv'
 ])
 
 let url = ref('')
