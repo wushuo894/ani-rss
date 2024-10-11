@@ -93,6 +93,7 @@ public class WebHookAction implements BaseAction {
             Optional<String> first = anis.stream()
                     .filter(ani -> {
                         String title = ani.getTitle();
+                        title =  title.replaceAll(" \\((\\d{4})\\)$", "").trim();
                         Integer season = ani.getSeason();
                         if (title.equals(seriesName) && s == season) {
                             return true;

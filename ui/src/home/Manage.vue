@@ -19,23 +19,24 @@
           </popconfirm>
         </div>
       </div>
-      <el-scrollbar>
-        <el-table
-            @selection-change="handleSelectionChange"
-            v-model:data="searchList"
-            height="400px"
-        >
-          <el-table-column type="selection" width="55"/>
-          <el-table-column label="状态" width="80">
-            <template #default="it">
-              {{ searchList[it.$index].enable ? '已启用' : '未启用' }}
-            </template>
-          </el-table-column>
-          <el-table-column label="标题" prop="title" width="200"/>
-          <el-table-column label="季" prop="season" width="50"/>
-          <el-table-column label="URL" prop="url" width="600"/>
-        </el-table>
-      </el-scrollbar>
+      <el-table
+          @selection-change="handleSelectionChange"
+          v-model:data="searchList"
+          height="400px"
+      >
+        <el-table-column type="selection" width="55"/>
+        <el-table-column label="状态" width="80">
+          <template #default="it">
+            {{ searchList[it.$index].enable ? '已启用' : '未启用' }}
+          </template>
+        </el-table-column>
+        <el-table-column label="标题" prop="title" width="200"/>
+        <el-table-column label="季" prop="season" width="50"/>
+        <el-table-column label="URL" prop="url" width="600"/>
+      </el-table>
+      <div>
+        <p style="margin: 6px;text-align: end;">共 {{ searchList.length }} 项</p>
+      </div>
     </div>
   </el-dialog>
 </template>

@@ -15,7 +15,7 @@
         <el-button @click="mikan?.show(ani.title)" :disabled="ani.type === 'dmhy'" text bg icon="VideoCamera"/>
       </div>
     </div>
-    <el-scrollbar>
+    <div>
       <el-table v-model:data="backRss" height="400px">
         <el-table-column label="字幕组" min-width="100px">
           <template #default="it">
@@ -52,7 +52,7 @@
           </template>
         </el-table-column>
       </el-table>
-    </el-scrollbar>
+    </div>
     <div style="display: flex;width: 100%;justify-content: end;margin-top: 10px">
       <el-button icon="Check" bg text @click="ok" :disabled="editIndex > -1">确定</el-button>
     </div>
