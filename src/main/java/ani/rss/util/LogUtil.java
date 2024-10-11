@@ -31,7 +31,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 @Slf4j
 public class LogUtil {
 
-    public static final List<Log> LOGS = new CopyOnWriteArrayList<>(new FixedSizeLinkedList<>(4096));
+    public static final List<Log> LOGS = new CopyOnWriteArrayList<>(new FixedSizeLinkedList<>(2048));
 
     public static void loadLogback() {
         Config config = ConfigUtil.CONFIG;

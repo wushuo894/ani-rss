@@ -123,12 +123,13 @@ public class qBittorrent implements BaseDownload {
         }
 
         if (!watchErrorTorrent) {
+            ThreadUtil.sleep(3000);
             return true;
         }
 
 
         for (int i = 0; i < 10; i++) {
-            ThreadUtil.sleep(2000);
+            ThreadUtil.sleep(3000);
             List<TorrentsInfo> torrentsInfos = getTorrentsInfos();
             Optional<TorrentsInfo> optionalTorrentsInfo = torrentsInfos
                     .stream()

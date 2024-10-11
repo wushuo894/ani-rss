@@ -3,9 +3,7 @@ package ani.rss.action;
 import ani.rss.annotation.Auth;
 import ani.rss.annotation.Path;
 import ani.rss.entity.Result;
-import ani.rss.util.AniUtil;
-import cn.hutool.core.text.StrFormatter;
-import cn.hutool.core.util.ReUtil;
+import ani.rss.util.TmdbUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.HttpStatus;
 import cn.hutool.http.server.HttpServerRequest;
@@ -21,7 +19,7 @@ public class ThemoviedbAction implements BaseAction {
         String s = request.getParam("method");
         if ("getThemoviedbName".equals(s)) {
             String name = request.getParam("name");
-            String themoviedbName = AniUtil.getThemoviedbName(name);
+            String themoviedbName = TmdbUtil.getName(name);
             Result<String> result = new Result<String>()
                     .setCode(HttpStatus.HTTP_OK)
                     .setMessage("获取TMDB成功")
