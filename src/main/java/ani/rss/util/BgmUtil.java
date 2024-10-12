@@ -285,7 +285,7 @@ public class BgmUtil {
 
         try {
             return HttpReq
-                    .get("https://bgm-cache.wushuo.top/bgm/" + subjectId + ".json", true)
+                    .get("https://bgm-cache.wushuo.top/bgm/" + subjectId.charAt(0) + "/" + subjectId + ".json", true)
                     .thenFunction(fun);
         } catch (Exception e) {
             HttpRequest httpRequest = HttpReq.get(host + "/v0/subjects/" + subjectId, true);
