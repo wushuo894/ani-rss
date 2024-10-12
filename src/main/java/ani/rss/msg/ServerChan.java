@@ -6,7 +6,6 @@ import ani.rss.enums.ServerChanTypeEnum;
 import ani.rss.util.HttpReq;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.HttpResponse;
-import com.google.gson.Gson;
 import lombok.extern.slf4j.Slf4j;
 import org.jsoup.internal.StringUtil;
 
@@ -15,7 +14,6 @@ import java.util.Objects;
 
 @Slf4j
 public class ServerChan implements Message {
-    private static final Gson gson = new Gson();
     private static final String MARKDOWN_STRING = "# <message>\n\n![<image>](<image>)";
 
     @Override
@@ -23,7 +21,7 @@ public class ServerChan implements Message {
         String type = config.getServerChanType();
         String sendKey = config.getServerChanSendKey();
         if (StringUtil.isBlank(type) || StringUtil.isBlank(sendKey)) {
-            log.warn("telegram 通知的参数不完整");
+            log.warn("ServerChan 通知的参数不完整");
             return false;
         }
         if (type.equals(ServerChanTypeEnum.SERVER_CHAN.getType())) {
