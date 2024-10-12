@@ -51,7 +51,7 @@ public class BgmTask extends Thread {
                 }
             }
             AniUtil.sync();
-            ThreadUtil.sleep(3, TimeUnit.HOURS);
+            ThreadUtil.sleep(12, TimeUnit.HOURS);
         }
         log.info("{} 任务已停止", getName());
     }
