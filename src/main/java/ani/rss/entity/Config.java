@@ -315,4 +315,18 @@ public class Config implements Serializable {
      */
     private Boolean verifyLoginIp;
 
+    /**
+     * server酱类型：server酱和server酱3
+     */
+    private String serverChanType;
+
+    /**
+     * server酱 sendKey
+     */
+    private String serverChanSendKey;
+
+    /**
+     * server酱 开关
+     */
+    private Boolean serverChan;
 }
