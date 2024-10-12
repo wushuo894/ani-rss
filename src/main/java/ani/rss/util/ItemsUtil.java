@@ -66,4 +66,22 @@ public class ItemsUtil {
             MessageUtil.send(config, ani, s, MessageEnum.OMIT);
         }
     }
+
+    public static int currentEpisodeNumber(Ani ani,List<Item> items){
+        int currentEpisodeNumber;
+        Boolean downloadNew = ani.getDownloadNew();
+        if (downloadNew) {
+            currentEpisodeNumber = items
+                    .stream()
+                    .filter(it -> it.getEpisode() == it.getEpisode().intValue())
+                    .mapToInt(item -> item.getEpisode().intValue())
+                    .max().orElse(0);
+        } else {
+            currentEpisodeNumber = (int) items
+                    .stream()
+                    .filter(it -> it.getEpisode() == it.getEpisode().intValue()).count();
+        }
+        return currentEpisodeNumber;
+    }
+
 }

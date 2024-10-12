@@ -6,10 +6,7 @@ import ani.rss.entity.Ani;
 import ani.rss.entity.Config;
 import ani.rss.entity.Item;
 import ani.rss.task.RssTask;
-import ani.rss.util.AniUtil;
-import ani.rss.util.ConfigUtil;
-import ani.rss.util.ExceptionUtil;
-import ani.rss.util.TorrentUtil;
+import ani.rss.util.*;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.comparator.PinyinComparator;
@@ -113,7 +110,9 @@ public class AniAction implements BaseAction {
         }
 
         List<Item> items = AniUtil.getItems(ani);
-        ani.setCurrentEpisodeNumber((int) items.stream().filter(it -> !it.getReName().endsWith(".5")).count());
+
+        int currentEpisodeNumber = ItemsUtil.currentEpisodeNumber(ani, items);
+        ani.setCurrentEpisodeNumber(currentEpisodeNumber);
 
         AniUtil.ANI_LIST.add(ani);
         AniUtil.sync();
@@ -210,7 +209,12 @@ public class AniAction implements BaseAction {
             resultErrorMsg("修改失败");
             return;
         }
-        AniUtil.ANI_LIST.removeAll(anis);
+        for (Ani ani : anis) {
+            synchronized (AniUtil.ANI_LIST) {
+                AniUtil.ANI_LIST.remove(ani);
+            }
+        }
+
         AniUtil.sync();
         resultSuccessMsg("删除订阅成功");
         for (Ani ani : anis) {

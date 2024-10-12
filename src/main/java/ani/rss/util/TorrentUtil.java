@@ -140,9 +140,9 @@ public class TorrentUtil {
             count++;
         }
 
-        long size = items.stream().filter(it -> !it.getReName().endsWith(".5")).count();
+        int size = ItemsUtil.currentEpisodeNumber(ani, items);
         if (size > 0 && ani.getCurrentEpisodeNumber() != size) {
-            ani.setCurrentEpisodeNumber((int) size);
+            ani.setCurrentEpisodeNumber(size);
             AniUtil.sync();
         }
 
