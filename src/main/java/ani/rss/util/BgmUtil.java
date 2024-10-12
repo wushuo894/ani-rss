@@ -22,6 +22,7 @@ import com.google.gson.JsonObject;
 
 import java.util.*;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
@@ -212,64 +213,85 @@ public class BgmUtil {
                 .thenFunction(HttpResponse::isOk);
     }
 
+    public static BigInfo getBgmInfo(Ani ani, Boolean isCache) {
+        String subjectId = getSubjectId(ani);
+        return getBgmInfo(subjectId, isCache);
+    }
+
     public static BigInfo getBgmInfo(Ani ani) {
         String subjectId = getSubjectId(ani);
         return getBgmInfo(subjectId);
     }
 
     public static BigInfo getBgmInfo(String subjectId) {
-        HttpRequest httpRequest = HttpReq.get(host + "/v0/subjects/" + subjectId, true);
-        setToken(httpRequest);
-        return httpRequest
-                .thenFunction(res -> {
-                    Assert.isTrue(res.isOk(), "status: {}", res.getStatus());
-                    String body = res.body();
-                    Assert.isTrue(JSONUtil.isTypeJSON(body), "no json");
-                    JsonObject jsonObject = gson.fromJson(body, JsonObject.class);
-                    BigInfo bigInfo = new BigInfo();
+        return getBgmInfo(subjectId, false);
+    }
 
-                    String nameCn = jsonObject.get("name_cn").getAsString();
-                    String date = jsonObject.get("date").getAsString();
-                    String platform = jsonObject.get("platform").getAsString();
-                    int eps = jsonObject.get("eps").getAsInt();
+    public static BigInfo getBgmInfo(String subjectId, Boolean isCache) {
+        Function<HttpResponse, BigInfo> fun = res -> {
+            Assert.isTrue(res.isOk(), "status: {}", res.getStatus());
+            String body = res.body();
+            Assert.isTrue(JSONUtil.isTypeJSON(body), "no json");
+            JsonObject jsonObject = gson.fromJson(body, JsonObject.class);
+            BigInfo bigInfo = new BigInfo();
 
-                    double score = 0.0;
-                    JsonObject rating = jsonObject.getAsJsonObject("rating");
-                    if (Objects.nonNull(rating)) {
-                        score = rating.get("score").getAsDouble();
-                    }
-                    bigInfo
-                            .setSubjectId(subjectId)
-                            .setNameCn(nameCn)
-                            .setDate(LocalDateTimeUtil.parse(date, DatePattern.NORM_DATE_PATTERN))
-                            .setEps(eps)
-                            .setScore(score)
-                            .setOva("OVA".equalsIgnoreCase(platform));
+            String nameCn = jsonObject.get("name_cn").getAsString();
+            String date = jsonObject.get("date").getAsString();
+            String platform = jsonObject.get("platform").getAsString();
+            int eps = jsonObject.get("eps").getAsInt();
 
-                    JsonObject images = jsonObject.getAsJsonObject("images");
-                    if (Objects.nonNull(images)) {
-                        bigInfo.setImage(images.get("common").getAsString());
-                    }
+            double score = 0.0;
+            JsonObject rating = jsonObject.getAsJsonObject("rating");
+            if (Objects.nonNull(rating)) {
+                score = rating.get("score").getAsDouble();
+            }
+            bigInfo
+                    .setSubjectId(subjectId)
+                    .setNameCn(nameCn)
+                    .setDate(LocalDateTimeUtil.parse(date, DatePattern.NORM_DATE_PATTERN))
+                    .setEps(eps)
+                    .setScore(score)
+                    .setOva("OVA".equalsIgnoreCase(platform));
 
-                    Set<String> tags = jsonObject.getAsJsonArray("tags")
-                            .asList()
-                            .stream().map(JsonElement::getAsJsonObject)
-                            .map(o -> o.get("name").getAsString())
-                            .filter(StrUtil::isNotBlank)
-                            .collect(Collectors.toSet());
+            JsonObject images = jsonObject.getAsJsonObject("images");
+            if (Objects.nonNull(images)) {
+                bigInfo.setImage(images.get("common").getAsString());
+            }
 
-                    int season = 1;
-                    for (String tag : tags) {
-                        String seasonReg = StrFormatter.format("^第({}{1,2})季$", ReUtil.RE_CHINESE);
-                        if (!ReUtil.contains(seasonReg, tag)) {
-                            continue;
-                        }
-                        season = Convert.chineseToNumber(ReUtil.get(seasonReg, tag, 1));
-                    }
+            Set<String> tags = jsonObject.getAsJsonArray("tags")
+                    .asList()
+                    .stream().map(JsonElement::getAsJsonObject)
+                    .map(o -> o.get("name").getAsString())
+                    .filter(StrUtil::isNotBlank)
+                    .collect(Collectors.toSet());
 
-                    bigInfo.setSeason(season);
-                    return bigInfo;
-                });
+            int season = 1;
+            for (String tag : tags) {
+                String seasonReg = StrFormatter.format("^第({}{1,2})季$", ReUtil.RE_CHINESE);
+                if (!ReUtil.contains(seasonReg, tag)) {
+                    continue;
+                }
+                season = Convert.chineseToNumber(ReUtil.get(seasonReg, tag, 1));
+            }
+
+            bigInfo.setSeason(season);
+            return bigInfo;
+        };
+        if (!isCache) {
+            HttpRequest httpRequest = HttpReq.get(host + "/v0/subjects/" + subjectId, true);
+            setToken(httpRequest);
+            return httpRequest.thenFunction(fun);
+        }
+
+        try {
+            return HttpReq
+                    .get("https://bgm-cache.wushuo.top/bgm/" + subjectId + ".json")
+                    .thenFunction(fun);
+        } catch (Exception e) {
+            HttpRequest httpRequest = HttpReq.get(host + "/v0/subjects/" + subjectId, true);
+            setToken(httpRequest);
+            return httpRequest.thenFunction(fun);
+        }
     }
 
     public static void setToken(HttpRequest httpRequest) {
