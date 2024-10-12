@@ -174,7 +174,6 @@ public class qBittorrent implements BaseDownload {
 
         String host = config.getHost();
 
-
         List<String> nameList = HttpReq.get(host + "/api/v2/torrents/files", false)
                 .form("hash", hash)
                 .thenFunction(res -> {
