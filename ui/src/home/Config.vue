@@ -125,7 +125,10 @@ const config = ref({
   'innerIP': false,
   'renameTemplate': '',
   'messageList': [],
-  'verifyLoginIp': true
+  'verifyLoginIp': true,
+  'serverChanSendKey': '',
+  'serverChan': false,
+  'serverChanType': ''
 })
 
 const activeName = ref('download')
