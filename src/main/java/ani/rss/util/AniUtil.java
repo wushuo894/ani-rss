@@ -180,7 +180,7 @@ public class AniUtil {
         }
 
         try {
-            BigInfo bgmInfo = BgmUtil.getBgmInfo(ani);
+            BigInfo bgmInfo = BgmUtil.getBgmInfo(ani, true);
 
             season = bgmInfo.getSeason();
             title = bgmInfo.getNameCn();
