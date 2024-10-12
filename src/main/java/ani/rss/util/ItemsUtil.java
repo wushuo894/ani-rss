@@ -67,7 +67,11 @@ public class ItemsUtil {
         }
     }
 
-    public static int currentEpisodeNumber(Ani ani,List<Item> items){
+    public static int currentEpisodeNumber(Ani ani, List<Item> items) {
+        if (items.isEmpty()) {
+            return 0;
+        }
+
         int currentEpisodeNumber;
         Boolean downloadNew = ani.getDownloadNew();
         if (downloadNew) {
