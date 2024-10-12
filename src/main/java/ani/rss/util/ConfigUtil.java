@@ -103,7 +103,10 @@ public class ConfigUtil {
                         MessageEnum.OMIT,
                         MessageEnum.ERROR
                 ))
-                .setVerifyLoginIp(true);
+                .setVerifyLoginIp(true)
+                .setServerChan(false)
+                .setServerChanType("")
+                .setServerChanSendKey("");
     }
 
     private static final Gson GSON = new GsonBuilder()
