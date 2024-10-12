@@ -141,6 +141,34 @@
         </div>
       </el-form>
     </el-collapse-item>
+    <el-collapse-item title="Server酱" name="4">
+      <el-form label-width="auto" @submit="(event)=>{
+                      event.preventDefault()
+                   }">
+        <el-form-item label="Type">
+          <el-select v-model="props.config.serverChanType">
+            <el-option
+                v-for="(value, label) in { 'server酱': 'serverChan', 'server酱³': 'serverChan3' }"
+                :key="label"
+                :label="label"
+                :value="value"
+            />
+          </el-select>
+        </el-form-item>
+        <el-form-item label="sendKey">
+          <el-input v-model:model-value="props.config.serverChanSendKey"></el-input>
+        </el-form-item>
+        <el-form-item label="开关">
+          <div style="display: flex;width: 100%;justify-content: space-between;">
+            <el-switch v-model:model-value="props.config.serverChan"/>
+            <el-button bg text @click="messageTest('ServerChan')"
+                       :loading="messageTestLoading && messageTestType === 'ServerChan'"
+                       :disabled="!config.serverChan" icon="Odometer">测试
+            </el-button>
+          </div>
+        </el-form-item>
+      </el-form>
+    </el-collapse-item>
   </el-collapse>
 </template>
 
