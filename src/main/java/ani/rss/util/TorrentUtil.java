@@ -531,6 +531,7 @@ public class TorrentUtil {
         Boolean ova = ani.getOva();
         Boolean master = item.getMaster();
         String subgroup = item.getSubgroup();
+        subgroup = StrUtil.blankToDefault(subgroup, "未知字幕组");
 
         Config config = ConfigUtil.CONFIG;
         Boolean backRss = config.getBackRss();
@@ -545,7 +546,6 @@ public class TorrentUtil {
         }
         ThreadUtil.sleep(1000);
         savePath = savePath.replace("\\", "/");
-
 
         String text = StrFormatter.format("[{}] {} 已更新", subgroup, name);
         if (backRss && !ani.getBackRssList().isEmpty()) {
