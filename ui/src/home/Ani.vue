@@ -111,6 +111,11 @@
               <el-input type="textarea" style="width: 100%" :disabled="!props.ani.customDownloadPath"
                         v-model:model-value="props.ani.downloadPath"/>
             </div>
+            <div style="display: flex;justify-content: end;">
+              <el-text class="mx-1" size="small">
+                最终下载位置以 <strong>预览</strong> 为准
+              </el-text>
+            </div>
           </div>
         </el-form-item>
         <el-form-item label="遗漏检测">
@@ -151,7 +156,7 @@ import Exclude from "../config/Exclude.vue";
 import Items from "./Items.vue";
 import {onMounted, ref} from "vue";
 import api from "../api.js";
-import {ElMessage} from "element-plus";
+import {ElMessage, ElText} from "element-plus";
 import Popconfirm from "../other/Popconfirm.vue";
 import BackRss from "./BackRss.vue";
 import Mikan from "./Mikan.vue";
