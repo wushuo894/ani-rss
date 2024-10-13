@@ -15,6 +15,8 @@ import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.text.StrFormatter;
 import cn.hutool.core.thread.ThreadUtil;
+import cn.hutool.core.util.ArrayUtil;
+import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.extra.pinyin.PinyinUtil;
 import cn.hutool.http.server.HttpServerRequest;
 import cn.hutool.http.server.HttpServerResponse;
@@ -23,10 +25,7 @@ import com.google.gson.JsonElement;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.File;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 
@@ -220,6 +219,11 @@ public class AniAction implements BaseAction {
         for (Ani ani : anis) {
             File torrentDir = TorrentUtil.getTorrentDir(ani);
             FileUtil.del(torrentDir);
+            File parentFile = torrentDir.getParentFile();
+            File[] files = ObjectUtil.defaultIfNull(parentFile.listFiles(), new File[]{});
+            if (ArrayUtil.isEmpty(files)) {
+                FileUtil.del(parentFile);
+            }
             log.info("删除订阅 {} {} {}", ani.getTitle(), ani.getUrl(), ani.getId());
         }
     }

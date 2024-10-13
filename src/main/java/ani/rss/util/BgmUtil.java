@@ -101,7 +101,7 @@ public class BgmUtil {
 
     public static String getSubjectId(Ani ani) {
         String bgmUrl = ani.getBgmUrl();
-        if (StrUtil.isBlank(bgmUrl)) {
+        if (StrUtil.isBlank(bgmUrl) && "mikan".equals(ani.getType())) {
             String bangumiId = AniUtil.getBangumiId(ani);
             Assert.notBlank(bangumiId);
             MikanUtil.getMikanInfo(ani, "");
@@ -215,6 +215,7 @@ public class BgmUtil {
 
     public static BigInfo getBgmInfo(Ani ani, Boolean isCache) {
         String subjectId = getSubjectId(ani);
+        Assert.notBlank(subjectId);
         return getBgmInfo(subjectId, isCache);
     }
 
@@ -277,20 +278,18 @@ public class BgmUtil {
             bigInfo.setSeason(season);
             return bigInfo;
         };
-        if (!isCache) {
+
+        try {
             HttpRequest httpRequest = HttpReq.get(host + "/v0/subjects/" + subjectId, true);
             setToken(httpRequest);
             return httpRequest.thenFunction(fun);
-        }
-
-        try {
+        } catch (Exception e) {
+            if (!isCache) {
+                throw e;
+            }
             return HttpReq
                     .get("https://bgm-cache.wushuo.top/bgm/" + subjectId.charAt(0) + "/" + subjectId + ".json", true)
                     .thenFunction(fun);
-        } catch (Exception e) {
-            HttpRequest httpRequest = HttpReq.get(host + "/v0/subjects/" + subjectId, true);
-            setToken(httpRequest);
-            return httpRequest.thenFunction(fun);
         }
     }
 
