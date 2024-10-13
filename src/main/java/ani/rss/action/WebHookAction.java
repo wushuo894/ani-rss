@@ -92,6 +92,11 @@ public class WebHookAction implements BaseAction {
             List<Ani> anis = AniUtil.ANI_LIST;
             Optional<String> first = anis.stream()
                     .filter(ani -> {
+                        String bgmUrl = ani.getBgmUrl();
+                        if (StrUtil.isBlank(bgmUrl)) {
+                            return false;
+                        }
+
                         String title = ani.getTitle();
                         title =  title.replaceAll(" \\((\\d{4})\\)$", "").trim();
                         Integer season = ani.getSeason();
