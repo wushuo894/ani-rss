@@ -179,6 +179,10 @@ public class TorrentUtil {
         if (!backRss) {
             return;
         }
+        List<Ani.BackRss> backRssList = ani.getBackRssList();
+        if (backRssList.isEmpty()) {
+            return;
+        }
         if (!ReUtil.contains(StringEnum.SEASON_REG, reName)) {
             return;
         }
