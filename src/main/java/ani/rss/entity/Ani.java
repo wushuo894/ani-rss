@@ -184,6 +184,7 @@ public class Ani implements Serializable {
                 .setEnable(true)
                 .setOva(false)
                 .setScore(0.0)
+                .setImage("")
                 .setThemoviedbName("")
                 .setCustomDownloadPath(false)
                 .setDownloadPath("")

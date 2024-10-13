@@ -30,19 +30,12 @@ public class BgmTask extends Thread {
             List<Ani> aniList = AniUtil.ANI_LIST;
             for (Ani ani : aniList) {
                 Boolean enable = ani.getEnable();
-                Integer totalEpisodeNumber = ani.getTotalEpisodeNumber();
-                if (enable || ani.getScore() < 1) {
+                double score = ani.getScore();
+                if (enable || score < 1) {
                     try {
                         BigInfo bgmInfo = BgmUtil.getBgmInfo(ani);
-                        double score = bgmInfo.getScore();
+                        score = bgmInfo.getScore();
                         ani.setScore(score);
-
-                        Integer eps = bgmInfo.getEps();
-                        if (totalEpisodeNumber < 1 && eps > 0) {
-                            String subjectId = bgmInfo.getSubjectId();
-                            eps = BgmUtil.getEpisodes(subjectId, 0).size();
-                            ani.setTotalEpisodeNumber(eps);
-                        }
                     } catch (Exception e) {
                         String message = ExceptionUtil.getMessage(e);
                         log.error(message, e);

@@ -9,6 +9,7 @@ import cn.hutool.core.bean.copier.CopyOptions;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.io.resource.ResourceUtil;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.text.StrFormatter;
 import cn.hutool.core.thread.ThreadUtil;
@@ -135,7 +136,7 @@ public class AniUtil {
     public static Ani getAni(String url, String text, String type, String bgmUrl) {
         type = StrUtil.blankToDefault(type, "mikan");
         int season = 1;
-        String title = "无";
+        String title = "无标题";
 
         Map<String, String> decodeParamMap = HttpUtil.decodeParamMap(url, StandardCharsets.UTF_8);
 
@@ -153,24 +154,13 @@ public class AniUtil {
         if (List.of("nyaa", "dmhy").contains(type)) {
             if (StrUtil.isNotBlank(text)) {
                 title = text;
-            } else {
-                Map<String, String> paramMap = HttpUtil.decodeParamMap(url, StandardCharsets.UTF_8);
-                title = paramMap.get("q");
-                if (StrUtil.isBlank(title)) {
-                    title = paramMap.get("keyword");
-                }
-            }
-            String subjectId;
-            if (StrUtil.isBlank(bgmUrl)) {
-                Assert.notBlank(title, "标题获取失败，请手动填写");
-                subjectId = BgmUtil.getSubjectId(title);
-            } else {
-                subjectId = BgmUtil.getSubjectId(new Ani().setBgmUrl(bgmUrl));
             }
 
-            log.info("subjectId: {}", subjectId);
-            Assert.notBlank(subjectId, "标题获取失败，请手动填写");
-            ani.setBgmUrl("https://bgm.tv/subject/" + subjectId);
+            if (StrUtil.isNotBlank(bgmUrl)) {
+                String subjectId = BgmUtil.getSubjectId(new Ani().setBgmUrl(bgmUrl));
+                log.info("subjectId: {}", subjectId);
+                ani.setBgmUrl("https://bgm.tv/subject/" + subjectId);
+            }
         } else {
             try {
                 MikanUtil.getMikanInfo(ani, subgroupid);
@@ -202,7 +192,9 @@ public class AniUtil {
         } catch (Exception e) {
             String message = ExceptionUtil.getMessage(e);
             log.error(message, e);
-            throw new RuntimeException("获取bgm信息失败");
+            if (StrUtil.isNotBlank(bgmUrl)) {
+                throw new RuntimeException("获取bgm信息失败");
+            }
         }
 
         String image = ani.getImage();
@@ -305,21 +297,34 @@ public class AniUtil {
      * @return
      */
     public static String saveJpg(String coverUrl, Boolean isOverride) {
+        File configDir = ConfigUtil.getConfigDir();
+        FileUtil.mkdir(configDir + "/files/");
+
+        // 默认空图片
+        String cover = "cover.png";
+        if (!FileUtil.exist(configDir + "/files/" + cover)) {
+            byte[] bytes = ResourceUtil.readBytes("image/cover.png");
+            FileUtil.writeBytes(bytes, configDir + "/files/" + cover);
+        }
         if (StrUtil.isBlank(coverUrl)) {
-            return "";
+            return cover;
         }
         String filename = MD5.create().digestHex(coverUrl);
         filename = filename.charAt(0) + "/" + filename + "." + FileUtil.extName(coverUrl);
-        File configDir = ConfigUtil.getConfigDir();
         FileUtil.mkdir(configDir + "/files/" + filename.charAt(0));
         File file = new File(configDir + "/files/" + filename);
         if (file.exists() && !isOverride) {
             return filename;
         }
         FileUtil.del(file);
-        HttpReq.get(coverUrl, true)
-                .then(res -> FileUtil.writeFromStream(res.bodyStream(), file));
-        return filename;
+        try {
+            HttpReq.get(coverUrl, true)
+                    .then(res -> FileUtil.writeFromStream(res.bodyStream(), file));
+            return filename;
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+            return cover;
+        }
     }
 
     /**
