@@ -67,7 +67,16 @@
                 ${season} 季 1 ,
                 ${episode} 集 1
                 <br>
-                如非必要请勿去除或更改 S${seasonFormat}E${episodeFormat}
+                请务必保留
+                <strong>
+                  ${title} S${seasonFormat}E${episodeFormat}
+                </strong>。
+                <br>
+                <strong>
+                  如果想使用洗版功能请不要在重命名模版添加 ${subgroup},
+                  <br>
+                  否则可能会出现 备用rss 洗版到 主rss 时出现错误 (点名 windows)
+                </strong>
               </el-text>
             </div>
           </el-form-item>
@@ -119,12 +128,13 @@
               <el-switch v-model:model-value="props.config.backRss"/>
               <div style="display: flex;width: 100%;justify-content: end;padding-top: 6px;">
                 <el-text class="mx-1" size="small">
+                  务必使用默认重命名模版
+                  <br>
                   请勿将动漫花园的rss用作 <strong>其他</strong> rss的备用或主RSS
                   <br>
-                  使用备用rss请同时开启qb的 <strong>修改任务标题</strong>, 对tr兼容性 <strong>不太稳定</strong>,
-                  且此功能
-                  <strong>不支持
-                    aria2</strong>
+                  使用备用rss请同时开启qb的 <strong>修改任务标题</strong>
+                  <br>
+                  对tr 与 aria2 的兼容性 <strong>不太稳定</strong>
                   <br>
                   若开启了 <strong>自动删除</strong> 将会 <strong>自动替换</strong> 备用rss 为 主rss 版本
                   (需要映射路径与下载器一致，否则若旧视频为mp4新视频为mkv时无法完成自动删除旧视频)

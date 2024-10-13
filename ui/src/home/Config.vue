@@ -35,7 +35,7 @@
           <About/>
         </el-tab-pane>
       </el-tabs>
-      <div style="display: flex;justify-content: end;width: 100%;">
+      <div style="display: flex;justify-content: end;width: 100%;margin-top: 10px;">
         <el-button :loading="configButtonLoading" @click="editConfig" text bg icon="Check">确定</el-button>
       </div>
     </div>

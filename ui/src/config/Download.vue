@@ -45,7 +45,7 @@
         <el-text class="mx-1" size="small">
           自动删除已完成的任务, 不会删除本地文件
           <br>
-          如果同时开启了 <strong>备用RSS</strong> 将在 <strong>主RSS</strong> 删除 <strong>备用RSS</strong> 所下载的视频
+          如果同时开启了 <strong>备用rss功能</strong> 将会自动删除对应洗版视频, 以实现 <strong>主rss</strong> 的替换
         </el-text>
       </div>
     </el-form-item>
