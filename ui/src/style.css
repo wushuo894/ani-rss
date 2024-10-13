@@ -11,6 +11,7 @@ html, body, #app {
 @media (max-width: 450px) {
     .el-dialog {
         --el-dialog-width: 100%;
+        margin-top: 55px;
     }
 }
 
@@ -48,7 +49,7 @@ html, body, #app {
     }
 }
 
-.el-card__body{
+.el-card__body {
     height: 100%;
-    box-sizing:border-box;
+    box-sizing: border-box;
 }
