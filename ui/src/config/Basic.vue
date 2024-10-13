@@ -134,7 +134,7 @@
                   <br>
                   使用备用rss请同时开启qb的 <strong>修改任务标题</strong>
                   <br>
-                  对tr 与 aria2 的兼容性 <strong>不太稳定</strong>
+                  对 tr 与 aria2 的兼容性 <strong>不太稳定</strong>
                   <br>
                   若开启了 <strong>自动删除</strong> 将会 <strong>自动替换</strong> 备用rss 为 主rss 版本
                   (需要映射路径与下载器一致，否则若旧视频为mp4新视频为mkv时无法完成自动删除旧视频)
