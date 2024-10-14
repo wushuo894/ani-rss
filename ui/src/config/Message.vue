@@ -169,6 +169,21 @@
         </el-form-item>
       </el-form>
     </el-collapse-item>
+    <el-collapse-item name="5" title="系统通知">
+      <el-form label-width="auto" @submit="(event)=>{
+                      event.preventDefault()
+                   }">
+        <el-form-item label="开关">
+          <div style="display: flex;width: 100%;justify-content: space-between;">
+            <el-switch v-model:model-value="props.config.systemMsg"/>
+            <el-button :disabled="!config.systemMsg" :loading="messageTestLoading" bg
+                       icon="Odometer"
+                       text @click="messageTest('SystemMsg')">测试
+            </el-button>
+          </div>
+        </el-form-item>
+      </el-form>
+    </el-collapse-item>
   </el-collapse>
 </template>
 

@@ -3,6 +3,7 @@ package ani.rss.msg;
 import ani.rss.entity.Ani;
 import ani.rss.entity.Config;
 import ani.rss.entity.MyMailAccount;
+import ani.rss.enums.MessageEnum;
 import ani.rss.util.ExceptionUtil;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.lang.Assert;
@@ -16,7 +17,7 @@ import java.util.List;
 @Slf4j
 public class Mail implements Message {
     @Override
-    public Boolean send(Config config, Ani ani, String text) {
+    public Boolean send(Config config, Ani ani, MessageEnum messageEnum, String text) {
         Boolean mail = config.getMail();
         MyMailAccount myMailAccount = config.getMailAccount();
         String mailAddressee = config.getMailAddressee();

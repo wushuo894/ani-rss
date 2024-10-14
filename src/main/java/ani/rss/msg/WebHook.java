@@ -2,7 +2,7 @@ package ani.rss.msg;
 
 import ani.rss.entity.Ani;
 import ani.rss.entity.Config;
-import ani.rss.util.BgmUtil;
+import ani.rss.enums.MessageEnum;
 import ani.rss.util.HttpReq;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.HttpRequest;
@@ -13,7 +13,7 @@ import java.util.Objects;
 
 public class WebHook implements Message {
     @Override
-    public Boolean send(Config config, Ani ani, String text) {
+    public Boolean send(Config config, Ani ani, MessageEnum messageEnum, String text) {
         String webHookMethod = config.getWebHookMethod();
         String webHookUrl = config.getWebHookUrl();
         String webHookBody = config.getWebHookBody();
