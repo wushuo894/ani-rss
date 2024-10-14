@@ -38,12 +38,12 @@ public class AuthUtil {
      * 刷新密钥
      */
     public static synchronized void resetKey() {
-        KEY = RandomUtil.randomString(32);
+        KEY = RandomUtil.randomString(128);
     }
 
     public static synchronized String getAuth(Login login) {
         login.setKey(KEY);
-        return MD5.digestHex(GSON.toJson(login));
+        return MD5.digestHex(GSON.toJson(login)) + ":" + KEY;
     }
 
     public static Login getLogin() {
