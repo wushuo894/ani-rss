@@ -6,7 +6,7 @@ import ani.rss.util.AniUtil;
 import ani.rss.util.BgmUtil;
 import ani.rss.util.ExceptionUtil;
 import cn.hutool.core.thread.ThreadUtil;
-import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.core.util.StrUtil;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
@@ -29,6 +29,10 @@ public class BgmTask extends Thread {
         while (loop.get()) {
             List<Ani> aniList = AniUtil.ANI_LIST;
             for (Ani ani : aniList) {
+                String bgmUrl = ani.getBgmUrl();
+                if (StrUtil.isBlank(bgmUrl)) {
+                    continue;
+                }
                 Boolean enable = ani.getEnable();
                 double score = ani.getScore();
                 if (enable || score < 1) {
