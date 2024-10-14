@@ -23,8 +23,6 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import lombok.extern.slf4j.Slf4j;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Element;
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
@@ -35,7 +33,6 @@ import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -172,8 +169,15 @@ public class AniUtil {
         try {
             BigInfo bgmInfo = BgmUtil.getBgmInfo(ani, true);
 
+            String nameCn = bgmInfo.getNameCn();
+            String name = bgmInfo.getName();
+
+            title = StrUtil.blankToDefault(nameCn, name);
+            if (StrUtil.isBlank(title)) {
+                title = "无标题";
+            }
+
             season = bgmInfo.getSeason();
-            title = bgmInfo.getNameCn();
             int eps = bgmInfo.getEps();
             String subjectId = bgmInfo.getSubjectId();
             if (eps > 0) {
