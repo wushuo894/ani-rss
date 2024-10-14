@@ -3,6 +3,7 @@ package ani.rss.util;
 import ani.rss.entity.About;
 import cn.hutool.core.comparator.VersionComparator;
 import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.io.resource.ResourceUtil;
 import cn.hutool.core.text.StrFormatter;
 import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.core.util.RuntimeUtil;
@@ -14,6 +15,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 
 import java.io.File;
+import java.io.InputStream;
 import java.util.List;
 
 @Slf4j
@@ -63,14 +65,11 @@ public class UpdateUtil {
         }
         File jar = getJar();
         String extName = StrUtil.blankToDefault(FileUtil.extName(jar), "");
-        String mainName = FileUtil.mainName(jar);
         if (!List.of("jar", "exe").contains(extName)) {
             throw new RuntimeException("不支持更新");
         }
-        if ("exe".equals(extName)) {
-            mainName = "ani-rss-launcher";
-        }
-        File file = new File(StrFormatter.format("{}_v{}.{}", mainName, latest, extName));
+        File file = new File(jar + ".tmp");
+
         FileUtil.del(file);
         String downloadUrl = about.getDownloadUrl();
         HttpReq.get(downloadUrl, true)
@@ -83,14 +82,22 @@ public class UpdateUtil {
                     }
                     ThreadUtil.execute(() -> {
                         ThreadUtil.sleep(1000);
-                        if ("exe".equals(extName)) {
+                        if ("jar".equals(extName)) {
+                            FileUtil.rename(file, jar.getName(), true);
                             ServerUtil.stop();
-                            RuntimeUtil.exec(file.getName());
                             System.exit(0);
                             return;
                         }
-                        FileUtil.rename(file, jar.getName(), true);
-                        System.exit(0);
+                        String filename = "ani-rss-update.exe";
+                        File updateExe = new File(file.getParent() + "/" + filename);
+                        try (InputStream stream = ResourceUtil.getStream(filename)) {
+                            FileUtil.writeFromStream(stream, updateExe, true);
+                            ServerUtil.stop();
+                            RuntimeUtil.exec(updateExe.toString(), file.getParent());
+                            System.exit(0);
+                        } catch (Exception e) {
+                            log.error(e.getMessage(), e);
+                        }
                     });
                 });
     }

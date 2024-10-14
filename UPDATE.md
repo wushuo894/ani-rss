@@ -1,1 +1,1 @@
-修复windows洗版问题
+优化windows更新方式
