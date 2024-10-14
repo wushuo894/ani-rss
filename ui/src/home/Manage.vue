@@ -11,6 +11,12 @@
           </el-select>
         </div>
         <div>
+          <el-button :disabled="!selectList.length" bg icon="Upload" text @click="exportData">
+            导出
+          </el-button>
+          <el-button :loading="importDataLoading" bg icon="Download" text @click="importData">
+            导入
+          </el-button>
           <popconfirm title="删除选中项?" @confirm="del">
             <template #reference>
               <el-button icon="Remove" bg text :disabled="!selectList.length" type="danger">删除
@@ -112,6 +118,51 @@ const del = () => {
       .finally(() => {
         delLoading.value = false
       })
+}
+
+let exportData = () => {
+  const textContent = JSON.stringify(selectList.value);
+  const blob = new Blob([textContent], {type: "text/plain"});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.style.display = "none";
+  a.href = url;
+  a.download = "ani.json";
+  document.body.appendChild(a);
+  a.click();
+  URL.revokeObjectURL(url);
+  document.body.removeChild(a);
+}
+
+let importDataLoading = ref(false)
+
+let importData = () => {
+  const input = document.createElement('input');
+  input.type = 'file';
+  input.accept = '.json';
+  input.style.display = 'none';
+  document.body.appendChild(input);
+  input.addEventListener('change', async () => {
+    const file = input.files[0];
+    const reader = new FileReader();
+
+    reader.onload = function (e) {
+      const fileContent = e.target.result;
+      importDataLoading.value = true
+      api.post('api/ani/import', JSON.parse(fileContent.toString()))
+          .then(res => {
+            ElMessage.success(res.message)
+            emit('load')
+            getList()
+          })
+          .finally(() => {
+            importDataLoading.value = false
+          })
+      document.body.removeChild(input);
+    };
+    reader.readAsText(file);
+  });
+  input.click();
 }
 
 defineExpose({show})
