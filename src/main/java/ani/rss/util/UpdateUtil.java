@@ -90,6 +90,7 @@ public class UpdateUtil {
                         }
                         String filename = "ani-rss-update.exe";
                         File updateExe = new File(file.getParent() + "/" + filename);
+                        FileUtil.del(updateExe);
                         try (InputStream stream = ResourceUtil.getStream(filename)) {
                             FileUtil.writeFromStream(stream, updateExe, true);
                             ServerUtil.stop();
