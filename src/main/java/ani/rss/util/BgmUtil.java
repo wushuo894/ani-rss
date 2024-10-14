@@ -236,6 +236,7 @@ public class BgmUtil {
             JsonObject jsonObject = gson.fromJson(body, JsonObject.class);
             BigInfo bigInfo = new BigInfo();
 
+            String name = jsonObject.get("name").getAsString();
             String nameCn = jsonObject.get("name_cn").getAsString();
             String date = jsonObject.get("date").getAsString();
             String platform = jsonObject.get("platform").getAsString();
@@ -249,6 +250,7 @@ public class BgmUtil {
             bigInfo
                     .setSubjectId(subjectId)
                     .setNameCn(nameCn)
+                    .setName(name)
                     .setDate(LocalDateTimeUtil.parse(date, DatePattern.NORM_DATE_PATTERN))
                     .setEps(eps)
                     .setScore(score)
