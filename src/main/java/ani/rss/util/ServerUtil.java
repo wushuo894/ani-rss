@@ -112,7 +112,11 @@ public class ServerUtil {
         if (Objects.isNull(server)) {
             return;
         }
-        server.getRawServer().stop(0);
+        try {
+            server.getRawServer().stop(0);
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+        }
     }
 
     public static synchronized Boolean isIpWhitelist(String ip) {
