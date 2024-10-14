@@ -329,4 +329,9 @@ public class Config implements Serializable {
      * server酱 开关
      */
     private Boolean serverChan;
+
+    /**
+     * 系统通知
+     */
+    private Boolean systemMsg;
 }

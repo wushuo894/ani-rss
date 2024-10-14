@@ -15,7 +15,6 @@ import com.google.gson.GsonBuilder;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -106,7 +105,8 @@ public class ConfigUtil {
                 .setVerifyLoginIp(true)
                 .setServerChan(false)
                 .setServerChanType("")
-                .setServerChanSendKey("");
+                .setServerChanSendKey("")
+                .setSystemMsg(false);
     }
 
     private static final Gson GSON = new GsonBuilder()
