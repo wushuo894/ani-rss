@@ -128,7 +128,8 @@ const config = ref({
   'verifyLoginIp': true,
   'serverChanSendKey': '',
   'serverChan': false,
-  'serverChanType': ''
+  'serverChanType': '',
+  'systemMsg': false
 })
 
 const activeName = ref('download')

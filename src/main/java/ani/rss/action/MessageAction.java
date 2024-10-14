@@ -34,7 +34,7 @@ public class MessageAction implements BaseAction {
         BigInfo bgmInfo = BgmUtil.getBgmInfo(ani);
         String image = bgmInfo.getImage();
         ani.setCover(AniUtil.saveJpg(image));
-        Boolean test = message.send(config, ani, "test");
+        Boolean test = message.send(config, ani, null, "test");
         if (test) {
             resultSuccess();
             return;

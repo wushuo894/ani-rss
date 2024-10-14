@@ -14,6 +14,9 @@ import java.util.Arrays;
 
 @Slf4j
 public class MenuUtil {
+
+    public static TrayIcon trayIcon;
+
     public static void start(String[] args) {
         args = ObjectUtil.defaultIfNull(args, new String[]{});
         // 仅在添加--gui参数时启动托盘
@@ -50,12 +53,12 @@ public class MenuUtil {
 
 
         SystemTray tray = SystemTray.getSystemTray();
-        TrayIcon trayIcon = new TrayIcon(Toolkit.getDefaultToolkit().getImage(ResourceUtil.getResource("icon" + ".png"
-        )), "ani-rss");
+        trayIcon = new TrayIcon(
+                Toolkit.getDefaultToolkit().getImage(
+                        ResourceUtil.getResource("icon.png")
+                ), "ani-rss");
         trayIcon.setImageAutoSize(true);
-        trayIcon.displayMessage("ani-rss", "启动成功", TrayIcon.MessageType.INFO);
         tray.add(trayIcon);
-
         // 使用JDialog 作为JPopupMenu载体
         JDialog jDialog = new JDialog();
         // 关闭JDialog的装饰器

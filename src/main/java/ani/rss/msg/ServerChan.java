@@ -2,6 +2,7 @@ package ani.rss.msg;
 
 import ani.rss.entity.Ani;
 import ani.rss.entity.Config;
+import ani.rss.enums.MessageEnum;
 import ani.rss.enums.ServerChanTypeEnum;
 import ani.rss.util.HttpReq;
 import cn.hutool.core.util.StrUtil;
@@ -17,7 +18,7 @@ public class ServerChan implements Message {
     private static final String MARKDOWN_STRING = "# <message>\n\n![<image>](<image>)";
 
     @Override
-    public Boolean send(Config config, Ani ani, String text) {
+    public Boolean send(Config config, Ani ani, MessageEnum messageEnum, String text) {
         String type = config.getServerChanType();
         String sendKey = config.getServerChanSendKey();
         if (StringUtil.isBlank(type) || StringUtil.isBlank(sendKey)) {

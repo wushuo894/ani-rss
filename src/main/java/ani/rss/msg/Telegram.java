@@ -2,6 +2,7 @@ package ani.rss.msg;
 
 import ani.rss.entity.Ani;
 import ani.rss.entity.Config;
+import ani.rss.enums.MessageEnum;
 import ani.rss.util.ConfigUtil;
 import ani.rss.util.HttpReq;
 import cn.hutool.core.text.StrFormatter;
@@ -19,7 +20,7 @@ import java.util.Objects;
 
 @Slf4j
 public class Telegram implements Message {
-    public Boolean send(Config config, Ani ani, String text) {
+    public Boolean send(Config config, Ani ani, MessageEnum messageEnum, String text) {
         String telegramBotToken = config.getTelegramBotToken();
         String telegramChatId = config.getTelegramChatId();
         String telegramApiHost = config.getTelegramApiHost();
@@ -44,7 +45,7 @@ public class Telegram implements Message {
         File configDir = ConfigUtil.getConfigDir();
         File photo = new File(configDir + "/files/" + cover);
         if (StrUtil.isBlank(cover) || !photo.exists()) {
-            return send(config, null, text);
+            return send(config, null, messageEnum, text);
         }
 
         url = StrFormatter.format("{}/bot{}/sendPhoto", telegramApiHost, telegramBotToken);
