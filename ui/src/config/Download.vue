@@ -108,6 +108,9 @@ const downloadSelect = ref([
 
 const downloadLoginTestLoading = ref(false)
 const downloadLoginTest = () => {
+  if (props.config.host.endsWith("/")) {
+    props.config.host = props.config.host.substring(0, props.config.host.length - 1);
+  }
   downloadLoginTestLoading.value = true
   api.post("api/downloadLoginTestLoading", props.config)
       .then(res => {
