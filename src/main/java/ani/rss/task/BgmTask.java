@@ -33,6 +33,9 @@ public class BgmTask extends Thread {
                 if (StrUtil.isBlank(bgmUrl)) {
                     continue;
                 }
+                if (!loop.get()) {
+                    return;
+                }
                 Boolean enable = ani.getEnable();
                 double score = ani.getScore();
                 if (enable || score < 1) {

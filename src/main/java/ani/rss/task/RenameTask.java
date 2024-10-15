@@ -2,17 +2,13 @@ package ani.rss.task;
 
 import ani.rss.entity.Config;
 import ani.rss.entity.TorrentsInfo;
-import ani.rss.enums.MessageEnum;
 import ani.rss.util.ConfigUtil;
 import ani.rss.util.ExceptionUtil;
-import ani.rss.util.MessageUtil;
 import ani.rss.util.TorrentUtil;
 import cn.hutool.core.thread.ThreadUtil;
-import cn.hutool.core.util.StrUtil;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -40,6 +36,9 @@ public class RenameTask extends Thread {
             try {
                 List<TorrentsInfo> torrentsInfos = TorrentUtil.getTorrentsInfos();
                 for (TorrentsInfo torrentsInfo : torrentsInfos) {
+                    if (!loop.get()) {
+                        return;
+                    }
                     TorrentUtil.rename(torrentsInfo);
                     TorrentUtil.notification(torrentsInfo);
                     TorrentUtil.delete(torrentsInfo);
