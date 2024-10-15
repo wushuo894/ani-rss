@@ -111,7 +111,7 @@ public class AniAction implements BaseAction {
             return;
         }
 
-        List<Item> items = AniUtil.getItems(ani);
+        List<Item> items = ItemsUtil.getItems(ani);
 
         int currentEpisodeNumber = ItemsUtil.currentEpisodeNumber(ani, items);
         ani.setCurrentEpisodeNumber(currentEpisodeNumber);

@@ -13,7 +13,6 @@ import ani.rss.util.TorrentUtil;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.text.StrFormatter;
 import cn.hutool.core.thread.ExecutorBuilder;
-import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.ReUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.server.HttpServerRequest;
@@ -98,7 +97,7 @@ public class WebHookAction implements BaseAction {
                         }
 
                         String title = ani.getTitle();
-                        title =  title.replaceAll(" \\((\\d{4})\\)$", "").trim();
+                        title = title.replaceAll(" \\((\\d{4})\\)$", "").trim();
                         Integer season = ani.getSeason();
                         if (title.equals(seriesName) && s == season) {
                             return true;

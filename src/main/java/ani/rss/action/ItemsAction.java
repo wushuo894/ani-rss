@@ -4,7 +4,7 @@ import ani.rss.annotation.Auth;
 import ani.rss.annotation.Path;
 import ani.rss.entity.Ani;
 import ani.rss.entity.Item;
-import ani.rss.util.AniUtil;
+import ani.rss.util.ItemsUtil;
 import ani.rss.util.TorrentUtil;
 import cn.hutool.http.server.HttpServerRequest;
 import cn.hutool.http.server.HttpServerResponse;
@@ -20,7 +20,7 @@ public class ItemsAction implements BaseAction {
     @Override
     public void doAction(HttpServerRequest request, HttpServerResponse response) throws IOException {
         Ani ani = getBody(Ani.class);
-        List<Item> items = AniUtil.getItems(ani);
+        List<Item> items = ItemsUtil.getItems(ani);
 
         String downloadPath = TorrentUtil.getDownloadPath(ani).get(0)
                 .toString().replace("\\", "/");
