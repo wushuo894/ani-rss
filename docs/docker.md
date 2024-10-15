@@ -9,7 +9,7 @@
 
 [使用文档](https://docs.wushuo.top/docs)
 
-![Xnip2024-09-08_04-57-29.jpg](https://docs.wushuo.top/image/Xnip2024-09-08_04-57-29.jpg)
+![Xnip2024-10-15_20-41-53.jpg](https://docs.wushuo.top/image/Xnip2024-10-15_20-41-53.jpg)
 
 默认 用户名: admin 密码: admin
 
@@ -20,6 +20,10 @@
 | TZ     | 时区       | Asia/Shanghai |
 
 ps: 如果需要开启 文件已下载自动跳过 功能 请确保 qBittorrent 与本程序 docker 映射挂载路径一致
+
+### 视频教程
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/y9-mgvnSnxs?si=CCz_58LaZu3mbpr5" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
 
 ### Docker 部署
 
