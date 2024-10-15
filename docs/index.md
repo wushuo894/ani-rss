@@ -27,6 +27,7 @@ ANI-RSS
 <img src="image/Xnip2024-09-08_04-57-29.jpg" alt="ani-rss 截图">
 
     请不要在B站发布视频宣传本项目
+    在国内平台请尽量简称为 ASS
 
 <hr style="height: 1px;">
 
