@@ -62,7 +62,7 @@ public class ItemsUtil {
             }
             log.info(s);
             // 缓存一天 不重复发送
-            messageCache.put(s, "1", TimeUnit.DAYS.toDays(1));
+            messageCache.put(s, "1", TimeUnit.DAYS.toMillis(1));
             MessageUtil.send(config, ani, s, MessageEnum.OMIT);
         }
     }
