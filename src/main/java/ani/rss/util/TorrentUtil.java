@@ -78,7 +78,19 @@ public class TorrentUtil {
 
         long count = getTorrentsInfos()
                 .stream()
-                .filter(it -> !EnumUtil.equalsIgnoreCase(it.getState(), TorrentsInfo.State.pausedUP.name()))
+                .filter(it -> {
+                    TorrentsInfo.State state = it.getState();
+                    if (Objects.isNull(state)) {
+                        return true;
+                    }
+                    // 未下载完成
+                    return !List.of(
+                            TorrentsInfo.State.uploading.name(),
+                            TorrentsInfo.State.stalledUP.name(),
+                            TorrentsInfo.State.pausedUP.name(),
+                            TorrentsInfo.State.stoppedUP.name()
+                    ).contains(state.name());
+                })
                 .count();
 
         for (Item item : items) {
