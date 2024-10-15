@@ -96,6 +96,10 @@ let test = () => {
 
 test()
 
+if (!location.pathname.endsWith('/') && !location.href.endsWith('#')) {
+  location.href = location.href + '/'
+}
+
 useDark()
 </script>
 
