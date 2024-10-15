@@ -27,7 +27,7 @@ ANI-RSS
 <img src="image/Xnip2024-09-08_04-57-29.jpg" alt="ani-rss 截图">
 
     请不要在B站发布视频宣传本项目
-    在国内平台请尽量简称为 ASS
+    在国内平台请尽量简称 ANI-RSS 为 ASS or 屁股
 
 <hr style="height: 1px;">
 

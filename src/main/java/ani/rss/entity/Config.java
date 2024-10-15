@@ -186,6 +186,11 @@ public class Config implements Serializable {
     private Login login;
 
     /**
+     * 登录有效时间/小时
+     */
+    private Integer loginEffectiveHours;
+
+    /**
      * 全局排除
      */
     private List<String> exclude;

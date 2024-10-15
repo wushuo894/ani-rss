@@ -14,6 +14,7 @@ import cn.hutool.crypto.digest.MD5;
 import cn.hutool.http.server.HttpServerRequest;
 import com.google.gson.Gson;
 import com.sun.net.httpserver.HttpExchange;
+import lombok.Synchronized;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.HashMap;
@@ -28,23 +29,41 @@ public class AuthUtil {
     private static final MD5 MD5 = new MD5();
     private static final Gson GSON = new Gson();
     private static final Map<String, Function<HttpServerRequest, Boolean>> MAP = new HashMap<>();
-    private static final FIFOCache<String, String> cache = CacheUtil.newFIFOCache(1);
+    private static final FIFOCache<String, String> CACHE = CacheUtil.newFIFOCache(1);
 
     static {
         resetKey();
     }
 
     /**
+     * 刷新有效时间
+     */
+    @Synchronized("CACHE")
+    public static void resetTime() {
+        String key = CACHE.get("key");
+        if (StrUtil.isBlank(key)) {
+            return;
+        }
+        Config config = ConfigUtil.CONFIG;
+        Integer loginEffectiveHours = config.getLoginEffectiveHours();
+        CACHE.put("key", key, TimeUnit.HOURS.toMillis(loginEffectiveHours));
+    }
+
+    /**
      * 刷新密钥
      */
-    public static synchronized String resetKey() {
+    @Synchronized("CACHE")
+    public static String resetKey() {
         String key = RandomUtil.randomString(128);
-        cache.put("key", key, TimeUnit.HOURS.toMillis(6));
+        Config config = ConfigUtil.CONFIG;
+        Integer loginEffectiveHours = config.getLoginEffectiveHours();
+        CACHE.put("key", key, TimeUnit.HOURS.toMillis(loginEffectiveHours));
         return key;
     }
 
-    public static synchronized String getAuth(Login login) {
-        String key = cache.get("key");
+    @Synchronized("CACHE")
+    public static String getAuth(Login login) {
+        String key = CACHE.get("key");
         if (StrUtil.isBlank(key)) {
             key = resetKey();
         }

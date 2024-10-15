@@ -23,6 +23,8 @@ public class Header implements Function<HttpServerRequest, Boolean> {
         Login login = AuthUtil.getLogin();
         String auth = AuthUtil.getAuth(login);
         if (StrUtil.equals(auth, s)) {
+            // 刷新有效时间
+            AuthUtil.resetTime();
             return true;
         }
         BaseAction.staticResult(new Result<>().setCode(403).setMessage("登录失效"));
