@@ -22,7 +22,7 @@ public class TaskUtil {
                 // 等待现有任务结束
                 while (thread.isAlive()) {
                     thread.interrupt();
-                    ThreadUtil.sleep(500);
+                    ThreadUtil.sleep(100);
                 }
                 thread.join();
             } catch (Exception e) {
