@@ -192,11 +192,11 @@ public class Ani implements Serializable {
                 .setCurrentEpisodeNumber(0)
                 .setTotalEpisodeNumber(0)
                 .setMatch(List.of())
-                .setExclude(List.of("720", "\\d{1,2}-\\d{1,2}", "合集", "特别篇"))
+                .setExclude(List.of("720", "\\d-\\d", "合集", "特别篇"))
                 .setBgmUrl("")
                 .setSubgroup("")
                 .setCustomEpisode(false)
-                .setCustomEpisodeStr("\\d{1,2}(\\.5)?")
+                .setCustomEpisodeStr("\\d{1,3}(\\.5)?")
                 .setCustomEpisodeGroupIndex(0)
                 .setOmit(true)
                 .setDownloadNew(false);
