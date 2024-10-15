@@ -7,10 +7,9 @@ import ani.rss.entity.Login;
 import ani.rss.util.ConfigUtil;
 import ani.rss.util.ExceptionUtil;
 import ani.rss.util.ServerUtil;
-import cn.hutool.core.util.ClassUtil;
-import cn.hutool.core.util.ObjectUtil;
-import cn.hutool.core.util.RandomUtil;
-import cn.hutool.core.util.ReflectUtil;
+import cn.hutool.cache.CacheUtil;
+import cn.hutool.cache.impl.FIFOCache;
+import cn.hutool.core.util.*;
 import cn.hutool.crypto.digest.MD5;
 import cn.hutool.http.server.HttpServerRequest;
 import com.google.gson.Gson;
@@ -20,15 +19,16 @@ import lombok.extern.slf4j.Slf4j;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Slf4j
 public class AuthUtil {
-    private static String KEY;
     private static final MD5 MD5 = new MD5();
     private static final Gson GSON = new Gson();
     private static final Map<String, Function<HttpServerRequest, Boolean>> MAP = new HashMap<>();
+    private static final FIFOCache<String, String> cache = CacheUtil.newFIFOCache(1);
 
     static {
         resetKey();
@@ -37,13 +37,19 @@ public class AuthUtil {
     /**
      * 刷新密钥
      */
-    public static synchronized void resetKey() {
-        KEY = RandomUtil.randomString(128);
+    public static synchronized String resetKey() {
+        String key = RandomUtil.randomString(128);
+        cache.put("key", key, TimeUnit.HOURS.toMillis(6));
+        return key;
     }
 
     public static synchronized String getAuth(Login login) {
-        login.setKey(KEY);
-        return MD5.digestHex(GSON.toJson(login)) + ":" + KEY;
+        String key = cache.get("key");
+        if (StrUtil.isBlank(key)) {
+            key = resetKey();
+        }
+        login.setKey(key);
+        return MD5.digestHex(GSON.toJson(login)) + ":" + key;
     }
 
     public static Login getLogin() {
