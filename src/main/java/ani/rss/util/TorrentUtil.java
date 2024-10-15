@@ -66,7 +66,7 @@ public class TorrentUtil {
                 .collect(Collectors.toSet());
 
         int currentDownloadCount = 0;
-        List<Item> items = AniUtil.getItems(ani);
+        List<Item> items = ItemsUtil.getItems(ani);
 
         ItemsUtil.omit(ani, items);
         log.debug("{} 共 {} 个", title, items.size());

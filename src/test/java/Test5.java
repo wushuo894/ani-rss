@@ -2,6 +2,7 @@ import ani.rss.entity.Ani;
 import ani.rss.entity.Item;
 import ani.rss.util.AniUtil;
 import ani.rss.util.ConfigUtil;
+import ani.rss.util.ItemsUtil;
 import cn.hutool.core.util.ReUtil;
 import cn.hutool.core.util.StrUtil;
 
@@ -27,7 +28,7 @@ public class Test5 {
         }
         ConfigUtil.load();
         Ani ani = AniUtil.getAni("https://mikanani.me/RSS/Bangumi?bangumiId=3341&subgroupid=583");
-        List<Item> items = AniUtil.getItems(ani);
+        List<Item> items = ItemsUtil.getItems(ani);
         for (Item item : items) {
             System.out.println(item);
         }

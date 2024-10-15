@@ -42,7 +42,8 @@
             <div style="width: 6px;"></div>
             <el-input v-model:model-value="props.ani.url" placeholder="https://xxx.xxx"/>
             <div style="width: 6px;"></div>
-            <el-button bg text @click="mikanRef?.show(props.ani.title)" icon="VideoCamera" :disabled="ani.type === 'dmhy'"/>
+            <el-button bg text @click="mikanRef?.show(props.ani.title)" icon="VideoCamera"
+                       :disabled="ani.type === 'dmhy'"/>
           </div>
         </el-form-item>
         <el-form-item label="备用 RSS">
