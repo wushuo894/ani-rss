@@ -57,7 +57,7 @@
 - [x] 支持BGM自动点格子
 - [x] 支持自定义集数规则
 
-![Xnip2024-09-08_04-57-29.jpg](https://docs.wushuo.top/image/Xnip2024-09-08_04-57-29.jpg)
+![Xnip2024-10-15_20-41-53.jpg](https://docs.wushuo.top/image/Xnip2024-10-15_20-41-53.jpg)
 
 默认 用户名: admin 密码: admin
 
