@@ -26,18 +26,18 @@ ANI-RSS
 
 <img src="image/Xnip2024-09-08_04-57-29.jpg" alt="ani-rss 截图">
 
-    请不要在B站发布视频宣传本项目
-    在国内平台请尽量简称 ANI-RSS 为 ASS or 屁股
-
 <hr style="height: 1px;">
 
 <img src="https://docs.wushuo.top/image/tr.png" alt="transmission" width="60">
 <img src="https://docs.wushuo.top/image/qb.png" alt="qbittorrent" width="60">
-<img src="https://docs.wushuo.top/image/aria2.png" alt="qbittorrent" width="60">
+<img src="https://docs.wushuo.top/image/aria2.png" alt="aria2" width="60">
 
 <p>支持 <strong>Transmission</strong> <strong>qBittorrent</strong> <strong>Aria2</strong></p>
 
 </div>
+
+    请不要在B站发布视频宣传本项目
+    在国内平台请尽量简称 ANI-RSS 为 ASS or 屁股
 
 [投喂作者](https://afdian.com/a/wushuo894)
 
