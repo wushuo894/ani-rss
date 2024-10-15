@@ -129,7 +129,6 @@ public class ItemsUtil {
                 }
                 if (itemChildNodeName.equals("nyaa:size")) {
                     size = itemChild.getTextContent();
-                    size = ReUtil.get("[\\d\\.]+", size, 0) + "MB";
                 }
 
                 if (itemChildNodeName.equals("link")) {
