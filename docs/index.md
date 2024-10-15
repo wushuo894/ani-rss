@@ -26,6 +26,8 @@ ANI-RSS
 
 <img src="image/Xnip2024-09-08_04-57-29.jpg" alt="ani-rss 截图">
 
+    请不要在B站发布视频宣传本项目
+
 <hr style="height: 1px;">
 
 <img src="https://docs.wushuo.top/image/tr.png" alt="transmission" width="60">
