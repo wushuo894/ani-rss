@@ -26,8 +26,10 @@
           <LoginConfig :config="config"/>
         </el-tab-pane>
         <el-tab-pane label="通知" :lazy="true">
-          <div style="margin: 4px;">
-            <Message ref="messageRef" v-model:config="config" v-model:message-active-name="messageActiveName"/>
+          <div style="height: 500px;">
+            <el-scrollbar style="padding: 0 12px">
+              <Message ref="messageRef" v-model:config="config" v-model:message-active-name="messageActiveName"/>
+            </el-scrollbar>
           </div>
           <div style="height: 4px;"></div>
         </el-tab-pane>
