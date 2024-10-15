@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="zh">
 <head>
     <meta charset="UTF-8"/>
     <link rel="icon" href="/favicon.ico"/>
@@ -8,6 +8,11 @@
     <title>ANI-RSS</title>
     <link rel="manifest" href="/manifest.json"/>
 </head>
+<script>
+    if (!location.pathname.endsWith('/') && !location.href.endsWith('#')) {
+        location.href = location.href + '/'
+    }
+</script>
 <body>
 <div id="app"></div>
 <script type="module" src="/src/main.js"></script>
