@@ -129,7 +129,8 @@ const config = ref({
   'serverChanSendKey': '',
   'serverChan': false,
   'serverChanType': '',
-  'systemMsg': false
+  'systemMsg': false,
+  'loginEffectiveHours': 3
 })
 
 const activeName = ref('download')

@@ -72,6 +72,7 @@ public class ConfigUtil {
                         .setUsername("admin")
                         .setPassword(password)
                 )
+                .setLoginEffectiveHours(3)
                 .setExclude(List.of("720", "\\d-\\d", "合集", "特别篇"))
                 .setImportExclude(false)
                 .setEnabledExclude(false)
