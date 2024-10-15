@@ -95,7 +95,7 @@ public class BgmUtil {
             id = list.get(0).get("id").getAsString();
         }
         ThreadUtil.sleep(1000);
-        nameCache.put(name, id, TimeUnit.DAYS.toDays(1));
+        nameCache.put(name, id, TimeUnit.DAYS.toMillis(1));
         return id;
     }
 
