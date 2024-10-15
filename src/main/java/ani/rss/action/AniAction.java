@@ -25,7 +25,10 @@ import com.google.gson.JsonElement;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.File;
-import java.util.*;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 
@@ -44,7 +47,7 @@ public class AniAction implements BaseAction {
 
         if (Objects.isNull(ani)) {
             RssTask.sync();
-            ThreadUtil.execute(RssTask::download);
+            ThreadUtil.execute(() -> RssTask.download(new AtomicBoolean(true)));
             resultSuccessMsg("已开始刷新RSS");
             return;
         }

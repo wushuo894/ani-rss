@@ -23,42 +23,7 @@ public class RssTask extends Thread {
 
     private final AtomicBoolean loop;
 
-    @Override
-    public void run() {
-        super.setName("rss-task-thread");
-        Config config = ConfigUtil.CONFIG;
-        Integer sleep = config.getSleep();
-        log.info("{} 当前设置间隔为 {} 分钟", getName(), sleep);
-        while (loop.get()) {
-            if (!config.getRss()) {
-                log.debug("rss未启用");
-                ThreadUtil.sleep(sleep, TimeUnit.MINUTES);
-                continue;
-            }
-            try {
-                sync();
-                download();
-            } catch (Exception e) {
-                String message = ExceptionUtil.getMessage(e);
-                log.error(message, e);
-            }
-            ThreadUtil.sleep(sleep, TimeUnit.MINUTES);
-        }
-        log.info("{} 任务已停止", getName());
-    }
-
-    public static final AtomicBoolean download = new AtomicBoolean(false);
-
-    public static void sync() {
-        synchronized (download) {
-            if (download.get()) {
-                throw new RuntimeException("存在未完成任务，请等待...");
-            }
-            download.set(true);
-        }
-    }
-
-    public static void download() {
+    public static void download(AtomicBoolean loop) {
         try {
             if (!TorrentUtil.login()) {
                 return;
@@ -68,6 +33,9 @@ public class RssTask extends Thread {
                     .map(Ani::getId)
                     .collect(Collectors.toSet());
             for (String id : ids) {
+                if (!loop.get()) {
+                    return;
+                }
                 Optional<Ani> first = AniUtil.ANI_LIST
                         .stream()
                         .filter(it -> it.getId().equals(id))
@@ -104,5 +72,40 @@ public class RssTask extends Thread {
         } finally {
             download.set(false);
         }
+    }
+
+    public static final AtomicBoolean download = new AtomicBoolean(false);
+
+    public static void sync() {
+        synchronized (download) {
+            if (download.get()) {
+                throw new RuntimeException("存在未完成任务，请等待...");
+            }
+            download.set(true);
+        }
+    }
+
+    @Override
+    public void run() {
+        super.setName("rss-task-thread");
+        Config config = ConfigUtil.CONFIG;
+        Integer sleep = config.getSleep();
+        log.info("{} 当前设置间隔为 {} 分钟", getName(), sleep);
+        while (loop.get()) {
+            if (!config.getRss()) {
+                log.debug("rss未启用");
+                ThreadUtil.sleep(sleep, TimeUnit.MINUTES);
+                continue;
+            }
+            try {
+                sync();
+                download(loop);
+            } catch (Exception e) {
+                String message = ExceptionUtil.getMessage(e);
+                log.error(message, e);
+            }
+            ThreadUtil.sleep(sleep, TimeUnit.MINUTES);
+        }
+        log.info("{} 任务已停止", getName());
     }
 }
