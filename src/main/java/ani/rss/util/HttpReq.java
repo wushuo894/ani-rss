@@ -1,10 +1,8 @@
 package ani.rss.util;
 
 import ani.rss.entity.Config;
-import cn.hutool.core.text.StrFormatter;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.HttpRequest;
-import cn.hutool.http.HttpUtil;
 import lombok.extern.slf4j.Slf4j;
 
 import java.net.Authenticator;

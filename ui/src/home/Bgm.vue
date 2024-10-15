@@ -14,14 +14,15 @@
         <el-table-column prop="id" label="id" width="80"/>
         <el-table-column label="封面" width="120">
           <template #default="it">
-            <img :src="img(list[it.$index]['images']['small'])" :alt="list[it.$index]['name']" height="100px" width="78px">
+            <img :src="img(list[it.$index]['images']['small'])" :alt="list[it.$index]['name']" height="100px"
+                 width="78px">
           </template>
         </el-table-column>
         <el-table-column prop="name_cn" label="名称" width="200"/>
         <el-table-column prop="url" label="url" width="200"/>
         <el-table-column>
           <template #default="it">
-            <el-button bg text @click="ok(list[it.$index])" >选择</el-button>
+            <el-button bg text @click="ok(list[it.$index])">选择</el-button>
           </template>
         </el-table-column>
       </el-table>
