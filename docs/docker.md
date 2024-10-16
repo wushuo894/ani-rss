@@ -23,6 +23,8 @@ ps: 如果需要开启 文件已下载自动跳过 功能 请确保 qBittorrent 
 
 ### 视频教程
 
+[阿里云盘](https://www.alipan.com/s/eqt2XLZJThu)
+
 <iframe width="560" height="315" src="https://www.youtube.com/embed/y9-mgvnSnxs?si=CCz_58LaZu3mbpr5" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
 
 ### Docker 部署
