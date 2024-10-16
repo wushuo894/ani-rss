@@ -1,5 +1,17 @@
 ## 常见问题
 
+### Windows 端口被占用
+
+BindException: Address already in use: bind
+
+可能是 Hyper-V 随机占用端口导致的
+
+可通过创建快捷方式并添加参数修改端口号
+
+    --port [端口号 如 13888]
+
+![PixPin_2024-10-17_03-37-35.png](image/PixPin_2024-10-17_03-37-35.png)
+
 ### qBittorrent 未配置完成
 
     是否已配置下载器的 地址、用户名、密码 和 下载位置
