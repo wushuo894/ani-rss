@@ -1,1 +1,1 @@
-增加 trackers 自动更新
+优化trackers更新
