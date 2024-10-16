@@ -1,20 +1,23 @@
 package ani.rss.list;
 
+import ani.rss.entity.Config;
+import ani.rss.util.ConfigUtil;
+
 import java.util.LinkedList;
 
 public class FixedSizeLinkedList<T> extends LinkedList<T> {
-    private final int maxSize;
 
-    public FixedSizeLinkedList(int maxSize) {
+    public FixedSizeLinkedList() {
         super();
-        this.maxSize = maxSize;
     }
 
     @Override
     public boolean add(T t) {
         boolean r = super.add(t);
-        if (size() > maxSize) {
-            removeRange(0, size() - maxSize);
+        Config config = ConfigUtil.CONFIG;
+        int logsMax = config.getLogsMax();
+        if (size() > logsMax) {
+            removeRange(0, size() - logsMax);
         }
         return r;
     }

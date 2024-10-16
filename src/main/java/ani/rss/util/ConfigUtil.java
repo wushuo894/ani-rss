@@ -51,6 +51,7 @@ public class ConfigUtil {
                 .setQbUseDownloadPath(false)
                 .setSkip5(true)
                 .setBackRss(false)
+                .setLogsMax(2048)
                 .setDebug(false)
                 .setProxy(false)
                 .setProxyHost("")

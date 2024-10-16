@@ -32,7 +32,7 @@ import java.util.Objects;
 @Slf4j
 public class LogUtil {
 
-    public static final List<Log> LOGS = Collections.synchronizedList(new FixedSizeLinkedList<>(2048));
+    public static final List<Log> LOGS = Collections.synchronizedList(new FixedSizeLinkedList<>());
 
     public static void loadLogback() {
         Config config = ConfigUtil.CONFIG;
