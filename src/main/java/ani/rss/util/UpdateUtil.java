@@ -59,7 +59,6 @@ public class UpdateUtil {
 
     public static void update(About about) {
         Boolean update = about.getUpdate();
-        String latest = about.getLatest();
         if (!update) {
             return;
         }
