@@ -55,7 +55,7 @@ public class UpdateTrackersTask implements Runnable {
         Class<Object> loadClass = ClassUtil.loadClass("ani.rss.download." + download);
         BaseDownload baseDownload = (BaseDownload) ReflectUtil.newInstance(loadClass);
         Boolean login = baseDownload.login(config);
-        Assert.isTrue(login, "下载器登录失败");
+        Assert.isTrue(login, "{} 登录失败", download);
         baseDownload.updateTrackers(trackers);
     }
 
