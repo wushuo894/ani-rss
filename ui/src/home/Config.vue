@@ -134,7 +134,9 @@ const config = ref({
   'serverChan': false,
   'serverChanType': '',
   'systemMsg': false,
-  'loginEffectiveHours': 3
+  'loginEffectiveHours': 3,
+  'trackersUpdateUrls': '',
+  'autoTrackersUpdate': false
 })
 
 const activeName = ref('download')

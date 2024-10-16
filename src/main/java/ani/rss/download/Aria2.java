@@ -5,6 +5,7 @@ import ani.rss.entity.Item;
 import ani.rss.entity.TorrentsInfo;
 import ani.rss.util.HttpReq;
 import cn.hutool.core.codec.Base64;
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.resource.ResourceUtil;
 import cn.hutool.core.text.StrFormatter;
@@ -19,6 +20,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -119,7 +121,7 @@ public class Aria2 implements BaseDownload {
         }
 
         if ("txt".equals(extName)) {
-            body = ResourceUtil.readUtf8Str("aria2/aria2.addUri.json");
+            body = ResourceUtil.readUtf8Str("aria2/addUri.json");
             body = StrFormatter.format(body, password, FileUtil.readUtf8String(torrentFile), savePath);
         } else {
             body = ResourceUtil.readUtf8Str("aria2/addTorrent.json");
@@ -196,5 +198,24 @@ public class Aria2 implements BaseDownload {
     @Override
     public Boolean addTags(TorrentsInfo torrentsInfo, String tags) {
         return false;
+    }
+
+    @Override
+    public void updateTrackers(Set<String> trackers) {
+        String trackersStr = CollUtil.join(trackers, "\\n");
+        String host = config.getHost();
+        String password = config.getPassword();
+        String body = ResourceUtil.readUtf8Str("aria2/changeGlobalOption.json");
+        body = StrFormatter.format(body, password, trackersStr);
+
+        HttpReq.post(host + "/jsonrpc", false)
+                .body(body)
+                .then(res -> {
+                    if (res.isOk()) {
+                        log.info("Aria2 更新Trackers完成 共{}条", trackers.size());
+                        return;
+                    }
+                    log.error("Aria2 更新Trackers失败 {}", res.getStatus());
+                });
     }
 }
