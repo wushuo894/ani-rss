@@ -1,0 +1,11 @@
+{
+  "jsonrpc": "2.0",
+  "method": "aria2.changeGlobalOption",
+  "id": "qwer",
+  "params": [
+    "token:{}",
+    {
+      "bt-tracker": "{}"
+    }
+  ]
+}

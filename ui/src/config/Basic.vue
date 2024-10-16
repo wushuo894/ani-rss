@@ -144,7 +144,29 @@
           </el-form-item>
         </el-form>
       </el-collapse-item>
-      <el-collapse-item title="其他" name="5">
+      <el-collapse-item name="5" title="Trackers">
+        <el-form label-width="auto">
+          <el-form-item label="trackers更新地址">
+            <div style="width: 100%">
+              <div>
+                <el-input v-model:model-value="props.config.trackersUpdateUrls" placeholder="换行输入多个"
+                          style="width: 100%" type="textarea"/>
+              </div>
+              <div style="height: 12px;"/>
+              <div style="display: flex;justify-content: space-between;">
+                <el-checkbox v-model:model-value="props.config.autoTrackersUpdate" label="每天1:00自动更新"/>
+                <el-button :loading="trackersUpdateLoading" bg text @click="trackersUpdate">更新</el-button>
+              </div>
+              <div>
+                <el-text class="mx-1" size="small">
+                  该功能暂不支持 Transmission
+                </el-text>
+              </div>
+            </div>
+          </el-form-item>
+        </el-form>
+      </el-collapse-item>
+      <el-collapse-item name="6" title="其他">
         <el-form label-width="auto">
           <el-form-item label="Mikan">
             <el-input v-model:model-value="props.config.mikanHost" placeholder="https://mikanime.tv"/>
@@ -182,10 +204,24 @@
 </template>
 
 <script setup>
-import {ElText} from "element-plus";
+import {ElMessage, ElText} from "element-plus";
 import {ref} from "vue";
+import api from "../api.js";
 
 let activeName = ref('1')
+
+let trackersUpdateLoading = ref(false)
+
+let trackersUpdate = () => {
+  trackersUpdateLoading.value = true
+  api.post('api/trackersUpdate', props.config)
+      .then(res => {
+        ElMessage.success(res.message);
+      })
+      .finally(() => {
+        trackersUpdateLoading.value = false
+      })
+}
 
 let props = defineProps(['config'])
 </script>

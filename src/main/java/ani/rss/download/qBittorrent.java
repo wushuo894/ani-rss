@@ -6,6 +6,7 @@ import ani.rss.entity.TorrentsInfo;
 import ani.rss.enums.StringEnum;
 import ani.rss.util.ExceptionUtil;
 import ani.rss.util.HttpReq;
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.thread.ThreadUtil;
@@ -22,6 +23,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Slf4j
 public class qBittorrent implements BaseDownload {
@@ -225,6 +227,32 @@ public class qBittorrent implements BaseDownload {
                 .form("hashes", hash)
                 .form("tags", tags)
                 .thenFunction(HttpResponse::isOk);
+    }
+
+    @Override
+    public void updateTrackers(Set<String> trackers) {
+        String host = config.getHost();
+        JsonObject preferences = HttpReq.get(host + "/api/v2/app/preferences", false)
+                .thenFunction(res -> {
+                    int status = res.getStatus();
+                    boolean ok = res.isOk();
+                    Assert.isTrue(ok, "更新trackers失败 {}", status);
+                    String body = res.body();
+                    return gson.fromJson(body, JsonObject.class);
+                });
+
+        preferences.addProperty("add_trackers", CollUtil.join(trackers, "\\n"));
+
+        HttpReq.post(host + "/api/v2/app/setPreferences", false)
+                .form("json", gson.toJson(preferences))
+                .then(res -> {
+                    if (res.isOk()) {
+                        log.info("qBittorrent 更新Trackers完成 共{}条", trackers.size());
+                        return;
+                    }
+                    log.error("qBittorrent 更新Trackers失败 {}", res.getStatus());
+                });
+
     }
 
 

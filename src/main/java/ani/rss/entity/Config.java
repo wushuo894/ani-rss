@@ -349,4 +349,14 @@ public class Config implements Serializable {
      * 系统通知
      */
     private Boolean systemMsg;
+
+    /**
+     * 自动更新 trackers
+     */
+    private Boolean autoTrackersUpdate;
+
+    /**
+     * Trackers更新地址
+     */
+    private String trackersUpdateUrls;
 }

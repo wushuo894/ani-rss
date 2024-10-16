@@ -109,7 +109,8 @@ public class ConfigUtil {
                 .setServerChan(false)
                 .setServerChanType("")
                 .setServerChanSendKey("")
-                .setSystemMsg(false);
+                .setSystemMsg(false)
+                .setTrackersUpdateUrls("https://cf.trackerslist.com/all.txt\nhttps://cdn.jsdelivr.net/gh/DeSireFire/animeTrackerList/AT_all.txt");
     }
 
     private static final Gson GSON = new GsonBuilder()
