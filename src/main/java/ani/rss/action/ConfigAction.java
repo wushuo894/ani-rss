@@ -101,7 +101,6 @@ public class ConfigAction implements BaseAction {
             TorrentUtil.load();
         }
 
-
         resultSuccessMsg("修改成功");
     }
 }

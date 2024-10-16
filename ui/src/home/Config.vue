@@ -82,6 +82,7 @@ const config = ref({
   'titleYear': false,
   'autoDisabled': false,
   'skip5': true,
+  'logsMax': 2048,
   'debug': false,
   'proxy': false,
   'proxyHost': '',
