@@ -20,7 +20,7 @@
         <el-input v-model:model-value="props.config.username" placeholder="username"></el-input>
       </el-form-item>
       <el-form-item label="密码">
-        <el-input show-password v-model:model-value="props.config.password" placeholder="password"></el-input>
+        <el-input v-model:model-value="props.config.password" placeholder="password" show-password/>
       </el-form-item>
     </template>
     <el-form-item label="RPC 密钥" v-else>
@@ -40,7 +40,11 @@
     </el-form-item>
     <el-form-item label="自动删除">
       <div>
-        <el-switch v-model:model-value="props.config.delete"></el-switch>
+        <el-switch v-model:model-value="props.config.delete"/>
+        <br>
+        <el-checkbox v-model:model-value="props.config.awaitStalledUP"
+                     :disabled="!props.config.delete"
+                     label="等待做种完毕"/>
         <br>
         <el-text class="mx-1" size="small">
           自动删除已完成的任务, 不会删除本地文件
@@ -51,7 +55,7 @@
     </el-form-item>
     <el-form-item label="拼音首字母">
       <div>
-        <el-switch v-model:model-value="props.config.acronym" :disabled="props.config.quarter"></el-switch>
+        <el-switch v-model:model-value="props.config.acronym" :disabled="props.config.quarter"/>
         <br>
         <el-text class="mx-1" size="small">
           存放到 #,0,A-Z 文件夹下
@@ -69,9 +73,9 @@
     </el-form-item>
     <el-form-item label="同时下载数量限制">
       <div>
-        <el-input-number v-model:model-value="props.config.downloadCount" min="0"></el-input-number>
+        <el-input-number v-model:model-value="props.config.downloadCount" min="0"/>
         <div>
-          设置为时 0 不做限制, 在 做种 完成后添加新任务
+          设置为时 0 不做限制
         </div>
       </div>
     </el-form-item>

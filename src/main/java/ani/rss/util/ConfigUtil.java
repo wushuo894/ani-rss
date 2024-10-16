@@ -35,6 +35,7 @@ public class ConfigUtil {
                 .setRss(true)
                 .setWatchErrorTorrent(true)
                 .setFileExist(false)
+                .setAwaitStalledUP(true)
                 .setDelete(false)
                 .setOffset(false)
                 .setTitleYear(false)

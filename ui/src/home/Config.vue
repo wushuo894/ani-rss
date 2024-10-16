@@ -76,6 +76,7 @@ const config = ref({
   'downloadPath': '',
   'ovaDownloadPath': '',
   'fileExist': true,
+  'awaitStalledUP': true,
   'delete': false,
   'offset': false,
   'acronym': false,
