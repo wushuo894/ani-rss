@@ -473,6 +473,12 @@ public class TorrentUtil {
         if ("Season 1".equals(seasonName)) {
             seasonFileName = StrFormatter.format("Season {}", season);
         }
+        if ("Season 01".equals(seasonName)) {
+            seasonFileName = StrFormatter.format("Season {}", String.format("%02d", season));
+        }
+        if ("S1".equals(seasonName)) {
+            seasonFileName = StrFormatter.format("S{}", season);
+        }
         if ("S01".equals(seasonName)) {
             seasonFileName = StrFormatter.format("S{}", String.format("%02d", season));
         }
