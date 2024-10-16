@@ -9,9 +9,12 @@ import cn.hutool.core.util.ClassUtil;
 import cn.hutool.core.util.ReflectUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.cron.CronUtil;
+import cn.hutool.http.ContentType;
+import cn.hutool.http.Header;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -34,17 +37,29 @@ public class UpdateTrackersTask implements Runnable {
 
         for (String url : urls) {
             log.info("获取 tracker {}", url);
-            HttpReq.get(url)
+            HttpReq.get(url, true)
                     .then(res -> {
                         int status = res.getStatus();
                         boolean ok = res.isOk();
-                        Assert.isTrue(ok, "更新trackers失败 {}", status);
+                        Assert.isTrue(ok, "更新trackers失败 {} {}", status, url);
+                        String contentType = res.header(Header.CONTENT_TYPE);
+                        Assert.notBlank(contentType, "更新trackers失败 contentType 为空 {}", url);
+                        Assert.isTrue(contentType.contains(ContentType.TEXT_PLAIN.name()), "更新trackers失败 {} {}", contentType, url);
 
                         String body = res.body();
                         StrUtil.split(body, "\n")
                                 .stream()
                                 .filter(StrUtil::isNotBlank)
                                 .map(s -> s.replace("\"", ""))
+                                .map(String::trim)
+                                .filter(s -> {
+                                    for (String string : List.of("udp://", "wss://", "ws://", "https://", "http://")) {
+                                        if (s.startsWith(string)) {
+                                            return true;
+                                        }
+                                    }
+                                    return false;
+                                })
                                 .forEach(trackers::add);
                     });
         }
