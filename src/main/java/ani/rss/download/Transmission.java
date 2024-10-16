@@ -25,6 +25,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -245,5 +246,10 @@ public class Transmission implements BaseDownload {
                 .header("X-Transmission-Session-Id", sessionId)
                 .body(body)
                 .thenFunction(HttpResponse::isOk);
+    }
+
+    @Override
+    public void updateTrackers(Set<String> trackers) {
+        log.info("Transmission暂时还不支持 自动更新Trackers");
     }
 }

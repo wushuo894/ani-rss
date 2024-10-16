@@ -12,6 +12,7 @@ import com.google.gson.GsonBuilder;
 
 import java.io.File;
 import java.util.List;
+import java.util.Set;
 
 public interface BaseDownload {
     Gson gson = new GsonBuilder()
@@ -64,6 +65,11 @@ public interface BaseDownload {
     void rename(TorrentsInfo torrentsInfo);
 
     Boolean addTags(TorrentsInfo torrentsInfo, String tags);
+
+    /**
+     * 自动更新 Trackers
+     */
+    void updateTrackers(Set<String> trackers);
 
     default String getFileReName(String name, String reName) {
         String ext = FileUtil.extName(name);
