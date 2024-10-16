@@ -14,7 +14,7 @@
 
 运行后 **右下角会出现托盘** 可通过其打开浏览器
 
-开机自启动:
+#### 开机自启动
 
     将 ani-rss-launcher.exe 创建快捷方式
     将快捷方式移动到 C:\ProgramData\Microsoft\Windows\Start Menu\Programs\Startup
