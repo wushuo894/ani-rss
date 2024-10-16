@@ -641,6 +641,7 @@ public class TorrentUtil {
     public static synchronized void delete(TorrentsInfo torrentsInfo) {
         Config config = ConfigUtil.CONFIG;
         Boolean delete = config.getDelete();
+        Boolean awaitStalledUP = config.getAwaitStalledUP();
 
         TorrentsInfo.State state = torrentsInfo.getState();
         String name = torrentsInfo.getName();
@@ -648,12 +649,26 @@ public class TorrentUtil {
         if (Objects.isNull(state)) {
             return;
         }
-        if (!List.of(
-                TorrentsInfo.State.pausedUP.name(),
-                TorrentsInfo.State.stoppedUP.name()
-        ).contains(state.name())) {
-            return;
+
+        // 是否等待做种完毕
+        if (awaitStalledUP) {
+            if (!List.of(
+                    TorrentsInfo.State.pausedUP.name(),
+                    TorrentsInfo.State.stoppedUP.name()
+            ).contains(state.name())) {
+                return;
+            }
+        } else {
+            if (!List.of(
+                    TorrentsInfo.State.uploading.name(),
+                    TorrentsInfo.State.stalledUP.name(),
+                    TorrentsInfo.State.pausedUP.name(),
+                    TorrentsInfo.State.stoppedUP.name()
+            ).contains(state.name())) {
+                return;
+            }
         }
+
 
         if (delete) {
             log.info("删除已完成任务 {}", name);
