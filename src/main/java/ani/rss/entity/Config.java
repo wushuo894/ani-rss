@@ -91,6 +91,11 @@ public class Config implements Serializable {
     private Boolean fileExist;
 
     /**
+     * 等待做种完毕
+     */
+    private Boolean awaitStalledUP;
+
+    /**
      * 自动删除已完成任务
      */
     private Boolean delete;
