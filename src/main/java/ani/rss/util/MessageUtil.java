@@ -56,8 +56,12 @@ public class MessageUtil {
                 SERVICE_MAP.put(name, executor);
             }
 
-            Message message = (Message) ReflectUtil.newInstance(aClass);
-            executor.execute(() -> message.send(config, ani, messageEnum, text));
+            try {
+                Message message = (Message) ReflectUtil.newInstance(aClass);
+                executor.execute(() -> message.send(config, ani, messageEnum, text));
+            } catch (Exception e) {
+                log.error(e.getMessage(), e);
+            }
         }
     }
 }
