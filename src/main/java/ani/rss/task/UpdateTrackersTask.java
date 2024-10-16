@@ -44,7 +44,7 @@ public class UpdateTrackersTask implements Runnable {
                         Assert.isTrue(ok, "更新trackers失败 {} {}", status, url);
                         String contentType = res.header(Header.CONTENT_TYPE);
                         Assert.notBlank(contentType, "更新trackers失败 contentType 为空 {}", url);
-                        Assert.isTrue(contentType.contains(ContentType.TEXT_PLAIN.name()), "更新trackers失败 {} {}", contentType, url);
+                        Assert.isTrue(contentType.contains(ContentType.TEXT_PLAIN.getValue()), "更新trackers失败 {} {}", contentType, url);
 
                         String body = res.body();
                         StrUtil.split(body, "\n")
