@@ -131,6 +131,11 @@ public class Config implements Serializable {
     private Boolean backRss;
 
     /**
+     * 最大日志条数
+     */
+    private Integer logsMax;
+
+    /**
      * DEBUG
      */
     private Boolean debug;
