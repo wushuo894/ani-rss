@@ -25,12 +25,12 @@ public class RenameTask extends Thread {
     public void run() {
         super.setName("rename-task-thread");
         Config config = ConfigUtil.CONFIG;
-        Integer renameSleep = config.getRenameSleep();
+        double renameSleep = config.getRenameSleep();
 
         log.info("{} 当前设置间隔为 {} 分钟", getName(), renameSleep);
         while (loop.get()) {
             if (!TorrentUtil.login()) {
-                ThreadUtil.sleep(renameSleep, TimeUnit.MINUTES);
+                ThreadUtil.sleep(renameSleep * TimeUnit.MINUTES.toMillis(1));
                 continue;
             }
             try {
@@ -47,7 +47,7 @@ public class RenameTask extends Thread {
                 String message = ExceptionUtil.getMessage(e);
                 log.error(message, e);
             }
-            ThreadUtil.sleep(renameSleep, TimeUnit.MINUTES);
+            ThreadUtil.sleep(renameSleep * TimeUnit.MINUTES.toMillis(1));
         }
         log.info("{} 任务已停止", getName());
     }

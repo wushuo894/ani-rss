@@ -73,7 +73,7 @@ public class Config implements Serializable {
     /**
      * 重命名间隔(分钟)
      */
-    private Integer renameSleep;
+    private Double renameSleep;
 
     /**
      * 自动重命名
