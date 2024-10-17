@@ -23,6 +23,9 @@ import java.io.*;
 import java.net.URI;
 import java.util.function.Consumer;
 
+/**
+ * 文件
+ */
 @Slf4j
 @Auth(type = AuthType.FORM)
 @Path("/file")

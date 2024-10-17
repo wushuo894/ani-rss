@@ -3,7 +3,7 @@ package ani.rss.action;
 import ani.rss.annotation.Auth;
 import ani.rss.annotation.Path;
 import ani.rss.entity.Ani;
-import ani.rss.entity.BigInfo;
+import ani.rss.entity.BgmInfo;
 import ani.rss.entity.Config;
 import ani.rss.msg.Message;
 import ani.rss.util.AniUtil;
@@ -16,6 +16,9 @@ import cn.hutool.http.server.HttpServerResponse;
 
 import java.io.IOException;
 
+/**
+ * 通知
+ */
 @Auth
 @Path("/message")
 public class MessageAction implements BaseAction {
@@ -31,7 +34,7 @@ public class MessageAction implements BaseAction {
         Message message = (Message) ReflectUtil.newInstance(loadClass);
         Ani ani = new Ani();
         ani.setBgmUrl("https://bgm.tv/subject/424883");
-        BigInfo bgmInfo = BgmUtil.getBgmInfo(ani);
+        BgmInfo bgmInfo = BgmUtil.getBgmInfo(ani);
         String image = bgmInfo.getImage();
         ani.setCover(AniUtil.saveJpg(image));
         Boolean test = message.send(config, ani, null, "test");

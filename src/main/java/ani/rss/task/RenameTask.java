@@ -12,6 +12,9 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+/**
+ * 重命名
+ */
 @Slf4j
 public class RenameTask extends Thread {
 

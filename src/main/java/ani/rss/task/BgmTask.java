@@ -1,7 +1,7 @@
 package ani.rss.task;
 
 import ani.rss.entity.Ani;
-import ani.rss.entity.BigInfo;
+import ani.rss.entity.BgmInfo;
 import ani.rss.util.AniUtil;
 import ani.rss.util.BgmUtil;
 import ani.rss.util.ExceptionUtil;
@@ -13,6 +13,9 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+/**
+ * 用于更新BGM评分
+ */
 @Slf4j
 public class BgmTask extends Thread {
 
@@ -40,7 +43,7 @@ public class BgmTask extends Thread {
                 double score = ani.getScore();
                 if (enable || score < 1) {
                     try {
-                        BigInfo bgmInfo = BgmUtil.getBgmInfo(ani);
+                        BgmInfo bgmInfo = BgmUtil.getBgmInfo(ani);
                         score = bgmInfo.getScore();
                         ani.setScore(score);
                     } catch (Exception e) {

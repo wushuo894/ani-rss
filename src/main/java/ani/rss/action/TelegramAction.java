@@ -10,6 +10,9 @@ import cn.hutool.http.server.HttpServerResponse;
 import java.io.IOException;
 import java.util.Map;
 
+/**
+ * 电报
+ */
 @Auth
 @Path("/telegram")
 public class TelegramAction implements BaseAction {

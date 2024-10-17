@@ -5,6 +5,11 @@ import ani.rss.util.ConfigUtil;
 
 import java.util.LinkedList;
 
+/**
+ * 用于存放日志
+ *
+ * @param <T>
+ */
 public class FixedSizeLinkedList<T> extends LinkedList<T> {
 
     public FixedSizeLinkedList() {

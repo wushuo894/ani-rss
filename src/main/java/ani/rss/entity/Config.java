@@ -7,6 +7,9 @@ import lombok.experimental.Accessors;
 import java.io.Serializable;
 import java.util.List;
 
+/**
+ * 设置
+ */
 @Data
 @Accessors(chain = true)
 public class Config implements Serializable {

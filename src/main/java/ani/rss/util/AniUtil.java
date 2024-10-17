@@ -1,7 +1,7 @@
 package ani.rss.util;
 
 import ani.rss.entity.Ani;
-import ani.rss.entity.BigInfo;
+import ani.rss.entity.BgmInfo;
 import ani.rss.entity.Config;
 import ani.rss.entity.Item;
 import cn.hutool.core.bean.BeanUtil;
@@ -162,7 +162,7 @@ public class AniUtil {
         }
 
         try {
-            BigInfo bgmInfo = BgmUtil.getBgmInfo(ani, true);
+            BgmInfo bgmInfo = BgmUtil.getBgmInfo(ani, true);
 
             String nameCn = bgmInfo.getNameCn();
             String name = bgmInfo.getName();

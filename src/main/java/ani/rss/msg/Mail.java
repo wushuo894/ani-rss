@@ -14,6 +14,9 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
 
+/**
+ * 邮箱
+ */
 @Slf4j
 public class Mail implements Message {
     @Override

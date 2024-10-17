@@ -1,7 +1,7 @@
 package ani.rss.util;
 
 import ani.rss.entity.Ani;
-import ani.rss.entity.BigInfo;
+import ani.rss.entity.BgmInfo;
 import cn.hutool.cache.Cache;
 import cn.hutool.cache.CacheUtil;
 import cn.hutool.core.convert.Convert;
@@ -213,28 +213,28 @@ public class BgmUtil {
                 .thenFunction(HttpResponse::isOk);
     }
 
-    public static BigInfo getBgmInfo(Ani ani, Boolean isCache) {
+    public static BgmInfo getBgmInfo(Ani ani, Boolean isCache) {
         String subjectId = getSubjectId(ani);
         Assert.notBlank(subjectId);
         return getBgmInfo(subjectId, isCache);
     }
 
-    public static BigInfo getBgmInfo(Ani ani) {
+    public static BgmInfo getBgmInfo(Ani ani) {
         String subjectId = getSubjectId(ani);
         return getBgmInfo(subjectId);
     }
 
-    public static BigInfo getBgmInfo(String subjectId) {
+    public static BgmInfo getBgmInfo(String subjectId) {
         return getBgmInfo(subjectId, false);
     }
 
-    public static BigInfo getBgmInfo(String subjectId, Boolean isCache) {
-        Function<HttpResponse, BigInfo> fun = res -> {
+    public static BgmInfo getBgmInfo(String subjectId, Boolean isCache) {
+        Function<HttpResponse, BgmInfo> fun = res -> {
             Assert.isTrue(res.isOk(), "status: {}", res.getStatus());
             String body = res.body();
             Assert.isTrue(JSONUtil.isTypeJSON(body), "no json");
             JsonObject jsonObject = gson.fromJson(body, JsonObject.class);
-            BigInfo bigInfo = new BigInfo();
+            BgmInfo bgmInfo = new BgmInfo();
 
             String name = jsonObject.get("name").getAsString();
             String nameCn = jsonObject.get("name_cn").getAsString();
@@ -247,7 +247,7 @@ public class BgmUtil {
             if (Objects.nonNull(rating)) {
                 score = rating.get("score").getAsDouble();
             }
-            bigInfo
+            bgmInfo
                     .setSubjectId(subjectId)
                     .setNameCn(nameCn)
                     .setName(name)
@@ -258,7 +258,7 @@ public class BgmUtil {
 
             JsonObject images = jsonObject.getAsJsonObject("images");
             if (Objects.nonNull(images)) {
-                bigInfo.setImage(images.get("common").getAsString());
+                bgmInfo.setImage(images.get("common").getAsString());
             }
 
             Set<String> tags = jsonObject.getAsJsonArray("tags")
@@ -277,8 +277,8 @@ public class BgmUtil {
                 season = Convert.chineseToNumber(ReUtil.get(seasonReg, tag, 1));
             }
 
-            bigInfo.setSeason(season);
-            return bigInfo;
+            bgmInfo.setSeason(season);
+            return bgmInfo;
         };
 
         try {

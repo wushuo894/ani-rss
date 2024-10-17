@@ -15,6 +15,9 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
 
+/**
+ * 登录
+ */
 @Slf4j
 @Auth(value = false)
 @Path("/login")

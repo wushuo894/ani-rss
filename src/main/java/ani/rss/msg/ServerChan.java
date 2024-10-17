@@ -13,6 +13,9 @@ import org.jsoup.internal.StringUtil;
 import java.util.Map;
 import java.util.Objects;
 
+/**
+ * ServerChan
+ */
 @Slf4j
 public class ServerChan implements Message {
     private static final String MARKDOWN_STRING = "# <message>\n\n![<image>](<image>)";

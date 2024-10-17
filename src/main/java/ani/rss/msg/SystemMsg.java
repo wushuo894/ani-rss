@@ -9,6 +9,9 @@ import lombok.extern.slf4j.Slf4j;
 import java.awt.*;
 import java.util.Objects;
 
+/**
+ * SystemMsg
+ */
 @Slf4j
 public class SystemMsg implements Message {
     @Override
