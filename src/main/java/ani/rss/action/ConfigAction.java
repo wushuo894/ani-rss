@@ -37,7 +37,7 @@ public class ConfigAction implements BaseAction {
         Config config = ConfigUtil.CONFIG;
         Login login = config.getLogin();
         String password = login.getPassword();
-        Integer renameSleep = config.getRenameSleep();
+        Double renameSleep = config.getRenameSleep();
         Integer sleep = config.getSleep();
         String download = config.getDownload();
         BeanUtil.copyProperties(gson.fromJson(req.getBody(), Config.class), config);
@@ -88,7 +88,7 @@ public class ConfigAction implements BaseAction {
         config.setTelegramApiHost(telegramApiHost);
 
         ConfigUtil.sync();
-        Integer newRenameSleep = config.getRenameSleep();
+        Double newRenameSleep = config.getRenameSleep();
         Integer newSleep = config.getSleep();
 
         // 时间间隔发生改变，重启任务
