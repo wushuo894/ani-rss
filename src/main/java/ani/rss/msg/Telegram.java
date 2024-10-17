@@ -69,7 +69,11 @@ public class Telegram implements Message {
         return HttpReq.get(url, true)
                 .thenFunction(res -> {
                     JsonObject jsonObject = gson.fromJson(res.body(), JsonObject.class);
-                    jsonObject.get("result").getAsJsonArray()
+                    JsonElement result = jsonObject.get("result");
+                    if (Objects.isNull(result)) {
+                        return map;
+                    }
+                    result.getAsJsonArray()
                             .asList()
                             .stream()
                             .map(JsonElement::getAsJsonObject)
