@@ -112,7 +112,10 @@
               <el-input type="textarea" style="width: 100%" :disabled="!props.ani.customDownloadPath"
                         v-model:model-value="props.ani.downloadPath"/>
             </div>
-            <div style="display: flex;justify-content: end;">
+            <div style="display: flex;justify-content: space-between;margin-top: 6px;">
+              <el-button :disabled="!props.ani.customDownloadPath" :loading="downloadPathLoading" bg icon="Refresh"
+                         text
+                         @click="downloadPath"/>
               <el-text class="mx-1" size="small">
                 最终下载位置以 <strong>预览</strong> 为准
               </el-text>
@@ -227,6 +230,20 @@ let download = () => {
       })
       .finally(() => {
         downloadLoading.value = false
+      })
+}
+
+let downloadPathLoading = ref(false)
+let downloadPath = () => {
+  downloadPathLoading.value = true
+  let newAni = JSON.parse(JSON.stringify(props.ani))
+  newAni.customDownloadPath = false
+  api.post('api/downloadPath', newAni)
+      .then(res => {
+        props.ani.downloadPath = res.data
+      })
+      .finally(() => {
+        downloadPathLoading.value = false
       })
 }
 
