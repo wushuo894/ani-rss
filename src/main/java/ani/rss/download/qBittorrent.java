@@ -25,6 +25,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
+/**
+ * qBittorrent
+ */
 @Slf4j
 public class qBittorrent implements BaseDownload {
     private Config config;

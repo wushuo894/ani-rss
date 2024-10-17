@@ -31,6 +31,13 @@ public class MikanUtil {
         return mikanHost;
     }
 
+    /**
+     * 搜索mikan番剧列表
+     *
+     * @param text
+     * @param season
+     * @return
+     */
     public static Mikan list(String text, Mikan.Season season) {
         Set<String> bangumiIdSet = AniUtil.ANI_LIST.stream()
                 .map(AniUtil::getBangumiId)
@@ -125,6 +132,12 @@ public class MikanUtil {
                 });
     }
 
+    /**
+     * 获取番剧字幕组
+     *
+     * @param url
+     * @return
+     */
     public static List<Mikan.Group> getGroups(String url) {
         return HttpReq.get(url, true)
                 .thenFunction(res -> {

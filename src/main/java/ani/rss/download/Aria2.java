@@ -23,6 +23,9 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+/**
+ * Aria2
+ */
 @Slf4j
 public class Aria2 implements BaseDownload {
     private Config config;

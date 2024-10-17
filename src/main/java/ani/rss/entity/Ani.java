@@ -8,6 +8,9 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * 订阅
+ */
 @Data
 @Accessors(chain = true)
 public class Ani implements Serializable {

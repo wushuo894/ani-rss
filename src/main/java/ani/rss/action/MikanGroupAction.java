@@ -8,9 +8,12 @@ import cn.hutool.http.server.HttpServerResponse;
 
 import java.io.IOException;
 
+/**
+ * Mikan字幕组
+ */
 @Auth
 @Path("/mikan/group")
-public class GroupAction implements BaseAction {
+public class MikanGroupAction implements BaseAction {
     @Override
     public void doAction(HttpServerRequest request, HttpServerResponse response) throws IOException {
         String url = request.getParam("url");

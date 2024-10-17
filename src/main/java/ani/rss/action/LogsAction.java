@@ -11,6 +11,9 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
 
+/**
+ * 日志
+ */
 @Slf4j
 @Auth
 @Path("/logs")

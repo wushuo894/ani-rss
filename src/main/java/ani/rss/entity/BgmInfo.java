@@ -5,9 +5,12 @@ import lombok.experimental.Accessors;
 
 import java.time.LocalDateTime;
 
+/**
+ * Bgm番剧信息
+ */
 @Data
 @Accessors(chain = true)
-public class BigInfo {
+public class BgmInfo {
     private String subjectId;
 
     /**

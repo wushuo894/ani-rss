@@ -11,6 +11,9 @@ import cn.hutool.http.server.HttpServerResponse;
 
 import java.io.IOException;
 
+/**
+ * TMDB
+ */
 @Auth
 @Path("/tmdb")
 public class ThemoviedbAction implements BaseAction {

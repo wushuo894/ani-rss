@@ -15,6 +15,9 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 
+/**
+ * RSS
+ */
 @Slf4j
 public class RssTask extends Thread {
     public RssTask(AtomicBoolean loop) {

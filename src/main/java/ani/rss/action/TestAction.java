@@ -7,6 +7,9 @@ import cn.hutool.http.server.HttpServerResponse;
 
 import java.io.IOException;
 
+/**
+ * 测试登录是否有效
+ */
 @Auth
 @Path("/test")
 public class TestAction implements BaseAction {
