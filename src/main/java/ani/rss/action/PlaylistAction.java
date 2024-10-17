@@ -22,6 +22,9 @@ import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
 
+/**
+ * 视频列表
+ */
 @Auth
 @Path("/playlist")
 public class PlaylistAction implements BaseAction {

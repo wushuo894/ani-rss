@@ -32,6 +32,9 @@ import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 
+/**
+ * 订阅 增删改查
+ */
 @Auth
 @Slf4j
 @Path("/ani")

@@ -11,9 +11,12 @@ import cn.hutool.http.server.HttpServerResponse;
 
 import java.io.IOException;
 
+/**
+ * 测试下载工具
+ */
 @Auth
 @Path("/downloadLoginTest")
-public class DownloadAction implements BaseAction {
+public class DownloadTestAction implements BaseAction {
     @Override
     public void doAction(HttpServerRequest request, HttpServerResponse response) throws IOException {
         Config config = getBody(Config.class);

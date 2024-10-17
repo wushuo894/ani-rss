@@ -11,6 +11,9 @@ import cn.hutool.http.server.HttpServerRequest;
 
 import java.util.function.Function;
 
+/**
+ * api key 鉴权
+ */
 @Auth(type = AuthType.API_KEY)
 public class ApiKey implements Function<HttpServerRequest, Boolean> {
     @Override

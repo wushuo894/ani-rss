@@ -15,6 +15,9 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
+/**
+ * 关闭或重启
+ */
 @Slf4j
 @Auth
 @Path("/stop")

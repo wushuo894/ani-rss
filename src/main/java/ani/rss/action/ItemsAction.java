@@ -14,6 +14,9 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * 预览订阅
+ */
 @Auth
 @Path("/items")
 public class ItemsAction implements BaseAction {

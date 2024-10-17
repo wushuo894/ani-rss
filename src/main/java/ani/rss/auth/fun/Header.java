@@ -11,6 +11,9 @@ import cn.hutool.http.server.HttpServerRequest;
 
 import java.util.function.Function;
 
+/**
+ * 请求头鉴权
+ */
 @Auth(type = AuthType.HEADER)
 public class Header implements Function<HttpServerRequest, Boolean> {
     @Override

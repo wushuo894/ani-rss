@@ -5,6 +5,9 @@ import lombok.experimental.Accessors;
 
 import java.io.Serializable;
 
+/**
+ * 下载项
+ */
 @Data
 @Accessors(chain = true)
 public class Item implements Serializable {

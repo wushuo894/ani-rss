@@ -28,6 +28,9 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+/**
+ * Transmission
+ */
 @Slf4j
 public class Transmission implements BaseDownload {
     private String host = "";

@@ -24,6 +24,9 @@ import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+/**
+ * 鉴权工具
+ */
 @Slf4j
 public class AuthUtil {
     private static final MD5 MD5 = new MD5();
@@ -82,6 +85,11 @@ public class AuthUtil {
         return login;
     }
 
+    /**
+     * 获取ip地址
+     *
+     * @return
+     */
     public static String getIp() {
         try {
             HttpServerRequest request = ServerUtil.REQUEST.get();
@@ -94,6 +102,13 @@ public class AuthUtil {
         return "未知";
     }
 
+    /**
+     * 鉴权检测
+     *
+     * @param request
+     * @param authType
+     * @return
+     */
     public static Boolean test(HttpServerRequest request, AuthType authType) {
         synchronized (MAP) {
             if (MAP.isEmpty()) {

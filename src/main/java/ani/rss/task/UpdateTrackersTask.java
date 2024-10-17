@@ -18,6 +18,9 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+/**
+ * 更新Trackers
+ */
 @Slf4j
 public class UpdateTrackersTask implements Runnable {
     public static void start() {

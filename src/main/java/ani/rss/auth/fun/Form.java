@@ -9,6 +9,9 @@ import cn.hutool.http.server.HttpServerRequest;
 
 import java.util.function.Function;
 
+/**
+ * 表单鉴权
+ */
 @Auth(type = AuthType.FORM)
 public class Form implements Function<HttpServerRequest, Boolean> {
     @Override

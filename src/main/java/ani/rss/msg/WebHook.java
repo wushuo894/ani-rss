@@ -8,9 +8,14 @@ import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpResponse;
 import cn.hutool.http.Method;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.Objects;
 
+/**
+ * WebHook
+ */
+@Slf4j
 public class WebHook implements Message {
     @Override
     public Boolean send(Config config, Ani ani, MessageEnum messageEnum, String text) {
@@ -19,6 +24,7 @@ public class WebHook implements Message {
         String webHookBody = config.getWebHookBody();
 
         if (StrUtil.isBlank(webHookUrl)) {
+            log.warn("webhook url is blank");
             return false;
         }
 

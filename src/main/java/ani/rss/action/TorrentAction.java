@@ -17,6 +17,9 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Optional;
 
+/**
+ * 种子管理
+ */
 @Slf4j
 @Auth
 @Path("/torrent")

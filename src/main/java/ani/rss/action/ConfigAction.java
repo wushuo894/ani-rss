@@ -17,6 +17,9 @@ import cn.hutool.http.server.HttpServerResponse;
 import java.io.IOException;
 import java.util.Objects;
 
+/**
+ * 设置
+ */
 @Auth
 @Path("/config")
 public class ConfigAction implements BaseAction {

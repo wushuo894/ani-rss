@@ -9,6 +9,9 @@ import cn.hutool.http.server.HttpServerResponse;
 
 import java.io.IOException;
 
+/**
+ * Trackers
+ */
 @Auth
 @Path("/trackersUpdate")
 public class TrackersUpdateAction implements BaseAction {

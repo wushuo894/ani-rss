@@ -7,6 +7,9 @@ import cn.hutool.http.server.HttpServerRequest;
 import cn.hutool.http.server.HttpServerResponse;
 import lombok.extern.slf4j.Slf4j;
 
+/**
+ * 关于
+ */
 @Auth
 @Slf4j
 @Path("/about")
@@ -16,6 +19,5 @@ public class AboutAction implements BaseAction {
     public void doAction(HttpServerRequest req, HttpServerResponse res) {
         resultSuccess(UpdateUtil.about());
     }
-
 
 }

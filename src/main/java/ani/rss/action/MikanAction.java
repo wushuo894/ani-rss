@@ -9,6 +9,9 @@ import cn.hutool.http.server.HttpServerResponse;
 
 import java.io.IOException;
 
+/**
+ * Mikan搜索
+ */
 @Auth
 @Path("/mikan")
 public class MikanAction implements BaseAction {
