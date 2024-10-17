@@ -48,7 +48,8 @@
             <el-switch v-model:model-value="props.config.rename"/>
           </el-form-item>
           <el-form-item label="重命名间隔(分钟)">
-            <el-input-number v-model:model-value="props.config.renameSleep" min="1"
+            <el-input-number v-model:model-value="props.config.renameSleep" :step="0.5"
+                             min="0.5"
                              :disabled="!config.rename"/>
           </el-form-item>
           <el-form-item label="季命名方式">
