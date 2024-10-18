@@ -13,6 +13,7 @@ import cn.hutool.core.lang.Assert;
 import cn.hutool.core.text.StrFormatter;
 import cn.hutool.core.util.ReUtil;
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.util.URLUtil;
 import cn.hutool.crypto.digest.MD5;
 import cn.hutool.http.HttpResponse;
 import cn.hutool.http.HttpUtil;
@@ -309,7 +310,7 @@ public class AniUtil {
             return cover;
         }
         String filename = MD5.create().digestHex(coverUrl);
-        filename = filename.charAt(0) + "/" + filename + "." + FileUtil.extName(coverUrl);
+        filename = filename.charAt(0) + "/" + filename + "." + FileUtil.extName(URLUtil.getPath(coverUrl));
         FileUtil.mkdir(configDir + "/files/" + filename.charAt(0));
         File file = new File(configDir + "/files/" + filename);
         if (file.exists() && !isOverride) {
