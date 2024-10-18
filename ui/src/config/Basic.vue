@@ -198,6 +198,18 @@
           <el-form-item label="DEBUG">
             <el-switch v-model:model-value="props.config.debug"/>
           </el-form-item>
+          <el-form-item label="缓存">
+            <div style="width: 100%;">
+              <div>
+                <el-button :loading="clearCacheLoading" bg icon="Delete" text @click="clearCache">清理</el-button>
+              </div>
+              <div>
+                <el-text class="mx-1" size="small">
+                  清理现在不被使用的缓存
+                </el-text>
+              </div>
+            </div>
+          </el-form-item>
         </el-form>
       </el-collapse-item>
     </el-collapse>
@@ -221,6 +233,19 @@ let trackersUpdate = () => {
       })
       .finally(() => {
         trackersUpdateLoading.value = false
+      })
+}
+
+
+let clearCacheLoading = ref(false)
+let clearCache = () => {
+  clearCacheLoading.value = true
+  api.post('api/clearCache')
+      .then(res => {
+        ElMessage.success(res.message);
+      })
+      .finally(() => {
+        clearCacheLoading.value = false
       })
 }
 
