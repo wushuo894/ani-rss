@@ -23,17 +23,20 @@
                     <div style="flex-grow: 1;position: relative;">
                       <div style="margin-left: 10px;">
                         <el-tooltip :content="item.title" placement="top">
-                          <div style="
-                            column-count: 1;
-                            overflow: hidden;
-                            white-space: nowrap;
-                            text-overflow: ellipsis;
-                            width: 200px;
-                            font-size: 0.97em;
-                            line-height: 1.6;
-                            font-weight: 500;
-                            hyphens: auto;
-                            letter-spacing: .0125em;">
+                          <div
+                              style="
+                              cursor: pointer;
+                              column-count: 1;
+                              overflow: hidden;
+                              white-space: nowrap;
+                              text-overflow: ellipsis;
+                              width: 200px;
+                              font-size: 0.97em;
+                              line-height: 1.6;
+                              font-weight: 500;
+                              hyphens: auto;
+                              letter-spacing: .0125em;"
+                              @click="openBgmUrl(item)">
                             {{ item.title }}
                           </div>
                         </el-tooltip>
