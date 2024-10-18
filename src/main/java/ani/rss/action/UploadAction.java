@@ -25,8 +25,8 @@ public class UploadAction implements BaseAction {
     public void doAction(HttpServerRequest request, HttpServerResponse response) throws IOException {
         MultipartFormData multipart = request.getMultipart();
         UploadFile file = multipart.getFile("file");
-        if (file.size() > 1024 * 1024) {
-            resultErrorMsg("文件大小超过 1M");
+        if (file.size() > 1024 * 1024 * 50) {
+            resultErrorMsg("文件大小超过 50M");
             return;
         }
         byte[] fileContent = file.getFileContent();

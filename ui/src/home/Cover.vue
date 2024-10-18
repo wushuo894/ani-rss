@@ -14,40 +14,40 @@
         <el-form label-width="auto">
           <el-form-item label="URL">
             <div style="width: 100%">
-              <div>
-                <el-input v-model:model-value="ani.image" label="图片链接"/>
-              </div>
-              <div style="width: 100%;display: flex;justify-content: end;margin-top: 8px;">
+              <div style="width: 100%;display: flex;">
+                <el-input v-model:model-value="ani.image" placeholder="https://lain.bgm.tv/pic/cover/1234.jpg"/>
+                <div style="width: 8px;"/>
                 <el-button :disabled="!ani.image" :loading="reLoadIng" bg icon="Refresh" text @click="reLoad"/>
+              </div>
+              <div style="margin-top: 8px;">
+                <el-upload
+                    :action="`api/upload?s${authorization()}`"
+                    :before-upload="beforeAvatarUpload"
+                    :on-success="res => {
+                      ani['cover'] = res.data.data
+                      time = new Date().getTime()
+                    }"
+                    :show-file-list="false"
+                    class="upload-demo"
+                    drag
+                    multiple
+                >
+                  <el-icon class="el-icon--upload">
+                    <upload-filled/>
+                  </el-icon>
+                  <div class="el-upload__text">
+                    在这里拖放文件或<em>点击上传</em>
+                  </div>
+                  <template #tip>
+                    <div class="el-upload__tip" style="display: flex;justify-content: end;">
+                      jpg / png 文件小于 1M
+                    </div>
+                  </template>
+                </el-upload>
               </div>
             </div>
           </el-form-item>
         </el-form>
-        <div>
-          <el-upload
-              :action="`api/upload?s${authorization()}`"
-              :on-success="res => {
-              ani['cover'] = res.data.data
-              time = new Date().getTime()
-            }"
-              :show-file-list="false"
-              class="upload-demo"
-              drag
-              multiple
-          >
-            <el-icon class="el-icon--upload">
-              <upload-filled/>
-            </el-icon>
-            <div class="el-upload__text">
-              在这里拖放文件或<em>点击上传</em>
-            </div>
-            <template #tip>
-              <div class="el-upload__tip">
-                jpg/png 文件小于 1M
-              </div>
-            </template>
-          </el-upload>
-        </div>
       </div>
     </div>
     <div style="display: flex;justify-content: end;">
@@ -103,6 +103,18 @@ let ok = () => {
       .finally(() => {
         okLoading.value = false
       })
+}
+
+const beforeAvatarUpload = (rawFile) => {
+  if (!['image/jpeg', 'image/png'].includes(rawFile.type)) {
+    ElMessage.error('Avatar picture must be JPG/PNG format!')
+    return false
+  }
+  if (rawFile.size / 1024 / 1024 > 1) {
+    ElMessage.error('Avatar picture size can not exceed 1MB!')
+    return false
+  }
+  return true
 }
 
 defineExpose({show})
