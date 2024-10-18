@@ -8,12 +8,12 @@
     ani.bgmUrl = it.url
   }"/>
   <el-dialog v-model="dialogVisible" title="添加订阅" center v-if="dialogVisible">
-    <div v-if="showRss" @keydown.enter="getRss">
+    <div v-if="showRss">
       <el-tabs tab-position="left" v-model="activeName">
         <el-tab-pane label="Mikan" name="mikan">
           <el-form label-width="auto"
                    style="height: 260px"
-                   v-if="showRss" @keydown.enter="getRss"
+                   v-if="showRss"
                    @submit="(event)=>{
                 event.preventDefault()
              }">
@@ -42,7 +42,7 @@
         <el-tab-pane label="Nyaa" name="nyaa">
           <el-form label-width="auto"
                    style="height: 200px"
-                   v-if="showRss" @keydown.enter="getRss"
+                   v-if="showRss"
                    @submit="(event)=>{
                 event.preventDefault()
              }">
@@ -76,7 +76,7 @@
         <el-tab-pane label="Dmhy" name="dmhy">
           <el-form label-width="auto"
                    style="height: 200px"
-                   v-if="showRss" @keydown.enter="getRss"
+                   v-if="showRss"
                    @submit="(event)=>{
                 event.preventDefault()
              }">

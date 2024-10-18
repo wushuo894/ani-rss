@@ -1,6 +1,7 @@
 <template>
-  <Edit ref="edit" @load="getList"/>
+  <Edit ref="refEdit" @load="getList"/>
   <PlayList ref="playList"/>
+  <Cover ref="refCover" @load="getList"/>
   <div style="height: 100%;overflow: hidden;">
     <el-scrollbar>
       <div style="margin: 0 10px;min-height: 500px" v-loading="loading">
@@ -16,8 +17,8 @@
                     <div style="height: 100%;">
                       <img :src="`api/file?filename=${item['cover']}&s=${authorization()}`" height="130" width="92"
                            :alt="item.title"
-                           @click="openBgmUrl(item)"
-                           style="border-radius: 4px;cursor: pointer;">
+                           style="border-radius: 4px;cursor: pointer;"
+                           @click="refCover?.show(item)"/>
                     </div>
                     <div style="flex-grow: 1;position: relative;">
                       <div style="margin-left: 10px;">
@@ -103,7 +104,7 @@
                           </el-icon>
                         </el-button>
                         <div style="height: 5px;" v-if="showPlaylist"></div>
-                        <el-button text @click="edit?.show(item)" bg>
+                        <el-button bg text @click="refEdit?.show(item)">
                           <el-icon>
                             <EditIcon/>
                           </el-icon>
@@ -163,6 +164,7 @@ import Edit from "./Edit.vue";
 import api from "../api.js";
 import Popconfirm from "../other/Popconfirm.vue";
 import PlayList from "../play/PlayList.vue";
+import Cover from "./Cover.vue";
 
 
 const weekList = ref([
@@ -197,12 +199,13 @@ const weekList = ref([
 )
 
 const pagerCount = ref(10)
-const edit = ref()
+const refEdit = ref()
 const pageSize = ref(40)
 const loading = ref(true)
 const playList = ref()
 const scoreShow = ref(false)
 const showPlaylist = ref(false)
+const refCover = ref()
 
 const searchList = (week) => {
   const text = props.title.trim()
