@@ -10,6 +10,7 @@ import cn.hutool.core.codec.Base64;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.resource.ResourceUtil;
+import cn.hutool.core.lang.Assert;
 import cn.hutool.core.text.StrFormatter;
 import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.core.util.ReUtil;
@@ -229,11 +230,8 @@ public class Transmission implements BaseDownload {
                 .header("X-Transmission-Session-Id", sessionId)
                 .body(body)
                 .thenFunction(HttpResponse::isOk);
-        if (ok) {
-            renameCache.remove(hash);
-            return;
-        }
-        log.error("重命名失败 {} ==> {}", name, reName);
+        Assert.isTrue(ok, "重命名失败 {} ==> {}", name, reName);
+        renameCache.remove(hash);
     }
 
     @Override
