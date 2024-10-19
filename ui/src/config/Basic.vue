@@ -25,6 +25,15 @@
           <el-form-item label="自动推断剧集偏移">
             <el-switch v-model:model-value="props.config.offset"/>
           </el-form-item>
+          <el-form-item label="TMDB ID">
+            <div>
+              <el-switch v-model:model-value="props.config.tmdbId"/>
+              <br>
+              <el-text class="mx-1" size="small">
+                自动获取tmdbId, 如: 女仆冥土小姐。 [tmdbid=242143]
+              </el-text>
+            </div>
+          </el-form-item>
           <el-form-item label="TMDB标题">
             <div>
               <el-switch v-model:model-value="props.config.tmdb"/>
@@ -81,6 +90,24 @@
                   <br>
                   否则可能会出现 备用rss 洗版到 主rss 时出现错误 (点名 windows)
                 </strong>
+              </el-text>
+            </div>
+          </el-form-item>
+          <el-form-item label="剔除年份">
+            <div>
+              <el-switch v-model:model-value="props.config.renameDelYear"/>
+              <br>
+              <el-text class="mx-1" size="small">
+                重命名时 ${title} 剔除 年份, 如 (2024)
+              </el-text>
+            </div>
+          </el-form-item>
+          <el-form-item label="剔除TMDB ID">
+            <div>
+              <el-switch v-model:model-value="props.config.renameDelTmdbId"/>
+              <br>
+              <el-text class="mx-1" size="small">
+                重命名时 ${title} 剔除 tmdbid, 如 [tmdbid=242143]
               </el-text>
             </div>
           </el-form-item>

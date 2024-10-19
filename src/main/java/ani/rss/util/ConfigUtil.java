@@ -86,6 +86,7 @@ public class ConfigUtil {
                 .setTelegramImage(true)
                 .setWebHook(false)
                 .setTmdb(false)
+                .setTmdbId(false)
                 .setIpWhitelist(false)
                 .setIpWhitelistStr("")
                 .setWebHookBody("")
@@ -101,6 +102,8 @@ public class ConfigUtil {
                 .setDownloadNew(false)
                 .setInnerIP(false)
                 .setRenameTemplate("${title} S${seasonFormat}E${episodeFormat}")
+                .setRenameDelYear(false)
+                .setRenameDelTmdbId(false)
                 .setMessageList(List.of(
                         MessageEnum.DOWNLOAD_START,
                         MessageEnum.OMIT,

@@ -1,5 +1,6 @@
 package ani.rss.util;
 
+import ani.rss.entity.Config;
 import cn.hutool.core.text.StrFormatter;
 import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.core.util.ReUtil;
@@ -27,7 +28,7 @@ public class TmdbUtil {
             return "";
         }
         AtomicReference<String> year = new AtomicReference<>("");
-        String yearReg = " \\((\\d{4})\\)$";
+        String yearReg = "\\((\\d{4})\\)( \\[tmdbid=\\d+])?$";
         if (ReUtil.contains(yearReg, name)) {
             year.set(ReUtil.get(yearReg, name, 1));
             name = name.replaceAll(yearReg, "");
@@ -35,6 +36,8 @@ public class TmdbUtil {
         if (StrUtil.isBlank(name)) {
             return "";
         }
+
+        AtomicReference<String> tmdbId = new AtomicReference<>("");
         String themoviedbName;
         try {
             String finalName = name;
@@ -66,6 +69,13 @@ public class TmdbUtil {
                             title = title.replace(l, " ");
                         }
                         title = title.trim();
+
+                        Element a = document.selectFirst(".title a");
+                        if (Objects.nonNull(a)) {
+                            String href = a.attr("href");
+                            tmdbId.set(ReUtil.get("\\d+", href, 0));
+                        }
+
                         return StrUtil.blankToDefault(title, "");
                     });
         } catch (Exception e) {
@@ -79,6 +89,11 @@ public class TmdbUtil {
         if (StrUtil.isNotBlank(year.get())) {
             themoviedbName = StrFormatter.format("{} ({})", themoviedbName, year);
         }
+        Config config = ConfigUtil.CONFIG;
+        if (config.getTmdbId() && StrUtil.isNotBlank(tmdbId.get())) {
+            themoviedbName = StrFormatter.format("{} [tmdbid={}]", themoviedbName, tmdbId.get());
+        }
+
         return themoviedbName;
     }
 }

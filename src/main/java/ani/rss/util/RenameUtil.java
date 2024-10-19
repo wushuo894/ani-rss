@@ -33,6 +33,26 @@ public class RenameUtil {
         int offset = ani.getOffset();
         int season = ani.getSeason();
         String title = ani.getTitle();
+
+        Boolean renameDelYear = config.getRenameDelYear();
+        Boolean renameDelTmdbId = config.getRenameDelTmdbId();
+
+        String tmdbIdReg = "\\[tmdbid=(\\d+)]$";
+
+        if (renameDelTmdbId) {
+            title = ReUtil.replaceAll(title, tmdbIdReg, "").trim();
+        }
+
+        if (renameDelYear) {
+            if (ReUtil.contains(tmdbIdReg, title)) {
+                title = ReUtil.replaceAll(title, "\\(\\d{4}\\) " + tmdbIdReg,
+                        StrFormatter.format("[tmdbid={}]", ReUtil.get(tmdbIdReg, title, 1))
+                ).trim();
+            } else {
+                title = ReUtil.replaceAll(title, "\\(\\d{4}\\)$", "").trim();
+            }
+        }
+
         Boolean customEpisode = ani.getCustomEpisode();
         String customEpisodeStr = ani.getCustomEpisodeStr();
         Integer customEpisodeGroupIndex = ani.getCustomEpisodeGroupIndex();
