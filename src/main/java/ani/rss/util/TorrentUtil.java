@@ -685,10 +685,19 @@ public class TorrentUtil {
     public static synchronized void rename(TorrentsInfo torrentsInfo) {
         Config config = ConfigUtil.CONFIG;
         Boolean rename = config.getRename();
-        if (rename) {
-            ThreadUtil.sleep(1000);
-            baseDownload.rename(torrentsInfo);
+        if (!rename) {
+            return;
         }
+
+        String tags = torrentsInfo.getTags();
+        if (StrUtil.split(tags, ",", true, true)
+                .contains("RENAME")) {
+            return;
+        }
+
+        ThreadUtil.sleep(1000);
+        baseDownload.rename(torrentsInfo);
+        addTags(torrentsInfo, "RENAME");
     }
 
     public static Boolean addTags(TorrentsInfo torrentsInfo, String tags) {
