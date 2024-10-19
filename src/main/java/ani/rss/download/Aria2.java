@@ -190,7 +190,7 @@ public class Aria2 implements BaseDownload {
                 continue;
             }
 
-            if (renameMinSize < src.length() / 1024 / 1024) {
+            if (renameMinSize > src.length() / 1024 / 1024) {
                 continue;
             }
 
