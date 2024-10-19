@@ -137,7 +137,10 @@ const config = ref({
   'loginEffectiveHours': 3,
   'trackersUpdateUrls': '',
   'autoTrackersUpdate': false,
-  'renameMinSize': 100
+  'renameMinSize': 100,
+  'tmdbId': false,
+  'renameDelYear': false,
+  'renameDelTmdbId': false
 })
 
 const activeName = ref('download')
