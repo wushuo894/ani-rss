@@ -181,12 +181,19 @@ public class Aria2 implements BaseDownload {
         if (StrUtil.isBlank(reName)) {
             return;
         }
+        Integer renameMinSize = config.getRenameMinSize();
+
         List<String> files = torrentsInfo.getFiles();
         for (String file : files) {
             File src = new File(file);
             if (!src.exists()) {
                 continue;
             }
+
+            if (renameMinSize < src.length() / 1024 / 1024) {
+                continue;
+            }
+
             String name = src.getName();
             String fileReName = getFileReName(name, reName);
             File newPath = new File(downloadDir + "/" + fileReName);

@@ -52,6 +52,9 @@
                              min="0.5"
                              :disabled="!config.rename"/>
           </el-form-item>
+          <el-form-item label="重命名最小文件大小(MB)">
+            <el-input-number v-model:model-value="props.config.renameMinSize" min="10" max="2048"/>
+          </el-form-item>
           <el-form-item label="季命名方式">
             <el-select v-model:model-value="props.config.seasonName" style="width: 150px">
               <el-option v-for="it in ['Season 1','Season 01','S1','S01','None']" :key="it" :label="it" :value="it"/>

@@ -1,5 +1,6 @@
 package ani.rss.download;
 
+import ani.rss.action.ClearCacheAction;
 import ani.rss.entity.Config;
 import ani.rss.entity.Item;
 import ani.rss.entity.TorrentsInfo;
@@ -10,6 +11,8 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.thread.ThreadUtil;
+import cn.hutool.core.util.ArrayUtil;
+import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.ReUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.HttpRequest;
@@ -20,10 +23,7 @@ import com.google.gson.JsonObject;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 /**
  * qBittorrent
@@ -75,6 +75,7 @@ public class qBittorrent implements BaseDownload {
                     for (JsonElement jsonElement : jsonElements) {
                         JsonObject jsonObject = jsonElement.getAsJsonObject();
                         TorrentsInfo torrentsInfo = gson.fromJson(jsonObject, TorrentsInfo.class);
+                        torrentsInfo.setDownloadDir(jsonObject.get("content_path").getAsString());
                         String tags = torrentsInfo.getTags();
                         if (StrUtil.isBlank(tags)) {
                             continue;
@@ -178,6 +179,7 @@ public class qBittorrent implements BaseDownload {
         }
 
         String host = config.getHost();
+        Integer renameMinSize = config.getRenameMinSize();
 
         List<String> nameList = HttpReq.get(host + "/api/v2/torrents/files", false)
                 .form("hash", hash)
@@ -188,6 +190,18 @@ public class qBittorrent implements BaseDownload {
                     for (JsonElement jsonElement : jsonElements) {
                         JsonObject jsonObject = jsonElement.getAsJsonObject();
                         String name = jsonObject.get("name").getAsString();
+                        String extName = FileUtil.extName(name);
+                        if (StrUtil.isBlank(extName)) {
+                            continue;
+                        }
+                        if (subtitleFormat.contains(extName)) {
+                            names.add(name);
+                            continue;
+                        }
+                        long size = jsonObject.get("size").getAsLong();
+                        if (renameMinSize < size / 1024 / 1024) {
+                            continue;
+                        }
                         names.add(name);
                     }
                     return names;
@@ -219,6 +233,28 @@ public class qBittorrent implements BaseDownload {
                     .thenFunction(HttpResponse::isOk);
             Assert.isTrue(b, "重命名失败 {} ==> {}", name, newPath);
             renameCache.remove(hash);
+        }
+
+        // 清理空文件夹
+        String downloadDir = torrentsInfo.getDownloadDir();
+        File file = new File(downloadDir);
+        if (!file.exists()) {
+            return;
+        }
+        if (file.isFile()) {
+            return;
+        }
+        for (File itemFile : ObjUtil.defaultIfNull(file.listFiles(), new File[]{})) {
+            if (itemFile.isFile()) {
+                continue;
+            }
+            if (ArrayUtil.isEmpty(itemFile.listFiles())) {
+                try {
+                    FileUtil.del(itemFile);
+                } catch (Exception e) {
+                    log.error("删除空文件夹失败: {}", itemFile);
+                }
+            }
         }
     }
 
