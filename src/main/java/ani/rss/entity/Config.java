@@ -84,6 +84,11 @@ public class Config implements Serializable {
     private Boolean rename;
 
     /**
+     * 重命名最小文件大小
+     */
+    private Integer renameMinSize;
+
+    /**
      * rss开关
      */
     private Boolean rss;
