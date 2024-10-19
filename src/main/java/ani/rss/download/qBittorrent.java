@@ -199,7 +199,7 @@ public class qBittorrent implements BaseDownload {
                             continue;
                         }
                         long size = jsonObject.get("size").getAsLong();
-                        if (renameMinSize < size / 1024 / 1024) {
+                        if (renameMinSize > size / 1024 / 1024) {
                             continue;
                         }
                         names.add(name);
