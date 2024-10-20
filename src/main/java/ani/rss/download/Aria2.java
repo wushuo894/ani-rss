@@ -186,7 +186,13 @@ public class Aria2 implements BaseDownload {
                 .filter(File::exists)
                 .filter(file -> {
                     String extName = FileUtil.extName(file);
-                    return StrUtil.isNotBlank(extName);
+                    if (StrUtil.isBlank(extName)) {
+                        return false;
+                    }
+                    if (file.length() < 1) {
+                        return false;
+                    }
+                    return videoFormat.contains(extName) || subtitleFormat.contains(extName);
                 })
                 .sorted(Comparator.comparingLong(file -> Long.MAX_VALUE - file.length()))
                 .collect(Collectors.toList());
