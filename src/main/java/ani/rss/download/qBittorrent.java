@@ -1,5 +1,6 @@
 package ani.rss.download;
 
+import ani.rss.action.ClearCacheAction;
 import ani.rss.entity.Config;
 import ani.rss.entity.Item;
 import ani.rss.entity.TorrentsInfo;
@@ -10,6 +11,8 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.thread.ThreadUtil;
+import cn.hutool.core.util.ArrayUtil;
+import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.ReUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.HttpRequest;
@@ -17,13 +20,13 @@ import cn.hutool.http.HttpResponse;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import lombok.Data;
+import lombok.experimental.Accessors;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * qBittorrent
@@ -75,6 +78,7 @@ public class qBittorrent implements BaseDownload {
                     for (JsonElement jsonElement : jsonElements) {
                         JsonObject jsonObject = jsonElement.getAsJsonObject();
                         TorrentsInfo torrentsInfo = gson.fromJson(jsonObject, TorrentsInfo.class);
+                        torrentsInfo.setDownloadDir(jsonObject.get("content_path").getAsString());
                         String tags = torrentsInfo.getTags();
                         if (StrUtil.isBlank(tags)) {
                             continue;
@@ -178,27 +182,67 @@ public class qBittorrent implements BaseDownload {
         }
 
         String host = config.getHost();
+        Integer renameMinSize = config.getRenameMinSize();
 
-        List<String> nameList = HttpReq.get(host + "/api/v2/torrents/files", false)
+        List<FileEntity> fileEntityList = HttpReq.get(host + "/api/v2/torrents/files", false)
                 .form("hash", hash)
-                .thenFunction(res -> {
-                    JsonArray jsonElements = gson.fromJson(res.body(), JsonArray.class);
+                .thenFunction(res -> gson.fromJson(res.body(), JsonArray.class)
+                        .asList()
+                        .stream()
+                        .map(jsonElement -> gson.fromJson(jsonElement, FileEntity.class))
+                        .filter(fileEntity -> {
+                            String name = fileEntity.getName();
+                            String extName = FileUtil.extName(name);
+                            if (StrUtil.isBlank(extName)) {
+                                return false;
+                            }
+                            Long size = fileEntity.getSize();
+                            if (size < 1) {
+                                return false;
+                            }
+                            return videoFormat.contains(extName) || subtitleFormat.contains(extName);
+                        })
+                        .sorted(Comparator.comparingLong(fileEntity -> Long.MAX_VALUE - fileEntity.getSize()))
+                        .collect(Collectors.toList()));
 
-                    List<String> names = new ArrayList<>();
-                    for (JsonElement jsonElement : jsonElements) {
-                        JsonObject jsonObject = jsonElement.getAsJsonObject();
-                        String name = jsonObject.get("name").getAsString();
-                        names.add(name);
+        long videoCount = fileEntityList.stream()
+                .map(FileEntity::getName)
+                .map(FileUtil::extName)
+                .filter(StrUtil::isNotBlank)
+                .filter(videoFormat::contains)
+                .count();
+
+        // 重命名文件大小限制
+        List<FileEntity> newFileEntityList = fileEntityList.stream()
+                .filter(fileEntity -> {
+                    Long size = fileEntity.getSize();
+                    String name = fileEntity.getName();
+                    String extName = FileUtil.extName(name);
+                    // 排除字幕
+                    if (subtitleFormat.contains(extName)) {
+                        return true;
                     }
-                    return names;
-                });
+                    // 大小限制为0时不启用
+                    if (renameMinSize < 1) {
+                        return true;
+                    }
+                    return renameMinSize <= size / 1024 / 1024;
+                }).collect(Collectors.toList());
+
+        // 过滤结果不为空
+        if (!newFileEntityList.isEmpty() && videoCount > 1) {
+            fileEntityList = newFileEntityList;
+        }
+
+        List<String> names = fileEntityList.stream().map(FileEntity::getName)
+                .collect(Collectors.toList());
 
         List<String> newNames = new ArrayList<>();
 
-        for (String name : nameList) {
+        for (String name : names) {
             String newPath = getFileReName(name, reName);
 
-            if (nameList.contains(newPath)) {
+            if (names.contains(newPath)) {
                 continue;
             }
             if (newNames.contains(newPath)) {
@@ -206,6 +250,7 @@ public class qBittorrent implements BaseDownload {
             }
             newNames.add(newPath);
 
+            // 文件名未发生改变
             if (name.equals(newPath)) {
                 continue;
             }
@@ -220,6 +265,36 @@ public class qBittorrent implements BaseDownload {
             Assert.isTrue(b, "重命名失败 {} ==> {}", name, newPath);
             renameCache.remove(hash);
         }
+
+        // 清理空文件夹
+        String downloadDir = torrentsInfo.getDownloadDir();
+        File file = new File(downloadDir);
+        if (!file.exists()) {
+            return;
+        }
+        if (file.isFile()) {
+            return;
+        }
+        for (File itemFile : ObjUtil.defaultIfNull(file.listFiles(), new File[]{})) {
+            if (itemFile.isFile()) {
+                continue;
+            }
+            if (ArrayUtil.isEmpty(itemFile.listFiles())) {
+                log.info("删除空文件夹: {}", itemFile);
+                try {
+                    FileUtil.del(itemFile);
+                } catch (Exception e) {
+                    log.error("删除空文件夹失败: {}", itemFile);
+                }
+            }
+        }
+    }
+
+    @Data
+    @Accessors(chain = true)
+    static class FileEntity {
+        private String name;
+        private Long size;
     }
 
     @Override

@@ -3,7 +3,8 @@ target/
 !**/src/main/**/target/
 !**/src/test/**/target/
 
-ui/package-lock.json
+package-lock.json
+pnpm-lock.yaml
 
 ### IntelliJ IDEA ###
 .idea
