@@ -432,7 +432,13 @@ public class TorrentUtil {
         String aniDownloadPath = ani.getDownloadPath();
 
         if (customDownloadPath && StrUtil.isNotBlank(aniDownloadPath)) {
-            return List.of(new File(aniDownloadPath));
+            List<File> files = StrUtil.split(aniDownloadPath, "\n", true, true)
+                    .stream()
+                    .map(File::new)
+                    .collect(Collectors.toList());
+            if (!files.isEmpty()) {
+                return files;
+            }
         }
 
         String title = ani.getTitle().trim();
