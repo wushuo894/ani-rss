@@ -207,8 +207,18 @@ public class Ani implements Serializable {
 
     @Data
     @Accessors(chain = true)
-    public static class BackRss {
+    public static class BackRss implements Serializable {
+        /**
+         * 字幕组
+         */
         private String label;
+        /**
+         * url
+         */
         private String url;
+        /**
+         * 剧集偏移
+         */
+        private Integer offset;
     }
 }

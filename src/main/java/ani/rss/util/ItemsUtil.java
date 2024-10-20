@@ -58,7 +58,9 @@ public class ItemsUtil {
             s = HttpReq.get(rss.getUrl(), true)
                     .thenFunction(HttpResponse::body);
             subgroup = StrUtil.blankToDefault(rss.getLabel(), "未知字幕组");
-            items.addAll(ItemsUtil.getItems(ani, s, new Item().setSubgroup(subgroup))
+            Ani clone = ObjUtil.clone(ani);
+            clone.setOffset(rss.getOffset());
+            items.addAll(ItemsUtil.getItems(clone, s, new Item().setSubgroup(subgroup))
                     .stream()
                     .peek(item -> item.setMaster(false))
                     .collect(Collectors.toList()));
