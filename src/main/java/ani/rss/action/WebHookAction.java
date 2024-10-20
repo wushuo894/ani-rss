@@ -120,8 +120,8 @@ public class WebHookAction implements BaseAction {
                                 return false;
                             }
                             String title = ani.getTitle();
-                            String yearReg = "\\((\\d{4})\\)( \\[tmdbid=\\d+])?$";
-                            title = title.replaceAll(yearReg, "").trim();
+                            title = title.replaceAll(StringEnum.YEAR_REG, "")
+                                    .trim();
                             Integer season = ani.getSeason();
                             return title.equals(seriesName) && s == season;
                         })
