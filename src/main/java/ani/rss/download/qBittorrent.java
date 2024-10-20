@@ -20,10 +20,13 @@ import cn.hutool.http.HttpResponse;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import lombok.Data;
+import lombok.experimental.Accessors;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.File;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * qBittorrent
@@ -181,38 +184,65 @@ public class qBittorrent implements BaseDownload {
         String host = config.getHost();
         Integer renameMinSize = config.getRenameMinSize();
 
-        List<String> nameList = HttpReq.get(host + "/api/v2/torrents/files", false)
+        List<FileEntity> fileEntityList = HttpReq.get(host + "/api/v2/torrents/files", false)
                 .form("hash", hash)
-                .thenFunction(res -> {
-                    JsonArray jsonElements = gson.fromJson(res.body(), JsonArray.class);
+                .thenFunction(res -> gson.fromJson(res.body(), JsonArray.class)
+                        .asList()
+                        .stream()
+                        .map(jsonElement -> gson.fromJson(jsonElement, FileEntity.class))
+                        .filter(fileEntity -> {
+                            String name = fileEntity.getName();
+                            String extName = FileUtil.extName(name);
+                            if (StrUtil.isBlank(extName)) {
+                                return false;
+                            }
+                            Long size = fileEntity.getSize();
+                            if (size < 1) {
+                                return false;
+                            }
+                            return videoFormat.contains(extName) || subtitleFormat.contains(extName);
+                        })
+                        .sorted(Comparator.comparingLong(fileEntity -> Long.MAX_VALUE - fileEntity.getSize()))
+                        .collect(Collectors.toList()));
 
-                    List<String> names = new ArrayList<>();
-                    for (JsonElement jsonElement : jsonElements) {
-                        JsonObject jsonObject = jsonElement.getAsJsonObject();
-                        String name = jsonObject.get("name").getAsString();
-                        String extName = FileUtil.extName(name);
-                        if (StrUtil.isBlank(extName)) {
-                            continue;
-                        }
-                        if (subtitleFormat.contains(extName)) {
-                            names.add(name);
-                            continue;
-                        }
-                        long size = jsonObject.get("size").getAsLong();
-                        if (renameMinSize > size / 1024 / 1024) {
-                            continue;
-                        }
-                        names.add(name);
+        long videoCount = fileEntityList.stream()
+                .map(FileEntity::getName)
+                .map(FileUtil::extName)
+                .filter(StrUtil::isNotBlank)
+                .filter(videoFormat::contains)
+                .count();
+
+        // 重命名文件大小限制
+        List<FileEntity> newFileEntityList = fileEntityList.stream()
+                .filter(fileEntity -> {
+                    Long size = fileEntity.getSize();
+                    String name = fileEntity.getName();
+                    String extName = FileUtil.extName(name);
+                    // 排除字幕
+                    if (subtitleFormat.contains(extName)) {
+                        return true;
                     }
-                    return names;
-                });
+                    // 大小限制为0时不启用
+                    if (renameMinSize < 1) {
+                        return true;
+                    }
+                    return renameMinSize <= size / 1024 / 1024;
+                }).collect(Collectors.toList());
+
+        // 过滤结果不为空
+        if (!newFileEntityList.isEmpty() && videoCount > 1) {
+            fileEntityList = newFileEntityList;
+        }
+
+        List<String> names = fileEntityList.stream().map(FileEntity::getName)
+                .collect(Collectors.toList());
 
         List<String> newNames = new ArrayList<>();
 
-        for (String name : nameList) {
+        for (String name : names) {
             String newPath = getFileReName(name, reName);
 
-            if (nameList.contains(newPath)) {
+            if (names.contains(newPath)) {
                 continue;
             }
             if (newNames.contains(newPath)) {
@@ -220,6 +250,7 @@ public class qBittorrent implements BaseDownload {
             }
             newNames.add(newPath);
 
+            // 文件名未发生改变
             if (name.equals(newPath)) {
                 continue;
             }
@@ -257,6 +288,13 @@ public class qBittorrent implements BaseDownload {
                 }
             }
         }
+    }
+
+    @Data
+    @Accessors(chain = true)
+    static class FileEntity {
+        private String name;
+        private Long size;
     }
 
     @Override
