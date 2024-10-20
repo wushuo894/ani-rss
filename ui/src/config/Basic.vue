@@ -90,7 +90,8 @@
                 ${seasonFormat} 季 01 ,
                 ${episodeFormat} 集 01 <br>
                 ${season} 季 1 ,
-                ${episode} 集 1
+                ${episode} 集 1 <br>
+                ${itemTitle} 原始标题
                 <br>
                 请务必保留
                 <strong>
