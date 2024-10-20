@@ -3,6 +3,7 @@ package ani.rss.util;
 import ani.rss.entity.Ani;
 import ani.rss.entity.Config;
 import ani.rss.entity.Item;
+import ani.rss.enums.StringEnum;
 import cn.hutool.core.io.resource.ResourceUtil;
 import cn.hutool.core.text.StrFormatter;
 import cn.hutool.core.util.ReUtil;
@@ -37,20 +38,14 @@ public class RenameUtil {
         Boolean renameDelYear = config.getRenameDelYear();
         Boolean renameDelTmdbId = config.getRenameDelTmdbId();
 
-        String tmdbIdReg = "\\[tmdbid=(\\d+)]$";
-
         if (renameDelTmdbId) {
-            title = ReUtil.replaceAll(title, tmdbIdReg, "").trim();
+            title = ReUtil.replaceAll(title, StringEnum.TMDB_ID_REG, "")
+                    .trim();
         }
 
         if (renameDelYear) {
-            if (ReUtil.contains(tmdbIdReg, title)) {
-                title = ReUtil.replaceAll(title, "\\(\\d{4}\\) " + tmdbIdReg,
-                        StrFormatter.format("[tmdbid={}]", ReUtil.get(tmdbIdReg, title, 1))
-                ).trim();
-            } else {
-                title = ReUtil.replaceAll(title, "\\(\\d{4}\\)$", "").trim();
-            }
+            title = ReUtil.replaceAll(title, StringEnum.YEAR_REG, "")
+                    .trim();
         }
 
         Boolean customEpisode = ani.getCustomEpisode();
@@ -64,6 +59,7 @@ public class RenameUtil {
         itemTitle = itemTitle.replace("+NCOPED", "");
 
         String e;
+        // 是否使用自定义剧规则
         if (customEpisode) {
             e = ReUtil.get(customEpisodeStr, itemTitle, customEpisodeGroupIndex);
         } else {

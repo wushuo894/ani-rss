@@ -1,6 +1,7 @@
 package ani.rss.util;
 
 import ani.rss.entity.Config;
+import ani.rss.enums.StringEnum;
 import cn.hutool.core.text.StrFormatter;
 import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.core.util.ReUtil;
@@ -28,10 +29,10 @@ public class TmdbUtil {
             return "";
         }
         AtomicReference<String> year = new AtomicReference<>("");
-        String yearReg = "\\((\\d{4})\\)( \\[tmdbid=\\d+])?$";
-        if (ReUtil.contains(yearReg, name)) {
-            year.set(ReUtil.get(yearReg, name, 1));
-            name = name.replaceAll(yearReg, "");
+        if (ReUtil.contains(StringEnum.YEAR_REG, name)) {
+            year.set(ReUtil.get(StringEnum.YEAR_REG, name, 1));
+            name = name.replaceAll(StringEnum.YEAR_REG, "")
+                    .trim();
         }
         if (StrUtil.isBlank(name)) {
             return "";
@@ -56,7 +57,7 @@ public class TmdbUtil {
                         }
                         Element releaseDate = document.selectFirst(".release_date");
                         if (Objects.nonNull(releaseDate) && StrUtil.isNotBlank(year.get())) {
-                            String s = "(\\d{4}) 年 \\d{2} 月 \\d{2} 日";
+                            String s = "((19|20)\\d{2}) 年 (\\d{2}) 月 (\\d{2}) 日";
                             String text = releaseDate.text();
                             if (ReUtil.contains(s, text)) {
                                 year.set(ReUtil.get(s, text, 1));
