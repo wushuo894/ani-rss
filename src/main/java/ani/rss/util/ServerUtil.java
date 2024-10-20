@@ -20,10 +20,7 @@ import cn.hutool.http.server.SimpleServer;
 import cn.hutool.log.Log;
 import lombok.extern.slf4j.Slf4j;
 
-import java.util.Arrays;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 import static ani.rss.auth.util.AuthUtil.getIp;
 
@@ -133,7 +130,7 @@ public class ServerUtil {
             if (!PatternPool.IPV4.matcher(ip).matches()) {
                 return false;
             }
-            String[] list = ipWhitelistStr.split("\n");
+            List<String> list = StrUtil.split(ipWhitelistStr, "\n", true, true);
             for (String string : list) {
                 if (StrUtil.isBlank(string)) {
                     continue;
