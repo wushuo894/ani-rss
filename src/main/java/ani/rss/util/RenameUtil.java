@@ -54,6 +54,7 @@ public class RenameUtil {
         String renameTemplate = config.getRenameTemplate();
 
         String subgroup = item.getSubgroup();
+        subgroup = StrUtil.blankToDefault(subgroup, "未知字幕组");
 
         String itemTitle = item.getTitle();
         itemTitle = itemTitle.replace("+NCOPED", "");
@@ -99,9 +100,8 @@ public class RenameUtil {
         renameTemplate = renameTemplate.replace("${episodeFormat}", episodeFormat);
         renameTemplate = renameTemplate.replace("${season}", String.valueOf(season));
         renameTemplate = renameTemplate.replace("${episode}", episode);
-        if (StrUtil.isNotBlank(subgroup)) {
-            renameTemplate = renameTemplate.replace("${subgroup}", subgroup);
-        }
+        renameTemplate = renameTemplate.replace("${subgroup}", subgroup);
+        renameTemplate = renameTemplate.replace("${itemTitle}", itemTitle);
 
         String reName = renameTemplate;
 
