@@ -328,7 +328,8 @@ let openBgmUrl = (it) => {
     return
   }
   if (it.title.length) {
-    let title = it.title.replace(/\(\d{4}\)$/g, "").trim()
+    let title = it.title.replace(/ ?\((19|20)\d{2}\)/g, "").trim()
+    title = title.replace(/ ?\[tmdbid=(\d+)]/g, "").trim()
     window.open(`https://bgm.tv/subject_search/${title}?cat=2`)
   }
 }
