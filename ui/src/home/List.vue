@@ -78,7 +78,7 @@
                           <el-tag type="success" v-if="item.enable">
                             已启用
                           </el-tag>
-                          <el-tag type="success" v-else>
+                          <el-tag type="info" v-else>
                             未启用
                           </el-tag>
                           <el-tag type="info" v-if="itemsPerRow > 1">

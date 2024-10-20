@@ -40,7 +40,8 @@ public class ItemsUtil {
 
         String s = HttpReq.get(url, true)
                 .thenFunction(HttpResponse::body);
-        items.addAll(ItemsUtil.getItems(ani, s, new Item().setSubgroup(ani.getSubgroup()))
+        String subgroup = StrUtil.blankToDefault(ani.getSubgroup(), "未知字幕组");
+        items.addAll(ItemsUtil.getItems(ani, s, new Item().setSubgroup(subgroup))
                 .stream()
                 .peek(item -> item.setMaster(true))
                 .collect(Collectors.toList()));
@@ -56,8 +57,10 @@ public class ItemsUtil {
             ThreadUtil.sleep(1000);
             s = HttpReq.get(rss.getUrl(), true)
                     .thenFunction(HttpResponse::body);
-            String subgroup = StrUtil.blankToDefault(rss.getLabel(), "未知字幕组");
-            items.addAll(ItemsUtil.getItems(ani, s, new Item().setSubgroup(subgroup))
+            subgroup = StrUtil.blankToDefault(rss.getLabel(), "未知字幕组");
+            Ani clone = ObjUtil.clone(ani);
+            clone.setOffset(rss.getOffset());
+            items.addAll(ItemsUtil.getItems(clone, s, new Item().setSubgroup(subgroup))
                     .stream()
                     .peek(item -> item.setMaster(false))
                     .collect(Collectors.toList()));

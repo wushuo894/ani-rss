@@ -11,6 +11,7 @@ import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.resource.ResourceUtil;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.text.StrFormatter;
+import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.ReUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.core.util.URLUtil;
@@ -85,6 +86,11 @@ public class AniUtil {
                                     .setUrl(rss)
                     );
                 }
+            }
+            for (Ani.BackRss rss : backRssList) {
+                Integer offset = rss.getOffset();
+                offset = ObjectUtil.defaultIfNull(offset, ani.getOffset());
+                rss.setOffset(offset);
             }
         }
         AniUtil.sync();
