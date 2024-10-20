@@ -37,6 +37,14 @@
             </div>
           </template>
         </el-table-column>
+        <el-table-column label="偏移" min-width="180px">
+          <template #default="it">
+            <div v-if="editIndex !== it.$index">
+              {{ backRss[it.$index].offset }}
+            </div>
+            <el-input-number v-model:model-value="backRss[it.$index].offset" v-else/>
+          </template>
+        </el-table-column>
         <el-table-column label="操作" width="115">
           <template #default="it">
             <div style="display: flex;">
@@ -80,7 +88,8 @@ let plus = () => {
   if (!backRss.value.length) {
     backRss.value.push({
       label: '未知字幕组',
-      url: ''
+      url: '',
+      offset: props.ani.offset
     })
     editIndex.value = backRss.value.length - 1
     return
@@ -88,7 +97,8 @@ let plus = () => {
   if (backRss.value[backRss.value.length - 1].url.trim()) {
     backRss.value.push({
       label: '备用RSS',
-      url: ''
+      url: '',
+      offset: props.ani.offset
     })
     editIndex.value = backRss.value.length - 1
   }

@@ -84,6 +84,11 @@ public class Config implements Serializable {
     private Boolean rename;
 
     /**
+     * 重命名最小文件大小
+     */
+    private Integer renameMinSize;
+
+    /**
      * rss开关
      */
     private Boolean rss;
@@ -269,6 +274,11 @@ public class Config implements Serializable {
     private Boolean tmdb;
 
     /**
+     * 获取标题时带有tmdbId
+     */
+    private Boolean tmdbId;
+
+    /**
      * 开启ip白名单
      */
     private Boolean ipWhitelist;
@@ -322,6 +332,16 @@ public class Config implements Serializable {
      * 重命名模版
      */
     private String renameTemplate;
+
+    /**
+     * 重命名时 ${title} 去除 年份 如 (2024)
+     */
+    private Boolean renameDelYear;
+
+    /**
+     * 重命名时 ${title} 去除 tmdbId [tmdbid=242143]
+     */
+    private Boolean renameDelTmdbId;
 
     /**
      * 通知类型

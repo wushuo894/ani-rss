@@ -17,10 +17,7 @@ import com.google.gson.JsonObject;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -181,12 +178,52 @@ public class Aria2 implements BaseDownload {
         if (StrUtil.isBlank(reName)) {
             return;
         }
-        List<String> files = torrentsInfo.getFiles();
-        for (String file : files) {
-            File src = new File(file);
-            if (!src.exists()) {
-                continue;
-            }
+        Integer renameMinSize = config.getRenameMinSize();
+
+        List<File> files = torrentsInfo.getFiles()
+                .stream()
+                .map(File::new)
+                .filter(File::exists)
+                .filter(file -> {
+                    String extName = FileUtil.extName(file);
+                    if (StrUtil.isBlank(extName)) {
+                        return false;
+                    }
+                    if (file.length() < 1) {
+                        return false;
+                    }
+                    return videoFormat.contains(extName) || subtitleFormat.contains(extName);
+                })
+                .sorted(Comparator.comparingLong(file -> Long.MAX_VALUE - file.length()))
+                .collect(Collectors.toList());
+
+        long videoCount = files.stream()
+                .filter(file -> {
+                    String extName = FileUtil.extName(file);
+                    return videoFormat.contains(extName);
+                }).count();
+
+        List<File> newFiles = files
+                .stream()
+                .filter(file -> {
+                    String extName = FileUtil.extName(file);
+                    // 排除字幕
+                    if (subtitleFormat.contains(extName)) {
+                        return true;
+                    }
+
+                    // 大小限制为0时不启用
+                    if (renameMinSize < 1) {
+                        return true;
+                    }
+                    return renameMinSize <= file.length() / 1024 / 1024;
+                }).collect(Collectors.toList());
+
+        if (!newFiles.isEmpty() && videoCount > 1) {
+            files = newFiles;
+        }
+
+        for (File src : files) {
             String name = src.getName();
             String fileReName = getFileReName(name, reName);
             File newPath = new File(downloadDir + "/" + fileReName);
