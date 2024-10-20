@@ -92,26 +92,16 @@ public class WebHookAction implements BaseAction {
             String episodeId;
             String subjectId;
             List<Ani> anis = AniUtil.ANI_LIST;
+
+            // 优先匹配路径相同的
             Optional<String> first = anis.stream()
                     .filter(ani -> {
                         String bgmUrl = ani.getBgmUrl();
                         if (StrUtil.isBlank(bgmUrl)) {
                             return false;
                         }
-
-                        String title = ani.getTitle();
-                        String yearReg = "\\((\\d{4})\\)( \\[tmdbid=\\d+])?$";
-                        title = title.replaceAll(yearReg, "").trim();
-                        Integer season = ani.getSeason();
-                        if (title.equals(seriesName) && s == season) {
-                            return true;
-                        }
-
                         List<File> downloadPath = TorrentUtil.getDownloadPath(ani);
                         for (File file : downloadPath) {
-                            if (!file.exists()) {
-                                continue;
-                            }
                             if (file.toString().equals(parent)) {
                                 return true;
                             }
@@ -120,6 +110,24 @@ public class WebHookAction implements BaseAction {
                     })
                     .map(BgmUtil::getSubjectId)
                     .findFirst();
+
+            if (first.isEmpty()) {
+                // 匹配名称相同的
+                first = anis.stream()
+                        .filter(ani -> {
+                            String bgmUrl = ani.getBgmUrl();
+                            if (StrUtil.isBlank(bgmUrl)) {
+                                return false;
+                            }
+                            String title = ani.getTitle();
+                            String yearReg = "\\((\\d{4})\\)( \\[tmdbid=\\d+])?$";
+                            title = title.replaceAll(yearReg, "").trim();
+                            Integer season = ani.getSeason();
+                            return title.equals(seriesName) && s == season;
+                        })
+                        .map(BgmUtil::getSubjectId)
+                        .findFirst();
+            }
 
             if (first.isPresent()) {
                 subjectId = first.get();
