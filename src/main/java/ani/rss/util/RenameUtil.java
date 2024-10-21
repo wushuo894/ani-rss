@@ -58,6 +58,8 @@ public class RenameUtil {
 
         String itemTitle = item.getTitle();
         itemTitle = itemTitle.replace("+NCOPED", "");
+        itemTitle = itemTitle.replace("\n", " ");
+        itemTitle = itemTitle.replace("\t", " ");
 
         String e;
         // 是否使用自定义剧规则
