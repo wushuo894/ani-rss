@@ -21,6 +21,8 @@
           />
         </el-select>
         <div style="width: 4px;"></div>
+        <el-button icon="Download" bg text @click="downloadLogs"/>
+        <div style="width: 4px;"></div>
         <el-button icon="Refresh" bg text @click="getLogs" :loading="getLogsLoading"/>
         <div style="width: 4px;"></div>
         <el-button icon="Delete" bg text @click="clear" :loading="clearLoading"/>
@@ -114,12 +116,19 @@ const getLogs = () => {
       })
 }
 
+let downloadLogs = () => {
+  window.open(`api/downloadLogs?s=${authorization()}`)
+}
+
+let authorization = () => {
+  return window.authorization;
+}
+
 let close = () => {
   htmlLogs.value = ''
   loggerNames.value = []
   selectLoggerNames.value = []
 }
-
 
 defineExpose({show})
 </script>
