@@ -113,20 +113,8 @@ public class BgmUtil {
         return ReUtil.get(regStr, bgmUrl, 2);
     }
 
-    /**
-     * 收藏番剧
-     *
-     * @param subjectId 番剧id
-     */
-    public static void collections(String subjectId) {
-        ThreadUtil.sleep(500);
-        Objects.requireNonNull(subjectId);
-        HttpReq.post(host + "/v0/users/-/collections/" + subjectId, true)
-                .header("Authorization", "Bearer " + ConfigUtil.CONFIG.getBgmToken())
-                .contentType(ContentType.JSON.getValue())
-                .body(gson.toJson(Map.of("type", 3)))
-                .thenFunction(HttpResponse::isOk);
-    }
+    static final Cache<String, String> collectionsCache = CacheUtil.newFIFOCache(64);
+    static final Cache<String, List<JsonObject>> getEpisodeIdCache = CacheUtil.newFIFOCache(64);
 
     /**
      * 获取视频列表
@@ -170,6 +158,25 @@ public class BgmUtil {
     }
 
     /**
+     * 收藏番剧
+     *
+     * @param subjectId 番剧id
+     */
+    public static void collections(String subjectId) {
+        if (collectionsCache.containsKey(subjectId)) {
+            return;
+        }
+        collectionsCache.put(subjectId, "1", TimeUnit.MINUTES.toMillis(1));
+        ThreadUtil.sleep(500);
+        Objects.requireNonNull(subjectId);
+        HttpReq.post(host + "/v0/users/-/collections/" + subjectId, true)
+                .header("Authorization", "Bearer " + ConfigUtil.CONFIG.getBgmToken())
+                .contentType(ContentType.JSON.getValue())
+                .body(gson.toJson(Map.of("type", 3)))
+                .thenFunction(HttpResponse::isOk);
+    }
+
+    /**
      * 获取 EpisodeId
      *
      * @param subjectId 番剧id
@@ -180,7 +187,11 @@ public class BgmUtil {
         String epId = "";
         String sortId = "";
 
-        List<JsonObject> episodes = getEpisodes(subjectId, 0);
+        List<JsonObject> episodes = getEpisodeIdCache.get(subjectId);
+        if (Objects.isNull(episodes)) {
+            episodes = getEpisodes(subjectId, 0);
+            getEpisodeIdCache.put(subjectId, episodes, TimeUnit.MINUTES.toMillis(10));
+        }
         for (JsonObject itemObject : episodes) {
             double ep = itemObject.get("ep").getAsDouble();
             double sort = itemObject.get("sort").getAsDouble();
