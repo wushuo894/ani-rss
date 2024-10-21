@@ -53,6 +53,10 @@ public class RenameUtil {
         Integer customEpisodeGroupIndex = ani.getCustomEpisodeGroupIndex();
         String renameTemplate = config.getRenameTemplate();
 
+        if (StrUtil.isBlank(renameTemplate)) {
+            renameTemplate = "${title} S${seasonFormat}E${episodeFormat}";
+        }
+
         String subgroup = item.getSubgroup();
         subgroup = StrUtil.blankToDefault(subgroup, "未知字幕组");
 
@@ -105,7 +109,7 @@ public class RenameUtil {
         renameTemplate = renameTemplate.replace("${subgroup}", subgroup);
         renameTemplate = renameTemplate.replace("${itemTitle}", itemTitle);
 
-        String reName = renameTemplate;
+        String reName = renameTemplate.trim();
 
         item
                 .setReName(reName);
