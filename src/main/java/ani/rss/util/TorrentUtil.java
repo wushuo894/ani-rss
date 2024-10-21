@@ -246,6 +246,7 @@ public class TorrentUtil {
                     log.info("删除成功 {}", file.getAbsolutePath());
                 } catch (Exception e) {
                     log.info("删除失败 {}", file.getAbsolutePath());
+                    log.error(e.getMessage(), e);
                 }
             }
         }
