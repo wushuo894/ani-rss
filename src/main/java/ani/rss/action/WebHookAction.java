@@ -40,7 +40,7 @@ public class WebHookAction implements BaseAction {
     private static final ExecutorService EXECUTOR = ExecutorBuilder.create()
             .setCorePoolSize(1)
             .setMaxPoolSize(1)
-            .setWorkQueue(new LinkedBlockingQueue<>(32))
+            .setWorkQueue(new LinkedBlockingQueue<>(256))
             .build();
 
     @Override
