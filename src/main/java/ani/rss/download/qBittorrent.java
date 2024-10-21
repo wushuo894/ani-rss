@@ -285,6 +285,7 @@ public class qBittorrent implements BaseDownload {
                     FileUtil.del(itemFile);
                 } catch (Exception e) {
                     log.error("删除空文件夹失败: {}", itemFile);
+                    log.error(e.getMessage(), e);
                 }
             }
         }
