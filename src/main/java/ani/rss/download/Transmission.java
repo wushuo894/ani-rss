@@ -181,7 +181,7 @@ public class Transmission implements BaseDownload {
             if (optionalTorrentsInfo.isEmpty()) {
                 continue;
             }
-            if (!ova && !"txt".equals(extName)) {
+            if (!ova) {
                 renameCache.put(id, name);
             }
             return true;
