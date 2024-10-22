@@ -206,6 +206,8 @@ public class Transmission implements BaseDownload {
         String id = torrentsInfo.getId();
         String name = torrentsInfo.getName();
 
+        Assert.isTrue(ReUtil.contains("^\\w+$", name), "磁力链接还在获取原数据中");
+
         String mainName = FileUtil.mainName(name);
 
         if (ReUtil.contains(StringEnum.SEASON_REG, mainName)) {
