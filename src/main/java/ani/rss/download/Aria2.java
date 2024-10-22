@@ -122,8 +122,10 @@ public class Aria2 implements BaseDownload {
         }
 
         if ("txt".equals(extName)) {
-            body = ResourceUtil.readUtf8Str("aria2/addUri.json");
-            body = StrFormatter.format(body, password, FileUtil.readUtf8String(torrentFile), savePath);
+            log.error("Aria2 暂不支持磁力链接下载与重命名");
+            return false;
+//            body = ResourceUtil.readUtf8Str("aria2/addUri.json");
+//            body = StrFormatter.format(body, password, FileUtil.readUtf8String(torrentFile), savePath);
         } else {
             body = ResourceUtil.readUtf8Str("aria2/addTorrent.json");
             body = StrFormatter.format(body, password, Base64.encode(torrentFile), savePath);
@@ -149,7 +151,7 @@ public class Aria2 implements BaseDownload {
                 if (!torrentsInfo.getId().equals(id)) {
                     continue;
                 }
-                if (!ova && "txt".equals(extName)) {
+                if (!ova) {
                     renameCache.put(id, name);
                 }
                 return true;
