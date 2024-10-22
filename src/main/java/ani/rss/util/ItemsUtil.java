@@ -4,6 +4,7 @@ import ani.rss.entity.Ani;
 import ani.rss.entity.Config;
 import ani.rss.entity.Item;
 import ani.rss.enums.MessageEnum;
+import ani.rss.enums.StringEnum;
 import cn.hutool.cache.Cache;
 import cn.hutool.cache.CacheUtil;
 import cn.hutool.core.collection.CollUtil;
@@ -47,8 +48,7 @@ public class ItemsUtil {
                 .collect(Collectors.toList()));
 
         Config config = ConfigUtil.CONFIG;
-        Boolean qbRenameTitle = config.getQbRenameTitle();
-        if (!qbRenameTitle || !config.getBackRss()) {
+        if (!config.getBackRss()) {
             return items;
         }
 
@@ -121,10 +121,9 @@ public class ItemsUtil {
                         infoHash = FileUtil.mainName(torrent);
                     }
 
-                    String magnetReg = "^magnet\\:\\?xt=urn:btih\\:(\\w+)";
-                    if (ReUtil.contains(magnetReg, url)) {
+                    if (ReUtil.contains(StringEnum.MAGNET_REG, url)) {
                         torrent = url;
-                        infoHash = ReUtil.get(magnetReg, url, 1);
+                        infoHash = ReUtil.get(StringEnum.MAGNET_REG, url, 1);
                     }
                 }
                 if (itemChildNodeName.equals("nyaa:infoHash")) {

@@ -1,6 +1,5 @@
 package ani.rss.download;
 
-import ani.rss.action.ClearCacheAction;
 import ani.rss.entity.Config;
 import ani.rss.entity.Item;
 import ani.rss.entity.TorrentsInfo;
@@ -98,7 +97,6 @@ public class qBittorrent implements BaseDownload {
         String subgroup = item.getSubgroup();
         subgroup = StrUtil.blankToDefault(subgroup, "未知字幕组");
         String host = config.getHost();
-        Boolean qbRenameTitle = config.getQbRenameTitle();
         Boolean qbUseDownloadPath = config.getQbUseDownloadPath();
         HttpRequest httpRequest = HttpReq.post(host + "/api/v2/torrents/add", false)
                 .form("addToTopOfQueue", false)
@@ -107,7 +105,7 @@ public class qBittorrent implements BaseDownload {
                 .form("dlLimit", 0)
                 .form("firstLastPiecePrio", false)
                 .form("paused", false)
-                .form("rename", qbRenameTitle ? name : "")
+                .form("rename", name)
                 .form("savepath", savePath)
                 .form("sequentialDownload", false)
                 .form("skip_checking", false)
@@ -126,10 +124,6 @@ public class qBittorrent implements BaseDownload {
 
         String hash = FileUtil.mainName(torrentFile);
         Boolean watchErrorTorrent = config.getWatchErrorTorrent();
-
-        if (!qbRenameTitle && !"txt".equals(extName) && !ova) {
-            renameCache.put(hash, name);
-        }
 
         if (!watchErrorTorrent) {
             ThreadUtil.sleep(3000);
@@ -166,17 +160,13 @@ public class qBittorrent implements BaseDownload {
 
     @Override
     public void rename(TorrentsInfo torrentsInfo) {
-        Boolean qbRenameTitle = config.getQbRenameTitle();
         String reName = torrentsInfo.getName();
-        if (!ReUtil.contains(StringEnum.SEASON_REG, reName) && qbRenameTitle) {
+        if (!ReUtil.contains(StringEnum.SEASON_REG, reName)) {
             return;
         }
 
         String hash = torrentsInfo.getHash();
 
-        if (!qbRenameTitle) {
-            reName = renameCache.get(hash);
-        }
         if (StrUtil.isBlank(reName)) {
             return;
         }
@@ -204,6 +194,8 @@ public class qBittorrent implements BaseDownload {
                         })
                         .sorted(Comparator.comparingLong(fileEntity -> Long.MAX_VALUE - fileEntity.getSize()))
                         .collect(Collectors.toList()));
+
+        Assert.notEmpty(fileEntityList);
 
         long videoCount = fileEntityList.stream()
                 .map(FileEntity::getName)

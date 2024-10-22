@@ -8,6 +8,7 @@ import cn.hutool.core.codec.Base64;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.resource.ResourceUtil;
+import cn.hutool.core.lang.Assert;
 import cn.hutool.core.text.StrFormatter;
 import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.core.util.StrUtil;
@@ -135,7 +136,7 @@ public class Aria2 implements BaseDownload {
         Boolean watchErrorTorrent = config.getWatchErrorTorrent();
 
         if (!watchErrorTorrent) {
-            if (!ova && !"txt".equals(extName)) {
+            if (!ova) {
                 renameCache.put(id, name);
             }
             return true;
@@ -196,6 +197,8 @@ public class Aria2 implements BaseDownload {
                 })
                 .sorted(Comparator.comparingLong(file -> Long.MAX_VALUE - file.length()))
                 .collect(Collectors.toList());
+
+        Assert.notEmpty(files);
 
         long videoCount = files.stream()
                 .filter(file -> {

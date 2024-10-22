@@ -151,19 +151,22 @@ public class Transmission implements BaseDownload {
             body = StrFormatter.format(body, tag, subgroup, savePath, torrent, "");
         }
 
-        String hash = FileUtil.mainName(torrentFile);
-
-        HttpReq.post(host + "/transmission/rpc", false)
+        String id = HttpReq.post(host + "/transmission/rpc", false)
                 .header(Header.AUTHORIZATION, authorization)
                 .header("X-Transmission-Session-Id", sessionId)
                 .body(body)
-                .then(HttpResponse::isOk);
+                .thenFunction(res -> {
+                    JsonObject jsonObject = gson.fromJson(res.body(), JsonObject.class);
+                    return jsonObject.getAsJsonObject("arguments")
+                            .getAsJsonObject("torrent-added")
+                            .get("id").getAsString();
+                });
 
         Boolean watchErrorTorrent = config.getWatchErrorTorrent();
 
         if (!watchErrorTorrent) {
-            if (!ova && !"txt".equals(extName)) {
-                renameCache.put(hash, name);
+            if (!ova) {
+                renameCache.put(id, name);
             }
             return true;
         }
@@ -173,13 +176,13 @@ public class Transmission implements BaseDownload {
             ThreadUtil.sleep(2000);
             Optional<TorrentsInfo> optionalTorrentsInfo = torrentsInfos
                     .stream()
-                    .filter(torrentsInfo -> torrentsInfo.getHash().equals(hash))
+                    .filter(torrentsInfo -> torrentsInfo.getId().equals(id))
                     .findFirst();
             if (optionalTorrentsInfo.isEmpty()) {
                 continue;
             }
             if (!ova && !"txt".equals(extName)) {
-                renameCache.put(hash, name);
+                renameCache.put(id, name);
             }
             return true;
         }
@@ -202,7 +205,6 @@ public class Transmission implements BaseDownload {
     public void rename(TorrentsInfo torrentsInfo) {
         String id = torrentsInfo.getId();
         String name = torrentsInfo.getName();
-        String hash = torrentsInfo.getHash();
 
         String mainName = FileUtil.mainName(name);
 
@@ -210,7 +212,7 @@ public class Transmission implements BaseDownload {
             return;
         }
 
-        String reName = renameCache.get(hash);
+        String reName = renameCache.get(id);
         if (StrUtil.isBlank(reName)) {
             return;
         }
@@ -231,7 +233,7 @@ public class Transmission implements BaseDownload {
                 .body(body)
                 .thenFunction(HttpResponse::isOk);
         Assert.isTrue(ok, "重命名失败 {} ==> {}", name, reName);
-        renameCache.remove(hash);
+        renameCache.remove(id);
     }
 
     @Override
