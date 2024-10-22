@@ -42,9 +42,13 @@ public class RenameTask extends Thread {
                     if (!loop.get()) {
                         return;
                     }
-                    TorrentUtil.rename(torrentsInfo);
-                    TorrentUtil.notification(torrentsInfo);
-                    TorrentUtil.delete(torrentsInfo);
+                    try {
+                        TorrentUtil.rename(torrentsInfo);
+                        TorrentUtil.notification(torrentsInfo);
+                        TorrentUtil.delete(torrentsInfo);
+                    } catch (Exception e) {
+                        log.error(e.getMessage(), e);
+                    }
                 }
             } catch (Exception e) {
                 String message = ExceptionUtil.getMessage(e);
