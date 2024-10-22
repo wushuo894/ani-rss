@@ -19,7 +19,7 @@ public interface BaseDownload {
             .disableHtmlEscaping()
             .create();
 
-    Cache<String, String> renameCache = CacheUtil.newFIFOCache(40960);
+    Cache<String, String> renameCache = CacheUtil.newFIFOCache(512);
 
     String tag = "ani-rss";
 

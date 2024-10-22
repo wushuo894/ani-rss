@@ -284,8 +284,8 @@ public class TorrentUtil {
     public static File getTorrent(Ani ani, Item item) {
         String infoHash = item.getInfoHash();
         File torrents = getTorrentDir(ani);
-        String type = ani.getType();
-        if ("dmhy".equals(type)) {
+        String torrent = item.getTorrent();
+        if (ReUtil.contains(StringEnum.MAGNET_REG, torrent)) {
             return new File(torrents + "/" + infoHash + ".txt");
         }
         return new File(torrents + "/" + infoHash + ".torrent");
@@ -307,8 +307,7 @@ public class TorrentUtil {
         }
 
         try {
-            String type = ani.getType();
-            if ("dmhy".equals(type)) {
+            if (ReUtil.contains(StringEnum.MAGNET_REG, torrent)) {
                 FileUtil.writeUtf8String(torrent, saveTorrentFile);
                 return saveTorrentFile;
             }

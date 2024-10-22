@@ -39,7 +39,7 @@
             </el-form-item>
           </el-form>
         </el-tab-pane>
-        <el-tab-pane label="Nyaa" name="nyaa">
+        <el-tab-pane label="Other" name="other">
           <el-form label-width="auto"
                    style="height: 200px"
                    v-if="showRss"
@@ -70,47 +70,6 @@
                   v-model:model-value="ani.url"
                   placeholder="https://nyaa.si/?page=rss&q=xxx"
               />
-            </el-form-item>
-          </el-form>
-        </el-tab-pane>
-        <el-tab-pane label="Dmhy" name="dmhy">
-          <el-form label-width="auto"
-                   style="height: 200px"
-                   v-if="showRss"
-                   @submit="(event)=>{
-                event.preventDefault()
-             }">
-            <el-form-item label="番剧名称">
-              <div style="display: flex;width: 100%;">
-                <div style="flex: 1">
-                  <el-input
-                      v-model:model-value="ani.title"
-                      placeholder="可以为空 如果获取失败建议补全"
-                  />
-                </div>
-                <div style="width: 4px;"></div>
-                <el-button text bg icon="Search" @click="bgmRef?.show(ani.title)"/>
-              </div>
-            </el-form-item>
-            <el-form-item label="BgmUrl">
-              <el-input
-                  v-model:model-value="ani.bgmUrl"
-                  placeholder="https://bgm.tv/subject/123456"
-              />
-            </el-form-item>
-            <el-form-item label="RSS 地址">
-              <div style="width: 100%">
-                <el-input
-                    v-model:model-value="ani.url"
-                    type="textarea"
-                    placeholder="https://share.dmhy.org/topics/rss/rss.xml?keyword=xxx"
-                />
-                <div>
-                  <el-text class="mx-1" size="small">
-                    Dmhy 仅支持qb开启修改任务标题的情况下自动重命名与坏种检测
-                  </el-text>
-                </div>
-              </div>
             </el-form-item>
           </el-form>
         </el-tab-pane>

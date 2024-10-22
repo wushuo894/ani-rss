@@ -49,7 +49,6 @@ public class ConfigUtil {
                 .setDownload("qBittorrent")
                 .setUsername("")
                 .setPassword("")
-                .setQbRenameTitle(true)
                 .setQbUseDownloadPath(false)
                 .setSkip5(true)
                 .setBackRss(false)

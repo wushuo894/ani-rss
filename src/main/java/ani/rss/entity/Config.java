@@ -39,11 +39,6 @@ public class Config implements Serializable {
     private String password;
 
     /**
-     * qb添加下载时修改任务标题
-     */
-    private Boolean qbRenameTitle;
-
-    /**
      * qb下载时，使用qb自身的保存路径配置(未下载完成的使用临时目录，复制种子文件)
      */
     private Boolean qbUseDownloadPath;
