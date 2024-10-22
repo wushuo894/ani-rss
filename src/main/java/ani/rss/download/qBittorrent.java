@@ -195,7 +195,7 @@ public class qBittorrent implements BaseDownload {
                         .sorted(Comparator.comparingLong(fileEntity -> Long.MAX_VALUE - fileEntity.getSize()))
                         .collect(Collectors.toList()));
 
-        Assert.notEmpty(fileEntityList);
+        Assert.notEmpty(fileEntityList, "磁力链接还在获取原数据中");
 
         long videoCount = fileEntityList.stream()
                 .map(FileEntity::getName)
