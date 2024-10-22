@@ -150,7 +150,7 @@ public class AniUtil {
         Ani ani = Ani.bulidAni();
         ani.setUrl(url.trim());
 
-        if (List.of("nyaa", "dmhy").contains(type)) {
+        if ("other".equals(type)) {
             if (StrUtil.isNotBlank(text)) {
                 title = text;
             }
