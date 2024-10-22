@@ -68,10 +68,13 @@
               <el-input
                   type="textarea"
                   v-model:model-value="ani.url"
-                  placeholder="https://nyaa.si/?page=rss&q=xxx"
+                  placeholder="https://xxxx.com/a.xml"
               />
             </el-form-item>
           </el-form>
+          <el-text class="mx-1" size="small">
+            dmhy等含有磁力链接的RSS不支持Aria2
+          </el-text>
         </el-tab-pane>
       </el-tabs>
       <div style="display: flex;justify-content: end;width: 100%;margin-top: 10px;">
