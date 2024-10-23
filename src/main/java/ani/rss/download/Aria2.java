@@ -177,6 +177,17 @@ public class Aria2 implements BaseDownload {
     public void rename(TorrentsInfo torrentsInfo) {
         String id = torrentsInfo.getId();
         String downloadDir = torrentsInfo.getDownloadDir();
+        TorrentsInfo.State state = torrentsInfo.getState();
+
+        if (Objects.isNull(state)) {
+            return;
+        }
+
+        // 仅支持下载完成后重命名
+        if (!state.name().equals(TorrentsInfo.State.pausedUP.name())) {
+            return;
+        }
+
         String reName = renameCache.get(id);
         if (StrUtil.isBlank(reName)) {
             return;
@@ -238,6 +249,7 @@ public class Aria2 implements BaseDownload {
             FileUtil.move(src, newPath, false);
             log.info("重命名 {} ==> {}", name, newPath);
         }
+        renameCache.remove(id);
     }
 
     @Override
