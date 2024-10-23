@@ -16,6 +16,7 @@ import cn.hutool.json.JSONUtil;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import lombok.Setter;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.File;
@@ -636,7 +637,64 @@ public class TorrentUtil {
         if (!b) {
             return;
         }
-        MessageUtil.send(ConfigUtil.CONFIG, null, name + " 下载完成", MessageEnum.DOWNLOAD_END);
+        MessageUtil.send(ConfigUtil.CONFIG, findAniByName(name), name + " 下载完成", MessageEnum.DOWNLOAD_END);
+    }
+
+    /**
+     * 根据通知反查订阅
+     *
+     * @param name
+     * @return
+     */
+    @SneakyThrows
+    public static synchronized Ani findAniByName(String name) {
+        if (!ReUtil.contains(StringEnum.SEASON_REG, name)) {
+            return null;
+        }
+        Config config = ConfigUtil.CONFIG;
+        String renameTemplate = config.getRenameTemplate();
+        renameTemplate = renameTemplate
+                .replace(".", "\\.")
+                .replace("(", "\\(")
+                .replace(")", "\\)")
+                .replace("[", "\\[")
+                .replace("]", "\\]");
+
+        String title;
+        int season;
+
+        if (!renameTemplate.contains("${title}")) {
+            return null;
+        }
+        title = ReUtil.get(renameTemplate
+                        .replace("${title}", "(.+)")
+                        .replace("$", "\\$")
+                        .replace("{", "\\{")
+                        .replace("}", "\\}"),
+                name, 1);
+
+        if (!renameTemplate.contains("${seasonFormat}") || !renameTemplate.contains("${season}")) {
+            return null;
+        }
+        season = Integer.parseInt(ReUtil.get(renameTemplate
+                        .replace("${seasonFormat}", "(\\d+)")
+                        .replace("${season}", "(\\d+)")
+                        .replace("$", "\\$")
+                        .replace("{", "\\{")
+                        .replace("}", "\\}"),
+                name, 1));
+
+        for (Ani ani : AniUtil.ANI_LIST) {
+            if (!title.equals(ani.getTitle())) {
+                continue;
+            }
+            if (season != ani.getSeason()) {
+                continue;
+            }
+            return ani;
+        }
+
+        return null;
     }
 
     /**
