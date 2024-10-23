@@ -689,7 +689,7 @@ public class TorrentUtil {
                 .replace("${seasonFormat}", "(\\d+)")
                 .replace("${season}", "(\\d+)");
 
-        renameTemplate = renameTemplate.replaceAll("\\$\\{\\w+\\}", ".+");
+        renameTemplate = renameTemplate.replaceAll("\\$\\{\\w+}", ".+");
 
         title = ReUtil.get(renameTemplate, name, titleIndex < seasonIndex ? 1 : 2);
         season = Integer.parseInt(ReUtil.get(renameTemplate, name, titleIndex < seasonIndex ? 2 : 1));
