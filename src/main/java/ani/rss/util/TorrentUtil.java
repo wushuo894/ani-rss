@@ -668,26 +668,31 @@ public class TorrentUtil {
         String title;
         int season;
 
-        if (!renameTemplate.contains("${title}")) {
-            return null;
-        }
-        title = ReUtil.get(renameTemplate
-                        .replace("${title}", "(.+)")
-                        .replace("$", "\\$")
-                        .replace("{", "\\{")
-                        .replace("}", "\\}"),
-                name, 1);
+        int titleIndex = renameTemplate.indexOf("${title}");
 
-        if (!renameTemplate.contains("${seasonFormat}") || !renameTemplate.contains("${season}")) {
+        if (titleIndex < 0) {
             return null;
         }
-        season = Integer.parseInt(ReUtil.get(renameTemplate
-                        .replace("${seasonFormat}", "(\\d+)")
-                        .replace("${season}", "(\\d+)")
-                        .replace("$", "\\$")
-                        .replace("{", "\\{")
-                        .replace("}", "\\}"),
-                name, 1));
+
+        int seasonIndex = renameTemplate.indexOf("${seasonFormat}");
+
+        if (seasonIndex < 1) {
+            seasonIndex = renameTemplate.indexOf("${season}");
+        }
+
+        if (seasonIndex < 1) {
+            return null;
+        }
+
+        renameTemplate = renameTemplate
+                .replace("${title}", "(.+)")
+                .replace("${seasonFormat}", "(\\d+)")
+                .replace("${season}", "(\\d+)");
+
+        renameTemplate = renameTemplate.replaceAll("\\$\\{\\w+\\}", ".+");
+
+        title = ReUtil.get(renameTemplate, name, titleIndex < seasonIndex ? 1 : 2);
+        season = Integer.parseInt(ReUtil.get(renameTemplate, name, titleIndex < seasonIndex ? 2 : 1));
 
         for (Ani ani : AniUtil.ANI_LIST) {
             if (!title.equals(ani.getTitle())) {
