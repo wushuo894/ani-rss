@@ -4,6 +4,8 @@
 
 [群晖NAS](#群晖nas)
 
+默认 用户名: admin 密码: admin
+
 ### Windows
 
 分为两个版本
