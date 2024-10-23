@@ -637,7 +637,13 @@ public class TorrentUtil {
         if (!b) {
             return;
         }
-        MessageUtil.send(ConfigUtil.CONFIG, findAniByName(name), name + " 下载完成", MessageEnum.DOWNLOAD_END);
+        Ani ani = null;
+        try {
+            ani = findAniByName(name);
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+        }
+        MessageUtil.send(ConfigUtil.CONFIG, ani, name + " 下载完成", MessageEnum.DOWNLOAD_END);
     }
 
     /**
@@ -646,7 +652,6 @@ public class TorrentUtil {
      * @param name
      * @return
      */
-    @SneakyThrows
     public static synchronized Ani findAniByName(String name) {
         if (!ReUtil.contains(StringEnum.SEASON_REG, name)) {
             return null;
