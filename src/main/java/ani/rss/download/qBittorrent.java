@@ -255,7 +255,6 @@ public class qBittorrent implements BaseDownload {
                     .form("newPath", newPath)
                     .thenFunction(HttpResponse::isOk);
             Assert.isTrue(b, "重命名失败 {} ==> {}", name, newPath);
-            renameCache.remove(hash);
         }
 
         // 清理空文件夹
