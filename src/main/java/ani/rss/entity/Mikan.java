@@ -4,6 +4,7 @@ import lombok.Data;
 import lombok.experimental.Accessors;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * mikan
@@ -59,6 +60,10 @@ public class Mikan {
          * 字幕组名称
          */
         private String label;
+        /**
+         * 标签
+         */
+        private Set<String> tags;
         /**
          * rss地址
          */

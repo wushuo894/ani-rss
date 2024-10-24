@@ -36,7 +36,8 @@ public class MessageAction implements BaseAction {
         ani.setBgmUrl("https://bgm.tv/subject/424883");
         BgmInfo bgmInfo = BgmUtil.getBgmInfo(ani);
         String image = bgmInfo.getImage();
-        ani.setCover(AniUtil.saveJpg(image));
+        ani.setCover(AniUtil.saveJpg(image))
+                .setImage(image);
         Boolean test = message.send(config, ani, null, "test");
         if (test) {
             resultSuccess();
