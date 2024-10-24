@@ -7,11 +7,11 @@
       <div style="margin: 0 10px;min-height: 500px" v-loading="loading">
         <template v-for="weekItem in weekList">
           <div v-show="searchList(weekItem.i).length">
-            <h2 style="margin: 16px 0 8px 4px;" v-if="weekItem.label.length">
-              {{ weekItem.label }}
+            <h2 style="margin: 16px 0 8px 4px;" v-if="weekItem['label'].length">
+              {{ weekItem['label'] }}
             </h2>
             <div class="grid-container">
-              <div v-for="item in searchList(weekItem.i)" v-if="searchList(weekItem.i).length">
+              <div v-for="item in searchList(weekItem['i'])" v-if="searchList(weekItem['i']).length">
                 <el-card shadow="never">
                   <div style="display: flex;width: 100%;align-items: center;">
                     <div style="height: 100%;">
@@ -256,8 +256,10 @@ const getList = () => {
         scoreShow.value = res.data.scoreShow
         if (weekShow.value) {
           weekList.value = defaultWeekList;
+          let day = new Date().getDay()
+          weekList.value = weekList.value.slice(day, weekList.value.length).concat(weekList.value.slice(0, day))
         } else {
-          weekList.value = [{ i: 1, label: '' }];
+          weekList.value = [{i: 1, label: ''}];
         }
         api.get('api/ani')
             .then(res => {
@@ -303,9 +305,6 @@ onMounted(() => {
   }
   window.addEventListener('resize', updateGridLayout);
   getList()
-
-  let day = new Date().getDay()
-  weekList.value = weekList.value.slice(day, weekList.value.length).concat(weekList.value.slice(0, day))
 })
 
 let logout = () => {
