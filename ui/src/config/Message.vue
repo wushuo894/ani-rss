@@ -6,7 +6,9 @@
     <div style="margin-bottom: 12px;margin-top: 4px;">
       <el-input v-model:model-value="props.config.messageTemplate" type="textarea"
                 placeholder="${text}"/>
-      <a target="_blank" href="https://docs.wushuo.top/docs#通知模版示例">通知模版示例</a>
+      <div style="width: 100%;display: flex;justify-content: end;">
+        <a target="_blank" href="https://docs.wushuo.top/docs#通知模版示例">通知模版示例</a>
+      </div>
     </div>
     <div>
       <el-checkbox-group v-model:model-value="config.messageList">
