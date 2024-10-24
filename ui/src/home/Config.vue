@@ -140,7 +140,8 @@ const config = ref({
   'renameMinSize': 100,
   'tmdbId': false,
   'renameDelYear': false,
-  'renameDelTmdbId': false
+  'renameDelTmdbId': false,
+  'messageTemplate': ''
 })
 
 const activeName = ref('download')
