@@ -306,6 +306,18 @@ qbittorrent:
 
 设置网页的账号与密码
 
+### 通知模版示例
+
+    标题: ${title}
+    评分: ${score}
+    TMDB: ${themoviedbName}
+    BGM: ${bgmUrl}
+    季: ${season}
+    集: ${episode}
+    进度: ${currentEpisodeNumber}/${totalEpisodeNumber}
+    日期:  ${year}年${month}月${date}日
+    事件: ${text}
+
 ### 邮件通知
 
 当有新番开始下载时向邮箱发送通知
