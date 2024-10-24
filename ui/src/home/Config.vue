@@ -172,6 +172,7 @@ const editConfig = () => {
   api.post('api/config', my_config)
       .then(res => {
         ElMessage.success(res.message)
+        emit('load')
         dialogVisible.value = false
       })
       .finally(() => {
@@ -182,6 +183,7 @@ const editConfig = () => {
 defineExpose({
   show
 })
+const emit = defineEmits(['load'])
 
 </script>
 
