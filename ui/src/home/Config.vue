@@ -140,7 +140,8 @@ const config = ref({
   'renameMinSize': 100,
   'tmdbId': false,
   'renameDelYear': false,
-  'renameDelTmdbId': false
+  'renameDelTmdbId': false,
+  'messageTemplate': ''
 })
 
 const activeName = ref('download')
@@ -172,6 +173,7 @@ const editConfig = () => {
   api.post('api/config', my_config)
       .then(res => {
         ElMessage.success(res.message)
+        emit('load')
         dialogVisible.value = false
       })
       .finally(() => {
@@ -182,6 +184,7 @@ const editConfig = () => {
 defineExpose({
   show
 })
+const emit = defineEmits(['load'])
 
 </script>
 
