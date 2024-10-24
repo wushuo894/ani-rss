@@ -34,6 +34,12 @@ public class RenameUtil {
         int offset = ani.getOffset();
         int season = ani.getSeason();
         String title = ani.getTitle();
+        Boolean ova = ani.getOva();
+
+        if (ova) {
+            item.setReName(title);
+            return true;
+        }
 
         Boolean renameDelYear = config.getRenameDelYear();
         Boolean renameDelTmdbId = config.getRenameDelTmdbId();

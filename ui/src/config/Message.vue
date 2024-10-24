@@ -1,6 +1,16 @@
 <template>
   <div style="margin-bottom: 12px;">
     <div>
+      <h3>通知模版</h3>
+    </div>
+    <div style="margin-bottom: 12px;margin-top: 4px;">
+      <el-input v-model:model-value="props.config.messageTemplate" type="textarea"
+                placeholder="${text}"/>
+      <div style="width: 100%;display: flex;justify-content: end;">
+        <a target="_blank" href="https://docs.wushuo.top/docs#通知模版示例">通知模版示例</a>
+      </div>
+    </div>
+    <div>
       <el-checkbox-group v-model:model-value="config.messageList">
         <el-checkbox label="开始下载" value="DOWNLOAD_START"/>
         <el-checkbox label="下载完成" value="DOWNLOAD_END"/>

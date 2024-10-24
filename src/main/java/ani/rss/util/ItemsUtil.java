@@ -196,9 +196,6 @@ public class ItemsUtil {
             return false;
         }).collect(Collectors.toList());
 
-        if (ova) {
-            return items;
-        }
         items = items.stream()
                 .filter(item -> {
                     try {
@@ -211,7 +208,6 @@ public class ItemsUtil {
                 }).collect(Collectors.toList());
         return CollUtil.distinct(items, Item::getReName, true);
     }
-
 
     static Cache<String, String> messageCache = CacheUtil.newFIFOCache(40960);
 
