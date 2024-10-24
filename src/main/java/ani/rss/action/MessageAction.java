@@ -32,7 +32,7 @@ public class MessageAction implements BaseAction {
         Config config = getBody(Config.class);
         Class<Object> loadClass = ClassUtil.loadClass("ani.rss.msg." + s);
         Message message = (Message) ReflectUtil.newInstance(loadClass);
-        Ani ani = new Ani();
+        Ani ani = Ani.bulidAni();
         ani.setBgmUrl("https://bgm.tv/subject/424883");
         BgmInfo bgmInfo = BgmUtil.getBgmInfo(ani);
         String image = bgmInfo.getImage();

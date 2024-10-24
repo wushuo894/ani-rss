@@ -40,12 +40,13 @@ public class MessageUtil {
             List<Func1<Ani, Object>> list = List.of(
                     Ani::getTitle,
                     Ani::getScore,
+                    Ani::getSeason,
                     Ani::getYear,
                     Ani::getMonth,
                     Ani::getDate,
                     Ani::getThemoviedbName,
                     Ani::getBgmUrl,
-                    Ani::getCustomEpisode,
+                    Ani::getCurrentEpisodeNumber,
                     Ani::getTotalEpisodeNumber
             );
 
