@@ -654,7 +654,11 @@ public class TorrentUtil {
      */
     public static synchronized Ani findAniByName(String name) {
         if (!ReUtil.contains(StringEnum.SEASON_REG, name)) {
-            return null;
+            return AniUtil.ANI_LIST
+                    .stream()
+                    .filter(ani -> ani.getTitle().equals(name))
+                    .findFirst()
+                    .orElse(null);
         }
         Config config = ConfigUtil.CONFIG;
         String renameTemplate = config.getRenameTemplate();
