@@ -53,6 +53,9 @@
                                 {{ group.label }}
                                 <el-text class="mx-1" size="small">{{ group['updateDay'] }}</el-text>
                               </div>
+                              <div v-if="showTag()">
+                                <el-tag v-for="tag in group['tags'].slice(0, 5)" style="margin-right: 4px;">{{ tag }}</el-tag>
+                              </div>
                               <div style="display: flex;align-items: center;margin-right: 14px;margin-left: 4px;">
                                 <el-button text bg @click.stop="add({
                                   'title':it.title,
@@ -209,6 +212,10 @@ let add = (v) => {
 
 let img = (it) => {
   return `api/file?img=${btoa(it['cover'])}&s=${window.authorization}`;
+}
+
+let showTag = () => {
+  return window.innerWidth > 900;
 }
 
 defineExpose({show})
