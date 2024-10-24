@@ -114,7 +114,8 @@ public class ConfigUtil {
                 .setServerChanSendKey("")
                 .setSystemMsg(false)
                 .setAutoTrackersUpdate(false)
-                .setTrackersUpdateUrls("https://cf.trackerslist.com/all.txt\nhttps://cdn.jsdelivr.net/gh/DeSireFire/animeTrackerList/AT_all.txt");
+                .setTrackersUpdateUrls("https://cf.trackerslist.com/all.txt\nhttps://cdn.jsdelivr.net/gh/DeSireFire/animeTrackerList/AT_all.txt")
+                .setMessageTemplate("${text}");
     }
 
     private static final Gson GSON = new GsonBuilder()
