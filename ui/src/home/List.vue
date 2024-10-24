@@ -169,8 +169,7 @@ import Popconfirm from "../other/Popconfirm.vue";
 import PlayList from "../play/PlayList.vue";
 import Cover from "./Cover.vue";
 
-
-const weekList = ref([
+const defaultWeekList = [
   {
     i: 1,
     label: '星期日'
@@ -198,8 +197,9 @@ const weekList = ref([
   {
     i: 7,
     label: '星期六'
-  }]
-)
+  }
+]
+const weekList = ref(defaultWeekList)
 
 const pagerCount = ref(10)
 const refEdit = ref()
@@ -254,11 +254,10 @@ const getList = () => {
         showPlaylist.value = res.data.showPlaylist
         weekShow.value = res.data.weekShow
         scoreShow.value = res.data.scoreShow
-        if (!weekShow.value) {
-          weekList.value = [{
-            i: 1,
-            label: ''
-          }]
+        if (weekShow.value) {
+          weekList.value = defaultWeekList;
+        } else {
+          weekList.value = [{ i: 1, label: '' }];
         }
         api.get('api/ani')
             .then(res => {

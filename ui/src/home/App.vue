@@ -1,5 +1,5 @@
 <template>
-  <Config ref="config"/>
+  <Config ref="config" @load="list?.getList"/>
   <Add ref="add" @load="list?.getList"/>
   <Logs ref="logs"/>
   <Manage ref="manage" @load="list?.getList"/>
