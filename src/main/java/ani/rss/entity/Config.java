@@ -377,4 +377,9 @@ public class Config implements Serializable {
      * Trackers更新地址
      */
     private String trackersUpdateUrls;
+
+    /**
+     * 消息模版
+     */
+    private String messageTemplate;
 }
