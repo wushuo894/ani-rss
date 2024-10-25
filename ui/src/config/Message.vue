@@ -102,6 +102,9 @@
           <el-input v-model:model-value="props.config.mailAddressee" :disabled="!config.mail"
                     placeholder="xx@xx.com"></el-input>
         </el-form-item>
+        <el-form-item label="图片">
+          <el-switch v-model:model-value="props.config.mailImage" :disabled="!config.mail"/>
+        </el-form-item>
         <el-form-item label="开关">
           <div style="width: 100%;display: flex;justify-content: space-between;">
             <el-switch v-model:model-value="props.config.mail"></el-switch>
@@ -127,11 +130,10 @@
           </el-select>
         </el-form-item>
         <el-form-item label="sendKey" v-if="props.config.serverChanType === 'serverChan'">
-          <el-input v-model="props.config.serverChanSendKey"></el-input>
+          <el-input v-model="props.config.serverChanSendKey" placeholder="1234567890"></el-input>
         </el-form-item>
-
         <el-form-item label="apiUrl" v-else-if="props.config.serverChanType === 'serverChan3'">
-          <el-input v-model="props.config.serverChan3ApiUrl"></el-input>
+          <el-input v-model="props.config.serverChan3ApiUrl" placeholder="https://<uid>.push.ft07.com/send/<sendKey>.send"></el-input>
         </el-form-item>
         <el-form-item label="开关">
           <div style="display: flex;width: 100%;justify-content: space-between;">

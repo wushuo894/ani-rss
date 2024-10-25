@@ -4,6 +4,7 @@ import ani.rss.entity.Config;
 import ani.rss.entity.Login;
 import ani.rss.entity.MyMailAccount;
 import ani.rss.enums.MessageEnum;
+import ani.rss.enums.ServerChanTypeEnum;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.bean.copier.CopyOptions;
 import cn.hutool.core.io.FileUtil;
@@ -65,6 +66,7 @@ public class ConfigUtil {
                 .setDownloadCount(0)
                 .setMail(false)
                 .setMailAddressee("")
+                .setMailImage(true)
                 .setMailAccount(
                         new MyMailAccount()
                                 .setHost("")
@@ -113,7 +115,7 @@ public class ConfigUtil {
                 ))
                 .setVerifyLoginIp(true)
                 .setServerChan(false)
-                .setServerChanType("")
+                .setServerChanType(ServerChanTypeEnum.SERVER_CHAN.getType())
                 .setServerChanSendKey("")
                 .setServerChan3ApiUrl("")
                 .setSystemMsg(false)

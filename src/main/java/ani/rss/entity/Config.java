@@ -194,6 +194,11 @@ public class Config implements Serializable {
     private String mailAddressee;
 
     /**
+     * mail 发送图片
+     */
+    private Boolean mailImage;
+
+    /**
      * 登录信息
      */
     private Login login;
