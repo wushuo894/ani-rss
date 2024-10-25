@@ -126,8 +126,12 @@
             />
           </el-select>
         </el-form-item>
-        <el-form-item label="sendKey">
-          <el-input v-model:model-value="props.config.serverChanSendKey"></el-input>
+        <el-form-item label="sendKey" v-if="props.config.serverChanType === 'serverChan'">
+          <el-input v-model="props.config.serverChanSendKey"></el-input>
+        </el-form-item>
+
+        <el-form-item label="apiUrl" v-else-if="props.config.serverChanType === 'serverChan3'">
+          <el-input v-model="props.config.serverChan3ApiUrl"></el-input>
         </el-form-item>
         <el-form-item label="开关">
           <div style="display: flex;width: 100%;justify-content: space-between;">

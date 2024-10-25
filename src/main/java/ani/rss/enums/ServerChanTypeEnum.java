@@ -5,7 +5,7 @@ import lombok.Getter;
 @Getter
 public enum ServerChanTypeEnum {
     SERVER_CHAN("serverChan", "server酱", "https://sctapi.ftqq.com/<sendKey>.send", "SCT"),
-    SERVER_CHAN_3("serverChan3", "server酱³", "https://<sendKey>.push.ft07.com/send", "sct");
+    SERVER_CHAN_3("serverChan3", "server酱³", "https://<uid>.push.ft07.com/send/<sendKey>.send", "sct");
 
     private final String type;
     private final String name;
