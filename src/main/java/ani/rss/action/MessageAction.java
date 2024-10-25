@@ -37,7 +37,14 @@ public class MessageAction implements BaseAction {
         BgmInfo bgmInfo = BgmUtil.getBgmInfo(ani);
         String image = bgmInfo.getImage();
         ani.setCover(AniUtil.saveJpg(image))
-                .setImage(image);
+                .setImage(image)
+                .setTitle("test")
+                .setSeason(1)
+                .setCurrentEpisodeNumber(2)
+                .setTotalEpisodeNumber(12)
+                .setScore(8.0)
+                .setThemoviedbName("test")
+                .setYear(2024);
         Boolean test = message.send(config, ani, "test", null);
         if (test) {
             resultSuccess();
