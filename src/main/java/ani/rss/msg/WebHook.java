@@ -19,7 +19,9 @@ import java.util.Objects;
 public class WebHook implements Message {
     @Override
     public Boolean send(Config config, Ani ani, String text, MessageEnum messageEnum) {
-        text = replaceMessageTemplate(ani, config.getMessageTemplate(), text);
+        String messageTemplate = config.getMessageTemplate();
+        messageTemplate = messageTemplate.replace("\n","\\n");
+        String message = replaceMessageTemplate(ani, messageTemplate, text);
 
         String webHookMethod = config.getWebHookMethod();
         String webHookUrl = config.getWebHookUrl();
@@ -33,8 +35,8 @@ public class WebHook implements Message {
             return false;
         }
 
-        webHookUrl = webHookUrl.replace("${message}", text);
-        webHookBody = webHookBody.replace("${message}", text);
+        webHookUrl = webHookUrl.replace("${message}", message);
+        webHookBody = webHookBody.replace("${message}", message);
 
         String image = "https://docs.wushuo.top/image/null.png";
 
