@@ -15,7 +15,8 @@ import java.util.Objects;
 @Slf4j
 public class SystemMsg implements Message {
     @Override
-    public Boolean send(Config config, Ani ani, MessageEnum messageEnum, String text) {
+    public Boolean send(Config config, Ani ani, String text, MessageEnum messageEnum) {
+        text = replaceMessageTemplate(ani, config.getMessageTemplate(), text);
         if (!SystemTray.isSupported()) {
             log.error("SystemTray is not supported");
             return false;

@@ -282,13 +282,6 @@ public class qBittorrent implements BaseDownload {
         }
     }
 
-    @Data
-    @Accessors(chain = true)
-    static class FileEntity {
-        private String name;
-        private Long size;
-    }
-
     @Override
     public Boolean addTags(TorrentsInfo torrentsInfo, String tags) {
         String host = config.getHost();
@@ -323,6 +316,13 @@ public class qBittorrent implements BaseDownload {
                     log.error("qBittorrent 更新Trackers失败 {}", res.getStatus());
                 });
 
+    }
+
+    @Data
+    @Accessors(chain = true)
+    static class FileEntity {
+        private String name;
+        private Long size;
     }
 
 

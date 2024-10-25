@@ -20,11 +20,12 @@ import java.util.stream.Collectors;
  */
 @Slf4j
 public class RssTask extends Thread {
+    public static final AtomicBoolean download = new AtomicBoolean(false);
+    private final AtomicBoolean loop;
+
     public RssTask(AtomicBoolean loop) {
         this.loop = loop;
     }
-
-    private final AtomicBoolean loop;
 
     public static void download(AtomicBoolean loop) {
         try {
@@ -76,8 +77,6 @@ public class RssTask extends Thread {
             download.set(false);
         }
     }
-
-    public static final AtomicBoolean download = new AtomicBoolean(false);
 
     public static void sync() {
         synchronized (download) {

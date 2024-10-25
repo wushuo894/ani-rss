@@ -20,7 +20,8 @@ import java.util.List;
 @Slf4j
 public class Mail implements Message {
     @Override
-    public Boolean send(Config config, Ani ani, MessageEnum messageEnum, String text) {
+    public Boolean send(Config config, Ani ani, String text, MessageEnum messageEnum) {
+        text = replaceMessageTemplate(ani, config.getMessageTemplate(), text);
         Boolean mail = config.getMail();
         MyMailAccount myMailAccount = config.getMailAccount();
         String mailAddressee = config.getMailAddressee();

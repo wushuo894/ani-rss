@@ -14,6 +14,13 @@ public interface BaseAction extends Action {
             .disableHtmlEscaping()
             .create();
 
+    static <T> void staticResult(Result<T> result) {
+        HttpServerResponse httpServerResponse = ServerUtil.RESPONSE.get();
+        httpServerResponse.setContentType("application/json; charset=utf-8");
+        String json = gson.toJson(result);
+        IoUtil.writeUtf8(httpServerResponse.getOut(), true, json);
+    }
+
     default <T> T getBody(Class<T> tClass) {
         return gson.fromJson(ServerUtil.REQUEST.get().getBody(), tClass);
     }
@@ -44,13 +51,5 @@ public interface BaseAction extends Action {
 
     default <T> void result(Result<T> result) {
         staticResult(result);
-    }
-
-
-    static <T> void staticResult(Result<T> result) {
-        HttpServerResponse httpServerResponse = ServerUtil.RESPONSE.get();
-        httpServerResponse.setContentType("application/json; charset=utf-8");
-        String json = gson.toJson(result);
-        IoUtil.writeUtf8(httpServerResponse.getOut(), true, json);
     }
 }

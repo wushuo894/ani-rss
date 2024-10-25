@@ -18,11 +18,11 @@ import java.util.concurrent.atomic.AtomicBoolean;
 @Slf4j
 public class RenameTask extends Thread {
 
+    private final AtomicBoolean loop;
+
     public RenameTask(AtomicBoolean loop) {
         this.loop = loop;
     }
-
-    private final AtomicBoolean loop;
 
     @Override
     public void run() {

@@ -29,6 +29,8 @@ import java.util.stream.Collectors;
  * BGM
  */
 public class BgmUtil {
+    static final Cache<String, String> collectionsCache = CacheUtil.newFIFOCache(64);
+    static final Cache<String, List<JsonObject>> getEpisodeIdCache = CacheUtil.newFIFOCache(64);
     private static final String host = "https://api.bgm.tv";
     private static final Gson gson = new Gson();
     private static final Cache<String, String> nameCache = CacheUtil.newFIFOCache(64);
@@ -112,9 +114,6 @@ public class BgmUtil {
         Assert.isTrue(ReUtil.contains(regStr, bgmUrl));
         return ReUtil.get(regStr, bgmUrl, 2);
     }
-
-    static final Cache<String, String> collectionsCache = CacheUtil.newFIFOCache(64);
-    static final Cache<String, List<JsonObject>> getEpisodeIdCache = CacheUtil.newFIFOCache(64);
 
     /**
      * 获取视频列表

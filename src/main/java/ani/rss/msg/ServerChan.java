@@ -21,7 +21,8 @@ public class ServerChan implements Message {
     private static final String MARKDOWN_STRING = "# <message>\n\n![<image>](<image>)";
 
     @Override
-    public Boolean send(Config config, Ani ani, MessageEnum messageEnum, String text) {
+    public Boolean send(Config config, Ani ani, String text, MessageEnum messageEnum) {
+        text = replaceMessageTemplate(ani, config.getMessageTemplate(), text);
         text = text.replace("\n", "\n\n");
         String type = config.getServerChanType();
         String sendKey = config.getServerChanSendKey();

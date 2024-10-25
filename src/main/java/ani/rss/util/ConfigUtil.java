@@ -22,6 +22,9 @@ import java.util.Map;
 public class ConfigUtil {
 
     public static final Config CONFIG = new Config();
+    private static final Gson GSON = new GsonBuilder()
+            .disableHtmlEscaping()
+            .create();
 
     /*
       默认配置
@@ -117,10 +120,6 @@ public class ConfigUtil {
                 .setTrackersUpdateUrls("https://cf.trackerslist.com/all.txt\nhttps://cdn.jsdelivr.net/gh/DeSireFire/animeTrackerList/AT_all.txt")
                 .setMessageTemplate("${text}");
     }
-
-    private static final Gson GSON = new GsonBuilder()
-            .disableHtmlEscaping()
-            .create();
 
     /**
      * 获取设置文件夹
