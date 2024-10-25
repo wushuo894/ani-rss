@@ -22,6 +22,7 @@ public class ServerChan implements Message {
 
     @Override
     public Boolean send(Config config, Ani ani, MessageEnum messageEnum, String text) {
+        text = text.replace("\n", "\n\n");
         String type = config.getServerChanType();
         String sendKey = config.getServerChanSendKey();
         if (StringUtil.isBlank(type) || StringUtil.isBlank(sendKey)) {
@@ -44,23 +45,27 @@ public class ServerChan implements Message {
 
         String image = "https://docs.wushuo.top/image/null.png";
 
-        if (Objects.nonNull(ani) && StrUtil.isNotBlank(ani.getImage())) {
-            image = ani.getImage();
+        String title = text;
+        if (Objects.nonNull(ani)) {
+            if (StrUtil.isNotBlank(ani.getImage())) {
+                image = ani.getImage();
+            }
+            title = ani.getTitle();
         }
-        String desp = MARKDOWN_STRING.replace("<message>", text).replace("<image>", image);
 
         String serverChanUrl = "";
         String body = "";
         if (type.equals(ServerChanTypeEnum.SERVER_CHAN.getType())) {
             serverChanUrl = ServerChanTypeEnum.SERVER_CHAN.getUrl().replace("<sendKey>", sendKey);
             body = gson.toJson(Map.of(
-                    "title", text,
+                    "title", title,
                     "desp", text
             ));
         } else if (type.equals(ServerChanTypeEnum.SERVER_CHAN_3.getType())) {
+            String desp = MARKDOWN_STRING.replace("<message>", text).replace("<image>", image);
             serverChanUrl = ServerChanTypeEnum.SERVER_CHAN_3.getUrl().replace("<sendKey>", sendKey);
             body = gson.toJson(Map.of(
-                    "title", text,
+                    "title", title,
                     "tags", "ass",
                     "desp", desp
             ));
