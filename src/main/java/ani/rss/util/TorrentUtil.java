@@ -16,7 +16,6 @@ import cn.hutool.json.JSONUtil;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import lombok.Setter;
-import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.File;
@@ -30,13 +29,11 @@ import java.util.stream.Stream;
 @Slf4j
 public class TorrentUtil {
 
-    @Setter
-    private static BaseDownload baseDownload;
-
     private static final Gson GSON = new GsonBuilder()
             .disableHtmlEscaping()
             .create();
-
+    @Setter
+    private static BaseDownload baseDownload;
 
     /**
      * 下载动漫

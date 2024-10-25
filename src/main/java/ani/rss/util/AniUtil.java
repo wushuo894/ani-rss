@@ -35,11 +35,10 @@ import java.util.stream.Collectors;
 @Slf4j
 public class AniUtil {
 
+    public static final List<Ani> ANI_LIST = new CopyOnWriteArrayList<>();
     private static final Gson GSON = new GsonBuilder()
             .disableHtmlEscaping()
             .create();
-
-    public static final List<Ani> ANI_LIST = new CopyOnWriteArrayList<>();
 
     /**
      * 获取订阅配置文件

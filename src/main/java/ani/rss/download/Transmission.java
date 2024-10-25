@@ -3,7 +3,6 @@ package ani.rss.download;
 import ani.rss.entity.Config;
 import ani.rss.entity.Item;
 import ani.rss.entity.TorrentsInfo;
-import ani.rss.enums.StringEnum;
 import ani.rss.util.ExceptionUtil;
 import ani.rss.util.HttpReq;
 import cn.hutool.core.codec.Base64;

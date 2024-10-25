@@ -18,10 +18,15 @@ import java.util.Objects;
 @Slf4j
 public class WebHook implements Message {
     @Override
-    public Boolean send(Config config, Ani ani, MessageEnum messageEnum, String text) {
+    public Boolean send(Config config, Ani ani, String text, MessageEnum messageEnum) {
+        text = replaceMessageTemplate(ani, config.getMessageTemplate(), text);
+
         String webHookMethod = config.getWebHookMethod();
         String webHookUrl = config.getWebHookUrl();
         String webHookBody = config.getWebHookBody();
+
+        webHookUrl = replaceMessageTemplate(ani, config.getMessageTemplate(), webHookUrl);
+        webHookBody = replaceMessageTemplate(ani, config.getMessageTemplate(), webHookBody);
 
         if (StrUtil.isBlank(webHookUrl)) {
             log.warn("webhook url is blank");
