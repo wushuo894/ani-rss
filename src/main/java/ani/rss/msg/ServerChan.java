@@ -26,23 +26,13 @@ public class ServerChan implements Message {
         text = text.replace("\n", "\n\n");
         String type = config.getServerChanType();
         String sendKey = config.getServerChanSendKey();
-        if (StringUtil.isBlank(type) || StringUtil.isBlank(sendKey)) {
-            log.warn("ServerChan 通知的参数不完整");
+        String apiUrl = config.getServerChan3ApiUrl();
+
+        Boolean flag = checkParam(type, sendKey, apiUrl);
+        if (!flag) {
             return false;
         }
-        if (type.equals(ServerChanTypeEnum.SERVER_CHAN.getType())) {
-            if (!sendKey.startsWith(ServerChanTypeEnum.SERVER_CHAN.getSendkeyPrefix())) {
-                log.warn("sendKey不匹配，请确认类型为{}", ServerChanTypeEnum.SERVER_CHAN.getName());
-                return false;
-            }
-        }
 
-        if (type.equals(ServerChanTypeEnum.SERVER_CHAN_3.getType())) {
-            if (!sendKey.startsWith(ServerChanTypeEnum.SERVER_CHAN_3.getSendkeyPrefix())) {
-                log.warn("sendKey不匹配，请确认类型为{}", ServerChanTypeEnum.SERVER_CHAN_3.getName());
-                return false;
-            }
-        }
 
         String image = "https://docs.wushuo.top/image/null.png";
 
@@ -64,7 +54,7 @@ public class ServerChan implements Message {
             ));
         } else if (type.equals(ServerChanTypeEnum.SERVER_CHAN_3.getType())) {
             String desp = MARKDOWN_STRING.replace("<message>", text).replace("<image>", image);
-            serverChanUrl = ServerChanTypeEnum.SERVER_CHAN_3.getUrl().replace("<sendKey>", sendKey);
+            serverChanUrl = apiUrl;
             body = gson.toJson(Map.of(
                     "title", title,
                     "tags", "ass",
@@ -75,5 +65,29 @@ public class ServerChan implements Message {
         return HttpReq.post(serverChanUrl, false)
                 .body(body)
                 .thenFunction(HttpResponse::isOk);
+    }
+
+    private static Boolean checkParam(String type, String sendKey, String apiUrl) {
+        if (StrUtil.isBlank(type)) {
+            log.warn("server酱类型不能为空");
+            return false;
+        }
+
+        if (type.equals(ServerChanTypeEnum.SERVER_CHAN.getType())) {
+            if (StrUtil.isBlank(sendKey)) {
+                log.warn("sendKey 不能为空");
+                return false;
+            }
+        } else if (type.equals(ServerChanTypeEnum.SERVER_CHAN_3.getType())) {
+            if (StrUtil.isBlank(apiUrl)) {
+                log.warn("apiUrl 不能为空");
+                return false;
+            }
+        } else {
+            log.warn("无效的server酱类型");
+            return false;
+        }
+
+        return true;
     }
 }

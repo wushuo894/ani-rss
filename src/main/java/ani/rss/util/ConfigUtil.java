@@ -115,6 +115,7 @@ public class ConfigUtil {
                 .setServerChan(false)
                 .setServerChanType("")
                 .setServerChanSendKey("")
+                .setServerChan3ApiUrl("")
                 .setSystemMsg(false)
                 .setAutoTrackersUpdate(false)
                 .setTrackersUpdateUrls("https://cf.trackerslist.com/all.txt\nhttps://cdn.jsdelivr.net/gh/DeSireFire/animeTrackerList/AT_all.txt")
