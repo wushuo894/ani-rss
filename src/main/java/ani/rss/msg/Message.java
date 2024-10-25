@@ -24,38 +24,39 @@ public interface Message {
 
     default String replaceMessageTemplate(Ani ani, String messageTemplate, String text) {
         messageTemplate = messageTemplate.replace("${text}", text);
-
-        if (Objects.nonNull(ani)) {
-            List<Func1<Ani, Object>> list = List.of(
-                    Ani::getTitle,
-                    Ani::getScore,
-                    Ani::getSeason,
-                    Ani::getYear,
-                    Ani::getMonth,
-                    Ani::getDate,
-                    Ani::getThemoviedbName,
-                    Ani::getBgmUrl,
-                    Ani::getCurrentEpisodeNumber,
-                    Ani::getTotalEpisodeNumber
-            );
-
-            for (Func1<Ani, Object> func1 : list) {
-                try {
-                    String fieldName = LambdaUtil.getFieldName(func1);
-                    String s = StrFormatter.format("${{}}", fieldName);
-                    String v = func1.callWithRuntimeException(ani).toString();
-                    messageTemplate = messageTemplate.replace(s, v);
-                } catch (Exception ignored) {
-                }
-            }
-        }
-
         // 集数
         double episode = 1.0;
         if (ReUtil.contains(StringEnum.SEASON_REG, text)) {
             episode = Double.parseDouble(ReUtil.get(StringEnum.SEASON_REG, text, 2));
         }
         messageTemplate = messageTemplate.replace("${episode}", String.valueOf(episode));
+
+        if (Objects.isNull(ani)) {
+            return messageTemplate;
+        }
+
+        List<Func1<Ani, Object>> list = List.of(
+                Ani::getTitle,
+                Ani::getScore,
+                Ani::getSeason,
+                Ani::getYear,
+                Ani::getMonth,
+                Ani::getDate,
+                Ani::getThemoviedbName,
+                Ani::getBgmUrl,
+                Ani::getCurrentEpisodeNumber,
+                Ani::getTotalEpisodeNumber
+        );
+
+        for (Func1<Ani, Object> func1 : list) {
+            try {
+                String fieldName = LambdaUtil.getFieldName(func1);
+                String s = StrFormatter.format("${{}}", fieldName);
+                String v = func1.callWithRuntimeException(ani).toString();
+                messageTemplate = messageTemplate.replace(s, v);
+            } catch (Exception ignored) {
+            }
+        }
         return messageTemplate;
     }
 }
