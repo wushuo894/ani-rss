@@ -46,13 +46,16 @@ public class Mail implements Message {
 
         messageBody = messageBody.replace("\n", "<br/>");
 
-        String image = "https://docs.wushuo.top/image/null.png";
+        Boolean mailImage = config.getMailImage();
+        if (mailImage) {
+            String image = "https://docs.wushuo.top/image/null.png";
 
-        if (Objects.nonNull(ani)) {
-            image = ani.getImage();
+            if (Objects.nonNull(ani)) {
+                image = ani.getImage();
+            }
+
+            messageBody += StrFormatter.format("<br/><img src=\"{}\"/>", image);
         }
-
-        messageBody += StrFormatter.format("<br/><img src=\"{}\"/>", image);
 
         try {
             MailUtil.send(mailAccount, List.of(mailAddressee), text, messageBody, true);
