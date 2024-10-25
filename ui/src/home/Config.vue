@@ -101,6 +101,7 @@ const config = ref({
     'pass': '',
     'sslEnable': false
   },
+  'mailImage': true,
   'login': {
     'username': '',
     'password': ''
