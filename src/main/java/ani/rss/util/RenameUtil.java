@@ -96,7 +96,7 @@ public class RenameUtil {
             }
         }
 
-        boolean is5 = Double.parseDouble(episode) - 0.5 == Double.valueOf(episode).intValue();
+        boolean is5 = Double.parseDouble(episode) != Double.valueOf(episode).intValue();
 
         item.setEpisode(Double.parseDouble(episode) + offset);
 
