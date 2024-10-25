@@ -13,6 +13,7 @@ import cn.hutool.extra.mail.MailUtil;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
+import java.util.Objects;
 
 /**
  * 邮箱
@@ -42,8 +43,19 @@ public class Mail implements Message {
         mailAccount.setUser(from)
                 .setFrom(StrFormatter.format("ani-rss <{}>", from))
                 .setAuth(true);
+
+        messageBody = messageBody.replace("\n", "<br/>");
+
+        String image = "https://docs.wushuo.top/image/null.png";
+
+        if (Objects.nonNull(ani)) {
+            image = ani.getImage();
+        }
+
+        messageBody += StrFormatter.format("<br/><img src=\"{}\"/>", image);
+
         try {
-            MailUtil.send(mailAccount, List.of(mailAddressee), text, messageBody, false);
+            MailUtil.send(mailAccount, List.of(mailAddressee), text, messageBody, true);
             return true;
         } catch (Exception e) {
             String message = ExceptionUtil.getMessage(e);
