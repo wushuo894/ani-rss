@@ -46,14 +46,14 @@ public class ServerChan implements Message {
 
         String serverChanUrl = "";
         String body = "";
+        String desp = MARKDOWN_STRING.replace("<message>", text).replace("<image>", image);
         if (type.equals(ServerChanTypeEnum.SERVER_CHAN.getType())) {
             serverChanUrl = ServerChanTypeEnum.SERVER_CHAN.getUrl().replace("<sendKey>", sendKey);
             body = gson.toJson(Map.of(
                     "title", title,
-                    "desp", text
+                    "desp", desp
             ));
         } else if (type.equals(ServerChanTypeEnum.SERVER_CHAN_3.getType())) {
-            String desp = MARKDOWN_STRING.replace("<message>", text).replace("<image>", image);
             serverChanUrl = apiUrl;
             body = gson.toJson(Map.of(
                     "title", title,
