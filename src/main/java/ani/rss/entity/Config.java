@@ -359,6 +359,11 @@ public class Config implements Serializable {
     private String serverChanSendKey;
 
     /**
+     * server酱3 apiUrl
+     */
+    private String serverChan3ApiUrl;
+
+    /**
      * server酱 开关
      */
     private Boolean serverChan;
