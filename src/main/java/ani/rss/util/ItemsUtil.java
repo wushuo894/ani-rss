@@ -82,7 +82,6 @@ public class ItemsUtil {
     public static List<Item> getItems(Ani ani, String xml, Item newItem) {
         List<String> exclude = ani.getExclude();
         List<String> match = ani.getMatch();
-        Boolean ova = ani.getOva();
 
         List<Item> items = new ArrayList<>();
 
