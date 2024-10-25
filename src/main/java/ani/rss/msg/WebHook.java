@@ -25,8 +25,8 @@ public class WebHook implements Message {
         String webHookUrl = config.getWebHookUrl();
         String webHookBody = config.getWebHookBody();
 
-        webHookUrl = replaceMessageTemplate(ani, config.getMessageTemplate(), webHookUrl);
-        webHookBody = replaceMessageTemplate(ani, config.getMessageTemplate(), webHookBody);
+        webHookUrl = replaceMessageTemplate(ani, webHookUrl, text);
+        webHookBody = replaceMessageTemplate(ani, webHookBody, text);
 
         if (StrUtil.isBlank(webHookUrl)) {
             log.warn("webhook url is blank");
