@@ -198,7 +198,7 @@
             <div style="width: 100%">
               <div>
                 <el-input v-model:model-value="props.config.trackersUpdateUrls" placeholder="换行输入多个"
-                          autosize
+                          :autosize="{ minRows: 2}"
                           style="width: 100%" type="textarea"/>
               </div>
               <div style="height: 12px;"/>
