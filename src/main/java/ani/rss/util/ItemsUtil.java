@@ -28,6 +28,8 @@ import java.util.stream.Collectors;
 @Slf4j
 public class ItemsUtil {
 
+    static Cache<String, String> messageCache = CacheUtil.newFIFOCache(40960);
+
     /**
      * 获取视频列表
      *
@@ -208,8 +210,6 @@ public class ItemsUtil {
                 }).collect(Collectors.toList());
         return CollUtil.distinct(items, Item::getReName, true);
     }
-
-    static Cache<String, String> messageCache = CacheUtil.newFIFOCache(40960);
 
     /**
      * 检测是否缺集

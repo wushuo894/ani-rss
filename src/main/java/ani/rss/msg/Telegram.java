@@ -23,43 +23,6 @@ import java.util.Objects;
  */
 @Slf4j
 public class Telegram implements Message {
-    public Boolean send(Config config, Ani ani, MessageEnum messageEnum, String text) {
-        String telegramBotToken = config.getTelegramBotToken();
-        String telegramChatId = config.getTelegramChatId();
-        String telegramApiHost = config.getTelegramApiHost();
-        Boolean telegramImage = config.getTelegramImage();
-        if (StrUtil.isBlank(telegramChatId) || StrUtil.isBlank(telegramBotToken)) {
-            log.warn("telegram 通知的参数不完整");
-            return false;
-        }
-        telegramApiHost = StrUtil.blankToDefault(telegramApiHost, "https://api.telegram.org");
-
-        String url = StrFormatter.format("{}/bot{}/sendMessage", telegramApiHost, telegramBotToken);
-
-        if (Objects.isNull(ani) || !telegramImage) {
-            return HttpReq.post(url, true)
-                    .body(gson.toJson(Map.of(
-                            "chat_id", telegramChatId,
-                            "text", text
-                    )))
-                    .thenFunction(HttpResponse::isOk);
-        }
-        String cover = ani.getCover();
-        File configDir = ConfigUtil.getConfigDir();
-        File photo = new File(configDir + "/files/" + cover);
-        if (StrUtil.isBlank(cover) || !photo.exists()) {
-            return send(config, null, messageEnum, text);
-        }
-
-        url = StrFormatter.format("{}/bot{}/sendPhoto", telegramApiHost, telegramBotToken);
-        return HttpReq.post(url, true)
-                .contentType(ContentType.MULTIPART.getValue())
-                .form("chat_id", telegramChatId)
-                .form("caption", text)
-                .form("photo", photo)
-                .thenFunction(HttpResponse::isOk);
-    }
-
     public static synchronized Map<String, String> getUpdates(Config config) {
         String telegramBotToken = config.getTelegramBotToken();
         if (StrUtil.isBlank(telegramBotToken)) {
@@ -92,5 +55,43 @@ public class Telegram implements Message {
                             );
                     return map;
                 });
+    }
+
+    public Boolean send(Config config, Ani ani, String text, MessageEnum messageEnum) {
+        text = replaceMessageTemplate(ani, config.getMessageTemplate(), text);
+        String telegramBotToken = config.getTelegramBotToken();
+        String telegramChatId = config.getTelegramChatId();
+        String telegramApiHost = config.getTelegramApiHost();
+        Boolean telegramImage = config.getTelegramImage();
+        if (StrUtil.isBlank(telegramChatId) || StrUtil.isBlank(telegramBotToken)) {
+            log.warn("telegram 通知的参数不完整");
+            return false;
+        }
+        telegramApiHost = StrUtil.blankToDefault(telegramApiHost, "https://api.telegram.org");
+
+        String url = StrFormatter.format("{}/bot{}/sendMessage", telegramApiHost, telegramBotToken);
+
+        if (Objects.isNull(ani) || !telegramImage) {
+            return HttpReq.post(url, true)
+                    .body(gson.toJson(Map.of(
+                            "chat_id", telegramChatId,
+                            "text", text
+                    )))
+                    .thenFunction(HttpResponse::isOk);
+        }
+        String cover = ani.getCover();
+        File configDir = ConfigUtil.getConfigDir();
+        File photo = new File(configDir + "/files/" + cover);
+        if (StrUtil.isBlank(cover) || !photo.exists()) {
+            return send(config, null, text, messageEnum);
+        }
+
+        url = StrFormatter.format("{}/bot{}/sendPhoto", telegramApiHost, telegramBotToken);
+        return HttpReq.post(url, true)
+                .contentType(ContentType.MULTIPART.getValue())
+                .form("chat_id", telegramChatId)
+                .form("caption", text)
+                .form("photo", photo)
+                .thenFunction(HttpResponse::isOk);
     }
 }

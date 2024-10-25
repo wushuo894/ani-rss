@@ -31,6 +31,26 @@ import java.util.function.Consumer;
 @Path("/file")
 public class FileAction implements BaseAction {
 
+    public static void getImg(String url, Consumer<InputStream> consumer) {
+        URI host = URLUtil.getHost(URLUtil.url(url));
+        HttpReq.get(url, true)
+                .then(res -> {
+                    HttpConnection httpConnection = (HttpConnection) ReflectUtil.getFieldValue(res, "httpConnection");
+                    URI host1 = URLUtil.getHost(httpConnection.getUrl());
+                    if (host.toString().equals(host1.toString())) {
+                        try {
+                            @Cleanup
+                            InputStream inputStream = res.bodyStream();
+                            consumer.accept(inputStream);
+                        } catch (Exception ignored) {
+                        }
+                        return;
+                    }
+                    String newUrl = url.replace(host.toString(), host1.toString());
+                    getImg(newUrl, consumer);
+                });
+    }
+
     @Override
     public void doAction(HttpServerRequest request, HttpServerResponse response) throws IOException {
         String img = request.getParam("img");
@@ -112,26 +132,6 @@ public class FileAction implements BaseAction {
             String message = ExceptionUtil.getMessage(e);
             log.debug(message, e);
         }
-    }
-
-    public static void getImg(String url, Consumer<InputStream> consumer) {
-        URI host = URLUtil.getHost(URLUtil.url(url));
-        HttpReq.get(url, true)
-                .then(res -> {
-                    HttpConnection httpConnection = (HttpConnection) ReflectUtil.getFieldValue(res, "httpConnection");
-                    URI host1 = URLUtil.getHost(httpConnection.getUrl());
-                    if (host.toString().equals(host1.toString())) {
-                        try {
-                            @Cleanup
-                            InputStream inputStream = res.bodyStream();
-                            consumer.accept(inputStream);
-                        } catch (Exception ignored) {
-                        }
-                        return;
-                    }
-                    String newUrl = url.replace(host.toString(), host1.toString());
-                    getImg(newUrl, consumer);
-                });
     }
 
 }

@@ -19,11 +19,11 @@ import java.util.concurrent.atomic.AtomicBoolean;
 @Slf4j
 public class BgmTask extends Thread {
 
+    private final AtomicBoolean loop;
+
     public BgmTask(AtomicBoolean loop) {
         this.loop = loop;
     }
-
-    private final AtomicBoolean loop;
 
     @Override
     public void run() {
