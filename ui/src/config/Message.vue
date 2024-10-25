@@ -242,7 +242,7 @@ const messageTest = (type) => {
       })
 }
 
-const messageActiveName = ref('0')
+const messageActiveName = ref('')
 
 let props = defineProps(['config'])
 
