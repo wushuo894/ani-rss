@@ -1,31 +1,30 @@
 <template>
-  <div style="margin-bottom: 12px;">
-    <div>
-      <h3>通知模版</h3>
-    </div>
-    <div style="margin-bottom: 12px;margin-top: 4px;">
-      <el-input v-model:model-value="props.config.messageTemplate" type="textarea"
-                placeholder="${text}"/>
-      <div style="width: 100%;display: flex;justify-content: end;">
-        <a target="_blank" href="https://docs.wushuo.top/docs#通知模版示例">通知模版示例</a>
-      </div>
-    </div>
-    <div>
-      <el-checkbox-group v-model:model-value="config.messageList">
-        <el-checkbox label="开始下载" value="DOWNLOAD_START"/>
-        <el-checkbox label="下载完成" value="DOWNLOAD_END"/>
-        <el-checkbox label="缺集" value="OMIT"/>
-        <el-checkbox label="错误" value="ERROR"/>
-      </el-checkbox-group>
-    </div>
-    <div>
-      <el-text class="mx-1" size="small">
-        下载完成通知暂不支持 Aria2
-      </el-text>
-    </div>
-  </div>
   <el-collapse v-model:model-value="messageActiveName" accordion>
-    <el-collapse-item title="Telegram通知" name="1">
+    <el-collapse-item title="通知设置" name="0">
+      <div style="margin-bottom: 12px;">
+        <div style="margin-bottom: 12px;margin-top: 4px;">
+          <el-input v-model:model-value="props.config.messageTemplate" type="textarea"
+                    placeholder="${text}" autosize/>
+          <div style="width: 100%;display: flex;justify-content: end;">
+            <a target="_blank" href="https://docs.wushuo.top/docs#通知模版示例">通知模版示例</a>
+          </div>
+        </div>
+        <div>
+          <el-checkbox-group v-model:model-value="config.messageList">
+            <el-checkbox label="开始下载" value="DOWNLOAD_START"/>
+            <el-checkbox label="下载完成" value="DOWNLOAD_END"/>
+            <el-checkbox label="缺集" value="OMIT"/>
+            <el-checkbox label="错误" value="ERROR"/>
+          </el-checkbox-group>
+        </div>
+        <div>
+          <el-text class="mx-1" size="small">
+            下载完成通知暂不支持 Aria2
+          </el-text>
+        </div>
+      </div>
+    </el-collapse-item>
+    <el-collapse-item title="TG通知" name="1">
       <el-form label-width="auto" @submit="(event)=>{
                       event.preventDefault()
                    }">
@@ -113,45 +112,7 @@
         </el-form-item>
       </el-form>
     </el-collapse-item>
-    <el-collapse-item title="WebHook" name="3">
-      <el-form label-width="auto" @submit="(event)=>{
-                      event.preventDefault()
-                   }">
-        <el-form-item label="Method">
-          <el-select v-model:model-value="props.config.webHookMethod">
-            <el-option v-for="item in ['POST','GET','PUT','DELETE']"
-                       :key="item"
-                       :label="item"
-                       :value="item"/>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="URL">
-          <el-input v-model:model-value="props.config.webHookUrl" type="textarea"
-                    placeholder="http://www.xxx.com?text=test_${message}"></el-input>
-        </el-form-item>
-        <el-form-item label="Body">
-          <el-input v-model:model-value="props.config.webHookBody" type="textarea"
-                    placeholder='{"text":"test_${message}"}'></el-input>
-        </el-form-item>
-        <el-form-item label="开关">
-          <div style="display: flex;width: 100%;justify-content: space-between;">
-            <el-switch v-model:model-value="props.config.webHook"/>
-            <el-button bg text @click="messageTest('WebHook')"
-                       :loading="messageTestLoading && messageTestType === 'WebHook'"
-                       :disabled="!config.webHook" icon="Odometer">测试
-            </el-button>
-          </div>
-        </el-form-item>
-        <div style="display: flex;justify-content: end;">
-          <el-text class="mx-1" size="small">
-            ${message} 会自动替换为信息
-            <br>
-            ${image} 会自动替换为图片链接
-          </el-text>
-        </div>
-      </el-form>
-    </el-collapse-item>
-    <el-collapse-item title="Server酱" name="4">
+    <el-collapse-item title="Server酱" name="3">
       <el-form label-width="auto" @submit="(event)=>{
                       event.preventDefault()
                    }">
@@ -179,7 +140,7 @@
         </el-form-item>
       </el-form>
     </el-collapse-item>
-    <el-collapse-item name="5" title="系统通知">
+    <el-collapse-item name="4" title="系统通知">
       <el-form label-width="auto" @submit="(event)=>{
                       event.preventDefault()
                    }">
@@ -192,6 +153,42 @@
             </el-button>
           </div>
         </el-form-item>
+      </el-form>
+    </el-collapse-item>
+    <el-collapse-item title="WebHook" name="5">
+      <el-form label-width="auto" @submit="(event)=>{
+                      event.preventDefault()
+                   }">
+        <el-form-item label="Method">
+          <el-select v-model:model-value="props.config.webHookMethod">
+            <el-option v-for="item in ['POST','GET','PUT','DELETE']"
+                       :key="item"
+                       :label="item"
+                       :value="item"/>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="URL">
+          <el-input v-model:model-value="props.config.webHookUrl" type="textarea"
+                    autosize
+                    placeholder="http://www.xxx.com?text=test_${message}"></el-input>
+        </el-form-item>
+        <el-form-item label="Body">
+          <el-input v-model:model-value="props.config.webHookBody" type="textarea"
+                    autosize
+                    placeholder='{"text":"test_${message}"}'></el-input>
+        </el-form-item>
+        <el-form-item label="开关">
+          <div style="display: flex;width: 100%;justify-content: space-between;">
+            <el-switch v-model:model-value="props.config.webHook"/>
+            <el-button bg text @click="messageTest('WebHook')"
+                       :loading="messageTestLoading && messageTestType === 'WebHook'"
+                       :disabled="!config.webHook" icon="Odometer">测试
+            </el-button>
+          </div>
+        </el-form-item>
+        <div style="display: flex;justify-content: end;">
+          <a target="_blank" href="https://docs.wushuo.top/docs#通知模版示例">通知模版示例</a>
+        </div>
       </el-form>
     </el-collapse-item>
   </el-collapse>
@@ -245,7 +242,7 @@ const messageTest = (type) => {
       })
 }
 
-const messageActiveName = ref('')
+const messageActiveName = ref('0')
 
 let props = defineProps(['config'])
 

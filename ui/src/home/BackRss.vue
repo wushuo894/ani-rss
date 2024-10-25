@@ -33,7 +33,7 @@
               {{ backRss[it.$index].url }}
             </div>
             <div v-else>
-              <el-input v-model:model-value="backRss[it.$index].url" placeholder="https://xxx.xxx" type="textarea"/>
+              <el-input v-model:model-value="backRss[it.$index].url" placeholder="https://xxx.xxx" type="textarea" autosize/>
             </div>
           </template>
         </el-table-column>

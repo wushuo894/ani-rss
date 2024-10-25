@@ -21,7 +21,7 @@ import java.util.List;
 public class Mail implements Message {
     @Override
     public Boolean send(Config config, Ani ani, String text, MessageEnum messageEnum) {
-        text = replaceMessageTemplate(ani, config.getMessageTemplate(), text);
+        String messageBody = replaceMessageTemplate(ani, config.getMessageTemplate(), text);
         Boolean mail = config.getMail();
         MyMailAccount myMailAccount = config.getMailAccount();
         String mailAddressee = config.getMailAddressee();
@@ -43,7 +43,7 @@ public class Mail implements Message {
                 .setFrom(StrFormatter.format("ani-rss <{}>", from))
                 .setAuth(true);
         try {
-            MailUtil.send(mailAccount, List.of(mailAddressee), text, text, false);
+            MailUtil.send(mailAccount, List.of(mailAddressee), text, messageBody, false);
             return true;
         } catch (Exception e) {
             String message = ExceptionUtil.getMessage(e);

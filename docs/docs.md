@@ -318,6 +318,11 @@ qbittorrent:
     日期:  ${year}年${month}月${date}日
     事件: ${text}
 
+webhook
+
+    ${message} 会自动替换为信息
+    ${image} 会自动替换为图片链接
+
 ### 邮件通知
 
 当有新番开始下载时向邮箱发送通知
