@@ -131,6 +131,7 @@ const config = ref({
   'messageList': [],
   'verifyLoginIp': true,
   'serverChanSendKey': '',
+  serverChan3ApiUrl: '',
   'serverChan': false,
   'serverChanType': '',
   'systemMsg': false,
