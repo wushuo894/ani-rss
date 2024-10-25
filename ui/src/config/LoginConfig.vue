@@ -30,6 +30,7 @@
         </div>
         <div style="width: 100%;">
           <el-input style="width: 100%" type="textarea"
+                    autosize
                     :disabled="!config['ipWhitelist']"
                     :placeholder="'127.0.0.1\n192.168.1.0/24'" v-model:model-value="config['ipWhitelistStr']"/>
           <br>
