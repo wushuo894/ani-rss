@@ -21,7 +21,7 @@
               <div style="width: 100%">
                 <el-input
                     type="textarea"
-                    autosize
+                    :autosize="{ minRows: 2}"
                     v-model:model-value="ani.url"
                     placeholder="https://mikanani.me/RSS/Bangumi?bangumiId=xxx&subgroupid=xxx"
                 />
@@ -67,7 +67,7 @@
             </el-form-item>
             <el-form-item label="RSS 地址">
               <el-input
-                  autosize
+                  :autosize="{ minRows: 2}"
                   type="textarea"
                   v-model:model-value="ani.url"
                   placeholder="https://xxxx.com/a.xml"

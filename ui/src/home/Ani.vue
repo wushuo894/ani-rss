@@ -109,7 +109,7 @@
             </div>
             <div>
               <el-input type="textarea" style="width: 100%" :disabled="!props.ani.customDownloadPath"
-                        autosize
+                        :autosize="{ minRows: 2}"
                         v-model:model-value="props.ani.downloadPath"/>
             </div>
             <div style="display: flex;justify-content: space-between;margin-top: 6px;">
