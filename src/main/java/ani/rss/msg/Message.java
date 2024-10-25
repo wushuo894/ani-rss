@@ -25,11 +25,17 @@ public interface Message {
     default String replaceMessageTemplate(Ani ani, String messageTemplate, String text) {
         messageTemplate = messageTemplate.replace("${text}", text);
         // 集数
-        double episode = 1.0;
+        Double episode = 1.0;
         if (ReUtil.contains(StringEnum.SEASON_REG, text)) {
             episode = Double.parseDouble(ReUtil.get(StringEnum.SEASON_REG, text, 2));
         }
-        messageTemplate = messageTemplate.replace("${episode}", String.valueOf(episode));
+
+        if (episode.intValue() == episode) {
+            messageTemplate = messageTemplate.replace("${episode}", String.valueOf(episode.intValue()));
+        } else {
+            messageTemplate = messageTemplate.replace("${episode}", String.valueOf(episode));
+        }
+
 
         if (Objects.isNull(ani)) {
             return messageTemplate;
