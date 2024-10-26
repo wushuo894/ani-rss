@@ -19,7 +19,6 @@ import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.File;
-import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -706,8 +705,16 @@ public class TorrentUtil {
         title = ReUtil.get(renameTemplate, name, titleIndex < seasonIndex ? 1 : 2);
         season = Integer.parseInt(ReUtil.get(renameTemplate, name, titleIndex < seasonIndex ? 2 : 1));
 
+        title = title.replaceAll(StringEnum.YEAR_REG, "");
+        title = title.replaceAll(StringEnum.TMDB_ID_REG, "");
+        title = title.trim();
+
         for (Ani ani : AniUtil.ANI_LIST) {
-            if (!title.equals(ani.getTitle())) {
+            String aniTitle = ani.getTitle();
+            aniTitle = aniTitle.replaceAll(StringEnum.YEAR_REG, "");
+            aniTitle = aniTitle.replaceAll(StringEnum.TMDB_ID_REG, "");
+            aniTitle = aniTitle.trim();
+            if (!title.equals(aniTitle)) {
                 continue;
             }
             if (season != ani.getSeason()) {

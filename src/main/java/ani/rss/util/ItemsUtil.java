@@ -261,6 +261,8 @@ public class ItemsUtil {
         Integer season = ani.getSeason();
         String title = ani.getTitle();
 
+        List<String> sList = new ArrayList<>();
+
         for (int i = min; i <= max; i++) {
             if (ArrayUtil.contains(array, i)) {
                 continue;
@@ -272,8 +274,15 @@ public class ItemsUtil {
             log.info(s);
             // 缓存一天 不重复发送
             messageCache.put(s, "1", TimeUnit.DAYS.toMillis(1));
-            MessageUtil.send(config, ani, s, MessageEnum.OMIT);
+            sList.add(s);
         }
+
+        if (sList.isEmpty()) {
+            return;
+        }
+
+        MessageUtil.send(config, ani, CollUtil.join(sList, "\n"), MessageEnum.OMIT);
+
     }
 
     public static int currentEpisodeNumber(Ani ani, List<Item> items) {
