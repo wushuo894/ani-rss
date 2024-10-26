@@ -79,6 +79,9 @@
         </div>
       </div>
     </el-form-item>
+    <el-form-item label="延迟下载(分钟)">
+      <el-input-number v-model:model-value="props.config.delayedDownload" min="0"/>
+    </el-form-item>
     <el-form-item label="检测是否死种">
       <el-switch v-model:model-value="props.config.watchErrorTorrent"/>
     </el-form-item>

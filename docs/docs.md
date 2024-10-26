@@ -315,7 +315,7 @@ qbittorrent:
     季: ${season}
     集: ${episode}
     进度: ${currentEpisodeNumber}/${totalEpisodeNumber}
-    日期:  ${year}年${month}月${date}日
+    首播:  ${year}年${month}月${date}日
     事件: ${text}
 
 webhook
