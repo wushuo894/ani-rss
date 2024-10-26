@@ -39,6 +39,7 @@ public class ConfigUtil {
                 .setRenameMinSize(100)
                 .setRss(true)
                 .setWatchErrorTorrent(true)
+                .setDelayedDownload(0)
                 .setFileExist(false)
                 .setAwaitStalledUP(true)
                 .setDelete(false)
@@ -120,7 +121,7 @@ public class ConfigUtil {
                 .setServerChan3ApiUrl("")
                 .setSystemMsg(false)
                 .setAutoTrackersUpdate(false)
-                .setTrackersUpdateUrls("https://cf.trackerslist.com/all.txt\nhttps://cdn.jsdelivr.net/gh/DeSireFire/animeTrackerList/AT_all.txt")
+                .setTrackersUpdateUrls("https://cf.trackerslist.com/best.txt\nhttps://cdn.jsdelivr.net/gh/ngosang/trackerslist@master/trackers_all.txt")
                 .setMessageTemplate("${text}");
     }
 

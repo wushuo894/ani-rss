@@ -73,6 +73,7 @@ const config = ref({
   'password': '',
   'sleep': 5,
   'watchErrorTorrent': true,
+  'delayedDownload': 0,
   'downloadPath': '',
   'ovaDownloadPath': '',
   'fileExist': true,
