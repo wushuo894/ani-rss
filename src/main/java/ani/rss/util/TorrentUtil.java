@@ -74,7 +74,7 @@ public class TorrentUtil {
             items = List.of(items.get(items.size() - 1));
         }
 
-        long count = getTorrentsInfos()
+        long count = torrentsInfos
                 .stream()
                 .filter(it -> {
                     TorrentsInfo.State state = it.getState();
