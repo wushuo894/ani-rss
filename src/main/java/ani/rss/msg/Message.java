@@ -8,17 +8,11 @@ import cn.hutool.core.lang.func.Func1;
 import cn.hutool.core.lang.func.LambdaUtil;
 import cn.hutool.core.text.StrFormatter;
 import cn.hutool.core.util.ReUtil;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 
 import java.util.List;
 import java.util.Objects;
 
 public interface Message {
-
-    Gson gson = new GsonBuilder()
-            .disableHtmlEscaping()
-            .create();
 
     Boolean send(Config config, Ani ani, String text, MessageEnum messageEnum);
 

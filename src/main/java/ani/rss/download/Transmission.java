@@ -4,6 +4,7 @@ import ani.rss.entity.Config;
 import ani.rss.entity.Item;
 import ani.rss.entity.TorrentsInfo;
 import ani.rss.util.ExceptionUtil;
+import ani.rss.util.GsonStatic;
 import ani.rss.util.HttpReq;
 import cn.hutool.core.codec.Base64;
 import cn.hutool.core.collection.CollUtil;
@@ -85,7 +86,7 @@ public class Transmission implements BaseDownload {
                         return getTorrentsInfos();
                     }
                     List<TorrentsInfo> torrentsInfos = new ArrayList<>();
-                    JsonObject jsonObject = gson.fromJson(res.body(), JsonObject.class);
+                    JsonObject jsonObject = GsonStatic.fromJson(res.body(), JsonObject.class);
                     JsonArray torrents = jsonObject.get("arguments")
                             .getAsJsonObject()
                             .get("torrents")
@@ -155,7 +156,7 @@ public class Transmission implements BaseDownload {
                 .header("X-Transmission-Session-Id", sessionId)
                 .body(body)
                 .thenFunction(res -> {
-                    JsonObject jsonObject = gson.fromJson(res.body(), JsonObject.class);
+                    JsonObject jsonObject = GsonStatic.fromJson(res.body(), JsonObject.class);
                     return jsonObject.getAsJsonObject("arguments")
                             .getAsJsonObject("torrent-added")
                             .get("id").getAsString();
@@ -238,7 +239,7 @@ public class Transmission implements BaseDownload {
         strings.add(tags);
 
         String body = ResourceUtil.readUtf8Str("transmission/torrent-set.json");
-        body = StrFormatter.format(body, gson.toJson(strings), id);
+        body = StrFormatter.format(body, GsonStatic.toJson(strings), id);
         return HttpReq.post(host + "/transmission/rpc", false)
                 .header(Header.AUTHORIZATION, authorization)
                 .header("X-Transmission-Session-Id", sessionId)

@@ -92,7 +92,7 @@ public class ServerUtil {
                         baseAction.doAction(req, res);
                     } catch (Exception e) {
                         String message = ExceptionUtil.getMessage(e);
-                        String json = gson.toJson(Result.error().setMessage(message));
+                        String json = GsonStatic.toJson(Result.error().setMessage(message));
                         IoUtil.writeUtf8(res.getOut(), true, json);
                         if (!(e instanceof IllegalArgumentException)) {
                             log.error("{} {}", urlPath, e.getMessage());

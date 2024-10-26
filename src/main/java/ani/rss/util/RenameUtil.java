@@ -8,7 +8,6 @@ import cn.hutool.core.io.resource.ResourceUtil;
 import cn.hutool.core.text.StrFormatter;
 import cn.hutool.core.util.ReUtil;
 import cn.hutool.core.util.StrUtil;
-import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import lombok.extern.slf4j.Slf4j;
@@ -21,7 +20,7 @@ public class RenameUtil {
 
     static {
         String s = ResourceUtil.readUtf8Str("reg.json");
-        JsonArray jsonElements = new Gson().fromJson(s, JsonArray.class);
+        JsonArray jsonElements = GsonStatic.fromJson(s, JsonArray.class);
         String ss = jsonElements.asList()
                 .stream().map(JsonElement::getAsString)
                 .collect(Collectors.joining("|"));

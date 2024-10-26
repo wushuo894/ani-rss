@@ -4,11 +4,11 @@ import ani.rss.entity.Ani;
 import ani.rss.entity.Config;
 import ani.rss.enums.MessageEnum;
 import ani.rss.enums.ServerChanTypeEnum;
+import ani.rss.util.GsonStatic;
 import ani.rss.util.HttpReq;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.HttpResponse;
 import lombok.extern.slf4j.Slf4j;
-import org.jsoup.internal.StringUtil;
 
 import java.util.Map;
 import java.util.Objects;
@@ -49,13 +49,13 @@ public class ServerChan implements Message {
         String desp = MARKDOWN_STRING.replace("<message>", text).replace("<image>", image);
         if (type.equals(ServerChanTypeEnum.SERVER_CHAN.getType())) {
             serverChanUrl = ServerChanTypeEnum.SERVER_CHAN.getUrl().replace("<sendKey>", sendKey);
-            body = gson.toJson(Map.of(
+            body = GsonStatic.toJson(Map.of(
                     "title", title,
                     "desp", desp
             ));
         } else if (type.equals(ServerChanTypeEnum.SERVER_CHAN_3.getType())) {
             serverChanUrl = apiUrl;
-            body = gson.toJson(Map.of(
+            body = GsonStatic.toJson(Map.of(
                     "title", title,
                     "tags", "ass",
                     "desp", desp
