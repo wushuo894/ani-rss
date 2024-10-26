@@ -58,7 +58,7 @@ public class Mail implements Message {
         }
 
         try {
-            MailUtil.send(mailAccount, List.of(mailAddressee), text, messageBody, true);
+            MailUtil.send(mailAccount, List.of(mailAddressee), text.length() > 200 ? ani.getTitle() : text, messageBody, true);
             return true;
         } catch (Exception e) {
             String message = ExceptionUtil.getMessage(e);
