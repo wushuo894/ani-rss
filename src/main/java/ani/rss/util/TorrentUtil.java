@@ -7,7 +7,8 @@ import ani.rss.entity.Item;
 import ani.rss.entity.TorrentsInfo;
 import ani.rss.enums.MessageEnum;
 import ani.rss.enums.StringEnum;
-import cn.hutool.core.date.LocalDateTimeUtil;
+import cn.hutool.core.date.DateField;
+import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.text.StrFormatter;
 import cn.hutool.core.thread.ThreadUtil;
@@ -18,7 +19,6 @@ import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.File;
-import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -96,9 +96,8 @@ public class TorrentUtil {
 
             Date pubDate = item.getPubDate();
             if (Objects.nonNull(pubDate) && delayedDownload > 0) {
-                LocalDateTime now = LocalDateTime.now();
-                now = LocalDateTimeUtil.offset(now, -delayedDownload, ChronoUnit.MINUTES);
-                if (LocalDateTimeUtil.toEpochMilli(now) > pubDate.getTime()) {
+                Date now = DateUtil.offset(new Date(), DateField.MINUTE, -delayedDownload);
+                if (now.getTime() > pubDate.getTime()) {
                     log.info("延迟下载 {}", reName);
                     continue;
                 }
