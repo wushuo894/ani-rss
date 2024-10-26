@@ -4,6 +4,7 @@ import lombok.Data;
 import lombok.experimental.Accessors;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 
 /**
  * 下载项
@@ -55,4 +56,9 @@ public class Item implements Serializable {
      * 字幕组
      */
     private String subgroup;
+
+    /**
+     * 发布时间
+     */
+    private LocalDateTime pubDate;
 }

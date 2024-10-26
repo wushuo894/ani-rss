@@ -7,6 +7,7 @@ import ani.rss.entity.Item;
 import ani.rss.entity.TorrentsInfo;
 import ani.rss.enums.MessageEnum;
 import ani.rss.enums.StringEnum;
+import cn.hutool.core.date.LocalDateTimeUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.text.StrFormatter;
 import cn.hutool.core.thread.ThreadUtil;
@@ -19,6 +20,8 @@ import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.File;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -44,6 +47,7 @@ public class TorrentUtil {
         Config config = ConfigUtil.CONFIG;
         Boolean autoDisabled = config.getAutoDisabled();
         Integer downloadCount = config.getDownloadCount();
+        Integer delayedDownload = config.getDelayedDownload();
 
         String title = ani.getTitle();
         Integer season = ani.getSeason();
@@ -99,6 +103,16 @@ public class TorrentUtil {
             String hash = FileUtil.mainName(torrent)
                     .trim().toLowerCase();
 
+            LocalDateTime pubDate = item.getPubDate();
+            if (Objects.nonNull(pubDate) && delayedDownload > 0) {
+                LocalDateTime now = LocalDateTime.now();
+                now = LocalDateTimeUtil.offset(now, -delayedDownload, ChronoUnit.MINUTES);
+                if (LocalDateTimeUtil.toEpochMilli(now) > LocalDateTimeUtil.toEpochMilli(pubDate)) {
+                    log.info("延迟下载 {}", reName);
+                    continue;
+                }
+            }
+
             // 已经下载过
             if (hashList.contains(hash) || downloadNameList.contains(reName)) {
                 log.debug("已有下载任务 {}", reName);
@@ -143,6 +157,13 @@ public class TorrentUtil {
             String savePath = downloadPathList
                     .get(0)
                     .toString();
+
+            int size = ItemsUtil.currentEpisodeNumber(ani, items);
+            if (size > 0 && ani.getCurrentEpisodeNumber() < size) {
+                ani.setCurrentEpisodeNumber(size);
+                AniUtil.sync();
+            }
+
             download(ani, item, savePath, saveTorrent);
             if (master && !reName.endsWith(".5")) {
                 currentDownloadCount++;

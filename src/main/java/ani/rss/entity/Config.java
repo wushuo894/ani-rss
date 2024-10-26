@@ -59,6 +59,11 @@ public class Config implements Serializable {
     private Boolean watchErrorTorrent;
 
     /**
+     * 延迟下载
+     */
+    private Integer delayedDownload;
+
+    /**
      * 显示评分
      */
     private Boolean scoreShow;
