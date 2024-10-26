@@ -12,7 +12,7 @@
         <el-input v-model:model-value="data.downloadPath" disabled></el-input>
       </div>
       <div style="padding: 0 12px">
-        <el-table :data="data.items.filter(selectItems.filter(it => it.label === select)[0].fun)" height="500">
+        <el-table :data="data.items.filter(selectItems.filter(it => it.label === select)[0].fun)" height="500" scrollbar-always-on>
           <el-table-column label="本地存在" min-width="100">
             <template #default="it">
               {{ data.items[it.$index].local ? '是' : '否' }}
@@ -26,6 +26,7 @@
           <el-table-column prop="subgroup" label="字幕组" min-width="120"/>
           <el-table-column prop="title" label="标题" min-width="400"/>
           <el-table-column prop="reName" label="重命名" min-width="280"/>
+          <el-table-column prop="pubDate" label="发布时间" min-width="140"/>
           <el-table-column prop="infoHash" label="InfoHash" min-width="360"/>
           <el-table-column prop="size" label="大小" width="120"/>
           <el-table-column label="种子" width="90">
