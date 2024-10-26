@@ -10,7 +10,6 @@ import cn.hutool.cache.CacheUtil;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.date.DateTime;
 import cn.hutool.core.date.DateUtil;
-import cn.hutool.core.date.LocalDateTimeUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.text.StrFormatter;
 import cn.hutool.core.thread.ThreadUtil;
@@ -19,7 +18,6 @@ import cn.hutool.http.HttpResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.w3c.dom.*;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -106,7 +104,7 @@ public class ItemsUtil {
 
             String size = "0MB";
 
-            LocalDateTime pubDate = null;
+            DateTime pubDate = null;
 
             NodeList itemChildNodes = item.getChildNodes();
             for (int j = 0; j < itemChildNodes.getLength(); j++) {
@@ -139,15 +137,14 @@ public class ItemsUtil {
 
                 if (itemChildNodeName.equals("pubDate")) {
                     try {
-                        DateTime parse = DateUtil.parse(itemChild.getTextContent());
-                        pubDate = parse.toLocalDateTime();
+                        pubDate = DateUtil.parse(itemChild.getTextContent());
                     } catch (Exception ignored) {
                     }
                 }
 
                 if (itemChildNodeName.equals("torrent")) {
                     try {
-                        pubDate = LocalDateTimeUtil.parse(XmlUtil.getElement((Element) itemChild, "pubDate").getTextContent());
+                        pubDate = DateUtil.parse(XmlUtil.getElement((Element) itemChild, "pubDate").getTextContent());
                     } catch (Exception ignored) {
                     }
                 }

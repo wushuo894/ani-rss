@@ -7,17 +7,12 @@ import cn.hutool.cache.Cache;
 import cn.hutool.cache.CacheUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.StrUtil;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 
 import java.io.File;
 import java.util.List;
 import java.util.Set;
 
 public interface BaseDownload {
-    Gson gson = new GsonBuilder()
-            .disableHtmlEscaping()
-            .create();
 
     Cache<String, String> renameCache = CacheUtil.newFIFOCache(512);
 

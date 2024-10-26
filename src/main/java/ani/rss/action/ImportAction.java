@@ -4,6 +4,7 @@ import ani.rss.annotation.Auth;
 import ani.rss.annotation.Path;
 import ani.rss.entity.Ani;
 import ani.rss.util.AniUtil;
+import ani.rss.util.GsonStatic;
 import cn.hutool.core.lang.UUID;
 import cn.hutool.http.server.HttpServerRequest;
 import cn.hutool.http.server.HttpServerResponse;
@@ -29,7 +30,7 @@ public class ImportAction implements BaseAction {
     public void doAction(HttpServerRequest request, HttpServerResponse response) throws IOException {
         JsonArray jsonArray = getBody(JsonArray.class);
         List<Ani> anis = jsonArray.asList().stream()
-                .map(it -> gson.fromJson(it, Ani.class))
+                .map(it -> GsonStatic.fromJson(it, Ani.class))
                 .collect(Collectors.toList());
         if (anis.isEmpty()) {
             resultErrorMsg("导入列表为空");

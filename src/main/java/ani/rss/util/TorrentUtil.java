@@ -14,27 +14,18 @@ import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.core.util.*;
 import cn.hutool.extra.pinyin.PinyinUtil;
 import cn.hutool.json.JSONUtil;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.File;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @Slf4j
 public class TorrentUtil {
-
-    private static final Gson GSON = new GsonBuilder()
-            .disableHtmlEscaping()
-            .create();
     @Setter
     private static BaseDownload baseDownload;
 
@@ -96,18 +87,18 @@ public class TorrentUtil {
                 .count();
 
         for (Item item : items) {
-            log.debug(JSONUtil.formatJsonStr(GSON.toJson(item)));
+            log.debug(JSONUtil.formatJsonStr(GsonStatic.toJson(item)));
             String reName = item.getReName();
             File torrent = getTorrent(ani, item);
             Boolean master = item.getMaster();
             String hash = FileUtil.mainName(torrent)
                     .trim().toLowerCase();
 
-            LocalDateTime pubDate = item.getPubDate();
+            Date pubDate = item.getPubDate();
             if (Objects.nonNull(pubDate) && delayedDownload > 0) {
                 LocalDateTime now = LocalDateTime.now();
                 now = LocalDateTimeUtil.offset(now, -delayedDownload, ChronoUnit.MINUTES);
-                if (LocalDateTimeUtil.toEpochMilli(now) > LocalDateTimeUtil.toEpochMilli(pubDate)) {
+                if (LocalDateTimeUtil.toEpochMilli(now) > pubDate.getTime()) {
                     log.info("延迟下载 {}", reName);
                     continue;
                 }
