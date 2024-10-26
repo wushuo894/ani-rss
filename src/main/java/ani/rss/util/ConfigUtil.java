@@ -102,7 +102,7 @@ public class ConfigUtil {
                 .setBgmToken("")
                 .setApiKey("")
                 .setWeekShow(true)
-                .setScoreShow(false)
+                .setScoreShow(true)
                 .setDownloadNew(false)
                 .setInnerIP(false)
                 .setRenameTemplate("${title} S${seasonFormat}E${episodeFormat}")
