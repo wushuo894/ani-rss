@@ -5,6 +5,7 @@ import ani.rss.entity.Item;
 import ani.rss.entity.TorrentsInfo;
 import ani.rss.enums.StringEnum;
 import ani.rss.util.ExceptionUtil;
+import ani.rss.util.GsonStatic;
 import ani.rss.util.HttpReq;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.io.FileUtil;
@@ -73,10 +74,10 @@ public class qBittorrent implements BaseDownload {
         return HttpReq.get(host + "/api/v2/torrents/info", false)
                 .thenFunction(res -> {
                     List<TorrentsInfo> torrentsInfoList = new ArrayList<>();
-                    JsonArray jsonElements = gson.fromJson(res.body(), JsonArray.class);
+                    JsonArray jsonElements = GsonStatic.fromJson(res.body(), JsonArray.class);
                     for (JsonElement jsonElement : jsonElements) {
                         JsonObject jsonObject = jsonElement.getAsJsonObject();
-                        TorrentsInfo torrentsInfo = gson.fromJson(jsonObject, TorrentsInfo.class);
+                        TorrentsInfo torrentsInfo = GsonStatic.fromJson(jsonObject, TorrentsInfo.class);
                         torrentsInfo.setDownloadDir(jsonObject.get("content_path").getAsString());
                         String tags = torrentsInfo.getTags();
                         if (StrUtil.isBlank(tags)) {
@@ -176,10 +177,10 @@ public class qBittorrent implements BaseDownload {
 
         List<FileEntity> fileEntityList = HttpReq.get(host + "/api/v2/torrents/files", false)
                 .form("hash", hash)
-                .thenFunction(res -> gson.fromJson(res.body(), JsonArray.class)
+                .thenFunction(res -> GsonStatic.fromJson(res.body(), JsonArray.class)
                         .asList()
                         .stream()
-                        .map(jsonElement -> gson.fromJson(jsonElement, FileEntity.class))
+                        .map(jsonElement -> GsonStatic.fromJson(jsonElement, FileEntity.class))
                         .filter(fileEntity -> {
                             String name = fileEntity.getName();
                             String extName = FileUtil.extName(name);
@@ -301,13 +302,13 @@ public class qBittorrent implements BaseDownload {
                     boolean ok = res.isOk();
                     Assert.isTrue(ok, "更新trackers失败 {}", status);
                     String body = res.body();
-                    return gson.fromJson(body, JsonObject.class);
+                    return GsonStatic.fromJson(body, JsonObject.class);
                 });
 
         preferences.addProperty("add_trackers", CollUtil.join(trackers, "\n"));
 
         HttpReq.post(host + "/api/v2/app/setPreferences", false)
-                .form("json", gson.toJson(preferences))
+                .form("json", GsonStatic.toJson(preferences))
                 .then(res -> {
                     if (res.isOk()) {
                         log.info("qBittorrent 更新Trackers完成 共{}条", trackers.size());

@@ -5,6 +5,7 @@ import ani.rss.annotation.Path;
 import ani.rss.entity.Config;
 import ani.rss.entity.Login;
 import ani.rss.util.ConfigUtil;
+import ani.rss.util.GsonStatic;
 import ani.rss.util.TaskUtil;
 import ani.rss.util.TorrentUtil;
 import cn.hutool.core.bean.BeanUtil;
@@ -43,7 +44,7 @@ public class ConfigAction implements BaseAction {
         Double renameSleep = config.getRenameSleep();
         Integer sleep = config.getSleep();
         String download = config.getDownload();
-        BeanUtil.copyProperties(gson.fromJson(req.getBody(), Config.class), config);
+        BeanUtil.copyProperties(GsonStatic.fromJson(req.getBody(), Config.class), config);
         String host = config.getHost();
         if (StrUtil.isNotBlank(host)) {
             if (host.endsWith("/")) {

@@ -4,6 +4,7 @@ import ani.rss.entity.Ani;
 import ani.rss.entity.Config;
 import ani.rss.enums.MessageEnum;
 import ani.rss.util.ConfigUtil;
+import ani.rss.util.GsonStatic;
 import ani.rss.util.HttpReq;
 import cn.hutool.core.text.StrFormatter;
 import cn.hutool.core.util.StrUtil;
@@ -34,7 +35,7 @@ public class Telegram implements Message {
         Map<String, String> map = new HashMap<>();
         return HttpReq.get(url, true)
                 .thenFunction(res -> {
-                    JsonObject jsonObject = gson.fromJson(res.body(), JsonObject.class);
+                    JsonObject jsonObject = GsonStatic.fromJson(res.body(), JsonObject.class);
                     JsonElement result = jsonObject.get("result");
                     if (Objects.isNull(result)) {
                         return map;
@@ -73,7 +74,7 @@ public class Telegram implements Message {
 
         if (Objects.isNull(ani) || !telegramImage) {
             return HttpReq.post(url, true)
-                    .body(gson.toJson(Map.of(
+                    .body(GsonStatic.toJson(Map.of(
                             "chat_id", telegramChatId,
                             "text", text
                     )))

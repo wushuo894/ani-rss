@@ -3,6 +3,7 @@ package ani.rss.download;
 import ani.rss.entity.Config;
 import ani.rss.entity.Item;
 import ani.rss.entity.TorrentsInfo;
+import ani.rss.util.GsonStatic;
 import ani.rss.util.HttpReq;
 import cn.hutool.core.codec.Base64;
 import cn.hutool.core.collection.CollUtil;
@@ -63,7 +64,7 @@ public class Aria2 implements BaseDownload {
         return HttpReq.post(host + "/jsonrpc", false)
                 .body(body)
                 .thenFunction(res -> {
-                    JsonObject jsonObject = gson.fromJson(res.body(), JsonObject.class);
+                    JsonObject jsonObject = GsonStatic.fromJson(res.body(), JsonObject.class);
                     List<JsonElement> result = jsonObject.get("result").getAsJsonArray().asList();
                     List<TorrentsInfo> torrentsInfos = new ArrayList<>();
                     for (JsonElement jsonElement : result) {
@@ -133,7 +134,7 @@ public class Aria2 implements BaseDownload {
 
         String id = HttpReq.post(host + "/jsonrpc", false)
                 .body(body)
-                .thenFunction(res -> gson.fromJson(res.body(), JsonObject.class).get("result").getAsString());
+                .thenFunction(res -> GsonStatic.fromJson(res.body(), JsonObject.class).get("result").getAsString());
 
         Boolean watchErrorTorrent = config.getWatchErrorTorrent();
 

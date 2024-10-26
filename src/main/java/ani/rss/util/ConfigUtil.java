@@ -11,8 +11,6 @@ import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.lang.Validator;
 import cn.hutool.crypto.digest.MD5;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.File;
@@ -23,9 +21,6 @@ import java.util.Map;
 public class ConfigUtil {
 
     public static final Config CONFIG = new Config();
-    private static final Gson GSON = new GsonBuilder()
-            .disableHtmlEscaping()
-            .create();
 
     /*
       默认配置
@@ -153,10 +148,10 @@ public class ConfigUtil {
         File configFile = getConfigFile();
 
         if (!configFile.exists()) {
-            FileUtil.writeUtf8String(GSON.toJson(CONFIG), configFile);
+            FileUtil.writeUtf8String(GsonStatic.toJson(CONFIG), configFile);
         }
         String s = FileUtil.readUtf8String(configFile);
-        BeanUtil.copyProperties(GSON.fromJson(s, Config.class), CONFIG, CopyOptions
+        BeanUtil.copyProperties(GsonStatic.fromJson(s, Config.class), CONFIG, CopyOptions
                 .create()
                 .setIgnoreNullValue(true));
         LogUtil.loadLogback();
@@ -184,9 +179,9 @@ public class ConfigUtil {
         File configFile = getConfigFile();
         log.debug("保存配置 {}", configFile);
         try {
-            String json = GSON.toJson(CONFIG);
+            String json = GsonStatic.toJson(CONFIG);
             // 校验json没有问题
-            GSON.fromJson(json, Config.class);
+            GsonStatic.fromJson(json, Config.class);
             FileUtil.writeUtf8String(json, configFile);
             LogUtil.loadLogback();
             log.debug("保存成功 {}", configFile);

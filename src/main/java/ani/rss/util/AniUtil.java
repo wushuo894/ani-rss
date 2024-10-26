@@ -19,8 +19,6 @@ import cn.hutool.crypto.digest.MD5;
 import cn.hutool.http.HttpResponse;
 import cn.hutool.http.HttpUtil;
 import cn.hutool.json.JSONUtil;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import lombok.extern.slf4j.Slf4j;
@@ -36,9 +34,6 @@ import java.util.stream.Collectors;
 public class AniUtil {
 
     public static final List<Ani> ANI_LIST = new CopyOnWriteArrayList<>();
-    private static final Gson GSON = new GsonBuilder()
-            .disableHtmlEscaping()
-            .create();
 
     /**
      * 获取订阅配置文件
@@ -57,12 +52,12 @@ public class AniUtil {
         File configFile = getAniFile();
 
         if (!configFile.exists()) {
-            FileUtil.writeUtf8String(GSON.toJson(ANI_LIST), configFile);
+            FileUtil.writeUtf8String(GsonStatic.toJson(ANI_LIST), configFile);
         }
         String s = FileUtil.readUtf8String(configFile);
-        JsonArray jsonElements = GSON.fromJson(s, JsonArray.class);
+        JsonArray jsonElements = GsonStatic.fromJson(s, JsonArray.class);
         for (JsonElement jsonElement : jsonElements) {
-            Ani ani = GSON.fromJson(jsonElement, Ani.class);
+            Ani ani = GsonStatic.fromJson(jsonElement, Ani.class);
             Ani newAni = Ani.bulidAni();
             BeanUtil.copyProperties(ani, newAni, CopyOptions
                     .create()
@@ -102,10 +97,10 @@ public class AniUtil {
         File configFile = getAniFile();
         log.debug("保存订阅 {}", configFile);
         try {
-            String json = GSON.toJson(ANI_LIST);
-            JsonArray jsonArray = GSON.fromJson(json, JsonArray.class);
+            String json = GsonStatic.toJson(ANI_LIST);
+            JsonArray jsonArray = GsonStatic.fromJson(json, JsonArray.class);
             for (JsonElement jsonElement : jsonArray.asList()) {
-                GSON.fromJson(jsonElement, Ani.class);
+                GsonStatic.fromJson(jsonElement, Ani.class);
             }
             FileUtil.writeUtf8String(json, configFile);
             log.debug("保存成功 {}", configFile);
@@ -267,7 +262,7 @@ public class AniUtil {
                 .replace("\\", "/");
         ani.setDownloadPath(downloadPath);
 
-        log.debug("获取到动漫信息 {}", JSONUtil.formatJsonStr(GSON.toJson(ani)));
+        log.debug("获取到动漫信息 {}", JSONUtil.formatJsonStr(GsonStatic.toJson(ani)));
         if (ani.getOva()) {
             return ani;
         }

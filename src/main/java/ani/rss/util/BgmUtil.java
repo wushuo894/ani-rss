@@ -16,7 +16,6 @@ import cn.hutool.http.ContentType;
 import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpResponse;
 import cn.hutool.json.JSONUtil;
-import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
@@ -32,7 +31,6 @@ public class BgmUtil {
     static final Cache<String, String> collectionsCache = CacheUtil.newFIFOCache(64);
     static final Cache<String, List<JsonObject>> getEpisodeIdCache = CacheUtil.newFIFOCache(64);
     private static final String host = "https://api.bgm.tv";
-    private static final Gson gson = new Gson();
     private static final Cache<String, String> nameCache = CacheUtil.newFIFOCache(64);
 
     public static List<JsonObject> search(String name) {
@@ -52,7 +50,7 @@ public class BgmUtil {
                         return new ArrayList<>();
                     }
 
-                    JsonObject jsonObject = gson.fromJson(body, JsonObject.class);
+                    JsonObject jsonObject = GsonStatic.fromJson(body, JsonObject.class);
                     JsonElement code = jsonObject.get("code");
                     if (Objects.nonNull(code)) {
                         if (code.getAsInt() == 404) {
@@ -140,7 +138,7 @@ public class BgmUtil {
                         return List.of();
                     }
 
-                    return gson.fromJson(body, JsonObject.class)
+                    return GsonStatic.fromJson(body, JsonObject.class)
                             .get("data")
                             .getAsJsonArray()
                             .asList()
@@ -171,7 +169,7 @@ public class BgmUtil {
         HttpReq.post(host + "/v0/users/-/collections/" + subjectId, true)
                 .header("Authorization", "Bearer " + ConfigUtil.CONFIG.getBgmToken())
                 .contentType(ContentType.JSON.getValue())
-                .body(gson.toJson(Map.of("type", 3)))
+                .body(GsonStatic.toJson(Map.of("type", 3)))
                 .thenFunction(HttpResponse::isOk);
     }
 
@@ -219,7 +217,7 @@ public class BgmUtil {
         HttpReq.put(host + "/v0/users/-/collections/-/episodes/" + episodeId, true)
                 .header("Authorization", "Bearer " + ConfigUtil.CONFIG.getBgmToken())
                 .contentType(ContentType.JSON.getValue())
-                .body(gson.toJson(Map.of("type", type)))
+                .body(GsonStatic.toJson(Map.of("type", type)))
                 .thenFunction(HttpResponse::isOk);
     }
 
@@ -243,7 +241,7 @@ public class BgmUtil {
             Assert.isTrue(res.isOk(), "status: {}", res.getStatus());
             String body = res.body();
             Assert.isTrue(JSONUtil.isTypeJSON(body), "no json");
-            JsonObject jsonObject = gson.fromJson(body, JsonObject.class);
+            JsonObject jsonObject = GsonStatic.fromJson(body, JsonObject.class);
             BgmInfo bgmInfo = new BgmInfo();
 
             String name = jsonObject.get("name").getAsString();
