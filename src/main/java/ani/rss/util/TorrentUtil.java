@@ -97,7 +97,7 @@ public class TorrentUtil {
             Date pubDate = item.getPubDate();
             if (Objects.nonNull(pubDate) && delayedDownload > 0) {
                 Date now = DateUtil.offset(new Date(), DateField.MINUTE, -delayedDownload);
-                if (now.getTime() > pubDate.getTime()) {
+                if (now.getTime() < pubDate.getTime()) {
                     log.info("延迟下载 {}", reName);
                     continue;
                 }
