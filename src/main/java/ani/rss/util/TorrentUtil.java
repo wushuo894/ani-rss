@@ -123,6 +123,8 @@ public class TorrentUtil {
                         // 删除失败或者不允许删除
                         continue;
                     }
+                    hashList.remove(backRSS.getHash());
+                    downloadNameList.remove(backRSS.getName());
                     torrentsInfos.remove(backRSS);
                 }
             }
