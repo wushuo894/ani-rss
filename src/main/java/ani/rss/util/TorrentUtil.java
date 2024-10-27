@@ -636,8 +636,8 @@ public class TorrentUtil {
         }
         // 添加下载完成标签，防止重复通知
         String tags = torrentsInfo.getTags();
-        if (StrUtil.split(tags, ",", true, true)
-                .contains("下载完成")) {
+        List<String> tagList = StrUtil.split(tags, ",", true, true);
+        if (tagList.contains("下载完成")) {
             return;
         }
         Boolean b = TorrentUtil.addTags(torrentsInfo, "下载完成");
@@ -647,6 +647,16 @@ public class TorrentUtil {
         Ani ani = null;
         try {
             ani = findAniByName(name);
+            String subgroup = tagList
+                    .stream()
+                    .filter(s -> !BaseDownload.tag.equals(s))
+                    .filter(s -> !"RENAME".equals(s))
+                    .findFirst()
+                    .orElse("");
+            subgroup = StrUtil.blankToDefault(subgroup, "未知字幕组");
+            if (Objects.nonNull(ani)) {
+                ani.setSubgroup(subgroup);
+            }
         } catch (Exception e) {
             log.error(e.getMessage(), e);
         }
@@ -720,7 +730,7 @@ public class TorrentUtil {
             if (season != ani.getSeason()) {
                 continue;
             }
-            return ani;
+            return ObjectUtil.clone(ani);
         }
 
         return null;

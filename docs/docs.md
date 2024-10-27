@@ -314,8 +314,9 @@ qbittorrent:
     BGM: ${bgmUrl}
     季: ${season}
     集: ${episode}
+    字幕组: ${subgroup}
     进度: ${currentEpisodeNumber}/${totalEpisodeNumber}
-    首播:  ${year}年${month}月${date}日
+    首播: ${year}年${month}月${date}日
     事件: ${text}
 
 webhook
