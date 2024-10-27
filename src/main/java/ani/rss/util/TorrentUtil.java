@@ -570,6 +570,8 @@ public class TorrentUtil {
         String subgroup = item.getSubgroup();
         subgroup = StrUtil.blankToDefault(subgroup, "未知字幕组");
 
+        ani = ObjectUtil.clone(ani).setSubgroup(subgroup);
+
         Config config = ConfigUtil.CONFIG;
         Boolean backRss = config.getBackRss();
 
@@ -584,7 +586,7 @@ public class TorrentUtil {
         ThreadUtil.sleep(1000);
         savePath = savePath.replace("\\", "/");
 
-        String text = StrFormatter.format("[{}] {} 已更新", subgroup, name);
+        String text = StrFormatter.format("{} 已更新", name);
         if (backRss && !ani.getBackRssList().isEmpty()) {
             text = StrFormatter.format("({}) {}", master ? "主RSS" : "备用RSS", text);
         }
