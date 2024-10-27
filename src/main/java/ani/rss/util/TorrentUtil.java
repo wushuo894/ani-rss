@@ -7,6 +7,7 @@ import ani.rss.entity.Item;
 import ani.rss.entity.TorrentsInfo;
 import ani.rss.enums.MessageEnum;
 import ani.rss.enums.StringEnum;
+import ani.rss.enums.TorrentsTags;
 import cn.hutool.core.date.DateField;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.io.FileUtil;
@@ -38,6 +39,7 @@ public class TorrentUtil {
         Boolean autoDisabled = config.getAutoDisabled();
         Integer downloadCount = config.getDownloadCount();
         Integer delayedDownload = config.getDelayedDownload();
+        Boolean deleteBackRSSOnly = config.getDeleteBackRSSOnly();
 
         String title = ani.getTitle();
         Integer season = ani.getSeason();
@@ -99,6 +101,29 @@ public class TorrentUtil {
                 if (now.getTime() < pubDate.getTime()) {
                     log.info("延迟下载 {}", reName);
                     continue;
+                }
+            }
+
+            // 仅在主RSS更新后删除备用RSS
+            if (master && deleteBackRSSOnly) {
+                TorrentsInfo backRSS = torrentsInfos
+                        .stream()
+                        .filter(torrentsInfo -> {
+                            if (!reName.equals(torrentsInfo.getName())) {
+                                return false;
+                            }
+                            List<String> strings = new ArrayList<>(List.of(torrentsInfo.getTags().split(",")));
+                            return strings.contains(TorrentsTags.BACK_RSS.getValue());
+                        })
+                        .findFirst()
+                        .orElse(null);
+
+                if (Objects.nonNull(backRSS)) {
+                    if (!delete(backRSS)) {
+                        // 删除失败或者不允许删除
+                        continue;
+                    }
+                    torrentsInfos.remove(backRSS);
                 }
             }
 
@@ -639,20 +664,24 @@ public class TorrentUtil {
         // 添加下载完成标签，防止重复通知
         String tags = torrentsInfo.getTags();
         List<String> tagList = StrUtil.split(tags, ",", true, true);
-        if (tagList.contains("下载完成")) {
+        if (tagList.contains(TorrentsTags.DOWNLOAD_COMPLETE.getValue())) {
             return;
         }
-        Boolean b = TorrentUtil.addTags(torrentsInfo, "下载完成");
+        Boolean b = TorrentUtil.addTags(torrentsInfo, TorrentsTags.DOWNLOAD_COMPLETE.getValue());
         if (!b) {
             return;
         }
         Ani ani = null;
         try {
             ani = findAniByName(name);
+
+            Set<String> allTags = Arrays.stream(TorrentsTags.values())
+                    .map(TorrentsTags::getValue)
+                    .collect(Collectors.toSet());
+
             String subgroup = tagList
                     .stream()
-                    .filter(s -> !BaseDownload.tag.equals(s))
-                    .filter(s -> !"RENAME".equals(s))
+                    .filter(s -> !allTags.contains(s))
                     .findFirst()
                     .orElse("");
             subgroup = StrUtil.blankToDefault(subgroup, "未知字幕组");
@@ -739,47 +768,64 @@ public class TorrentUtil {
     }
 
     /**
-     * 删除已完成任务
+     * 判断种子是否可以删除
      *
      * @param torrentsInfo
+     * @return
      */
-    public static synchronized void delete(TorrentsInfo torrentsInfo) {
+    public static Boolean isDelete(TorrentsInfo torrentsInfo) {
         Config config = ConfigUtil.CONFIG;
-        Boolean delete = config.getDelete();
         Boolean awaitStalledUP = config.getAwaitStalledUP();
 
         TorrentsInfo.State state = torrentsInfo.getState();
-        String name = torrentsInfo.getName();
 
         if (Objects.isNull(state)) {
-            return;
+            return false;
         }
 
         // 是否等待做种完毕
         if (awaitStalledUP) {
-            if (!List.of(
+            return List.of(
                     TorrentsInfo.State.pausedUP.name(),
                     TorrentsInfo.State.stoppedUP.name()
-            ).contains(state.name())) {
-                return;
-            }
+            ).contains(state.name());
+        }
+
+        return List.of(
+                TorrentsInfo.State.uploading.name(),
+                TorrentsInfo.State.stalledUP.name(),
+                TorrentsInfo.State.pausedUP.name(),
+                TorrentsInfo.State.stoppedUP.name()
+        ).contains(state.name());
+    }
+
+    /**
+     * 删除已完成任务
+     *
+     * @param torrentsInfo
+     */
+    public static synchronized Boolean delete(TorrentsInfo torrentsInfo) {
+        Config config = ConfigUtil.CONFIG;
+        Boolean delete = config.getDelete();
+
+        if (!isDelete(torrentsInfo)) {
+            return false;
+        }
+
+        String name = torrentsInfo.getName();
+
+        if (!delete) {
+            return false;
+        }
+        log.info("删除已完成任务 {}", name);
+        ThreadUtil.sleep(500);
+        Boolean b = baseDownload.delete(torrentsInfo);
+        if (b) {
+            log.info("删除任务成功 {}", name);
         } else {
-            if (!List.of(
-                    TorrentsInfo.State.uploading.name(),
-                    TorrentsInfo.State.stalledUP.name(),
-                    TorrentsInfo.State.pausedUP.name(),
-                    TorrentsInfo.State.stoppedUP.name()
-            ).contains(state.name())) {
-                return;
-            }
+            log.error("删除任务失败 {}", name);
         }
-
-
-        if (delete) {
-            log.info("删除已完成任务 {}", name);
-            ThreadUtil.sleep(1000);
-            baseDownload.delete(torrentsInfo);
-        }
+        return b;
     }
 
     /**
@@ -796,13 +842,13 @@ public class TorrentUtil {
 
         String tags = torrentsInfo.getTags();
         if (StrUtil.split(tags, ",", true, true)
-                .contains("RENAME")) {
+                .contains(TorrentsTags.RENAME.getValue())) {
             return;
         }
 
         ThreadUtil.sleep(1000);
         baseDownload.rename(torrentsInfo);
-        addTags(torrentsInfo, "RENAME");
+        addTags(torrentsInfo, TorrentsTags.RENAME.getValue());
     }
 
     public static Boolean addTags(TorrentsInfo torrentsInfo, String tags) {

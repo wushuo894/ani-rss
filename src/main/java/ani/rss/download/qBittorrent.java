@@ -4,6 +4,7 @@ import ani.rss.entity.Config;
 import ani.rss.entity.Item;
 import ani.rss.entity.TorrentsInfo;
 import ani.rss.enums.StringEnum;
+import ani.rss.enums.TorrentsTags;
 import ani.rss.util.ExceptionUtil;
 import ani.rss.util.GsonStatic;
 import ani.rss.util.HttpReq;
@@ -84,7 +85,7 @@ public class qBittorrent implements BaseDownload {
                             continue;
                         }
                         // 包含标签
-                        if (StrUtil.split(tags, ",", true, true).contains(tag)) {
+                        if (StrUtil.split(tags, ",", true, true).contains(TorrentsTags.ANI_RSS.getValue())) {
                             torrentsInfoList.add(torrentsInfo);
                         }
                     }
@@ -95,10 +96,19 @@ public class qBittorrent implements BaseDownload {
     @Override
     public Boolean download(Item item, String savePath, File torrentFile, Boolean ova) {
         String name = item.getReName();
+        Boolean master = item.getMaster();
         String subgroup = item.getSubgroup();
         subgroup = StrUtil.blankToDefault(subgroup, "未知字幕组");
         String host = config.getHost();
         Boolean qbUseDownloadPath = config.getQbUseDownloadPath();
+
+        List<String> tags = new ArrayList<>();
+        tags.add(TorrentsTags.ANI_RSS.getValue());
+        tags.add(subgroup);
+        if (!master) {
+            tags.add(TorrentsTags.BACK_RSS.getValue());
+        }
+
         HttpRequest httpRequest = HttpReq.post(host + "/api/v2/torrents/add", false)
                 .form("addToTopOfQueue", false)
                 .form("autoTMM", false)
@@ -113,7 +123,7 @@ public class qBittorrent implements BaseDownload {
                 .form("stopCondition", "None")
                 .form("upLimit", 102400)
                 .form("useDownloadPath", qbUseDownloadPath)
-                .form("tags", "ani-rss," + subgroup);
+                .form("tags", CollUtil.join(tags, ","));
 
         String extName = FileUtil.extName(torrentFile);
         if ("txt".equals(extName)) {
@@ -150,13 +160,18 @@ public class qBittorrent implements BaseDownload {
     }
 
     @Override
-    public void delete(TorrentsInfo torrentsInfo) {
+    public Boolean delete(TorrentsInfo torrentsInfo) {
         String host = config.getHost();
         String hash = torrentsInfo.getHash();
-        HttpReq.post(host + "/api/v2/torrents/delete", false)
-                .form("hashes", hash)
-                .form("deleteFiles", false)
-                .thenFunction(HttpResponse::isOk);
+        try {
+            return HttpReq.post(host + "/api/v2/torrents/delete", false)
+                    .form("hashes", hash)
+                    .form("deleteFiles", false)
+                    .thenFunction(HttpResponse::isOk);
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+            return false;
+        }
     }
 
     @Override

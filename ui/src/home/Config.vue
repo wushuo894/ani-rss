@@ -79,6 +79,7 @@ const config = ref({
   'fileExist': true,
   'awaitStalledUP': true,
   'delete': false,
+  'deleteBackRSSOnly': false,
   'offset': false,
   'acronym': false,
   'titleYear': false,

@@ -3,6 +3,7 @@ package ani.rss.download;
 import ani.rss.entity.Config;
 import ani.rss.entity.Item;
 import ani.rss.entity.TorrentsInfo;
+import ani.rss.enums.TorrentsTags;
 import ani.rss.util.ExceptionUtil;
 import ani.rss.util.GsonStatic;
 import ani.rss.util.HttpReq;
@@ -95,7 +96,7 @@ public class Transmission implements BaseDownload {
                         JsonObject item = jsonElement.getAsJsonObject();
                         List<String> tags = item.get("labels").getAsJsonArray()
                                 .asList().stream().map(JsonElement::getAsString).collect(Collectors.toList());
-                        if (!tags.contains(tag)) {
+                        if (!tags.contains(TorrentsTags.ANI_RSS.getValue())) {
                             continue;
                         }
                         List<String> files = item.get("files").getAsJsonArray().asList()
@@ -135,6 +136,7 @@ public class Transmission implements BaseDownload {
     @Override
     public Boolean download(Item item, String savePath, File torrentFile, Boolean ova) {
         String name = item.getReName();
+        Boolean master = item.getMaster();
         String subgroup = item.getSubgroup();
         subgroup = StrUtil.blankToDefault(subgroup, "未知字幕组");
         String body = ResourceUtil.readUtf8Str("transmission/torrent-add.json");
@@ -142,13 +144,21 @@ public class Transmission implements BaseDownload {
         if (StrUtil.isBlank(extName)) {
             return false;
         }
-        String torrent = "";
+
+        List<String> tags = new ArrayList<>();
+        tags.add(TorrentsTags.ANI_RSS.getValue());
+        tags.add(subgroup);
+        if (!master) {
+            tags.add(TorrentsTags.BACK_RSS.getValue());
+        }
+
+        String torrent;
         if ("txt".equals(extName)) {
             torrent = FileUtil.readUtf8String(torrentFile);
-            body = StrFormatter.format(body, tag, subgroup, savePath, "", torrent);
+            body = StrFormatter.format(body, GsonStatic.toJson(tags), savePath, "", torrent);
         } else {
             torrent = Base64.encode(torrentFile);
-            body = StrFormatter.format(body, tag, subgroup, savePath, torrent, "");
+            body = StrFormatter.format(body, GsonStatic.toJson(tags), savePath, torrent, "");
         }
 
         String id = HttpReq.post(host + "/transmission/rpc", false)
@@ -191,14 +201,19 @@ public class Transmission implements BaseDownload {
     }
 
     @Override
-    public void delete(TorrentsInfo torrentsInfo) {
+    public Boolean delete(TorrentsInfo torrentsInfo) {
         String body = ResourceUtil.readUtf8Str("transmission/torrent-remove.json");
         body = StrFormatter.format(body, torrentsInfo.getId());
-        HttpReq.post(host + "/transmission/rpc", false)
-                .header(Header.AUTHORIZATION, authorization)
-                .header("X-Transmission-Session-Id", sessionId)
-                .body(body)
-                .then(HttpResponse::isOk);
+        try {
+            return HttpReq.post(host + "/transmission/rpc", false)
+                    .header(Header.AUTHORIZATION, authorization)
+                    .header("X-Transmission-Session-Id", sessionId)
+                    .body(body)
+                    .thenFunction(HttpResponse::isOk);
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+            return false;
+        }
     }
 
     @Override
@@ -233,10 +248,11 @@ public class Transmission implements BaseDownload {
     }
 
     @Override
-    public Boolean addTags(TorrentsInfo torrentsInfo, String tags) {
+    public Boolean addTags(TorrentsInfo torrentsInfo, String tag) {
         String id = torrentsInfo.getId();
-        List<String> strings = new ArrayList<>(List.of(torrentsInfo.getTags().split(",")));
-        strings.add(tags);
+        String tags = torrentsInfo.getTags();
+        List<String> strings = new ArrayList<>(StrUtil.split(tags, ",", true, true));
+        strings.add(tag);
 
         String body = ResourceUtil.readUtf8Str("transmission/torrent-set.json");
         body = StrFormatter.format(body, GsonStatic.toJson(strings), id);

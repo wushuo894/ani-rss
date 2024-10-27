@@ -16,8 +16,6 @@ public interface BaseDownload {
 
     Cache<String, String> renameCache = CacheUtil.newFIFOCache(512);
 
-    String tag = "ani-rss";
-
     List<String> videoFormat = List.of("mp4", "mkv", "avi", "wmv");
 
     List<String> subtitleFormat = List.of("ass", "ssa", "sub", "srt", "lyc");
@@ -50,7 +48,7 @@ public interface BaseDownload {
      *
      * @param torrentsInfo
      */
-    void delete(TorrentsInfo torrentsInfo);
+    Boolean delete(TorrentsInfo torrentsInfo);
 
     /**
      * 重命名
