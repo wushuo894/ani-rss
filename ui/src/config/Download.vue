@@ -57,7 +57,7 @@
                      label="仅在主RSS更新后删除备用RSS"/>
         <br>
         <el-text class="mx-1" size="small">
-          主RSS将不会自动删除，仅在其更新后删除对应的备用RSS
+          主RSS将不会自动删除，仅在其更新后删除对应的备用RSS的任务与文件
         </el-text>
       </div>
     </el-form-item>
