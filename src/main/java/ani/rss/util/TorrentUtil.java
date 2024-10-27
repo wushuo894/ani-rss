@@ -50,7 +50,6 @@ public class TorrentUtil {
         Set<String> downloadNameList = torrentsInfos.stream()
                 .map(TorrentsInfo::getName)
                 .map(String::trim)
-                .map(String::toLowerCase)
                 .collect(Collectors.toSet());
 
         Set<String> hashList = torrentsInfos
