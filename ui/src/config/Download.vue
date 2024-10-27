@@ -42,6 +42,12 @@
       <div>
         <el-switch v-model:model-value="props.config.delete"/>
         <br>
+        <el-text class="mx-1" size="small">
+          自动删除已完成的任务, 不会删除本地文件
+          <br>
+          如果同时开启了 <strong>备用rss功能</strong> 将会自动删除对应洗版视频, 以实现 <strong>主rss</strong> 的替换
+        </el-text>
+        <br>
         <el-checkbox v-model:model-value="props.config.awaitStalledUP"
                      :disabled="!props.config.delete"
                      label="等待做种完毕"/>
@@ -51,9 +57,7 @@
                      label="仅在主RSS更新后删除备用RSS"/>
         <br>
         <el-text class="mx-1" size="small">
-          自动删除已完成的任务, 不会删除本地文件
-          <br>
-          如果同时开启了 <strong>备用rss功能</strong> 将会自动删除对应洗版视频, 以实现 <strong>主rss</strong> 的替换
+          主RSS将不会自动删除，仅在其更新后删除对应的备用RSS
         </el-text>
       </div>
     </el-form-item>
