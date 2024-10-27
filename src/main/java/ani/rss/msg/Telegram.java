@@ -18,6 +18,7 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 
 /**
  * Telegram
@@ -50,12 +51,25 @@ public class Telegram implements Message {
                             .filter(Objects::nonNull)
                             .forEach(o ->
                                     map.put(
-                                            o.get("type").getAsString() + ": " + o.get("username").getAsString(),
+                                            o.get("type").getAsString() + ": " + buildUsername(o),
                                             o.get("id").getAsString()
                                     )
                             );
                     return map;
                 });
+    }
+
+    private static String buildUsername(JsonObject jsonObject) {
+        if (jsonObject.has("username")) {
+            return jsonObject.get("username").getAsString();
+        }
+        String firstName = Optional.ofNullable(jsonObject.get("first_name"))
+                .map(JsonElement::getAsString)
+                .orElse("");
+        String lastName = Optional.ofNullable(jsonObject.get("last_name"))
+                .map(JsonElement::getAsString)
+                .orElse("");
+        return firstName + " " + lastName;
     }
 
     public Boolean send(Config config, Ani ani, String text, MessageEnum messageEnum) {
