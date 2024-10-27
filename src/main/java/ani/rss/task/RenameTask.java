@@ -29,7 +29,6 @@ public class RenameTask extends Thread {
         super.setName("rename-task-thread");
         Config config = ConfigUtil.CONFIG;
         double renameSleep = config.getRenameSleep();
-        Boolean deleteBackRSSOnly = config.getDeleteBackRSSOnly();
 
         log.info("{} 当前设置间隔为 {} 分钟", getName(), renameSleep);
         while (loop.get()) {
@@ -43,6 +42,7 @@ public class RenameTask extends Thread {
                     if (!loop.get()) {
                         return;
                     }
+                    Boolean deleteBackRSSOnly = config.getDeleteBackRSSOnly();
                     try {
                         TorrentUtil.rename(torrentsInfo);
                         TorrentUtil.notification(torrentsInfo);
