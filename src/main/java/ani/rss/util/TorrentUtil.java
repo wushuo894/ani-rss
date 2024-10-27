@@ -111,7 +111,8 @@ public class TorrentUtil {
                             if (!reName.equals(torrentsInfo.getName())) {
                                 return false;
                             }
-                            List<String> strings = new ArrayList<>(List.of(torrentsInfo.getTags().split(",")));
+                            String tags = torrentsInfo.getTags();
+                            List<String> strings = StrUtil.split(tags, ",", true, true);
                             return strings.contains(TorrentsTags.BACK_RSS.getValue());
                         })
                         .findFirst()
