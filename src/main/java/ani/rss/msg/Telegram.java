@@ -50,7 +50,11 @@ public class Telegram implements Message {
                             .filter(Objects::nonNull)
                             .forEach(o ->
                                     map.put(
-                                            o.get("type").getAsString() + ": " + o.get("username").getAsString(),
+                                            o.get("type").getAsString() + ": " +
+                                                    (
+                                                            Objects.isNull(o.get("username")) ?
+                                                                    o.get("id").getAsString() : o.get("username").getAsString()
+                                                    ),
                                             o.get("id").getAsString()
                                     )
                             );
