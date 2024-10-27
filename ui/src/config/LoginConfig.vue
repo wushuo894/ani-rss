@@ -8,7 +8,7 @@
     <el-form-item label="密码">
       <el-input v-model:model-value="props.config.login.password"/>
     </el-form-item>
-    <el-form-item label="登录有效时间(小时)">
+    <el-form-item label="登录有效(小时)">
       <el-input-number v-model:model-value="props.config.loginEffectiveHours" min="1"/>
     </el-form-item>
     <el-form-item label="IP校验">
