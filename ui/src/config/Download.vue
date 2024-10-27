@@ -46,6 +46,10 @@
                      :disabled="!props.config.delete"
                      label="等待做种完毕"/>
         <br>
+        <el-checkbox v-model:model-value="props.config.deleteBackRSSOnly"
+                     :disabled="!props.config.delete"
+                     label="仅在主RSS更新后删除备用RSS"/>
+        <br>
         <el-text class="mx-1" size="small">
           自动删除已完成的任务, 不会删除本地文件
           <br>

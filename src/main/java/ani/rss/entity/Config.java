@@ -109,6 +109,11 @@ public class Config implements Serializable {
     private Boolean delete;
 
     /**
+     * 仅在主RSS更新后删除备用RSS
+     */
+    private Boolean deleteBackRSSOnly;
+
+    /**
      * 自动推断剧集偏移
      */
     private Boolean offset;

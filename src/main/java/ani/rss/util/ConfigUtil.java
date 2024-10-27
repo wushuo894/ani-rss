@@ -38,6 +38,7 @@ public class ConfigUtil {
                 .setFileExist(false)
                 .setAwaitStalledUP(true)
                 .setDelete(false)
+                .setDeleteBackRSSOnly(false)
                 .setOffset(false)
                 .setTitleYear(false)
                 .setAcronym(false)

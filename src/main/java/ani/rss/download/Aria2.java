@@ -162,16 +162,21 @@ public class Aria2 implements BaseDownload {
     }
 
     @Override
-    public void delete(TorrentsInfo torrentsInfo) {
+    public Boolean delete(TorrentsInfo torrentsInfo) {
         String host = config.getHost();
         String password = config.getPassword();
         String id = torrentsInfo.getId();
         String body = ResourceUtil.readUtf8Str("aria2/removeDownloadResult.json");
         body = StrFormatter.format(body, password, id);
 
-        HttpReq.post(host + "/jsonrpc", false)
-                .body(body)
-                .thenFunction(HttpResponse::isOk);
+        try {
+            return HttpReq.post(host + "/jsonrpc", false)
+                    .body(body)
+                    .thenFunction(HttpResponse::isOk);
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+            return false;
+        }
     }
 
     @Override
