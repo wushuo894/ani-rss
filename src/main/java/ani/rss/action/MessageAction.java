@@ -44,7 +44,8 @@ public class MessageAction implements BaseAction {
                 .setTotalEpisodeNumber(12)
                 .setScore(8.0)
                 .setThemoviedbName("test")
-                .setYear(2024);
+                .setYear(2024)
+                .setSubgroup("未知字幕组");
         Boolean test = message.send(config, ani, "test", null);
         if (test) {
             resultSuccess();
