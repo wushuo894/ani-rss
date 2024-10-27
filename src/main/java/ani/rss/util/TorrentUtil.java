@@ -119,6 +119,12 @@ public class TorrentUtil {
                         .orElse(null);
 
                 if (Objects.nonNull(backRSS)) {
+                    String tags = backRSS.getTags();
+                    if (!StrUtil.split(tags, ",", true, true)
+                            .contains(TorrentsTags.RENAME.getValue())) {
+                        // 未完成重命名
+                        continue;
+                    }
                     if (!delete(backRSS)) {
                         // 删除失败或者不允许删除
                         continue;
