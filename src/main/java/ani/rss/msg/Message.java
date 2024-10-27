@@ -45,7 +45,8 @@ public interface Message {
                 Ani::getThemoviedbName,
                 Ani::getBgmUrl,
                 Ani::getCurrentEpisodeNumber,
-                Ani::getTotalEpisodeNumber
+                Ani::getTotalEpisodeNumber,
+                Ani::getSubgroup
         );
 
         for (Func1<Ani, Object> func1 : list) {
