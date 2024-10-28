@@ -44,6 +44,21 @@ public class Config implements Serializable {
     private Boolean qbUseDownloadPath;
 
     /**
+     * 分享率
+     */
+    private Integer ratioLimit;
+
+    /**
+     * 总做种时长
+     */
+    private Integer seedingTimeLimit;
+
+    /**
+     * 非活跃时长
+     */
+    private Integer inactiveSeedingTimeLimit;
+
+    /**
      * 下载路径
      */
     private String downloadPath;

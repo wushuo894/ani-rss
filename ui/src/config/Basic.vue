@@ -56,14 +56,22 @@
           <el-form-item label="自动重命名">
             <el-switch v-model:model-value="props.config.rename"/>
           </el-form-item>
-          <el-form-item label="重命名间隔(分钟)">
+          <el-form-item label="重命名间隔">
             <el-input-number v-model:model-value="props.config.renameSleep" :step="0.5"
                              min="0.5"
-                             :disabled="!config.rename"/>
+                             :disabled="!config.rename">
+              <template #suffix>
+                <span>分钟</span>
+              </template>
+            </el-input-number>
           </el-form-item>
-          <el-form-item label="重命名最小文件大小(MB)">
+          <el-form-item label="重命名最小文件">
             <div>
-              <el-input-number v-model:model-value="props.config.renameMinSize" min="10" max="2048"/>
+              <el-input-number v-model:model-value="props.config.renameMinSize" min="10" max="2048">
+                <template #suffix>
+                  <span>MB</span>
+                </template>
+              </el-input-number>
               <br>
               <el-text class="mx-1" size="small">
                 设置为 0 时不启用
@@ -132,8 +140,12 @@
           <el-form-item label="RSS开关">
             <el-switch v-model:model-value="props.config.rss"/>
           </el-form-item>
-          <el-form-item label="RSS间隔(分钟)">
-            <el-input-number v-model:model-value="props.config.sleep" :disabled="!props.config.rss" :min="5"/>
+          <el-form-item label="RSS间隔">
+            <el-input-number v-model:model-value="props.config.sleep" :disabled="!props.config.rss" :min="5">
+              <template #suffix>
+                <span>分钟</span>
+              </template>
+            </el-input-number>
           </el-form-item>
           <el-form-item label="自动跳过">
             <div style="width: 100%">
