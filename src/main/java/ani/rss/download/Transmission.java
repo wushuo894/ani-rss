@@ -182,8 +182,8 @@ public class Transmission implements BaseDownload {
         }
 
         List<TorrentsInfo> torrentsInfos = getTorrentsInfos();
-        for (int i = 0; i < 10; i++) {
-            ThreadUtil.sleep(2000);
+        for (int i = 0; i < 6; i++) {
+            ThreadUtil.sleep(1000 * 10);
             Optional<TorrentsInfo> optionalTorrentsInfo = torrentsInfos
                     .stream()
                     .filter(torrentsInfo -> torrentsInfo.getId().equals(id))
