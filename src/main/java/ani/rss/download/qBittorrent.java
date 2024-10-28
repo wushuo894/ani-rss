@@ -12,10 +12,7 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.thread.ThreadUtil;
-import cn.hutool.core.util.ArrayUtil;
-import cn.hutool.core.util.ObjUtil;
-import cn.hutool.core.util.ReUtil;
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.util.*;
 import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpResponse;
 import com.google.gson.JsonArray;
@@ -95,7 +92,9 @@ public class qBittorrent implements BaseDownload {
                         torrentsInfo.setName(name);
                         torrentsInfo.setHash(hash);
                         torrentsInfo.setDownloadDir(savePath);
-                        torrentsInfo.setState(Objects.isNull(state) ? null : TorrentsInfo.State.valueOf(state.getAsString()));
+                        torrentsInfo.setState(Objects.isNull(state) ?
+                                null : EnumUtil.fromString(TorrentsInfo.State.class, state.getAsString(), TorrentsInfo.State.downloading)
+                        );
                         torrentsInfo.setTags(tagList);
 
                         // 包含标签
