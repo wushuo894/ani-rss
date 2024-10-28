@@ -121,7 +121,7 @@ public class Transmission implements BaseDownload {
 
                         TorrentsInfo torrentsInfo = new TorrentsInfo();
                         torrentsInfo.setName(item.get("name").getAsString());
-                        torrentsInfo.setTags(CollUtil.join(tags, ","));
+                        torrentsInfo.setTags(tags);
                         torrentsInfo.setHash(item.get("hashString").getAsString());
                         torrentsInfo.setState(state);
                         torrentsInfo.setId(item.get("id").getAsString());
@@ -250,8 +250,8 @@ public class Transmission implements BaseDownload {
     @Override
     public Boolean addTags(TorrentsInfo torrentsInfo, String tag) {
         String id = torrentsInfo.getId();
-        String tags = torrentsInfo.getTags();
-        List<String> strings = new ArrayList<>(StrUtil.split(tags, ",", true, true));
+        List<String> tags = torrentsInfo.getTags();
+        List<String> strings = new ArrayList<>(tags);
         strings.add(tag);
 
         String body = ResourceUtil.readUtf8Str("transmission/torrent-set.json");
