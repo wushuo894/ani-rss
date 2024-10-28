@@ -78,14 +78,28 @@ public class qBittorrent implements BaseDownload {
                     JsonArray jsonElements = GsonStatic.fromJson(res.body(), JsonArray.class);
                     for (JsonElement jsonElement : jsonElements) {
                         JsonObject jsonObject = jsonElement.getAsJsonObject();
-                        TorrentsInfo torrentsInfo = GsonStatic.fromJson(jsonObject, TorrentsInfo.class);
-                        torrentsInfo.setDownloadDir(jsonObject.get("content_path").getAsString());
-                        String tags = torrentsInfo.getTags();
+                        String tags = jsonObject.get("tags").getAsString();
+
                         if (StrUtil.isBlank(tags)) {
                             continue;
                         }
+
+                        String hash = jsonObject.get("hash").getAsString();
+                        String name = jsonObject.get("name").getAsString();
+                        String savePath = jsonObject.get("save_path").getAsString();
+                        JsonElement state = jsonObject.get("state");
+
+                        List<String> tagList = StrUtil.split(tags, ",", true, true);
+
+                        TorrentsInfo torrentsInfo = new TorrentsInfo();
+                        torrentsInfo.setName(name);
+                        torrentsInfo.setHash(hash);
+                        torrentsInfo.setDownloadDir(savePath);
+                        torrentsInfo.setState(Objects.isNull(state) ? null : TorrentsInfo.State.valueOf(state.getAsString()));
+                        torrentsInfo.setTags(tagList);
+
                         // 包含标签
-                        if (StrUtil.split(tags, ",", true, true).contains(TorrentsTags.ANI_RSS.getValue())) {
+                        if (tagList.contains(TorrentsTags.ANI_RSS.getValue())) {
                             torrentsInfoList.add(torrentsInfo);
                         }
                     }
@@ -109,6 +123,10 @@ public class qBittorrent implements BaseDownload {
             tags.add(TorrentsTags.BACK_RSS.getValue());
         }
 
+        // ratioLimit 分享率
+        // seedingTimeLimit 总做种时长
+        // inactiveSeedingTimeLimit 非活跃时长
+
         HttpRequest httpRequest = HttpReq.post(host + "/api/v2/torrents/add", false)
                 .form("addToTopOfQueue", false)
                 .form("autoTMM", false)
@@ -121,7 +139,7 @@ public class qBittorrent implements BaseDownload {
                 .form("sequentialDownload", false)
                 .form("skip_checking", false)
                 .form("stopCondition", "None")
-                .form("upLimit", 102400)
+                .form("upLimit", 0)
                 .form("useDownloadPath", qbUseDownloadPath)
                 .form("tags", CollUtil.join(tags, ","));
 

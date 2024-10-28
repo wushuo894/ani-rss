@@ -96,7 +96,7 @@ public class Aria2 implements BaseDownload {
 
                         TorrentsInfo torrentsInfo = new TorrentsInfo();
                         torrentsInfo
-                                .setTags("")
+                                .setTags(List.of())
                                 .setId(gid)
                                 .setName(name)
                                 .setHash(infoHash)
