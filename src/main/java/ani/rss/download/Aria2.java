@@ -145,8 +145,8 @@ public class Aria2 implements BaseDownload {
             return true;
         }
 
-        for (int i = 0; i < 10; i++) {
-            ThreadUtil.sleep(2000);
+        for (int i = 0; i < 6; i++) {
+            ThreadUtil.sleep(1000 * 10);
             List<TorrentsInfo> torrentsInfos = getTorrentsInfos();
             for (TorrentsInfo torrentsInfo : torrentsInfos) {
                 if (!torrentsInfo.getId().equals(id)) {

@@ -141,9 +141,9 @@ public class qBittorrent implements BaseDownload {
                 .form("upLimit", 0)
                 .form("useDownloadPath", qbUseDownloadPath)
                 .form("tags", CollUtil.join(tags, ","))
-                .form("ratioLimit",ratioLimit)
-                .form("seedingTimeLimit",seedingTimeLimit)
-                .form("inactiveSeedingTimeLimit",inactiveSeedingTimeLimit);
+                .form("ratioLimit", ratioLimit)
+                .form("seedingTimeLimit", seedingTimeLimit)
+                .form("inactiveSeedingTimeLimit", inactiveSeedingTimeLimit);
 
         String extName = FileUtil.extName(torrentFile);
         if ("txt".equals(extName)) {
@@ -162,8 +162,8 @@ public class qBittorrent implements BaseDownload {
         }
 
 
-        for (int i = 0; i < 10; i++) {
-            ThreadUtil.sleep(3000);
+        for (int i = 0; i < 6; i++) {
+            ThreadUtil.sleep(1000 * 10);
             List<TorrentsInfo> torrentsInfos = getTorrentsInfos();
             Optional<TorrentsInfo> optionalTorrentsInfo = torrentsInfos
                     .stream()
