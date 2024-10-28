@@ -134,7 +134,7 @@ const config = ref({
   'messageList': [],
   'verifyLoginIp': true,
   'serverChanSendKey': '',
-  serverChan3ApiUrl: '',
+  'serverChan3ApiUrl': '',
   'serverChan': false,
   'serverChanType': '',
   'systemMsg': false,
@@ -145,7 +145,10 @@ const config = ref({
   'tmdbId': false,
   'renameDelYear': false,
   'renameDelTmdbId': false,
-  'messageTemplate': ''
+  'messageTemplate': '',
+  'ratioLimit': -2,
+  'seedingTimeLimit': -2,
+  'inactiveSeedingTimeLimit': -2
 })
 
 const activeName = ref('download')
