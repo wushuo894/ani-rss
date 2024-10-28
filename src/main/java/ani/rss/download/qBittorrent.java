@@ -122,9 +122,9 @@ public class qBittorrent implements BaseDownload {
             tags.add(TorrentsTags.BACK_RSS.getValue());
         }
 
-        // ratioLimit 分享率
-        // seedingTimeLimit 总做种时长
-        // inactiveSeedingTimeLimit 非活跃时长
+        Integer ratioLimit = config.getRatioLimit();
+        Integer seedingTimeLimit = config.getSeedingTimeLimit();
+        Integer inactiveSeedingTimeLimit = config.getInactiveSeedingTimeLimit();
 
         HttpRequest httpRequest = HttpReq.post(host + "/api/v2/torrents/add", false)
                 .form("addToTopOfQueue", false)
@@ -140,7 +140,10 @@ public class qBittorrent implements BaseDownload {
                 .form("stopCondition", "None")
                 .form("upLimit", 0)
                 .form("useDownloadPath", qbUseDownloadPath)
-                .form("tags", CollUtil.join(tags, ","));
+                .form("tags", CollUtil.join(tags, ","))
+                .form("ratioLimit",ratioLimit)
+                .form("seedingTimeLimit",seedingTimeLimit)
+                .form("inactiveSeedingTimeLimit",inactiveSeedingTimeLimit);
 
         String extName = FileUtil.extName(torrentFile);
         if ("txt".equals(extName)) {
