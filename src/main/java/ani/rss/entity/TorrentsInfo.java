@@ -32,7 +32,7 @@ public class TorrentsInfo implements Serializable {
     /**
      * 标签
      */
-    private String tags;
+    private List<String> tags;
 
     /**
      * 大小

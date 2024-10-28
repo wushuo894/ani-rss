@@ -111,17 +111,15 @@ public class TorrentUtil {
                             if (!reName.equals(torrentsInfo.getName())) {
                                 return false;
                             }
-                            String tags = torrentsInfo.getTags();
-                            List<String> strings = StrUtil.split(tags, ",", true, true);
-                            return strings.contains(TorrentsTags.BACK_RSS.getValue());
+                            List<String> tags = torrentsInfo.getTags();
+                            return tags.contains(TorrentsTags.BACK_RSS.getValue());
                         })
                         .findFirst()
                         .orElse(null);
 
                 if (Objects.nonNull(backRSS)) {
-                    String tags = backRSS.getTags();
-                    if (!StrUtil.split(tags, ",", true, true)
-                            .contains(TorrentsTags.RENAME.getValue())) {
+                    List<String> tags = backRSS.getTags();
+                    if (!tags.contains(TorrentsTags.RENAME.getValue())) {
                         // 未完成重命名
                         continue;
                     }
@@ -670,9 +668,8 @@ public class TorrentUtil {
             return;
         }
         // 添加下载完成标签，防止重复通知
-        String tags = torrentsInfo.getTags();
-        List<String> tagList = StrUtil.split(tags, ",", true, true);
-        if (tagList.contains(TorrentsTags.DOWNLOAD_COMPLETE.getValue())) {
+        List<String> tags = torrentsInfo.getTags();
+        if (tags.contains(TorrentsTags.DOWNLOAD_COMPLETE.getValue())) {
             return;
         }
         Boolean b = TorrentUtil.addTags(torrentsInfo, TorrentsTags.DOWNLOAD_COMPLETE.getValue());
@@ -687,7 +684,7 @@ public class TorrentUtil {
                     .map(TorrentsTags::getValue)
                     .collect(Collectors.toSet());
 
-            String subgroup = tagList
+            String subgroup = tags
                     .stream()
                     .filter(s -> !allTags.contains(s))
                     .findFirst()
@@ -848,9 +845,8 @@ public class TorrentUtil {
             return;
         }
 
-        String tags = torrentsInfo.getTags();
-        if (StrUtil.split(tags, ",", true, true)
-                .contains(TorrentsTags.RENAME.getValue())) {
+        List<String> tags = torrentsInfo.getTags();
+        if (tags.contains(TorrentsTags.RENAME.getValue())) {
             return;
         }
 
