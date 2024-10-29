@@ -102,7 +102,10 @@ public class AniUtil {
             for (JsonElement jsonElement : jsonArray.asList()) {
                 GsonStatic.fromJson(jsonElement, Ani.class);
             }
-            FileUtil.writeUtf8String(json, configFile);
+            File temp = new File(configFile + ".temp");
+            FileUtil.del(temp);
+            FileUtil.writeUtf8String(json, temp);
+            FileUtil.rename(temp, configFile.getName(), true);
             log.debug("保存成功 {}", configFile);
         } catch (Exception e) {
             log.error("保存失败 {}", configFile);
