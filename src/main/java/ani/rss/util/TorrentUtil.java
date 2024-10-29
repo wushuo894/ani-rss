@@ -36,6 +36,7 @@ public class TorrentUtil {
      */
     public static synchronized void downloadAni(Ani ani) {
         Config config = ConfigUtil.CONFIG;
+        Boolean delete = config.getDelete();
         Boolean autoDisabled = config.getAutoDisabled();
         Integer downloadCount = config.getDownloadCount();
         Integer delayedDownload = config.getDelayedDownload();
@@ -104,7 +105,7 @@ public class TorrentUtil {
             }
 
             // 仅在主RSS更新后删除备用RSS
-            if (master && deleteBackRSSOnly) {
+            if (delete && master && deleteBackRSSOnly) {
                 TorrentsInfo backRSS = torrentsInfos
                         .stream()
                         .filter(torrentsInfo -> {
