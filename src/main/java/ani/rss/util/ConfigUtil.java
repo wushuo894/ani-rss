@@ -185,8 +185,10 @@ public class ConfigUtil {
         try {
             String json = GsonStatic.toJson(CONFIG);
             // 校验json没有问题
-            GsonStatic.fromJson(json, Config.class);
-            FileUtil.writeUtf8String(json, configFile);
+            File temp = new File(configFile + ".temp");
+            FileUtil.del(temp);
+            FileUtil.writeUtf8String(json, temp);
+            FileUtil.rename(temp, configFile.getName(), true);
             LogUtil.loadLogback();
             log.debug("保存成功 {}", configFile);
         } catch (Exception e) {
