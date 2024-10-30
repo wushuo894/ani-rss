@@ -45,7 +45,7 @@ public class MikanUtil {
                 .collect(Collectors.toSet());
         String url = getMikanHost();
         if (StrUtil.isNotBlank(text)) {
-            url = url + "/Home/Search?searchstr=" + URLUtil.encode(text, StandardCharsets.UTF_8);
+            url = url + "/Home/Search?searchstr=" + URLUtil.encodeBlank(text);
         } else {
             Integer year = season.getYear();
             String seasonStr = season.getSeason();

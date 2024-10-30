@@ -3,6 +3,7 @@
   <BackRss ref="backRss" :ani="props.ani"/>
   <Mikan ref="mikanRef" @add="args => {
     ani.subgroup = args.group
+    ani.match = args.match
     ani.url = args.url
   }"/>
   <div style="height: 500px;">
