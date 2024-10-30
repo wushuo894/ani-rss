@@ -1,11 +1,14 @@
 package ani.rss.util;
 
+import ani.rss.Main;
 import ani.rss.entity.About;
 import cn.hutool.core.comparator.VersionComparator;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.resource.ResourceUtil;
+import cn.hutool.core.lang.Assert;
 import cn.hutool.core.text.StrFormatter;
 import cn.hutool.core.thread.ThreadUtil;
+import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.RuntimeUtil;
 import cn.hutool.core.util.StrUtil;
 import lombok.SneakyThrows;
@@ -16,6 +19,8 @@ import org.jsoup.nodes.Element;
 
 import java.io.File;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @Slf4j
@@ -73,6 +78,8 @@ public class UpdateUtil {
         String downloadUrl = about.getDownloadUrl();
         HttpReq.get(downloadUrl, true)
                 .then(res -> {
+                    int status = res.getStatus();
+                    Assert.isTrue(res.isOk(), "Error: {}", status);
                     long contentLength = res.contentLength();
                     FileUtil.writeFromStream(res.bodyStream(), file, true);
                     if (contentLength != file.length()) {
@@ -93,7 +100,12 @@ public class UpdateUtil {
                         try (InputStream stream = ResourceUtil.getStream(filename)) {
                             FileUtil.writeFromStream(stream, updateExe, true);
                             ServerUtil.stop();
-                            RuntimeUtil.exec(updateExe.toString(), file.getParent());
+                            List<String> strings = new ArrayList<>();
+                            strings.add(updateExe.toString());
+                            strings.add(file.getParent());
+                            strings.addAll(Arrays.asList(Main.ARGS));
+                            String[] array = ArrayUtil.toArray(strings, String.class);
+                            RuntimeUtil.exec(array);
                             System.exit(0);
                         } catch (Exception e) {
                             log.error(e.getMessage(), e);
