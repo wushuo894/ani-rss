@@ -7,7 +7,7 @@
             <el-input v-model:model-value="name" @keyup.enter="search" placeholder="请输入搜索标题" clearable/>
           </div>
           <div style="width: 4px;"></div>
-          <el-button @click="search" :loading="searchLoading" text bg icon="Search">搜索</el-button>
+          <el-button @click="search" :loading="searchLoading" text bg icon="Search" :disabled="!name">搜索</el-button>
         </div>
       </div>
       <el-table v-model:data="list" height="500px">

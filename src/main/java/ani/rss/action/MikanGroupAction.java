@@ -4,11 +4,14 @@ import ani.rss.annotation.Auth;
 import ani.rss.annotation.Path;
 import ani.rss.entity.Mikan;
 import ani.rss.entity.TorrentsInfo;
+import ani.rss.util.GsonStatic;
 import ani.rss.util.MikanUtil;
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.http.server.HttpServerRequest;
 import cn.hutool.http.server.HttpServerResponse;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
@@ -34,20 +37,33 @@ public class MikanGroupAction implements BaseAction {
                 "mp4", "mkv"
         );
 
+
         for (Mikan.Group group : groups) {
+            List<List<String>> matchList = new ArrayList<>();
             Set<String> tags = new LinkedHashSet<>();
             group.setTags(tags);
 
             List<TorrentsInfo> items = group.getItems();
             for (TorrentsInfo item : items) {
-                String name = item.getName().toLowerCase();
+                String name = item.getName();
+                List<String> match = new ArrayList<>();
                 for (String s : tagList) {
-                    if (!name.contains(s)) {
+                    if (name.contains(s)) {
+                        tags.add(s);
+                        match.add(s);
                         continue;
                     }
-                    tags.add(s);
+                    if (name.contains(s.toUpperCase())) {
+                        tags.add(s.toUpperCase());
+                        match.add(s.toUpperCase());
+                    }
                 }
+                match = CollUtil.distinct(match);
+                matchList.add(match);
             }
+
+            matchList = CollUtil.distinct(matchList, GsonStatic::toJson, true);
+            group.setMatchList(matchList);
         }
         resultSuccess(groups);
     }

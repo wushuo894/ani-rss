@@ -1,4 +1,24 @@
 <template>
+  <el-dialog v-model="matchDialogVisible" title="匹配" center v-if="matchDialogVisible" width="500" align-center>
+    <div>
+      <el-radio-group v-model="addAni.match">
+        <div v-for="match in matchList" style="margin-right: 12px;">
+          <el-radio :label="match" :value="match">
+            <el-tag v-if="match.length" v-for="item in match" style="margin-right: 4px;">{{ item }}</el-tag>
+            <el-tag v-else type="success">全部</el-tag>
+          </el-radio>
+        </div>
+      </el-radio-group>
+    </div>
+    <div style="display: flex;width: 100%;justify-content: end;">
+      <el-button icon="Check" @click="async ()=>{
+          emit('add', addAni)
+          dialogVisible = false
+          matchDialogVisible = false
+      }" text bg>确定
+      </el-button>
+    </div>
+  </el-dialog>
   <el-dialog v-model="dialogVisible" title="Mikan" center v-if="dialogVisible">
     <div style="min-height: 300px;">
       <div style="margin: 4px;">
@@ -63,7 +83,8 @@
                                 <el-button text bg @click.stop="add({
                                   'title':it.title,
                                   'group':group.label,
-                                  'url':group['rss']
+                                  'url':group['rss'],
+                                  'matchList':group['matchList']
                                 })" icon="Plus">
                                   添加
                                 </el-button>
@@ -207,9 +228,30 @@ let collapseChange = (v) => {
       })
 }
 
+
+let matchDialogVisible = ref(false)
+
+let addAni = ref({
+  'url': '',
+  'match': []
+})
+
+let matchList = ref([])
+
 let add = (v) => {
-  emit('add', v)
-  dialogVisible.value = false
+  matchList.value = JSON.parse(JSON.stringify(v.matchList))
+  let all = []
+  addAni.value.url = v.url
+  addAni.value.match = all
+
+  if (matchList.value.length === 1) {
+    dialogVisible.value = false
+    emit('add', addAni.value)
+    return
+  }
+
+  matchList.value.push(all)
+  matchDialogVisible.value = true
 }
 
 
