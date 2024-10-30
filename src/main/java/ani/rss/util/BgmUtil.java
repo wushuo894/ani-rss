@@ -262,7 +262,7 @@ public class BgmUtil {
                     .setDate(LocalDateTimeUtil.parse(date, DatePattern.NORM_DATE_PATTERN))
                     .setEps(eps)
                     .setScore(score)
-                    .setOva("OVA".equalsIgnoreCase(platform));
+                    .setOva(List.of("OVA", "剧场版").contains(platform.toUpperCase()));
 
             JsonObject images = jsonObject.getAsJsonObject("images");
             if (Objects.nonNull(images)) {
