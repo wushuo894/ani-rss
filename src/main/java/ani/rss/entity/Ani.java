@@ -104,7 +104,7 @@ public class Ani implements Serializable {
     private Boolean globalExclude;
 
     /**
-     * 剧场版
+     * 剧场版 or OVA
      */
     private Boolean ova;
 
