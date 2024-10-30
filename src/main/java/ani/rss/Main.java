@@ -2,12 +2,16 @@ package ani.rss;
 
 import ani.rss.task.UpdateTrackersTask;
 import ani.rss.util.*;
+import cn.hutool.core.util.ObjectUtil;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class Main {
 
+    public static String[] ARGS = new String[]{};
+
     public static void main(String[] args) {
+        Main.ARGS = ObjectUtil.defaultIfNull(args, new String[]{});
         System.setProperty("jdk.http.auth.tunneling.disabledSchemes", "");
         try {
             UpdateUtil.manageWindows();
@@ -17,9 +21,9 @@ public class Main {
             String version = MavenUtil.getVersion();
             log.info("version {}", version);
 
-            MenuUtil.start(args);
+            MenuUtil.start();
             UpdateTrackersTask.start();
-            ServerUtil.create(args).start();
+            ServerUtil.create().start();
         } catch (Exception e) {
             String message = ExceptionUtil.getMessage(e);
             log.error(message, e);
