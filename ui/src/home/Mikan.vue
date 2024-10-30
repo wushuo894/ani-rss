@@ -242,9 +242,10 @@ let add = (v) => {
   matchList.value = JSON.parse(JSON.stringify(v.matchList))
   let all = []
   addAni.value.url = v.url
+  addAni.value.group = v.group
   addAni.value.match = all
 
-  if (matchList.value.length === 1) {
+  if (matchList.value.length === 1 || props.match) {
     dialogVisible.value = false
     emit('add', addAni.value)
     return
@@ -269,7 +270,8 @@ let open = (url) => {
 
 defineExpose({show})
 
-const emit = defineEmits(['add'])
+let props = defineProps(['match'])
+let emit = defineEmits(['add'])
 
 </script>
 
