@@ -707,6 +707,25 @@ public class TorrentUtil {
      * @return
      */
     public static synchronized Ani findAniByName(String name) {
+        String tempName = name
+                .replaceAll(StringEnum.YEAR_REG, "")
+                .replaceAll(StringEnum.TMDB_ID_REG, "")
+                .trim();
+
+        Optional<Ani> first = AniUtil.ANI_LIST.stream()
+                .filter(it -> it.getSeason() == 1)
+                .filter(it -> {
+                    String title = it.getTitle();
+                    title = title.replaceAll(StringEnum.YEAR_REG, "");
+                    title = title.replaceAll(StringEnum.TMDB_ID_REG, "");
+                    title = title.trim();
+                    return title.equals(tempName);
+                })
+                .findFirst();
+        if (first.isPresent()) {
+            return first.get();
+        }
+
         if (!ReUtil.contains(StringEnum.SEASON_REG, name)) {
             return AniUtil.ANI_LIST
                     .stream()
