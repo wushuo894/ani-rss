@@ -1,7 +1,7 @@
 package ani.rss.util;
 
+import ani.rss.Main;
 import cn.hutool.core.io.resource.ResourceUtil;
-import cn.hutool.core.util.ObjectUtil;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.swing.*;
@@ -17,8 +17,8 @@ public class MenuUtil {
 
     public static TrayIcon trayIcon;
 
-    public static void start(String[] args) {
-        args = ObjectUtil.defaultIfNull(args, new String[]{});
+    public static void start() {
+        String[] args = Main.ARGS;
         // 仅在添加--gui参数时启动托盘
         if (Arrays.asList(args).contains("--gui")) {
             try {

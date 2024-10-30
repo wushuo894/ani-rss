@@ -1,5 +1,6 @@
 package ani.rss.util;
 
+import ani.rss.Main;
 import ani.rss.action.BaseAction;
 import ani.rss.action.RootAction;
 import ani.rss.annotation.Auth;
@@ -31,8 +32,9 @@ public class ServerUtil {
     public static String PORT = "7789";
     public static SimpleServer server;
 
-    public static SimpleServer create(String... args) {
+    public static SimpleServer create() {
         Map<String, String> env = System.getenv();
+        String[] args = Main.ARGS;
         int i = Arrays.asList(args).indexOf("--port");
 
         if (i > -1) {
