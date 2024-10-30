@@ -1,6 +1,7 @@
 <template>
   <Mikan ref="mikan" @add="args => {
     ani.url = args.url
+    ani.match = args.match
     getRss()
   }"/>
   <Bgm ref="bgmRef" @add="it => {
@@ -20,6 +21,7 @@
             <el-form-item label="RSS 地址">
               <div style="width: 100%">
                 <el-input
+                    :disabled="rssButtonLoading"
                     type="textarea"
                     :autosize="{ minRows: 2}"
                     v-model:model-value="ani.url"
@@ -27,7 +29,9 @@
                 />
                 <br>
                 <div style="width: 100%;display: flex;justify-content: end;margin-top: 8px;">
-                  <el-button @click="mikan?.show()" text bg icon="VideoCamera" type="primary">Mikan</el-button>
+                  <el-button @click="mikan?.show()" text bg icon="VideoCamera" type="primary"
+                             :disabled="rssButtonLoading">Mikan
+                  </el-button>
                 </div>
                 <div>
                   <el-text class="mx-1" size="small">
@@ -51,22 +55,25 @@
               <div style="display: flex;width: 100%;">
                 <div style="flex: 1">
                   <el-input
+                      :disabled="rssButtonLoading"
                       v-model:model-value="ani.title"
                       placeholder="可以为空 如果获取失败建议补全"
                   />
                 </div>
                 <div style="width: 4px;"></div>
-                <el-button text bg icon="Search" @click="bgmRef?.show(ani.title)"/>
+                <el-button text bg icon="Search" @click="bgmRef?.show(ani.title)" :disabled="rssButtonLoading"/>
               </div>
             </el-form-item>
             <el-form-item label="BgmUrl">
               <el-input
                   v-model:model-value="ani.bgmUrl"
                   placeholder="https://bgm.tv/subject/123456"
+                  :disabled="rssButtonLoading"
               />
             </el-form-item>
             <el-form-item label="RSS 地址">
               <el-input
+                  :disabled="rssButtonLoading"
                   :autosize="{ minRows: 2}"
                   type="textarea"
                   v-model:model-value="ani.url"
@@ -134,7 +141,9 @@ const getRss = () => {
   ani.value.type = activeName.value
   api.post('api/rss', ani.value)
       .then(res => {
+        let match = ani.value['match'];
         ani.value = res['data']
+        ani.value['match'] = match
         ani.value.showDownlaod = false
         showRss.value = false
       })
@@ -161,7 +170,8 @@ const show = () => {
     'offset': 0,
     'title': '',
     'exclude': [],
-    'totalEpisodeNumber': 0
+    'totalEpisodeNumber': 0,
+    'match': []
   }
   activeName.value = 'mikan'
   showRss.value = true

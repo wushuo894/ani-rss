@@ -57,6 +57,11 @@ public class Mikan {
     @Accessors(chain = true)
     public static class Group {
         /**
+         * 匹配
+         */
+        private List<List<String>> matchList;
+
+        /**
          * 字幕组名称
          */
         private String label;
