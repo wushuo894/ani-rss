@@ -35,6 +35,10 @@ public class AniUtil {
 
     public static final List<Ani> ANI_LIST = new CopyOnWriteArrayList<>();
 
+    static {
+        load();
+    }
+
     /**
      * 获取订阅配置文件
      *
