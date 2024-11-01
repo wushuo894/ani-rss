@@ -1,5 +1,5 @@
 <template>
-  <Items ref="items"/>
+  <Items ref="items" :ani="props.ani"/>
   <BackRss ref="backRss" :ani="props.ani"/>
   <Mikan ref="mikanRef" @add="args => {
     ani.subgroup = args.group
@@ -145,7 +145,7 @@
       </popconfirm>
     </div>
     <div>
-      <el-button @click="items.show(ani)" bg text icon="Grid">预览</el-button>
+      <el-button @click="items.show()" bg text icon="Grid">预览</el-button>
       <el-button icon="Check" :loading="okLoading" @click="async ()=>{
         okLoading = true
         emit('ok',()=>okLoading = false)
