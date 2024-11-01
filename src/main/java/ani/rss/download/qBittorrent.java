@@ -212,7 +212,12 @@ public class qBittorrent implements BaseDownload {
             // 清空剩余文件夹
             for (File file : dirList) {
                 log.info("删除剩余文件夹: {}", file);
-                FileUtil.del(file);
+                try {
+                    FileUtil.del(file);
+                } catch (Exception e) {
+                    log.info("删除失败: {}", file);
+                    log.error(e.getMessage(), e);
+                }
             }
 
             return true;
