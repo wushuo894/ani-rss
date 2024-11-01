@@ -11,16 +11,31 @@
         <div style="width: 4px;"/>
         <el-input v-model:model-value="data.downloadPath" disabled></el-input>
       </div>
+      <div style="width: 100%;display: flex;justify-content: end;margin-top: 4px;">
+        <el-button bg text @click="allowDownload">允许下载</el-button>
+        <el-button bg text @click="notDownload">禁止下载</el-button>
+      </div>
       <div style="padding: 0 12px">
-        <el-table :data="data.items.filter(selectItems.filter(it => it.label === select)[0].fun)" height="500" scrollbar-always-on>
+        <el-table :data="data.items.filter(selectItems.filter(it => it.label === select)[0].fun)" height="500"
+                  @selection-change="handleSelectionChange"
+                  scrollbar-always-on>
+          <el-table-column type="selection" width="55"/>
+          <el-table-column label="是否下载" min-width="100">
+            <template #default="it">
+              <el-tag v-if="props.ani['notDownload'].includes(data.items[it.$index]['episode'])" type="info">否</el-tag>
+              <el-tag v-else>是</el-tag>
+            </template>
+          </el-table-column>
           <el-table-column label="本地存在" min-width="100">
             <template #default="it">
-              {{ data.items[it.$index].local ? '是' : '否' }}
+              <el-tag v-if="!data.items[it.$index].local" type="info">否</el-tag>
+              <el-tag v-else>是</el-tag>
             </template>
           </el-table-column>
           <el-table-column label="主RSS" min-width="80">
             <template #default="it">
-              {{ data.items[it.$index]['master'] ? '是' : '否' }}
+              <el-tag v-if="!data.items[it.$index]['master']" type="info">否</el-tag>
+              <el-tag v-else>是</el-tag>
             </template>
           </el-table-column>
           <el-table-column prop="subgroup" label="字幕组" min-width="120"/>
@@ -66,6 +81,11 @@ import api from "../api.js";
 import {ElMessage, ElText} from "element-plus";
 import Popconfirm from "../other/Popconfirm.vue";
 
+const selectViews = ref([])
+let handleSelectionChange = (selectViewsValue) => {
+  selectViews.value = selectViewsValue
+}
+
 const select = ref('全部')
 const selectItems = ref([
   {
@@ -98,10 +118,7 @@ let copy = (it) => {
   ElMessage.success('已复制')
 }
 
-let ani = {}
-
-let show = (new_ani) => {
-  ani = new_ani
+let show = () => {
   data.value.downloadPath = ''
   data.value.items = []
   select.value = '全部'
@@ -111,7 +128,7 @@ let show = (new_ani) => {
 
 let load = () => {
   loading.value = true
-  api.post('api/items', ani)
+  api.post('api/items', props.ani)
       .then(res => {
         data.value = res.data
       })
@@ -128,7 +145,17 @@ let delTorrent = (item) => {
       })
 }
 
+let notDownload = () => {
+  props.ani['notDownload'].push(...selectViews.value.map(it => it['episode']))
+  props.ani['notDownload'] = Array.from(new Set(props.ani['notDownload']))
+}
+
+let allowDownload = () => {
+  props.ani['notDownload'] = props.ani['notDownload'].filter(episode => !selectViews.value.map(it => it['episode']).includes(episode))
+}
+
 defineExpose({show})
+let props = defineProps(['ani'])
 </script>
 
 <style>
