@@ -139,10 +139,11 @@ public class Aria2 implements BaseDownload {
 
         Boolean watchErrorTorrent = config.getWatchErrorTorrent();
 
+        if (!ova) {
+            EhCacheUtil.put(id, name);
+        }
+
         if (!watchErrorTorrent) {
-            if (!ova) {
-                EhCacheUtil.put(id, name);
-            }
             return true;
         }
 
@@ -152,9 +153,6 @@ public class Aria2 implements BaseDownload {
             for (TorrentsInfo torrentsInfo : torrentsInfos) {
                 if (!torrentsInfo.getId().equals(id)) {
                     continue;
-                }
-                if (!ova) {
-                    EhCacheUtil.put(id, name);
                 }
                 return true;
             }

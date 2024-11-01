@@ -174,10 +174,12 @@ public class Transmission implements BaseDownload {
 
         Boolean watchErrorTorrent = config.getWatchErrorTorrent();
 
+
+        if (!ova) {
+            EhCacheUtil.put(id, name);
+        }
+
         if (!watchErrorTorrent) {
-            if (!ova) {
-                EhCacheUtil.put(id, name);
-            }
             return true;
         }
 
@@ -190,9 +192,6 @@ public class Transmission implements BaseDownload {
                     .findFirst();
             if (optionalTorrentsInfo.isEmpty()) {
                 continue;
-            }
-            if (!ova) {
-                EhCacheUtil.put(id, name);
             }
             return true;
         }
