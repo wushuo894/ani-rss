@@ -12,7 +12,9 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.thread.ThreadUtil;
-import cn.hutool.core.util.*;
+import cn.hutool.core.util.EnumUtil;
+import cn.hutool.core.util.ReUtil;
+import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpResponse;
 import com.google.gson.JsonArray;
@@ -184,33 +186,47 @@ public class qBittorrent implements BaseDownload {
         String host = config.getHost();
         String hash = torrentsInfo.getHash();
         try {
-            return HttpReq.post(host + "/api/v2/torrents/delete", false)
+            List<FileEntity> files = files(torrentsInfo);
+            boolean b = HttpReq.post(host + "/api/v2/torrents/delete", false)
                     .form("hashes", hash)
                     .form("deleteFiles", false)
                     .thenFunction(HttpResponse::isOk);
+            if (!b) {
+                return false;
+            }
+
+            String downloadDir = torrentsInfo.getDownloadDir();
+
+            List<File> dirList = files.stream()
+                    .map(FileEntity::getName)
+                    .map(File::new)
+                    .map(File::getParent)
+                    .filter(StrUtil::isNotBlank)
+                    .map(s -> downloadDir + "/" + s)
+                    .distinct()
+                    .map(File::new)
+                    .filter(File::exists)
+                    .filter(File::isDirectory)
+                    .collect(Collectors.toList());
+
+            // 清空剩余文件夹
+            for (File file : dirList) {
+                log.info("删除剩余文件夹: {}", file);
+                FileUtil.del(file);
+            }
+
+            return true;
         } catch (Exception e) {
             log.error(e.getMessage(), e);
             return false;
         }
     }
 
-    @Override
-    public void rename(TorrentsInfo torrentsInfo) {
-        String reName = torrentsInfo.getName();
-        if (!ReUtil.contains(StringEnum.SEASON_REG, reName)) {
-            return;
-        }
-
+    public synchronized List<FileEntity> files(TorrentsInfo torrentsInfo) {
         String hash = torrentsInfo.getHash();
-
-        if (StrUtil.isBlank(reName)) {
-            return;
-        }
-
         String host = config.getHost();
-        Integer renameMinSize = config.getRenameMinSize();
 
-        List<FileEntity> fileEntityList = HttpReq.get(host + "/api/v2/torrents/files", false)
+        return HttpReq.get(host + "/api/v2/torrents/files", false)
                 .form("hash", hash)
                 .thenFunction(res -> GsonStatic.fromJson(res.body(), JsonArray.class)
                         .asList()
@@ -230,37 +246,25 @@ public class qBittorrent implements BaseDownload {
                         })
                         .sorted(Comparator.comparingLong(fileEntity -> Long.MAX_VALUE - fileEntity.getSize()))
                         .collect(Collectors.toList()));
+    }
+
+    @Override
+    public void rename(TorrentsInfo torrentsInfo) {
+        String reName = torrentsInfo.getName();
+        if (StrUtil.isBlank(reName)) {
+            return;
+        }
+
+        if (!ReUtil.contains(StringEnum.SEASON_REG, reName)) {
+            return;
+        }
+        String hash = torrentsInfo.getHash();
+
+        String host = config.getHost();
+
+        List<FileEntity> fileEntityList = files(torrentsInfo);
 
         Assert.notEmpty(fileEntityList, "{} 磁力链接还在获取原数据中", hash);
-
-        long videoCount = fileEntityList.stream()
-                .map(FileEntity::getName)
-                .map(FileUtil::extName)
-                .filter(StrUtil::isNotBlank)
-                .filter(videoFormat::contains)
-                .count();
-
-        // 重命名文件大小限制
-        List<FileEntity> newFileEntityList = fileEntityList.stream()
-                .filter(fileEntity -> {
-                    Long size = fileEntity.getSize();
-                    String name = fileEntity.getName();
-                    String extName = FileUtil.extName(name);
-                    // 排除字幕
-                    if (subtitleFormat.contains(extName)) {
-                        return true;
-                    }
-                    // 大小限制为0时不启用
-                    if (renameMinSize < 1) {
-                        return true;
-                    }
-                    return renameMinSize <= size / 1024 / 1024;
-                }).collect(Collectors.toList());
-
-        // 过滤结果不为空
-        if (!newFileEntityList.isEmpty() && videoCount > 1) {
-            fileEntityList = newFileEntityList;
-        }
 
         List<String> names = fileEntityList.stream().map(FileEntity::getName)
                 .collect(Collectors.toList());
@@ -291,30 +295,6 @@ public class qBittorrent implements BaseDownload {
                     .form("newPath", newPath)
                     .thenFunction(HttpResponse::isOk);
             Assert.isTrue(b, "重命名失败 {} ==> {}", name, newPath);
-        }
-
-        // 清理空文件夹
-        String downloadDir = torrentsInfo.getDownloadDir();
-        File file = new File(downloadDir);
-        if (!file.exists()) {
-            return;
-        }
-        if (file.isFile()) {
-            return;
-        }
-        for (File itemFile : ObjUtil.defaultIfNull(file.listFiles(), new File[]{})) {
-            if (itemFile.isFile()) {
-                continue;
-            }
-            if (ArrayUtil.isEmpty(itemFile.listFiles())) {
-                log.info("删除空文件夹: {}", itemFile);
-                try {
-                    FileUtil.del(itemFile);
-                } catch (Exception e) {
-                    log.error("删除空文件夹失败: {}", itemFile);
-                    log.error(e.getMessage(), e);
-                }
-            }
         }
     }
 
@@ -356,7 +336,7 @@ public class qBittorrent implements BaseDownload {
 
     @Data
     @Accessors(chain = true)
-    static class FileEntity {
+    public static class FileEntity {
         private String name;
         private Long size;
     }

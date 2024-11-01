@@ -198,7 +198,6 @@ public class Aria2 implements BaseDownload {
         if (StrUtil.isBlank(reName)) {
             return;
         }
-        Integer renameMinSize = config.getRenameMinSize();
 
         List<File> files = torrentsInfo.getFiles()
                 .stream()
@@ -218,32 +217,6 @@ public class Aria2 implements BaseDownload {
                 .collect(Collectors.toList());
 
         Assert.notEmpty(files);
-
-        long videoCount = files.stream()
-                .filter(file -> {
-                    String extName = FileUtil.extName(file);
-                    return videoFormat.contains(extName);
-                }).count();
-
-        List<File> newFiles = files
-                .stream()
-                .filter(file -> {
-                    String extName = FileUtil.extName(file);
-                    // 排除字幕
-                    if (subtitleFormat.contains(extName)) {
-                        return true;
-                    }
-
-                    // 大小限制为0时不启用
-                    if (renameMinSize < 1) {
-                        return true;
-                    }
-                    return renameMinSize <= file.length() / 1024 / 1024;
-                }).collect(Collectors.toList());
-
-        if (!newFiles.isEmpty() && videoCount > 1) {
-            files = newFiles;
-        }
 
         for (File src : files) {
             String name = src.getName();
