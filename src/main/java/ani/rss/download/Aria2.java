@@ -3,6 +3,7 @@ package ani.rss.download;
 import ani.rss.entity.Config;
 import ani.rss.entity.Item;
 import ani.rss.entity.TorrentsInfo;
+import ani.rss.util.EhCacheUtil;
 import ani.rss.util.GsonStatic;
 import ani.rss.util.HttpReq;
 import cn.hutool.core.codec.Base64;
@@ -115,7 +116,7 @@ public class Aria2 implements BaseDownload {
         String name = item.getReName();
         String host = config.getHost();
         String password = config.getPassword();
-        String body = "";
+        String body;
 
         String extName = FileUtil.extName(torrentFile);
         if (StrUtil.isBlank(extName)) {
@@ -140,7 +141,7 @@ public class Aria2 implements BaseDownload {
 
         if (!watchErrorTorrent) {
             if (!ova) {
-                renameCache.put(id, name);
+                EhCacheUtil.put(id, name);
             }
             return true;
         }
@@ -153,7 +154,7 @@ public class Aria2 implements BaseDownload {
                     continue;
                 }
                 if (!ova) {
-                    renameCache.put(id, name);
+                    EhCacheUtil.put(id, name);
                 }
                 return true;
             }
@@ -194,7 +195,7 @@ public class Aria2 implements BaseDownload {
             return;
         }
 
-        String reName = renameCache.get(id);
+        String reName = EhCacheUtil.get(id);
         if (StrUtil.isBlank(reName)) {
             return;
         }
@@ -228,7 +229,7 @@ public class Aria2 implements BaseDownload {
             FileUtil.move(src, newPath, false);
             log.info("重命名 {} ==> {}", name, newPath);
         }
-        renameCache.remove(id);
+        EhCacheUtil.remove(id);
     }
 
     @Override

@@ -3,8 +3,6 @@ package ani.rss.download;
 import ani.rss.entity.Config;
 import ani.rss.entity.Item;
 import ani.rss.entity.TorrentsInfo;
-import cn.hutool.cache.Cache;
-import cn.hutool.cache.CacheUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.StrUtil;
 
@@ -13,8 +11,6 @@ import java.util.List;
 import java.util.Set;
 
 public interface BaseDownload {
-
-    Cache<String, String> renameCache = CacheUtil.newFIFOCache(512);
 
     List<String> videoFormat = List.of("mp4", "mkv", "avi", "wmv");
 

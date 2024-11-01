@@ -11,12 +11,10 @@ public class Main {
     public static String[] ARGS = new String[]{};
 
     public static void main(String[] args) {
-        Main.ARGS = ObjectUtil.defaultIfNull(args, new String[]{});
         System.setProperty("jdk.http.auth.tunneling.disabledSchemes", "");
+        Main.ARGS = ObjectUtil.defaultIfNull(args, new String[]{});
         try {
             UpdateUtil.manageWindows();
-            ConfigUtil.load();
-            AniUtil.load();
             TaskUtil.start();
             String version = MavenUtil.getVersion();
             log.info("version {}", version);
