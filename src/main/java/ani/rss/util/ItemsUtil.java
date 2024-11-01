@@ -188,8 +188,16 @@ public class ItemsUtil {
                     .setPubDate(pubDate);
 
             // 进行过滤
-            if (exclude.stream().noneMatch(s -> ReUtil.contains(s, addNewItem.getTitle()))) {
-                continue;
+            if (!exclude.isEmpty()) {
+                if (exclude.stream().anyMatch(s -> ReUtil.contains(s, addNewItem.getTitle()))) {
+                    continue;
+                }
+            }
+
+            if (!match.isEmpty()) {
+                if (match.stream().anyMatch(s -> !ReUtil.contains(s, addNewItem.getTitle()))) {
+                    continue;
+                }
             }
 
             // 全局排除
@@ -200,19 +208,6 @@ public class ItemsUtil {
             }
             items.add(addNewItem);
         }
-
-        // 匹配规则
-        items = items.stream().filter(it -> {
-            if (match.isEmpty()) {
-                return true;
-            }
-            for (String string : match) {
-                if (ReUtil.contains(string, it.getTitle())) {
-                    return true;
-                }
-            }
-            return false;
-        }).collect(Collectors.toList());
 
         items = items.stream()
                 .filter(item -> {
