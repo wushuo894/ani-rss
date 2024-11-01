@@ -79,6 +79,7 @@ public class TorrentUtil {
                     }
                     // 未下载完成
                     return !List.of(
+                            TorrentsInfo.State.queuedUP.name(),
                             TorrentsInfo.State.uploading.name(),
                             TorrentsInfo.State.stalledUP.name(),
                             TorrentsInfo.State.pausedUP.name(),
@@ -661,6 +662,7 @@ public class TorrentUtil {
             return;
         }
         if (!List.of(
+                TorrentsInfo.State.queuedUP.name(),
                 TorrentsInfo.State.uploading.name(),
                 TorrentsInfo.State.stalledUP.name(),
                 TorrentsInfo.State.pausedUP.name(),
@@ -817,6 +819,7 @@ public class TorrentUtil {
         }
 
         return List.of(
+                TorrentsInfo.State.queuedUP.name(),
                 TorrentsInfo.State.uploading.name(),
                 TorrentsInfo.State.stalledUP.name(),
                 TorrentsInfo.State.pausedUP.name(),
