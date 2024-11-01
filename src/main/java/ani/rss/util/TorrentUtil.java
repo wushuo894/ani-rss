@@ -900,7 +900,6 @@ public class TorrentUtil {
                 .map(aClass -> (BaseDownload) ReflectUtil.newInstance(aClass))
                 .findFirst()
                 .ifPresent(TorrentUtil::setBaseDownload);
-        EhCacheUtil.MY_CACHE.clear();
         log.info("下载工具 {}", download);
     }
 
