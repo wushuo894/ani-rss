@@ -65,25 +65,6 @@
               </template>
             </el-input-number>
           </el-form-item>
-          <el-form-item label="重命名最小文件">
-            <div>
-              <el-input-number v-model:model-value="props.config.renameMinSize" min="10" max="2048">
-                <template #suffix>
-                  <span>MB</span>
-                </template>
-              </el-input-number>
-              <br>
-              <el-text class="mx-1" size="small">
-                设置为 0 时不启用
-                <br>
-                当视频为一个时不生效
-                <br>
-                当过滤结果为空时不生效
-                <br>
-                对 tr 不生效
-              </el-text>
-            </div>
-          </el-form-item>
           <el-form-item label="季命名方式">
             <el-select v-model:model-value="props.config.seasonName" style="width: 150px">
               <el-option v-for="it in ['Season 1','Season 01','S1','S01','None']" :key="it" :label="it" :value="it"/>
