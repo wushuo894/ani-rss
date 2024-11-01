@@ -16,6 +16,11 @@
 
     <dependencies>
         <dependency>
+            <groupId>org.glassfish.jaxb</groupId>
+            <artifactId>jaxb-runtime</artifactId>
+            <version>3.0.2</version>
+        </dependency>
+        <dependency>
             <groupId>org.ehcache</groupId>
             <artifactId>ehcache</artifactId>
             <version>3.10.8</version>
@@ -25,8 +30,8 @@
                     <groupId>org.slf4j</groupId>
                 </exclusion>
                 <exclusion>
-                    <artifactId>jakarta.xml.bind-api</artifactId>
-                    <groupId>jakarta.xml.bind</groupId>
+                    <artifactId>jaxb-runtime</artifactId>
+                    <groupId>org.glassfish.jaxb</groupId>
                 </exclusion>
             </exclusions>
         </dependency>
