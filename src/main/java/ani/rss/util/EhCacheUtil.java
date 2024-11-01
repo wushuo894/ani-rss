@@ -35,6 +35,7 @@ public class EhCacheUtil {
         RuntimeUtil.addShutdownHook(() -> {
             try {
                 cacheManager.close();
+                log.info("ehcache closed");
             } catch (Exception e) {
                 log.error(e.getMessage(), e);
             }
@@ -42,7 +43,7 @@ public class EhCacheUtil {
     }
 
     public static void put(String key, String object) {
-        MY_CACHE.putIfAbsent(key, object);
+        MY_CACHE.put(key, object);
     }
 
     public static String get(String key) {

@@ -174,7 +174,6 @@ public class Transmission implements BaseDownload {
 
         Boolean watchErrorTorrent = config.getWatchErrorTorrent();
 
-
         if (!ova) {
             EhCacheUtil.put(id, name);
         }
