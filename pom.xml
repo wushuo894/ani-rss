@@ -127,15 +127,4 @@
         </plugins>
     </build>
 
-    <repositories>
-        <repository>
-            <id>google</id>
-            <url>https://maven-central.storage.googleapis.com</url>
-        </repository>
-        <repository>
-            <id>aliyun</id>
-            <url>https://maven.aliyun.com/repository/public</url>
-        </repository>
-    </repositories>
-
 </project>
