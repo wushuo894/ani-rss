@@ -45,6 +45,7 @@ public class TorrentUtil {
         String title = ani.getTitle();
         Integer season = ani.getSeason();
         Boolean downloadNew = ani.getDownloadNew();
+        List<Double> notDownload = ani.getNotDownload();
 
         List<TorrentsInfo> torrentsInfos = getTorrentsInfos();
 
@@ -95,6 +96,12 @@ public class TorrentUtil {
             Boolean master = item.getMaster();
             String hash = FileUtil.mainName(torrent)
                     .trim().toLowerCase();
+
+            Double episode = item.getEpisode();
+            if (notDownload.contains(episode)) {
+                log.debug("已被禁止下载: {}", reName);
+                continue;
+            }
 
             Date pubDate = item.getPubDate();
             if (Objects.nonNull(pubDate) && delayedDownload > 0) {
