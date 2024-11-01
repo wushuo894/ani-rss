@@ -31,7 +31,6 @@ public class ConfigUtil {
                 .setMikanHost("https://mikanime.tv")
                 .setRenameSleep(1.0)
                 .setRename(true)
-                .setRenameMinSize(100)
                 .setRss(true)
                 .setWatchErrorTorrent(true)
                 .setDelayedDownload(0)
