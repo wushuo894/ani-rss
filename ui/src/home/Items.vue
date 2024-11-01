@@ -2,7 +2,7 @@
   <el-dialog v-model="dialogVisible" title="预览" center v-if="dialogVisible" class="items-dialog">
     <div style="width: 100%;" v-loading="loading">
       <div style="margin: 4px 0;display: flex;">
-        <el-select v-model:model-value="select" style="max-width: 120px;">
+        <el-select v-model:model-value="select" style="max-width: 120px;" @change="selectChange">
           <el-option v-for="item in selectItems"
                      :key="item.label"
                      :label="item.label"
@@ -11,12 +11,13 @@
         <div style="width: 4px;"/>
         <el-input v-model:model-value="data.downloadPath" disabled></el-input>
       </div>
-      <div style="width: 100%;display: flex;justify-content: end;margin-top: 4px;">
-        <el-button bg text @click="allowDownload">允许下载</el-button>
-        <el-button bg text @click="notDownload">禁止下载</el-button>
+      <div style="width: 100%;display: flex;justify-content: end;margin-top: 8px;">
+        <el-button bg text :disabled="!selectViews.length" @click="allowDownload" icon="Check" type="primary">允许下载
+        </el-button>
+        <el-button bg text :disabled="!selectViews.length" @click="notDownload" icon="Close">禁止下载</el-button>
       </div>
       <div style="padding: 0 12px">
-        <el-table :data="data.items.filter(selectItems.filter(it => it.label === select)[0].fun)" height="500"
+        <el-table :data="showItems" height="500"
                   @selection-change="handleSelectionChange"
                   scrollbar-always-on>
           <el-table-column type="selection" width="55"/>
@@ -81,7 +82,7 @@ import api from "../api.js";
 import {ElMessage, ElText} from "element-plus";
 import Popconfirm from "../other/Popconfirm.vue";
 
-const selectViews = ref([])
+let selectViews = ref([])
 let handleSelectionChange = (selectViewsValue) => {
   selectViews.value = selectViewsValue
 }
@@ -126,11 +127,18 @@ let show = () => {
   load()
 }
 
+let selectChange = () => {
+  showItems.value = data.value.items.filter(selectItems.value.filter(it => it.label === select.value)[0].fun)
+}
+
+let showItems = ref([])
+
 let load = () => {
   loading.value = true
   api.post('api/items', props.ani)
       .then(res => {
         data.value = res.data
+        selectChange()
       })
       .finally(() => {
         loading.value = false
@@ -138,7 +146,7 @@ let load = () => {
 }
 
 let delTorrent = (item) => {
-  api.del(`api/torrent?id=${ani.id}&infoHash=${item['infoHash']}`)
+  api.del(`api/torrent?id=${props.ani.id}&infoHash=${item['infoHash']}`)
       .then(res => {
         ElMessage.success(res.message)
         load()
