@@ -188,7 +188,7 @@ public class ItemsUtil {
                     .setPubDate(pubDate);
 
             // 进行过滤
-            if (exclude.stream().anyMatch(s -> ReUtil.contains(s, addNewItem.getTitle()))) {
+            if (exclude.stream().allMatch(s -> ReUtil.contains(s, addNewItem.getTitle()))) {
                 continue;
             }
 
