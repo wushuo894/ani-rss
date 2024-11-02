@@ -97,6 +97,9 @@
                           <el-tag type="danger" v-else>
                             tv
                           </el-tag>
+                          <el-tag v-if="item.backRssList.length > 0">
+                            备用RSS
+                          </el-tag>
                         </div>
                       </div>
                       <div
