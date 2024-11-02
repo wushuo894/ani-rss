@@ -559,7 +559,7 @@ public class TorrentUtil {
             if (!ReUtil.contains(regStr, name)) {
                 continue;
             }
-            String s = ReUtil.get(regStr, name, 1);
+            String s = ReUtil.get(regStr, name, 2);
             Integer sInt = Integer.parseInt(s);
             if (!NumberUtil.equals(sInt, season)) {
                 continue;
