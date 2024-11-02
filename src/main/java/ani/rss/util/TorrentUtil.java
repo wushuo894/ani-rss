@@ -551,24 +551,15 @@ public class TorrentUtil {
 
         File[] seasonFiles = ObjectUtil.defaultIfNull(aniFile.listFiles(), new File[]{});
         for (File seasonFile : seasonFiles) {
-            if (!seasonFile.isDirectory()) {
+            if (seasonFile.isFile()) {
                 continue;
             }
             String name = seasonFile.getName();
-            String s1 = ReUtil.get("^[a-zA-Z]+", name, 0);
-            if (StrUtil.isBlank(s1)) {
+            String regStr = "([Ss]eason|[Ss]) ?(\\d+)";
+            if (!ReUtil.contains(regStr, name)) {
                 continue;
             }
-            if ((!s1.equalsIgnoreCase("S")) && (!s1.equalsIgnoreCase("Season"))) {
-                continue;
-            }
-            String s = ReUtil.get("\\d+$", name, 0);
-            if (StrUtil.isBlank(s)) {
-                continue;
-            }
-            if (!NumberUtil.isNumber(s)) {
-                continue;
-            }
+            String s = ReUtil.get(regStr, name, 1);
             Integer sInt = Integer.parseInt(s);
             if (!NumberUtil.equals(sInt, season)) {
                 continue;
