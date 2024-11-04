@@ -40,6 +40,7 @@ public class ConfigAction implements BaseAction {
         }
         Config config = ConfigUtil.CONFIG;
         Login login = config.getLogin();
+        String username = login.getUsername();
         String password = login.getPassword();
         Double renameSleep = config.getRenameSleep();
         Integer sleep = config.getSleep();
@@ -71,6 +72,10 @@ public class ConfigAction implements BaseAction {
         // 密码未发生修改
         if (StrUtil.isBlank(loginPassword)) {
             config.getLogin().setPassword(password);
+        }
+        String loginUsername = config.getLogin().getUsername();
+        if (StrUtil.isBlank(loginUsername)) {
+            config.getLogin().setUsername(username);
         }
 
         // 下载地址后面不要带 斜杠
