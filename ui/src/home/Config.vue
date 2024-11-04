@@ -148,7 +148,8 @@ const config = ref({
   'messageTemplate': '',
   'ratioLimit': -2,
   'seedingTimeLimit': -2,
-  'inactiveSeedingTimeLimit': -2
+  'inactiveSeedingTimeLimit': -2,
+  'autoUpdate': false
 })
 
 const activeName = ref('download')
