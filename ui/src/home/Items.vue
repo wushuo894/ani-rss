@@ -23,19 +23,19 @@
           <el-table-column type="selection" width="55"/>
           <el-table-column label="是否下载" min-width="100">
             <template #default="it">
-              <el-tag v-if="props.ani['notDownload'].includes(data.items[it.$index]['episode'])" type="info">否</el-tag>
+              <el-tag v-if="props.ani['notDownload'].includes(showItems[it.$index]['episode'])" type="info">否</el-tag>
               <el-tag v-else>是</el-tag>
             </template>
           </el-table-column>
           <el-table-column label="本地存在" min-width="100">
             <template #default="it">
-              <el-tag v-if="!data.items[it.$index].local" type="info">否</el-tag>
+              <el-tag v-if="!showItems[it.$index].local" type="info">否</el-tag>
               <el-tag v-else>是</el-tag>
             </template>
           </el-table-column>
           <el-table-column label="主RSS" min-width="80">
             <template #default="it">
-              <el-tag v-if="!data.items[it.$index]['master']" type="info">否</el-tag>
+              <el-tag v-if="!showItems[it.$index]['master']" type="info">否</el-tag>
               <el-tag v-else>是</el-tag>
             </template>
           </el-table-column>
@@ -47,15 +47,15 @@
           <el-table-column prop="size" label="大小" width="120"/>
           <el-table-column label="种子" width="90">
             <template #default="it">
-              <el-button bg text @click="copy(data.items[it.$index])">复制</el-button>
+              <el-button bg text @click="copy(showItems[it.$index])">复制</el-button>
             </template>
           </el-table-column>
           <el-table-column label="操作" width="120">
             <template #default="it">
-              <popconfirm @confirm="delTorrent(data.items[it.$index])" title="删除种子缓存?">
+              <popconfirm @confirm="delTorrent(showItems[it.$index])" title="删除种子缓存?">
                 <template #reference>
                   <el-button bg text
-                             :disabled="!data.items[it.$index].local">
+                             :disabled="!showItems[it.$index].local">
                     删除种子
                   </el-button>
                 </template>
