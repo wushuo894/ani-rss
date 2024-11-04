@@ -27,7 +27,6 @@ jobs:
           bash ./package-win.sh
           version=$(cat pom.xml | grep -oPm1 '(?<=<version>).*?(?=</version>)')
           echo "version=v$version" >> $GITHUB_ENV
-          sed -i 's|https://docs.wushuo.top/image/|https://github.com/wushuo894/ani-rss/raw/master/docs/image/|g' ./docs/docker.md
       - name: Release
         uses: softprops/action-gh-release@v2
         with:
