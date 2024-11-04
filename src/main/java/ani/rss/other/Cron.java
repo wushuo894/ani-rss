@@ -1,9 +1,11 @@
-package ani.rss.task;
+package ani.rss.other;
 
 import ani.rss.download.BaseDownload;
+import ani.rss.entity.About;
 import ani.rss.entity.Config;
 import ani.rss.util.ConfigUtil;
 import ani.rss.util.HttpReq;
+import ani.rss.util.UpdateUtil;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.ClassUtil;
 import cn.hutool.core.util.ReflectUtil;
@@ -19,14 +21,10 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
- * 更新Trackers
+ * 定时任务
  */
 @Slf4j
-public class UpdateTrackersTask implements Runnable {
-    public static void start() {
-        new UpdateTrackersTask().run();
-    }
-
+public class Cron {
     public static void updateTrackers(Config config) {
         String trackersUpdateUrls = config.getTrackersUpdateUrls();
         Assert.notBlank(trackersUpdateUrls, "Trackers更新地址 为空");
@@ -77,25 +75,44 @@ public class UpdateTrackersTask implements Runnable {
         baseDownload.updateTrackers(trackers);
     }
 
-    @Override
-    public void run() {
-        CronUtil.schedule("0 1 * * *", new Runnable() {
-            @Override
-            public void run() {
-                Config config = ConfigUtil.CONFIG;
-                Boolean autoTrackersUpdate = config.getAutoTrackersUpdate();
-                if (!autoTrackersUpdate) {
-                    // 未开启自动更新  Trackers
-                    return;
-                }
-                log.info("定时任务 开始更新 Trackers");
-                try {
-                    UpdateTrackersTask.updateTrackers(config);
-                } catch (Exception e) {
-                    log.error(e.getMessage(), e);
-                }
+    public static void autoUpdate(Config config) {
+        About about = UpdateUtil.about();
+        Boolean update = about.getUpdate();
+        if (update) {
+            log.info("检测到可更新版本 v{}", about.getLatest());
+        }
+        UpdateUtil.update(about);
+    }
+
+    public static void start() {
+        Config config = ConfigUtil.CONFIG;
+        CronUtil.schedule("0 1 * * *", (Runnable) () -> {
+            Boolean autoTrackersUpdate = config.getAutoTrackersUpdate();
+            if (!autoTrackersUpdate) {
+                // 未开启自动更新  Trackers
+                return;
+            }
+            log.info("定时任务 开始更新 Trackers");
+            try {
+                Cron.updateTrackers(config);
+            } catch (Exception e) {
+                log.error(e.getMessage(), e);
             }
         });
+        CronUtil.schedule("0 6 * * *", (Runnable) () -> {
+            Boolean autoUpdate = config.getAutoUpdate();
+            if (!autoUpdate) {
+                // 未开启 自动更新
+                return;
+            }
+            log.info("定时任务 自动更新");
+            try {
+                Cron.autoUpdate(config);
+            } catch (Exception e) {
+                log.error(e.getMessage(), e);
+            }
+        });
+
         CronUtil.start();
     }
 

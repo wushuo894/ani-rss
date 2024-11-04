@@ -120,7 +120,8 @@ public class ConfigUtil {
                 .setSystemMsg(false)
                 .setAutoTrackersUpdate(false)
                 .setTrackersUpdateUrls("https://cf.trackerslist.com/best.txt\nhttps://cdn.jsdelivr.net/gh/ngosang/trackerslist@master/trackers_all.txt")
-                .setMessageTemplate("${text}");
+                .setMessageTemplate("${text}")
+                .setAutoUpdate(false);
         load();
     }
 

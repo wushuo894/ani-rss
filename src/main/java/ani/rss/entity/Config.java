@@ -412,4 +412,9 @@ public class Config implements Serializable {
      * 消息模版
      */
     private String messageTemplate;
+
+    /**
+     * 自动更新
+     */
+    private Boolean autoUpdate;
 }
