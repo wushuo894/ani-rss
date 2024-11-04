@@ -1,5 +1,5 @@
 <div align="center">
-<img alt="mikan-pic.png" height="80" src="https://docs.wushuo.top/image/mikan-pic.png"/>
+<img alt="mikan-pic.png" height="80" src="https://docs.wushuo.top/mikan-pic.png"/>
 <h1 align="center" style="margin-top: 0">ANI-RSS</h1>
 <p align="center">
 <strong>自动追番、订阅、下载 蜜柑RSS动漫</strong>
@@ -51,13 +51,13 @@
 - [x] 自动使用TMDB的标题
 - [x] 支持ova
 - [x] 支持 Telegram 和 WebHook 通知
-- [x] 支持RSS订阅预览
+- [x] 支[image](image)持RSS订阅预览
 - [x] 获取标题时带上年份
 - [x] 支持 Transmission qBittorrent Aria2
 - [x] 支持BGM自动点格子
 - [x] 支持自定义集数规则
 
-![Xnip2024-10-15_20-41-53.jpg](https://docs.wushuo.top/image/Xnip2024-10-15_20-41-53.jpg)
+![image](https://docs.wushuo.top/assets/Xnip2024-11-05_05-31-50.-XPBZj-a.png)
 
 默认 用户名: admin 密码: admin
 
