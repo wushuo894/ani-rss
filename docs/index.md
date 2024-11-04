@@ -14,6 +14,8 @@ ANI-RSS
 <a href="docker">Docker部署</a>
 |
 <a href="faq">常见问题</a>
+|
+<a href="dev">参与开发</a>
 
 <p></p>
 
