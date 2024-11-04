@@ -1,6 +1,6 @@
 package ani.rss;
 
-import ani.rss.task.UpdateTrackersTask;
+import ani.rss.other.Cron;
 import ani.rss.util.*;
 import cn.hutool.core.util.ObjectUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -20,7 +20,7 @@ public class Main {
             log.info("version {}", version);
 
             MenuUtil.start();
-            UpdateTrackersTask.start();
+            Cron.start();
             ServerUtil.create().start();
         } catch (Exception e) {
             String message = ExceptionUtil.getMessage(e);

@@ -236,6 +236,18 @@
               </el-select>
             </div>
           </el-form-item>
+          <el-form-item label="自动更新">
+            <div style="width: 100%;">
+              <div>
+                <el-switch v-model:model-value="props.config.autoUpdate"/>
+              </div>
+              <div>
+                <el-text class="mx-1" size="small">
+                  每天 06:00 自动更新程序
+                </el-text>
+              </div>
+            </div>
+          </el-form-item>
           <el-form-item label="DEBUG">
             <el-switch v-model:model-value="props.config.debug"/>
           </el-form-item>
