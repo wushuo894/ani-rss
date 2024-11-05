@@ -5,7 +5,7 @@
 <strong>自动追番、订阅、下载 蜜柑RSS动漫</strong>
 </p>
 
-[快速开始](https://docs.wushuo.top/start) | [使用文档](https://docs.wushuo.top/docs) | [Docker部署](https://docs.wushuo.top/docker) ｜ [常见问题](https://docs.wushuo.top/faq) | [参与开发](https://docs.wushuo.top/dev)
+[快速开始](https://docs.wushuo.top/start) | [使用文档](https://docs.wushuo.top/add-rss) | [Docker部署](https://docs.wushuo.top/deploy/docker) ｜ [常见问题](https://docs.wushuo.top/faq) | [参与开发](https://docs.wushuo.top/dev)
 
 [![GitHub](https://img.shields.io/badge/-GitHub-181717?logo=github)](https://github.com/wushuo894/ani-rss)
 ![GitHub License](https://img.shields.io/github/license/wushuo894/ani-rss)
@@ -19,47 +19,24 @@
 
 </div>
 
-    请不要在B站发布视频宣传本项目
-    在国内平台请尽量简称 ANI-RSS 为 ASS or 屁股
-
-### 实现功能
-
-- [x] 自动下载
-- [x] 自动识别季数
-- [x] 自动重命名
-- [x] 文件已下载自动跳过
-- [x] 自动删除已完成任务
-- [x] 自定义 qBittorrent 设置
-- [x] RSS 关键字过滤
-- [x] 集数偏移
-- [x] 自动识别集数偏移
-- [x] 自定义间隔
-- [x] 适配移动端
-- [x] 支持拼音排序与搜索
-- [x] 支持自定义代理
-- [x] 自动洗版
-- [x] 支持X.5集
-- [x] 支持动漫花园
-- [x] 支持windows端exe
-- [x] 季命名方式可选
-- [x] 支持自定义mikan地址
-- [x] IP白名单登录校验
-- [x] 订阅可设置自定义下载位置
-- [x] 支持自动切换暗黑模式
-- [x] 支持代理测试
-- [x] 支持nyaa订阅
-- [x] 自动使用TMDB的标题
-- [x] 支持ova
-- [x] 支持 Telegram 和 WebHook 通知
-- [x] 支持RSS订阅预览
-- [x] 获取标题时带上年份
-- [x] 支持 Transmission qBittorrent Aria2
-- [x] 支持BGM自动点格子
-- [x] 支持自定义集数规则
-
 ![image](https://github.com/wushuo894/ani-rss-docs/raw/main/docs/image/Xnip2024-11-05_05-31-50.png)
 
-默认 用户名: admin 密码: admin
+## 其他
 
 [投喂作者](https://afdian.com/a/wushuo894)
+
+### 推广须知
+
+- 请不要在B站发布视频宣传本项目
+- 在国内平台请尽量简称 ANI-RSS 为 ASS or 屁股
+
+### 相关文章
+
+[猫猫博客 Docker 部署 ani-rss 实现自动追番](https://catcat.blog/docker-ani-rss.html)
+
+[从零开始的NAS生活 第四回：ANI-RSS，自动追番！](https://www.wtsss.fun/archives/qhaQ3M7v)
+
+[自动化追番计划](http://jinghuashang.cn/posts/8f622332.html)
+
+[ANI-RSS：自动追番新姿势！](https://www.himiku.com/archives/ani-rss.html)
 
