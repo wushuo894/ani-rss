@@ -79,7 +79,7 @@
         </el-text>
       </div>
     </el-form-item>
-    <el-form-item label="同时下载数量限制">
+    <el-form-item label="同时下载限制">
       <div>
         <el-input-number v-model:model-value="props.config.downloadCount" min="0"/>
         <div>
