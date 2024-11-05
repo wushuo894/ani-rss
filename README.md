@@ -51,7 +51,7 @@
 - [x] 自动使用TMDB的标题
 - [x] 支持ova
 - [x] 支持 Telegram 和 WebHook 通知
-- [x] 支[image](image)持RSS订阅预览
+- [x] 支持RSS订阅预览
 - [x] 获取标题时带上年份
 - [x] 支持 Transmission qBittorrent Aria2
 - [x] 支持BGM自动点格子
