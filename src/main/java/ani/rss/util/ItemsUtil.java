@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -187,22 +188,34 @@ public class ItemsUtil {
                     .setSize(size)
                     .setPubDate(pubDate);
 
-            // 进行过滤
+            Function<String, String> map = s -> {
+                String subgroup = ReUtil.get(StringEnum.SUBGROUP_REG_STR, s, 1);
+                if (StrUtil.isBlank(subgroup)) {
+                    return s;
+                }
+                if (subgroup.equals(newItem.getSubgroup())) {
+                    return ReUtil.get(StringEnum.SUBGROUP_REG_STR, s, 2);
+                }
+                return "";
+            };
+
+            // 排除
             if (!exclude.isEmpty()) {
-                if (exclude.stream().anyMatch(s -> ReUtil.contains(s, addNewItem.getTitle()))) {
+                if (exclude.stream().map(map).filter(StrUtil::isNotBlank).anyMatch(s -> ReUtil.contains(s, addNewItem.getTitle()))) {
                     continue;
                 }
             }
 
+            // 匹配
             if (!match.isEmpty()) {
-                if (match.stream().anyMatch(s -> !ReUtil.contains(s, addNewItem.getTitle()))) {
+                if (match.stream().map(map).filter(StrUtil::isNotBlank).anyMatch(s -> !ReUtil.contains(s, addNewItem.getTitle()))) {
                     continue;
                 }
             }
 
             // 全局排除
             if (globalExclude) {
-                if (globalExcludeList.stream().anyMatch(s -> ReUtil.contains(s, addNewItem.getTitle()))) {
+                if (globalExcludeList.stream().map(map).filter(StrUtil::isNotBlank).anyMatch(s -> ReUtil.contains(s, addNewItem.getTitle()))) {
                     continue;
                 }
             }
