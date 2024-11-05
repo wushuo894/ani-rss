@@ -15,6 +15,7 @@ public class Main {
         Main.ARGS = ObjectUtil.defaultIfNull(args, new String[]{});
         try {
             UpdateUtil.manageWindows();
+            ConfigUtil.load();
             TaskUtil.start();
             String version = MavenUtil.getVersion();
             log.info("version {}", version);
