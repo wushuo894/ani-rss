@@ -76,23 +76,8 @@
                         placeholder="${title} S${seasonFormat}E${episodeFormat}"/>
               <br>
               <el-text class="mx-1" size="small">
-                ${title} 标题 , ${subgroup} 字幕组 <br>
-                ${seasonFormat} 季 01 ,
-                ${episodeFormat} 集 01 <br>
-                ${season} 季 1 ,
-                ${episode} 集 1 <br>
-                ${itemTitle} 原始标题
-                <br>
-                请务必保留:&nbsp;
-                <strong>
-                  ${title} S${seasonFormat}E${episodeFormat}
-                </strong>
-                <br>
-                <strong>
-                  如果想使用洗版功能请不要在重命名模版添加 ${subgroup}, ${itemTitle}。
-                  <br>
-                  否则可能会出现 备用rss 洗版到 主rss 时出现错误
-                </strong>
+                <a href="https://docs.wushuo.top/config/basic.html#rename-template"
+                   target="_blank">详细说明</a>
               </el-text>
             </div>
           </el-form-item>
@@ -164,21 +149,10 @@
           <el-form-item label="备用RSS">
             <div>
               <el-switch v-model:model-value="props.config.backRss"/>
-              <div style="display: flex;width: 100%;justify-content: end;padding-top: 6px;">
+              <div style="display: flex;width: 100%;justify-content: end;">
                 <el-text class="mx-1" size="small">
-                  务必使用默认重命名模版
-                  <br>
-                  请勿将动漫花园的rss用作 <strong>其他</strong> rss的备用或主RSS
-                  <br>
-                  使用备用rss请同时开启qb的 <strong>修改任务标题</strong>
-                  <br>
-                  对 tr 与 aria2 的兼容性 <strong>不太稳定</strong>
-                  <br>
-                  若开启了 <strong>自动删除</strong> 将会 <strong>自动替换</strong> 备用rss 为 主rss 版本
-                  <br>
-                  (需要映射路径与下载器一致，否则若旧视频为mp4新视频为mkv时无法完成自动删除旧视频。)
-                  <br>
-                  (windows自动删除旧视频可能会出现文件被占用无法删除的问题)
+                  <a href="https://docs.wushuo.top/config/basic.html#back-rss"
+                     target="_blank">详细说明</a>
                 </el-text>
               </div>
             </div>
@@ -221,7 +195,7 @@
                   你可以在 <a target="_blank" href="https://next.bgm.tv/demo/access-token">https://next.bgm.tv/demo/access-token</a>
                   生成一个 Access Token
                   <br>
-                  <a target="_blank" href="http://docs.wushuo.top/docs#emby-webhook通知设置">支持自动点格子</a>
+                  <a target="_blank" href="http://docs.wushuo.top/config/basic#emby-webhook">支持自动点格子</a>
                 </el-text>
               </div>
             </div>
