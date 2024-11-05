@@ -1,4 +1,19 @@
 <template>
+  <el-dialog title="添加正则" v-if="add" v-model:model-value="add" center align-center width="300">
+    <el-form label-width="auto">
+      <el-form-item label="字幕组">
+        <el-input placeholder="留空匹配所有字幕组" v-model="subgroup"></el-input>
+      </el-form-item>
+      <div style="margin: 4px;"></div>
+      <el-form-item label="正则">
+        <el-input placeholder="如 720、简、\d-\d" v-model="exclude"></el-input>
+      </el-form-item>
+    </el-form>
+    <div style="width: 100%;display: flex;justify-content: end;margin-top: 8px;">
+      <el-button bg text @click="addExclude">添加</el-button>
+    </div>
+  </el-dialog>
+
   <div style="width: 100%;">
     <div class="flex gap-2">
       <el-tag v-if="!props.exclude.length"
@@ -16,17 +31,9 @@
       >
         {{ tag }}
       </el-tag>
-      <el-input
-          style="max-width: 120px;margin-right: 4px;margin-bottom: 4px;"
-          v-if="excludeVisible"
-          ref="InputRef"
-          v-model="excludeValue"
-          class="w-20"
-          size="small"
-          @keyup.enter="handleInputConfirm"
-          @blur="handleInputConfirm"
-      />
-      <el-button v-else class="button-new-tag" size="small" @click="showInput" bg text
+      <el-button class="button-new-tag" size="small" @click="()=>{
+        add = true
+      }" bg text
                  style="margin-right: 4px;margin-bottom: 4px;">
         +
       </el-button>
@@ -50,26 +57,21 @@
 
 import {ref} from "vue";
 import api from "../api.js";
+import {ElMessage} from "element-plus";
 
-const excludeVisible = ref(false)
 const excludeValue = ref('')
 
 const handleClose = (tag) => {
   props.exclude.splice(props.exclude.indexOf(tag), 1)
 }
 
+const add = ref(false)
 const InputRef = ref()
-
-const showInput = () => {
-  excludeVisible.value = true
-  InputRef.value?.input?.focus()
-}
 
 const handleInputConfirm = () => {
   if (excludeValue.value) {
     props.exclude.push(excludeValue.value)
   }
-  excludeVisible.value = false
   excludeValue.value = ''
 }
 
@@ -92,6 +94,23 @@ let importExclude = () => {
         importExcludeLoading.value = false
       })
 
+}
+
+let subgroup = ref('')
+let exclude = ref('')
+
+let addExclude = () => {
+  if (!exclude.value) {
+    ElMessage.error('正则为空')
+    return
+  }
+  if (subgroup.value) {
+    exclude.value = `{{${subgroup.value}}}:${exclude.value}`
+  }
+  props.exclude.push(exclude.value)
+  subgroup.value = ''
+  exclude.value = ''
+  add.value = false
 }
 
 let props = defineProps(['exclude', 'importExclude', 'showText'])
