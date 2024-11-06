@@ -19,8 +19,9 @@
       <div style="padding: 0 12px">
         <el-table :data="showItems" height="500"
                   @selection-change="handleSelectionChange"
-                  scrollbar-always-on>
-          <el-table-column type="selection" width="55"/>
+                  scrollbar-always-on
+                  stripe>
+          <el-table-column type="selection" width="55" fixed/>
           <el-table-column label="是否下载" min-width="100">
             <template #default="it">
               <el-tag v-if="props.ani['notDownload'].includes(showItems[it.$index]['episode'])" type="info">否</el-tag>
