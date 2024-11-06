@@ -22,7 +22,7 @@ public class Main {
 
             MenuUtil.start();
             Cron.start();
-            ServerUtil.create().start();
+            ServerUtil.start();
         } catch (Exception e) {
             String message = ExceptionUtil.getMessage(e);
             log.error(message, e);
