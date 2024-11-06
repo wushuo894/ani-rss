@@ -12,6 +12,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -106,6 +107,9 @@ public class RenameUtil {
             episodeFormat = episodeFormat + ".5";
         }
 
+        title = getName(title);
+        itemTitle = getName(itemTitle);
+
         renameTemplate = renameTemplate.replace("${title}", title);
         renameTemplate = renameTemplate.replace("${seasonFormat}", seasonFormat);
         renameTemplate = renameTemplate.replace("${episodeFormat}", episodeFormat);
@@ -119,6 +123,29 @@ public class RenameUtil {
         item
                 .setReName(reName);
         return true;
+    }
+
+    public static String getName(String s) {
+        s = s.replace("1/2", "½");
+
+        Map<String, String> map = Map.of(
+                "/", " ",
+                "\\", " ",
+                ":", "：",
+                "?", "？",
+                "|", "｜",
+                "*", " ",
+                "<", " ",
+                ">", " ",
+                "\"", " "
+        );
+
+        for (Map.Entry<String, String> entry : map.entrySet()) {
+            String key = entry.getKey();
+            String value = entry.getValue();
+            s = s.replace(key, value);
+        }
+        return s.trim();
     }
 
 }
