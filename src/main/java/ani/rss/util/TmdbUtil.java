@@ -10,7 +10,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
 
-import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -70,12 +69,7 @@ public class TmdbUtil {
                             }
                         }
                         String title = element.ownText();
-                        title = title.replace("1/2", "½");
-                        var ls = List.of("/", "\\", ":", "?", "*", "|", ">", "<", "\"");
-                        for (String l : ls) {
-                            title = title.replace(l, " ");
-                        }
-                        title = title.trim();
+                        title = RenameUtil.getName(title);
 
                         Element a = document.selectFirst(".title a");
                         if (Objects.nonNull(a)) {
