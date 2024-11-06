@@ -299,6 +299,11 @@ public class Config implements Serializable {
     private Boolean tmdbId;
 
     /**
+     * 使用台湾翻译
+     */
+    private Boolean tmdbTw;
+
+    /**
      * 开启ip白名单
      */
     private Boolean ipWhitelist;
