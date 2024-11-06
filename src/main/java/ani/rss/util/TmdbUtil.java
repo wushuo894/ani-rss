@@ -37,6 +37,12 @@ public class TmdbUtil {
         if (StrUtil.isBlank(name)) {
             return "";
         }
+        Config config = ConfigUtil.CONFIG;
+        Boolean tmdbTw = config.getTmdbTw();
+        String acceptLanguage = "zh-CN";
+        if (tmdbTw) {
+            acceptLanguage = "zh-TW";
+        }
 
         AtomicReference<String> tmdbId = new AtomicReference<>("");
         String themoviedbName;
@@ -44,7 +50,7 @@ public class TmdbUtil {
             String finalName = name;
             themoviedbName = HttpReq.get("https://www.themoviedb.org/search", true)
                     .form("query", name)
-                    .header("accept-language", "zh-CN")
+                    .header("accept-language", acceptLanguage)
                     .thenFunction(res -> {
                         org.jsoup.nodes.Document document = Jsoup.parse(res.body());
                         Element element = document.selectFirst(".title h2");
@@ -90,7 +96,6 @@ public class TmdbUtil {
         if (StrUtil.isNotBlank(year.get())) {
             themoviedbName = StrFormatter.format("{} ({})", themoviedbName, year);
         }
-        Config config = ConfigUtil.CONFIG;
         if (config.getTmdbId() && StrUtil.isNotBlank(tmdbId.get())) {
             themoviedbName = StrFormatter.format("{} [tmdbid={}]", themoviedbName, tmdbId.get());
         }
