@@ -11,6 +11,7 @@ import ani.rss.entity.Result;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.lang.PatternPool;
 import cn.hutool.core.net.Ipv4Util;
+import cn.hutool.core.net.NetUtil;
 import cn.hutool.core.util.ClassUtil;
 import cn.hutool.core.util.ReflectUtil;
 import cn.hutool.core.util.StrUtil;
@@ -108,6 +109,9 @@ public class ServerUtil {
         server.getRawServer().start();
         InetSocketAddress address = server.getAddress();
         log.info("Http Server listen on [{}:{}]", address.getHostName(), address.getPort());
+        for (String ip : NetUtil.localIpv4s()) {
+            log.info("http://{}:{}", ip, address.getPort());
+        }
     }
 
     public static void stop() {
