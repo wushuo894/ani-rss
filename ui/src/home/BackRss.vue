@@ -33,11 +33,12 @@
               {{ backRss[it.$index].url }}
             </div>
             <div v-else>
-              <el-input v-model:model-value="backRss[it.$index].url" placeholder="https://xxx.xxx" type="textarea" autosize/>
+              <el-input v-model:model-value="backRss[it.$index].url" placeholder="https://xxx.xxx" type="textarea"
+                        autosize/>
             </div>
           </template>
         </el-table-column>
-        <el-table-column label="偏移" min-width="180px">
+        <el-table-column label="偏移" width="180px">
           <template #default="it">
             <div v-if="editIndex !== it.$index">
               {{ backRss[it.$index].offset }}
