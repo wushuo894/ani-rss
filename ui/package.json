@@ -12,14 +12,14 @@
     "@element-plus/icons-vue": "^2.3.1",
     "@vueuse/core": "^11.1.0",
     "artplayer": "^5.1.7",
-    "artplayer-plugin-multiple-subtitles": "^1.0.0",
+    "artplayer-plugin-multiple-subtitles": "^1.1.0",
     "crypto-js": "^4.2.0",
-    "element-plus": "^2.8.3",
-    "vue": "^3.5.8"
+    "element-plus": "^2.8.7",
+    "vue": "^3.5.12"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^5.1.4",
-    "shiki": "^1.18.0",
-    "vite": "^5.4.7"
+    "shiki": "^1.22.2",
+    "vite": "^5.4.10"
   }
 }
