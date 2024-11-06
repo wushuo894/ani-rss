@@ -145,7 +145,9 @@ public class RenameUtil {
             String value = entry.getValue();
             s = s.replace(key, value);
         }
-        s = s.replace("   ", " ");
+        while (s.contains("  ")) {
+            s = s.replace("  ", " ");
+        }
         return s.trim();
     }
 
