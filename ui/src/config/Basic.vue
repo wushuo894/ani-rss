@@ -119,7 +119,7 @@
               <br>
               <el-text class="mx-1" size="small">
                 文件已下载自动跳过 此选项必须启用 自动重命名。确保 下载工具 与本程序 docker 映射挂载路径一致
-                <a href="https://docs.wushuo.top/docs#%E8%87%AA%E5%8A%A8%E8%B7%B3%E8%BF%87"
+                <a href="https://docs.wushuo.top/config/basic#auto-skip"
                    target="_blank">详细说明</a>
               </el-text>
             </div>
