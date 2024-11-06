@@ -5,7 +5,15 @@
 <strong>自动追番、订阅、下载 蜜柑RSS动漫</strong>
 </p>
 
-[快速开始](https://docs.wushuo.top/start) | [使用文档](https://docs.wushuo.top/add-rss) | [Docker部署](https://docs.wushuo.top/deploy/docker) ｜ [常见问题](https://docs.wushuo.top/faq) | [参与开发](https://docs.wushuo.top/dev)
+[快速开始](https://docs.wushuo.top/start)
+|
+[使用文档](https://docs.wushuo.top/add-rss)
+|
+[Docker部署](https://docs.wushuo.top/deploy/docker)
+|
+[常见问题](https://docs.wushuo.top/faq)
+|
+[参与开发](https://docs.wushuo.top/dev)
 
 [![GitHub](https://img.shields.io/badge/-GitHub-181717?logo=github)](https://github.com/wushuo894/ani-rss)
 ![GitHub License](https://img.shields.io/github/license/wushuo894/ani-rss)
