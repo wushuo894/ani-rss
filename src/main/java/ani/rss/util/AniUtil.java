@@ -241,12 +241,7 @@ public class AniUtil {
             ani.setExclude(exclude);
         }
 
-        title = title.replace("1/2", "½");
-        var ls = List.of("/", "\\", ":", "?", "*", "|", ">", "<", "\"");
-        for (String l : ls) {
-            title = title.replace(l, " ");
-        }
-        title = title.trim();
+        title = RenameUtil.getName(title);
 
         ani
                 .setDownloadNew(downloadNew)
