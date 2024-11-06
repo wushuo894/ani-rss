@@ -232,7 +232,7 @@ public class ItemsUtil {
                     }
                     return false;
                 }).collect(Collectors.toList());
-        return CollUtil.distinct(items, Item::getReName, true);
+        return CollUtil.distinct(items, item -> item.getEpisode().toString(), true);
     }
 
     /**
