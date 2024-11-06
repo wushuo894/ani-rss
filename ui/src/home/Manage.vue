@@ -29,11 +29,17 @@
           @selection-change="handleSelectionChange"
           v-model:data="searchList"
           height="400px"
+          stripe
       >
-        <el-table-column type="selection" width="55"/>
+        <el-table-column type="selection" width="55" fixed/>
         <el-table-column label="状态" width="80">
           <template #default="it">
-            {{ searchList[it.$index].enable ? '已启用' : '未启用' }}
+            <el-tag v-if="searchList[it.$index].enable">
+              已启用
+            </el-tag>
+            <el-tag v-else type="info">
+              未启用
+            </el-tag>
           </template>
         </el-table-column>
         <el-table-column label="标题" prop="title" width="200"/>
