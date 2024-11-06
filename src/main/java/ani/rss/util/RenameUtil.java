@@ -107,7 +107,7 @@ public class RenameUtil {
             episodeFormat = episodeFormat + ".5";
         }
 
-
+        title = getName(title);
         itemTitle = getName(itemTitle);
 
         renameTemplate = renameTemplate.replace("${title}", title);
