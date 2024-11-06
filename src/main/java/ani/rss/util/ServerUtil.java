@@ -21,6 +21,7 @@ import cn.hutool.http.server.SimpleServer;
 import cn.hutool.log.Log;
 import lombok.extern.slf4j.Slf4j;
 
+import java.net.InetSocketAddress;
 import java.util.*;
 
 import static ani.rss.auth.util.AuthUtil.getIp;
@@ -32,7 +33,7 @@ public class ServerUtil {
     public static String PORT = "7789";
     public static SimpleServer server;
 
-    public static SimpleServer create() {
+    public static void start() {
         Map<String, String> env = System.getenv();
         String[] args = Main.ARGS;
         int i = Arrays.asList(args).indexOf("--port");
@@ -104,7 +105,9 @@ public class ServerUtil {
                 }
             });
         }
-        return server;
+        server.getRawServer().start();
+        InetSocketAddress address = server.getAddress();
+        log.info("Http Server listen on [{}:{}]", address.getHostName(), address.getPort());
     }
 
     public static void stop() {
