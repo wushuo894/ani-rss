@@ -49,6 +49,7 @@ public class TmdbUtil {
             String finalName = name;
             themoviedbName = HttpReq.get("https://www.themoviedb.org/search", true)
                     .form("query", name)
+                    .cookie("")
                     .header("accept-language", acceptLanguage)
                     .thenFunction(res -> {
                         org.jsoup.nodes.Document document = Jsoup.parse(res.body());
@@ -62,7 +63,7 @@ public class TmdbUtil {
                         }
                         Element releaseDate = document.selectFirst(".release_date");
                         if (Objects.nonNull(releaseDate) && StrUtil.isNotBlank(year.get())) {
-                            String s = "((19|20)\\d{2}) 年 (\\d{2}) 月 (\\d{2}) 日";
+                            String s = "((19|20)\\d{2}) 年";
                             String text = releaseDate.text();
                             if (ReUtil.contains(s, text)) {
                                 year.set(ReUtil.get(s, text, 1));
