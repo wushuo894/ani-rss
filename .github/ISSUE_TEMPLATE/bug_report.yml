@@ -1,4 +1,4 @@
-name: "问题报告"
+name: "问题报告🐞"
 description: Bug report
 labels: [bug]
 body:
@@ -9,7 +9,7 @@ body:
 
   - type: checkboxes
     attributes:
-      label: 请勾选你确认过的前置条件
+      label: 请勾选您确认过的前置条件
       options:
         - label: |
             我已经阅读了 [常见问题](https://docs.wushuo.top/faq.html) [使用文档](https://docs.wushuo.top/add-rss.html)
