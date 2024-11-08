@@ -102,6 +102,15 @@ public class qBittorrent implements BaseDownload {
                         // 包含标签
                         if (tagList.contains(TorrentsTags.ANI_RSS.getValue())) {
                             torrentsInfoList.add(torrentsInfo);
+                            continue;
+                        }
+
+                        JsonElement category = jsonObject.get("category");
+                        if (Objects.isNull(category)) {
+                            continue;
+                        }
+                        if (category.getAsString().equals(TorrentsTags.ANI_RSS.getValue())) {
+                            torrentsInfoList.add(torrentsInfo);
                         }
                     }
                     return torrentsInfoList;
@@ -131,6 +140,7 @@ public class qBittorrent implements BaseDownload {
         HttpRequest httpRequest = HttpReq.post(host + "/api/v2/torrents/add", false)
                 .form("addToTopOfQueue", false)
                 .form("autoTMM", false)
+                .form("category", TorrentsTags.ANI_RSS.getValue())
                 .form("contentLayout", "Original")
                 .form("dlLimit", 0)
                 .form("firstLastPiecePrio", false)
