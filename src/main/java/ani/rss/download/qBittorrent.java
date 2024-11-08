@@ -127,7 +127,6 @@ public class qBittorrent implements BaseDownload {
         Boolean qbUseDownloadPath = config.getQbUseDownloadPath();
 
         List<String> tags = new ArrayList<>();
-        tags.add(TorrentsTags.ANI_RSS.getValue());
         tags.add(subgroup);
         if (!master) {
             tags.add(TorrentsTags.BACK_RSS.getValue());
