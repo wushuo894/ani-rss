@@ -27,13 +27,15 @@ body:
         请选择你的运行环境
       options:
         - label: |
-            群晖套件
-        - label: |
             Docker
         - label: |
             Linux
         - label: |
+            macOS
+        - label: |
             Windows
+        - label: |
+            群晖套件
 
   - type: input
     id: version
