@@ -1,0 +1,58 @@
+name: "问题报告"
+description: Bug report
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        请**务必确认您的issue不是重复的且不是因为您的操作或版本问题**
+
+  - type: checkboxes
+    attributes:
+      label: 请勾选你确认过的前置条件
+      options:
+        - label: |
+            我已经阅读了 [常见问题](https://docs.wushuo.top/faq.html) [使用文档](https://docs.wushuo.top/add-rss.html)
+        - label: |
+            我确定没有重复的issue或discussions
+        - label: |
+            我确定这是程序本身的问题而不是其他 (比如网络相关的报错)
+        - label: |
+            我确定这个问题在最新版本中没有被修复
+
+  - type: checkboxes
+    attributes:
+      label: 运行环境
+      description: |
+        请选择你的运行环境
+      options:
+        - label: |
+            群晖套件
+        - label: |
+            Docker
+        - label: |
+            Linux
+        - label: |
+            Windows
+
+  - type: input
+    id: version
+    attributes:
+      label: 程序版本
+      description: |
+        您使用的是哪个版本的程序？
+      placeholder: v1.0.0
+    validations:
+      required: true
+  - type: textarea
+    id: bug-description
+    attributes:
+      label: 问题描述
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: 日志
+      description: |
+        请复制 粘贴/上传 错误日志、截图。
