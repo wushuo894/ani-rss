@@ -20,7 +20,7 @@ public class WebHook implements Message {
     @Override
     public Boolean send(Config config, Ani ani, String text, MessageEnum messageEnum) {
         String messageTemplate = config.getMessageTemplate();
-        messageTemplate = messageTemplate.replace("\n","\\n");
+        messageTemplate = messageTemplate.replace("\n", "\\n");
         String message = replaceMessageTemplate(ani, messageTemplate, text);
 
         String webHookMethod = config.getWebHookMethod();
@@ -47,7 +47,7 @@ public class WebHook implements Message {
         webHookUrl = webHookUrl.replace("${image}", image);
         webHookBody = webHookBody.replace("${image}", image);
 
-        HttpRequest httpRequest = HttpReq.get(webHookUrl)
+        HttpRequest httpRequest = HttpReq.get(webHookUrl, true)
                 .method(Method.valueOf(webHookMethod));
 
         if (StrUtil.isNotBlank(webHookBody)) {
