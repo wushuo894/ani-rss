@@ -8,6 +8,8 @@ import ani.rss.annotation.Path;
 import ani.rss.auth.util.AuthUtil;
 import ani.rss.entity.Config;
 import ani.rss.entity.Result;
+import cn.hutool.cache.Cache;
+import cn.hutool.cache.CacheUtil;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.lang.PatternPool;
 import cn.hutool.core.net.Ipv4Util;
@@ -125,19 +127,26 @@ public class ServerUtil {
         }
     }
 
+    public static final Cache<String, Boolean> cache = CacheUtil.newFIFOCache(4024);
+
     public static synchronized Boolean isIpWhitelist(String ip) {
+        Config config = ConfigUtil.CONFIG;
+        String ipWhitelistStr = config.getIpWhitelistStr();
+        Boolean ipWhitelist = config.getIpWhitelist();
+        if (!ipWhitelist) {
+            return false;
+        }
+        if (StrUtil.isBlank(ipWhitelistStr)) {
+            return false;
+        }
+        String cacheKey = ipWhitelistStr + ":" + ip;
         try {
-            Config config = ConfigUtil.CONFIG;
-            String ipWhitelistStr = config.getIpWhitelistStr();
-            Boolean ipWhitelist = config.getIpWhitelist();
-            if (!ipWhitelist) {
-                return false;
-            }
-            if (StrUtil.isBlank(ipWhitelistStr)) {
-                return false;
-            }
             if (!PatternPool.IPV4.matcher(ip).matches()) {
                 return false;
+            }
+            Boolean b = cache.get(cacheKey);
+            if (Objects.nonNull(b)) {
+                return b;
             }
             List<String> list = StrUtil.split(ipWhitelistStr, "\n", true, true);
             for (String string : list) {
@@ -145,19 +154,24 @@ public class ServerUtil {
                     continue;
                 }
                 if (ip.equals(string)) {
+                    cache.put(cacheKey, Boolean.TRUE);
                     return true;
                 }
                 if (Ipv4Util.list(string, false).contains(ip)) {
+                    cache.put(cacheKey, Boolean.TRUE);
                     return true;
                 }
                 if (Ipv4Util.matches(string, ip)) {
+                    cache.put(cacheKey, Boolean.TRUE);
                     return true;
                 }
             }
+
         } catch (Exception e) {
             log.error("ip白名单存在问题");
             log.error(e.getMessage(), e);
         }
+        cache.put(cacheKey, Boolean.FALSE);
         return false;
     }
 }
