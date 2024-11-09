@@ -160,7 +160,11 @@ public class qBittorrent implements BaseDownload {
         if ("txt".equals(extName)) {
             httpRequest.form("urls", FileUtil.readUtf8String(torrentFile));
         } else {
-            httpRequest.form("torrents", torrentFile);
+            if (torrentFile.length() > 0) {
+                httpRequest.form("torrents", torrentFile);
+            } else {
+                httpRequest.form("urls", "magnet:?xt=urn:btih:" + FileUtil.mainName(torrentFile));
+            }
         }
         httpRequest.thenFunction(HttpResponse::isOk);
 

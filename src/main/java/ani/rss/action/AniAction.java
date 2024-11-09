@@ -207,7 +207,7 @@ public class AniAction implements BaseAction {
                 .filter(it -> ids.contains(it.getId()))
                 .collect(Collectors.toList());
         if (anis.isEmpty()) {
-            resultErrorMsg("修改失败");
+            resultErrorMsg("删除失败");
             return;
         }
         for (Ani ani : anis) {
