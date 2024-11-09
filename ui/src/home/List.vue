@@ -2,6 +2,7 @@
   <Edit ref="refEdit" @load="getList"/>
   <PlayList ref="playList"/>
   <Cover ref="refCover" @load="getList"/>
+  <Del ref="refDel" @load="getList"/>
   <div style="height: 100%;overflow: hidden;">
     <el-scrollbar>
       <div style="margin: 0 10px;min-height: 500px" v-loading="loading">
@@ -116,15 +117,11 @@
                           </el-icon>
                         </el-button>
                         <div style="height: 5px;"></div>
-                        <popconfirm title="你确定要删除吗?" @confirm="delAni(item)">
-                          <template #reference>
-                            <el-button type="danger" text :loading="item['deleteLoading']" bg>
-                              <el-icon>
-                                <Delete/>
-                              </el-icon>
-                            </el-button>
-                          </template>
-                        </popconfirm>
+                        <el-button type="danger" text @click="refDel?.show([item])" bg>
+                          <el-icon>
+                            <Delete/>
+                          </el-icon>
+                        </el-button>
                       </div>
                     </div>
                   </div>
@@ -171,6 +168,7 @@ import api from "../api.js";
 import Popconfirm from "../other/Popconfirm.vue";
 import PlayList from "../play/PlayList.vue";
 import Cover from "./Cover.vue";
+import Del from "./Del.vue";
 
 const defaultWeekList = [
   {
@@ -206,6 +204,7 @@ const weekList = ref(defaultWeekList)
 
 const pagerCount = ref(10)
 const refEdit = ref()
+const refDel = ref()
 const pageSize = ref(40)
 const loading = ref(true)
 const playList = ref()

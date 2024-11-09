@@ -224,6 +224,20 @@ public class AniAction implements BaseAction {
             ClearCacheAction.clearParentFile(torrentDir);
             log.info("删除订阅 {} {} {}", ani.getTitle(), ani.getUrl(), ani.getId());
         }
+        HttpServerRequest request = ServerUtil.REQUEST.get();
+        String deleteFiles = request.getParam("deleteFiles");
+        if (!Boolean.parseBoolean(deleteFiles)) {
+            // 不删除本地文件
+            return;
+        }
+        for (Ani ani : anis) {
+            List<File> downloadPath = TorrentUtil.getDownloadPath(ani);
+            for (File file : downloadPath) {
+                log.info("删除 {}", file);
+                FileUtil.del(file);
+                ClearCacheAction.clearParentFile(file);
+            }
+        }
     }
 
     @Override

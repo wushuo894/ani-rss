@@ -1,4 +1,5 @@
 <template>
+  <Del ref="refDel" @load="getList"/>
   <el-dialog v-model="dialogVisible" title="管理" center v-if="dialogVisible" class="manage-dialog">
     <div style="min-height: 300px;" v-loading="loading">
       <div style="display: flex;justify-content: space-between;width: 100%;">
@@ -17,12 +18,8 @@
           <el-button :loading="importDataLoading" bg icon="Download" text @click="importData">
             导入
           </el-button>
-          <popconfirm title="删除选中项?" @confirm="del">
-            <template #reference>
-              <el-button icon="Remove" bg text :disabled="!selectList.length" type="danger">删除
-              </el-button>
-            </template>
-          </popconfirm>
+          <el-button icon="Remove" bg text :disabled="!selectList.length" type="danger" @click="refDel?.show(selectList)">删除
+          </el-button>
         </div>
       </div>
       <el-table
@@ -58,6 +55,9 @@ import {ref} from "vue";
 import api from "../api.js";
 import Popconfirm from "../other/Popconfirm.vue";
 import {ElMessage} from "element-plus";
+import Del from "./Del.vue";
+
+let refDel = ref()
 
 let selectFilter = ref('全部')
 
@@ -88,6 +88,7 @@ let loading = ref(false)
 let show = () => {
   selectFilter.value = '全部'
   dialogVisible.value = true
+  selectList.value = []
   getList()
 }
 
@@ -109,21 +110,6 @@ let selectList = ref([])
 
 let handleSelectionChange = (v) => {
   selectList.value = v
-}
-
-const delLoading = ref(false)
-
-const del = () => {
-  delLoading.value = true
-  api.del('api/ani', selectList.value.map(it => it['id']))
-      .then(res => {
-        ElMessage.success(res.message)
-        emit('load')
-        getList()
-      })
-      .finally(() => {
-        delLoading.value = false
-      })
 }
 
 let exportData = () => {
