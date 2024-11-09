@@ -157,8 +157,13 @@ public class Transmission implements BaseDownload {
             torrent = FileUtil.readUtf8String(torrentFile);
             body = StrFormatter.format(body, GsonStatic.toJson(tags), savePath, "", torrent);
         } else {
-            torrent = Base64.encode(torrentFile);
-            body = StrFormatter.format(body, GsonStatic.toJson(tags), savePath, torrent, "");
+            if (torrentFile.length() > 0) {
+                torrent = Base64.encode(torrentFile);
+                body = StrFormatter.format(body, GsonStatic.toJson(tags), savePath, torrent, "");
+            } else {
+                torrent = "magnet:?xt=urn:btih:" + FileUtil.mainName(torrentFile);
+                body = StrFormatter.format(body, GsonStatic.toJson(tags), savePath, "", torrent);
+            }
         }
 
         String id = HttpReq.post(host + "/transmission/rpc", false)
