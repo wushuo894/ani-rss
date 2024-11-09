@@ -165,6 +165,7 @@ public class AniAction implements BaseAction {
                 for (File file : downloadPath) {
                     log.info("移动目录至 {} ==> {}", file, parentFile);
                     FileUtil.move(file, parentFile, true);
+                    ClearCacheAction.clearParentFile(file);
                 }
             }
         }
