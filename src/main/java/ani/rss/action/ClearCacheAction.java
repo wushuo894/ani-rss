@@ -11,6 +11,7 @@ import cn.hutool.core.util.NumberUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.http.server.HttpServerRequest;
 import cn.hutool.http.server.HttpServerResponse;
+import lombok.extern.slf4j.Slf4j;
 
 import java.io.File;
 import java.io.IOException;
@@ -20,6 +21,7 @@ import java.util.stream.Collectors;
 /**
  * 缓存清理
  */
+@Slf4j
 @Auth
 @Path("/clearCache")
 public class ClearCacheAction implements BaseAction {
@@ -37,6 +39,7 @@ public class ClearCacheAction implements BaseAction {
         if (ArrayUtil.isNotEmpty(list)) {
             return;
         }
+        log.info("清理空文件夹 {}", parentFile);
         FileUtil.del(parentFile);
         clearParentFile(parentFile);
     }

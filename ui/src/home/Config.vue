@@ -1,7 +1,7 @@
 <template>
   <el-dialog v-model="dialogVisible" title="设置" center v-if="dialogVisible">
-    <div style="margin: 0 15px;" v-loading="loading">
-      <el-tabs v-model:model-value="activeName">
+    <div v-loading="loading">
+      <el-tabs v-model:model-value="activeName" style="margin: 0 15px;">
         <el-tab-pane label="下载设置" name="download" :lazy="true">
           <div style="height: 500px;">
             <el-scrollbar style="padding: 0 12px">
@@ -37,8 +37,10 @@
           <About/>
         </el-tab-pane>
       </el-tabs>
-      <div style="display: flex;justify-content: end;width: 100%;margin-top: 10px;">
-        <el-button :loading="configButtonLoading" @click="editConfig" text bg icon="Check">确定</el-button>
+      <div style="display: flex;justify-content: end;width: 100%;margin-top: 8px;">
+        <el-button :loading="configButtonLoading" @click="editConfig" text bg icon="Check" type="primary">确定
+        </el-button>
+        <el-button icon="Close" bg text @click="dialogVisible = false">取消</el-button>
       </div>
     </div>
   </el-dialog>
