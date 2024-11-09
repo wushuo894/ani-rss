@@ -1,5 +1,5 @@
 <template>
-  <el-dialog v-model="downloadPathDialogVisible" v-if="downloadPathDialogVisible" center align-center width="300">
+  <el-dialog v-model="downloadPathDialogVisible" v-if="downloadPathDialogVisible" center align-center width="300" @close="callback">
     <div>
       <el-text class="mx-1" size="default">
         检测到修改后的下载位置发生了改动，是否将已下载文件移动到新的位置？
