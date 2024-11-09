@@ -241,7 +241,7 @@ let downloadPath = () => {
   newAni.customDownloadPath = false
   api.post('api/downloadPath', newAni)
       .then(res => {
-        props.ani.downloadPath = res.data
+        props.ani.downloadPath = res.data.downloadPath
       })
       .finally(() => {
         downloadPathLoading.value = false

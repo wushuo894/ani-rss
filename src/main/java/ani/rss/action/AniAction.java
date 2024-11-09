@@ -153,6 +153,21 @@ public class AniAction implements BaseAction {
             resultErrorMsg("修改失败");
             return;
         }
+        HttpServerRequest request = ServerUtil.REQUEST.get();
+        String move = request.getParam("move");
+        if (Boolean.parseBoolean(move)) {
+            List<File> downloadPath = TorrentUtil.getDownloadPath(first.get());
+            List<File> newDownloadPath = TorrentUtil.getDownloadPath(ani);
+            // 下载位置发生变动
+            if (!downloadPath.get(0).toString().equals(newDownloadPath.get(0).toString())) {
+                File parentFile = newDownloadPath.get(0).getParentFile();
+                FileUtil.mkdir(parentFile);
+                for (File file : downloadPath) {
+                    log.info("移动目录至 {} ==> {}", file, parentFile);
+                    FileUtil.move(file, parentFile, true);
+                }
+            }
+        }
         File torrentDir = TorrentUtil.getTorrentDir(first.get());
         BeanUtil.copyProperties(ani, first.get());
         File newTorrentDir = TorrentUtil.getTorrentDir(first.get());
