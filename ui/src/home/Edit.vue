@@ -3,9 +3,13 @@
     <div>
       <el-text class="mx-1" size="default">
         检测到修改后的下载位置发生了改动，是否将已下载文件移动到新的位置？
+      </el-text>
+      <br>
+      <br>
+      <el-text class="mx-1" size="small">
+        {{ downloadPath }}
         <br>
-        <br>
-        新的位置: {{ downloadPath }}
+        移动后会影响下载器正在做种与下载的任务
       </el-text>
     </div>
     <div style="width:100%;display: flex;justify-content: end;margin-top: 8px;">
