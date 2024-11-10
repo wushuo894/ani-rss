@@ -178,7 +178,9 @@ public class AniAction implements BaseAction {
                         // 修改保存位置
                         TorrentUtil.setSavePath(torrentsInfo, newDownloadPath.get(0).toString());
                     }
-
+                    if (!file.exists()) {
+                        continue;
+                    }
                     log.info("移动目录至 {} ==> {}", file, parentFile);
                     FileUtil.move(file, parentFile, true);
                     ClearCacheAction.clearParentFile(file);
