@@ -191,6 +191,7 @@ public class AniAction implements BaseAction {
                         log.info("移动文件 {} ==> {}", oldFile, newDownloadPath);
                         FileUtil.move(oldFile, newDownloadPath, false);
                     }
+                    FileUtil.del(file);
                     ClearCacheAction.clearParentFile(file);
                 }
 
