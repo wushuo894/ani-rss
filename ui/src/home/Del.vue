@@ -5,9 +5,9 @@
         <el-text class="mx-1" size="large">是否删除 {{ aniList[0].title }} 第{{ aniList[0].season }}季?</el-text>
       </div>
       <div v-else>
-        <el-text class="mx-1" size="large">是否删除共 {{aniList.length}} 个订阅?</el-text>
+        <el-text class="mx-1" size="large">是否删除共 {{ aniList.length }} 个订阅?</el-text>
       </div>
-      <el-checkbox v-model="deleteFiles">同时删除本地已下载的文件</el-checkbox>
+      <el-checkbox v-model="deleteFiles">同时删除下载任务与本地已下载的文件</el-checkbox>
     </div>
     <div style="width:100%;display: flex;justify-content: end;margin-top: 8px;">
       <el-button icon="Check" :loading="okLoading" @click="delAni" text bg type="danger">确定
