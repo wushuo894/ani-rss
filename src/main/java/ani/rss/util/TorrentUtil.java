@@ -644,7 +644,12 @@ public class TorrentUtil {
      */
     public static synchronized List<TorrentsInfo> getTorrentsInfos() {
         ThreadUtil.sleep(1000);
-        return baseDownload.getTorrentsInfos();
+        try {
+            return baseDownload.getTorrentsInfos();
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+        }
+        return new ArrayList<>();
     }
 
     /**
@@ -825,25 +830,30 @@ public class TorrentUtil {
         ).contains(state.name());
     }
 
+
     /**
      * 删除已完成任务
      *
      * @param torrentsInfo
+     * @param forcedDelete
      */
-    public static synchronized Boolean delete(TorrentsInfo torrentsInfo) {
+    public static synchronized Boolean delete(TorrentsInfo torrentsInfo, Boolean forcedDelete) {
         Config config = ConfigUtil.CONFIG;
         Boolean delete = config.getDelete();
 
-        if (!isDelete(torrentsInfo)) {
-            return false;
-        }
-
         String name = torrentsInfo.getName();
 
-        if (!delete) {
-            return false;
+        if (forcedDelete) {
+            log.info("删除任务 {}", name);
+        } else {
+            if (!isDelete(torrentsInfo)) {
+                return false;
+            }
+            if (!delete) {
+                return false;
+            }
+            log.info("删除已完成任务 {}", name);
         }
-        log.info("删除已完成任务 {}", name);
         ThreadUtil.sleep(500);
         Boolean b = baseDownload.delete(torrentsInfo);
         if (b) {
@@ -852,6 +862,16 @@ public class TorrentUtil {
             log.error("删除任务失败 {}", name);
         }
         return b;
+    }
+
+
+    /**
+     * 删除已完成任务
+     *
+     * @param torrentsInfo
+     */
+    public static synchronized Boolean delete(TorrentsInfo torrentsInfo) {
+        return delete(torrentsInfo, false);
     }
 
     /**

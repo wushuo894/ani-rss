@@ -5,6 +5,7 @@ import ani.rss.annotation.Path;
 import ani.rss.entity.Ani;
 import ani.rss.entity.Config;
 import ani.rss.entity.Item;
+import ani.rss.entity.TorrentsInfo;
 import ani.rss.task.RssTask;
 import ani.rss.util.*;
 import cn.hutool.core.bean.BeanUtil;
@@ -23,10 +24,7 @@ import com.google.gson.JsonElement;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.File;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 
@@ -234,26 +232,47 @@ public class AniAction implements BaseAction {
 
         AniUtil.sync();
         resultSuccessMsg("删除订阅成功");
-        for (Ani ani : anis) {
-            File torrentDir = TorrentUtil.getTorrentDir(ani);
-            FileUtil.del(torrentDir);
-            ClearCacheAction.clearParentFile(torrentDir);
-            log.info("删除订阅 {} {} {}", ani.getTitle(), ani.getUrl(), ani.getId());
-        }
-        HttpServerRequest request = ServerUtil.REQUEST.get();
-        String deleteFiles = request.getParam("deleteFiles");
-        if (!Boolean.parseBoolean(deleteFiles)) {
-            // 不删除本地文件
-            return;
-        }
-        for (Ani ani : anis) {
-            List<File> downloadPath = TorrentUtil.getDownloadPath(ani);
-            for (File file : downloadPath) {
+        ThreadUtil.execute(() -> {
+            for (Ani ani : anis) {
+                File torrentDir = TorrentUtil.getTorrentDir(ani);
+                FileUtil.del(torrentDir);
+                ClearCacheAction.clearParentFile(torrentDir);
+                log.info("删除订阅 {} {} {}", ani.getTitle(), ani.getUrl(), ani.getId());
+            }
+            HttpServerRequest request = ServerUtil.REQUEST.get();
+            String deleteFiles = request.getParam("deleteFiles");
+            if (!Boolean.parseBoolean(deleteFiles)) {
+                // 不删除本地文件
+                return;
+            }
+
+            List<File> files = anis
+                    .stream()
+                    .map(TorrentUtil::getDownloadPath)
+                    .flatMap(List::stream)
+                    .collect(Collectors.toList());
+
+            Boolean login = TorrentUtil.login();
+            List<TorrentsInfo> torrentsInfos = new ArrayList<>();
+            if (login) {
+                torrentsInfos = TorrentUtil.getTorrentsInfos();
+            }
+            for (File file : files) {
+                if (!FileUtil.exist(file)) {
+                    continue;
+                }
+                List<TorrentsInfo> collect = torrentsInfos
+                        .stream()
+                        .filter(torrentsInfo -> torrentsInfo.getDownloadDir().equals(file.toString()))
+                        .collect(Collectors.toList());
+                for (TorrentsInfo torrentsInfo : collect) {
+                    TorrentUtil.delete(torrentsInfo, true);
+                }
                 log.info("删除 {}", file);
                 FileUtil.del(file);
                 ClearCacheAction.clearParentFile(file);
             }
-        }
+        });
     }
 
     @Override
