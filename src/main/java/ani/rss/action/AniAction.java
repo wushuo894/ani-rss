@@ -157,34 +157,38 @@ public class AniAction implements BaseAction {
         if (Boolean.parseBoolean(move)) {
             Ani get = first.get();
             ThreadUtil.execute(() -> {
-                List<File> downloadPath = TorrentUtil.getDownloadPath(get);
-                List<File> newDownloadPath = TorrentUtil.getDownloadPath(ani);
-                // 下载位置未发生变动
-                if (downloadPath.get(0).toString().equals(newDownloadPath.get(0).toString())) {
-                    return;
-                }
+                List<File> downloadPaths = TorrentUtil.getDownloadPath(get);
+                File newDownloadPath = TorrentUtil.getDownloadPath(ani).get(0);
                 Boolean login = TorrentUtil.login();
                 List<TorrentsInfo> torrentsInfos = new ArrayList<>();
                 if (login) {
                     torrentsInfos = TorrentUtil.getTorrentsInfos();
                 }
-                File parentFile = newDownloadPath.get(0).getParentFile();
-                for (File file : downloadPath) {
+                for (File file : downloadPaths) {
+                    if (file.toString().equals(newDownloadPath.toString())) {
+                        // 位置未发生改变
+                        continue;
+                    }
+
                     for (TorrentsInfo torrentsInfo : torrentsInfos) {
                         if (!torrentsInfo.getDownloadDir().equals(file.toString())) {
                             // 旧位置不相同
                             continue;
                         }
                         // 修改保存位置
-                        TorrentUtil.setSavePath(torrentsInfo, newDownloadPath.get(0).toString());
+                        TorrentUtil.setSavePath(torrentsInfo, newDownloadPath.toString());
                     }
                     if (!file.exists()) {
                         continue;
                     }
+                    File newPath = newDownloadPath;
+                    if (newDownloadPath.getName().equals(file.getName())) {
+                        newPath = newDownloadPath.getParentFile();
+                    }
                     ThreadUtil.sleep(3000);
-                    log.info("移动目录至 {} ==> {}", file, parentFile);
-                    FileUtil.mkdir(parentFile);
-                    FileUtil.move(file, parentFile, true);
+                    log.info("移动目录至 {} ==> {}", file, newPath);
+                    FileUtil.mkdir(newPath);
+                    FileUtil.move(file, newPath, true);
                     ClearCacheAction.clearParentFile(file);
                 }
 
