@@ -160,7 +160,7 @@ public class ServerUtil {
                     cache.put(cacheKey, Boolean.TRUE);
                     return true;
                 }
-                if (Ipv4Util.matches(string, ip)) {
+                if (string.contains("*") && Ipv4Util.matches(string, ip)) {
                     cache.put(cacheKey, Boolean.TRUE);
                     return true;
                 }
