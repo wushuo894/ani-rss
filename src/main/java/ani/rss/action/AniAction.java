@@ -168,6 +168,7 @@ public class AniAction implements BaseAction {
                     torrentsInfos = TorrentUtil.getTorrentsInfos();
                 }
                 File parentFile = newDownloadPath.get(0).getParentFile();
+                FileUtil.mkdir(parentFile);
                 for (File file : downloadPath) {
                     for (TorrentsInfo torrentsInfo : torrentsInfos) {
                         if (!torrentsInfo.getDownloadDir().equals(file.toString())) {
