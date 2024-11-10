@@ -181,7 +181,7 @@ public class AniAction implements BaseAction {
                     if (!file.exists()) {
                         continue;
                     }
-                    ThreadUtil.sleep(2000);
+                    ThreadUtil.sleep(2000 * 10);
                     log.info("移动目录至 {} ==> {}", file, parentFile);
                     FileUtil.move(file, parentFile, true);
                     ClearCacheAction.clearParentFile(file);
