@@ -127,7 +127,7 @@ public class ServerUtil {
         }
     }
 
-    public static final Cache<String, Boolean> cache = CacheUtil.newFIFOCache(4024);
+    public static final Cache<String, Boolean> cache = CacheUtil.newFIFOCache(4096);
 
     public static synchronized Boolean isIpWhitelist(String ip) {
         Config config = ConfigUtil.CONFIG;
