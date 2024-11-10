@@ -154,10 +154,14 @@ public class AniAction implements BaseAction {
         HttpServerRequest request = ServerUtil.REQUEST.get();
         String move = request.getParam("move");
         if (Boolean.parseBoolean(move)) {
-            List<File> downloadPath = TorrentUtil.getDownloadPath(first.get());
-            List<File> newDownloadPath = TorrentUtil.getDownloadPath(ani);
-            // 下载位置发生变动
-            if (!downloadPath.get(0).toString().equals(newDownloadPath.get(0).toString())) {
+            Ani get = first.get();
+            ThreadUtil.execute(() -> {
+                List<File> downloadPath = TorrentUtil.getDownloadPath(get);
+                List<File> newDownloadPath = TorrentUtil.getDownloadPath(ani);
+                // 下载位置未发生变动
+                if (downloadPath.get(0).toString().equals(newDownloadPath.get(0).toString())) {
+                    return;
+                }
                 Boolean login = TorrentUtil.login();
                 List<TorrentsInfo> torrentsInfos = new ArrayList<>();
                 if (login) {
@@ -179,7 +183,8 @@ public class AniAction implements BaseAction {
                     FileUtil.move(file, parentFile, true);
                     ClearCacheAction.clearParentFile(file);
                 }
-            }
+
+            });
         }
         File torrentDir = TorrentUtil.getTorrentDir(first.get());
         BeanUtil.copyProperties(ani, first.get());
