@@ -60,6 +60,14 @@ public interface BaseDownload {
      */
     void updateTrackers(Set<String> trackers);
 
+    /**
+     * 修改保存位置
+     *
+     * @param torrentsInfo
+     * @param path
+     */
+    void setSavePath(TorrentsInfo torrentsInfo, String path);
+
     default String getFileReName(String name, String reName) {
         String ext = FileUtil.extName(name);
         if (StrUtil.isBlank(ext)) {

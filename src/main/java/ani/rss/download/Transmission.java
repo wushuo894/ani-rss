@@ -270,4 +270,9 @@ public class Transmission implements BaseDownload {
     public void updateTrackers(Set<String> trackers) {
         log.info("Transmission暂时还不支持 自动更新Trackers");
     }
+
+    @Override
+    public void setSavePath(TorrentsInfo torrentsInfo, String path) {
+
+    }
 }
