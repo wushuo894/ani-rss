@@ -158,9 +158,23 @@ public class AniAction implements BaseAction {
             List<File> newDownloadPath = TorrentUtil.getDownloadPath(ani);
             // 下载位置发生变动
             if (!downloadPath.get(0).toString().equals(newDownloadPath.get(0).toString())) {
+                Boolean login = TorrentUtil.login();
+                List<TorrentsInfo> torrentsInfos = new ArrayList<>();
+                if (login) {
+                    torrentsInfos = TorrentUtil.getTorrentsInfos();
+                }
                 File parentFile = newDownloadPath.get(0).getParentFile();
                 FileUtil.mkdir(parentFile);
                 for (File file : downloadPath) {
+                    for (TorrentsInfo torrentsInfo : torrentsInfos) {
+                        if (!torrentsInfo.getDownloadDir().equals(file.toString())) {
+                            // 旧位置不相同
+                            continue;
+                        }
+                        // 修改保存位置
+                        TorrentUtil.setSavePath(torrentsInfo, newDownloadPath.get(0).toString());
+                    }
+
                     log.info("移动目录至 {} ==> {}", file, parentFile);
                     FileUtil.move(file, parentFile, true);
                     ClearCacheAction.clearParentFile(file);
