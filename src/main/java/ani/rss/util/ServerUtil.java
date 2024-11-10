@@ -139,6 +139,9 @@ public class ServerUtil {
         if (StrUtil.isBlank(ipWhitelistStr)) {
             return false;
         }
+        if (StrUtil.isBlank(ip)) {
+            return false;
+        }
         String cacheKey = ipWhitelistStr + ":" + ip;
         try {
             if (!PatternPool.IPV4.matcher(ip).matches()) {
@@ -157,11 +160,11 @@ public class ServerUtil {
                     cache.put(cacheKey, Boolean.TRUE);
                     return true;
                 }
-                if (Ipv4Util.list(string, false).contains(ip)) {
+                if (Ipv4Util.matches(string, ip)) {
                     cache.put(cacheKey, Boolean.TRUE);
                     return true;
                 }
-                if (Ipv4Util.matches(string, ip)) {
+                if (Ipv4Util.list(string, false).contains(ip)) {
                     cache.put(cacheKey, Boolean.TRUE);
                     return true;
                 }
