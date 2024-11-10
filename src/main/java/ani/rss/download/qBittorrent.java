@@ -362,7 +362,11 @@ public class qBittorrent implements BaseDownload {
         HttpReq.post(host + "/api/v2/torrents/setSavePath")
                 .form("id", torrentsInfo.getHash())
                 .form("path", path)
-                .thenFunction(HttpResponse::isOk);
+                .then(req -> {
+                    if (!req.isOk()) {
+                        log.error(req.body());
+                    }
+                });
     }
 
 
