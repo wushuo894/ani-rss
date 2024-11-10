@@ -189,7 +189,7 @@ public class AniAction implements BaseAction {
                     File[] files = ObjectUtil.defaultIfNull(file.listFiles(), new File[]{});
                     for (File oldFile : files) {
                         log.info("移动文件 {} ==> {}", oldFile, newDownloadPath);
-                        FileUtil.move(file, newDownloadPath, false);
+                        FileUtil.move(oldFile, newDownloadPath, false);
                     }
                     ClearCacheAction.clearParentFile(file);
                 }
