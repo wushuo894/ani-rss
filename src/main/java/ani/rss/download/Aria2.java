@@ -253,4 +253,9 @@ public class Aria2 implements BaseDownload {
                     log.error("Aria2 更新Trackers失败 {}", res.getStatus());
                 });
     }
+
+    @Override
+    public void setSavePath(TorrentsInfo torrentsInfo, String path) {
+        // api 不支持
+    }
 }

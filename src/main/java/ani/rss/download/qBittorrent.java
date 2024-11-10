@@ -352,6 +352,20 @@ public class qBittorrent implements BaseDownload {
 
     }
 
+    @Override
+    public void setSavePath(TorrentsInfo torrentsInfo, String path) {
+        String host = config.getHost();
+        HttpReq.post(host + "/api/v2/torrents/setAutoManagement")
+                .form("hashes", torrentsInfo.getHash())
+                .form("enable", false)
+                .thenFunction(HttpResponse::isOk);
+        HttpReq.post(host + "/api/v2/torrents/setSavePath")
+                .form("id", torrentsInfo.getHash())
+                .form("path", path)
+                .thenFunction(HttpResponse::isOk);
+    }
+
+
     @Data
     @Accessors(chain = true)
     public static class FileEntity {

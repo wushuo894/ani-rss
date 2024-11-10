@@ -908,6 +908,25 @@ public class TorrentUtil {
         return false;
     }
 
+
+    /**
+     * 修改保存位置
+     *
+     * @param torrentsInfo
+     * @param path
+     */
+    public static void setSavePath(TorrentsInfo torrentsInfo, String path) {
+        if (StrUtil.isBlank(path)) {
+            return;
+        }
+        try {
+            log.info("修改保存位置 {} ==> {}", torrentsInfo.getName(), path);
+            baseDownload.setSavePath(torrentsInfo, path);
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+        }
+    }
+
     public static synchronized void load() {
         Config config = ConfigUtil.CONFIG;
         String download = config.getDownload();
