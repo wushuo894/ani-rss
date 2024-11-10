@@ -290,6 +290,7 @@ public class AniAction implements BaseAction {
                 for (TorrentsInfo torrentsInfo : collect) {
                     TorrentUtil.delete(torrentsInfo, true);
                 }
+                ThreadUtil.sleep(3000);
                 log.info("删除 {}", file);
                 FileUtil.del(file);
                 ClearCacheAction.clearParentFile(file);
