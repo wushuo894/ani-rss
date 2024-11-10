@@ -29,7 +29,6 @@ public class MikanGroupAction implements BaseAction {
 
         List<String> tagList = List.of(
                 "1920x1080", "3840x2160", "1080p", "4k", "720p",
-                "重制", "修复", "end", "抢先版",
                 "繁", "简", "日",
                 "cht", "chs", "hevc",
                 "10bit", "h265", "h264",
