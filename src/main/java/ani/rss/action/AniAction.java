@@ -16,7 +16,7 @@ import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.text.StrFormatter;
 import cn.hutool.core.thread.ThreadUtil;
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.extra.pinyin.PinyinUtil;
 import cn.hutool.http.server.HttpServerRequest;
 import cn.hutool.http.server.HttpServerResponse;
@@ -181,14 +181,16 @@ public class AniAction implements BaseAction {
                     if (!file.exists()) {
                         continue;
                     }
-                    File newPath = newDownloadPath;
-                    if (newDownloadPath.getName().equals(file.getName())) {
-                        newPath = newDownloadPath.getParentFile();
+                    if (file.isFile()) {
+                        continue;
                     }
                     ThreadUtil.sleep(3000);
-                    log.info("移动目录至 {} ==> {}", file, newPath);
-                    FileUtil.mkdir(newPath);
-                    FileUtil.move(file, newPath, true);
+                    FileUtil.mkdir(newDownloadPath);
+                    File[] files = ObjectUtil.defaultIfNull(file.listFiles(), new File[]{});
+                    for (File oldFile : files) {
+                        log.info("移动文件 {} ==> {}", oldFile, newDownloadPath);
+                        FileUtil.move(file, newDownloadPath, false);
+                    }
                     ClearCacheAction.clearParentFile(file);
                 }
 
