@@ -273,6 +273,13 @@ public class Transmission implements BaseDownload {
 
     @Override
     public void setSavePath(TorrentsInfo torrentsInfo, String path) {
-
+        String id = torrentsInfo.getId();
+        String body = ResourceUtil.readUtf8Str("transmission/torrent-set-location.json");
+        body = StrFormatter.format(body, id, path);
+        HttpReq.post(host + "/transmission/rpc", false)
+                .header(Header.AUTHORIZATION, authorization)
+                .header("X-Transmission-Session-Id", sessionId)
+                .body(body)
+                .thenFunction(HttpResponse::isOk);
     }
 }
