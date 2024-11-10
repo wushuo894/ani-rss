@@ -5,6 +5,7 @@ import ani.rss.annotation.Path;
 import ani.rss.entity.Ani;
 import ani.rss.util.AniUtil;
 import ani.rss.util.TorrentUtil;
+import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.http.server.HttpServerRequest;
 import cn.hutool.http.server.HttpServerResponse;
 
@@ -30,7 +31,10 @@ public class DownloadPathAction implements BaseAction {
                 .filter(it -> it.getId().equals(ani.getId()))
                 .findFirst();
         if (first.isPresent()) {
-            List<File> oldDownloadPath = TorrentUtil.getDownloadPath(first.get());
+            Ani oldAni = ObjectUtil.clone(first.get());
+            // 只在名称改变时移动
+            oldAni.setSeason(ani.getSeason());
+            List<File> oldDownloadPath = TorrentUtil.getDownloadPath(oldAni);
             change = !downloadPath.get(0).toString().equals(oldDownloadPath.get(0).toString());
         }
 
