@@ -16,6 +16,7 @@ import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.text.StrFormatter;
 import cn.hutool.core.thread.ThreadUtil;
+import cn.hutool.core.util.StrUtil;
 import cn.hutool.extra.pinyin.PinyinUtil;
 import cn.hutool.http.server.HttpServerRequest;
 import cn.hutool.http.server.HttpServerResponse;
@@ -254,6 +255,8 @@ public class AniAction implements BaseAction {
 
         AniUtil.sync();
         resultSuccessMsg("删除订阅成功");
+        HttpServerRequest request = ServerUtil.REQUEST.get();
+        String deleteFiles = request.getParam("deleteFiles");
         ThreadUtil.execute(() -> {
             for (Ani ani : anis) {
                 File torrentDir = TorrentUtil.getTorrentDir(ani);
@@ -261,8 +264,6 @@ public class AniAction implements BaseAction {
                 ClearCacheAction.clearParentFile(torrentDir);
                 log.info("删除订阅 {} {} {}", ani.getTitle(), ani.getUrl(), ani.getId());
             }
-            HttpServerRequest request = ServerUtil.REQUEST.get();
-            String deleteFiles = request.getParam("deleteFiles");
             if (!Boolean.parseBoolean(deleteFiles)) {
                 // 不删除本地文件
                 return;
@@ -280,15 +281,15 @@ public class AniAction implements BaseAction {
                 torrentsInfos = TorrentUtil.getTorrentsInfos();
             }
             for (File file : files) {
-                if (!FileUtil.exist(file)) {
-                    continue;
-                }
                 List<TorrentsInfo> collect = torrentsInfos
                         .stream()
                         .filter(torrentsInfo -> torrentsInfo.getDownloadDir().equals(file.toString()))
                         .collect(Collectors.toList());
                 for (TorrentsInfo torrentsInfo : collect) {
                     TorrentUtil.delete(torrentsInfo, true);
+                }
+                if (!file.exists()) {
+                    continue;
                 }
                 ThreadUtil.sleep(3000);
                 log.info("删除 {}", file);
