@@ -156,13 +156,17 @@ public class ServerUtil {
                 if (StrUtil.isBlank(string)) {
                     continue;
                 }
-                if (ip.equals(string)) {
-                    cache.put(cacheKey, Boolean.TRUE);
-                    return true;
+                if (PatternPool.IPV4.matcher(string).matches()) {
+                    if (string.equals(ip)) {
+                        cache.put(cacheKey, Boolean.TRUE);
+                        return true;
+                    }
                 }
-                if (string.contains("*") && Ipv4Util.matches(string, ip)) {
-                    cache.put(cacheKey, Boolean.TRUE);
-                    return true;
+                if (string.contains("*")) {
+                    if (Ipv4Util.matches(string, ip)) {
+                        cache.put(cacheKey, Boolean.TRUE);
+                        return true;
+                    }
                 }
                 if (Ipv4Util.list(string, false).contains(ip)) {
                     cache.put(cacheKey, Boolean.TRUE);
