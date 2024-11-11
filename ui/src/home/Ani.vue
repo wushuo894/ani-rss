@@ -146,7 +146,7 @@
     </div>
     <div>
       <el-button @click="items.show()" bg text icon="Grid">预览</el-button>
-      <el-button icon="Check" :loading="okLoading" @click="async ()=>{
+      <el-button icon="Check" type="primary" :loading="okLoading" @click="async ()=>{
         okLoading = true
         emit('ok',()=>okLoading = false)
       }" text bg>确定
