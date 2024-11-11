@@ -102,10 +102,6 @@ public class AniUtil {
         log.debug("保存订阅 {}", configFile);
         try {
             String json = GsonStatic.toJson(ANI_LIST);
-            JsonArray jsonArray = GsonStatic.fromJson(json, JsonArray.class);
-            for (JsonElement jsonElement : jsonArray.asList()) {
-                GsonStatic.fromJson(jsonElement, Ani.class);
-            }
             File temp = new File(configFile + ".temp");
             FileUtil.del(temp);
             FileUtil.writeUtf8String(json, temp);
