@@ -5,7 +5,7 @@
     <div style="justify-content: center;align-items: center;display: flex;flex: 1">
       <div id="form" style="max-width: 200px;">
         <div style="text-align: center;">
-          <img src="../public/mikan-pic.png" height="80" width="80"/>
+          <img src="../public/icon.svg" height="80" width="80"/>
         </div>
         <h2 style="text-align: center">ANI-RSS</h2>
         <div style="height: 30px;"></div>
