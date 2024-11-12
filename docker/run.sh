@@ -6,8 +6,7 @@ jar="ani-rss-jar-with-dependencies.jar"
 jar_path=$path$jar
 
 if [ ! -f $jar_path ]; then
-    version=$(curl -Ls https://github.com/wushuo894/ani-rss/releases/latest | grep -o '<h1 data-view-component="true" class="d-inline mr-3">[^<]*</h1>' | sed 's/<[^>]*>//g')
-    url="https://github.com/wushuo894/ani-rss/releases/download/$version/ani-rss-jar-with-dependencies.jar"
+    url="https://github.com/wushuo894/ani-rss/releases/latest/download/ani-rss-jar-with-dependencies.jar"
     wget -O $jar_path $url
 
     if [ $? -eq 0 ]; then
