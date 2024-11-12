@@ -55,7 +55,7 @@ public class MenuUtil {
         SystemTray tray = SystemTray.getSystemTray();
         trayIcon = new TrayIcon(
                 Toolkit.getDefaultToolkit().getImage(
-                        ResourceUtil.getResource("icon.png")
+                        ResourceUtil.getResource("icon-64.png")
                 ), "ani-rss");
         trayIcon.setImageAutoSize(true);
         tray.add(trayIcon);
