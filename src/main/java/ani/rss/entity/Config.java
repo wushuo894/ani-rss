@@ -422,4 +422,24 @@ public class Config implements Serializable {
      * 自动更新
      */
     private Boolean autoUpdate;
+
+    /**
+     * Alist
+     */
+    private String alistHost;
+
+    /**
+     * Alist 令牌
+     */
+    private String alistToken;
+
+    /**
+     * 上传位置
+     */
+    private String alistPath;
+
+    /**
+     * 启用alist
+     */
+    private Boolean alist;
 }

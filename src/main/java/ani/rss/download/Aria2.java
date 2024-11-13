@@ -103,7 +103,7 @@ public class Aria2 implements BaseDownload {
                                 .setHash(infoHash)
                                 .setState(state)
                                 .setDownloadDir(dir)
-                                .setFiles(files);
+                                .setFiles(() -> files);
                         torrentsInfos.add(torrentsInfo);
                     }
                     return torrentsInfos;
@@ -198,7 +198,7 @@ public class Aria2 implements BaseDownload {
             return;
         }
 
-        List<File> files = torrentsInfo.getFiles()
+        List<File> files = torrentsInfo.getFiles().get()
                 .stream()
                 .map(File::new)
                 .filter(File::exists)

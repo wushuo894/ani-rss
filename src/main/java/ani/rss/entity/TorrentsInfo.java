@@ -5,6 +5,7 @@ import lombok.experimental.Accessors;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.function.Supplier;
 
 /**
  * 种子信息
@@ -52,7 +53,7 @@ public class TorrentsInfo implements Serializable {
     /**
      * 文件列表
      */
-    private List<String> files;
+    private Supplier<List<String>> files;
 
     public enum State {
         /**

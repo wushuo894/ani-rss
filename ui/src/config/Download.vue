@@ -145,6 +145,29 @@
           </div>
         </el-form-item>
       </el-collapse-item>
+      <el-collapse-item title="Alist">
+        <el-form-item label="AlistHost">
+          <el-input v-model:model-value="props.config['alistHost']" placeholder="http://127.0.0.1:5244"/>
+        </el-form-item>
+        <el-form-item label="AlistToken">
+          <el-input v-model:model-value="props.config['alistToken']" placeholder="alist-xxxxxx"/>
+        </el-form-item>
+        <el-form-item label="AlistPath">
+          <el-input v-model:model-value="props.config['alistPath']" placeholder="/"/>
+        </el-form-item>
+        <el-form-item label="开关">
+          <div style="width: 100%">
+            <div>
+              <el-switch v-model:model-value="props.config['alist']"/>
+            </div>
+            <div>
+              <el-text class="mx-1" size="small">
+                自动将下载完成的文件上传至alist
+              </el-text>
+            </div>
+          </div>
+        </el-form-item>
+      </el-collapse-item>
     </el-collapse>
 
   </el-form>
