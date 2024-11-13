@@ -122,7 +122,11 @@ public class ConfigUtil {
                 .setAutoTrackersUpdate(false)
                 .setTrackersUpdateUrls("https://cf.trackerslist.com/best.txt\nhttps://cdn.jsdelivr.net/gh/ngosang/trackerslist@master/trackers_all.txt")
                 .setMessageTemplate("${text}")
-                .setAutoUpdate(false);
+                .setAutoUpdate(false)
+                .setAlist(false)
+                .setAlistPath("/")
+                .setAlistHost("")
+                .setAlistToken("");
     }
 
     /**

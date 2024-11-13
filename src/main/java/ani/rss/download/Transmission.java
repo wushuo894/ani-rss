@@ -126,7 +126,7 @@ public class Transmission implements BaseDownload {
                         torrentsInfo.setState(state);
                         torrentsInfo.setId(item.get("id").getAsString());
                         torrentsInfo.setDownloadDir(item.get("downloadDir").getAsString());
-                        torrentsInfo.setFiles(files);
+                        torrentsInfo.setFiles(() -> files);
                         torrentsInfos.add(torrentsInfo);
                     }
                     return torrentsInfos;
