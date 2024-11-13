@@ -2,6 +2,8 @@ package ani.rss.util;
 
 import ani.rss.entity.Config;
 import ani.rss.entity.TorrentsInfo;
+import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.io.resource.InputStreamResource;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.thread.ExecutorBuilder;
 import cn.hutool.core.util.StrUtil;
@@ -10,6 +12,7 @@ import cn.hutool.http.Header;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.File;
+import java.io.InputStream;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -71,19 +74,20 @@ public class AlistUtil {
                     return;
                 }
                 log.info("上传 {} ==> {}", file, finalFilePath);
-                try {
+                try (InputStream inputStream = FileUtil.getInputStream(file)) {
                     String url = alistHost;
                     if (url.endsWith("/")) {
                         url = url.substring(0, url.length() - 1);
                     }
-                    url += "/api/fs/form";
+                    // 使用流式上传
+                    url += "/api/fs/put";
                     HttpReq
                             .put(url)
                             .timeout(1000 * 60 * 2)
                             .header(Header.AUTHORIZATION, alistToken)
                             .header("As-Task", "true")
                             .header("File-Path", URLUtil.encode(finalFilePath))
-                            .form("file", file)
+                            .body(new InputStreamResource(inputStream))
                             .then(res -> {
                                 Assert.isTrue(res.isOk(), "上传失败 {} 状态码:{}", string, res.getStatus());
                                 log.info("已向alist添加上传任务 {}", string);
