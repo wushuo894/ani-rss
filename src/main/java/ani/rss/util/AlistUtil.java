@@ -86,8 +86,9 @@ public class AlistUtil {
                     // 使用流式上传
                     url += "/api/fs/form";
 
+                    // 50M 上传
                     HttpConfig httpConfig = new HttpConfig()
-                            .setBlockSize(NioUtil.DEFAULT_LARGE_BUFFER_SIZE);
+                            .setBlockSize(1024 * 1024 * 50);
 
                     HttpReq
                             .put(url)
