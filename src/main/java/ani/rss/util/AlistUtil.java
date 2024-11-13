@@ -57,12 +57,15 @@ public class AlistUtil {
         String downloadDir = torrentsInfo.getDownloadDir();
 
         String downloadPath = config.getDownloadPath();
+        String ovaDownloadPath = config.getOvaDownloadPath();
 
         List<String> strings = torrentsInfo.getFiles().get();
         for (String string : strings) {
             String filePath = alistPath;
-            if (downloadDir.startsWith(downloadPath)) {
+            if (StrUtil.isNotBlank(downloadPath) && downloadDir.startsWith(downloadPath)) {
                 filePath += downloadDir.substring(downloadPath.length());
+            } else if (StrUtil.isNotBlank(ovaDownloadPath) && downloadDir.startsWith(ovaDownloadPath)) {
+                filePath += downloadDir.substring(ovaDownloadPath.length());
             } else {
                 filePath += downloadDir;
             }
@@ -84,7 +87,7 @@ public class AlistUtil {
                     url += "/api/fs/form";
 
                     HttpConfig httpConfig = new HttpConfig()
-                            .setBlockSize(NioUtil.DEFAULT_MIDDLE_BUFFER_SIZE);
+                            .setBlockSize(NioUtil.DEFAULT_LARGE_BUFFER_SIZE);
 
                     HttpReq
                             .put(url)
