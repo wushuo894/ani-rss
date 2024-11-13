@@ -78,7 +78,7 @@ public class AlistUtil {
                     return;
                 }
                 log.info("上传 {} ==> {}", file, finalFilePath);
-                try (InputStream inputStream = FileUtil.getInputStream(file)) {
+                try {
                     String url = alistHost;
                     if (url.endsWith("/")) {
                         url = url.substring(0, url.length() - 1);
