@@ -3,12 +3,14 @@ package ani.rss.util;
 import ani.rss.entity.Config;
 import ani.rss.entity.TorrentsInfo;
 import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.io.NioUtil;
 import cn.hutool.core.io.resource.InputStreamResource;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.thread.ExecutorBuilder;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.core.util.URLUtil;
 import cn.hutool.http.Header;
+import cn.hutool.http.HttpConfig;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.File;
@@ -81,9 +83,14 @@ public class AlistUtil {
                     }
                     // 使用流式上传
                     url += "/api/fs/put";
+
+                    HttpConfig httpConfig = new HttpConfig()
+                            .setBlockSize(NioUtil.DEFAULT_LARGE_BUFFER_SIZE);
+
                     HttpReq
                             .put(url)
                             .timeout(1000 * 60 * 2)
+                            .setConfig(httpConfig)
                             .header(Header.AUTHORIZATION, alistToken)
                             .header("As-Task", "true")
                             .header("File-Path", URLUtil.encode(finalFilePath))
