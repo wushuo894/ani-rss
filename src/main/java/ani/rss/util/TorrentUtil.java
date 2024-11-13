@@ -682,6 +682,7 @@ public class TorrentUtil {
         if (!b) {
             return;
         }
+        AlistUtil.upload(torrentsInfo);
         Ani ani = null;
         try {
             ani = findAniByName(name);

@@ -98,7 +98,7 @@ public class qBittorrent implements BaseDownload {
                                 TorrentsInfo.State.downloading : EnumUtil.fromString(TorrentsInfo.State.class, state.getAsString(), TorrentsInfo.State.downloading)
                         );
                         torrentsInfo.setTags(tagList);
-
+                        torrentsInfo.setFiles(() -> files(torrentsInfo).stream().map(FileEntity::getName).collect(Collectors.toList()));
                         // 包含标签
                         if (tagList.contains(TorrentsTags.ANI_RSS.getValue())) {
                             torrentsInfoList.add(torrentsInfo);
