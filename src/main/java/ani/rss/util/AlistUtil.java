@@ -84,7 +84,7 @@ public class AlistUtil {
                     url += "/api/fs/form";
 
                     HttpConfig httpConfig = new HttpConfig()
-                            .setBlockSize(NioUtil.DEFAULT_BUFFER_SIZE);
+                            .setBlockSize(NioUtil.DEFAULT_MIDDLE_BUFFER_SIZE);
 
                     HttpReq
                             .put(url)
