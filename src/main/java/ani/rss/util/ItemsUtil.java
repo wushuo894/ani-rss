@@ -21,6 +21,7 @@ import org.w3c.dom.*;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -118,15 +119,17 @@ public class ItemsUtil {
                 if (itemChildNodeName.equals("enclosure")) {
                     NamedNodeMap attributes = itemChild.getAttributes();
                     String url = attributes.getNamedItem("url").getNodeValue();
-                    length = attributes.getNamedItem("length").getNodeValue();
-                    if (Long.parseLong(length) > 1) {
-                        torrent = url;
-                        infoHash = FileUtil.mainName(torrent);
-                    }
+                    length = Optional.of(attributes)
+                            .map(it -> it.getNamedItem("length"))
+                            .map(Node::getNodeValue)
+                            .orElse("1");
 
                     if (ReUtil.contains(StringEnum.MAGNET_REG, url)) {
                         torrent = url;
                         infoHash = ReUtil.get(StringEnum.MAGNET_REG, url, 1);
+                    } else {
+                        torrent = url;
+                        infoHash = FileUtil.mainName(torrent);
                     }
                 }
                 if (itemChildNodeName.equals("nyaa:infoHash")) {

@@ -1,1 +1,1 @@
-修改Logo
+兼容 acg.rip
