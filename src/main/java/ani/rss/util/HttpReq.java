@@ -1,9 +1,7 @@
 package ani.rss.util;
 
 import ani.rss.entity.Config;
-import cn.hutool.core.io.NioUtil;
 import cn.hutool.core.util.StrUtil;
-import cn.hutool.http.HttpConfig;
 import cn.hutool.http.HttpRequest;
 import lombok.extern.slf4j.Slf4j;
 
@@ -14,21 +12,13 @@ import java.util.Objects;
 @Slf4j
 public class HttpReq {
 
-    public static final HttpConfig httpConfig = new HttpConfig();
-
-    static {
-        // HttpUrlConnection默认是将所有数据读到本地缓存，然后再发送给服务器，这样上传大文件时就会导致内存溢出。
-        httpConfig.setBlockSize(NioUtil.DEFAULT_LARGE_BUFFER_SIZE);
-    }
-
     public static HttpRequest post(String url) {
         return post(url, true);
     }
 
     private static void config(HttpRequest req) {
         req.timeout(6000)
-                .setFollowRedirects(true)
-                .setConfig(httpConfig);
+                .setFollowRedirects(true);
     }
 
     public static HttpRequest post(String url, Boolean proxy) {
