@@ -65,7 +65,12 @@ public class AlistUtil {
             filePath += "/" + string;
             String finalFilePath = filePath;
             EXECUTOR.execute(() -> {
-                log.info("上传 {} ==> {}", string, finalFilePath);
+                File file = new File(downloadDir + "/" + string);
+                if (!file.exists()) {
+                    log.error("文件不存在 {}", file);
+                    return;
+                }
+                log.info("上传 {} ==> {}", file, finalFilePath);
                 try {
                     String url = alistHost;
                     if (url.endsWith("/")) {
@@ -78,7 +83,7 @@ public class AlistUtil {
                             .header(Header.AUTHORIZATION, alistToken)
                             .header("As-Task", "true")
                             .header("File-Path", URLUtil.encode(finalFilePath))
-                            .form("file", new File(downloadDir + "/" + string))
+                            .form("file", file)
                             .then(res -> {
                                 Assert.isTrue(res.isOk(), "上传失败 {} 状态码:{}", string, res.getStatus());
                                 log.info("已向alist添加上传任务 {}", string);
