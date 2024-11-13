@@ -94,6 +94,7 @@ public class AlistUtil {
                             .header(Header.AUTHORIZATION, alistToken)
                             .header("As-Task", "true")
                             .header("File-Path", URLUtil.encode(finalFilePath))
+                            .header(Header.CONTENT_LENGTH, String.valueOf(file.length()))
                             .body(new InputStreamResource(inputStream))
                             .then(res -> {
                                 Assert.isTrue(res.isOk(), "上传失败 {} 状态码:{}", string, res.getStatus());
