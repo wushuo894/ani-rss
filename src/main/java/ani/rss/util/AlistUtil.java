@@ -5,6 +5,7 @@ import ani.rss.entity.TorrentsInfo;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.thread.ExecutorBuilder;
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.util.URLUtil;
 import cn.hutool.http.Header;
 import lombok.extern.slf4j.Slf4j;
 
@@ -76,7 +77,7 @@ public class AlistUtil {
                             .timeout(1000 * 60 * 2)
                             .header(Header.AUTHORIZATION, alistToken)
                             .header("As-Task", "true")
-                            .header("File-Path", finalFilePath)
+                            .header("File-Path", URLUtil.encode(finalFilePath))
                             .form("file", new File(downloadDir + "/" + string))
                             .then(res -> {
                                 Assert.isTrue(res.isOk(), "上传失败 {} 状态码:{}", string, res.getStatus());
