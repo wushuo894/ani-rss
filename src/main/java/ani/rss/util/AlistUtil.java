@@ -4,7 +4,6 @@ import ani.rss.entity.Config;
 import ani.rss.entity.TorrentsInfo;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.NioUtil;
-import cn.hutool.core.io.resource.InputStreamResource;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.thread.ExecutorBuilder;
 import cn.hutool.core.util.StrUtil;
@@ -82,7 +81,7 @@ public class AlistUtil {
                         url = url.substring(0, url.length() - 1);
                     }
                     // 使用流式上传
-                    url += "/api/fs/put";
+                    url += "/api/fs/form";
 
                     HttpConfig httpConfig = new HttpConfig()
                             .setBlockSize(NioUtil.DEFAULT_BUFFER_SIZE);
@@ -95,7 +94,7 @@ public class AlistUtil {
                             .header("As-Task", "true")
                             .header("File-Path", URLUtil.encode(finalFilePath))
                             .header(Header.CONTENT_LENGTH, String.valueOf(file.length()))
-                            .body(new InputStreamResource(inputStream))
+                            .form("file", file)
                             .then(res -> {
                                 Assert.isTrue(res.isOk(), "上传失败 {} 状态码:{}", string, res.getStatus());
                                 log.info("已向alist添加上传任务 {}", string);
