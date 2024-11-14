@@ -10,7 +10,6 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.geom.AffineTransform;
 import java.net.URL;
-import java.util.Arrays;
 
 @Slf4j
 public class MenuUtil {
@@ -18,9 +17,8 @@ public class MenuUtil {
     public static TrayIcon trayIcon;
 
     public static void start() {
-        String[] args = Main.ARGS;
         // 仅在添加--gui参数时启动托盘
-        if (Arrays.asList(args).contains("--gui")) {
+        if (Main.ARGS.contains("--gui")) {
             try {
                 showSystemTray();
                 log.info("启动系统托盘已启动");
