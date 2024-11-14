@@ -55,7 +55,12 @@ public class ServerUtil {
         if (StrUtil.isBlank(HOST)) {
             server = new SimpleServer(Integer.parseInt(PORT));
         } else {
-            server = new SimpleServer(HOST, Integer.parseInt(PORT));
+            try {
+                server = new SimpleServer(HOST, Integer.parseInt(PORT));
+            } catch (Exception e) {
+                log.error(e.getMessage(), e);
+                server = new SimpleServer(Integer.parseInt(PORT));
+            }
         }
 
         server.addFilter((req, res, chain) -> {
