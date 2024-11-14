@@ -1,1 +1,3 @@
-支持 自动将下载完成的文件上传至alist
+可以使用参数或环境变量控制绑定的ip
+
+[https://docs.wushuo.top/deploy/deploy.html#argument](https://docs.wushuo.top/deploy/deploy.html#argument)
