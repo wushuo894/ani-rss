@@ -5,14 +5,17 @@ import ani.rss.util.*;
 import cn.hutool.core.util.ObjectUtil;
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Slf4j
 public class Main {
 
-    public static String[] ARGS = new String[]{};
+    public static List<String> ARGS = new ArrayList<>();
 
     public static void main(String[] args) {
         System.setProperty("jdk.http.auth.tunneling.disabledSchemes", "");
-        Main.ARGS = ObjectUtil.defaultIfNull(args, new String[]{});
+        Main.ARGS = List.of(ObjectUtil.defaultIfNull(args, new String[]{}));
         try {
             UpdateUtil.manageWindows();
             ConfigUtil.load();
