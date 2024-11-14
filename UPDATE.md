@@ -1,3 +1,1 @@
-可以使用参数或环境变量控制绑定的ip
-
-[https://docs.wushuo.top/deploy/deploy.html#argument](https://docs.wushuo.top/deploy/deploy.html#argument)
+修复订阅标题包含两个空格时导致下载完成通知异常的问题
