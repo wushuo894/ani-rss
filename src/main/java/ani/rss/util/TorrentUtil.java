@@ -785,6 +785,9 @@ public class TorrentUtil {
             String aniTitle = ani.getTitle();
             aniTitle = aniTitle.replaceAll(StringEnum.YEAR_REG, "");
             aniTitle = aniTitle.replaceAll(StringEnum.TMDB_ID_REG, "");
+            while (aniTitle.contains("  ")) {
+                aniTitle = aniTitle.replace("  ", " ");
+            }
             aniTitle = aniTitle.trim();
             if (!title.equals(aniTitle)) {
                 continue;
