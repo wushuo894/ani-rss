@@ -103,7 +103,7 @@ public class UpdateUtil {
                             List<String> strings = new ArrayList<>();
                             strings.add(updateExe.toString());
                             strings.add(file.getParent());
-                            strings.addAll(Arrays.asList(Main.ARGS));
+                            strings.addAll(Main.ARGS);
                             String[] array = ArrayUtil.toArray(strings, String.class);
                             RuntimeUtil.exec(array);
                             System.exit(0);

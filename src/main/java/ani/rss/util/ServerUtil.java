@@ -17,7 +17,6 @@ import cn.hutool.core.net.NetUtil;
 import cn.hutool.core.util.ClassUtil;
 import cn.hutool.core.util.ReflectUtil;
 import cn.hutool.core.util.StrUtil;
-import cn.hutool.http.HttpUtil;
 import cn.hutool.http.server.HttpServerRequest;
 import cn.hutool.http.server.HttpServerResponse;
 import cn.hutool.http.server.SimpleServer;
@@ -25,7 +24,10 @@ import cn.hutool.log.Log;
 import lombok.extern.slf4j.Slf4j;
 
 import java.net.InetSocketAddress;
-import java.util.*;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
 
 import static ani.rss.auth.util.AuthUtil.getIp;
 
@@ -33,21 +35,28 @@ import static ani.rss.auth.util.AuthUtil.getIp;
 public class ServerUtil {
     public static final ThreadLocal<HttpServerRequest> REQUEST = new ThreadLocal<>();
     public static final ThreadLocal<HttpServerResponse> RESPONSE = new ThreadLocal<>();
+    public static String HOST = "";
     public static String PORT = "7789";
     public static SimpleServer server;
 
     public static void start() {
         Map<String, String> env = System.getenv();
-        String[] args = Main.ARGS;
-        int i = Arrays.asList(args).indexOf("--port");
-
+        int i = Main.ARGS.indexOf("--port");
         if (i > -1) {
-            PORT = args[i + 1];
+            PORT = Main.ARGS.get(i + 1);
         }
-
+        i = Main.ARGS.indexOf("--host");
+        if (i > -1) {
+            HOST = Main.ARGS.get(i + 1);
+        }
         PORT = env.getOrDefault("PORT", PORT);
+        HOST = env.getOrDefault("HOST", HOST);
 
-        server = HttpUtil.createServer(Integer.parseInt(PORT));
+        if (StrUtil.isBlank(HOST)) {
+            server = new SimpleServer(Integer.parseInt(PORT));
+        } else {
+            server = new SimpleServer(HOST, Integer.parseInt(PORT));
+        }
 
         server.addFilter((req, res, chain) -> {
             REQUEST.set(req);
