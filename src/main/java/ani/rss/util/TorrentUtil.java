@@ -388,7 +388,7 @@ public class TorrentUtil {
             return false;
         }
 
-        String downloadPath = config.getDownloadPath();
+        String downloadPath = FileUtil.getAbsolutePath(config.getDownloadPath());
 
         if (StrUtil.isBlank(downloadPath)) {
             return false;
@@ -494,8 +494,8 @@ public class TorrentUtil {
         Boolean ova = ani.getOva();
 
         Config config = ConfigUtil.CONFIG;
-        String downloadPath = config.getDownloadPath();
-        String ovaDownloadPath = config.getOvaDownloadPath();
+        String downloadPath = FileUtil.getAbsolutePath(config.getDownloadPath());
+        String ovaDownloadPath = FileUtil.getAbsolutePath(config.getOvaDownloadPath());
         // 按拼音首字母存放
         Boolean acronym = config.getAcronym();
         // 根据季度存放
@@ -615,7 +615,7 @@ public class TorrentUtil {
             return;
         }
         ThreadUtil.sleep(1000);
-        savePath = savePath.replace("\\", "/");
+        savePath = FileUtil.getAbsolutePath(savePath);
 
         String text = StrFormatter.format("{} 已更新", name);
         if (backRss && !ani.getBackRssList().isEmpty()) {

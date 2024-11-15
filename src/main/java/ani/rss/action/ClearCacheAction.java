@@ -47,12 +47,12 @@ public class ClearCacheAction implements BaseAction {
     @Override
     public synchronized void doAction(HttpServerRequest request, HttpServerResponse response) throws IOException {
         File configDir = ConfigUtil.getConfigDir();
-        String configDirStr = configDir.toString().replace("\\", "/");
+        String configDirStr = FileUtil.getAbsolutePath(configDir);
 
         Set<String> covers = AniUtil.ANI_LIST
                 .stream()
                 .map(Ani::getCover)
-                .map(s -> new File(configDirStr + "/files/" + s).toString().replace("\\", "/"))
+                .map(s -> FileUtil.getAbsolutePath(new File(configDirStr + "/files/" + s)))
                 .collect(Collectors.toSet());
 
         FileUtil.mkdir(configDirStr + "/files");
@@ -61,7 +61,7 @@ public class ClearCacheAction implements BaseAction {
         Set<File> files = FileUtil.loopFiles(configDirStr + "/files")
                 .stream()
                 .filter(file -> {
-                    String fileName = file.toString().replace("\\", "/");
+                    String fileName = FileUtil.getAbsolutePath(file);
                     return !covers.contains(fileName);
                 }).collect(Collectors.toSet());
         long filesSize = files.stream()
