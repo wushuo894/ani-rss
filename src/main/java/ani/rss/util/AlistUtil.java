@@ -50,18 +50,14 @@ public class AlistUtil {
             return;
         }
 
-        if (alistPath.endsWith("/")) {
-            alistPath = alistPath.substring(0, alistPath.length() - 1);
-        }
+        String downloadDir = FileUtil.getAbsolutePath(torrentsInfo.getDownloadDir());
 
-        String downloadDir = torrentsInfo.getDownloadDir();
-
-        String downloadPath = config.getDownloadPath();
-        String ovaDownloadPath = config.getOvaDownloadPath();
+        String downloadPath = FileUtil.getAbsolutePath(config.getDownloadPath());
+        String ovaDownloadPath = FileUtil.getAbsolutePath(config.getOvaDownloadPath());
 
         List<String> strings = torrentsInfo.getFiles().get();
         for (String string : strings) {
-            String filePath = alistPath;
+            String filePath = FileUtil.getAbsolutePath(alistPath);
             if (StrUtil.isNotBlank(downloadPath) && downloadDir.startsWith(downloadPath)) {
                 filePath += downloadDir.substring(downloadPath.length());
             } else if (StrUtil.isNotBlank(ovaDownloadPath) && downloadDir.startsWith(ovaDownloadPath)) {
