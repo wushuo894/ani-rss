@@ -77,13 +77,13 @@ public class PlaylistAction implements BaseAction {
                     return new PlayItem.Subtitles()
                             .setName(name)
                             .setHtml(name.toUpperCase())
-                            .setUrl(Base64.encode(f.getAbsolutePath().replace("\\", "/")))
+                            .setUrl(Base64.encode(FileUtil.getAbsolutePath(f)))
                             .setType(FileUtil.extName(f));
                 }).collect(Collectors.toList());
         subtitles = CollUtil.distinct(subtitles, PlayItem.Subtitles::getName, true);
         PlayItem playItem = new PlayItem();
         playItem.setSubtitles(subtitles);
-        playItem.setFilename(Base64.encode(file.getAbsolutePath().replace("\\", "/")))
+        playItem.setFilename(Base64.encode(FileUtil.getAbsolutePath(file)))
                 .setTitle(ReUtil.get(StringEnum.SEASON_REG, file.getName(), 0));
         playItems.add(playItem);
         return playItems;

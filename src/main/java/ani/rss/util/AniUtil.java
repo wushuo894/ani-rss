@@ -251,13 +251,11 @@ public class AniUtil {
         if (ova) {
             String ovaDownloadPath = config.getOvaDownloadPath();
             if (StrUtil.isNotBlank(ovaDownloadPath)) {
-                ani.setDownloadPath(ovaDownloadPath);
+                ani.setDownloadPath(FileUtil.getAbsolutePath(ovaDownloadPath));
             }
         }
 
-        String downloadPath = TorrentUtil.getDownloadPath(ani).get(0)
-                .toString()
-                .replace("\\", "/");
+        String downloadPath = FileUtil.getAbsolutePath(TorrentUtil.getDownloadPath(ani).get(0));
         ani.setDownloadPath(downloadPath);
 
         log.debug("获取到动漫信息 {}", JSONUtil.formatJsonStr(GsonStatic.toJson(ani)));
