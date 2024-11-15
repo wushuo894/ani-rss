@@ -9,6 +9,7 @@ import ani.rss.util.GsonStatic;
 import ani.rss.util.TaskUtil;
 import ani.rss.util.TorrentUtil;
 import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.ReUtil;
 import cn.hutool.core.util.StrUtil;
@@ -79,8 +80,8 @@ public class ConfigAction implements BaseAction {
         }
 
         // 下载地址后面不要带 斜杠
-        String downloadPath = config.getDownloadPath().replace("\\", "/");
-        String ovaDownloadPath = config.getOvaDownloadPath().replace("\\", "/");
+        String downloadPath = FileUtil.getAbsolutePath(config.getDownloadPath());
+        String ovaDownloadPath = FileUtil.getAbsolutePath(config.getOvaDownloadPath());
         if (downloadPath.endsWith("/")) {
             downloadPath = downloadPath.substring(0, downloadPath.length() - 1);
         }
