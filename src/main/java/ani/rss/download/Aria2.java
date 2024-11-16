@@ -3,6 +3,7 @@ package ani.rss.download;
 import ani.rss.entity.Config;
 import ani.rss.entity.Item;
 import ani.rss.entity.TorrentsInfo;
+import ani.rss.enums.TorrentsTags;
 import ani.rss.util.EhCacheUtil;
 import ani.rss.util.GsonStatic;
 import ani.rss.util.HttpReq;
@@ -137,6 +138,8 @@ public class Aria2 implements BaseDownload {
                 .body(body)
                 .thenFunction(res -> GsonStatic.fromJson(res.body(), JsonObject.class).get("result").getAsString());
 
+        log.info("aria2 添加下载 => name: {} id: {}", name, id);
+
         Boolean watchErrorTorrent = config.getWatchErrorTorrent();
 
         if (!ova) {
@@ -144,6 +147,7 @@ public class Aria2 implements BaseDownload {
         }
 
         if (!watchErrorTorrent) {
+            ThreadUtil.sleep(1000 * 10);
             return true;
         }
 
@@ -193,8 +197,15 @@ public class Aria2 implements BaseDownload {
             return;
         }
 
+        List<String> tags = torrentsInfo.getTags();
+
+        if (tags.contains(TorrentsTags.BACK_RSS.getValue())) {
+            return;
+        }
+
         String reName = EhCacheUtil.get(id);
         if (StrUtil.isBlank(reName)) {
+            log.error("未获取到重命名 => id: {}", id);
             return;
         }
 
