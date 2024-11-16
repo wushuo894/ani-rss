@@ -102,6 +102,8 @@ public class TorrentUtil {
                 log.debug("已被禁止下载: {}", reName);
                 continue;
             }
+            // .5 集
+            Boolean is5 = episode.intValue() != episode;
 
             Date pubDate = item.getPubDate();
             if (Objects.nonNull(pubDate) && delayedDownload > 0) {
@@ -145,7 +147,7 @@ public class TorrentUtil {
             // 已经下载过
             if (hashList.contains(hash) || downloadNameList.contains(reName)) {
                 log.debug("已有下载任务 {}", reName);
-                if (master && !reName.endsWith(".5")) {
+                if (master && !is5) {
                     currentDownloadCount++;
                 }
                 continue;
@@ -154,7 +156,7 @@ public class TorrentUtil {
             // 已经下载过
             if (torrent.exists()) {
                 log.debug("种子记录已存在 {}", reName);
-                if (master && !reName.endsWith(".5")) {
+                if (master && !is5) {
                     currentDownloadCount++;
                 }
                 continue;
@@ -163,7 +165,7 @@ public class TorrentUtil {
             // 未开启rename不进行检测
             if (itemDownloaded(ani, item, true)) {
                 log.debug("本地文件已存在 {}", reName);
-                if (master && !reName.endsWith(".5")) {
+                if (master && !is5) {
                     currentDownloadCount++;
                 }
                 continue;
@@ -194,7 +196,7 @@ public class TorrentUtil {
             }
 
             download(ani, item, savePath, saveTorrent);
-            if (master && !reName.endsWith(".5")) {
+            if (master && !is5) {
                 currentDownloadCount++;
             }
             count++;
