@@ -43,14 +43,17 @@ public class EhCacheUtil {
     }
 
     public static void put(String key, String object) {
+        log.debug("put => key: {}, object: {}", key, object);
         MY_CACHE.put(key, object);
     }
 
     public static String get(String key) {
+        log.debug("get => key: {}", key);
         return MY_CACHE.get(key);
     }
 
     public static void remove(String key) {
+        log.debug("remove => key: {}", key);
         MY_CACHE.remove(key);
     }
 

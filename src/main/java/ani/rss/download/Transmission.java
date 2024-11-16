@@ -167,6 +167,7 @@ public class Transmission implements BaseDownload {
         }
 
         String id = HttpReq.post(host + "/transmission/rpc", false)
+                .timeout(1000 * 60)
                 .header(Header.AUTHORIZATION, authorization)
                 .header("X-Transmission-Session-Id", sessionId)
                 .body(body)
@@ -177,6 +178,8 @@ public class Transmission implements BaseDownload {
                             .get("id").getAsString();
                 });
 
+        log.info("tr 添加下载 => name: {} id: {}", name, id);
+
         Boolean watchErrorTorrent = config.getWatchErrorTorrent();
 
         if (!ova) {
@@ -184,6 +187,7 @@ public class Transmission implements BaseDownload {
         }
 
         if (!watchErrorTorrent) {
+            ThreadUtil.sleep(1000 * 10);
             return true;
         }
 
@@ -223,11 +227,17 @@ public class Transmission implements BaseDownload {
     public void rename(TorrentsInfo torrentsInfo) {
         String id = torrentsInfo.getId();
         String name = torrentsInfo.getName();
+        List<String> tags = torrentsInfo.getTags();
+
+        if (tags.contains(TorrentsTags.BACK_RSS.getValue())) {
+            return;
+        }
 
         Assert.isTrue(!ReUtil.contains("^\\w{40}$", name), "{} 磁力链接还在获取原数据中", name);
 
         String reName = EhCacheUtil.get(id);
         if (StrUtil.isBlank(reName)) {
+            log.error("未获取到重命名 => id: {}", id);
             return;
         }
 
