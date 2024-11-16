@@ -197,15 +197,9 @@ public class Aria2 implements BaseDownload {
             return;
         }
 
-        List<String> tags = torrentsInfo.getTags();
-
-        if (tags.contains(TorrentsTags.BACK_RSS.getValue())) {
-            return;
-        }
-
         String reName = EhCacheUtil.get(id);
         if (StrUtil.isBlank(reName)) {
-            log.error("未获取到重命名 => id: {}", id);
+            log.debug("未获取到重命名 => id: {}", id);
             return;
         }
 

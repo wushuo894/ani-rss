@@ -227,17 +227,12 @@ public class Transmission implements BaseDownload {
     public void rename(TorrentsInfo torrentsInfo) {
         String id = torrentsInfo.getId();
         String name = torrentsInfo.getName();
-        List<String> tags = torrentsInfo.getTags();
-
-        if (tags.contains(TorrentsTags.BACK_RSS.getValue())) {
-            return;
-        }
 
         Assert.isTrue(!ReUtil.contains("^\\w{40}$", name), "{} 磁力链接还在获取原数据中", name);
 
         String reName = EhCacheUtil.get(id);
         if (StrUtil.isBlank(reName)) {
-            log.error("未获取到重命名 => id: {}", id);
+            log.debug("未获取到重命名 => id: {}", id);
             return;
         }
 
