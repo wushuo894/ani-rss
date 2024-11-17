@@ -102,7 +102,7 @@ public class UpdateUtil {
                             ServerUtil.stop();
                             List<String> strings = new ArrayList<>();
                             strings.add(updateExe.toString());
-                            strings.add(file.getParent());
+                            strings.add(FileUtil.getAbsolutePath(jar));
                             strings.addAll(Main.ARGS);
                             String[] array = ArrayUtil.toArray(strings, String.class);
                             RuntimeUtil.exec(array);
@@ -116,22 +116,6 @@ public class UpdateUtil {
 
     public static File getJar() {
         return new File(System.getProperty("java.class.path").split(";")[0]);
-    }
-
-    /**
-     * 管理windows的exe更新
-     */
-    @SneakyThrows
-    public static void manageWindows() {
-        File jar = getJar();
-        String extName = FileUtil.extName(jar);
-        if (!"exe".equals(extName)) {
-            return;
-        }
-        if (jar.getName().equals("ani-rss-launcher.exe")) {
-            return;
-        }
-        FileUtil.copy(jar, new File("ani-rss-launcher.exe"), true);
     }
 
 }

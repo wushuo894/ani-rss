@@ -17,7 +17,6 @@ public class Main {
         System.setProperty("jdk.http.auth.tunneling.disabledSchemes", "");
         Main.ARGS = List.of(ObjectUtil.defaultIfNull(args, new String[]{}));
         try {
-            UpdateUtil.manageWindows();
             ConfigUtil.load();
             TaskUtil.start();
             String version = MavenUtil.getVersion();
