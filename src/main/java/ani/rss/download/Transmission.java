@@ -208,9 +208,9 @@ public class Transmission implements BaseDownload {
     }
 
     @Override
-    public Boolean delete(TorrentsInfo torrentsInfo) {
+    public Boolean delete(TorrentsInfo torrentsInfo, Boolean deleteFiles) {
         String body = ResourceUtil.readUtf8Str("transmission/torrent-remove.json");
-        body = StrFormatter.format(body, torrentsInfo.getId());
+        body = StrFormatter.format(body, torrentsInfo.getId(), deleteFiles);
         try {
             return HttpReq.post(host + "/transmission/rpc", false)
                     .header(Header.AUTHORIZATION, authorization)

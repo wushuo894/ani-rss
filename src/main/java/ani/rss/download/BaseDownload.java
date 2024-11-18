@@ -43,8 +43,9 @@ public interface BaseDownload {
      * 删除已完成任务
      *
      * @param torrentsInfo
+     * @param deleteFiles  删除本地文件
      */
-    Boolean delete(TorrentsInfo torrentsInfo);
+    Boolean delete(TorrentsInfo torrentsInfo, Boolean deleteFiles);
 
     /**
      * 重命名

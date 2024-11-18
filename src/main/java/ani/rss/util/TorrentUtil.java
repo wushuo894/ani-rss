@@ -843,10 +843,11 @@ public class TorrentUtil {
     /**
      * 删除已完成任务
      *
-     * @param torrentsInfo
-     * @param forcedDelete
+     * @param torrentsInfo 任务
+     * @param forcedDelete 强制删除
+     * @param deleteFiles  删除本地文件
      */
-    public static synchronized Boolean delete(TorrentsInfo torrentsInfo, Boolean forcedDelete) {
+    public static synchronized Boolean delete(TorrentsInfo torrentsInfo, Boolean forcedDelete, Boolean deleteFiles) {
         Config config = ConfigUtil.CONFIG;
         Boolean delete = config.getDelete();
 
@@ -864,7 +865,7 @@ public class TorrentUtil {
             log.info("删除已完成任务 {}", name);
         }
         ThreadUtil.sleep(500);
-        Boolean b = baseDownload.delete(torrentsInfo);
+        Boolean b = baseDownload.delete(torrentsInfo, deleteFiles);
         if (b) {
             log.info("删除任务成功 {}", name);
         } else {
@@ -880,7 +881,7 @@ public class TorrentUtil {
      * @param torrentsInfo
      */
     public static synchronized Boolean delete(TorrentsInfo torrentsInfo) {
-        return delete(torrentsInfo, false);
+        return delete(torrentsInfo, false, false);
     }
 
     /**

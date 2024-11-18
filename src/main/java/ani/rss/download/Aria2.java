@@ -3,7 +3,6 @@ package ani.rss.download;
 import ani.rss.entity.Config;
 import ani.rss.entity.Item;
 import ani.rss.entity.TorrentsInfo;
-import ani.rss.enums.TorrentsTags;
 import ani.rss.util.EhCacheUtil;
 import ani.rss.util.GsonStatic;
 import ani.rss.util.HttpReq;
@@ -127,8 +126,6 @@ public class Aria2 implements BaseDownload {
         if ("txt".equals(extName)) {
             log.error("Aria2 暂不支持磁力链接下载与重命名");
             return false;
-//            body = ResourceUtil.readUtf8Str("aria2/addUri.json");
-//            body = StrFormatter.format(body, password, FileUtil.readUtf8String(torrentFile), savePath);
         } else {
             body = ResourceUtil.readUtf8Str("aria2/addTorrent.json");
             body = StrFormatter.format(body, password, Base64.encode(torrentFile), savePath);
@@ -165,7 +162,7 @@ public class Aria2 implements BaseDownload {
     }
 
     @Override
-    public Boolean delete(TorrentsInfo torrentsInfo) {
+    public Boolean delete(TorrentsInfo torrentsInfo, Boolean deleteFiles) {
         String host = config.getHost();
         String password = config.getPassword();
         String id = torrentsInfo.getId();

@@ -4,7 +4,7 @@
     "ids": [
       {}
     ],
-    "delete-local-data": false
+    "delete-local-data": {}
   },
   "tag": ""
 }
