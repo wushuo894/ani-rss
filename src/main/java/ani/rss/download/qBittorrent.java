@@ -280,12 +280,9 @@ public class qBittorrent implements BaseDownload {
 
         String host = config.getHost();
 
-        List<FileEntity> fileEntityList = files(torrentsInfo);
+        List<String> names = torrentsInfo.getFiles().get();
 
-        Assert.notEmpty(fileEntityList, "{} 磁力链接还在获取原数据中", hash);
-
-        List<String> names = fileEntityList.stream().map(FileEntity::getName)
-                .collect(Collectors.toList());
+        Assert.notEmpty(names, "{} 磁力链接还在获取原数据中", hash);
 
         List<String> newNames = new ArrayList<>();
 
@@ -313,6 +310,19 @@ public class qBittorrent implements BaseDownload {
                     .form("newPath", newPath)
                     .thenFunction(HttpResponse::isOk);
             Assert.isTrue(b, "重命名失败 {} ==> {}", name, newPath);
+        }
+
+        if (newNames.isEmpty()) {
+            return;
+        }
+
+        // qb重命名具有延迟，等待重命名完成
+        for (int i = 0; i < 10; i++) {
+            ThreadUtil.sleep(500);
+            names = torrentsInfo.getFiles().get();
+            if (new HashSet<>(names).containsAll(newNames)) {
+                break;
+            }
         }
     }
 
