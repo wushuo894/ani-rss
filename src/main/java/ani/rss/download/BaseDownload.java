@@ -12,63 +12,89 @@ import java.util.Set;
 
 public interface BaseDownload {
 
+    /**
+     * 视频格式
+     */
     List<String> videoFormat = List.of("mp4", "mkv", "avi", "wmv");
 
+    /**
+     * 字幕格式
+     */
     List<String> subtitleFormat = List.of("ass", "ssa", "sub", "srt", "lyc");
 
     /**
      * 登录
      *
-     * @return
+     * @param config 设置
+     * @return 登录状态
      */
     Boolean login(Config config);
 
     /**
      * 获取任务列表
      *
-     * @return
+     * @return 任务列表
      */
     List<TorrentsInfo> getTorrentsInfos();
 
     /**
      * 下载
      *
-     * @param item
-     * @param savePath
-     * @param torrentFile
+     * @param item        下载项
+     * @param savePath    保存位置
+     * @param torrentFile 种子文件
+     * @param ova         是否剧场版/OVA
+     * @return 下载状态
      */
     Boolean download(Item item, String savePath, File torrentFile, Boolean ova);
 
     /**
      * 删除已完成任务
      *
-     * @param torrentsInfo
+     * @param torrentsInfo 任务
      * @param deleteFiles  删除本地文件
+     * @return 删除状态
      */
     Boolean delete(TorrentsInfo torrentsInfo, Boolean deleteFiles);
 
     /**
      * 重命名
      *
-     * @param torrentsInfo
+     * @param torrentsInfo 任务
      */
     void rename(TorrentsInfo torrentsInfo);
 
+    /**
+     * 为任务添加标签
+     *
+     * @param torrentsInfo 任务
+     * @param tags         标签
+     * @return 状态
+     */
     Boolean addTags(TorrentsInfo torrentsInfo, String tags);
 
     /**
      * 自动更新 Trackers
+     *
+     * @param trackers trackers 列表
      */
     void updateTrackers(Set<String> trackers);
 
     /**
      * 修改保存位置
      *
-     * @param torrentsInfo
-     * @param path
+     * @param torrentsInfo 任务
+     * @param path         位置
      */
     void setSavePath(TorrentsInfo torrentsInfo, String path);
 
+    /**
+     * 获取重命名结果
+     *
+     * @param name   文件名
+     * @param reName 重命名
+     * @return 最终命名
+     */
     default String getFileReName(String name, String reName) {
         String ext = FileUtil.extName(name);
         if (StrUtil.isBlank(ext)) {
