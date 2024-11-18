@@ -195,14 +195,14 @@ public class qBittorrent implements BaseDownload {
     }
 
     @Override
-    public Boolean delete(TorrentsInfo torrentsInfo) {
+    public Boolean delete(TorrentsInfo torrentsInfo, Boolean deleteFiles) {
         String host = config.getHost();
         String hash = torrentsInfo.getHash();
         try {
             List<FileEntity> files = files(torrentsInfo);
             boolean b = HttpReq.post(host + "/api/v2/torrents/delete", false)
                     .form("hashes", hash)
-                    .form("deleteFiles", false)
+                    .form("deleteFiles", deleteFiles)
                     .thenFunction(HttpResponse::isOk);
             if (!b) {
                 return false;

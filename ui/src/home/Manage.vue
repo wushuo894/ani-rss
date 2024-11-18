@@ -53,7 +53,6 @@
 
 import {ref} from "vue";
 import api from "../api.js";
-import Popconfirm from "../other/Popconfirm.vue";
 import {ElMessage} from "element-plus";
 import Del from "./Del.vue";
 
