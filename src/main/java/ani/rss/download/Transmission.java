@@ -255,7 +255,7 @@ public class Transmission implements BaseDownload {
         EhCacheUtil.remove(id);
 
         for (int i = 0; i < 10; i++) {
-            ThreadUtil.sleep(500);
+            ThreadUtil.sleep(1000);
             Optional<TorrentsInfo> first = getTorrentsInfos().stream()
                     .filter(info -> info.getId().equals(id))
                     .findFirst();
@@ -263,9 +263,10 @@ public class Transmission implements BaseDownload {
                 break;
             }
             if (first.get().getName().equals(reName)) {
-                break;
+                return;
             }
         }
+        log.warn("重命名貌似出现了问题？{}", reName);
     }
 
     @Override
