@@ -318,12 +318,13 @@ public class qBittorrent implements BaseDownload {
 
         // qb重命名具有延迟，等待重命名完成
         for (int i = 0; i < 10; i++) {
-            ThreadUtil.sleep(500);
+            ThreadUtil.sleep(1000);
             names = torrentsInfo.getFiles().get();
             if (new HashSet<>(names).containsAll(newNames)) {
-                break;
+                return;
             }
         }
+        log.warn("重命名貌似出现了问题？{}", reName);
     }
 
     @Override
