@@ -3,7 +3,6 @@ package ani.rss.util;
 import ani.rss.entity.Config;
 import ani.rss.entity.TorrentsInfo;
 import cn.hutool.core.io.FileUtil;
-import cn.hutool.core.io.NioUtil;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.thread.ExecutorBuilder;
 import cn.hutool.core.util.StrUtil;
@@ -13,7 +12,6 @@ import cn.hutool.http.HttpConfig;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.File;
-import java.io.InputStream;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.LinkedBlockingQueue;
