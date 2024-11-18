@@ -253,6 +253,19 @@ public class Transmission implements BaseDownload {
                 .thenFunction(HttpResponse::isOk);
         Assert.isTrue(ok, "重命名失败 {} ==> {}", name, reName);
         EhCacheUtil.remove(id);
+
+        for (int i = 0; i < 10; i++) {
+            ThreadUtil.sleep(500);
+            Optional<TorrentsInfo> first = getTorrentsInfos().stream()
+                    .filter(info -> info.getId().equals(id))
+                    .findFirst();
+            if (first.isEmpty()) {
+                break;
+            }
+            if (first.get().getName().equals(reName)) {
+                break;
+            }
+        }
     }
 
     @Override
