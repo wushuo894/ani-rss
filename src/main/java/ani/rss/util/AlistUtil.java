@@ -16,6 +16,9 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.LinkedBlockingQueue;
 
+/**
+ * Alist
+ */
 @Slf4j
 public class AlistUtil {
     private static final ExecutorService EXECUTOR = ExecutorBuilder.create()
@@ -24,6 +27,11 @@ public class AlistUtil {
             .setWorkQueue(new LinkedBlockingQueue<>(256))
             .build();
 
+    /**
+     * 将下载完成的任务上传至Alist
+     *
+     * @param torrentsInfo 任务
+     */
     public static void upload(TorrentsInfo torrentsInfo) {
         Config config = ConfigUtil.CONFIG;
         Boolean alist = config.getAlist();
