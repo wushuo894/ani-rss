@@ -3,6 +3,13 @@
     <el-collapse v-model:model-value="activeName" accordion>
       <el-collapse-item title="页面设置" name="1">
         <el-form label-width="auto">
+          <el-form-item label="外观">
+            <el-radio-group v-model="store">
+              <el-radio-button label="自动" value="auto"/>
+              <el-radio-button label="浅色" value="light"/>
+              <el-radio-button label="深色" value="dark"/>
+            </el-radio-group>
+          </el-form-item>
           <el-form-item label="按星期展示">
             <el-switch v-model:model-value="props.config.weekShow"/>
           </el-form-item>
@@ -256,6 +263,9 @@
 import {ElMessage, ElText} from "element-plus";
 import {ref} from "vue";
 import api from "../api.js";
+import {useColorMode} from "@vueuse/core";
+
+const {system, store} = useColorMode()
 
 let activeName = ref('1')
 
