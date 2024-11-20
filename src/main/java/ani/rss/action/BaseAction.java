@@ -7,14 +7,19 @@ import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.text.StrFormatter;
 import cn.hutool.http.server.HttpServerResponse;
 import cn.hutool.http.server.action.Action;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Objects;
 
 public interface BaseAction extends Action {
 
+    Logger logger = LoggerFactory.getLogger(BaseAction.class);
+
     static <T> void staticResult(Result<T> result) {
         HttpServerResponse httpServerResponse = ServerUtil.RESPONSE.get();
         if (Objects.isNull(httpServerResponse)) {
+            logger.error("httpServerResponse is null");
             return;
         }
         httpServerResponse.setContentType("application/json; charset=utf-8");
