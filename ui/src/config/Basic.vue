@@ -10,6 +10,12 @@
               <el-radio-button label="深色" value="dark"/>
             </el-radio-group>
           </el-form-item>
+          <el-form-item label="主题色">
+            <el-color-picker v-model="color" :predefine="predefineColors"
+                             @active-change="colorChange"
+                             @change="colorChange(color)"
+                             @blur="colorChange(color)"/>
+          </el-form-item>
           <el-form-item label="按星期展示">
             <el-switch v-model:model-value="props.config.weekShow"/>
           </el-form-item>
@@ -263,7 +269,7 @@
 import {ElMessage, ElText} from "element-plus";
 import {ref} from "vue";
 import api from "../api.js";
-import {useColorMode} from "@vueuse/core";
+import {useColorMode, useLocalStorage} from "@vueuse/core";
 
 const {system, store} = useColorMode()
 
@@ -293,6 +299,29 @@ let clearCache = () => {
       .finally(() => {
         clearCacheLoading.value = false
       })
+}
+
+let predefineColors = ref([
+  '#409eff', '#109D58', '#BF3545', '#CB7574',
+  '#9AAEC7', '#2EC5B6', '#1C1C1C', '#F7B1A9',
+    '#B18874','#E9BA86','#F68F6C','#F0458B',
+    '#C35653','#40494E','#6F0000','#8D3647',
+    '#E6C5D0','#2377B3','#49312D','#7C9AB6',
+    '#A5B18D','#E8662A','#AB5D50'
+])
+
+let color = useLocalStorage('--el-color-primary', '#409eff')
+
+let colorChange = (v) => {
+  // document.documentElement 是全局变量时
+  const el = document.documentElement
+  // const el = document.getElementById('xxx')
+
+  // 获取 css 变量
+  getComputedStyle(el).getPropertyValue(`--el-color-primary`)
+
+  // 设置 css 变量
+  el.style.setProperty('--el-color-primary', v)
 }
 
 let props = defineProps(['config'])
