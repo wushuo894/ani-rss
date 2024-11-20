@@ -82,7 +82,7 @@ public class UpdateUtil {
                     FileUtil.writeFromStream(res.bodyStream(), file, true);
                     if (contentLength != file.length()) {
                         log.error("下载出现问题");
-                        return;
+                        throw new RuntimeException("下载出现问题");
                     }
                     ThreadUtil.execute(() -> {
                         ThreadUtil.sleep(1000);
