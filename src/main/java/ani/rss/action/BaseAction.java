@@ -8,10 +8,15 @@ import cn.hutool.core.text.StrFormatter;
 import cn.hutool.http.server.HttpServerResponse;
 import cn.hutool.http.server.action.Action;
 
+import java.util.Objects;
+
 public interface BaseAction extends Action {
 
     static <T> void staticResult(Result<T> result) {
         HttpServerResponse httpServerResponse = ServerUtil.RESPONSE.get();
+        if (Objects.isNull(httpServerResponse)) {
+            return;
+        }
         httpServerResponse.setContentType("application/json; charset=utf-8");
         String json = GsonStatic.toJson(result);
         IoUtil.writeUtf8(httpServerResponse.getOut(), true, json);
