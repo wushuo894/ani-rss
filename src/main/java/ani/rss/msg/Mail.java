@@ -48,7 +48,7 @@ public class Mail implements Message {
 
         Boolean mailImage = config.getMailImage();
         if (mailImage) {
-            String image = "https://docs.wushuo.top/image/null.png";
+            String image = "https://docs.wushuo.top/null.png";
 
             if (Objects.nonNull(ani)) {
                 image = ani.getImage();

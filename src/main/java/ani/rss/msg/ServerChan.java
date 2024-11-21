@@ -34,7 +34,7 @@ public class ServerChan implements Message {
         }
 
 
-        String image = "https://docs.wushuo.top/image/null.png";
+        String image = "https://docs.wushuo.top/null.png";
 
         String title = text;
         if (Objects.nonNull(ani)) {

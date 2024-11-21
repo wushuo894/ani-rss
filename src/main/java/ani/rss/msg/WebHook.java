@@ -38,7 +38,7 @@ public class WebHook implements Message {
         webHookUrl = webHookUrl.replace("${message}", message);
         webHookBody = webHookBody.replace("${message}", message);
 
-        String image = "https://docs.wushuo.top/image/null.png";
+        String image = "https://docs.wushuo.top/null.png";
 
         if (Objects.nonNull(ani) && StrUtil.isNotBlank(ani.getImage())) {
             image = ani.getImage();
