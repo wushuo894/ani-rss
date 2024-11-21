@@ -58,3 +58,7 @@ html, body, #app {
     height: 100%;
     box-sizing: border-box;
 }
+
+.el-tag  {
+    border-width: 0
+}
