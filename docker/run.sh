@@ -35,7 +35,7 @@ trap 'sigterm_handler' SIGTERM
 
 while :
 do
-    java -jar -Xmx1g $jar_path --port $port &
+    java -Xms50m -Xmx1g -Xss512k -XX:+UseG1GC -XX:+UseStringDeduplication -XX:+ShrinkHeapInSteps -jar $jar_path --port $port &
     wait $!
     if [ $? -ne 0 ]; then
         break
