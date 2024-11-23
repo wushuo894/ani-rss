@@ -131,6 +131,7 @@ const config = ref({
   'backRss': false,
   'downloadNew': false,
   'telegramImage': true,
+  'telegramFormat': '',
   'innerIP': false,
   'renameTemplate': '',
   'messageList': [],

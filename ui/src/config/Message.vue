@@ -65,6 +65,13 @@
         <el-form-item label="图片">
           <el-switch v-model:model-value="props.config.telegramImage" :disabled="!config.telegram"/>
         </el-form-item>
+        <el-form-item label="格式">
+          <el-select v-model:model-value="props.config.telegramFormat" :disabled="!config.telegram" placeholder="无特殊格式">
+            <el-option label="无特殊格式" value=""/>
+            <el-option label="Markdown" value="Markdown"/>
+            <el-option label="HTML" value="HTML"/>
+          </el-select>
+        </el-form-item>
         <el-form-item label="开关">
           <div style="width: 100%;display: flex;justify-content: space-between;">
             <el-switch v-model:model-value="props.config.telegram"/>
