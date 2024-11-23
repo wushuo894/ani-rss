@@ -269,6 +269,11 @@ public class Config implements Serializable {
     private Boolean telegramImage;
 
     /**
+     * telegram 格式
+     */
+    private String telegramFormat;
+
+    /**
      * webHookMethod
      */
     private String webHookMethod;

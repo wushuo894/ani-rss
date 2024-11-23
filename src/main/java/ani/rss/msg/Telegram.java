@@ -78,6 +78,7 @@ public class Telegram implements Message {
         String telegramChatId = config.getTelegramChatId();
         String telegramApiHost = config.getTelegramApiHost();
         Boolean telegramImage = config.getTelegramImage();
+        String telegramFormat = config.getTelegramFormat();
         if (StrUtil.isBlank(telegramChatId) || StrUtil.isBlank(telegramBotToken)) {
             log.warn("telegram 通知的参数不完整");
             return false;
@@ -87,11 +88,14 @@ public class Telegram implements Message {
         String url = StrFormatter.format("{}/bot{}/sendMessage", telegramApiHost, telegramBotToken);
 
         if (Objects.isNull(ani) || !telegramImage) {
+            Map<String, Object> body = new HashMap<>();
+            body.put("chat_id", telegramChatId);
+            body.put("text", text);
+            if (StrUtil.isNotBlank(telegramFormat)) {
+                body.put("parse_mode", telegramFormat);
+            }
             return HttpReq.post(url, true)
-                    .body(GsonStatic.toJson(Map.of(
-                            "chat_id", telegramChatId,
-                            "text", text
-                    )))
+                    .body(GsonStatic.toJson(body))
                     .thenFunction(HttpResponse::isOk);
         }
         String cover = ani.getCover();
@@ -107,6 +111,7 @@ public class Telegram implements Message {
                 .form("chat_id", telegramChatId)
                 .form("caption", text)
                 .form("photo", photo)
+                .form("parse_mode", telegramFormat)
                 .thenFunction(HttpResponse::isOk);
     }
 }
