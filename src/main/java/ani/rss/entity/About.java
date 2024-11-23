@@ -3,12 +3,14 @@ package ani.rss.entity;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
+import java.io.Serializable;
+
 /**
  * 关于
  */
 @Data
 @Accessors(chain = true)
-public class About {
+public class About implements Serializable {
     /**
      * 版本
      */
