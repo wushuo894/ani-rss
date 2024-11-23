@@ -3,6 +3,7 @@ package ani.rss.entity;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 /**
@@ -10,7 +11,7 @@ import java.time.LocalDateTime;
  */
 @Data
 @Accessors(chain = true)
-public class BgmInfo {
+public class BgmInfo implements Serializable {
     private String subjectId;
 
     /**

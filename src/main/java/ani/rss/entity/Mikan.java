@@ -3,6 +3,7 @@ package ani.rss.entity;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.Set;
 
@@ -11,7 +12,7 @@ import java.util.Set;
  */
 @Data
 @Accessors(chain = true)
-public class Mikan {
+public class Mikan implements Serializable {
 
     private List<Season> seasons;
 
@@ -22,7 +23,7 @@ public class Mikan {
      */
     @Data
     @Accessors(chain = true)
-    public static class Season {
+    public static class Season implements Serializable {
         /**
          * 年
          */
@@ -39,7 +40,7 @@ public class Mikan {
      */
     @Data
     @Accessors(chain = true)
-    public static class Item {
+    public static class Item implements Serializable {
         /**
          * 星期
          */
@@ -55,7 +56,7 @@ public class Mikan {
      */
     @Data
     @Accessors(chain = true)
-    public static class Group {
+    public static class Group implements Serializable {
         /**
          * 匹配
          */
