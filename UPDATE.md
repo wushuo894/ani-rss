@@ -1,4 +1,4 @@
-添加 Telegram 格式配置支持 @Ovler
+添加 Telegram 格式配置支持 @Ovler-Young
 
 ----------
 
