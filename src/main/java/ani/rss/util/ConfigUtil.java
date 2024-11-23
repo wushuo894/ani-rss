@@ -87,6 +87,7 @@ public class ConfigUtil {
                 .setTelegramBotToken("")
                 .setTelegramApiHost("https://api.telegram.org")
                 .setTelegramImage(true)
+                .setTelegramFormat("")
                 .setWebHook(false)
                 .setTmdb(false)
                 .setTmdbId(false)
