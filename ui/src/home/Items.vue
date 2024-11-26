@@ -15,6 +15,14 @@
         <el-button bg text :disabled="!selectViews.length" @click="allowDownload" icon="Check" type="primary">允许下载
         </el-button>
         <el-button bg text :disabled="!selectViews.length" @click="notDownload" icon="Close">禁止下载</el-button>
+        <popconfirm @confirm="delTorrent" :title="`删除${selectViews.filter(it => it.local).length}个种子缓存?`">
+          <template #reference>
+            <el-button icon="Remove" bg text
+                       :disabled="!selectViews.filter(it => it.local).length">
+              删除种子
+            </el-button>
+          </template>
+        </popconfirm>
       </div>
       <div style="padding: 0 12px">
         <el-table :data="showItems" height="500"
@@ -49,18 +57,6 @@
           <el-table-column label="种子" width="90">
             <template #default="it">
               <el-button bg text @click="copy(showItems[it.$index])">复制</el-button>
-            </template>
-          </el-table-column>
-          <el-table-column label="操作" width="120">
-            <template #default="it">
-              <popconfirm @confirm="delTorrent(showItems[it.$index])" title="删除种子缓存?">
-                <template #reference>
-                  <el-button bg text
-                             :disabled="!showItems[it.$index].local">
-                    删除种子
-                  </el-button>
-                </template>
-              </popconfirm>
             </template>
           </el-table-column>
         </el-table>
@@ -146,8 +142,9 @@ let load = () => {
       })
 }
 
-let delTorrent = (item) => {
-  api.del(`api/torrent?id=${props.ani.id}&infoHash=${item['infoHash']}`)
+let delTorrent = () => {
+  let infoHash = selectViews.value.filter(it => it['local']).map(it => it['infoHash']).join(",")
+  api.del(`api/torrent?id=${props.ani.id}&infoHash=${infoHash}`)
       .then(res => {
         ElMessage.success(res.message)
         load()
