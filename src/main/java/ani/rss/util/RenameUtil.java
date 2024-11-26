@@ -83,28 +83,32 @@ public class RenameUtil {
             return false;
         }
 
-        String episode = ReUtil.get("\\d+(\\.5)?", e, 0);
-        if (StrUtil.isBlank(episode)) {
+        String episodeStr = ReUtil.get("\\d+(\\.5)?", e, 0);
+        if (StrUtil.isBlank(episodeStr)) {
             return false;
         }
 
         Boolean skip5 = config.getSkip5();
         if (skip5) {
-            if (episode.endsWith(".5")) {
-                log.debug("{} 疑似 {} 剧集, 自动跳过", itemTitle, episode + ".5");
+            if (episodeStr.endsWith(".5")) {
                 return false;
             }
         }
 
-        boolean is5 = Double.parseDouble(episode) != Double.valueOf(episode).intValue();
-
-        item.setEpisode(Double.parseDouble(episode) + offset);
+        double episode = Double.parseDouble(episodeStr) + offset;
+        item.setEpisode(episode);
 
         String seasonFormat = String.format("%02d", season);
-        String episodeFormat = String.format("%02d", item.getEpisode().intValue());
+        String episodeFormat = String.format("%02d", (int) episode);
+
+        episodeStr = String.valueOf((int) episode);
+
+        // .5
+        boolean is5 = episode != (int) episode;
 
         if (is5) {
             episodeFormat = episodeFormat + ".5";
+            episodeStr = episodeStr + ".5";
         }
 
         title = getName(title);
@@ -114,7 +118,7 @@ public class RenameUtil {
         renameTemplate = renameTemplate.replace("${seasonFormat}", seasonFormat);
         renameTemplate = renameTemplate.replace("${episodeFormat}", episodeFormat);
         renameTemplate = renameTemplate.replace("${season}", String.valueOf(season));
-        renameTemplate = renameTemplate.replace("${episode}", episode);
+        renameTemplate = renameTemplate.replace("${episode}", episodeStr);
         renameTemplate = renameTemplate.replace("${subgroup}", subgroup);
         renameTemplate = renameTemplate.replace("${itemTitle}", itemTitle);
 
