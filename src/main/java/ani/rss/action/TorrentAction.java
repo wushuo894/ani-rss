@@ -8,6 +8,7 @@ import ani.rss.util.ServerUtil;
 import ani.rss.util.TorrentUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.Method;
 import cn.hutool.http.server.HttpServerRequest;
 import cn.hutool.http.server.HttpServerResponse;
@@ -15,6 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -46,12 +48,15 @@ public class TorrentAction implements BaseAction {
             resultErrorMsg("此订阅不存在");
             return;
         }
+
+        List<String> infoHashList = StrUtil.split(infoHash, ",", true, true);
+
         Ani ani = first.get();
         File torrentDir = TorrentUtil.getTorrentDir(ani);
         File[] files = ObjectUtil.defaultIfNull(torrentDir.listFiles(), new File[]{});
         for (File file : files) {
             String s = FileUtil.mainName(file);
-            if (infoHash.equals(s)) {
+            if (infoHashList.contains(s)) {
                 log.info("删除种子 {}", file);
                 FileUtil.del(file);
             }
