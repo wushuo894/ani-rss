@@ -140,7 +140,8 @@
           <el-input v-model="props.config.serverChanSendKey" placeholder="1234567890"></el-input>
         </el-form-item>
         <el-form-item label="apiUrl" v-else-if="props.config.serverChanType === 'serverChan3'">
-          <el-input v-model="props.config.serverChan3ApiUrl" placeholder="https://<uid>.push.ft07.com/send/<sendKey>.send"></el-input>
+          <el-input v-model="props.config.serverChan3ApiUrl"
+                    placeholder="https://<uid>.push.ft07.com/send/<sendKey>.send"></el-input>
         </el-form-item>
         <el-form-item label="开关">
           <div style="display: flex;width: 100%;justify-content: space-between;">

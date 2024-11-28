@@ -1,6 +1,6 @@
 name: "问题报告🐞"
 description: Bug report
-labels: [bug]
+labels: [ bug ]
 body:
   - type: markdown
     attributes:
