@@ -199,12 +199,3 @@ defineExpose({
 const emit = defineEmits(['load'])
 
 </script>
-
-
-<style>
-@media (min-width: 900px) {
-  #menu > div {
-    display: inline-block;
-  }
-}
-</style>
