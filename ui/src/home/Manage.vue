@@ -18,7 +18,8 @@
           <el-button :loading="importDataLoading" bg icon="Download" text @click="importData">
             导入
           </el-button>
-          <el-button icon="Remove" bg text :disabled="!selectList.length" type="danger" @click="refDel?.show(selectList)">删除
+          <el-button icon="Remove" bg text :disabled="!selectList.length" type="danger"
+                     @click="refDel?.show(selectList)">删除
           </el-button>
         </div>
       </div>
