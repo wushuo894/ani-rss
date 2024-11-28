@@ -246,10 +246,7 @@ public class qBittorrent implements BaseDownload {
 
         return HttpReq.get(host + "/api/v2/torrents/files", false)
                 .form("hash", hash)
-                .thenFunction(res -> GsonStatic.fromJson(res.body(), JsonArray.class)
-                        .asList()
-                        .stream()
-                        .map(jsonElement -> GsonStatic.fromJson(jsonElement, FileEntity.class))
+                .thenFunction(res -> GsonStatic.fromJsonList(res.body(), FileEntity.class).stream()
                         .filter(fileEntity -> {
                             String name = fileEntity.getName();
                             String extName = FileUtil.extName(name);
