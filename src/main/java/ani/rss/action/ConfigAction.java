@@ -4,10 +4,7 @@ import ani.rss.annotation.Auth;
 import ani.rss.annotation.Path;
 import ani.rss.entity.Config;
 import ani.rss.entity.Login;
-import ani.rss.util.ConfigUtil;
-import ani.rss.util.GsonStatic;
-import ani.rss.util.TaskUtil;
-import ani.rss.util.TorrentUtil;
+import ani.rss.util.*;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.ObjectUtil;
@@ -30,8 +27,10 @@ public class ConfigAction implements BaseAction {
     public void doAction(HttpServerRequest req, HttpServerResponse res) throws IOException {
         String method = req.getMethod();
         if (method.equals("GET")) {
+            String version = MavenUtil.getVersion();
             Config config = ObjectUtil.clone(ConfigUtil.CONFIG);
             config.getLogin().setPassword("");
+            config.setVersion(version);
             resultSuccess(config);
             return;
         }
