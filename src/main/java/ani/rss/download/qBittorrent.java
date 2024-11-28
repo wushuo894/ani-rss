@@ -246,21 +246,24 @@ public class qBittorrent implements BaseDownload {
 
         return HttpReq.get(host + "/api/v2/torrents/files", false)
                 .form("hash", hash)
-                .thenFunction(res -> GsonStatic.fromJsonList(res.body(), FileEntity.class).stream()
-                        .filter(fileEntity -> {
-                            String name = fileEntity.getName();
-                            String extName = FileUtil.extName(name);
-                            if (StrUtil.isBlank(extName)) {
-                                return false;
-                            }
-                            Long size = fileEntity.getSize();
-                            if (size < 1) {
-                                return false;
-                            }
-                            return videoFormat.contains(extName) || subtitleFormat.contains(extName);
-                        })
-                        .sorted(Comparator.comparingLong(fileEntity -> Long.MAX_VALUE - fileEntity.getSize()))
-                        .collect(Collectors.toList()));
+                .thenFunction(res -> {
+                    Assert.isTrue(res.isOk(), "status: {}", res.getStatus());
+                    return GsonStatic.fromJsonList(res.body(), FileEntity.class).stream()
+                            .filter(fileEntity -> {
+                                String name = fileEntity.getName();
+                                String extName = FileUtil.extName(name);
+                                if (StrUtil.isBlank(extName)) {
+                                    return false;
+                                }
+                                Long size = fileEntity.getSize();
+                                if (size < 1) {
+                                    return false;
+                                }
+                                return videoFormat.contains(extName) || subtitleFormat.contains(extName);
+                            })
+                            .sorted(Comparator.comparingLong(fileEntity -> Long.MAX_VALUE - fileEntity.getSize()))
+                            .collect(Collectors.toList());
+                });
     }
 
     @Override
