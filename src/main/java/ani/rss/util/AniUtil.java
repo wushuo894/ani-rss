@@ -19,8 +19,6 @@ import cn.hutool.crypto.digest.MD5;
 import cn.hutool.http.HttpResponse;
 import cn.hutool.http.HttpUtil;
 import cn.hutool.json.JSONUtil;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.File;
@@ -59,9 +57,8 @@ public class AniUtil {
             FileUtil.writeUtf8String(GsonStatic.toJson(ANI_LIST), configFile);
         }
         String s = FileUtil.readUtf8String(configFile);
-        JsonArray jsonElements = GsonStatic.fromJson(s, JsonArray.class);
-        for (JsonElement jsonElement : jsonElements) {
-            Ani ani = GsonStatic.fromJson(jsonElement, Ani.class);
+        List<Ani> anis = GsonStatic.fromJsonList(s, Ani.class);
+        for (Ani ani : anis) {
             Ani newAni = Ani.bulidAni();
             BeanUtil.copyProperties(ani, newAni, CopyOptions
                     .create()
