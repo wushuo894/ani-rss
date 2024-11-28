@@ -10,7 +10,7 @@
       </div>
     </div>
     <div style="margin-bottom: 12px;align-items: center;display: flex;">
-      <div>
+      <div id="button-list">
         <el-button bg text type="info" @click="openUrl('https://github.com/wushuo894/ani-rss')" :icon="Github">GitHub
         </el-button>
         <el-button bg text type="info" @click="openUrl('https://docs.wushuo.top')" :icon="Book">使用文档</el-button>
@@ -24,7 +24,7 @@
         </el-button>
       </div>
     </div>
-    <div v-loading.fullscreen.lock="actionLoading" id="menu">
+    <div v-loading.fullscreen.lock="actionLoading" style="display: flex;">
       <popconfirm title="你确定重启吗?" @confirm="stop(0)">
         <template #reference>
           <el-button type="warning" text bg icon="RefreshRight">重启</el-button>
@@ -38,7 +38,8 @@
       </popconfirm>
       <div style="margin: 6px;"></div>
       <el-badge class="item" value="new" :hidden="!about.update">
-        <el-button type="success" @click="dialogVisible = true" text bg icon="Top" :loading="about.version.length < 1">更新
+        <el-button type="success" @click="dialogVisible = true" text bg icon="Top" :loading="about.version.length < 1">
+          更新
         </el-button>
       </el-badge>
     </div>
@@ -133,3 +134,19 @@ let dialogVisible = ref(false)
 let props = defineProps(['config'])
 
 </script>
+
+<style>
+#button-list > button {
+  margin-top: 16px;
+  margin-left: 0;
+}
+
+#button-list > button {
+  margin-right: 16px;
+}
+
+#button-list > button:last-child {
+  margin-right: 0;
+}
+
+</style>
