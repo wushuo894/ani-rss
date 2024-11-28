@@ -48,3 +48,9 @@
 
 [ANI-RSS：自动追番新姿势！](https://www.himiku.com/archives/ani-rss.html)
 
+### 贡献者
+
+<a href="https://github.com/wushuo894/ani-rss/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=wushuo894/ani-rss" alt="contributors" />
+</a>
+
