@@ -65,6 +65,7 @@ public class Aria2 implements BaseDownload {
         return HttpReq.post(host + "/jsonrpc", false)
                 .body(body)
                 .thenFunction(res -> {
+                    Assert.isTrue(res.isOk(), "status: {}", res.getStatus());
                     JsonObject jsonObject = GsonStatic.fromJson(res.body(), JsonObject.class);
                     List<JsonElement> result = jsonObject.get("result").getAsJsonArray().asList();
                     List<TorrentsInfo> torrentsInfos = new ArrayList<>();
