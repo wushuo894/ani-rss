@@ -4,10 +4,13 @@ import ani.rss.other.TimeZoneSerializer;
 import cn.hutool.core.date.DatePattern;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.List;
 import java.util.TimeZone;
+import java.util.stream.Collectors;
 
 @Slf4j
 public class GsonStatic {
@@ -19,6 +22,14 @@ public class GsonStatic {
 
     public static <T> T fromJson(JsonElement jsonElement, Class<T> clazz) {
         return gson.fromJson(jsonElement, clazz);
+    }
+
+    public static <T> List<T> fromJsonList(String body, Class<T> clazz) {
+        JsonArray array = gson.fromJson(body, JsonArray.class);
+        return array.asList()
+                .stream()
+                .map(it -> fromJson(it, clazz))
+                .collect(Collectors.toList());
     }
 
     public static <T> T fromJson(String body, Class<T> tClass) {
