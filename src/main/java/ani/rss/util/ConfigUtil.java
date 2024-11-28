@@ -127,7 +127,8 @@ public class ConfigUtil {
                 .setAlist(false)
                 .setAlistPath("/")
                 .setAlistHost("")
-                .setAlistToken("");
+                .setAlistToken("")
+                .setVersion("");
     }
 
     /**

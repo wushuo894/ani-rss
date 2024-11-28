@@ -59,6 +59,14 @@ html, body, #app {
     box-sizing: border-box;
 }
 
-.el-tag  {
+.el-tag {
     border-width: 0
+}
+
+a {
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
 }

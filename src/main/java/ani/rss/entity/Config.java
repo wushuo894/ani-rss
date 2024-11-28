@@ -447,4 +447,9 @@ public class Config implements Serializable {
      * 启用alist
      */
     private Boolean alist;
+
+    /**
+     * 版本
+     */
+    private String version;
 }

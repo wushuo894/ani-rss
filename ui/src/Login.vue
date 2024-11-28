@@ -5,7 +5,7 @@
     <div style="justify-content: center;align-items: center;display: flex;flex: 1">
       <div id="form" style="max-width: 200px;">
         <div style="text-align: center;">
-          <img src="../public/icon.svg" height="80" width="80"/>
+          <img src="../public/icon.svg" height="80" width="80" alt="icon.svg"/>
         </div>
         <h2 style="text-align: center">ANI-RSS</h2>
         <div style="height: 30px;"></div>
@@ -107,7 +107,7 @@ const el = document.documentElement
 getComputedStyle(el).getPropertyValue(`--el-color-primary`)
 
 // 设置 css 变量
-el.style.setProperty('--el-color-primary', useLocalStorage('--el-color-primary','#409eff').value)
+el.style.setProperty('--el-color-primary', useLocalStorage('--el-color-primary', '#409eff').value)
 
 </script>
 
