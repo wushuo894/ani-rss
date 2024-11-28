@@ -304,10 +304,10 @@ let clearCache = () => {
 let predefineColors = ref([
   '#409eff', '#109D58', '#BF3545', '#CB7574',
   '#9AAEC7', '#2EC5B6', '#1C1C1C', '#F7B1A9',
-    '#B18874','#E9BA86','#F68F6C','#F0458B',
-    '#C35653','#40494E','#6F0000','#8D3647',
-    '#E6C5D0','#2377B3','#49312D','#7C9AB6',
-    '#A5B18D','#E8662A','#AB5D50'
+  '#B18874', '#E9BA86', '#F68F6C', '#F0458B',
+  '#C35653', '#40494E', '#6F0000', '#8D3647',
+  '#E6C5D0', '#2377B3', '#49312D', '#7C9AB6',
+  '#A5B18D', '#E8662A', '#AB5D50'
 ])
 
 let color = useLocalStorage('--el-color-primary', '#409eff')
