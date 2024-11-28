@@ -53,9 +53,12 @@ public class UpdateUtil {
                         String downloadUrl = StrFormatter.format("https://github.com/wushuo894/ani-rss/releases/download/v{}/{}", latest, filename);
                         about.setDownloadUrl(downloadUrl);
 
-                        Element relativeTime = box.selectFirst("relative-time");
-                        String datetime = relativeTime.attr("datetime");
-                        about.setDate(DateUtil.parse(datetime));
+                        try {
+                            Element relativeTime = box.selectFirst("relative-time");
+                            String datetime = relativeTime.attr("datetime");
+                            about.setDate(DateUtil.parse(datetime));
+                        } catch (Exception ignored) {
+                        }
                     });
         } catch (Exception e) {
             String message = ExceptionUtil.getMessage(e);
