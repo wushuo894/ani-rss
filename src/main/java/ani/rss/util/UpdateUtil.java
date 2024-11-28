@@ -3,6 +3,7 @@ package ani.rss.util;
 import ani.rss.Main;
 import ani.rss.entity.About;
 import cn.hutool.core.comparator.VersionComparator;
+import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.resource.ResourceUtil;
 import cn.hutool.core.lang.Assert;
@@ -51,6 +52,10 @@ public class UpdateUtil {
                         }
                         String downloadUrl = StrFormatter.format("https://github.com/wushuo894/ani-rss/releases/download/v{}/{}", latest, filename);
                         about.setDownloadUrl(downloadUrl);
+
+                        Element relativeTime = box.selectFirst("relative-time");
+                        String datetime = relativeTime.attr("datetime");
+                        about.setDate(DateUtil.parse(datetime));
                     });
         } catch (Exception e) {
             String message = ExceptionUtil.getMessage(e);

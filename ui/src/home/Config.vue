@@ -34,7 +34,7 @@
           <div style="height: 4px;"></div>
         </el-tab-pane>
         <el-tab-pane label="关于" name="about" :lazy="true">
-          <About/>
+          <About :config="config"/>
         </el-tab-pane>
       </el-tabs>
       <div style="display: flex;justify-content: end;width: 100%;margin-top: 8px;">
