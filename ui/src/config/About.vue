@@ -38,7 +38,7 @@
       </popconfirm>
       <div style="margin: 6px;"></div>
       <el-badge class="item" value="new" :hidden="!about.update">
-        <el-button type="success" @click="dialogVisible = true" text bg icon="Top">更新
+        <el-button type="success" @click="dialogVisible = true" text bg icon="Top" :loading="about.version.length < 1">更新
         </el-button>
       </el-badge>
     </div>
