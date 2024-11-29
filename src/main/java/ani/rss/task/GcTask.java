@@ -23,8 +23,10 @@ public class GcTask extends Thread {
         Config config = ConfigUtil.CONFIG;
         Integer gcSleep = config.getGcSleep();
         if (gcSleep < 1) {
+            log.info("定时GC间隔为{}, 将不会自动GC", gcSleep);
             return;
         }
+        log.info("定时GC间隔为{}", gcSleep);
         while (loop.get()) {
             ThreadUtil.sleep(gcSleep * TimeUnit.MINUTES.toMillis(1));
             if (loop.get()) {
