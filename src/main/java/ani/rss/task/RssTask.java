@@ -1,9 +1,7 @@
 package ani.rss.task;
 
 import ani.rss.entity.Ani;
-import ani.rss.entity.Config;
 import ani.rss.util.AniUtil;
-import ani.rss.util.ConfigUtil;
 import ani.rss.util.ExceptionUtil;
 import ani.rss.util.TorrentUtil;
 import cn.hutool.core.thread.ThreadUtil;
@@ -11,7 +9,6 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.util.Optional;
 import java.util.Set;
-import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 
@@ -19,7 +16,7 @@ import java.util.stream.Collectors;
  * RSS
  */
 @Slf4j
-public class RssTask extends Thread {
+public class RssTask implements Runnable {
     public static final AtomicBoolean download = new AtomicBoolean(false);
     private final AtomicBoolean loop;
 
@@ -89,25 +86,13 @@ public class RssTask extends Thread {
 
     @Override
     public void run() {
-        super.setName("rss-task-thread");
-        Config config = ConfigUtil.CONFIG;
-        Integer sleep = config.getSleep();
-        log.info("{} 当前设置间隔为 {} 分钟", getName(), sleep);
-        while (loop.get()) {
-            if (!config.getRss()) {
-                log.debug("rss未启用");
-                ThreadUtil.sleep(sleep, TimeUnit.MINUTES);
-                continue;
-            }
-            try {
-                sync();
-                download(loop);
-            } catch (Exception e) {
-                String message = ExceptionUtil.getMessage(e);
-                log.error(message, e);
-            }
-            ThreadUtil.sleep(sleep, TimeUnit.MINUTES);
+        try {
+            sync();
+            download(this.loop);
+        } catch (Exception e) {
+            String message = ExceptionUtil.getMessage(e);
+            log.error(message, e);
         }
-        log.info("{} 任务已停止", getName());
+        log.info("RSSTask已停止");
     }
 }

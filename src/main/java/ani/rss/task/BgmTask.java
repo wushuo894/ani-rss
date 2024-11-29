@@ -10,14 +10,13 @@ import cn.hutool.core.util.StrUtil;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * 用于更新BGM评分
  */
 @Slf4j
-public class BgmTask extends Thread {
+public class BgmTask implements Runnable {
 
     private final AtomicBoolean loop;
 
@@ -25,19 +24,19 @@ public class BgmTask extends Thread {
         this.loop = loop;
     }
 
+
     @Override
     public void run() {
-        super.setName("bgm-task-thread");
-        log.info("{} 任务正在运行", getName());
-        while (loop.get()) {
+        try {
+            log.info("BgmTask正在运行");
             List<Ani> aniList = AniUtil.ANI_LIST;
             for (Ani ani : aniList) {
+                if (!loop.get()) {
+                    return;
+                }
                 String bgmUrl = ani.getBgmUrl();
                 if (StrUtil.isBlank(bgmUrl)) {
                     continue;
-                }
-                if (!loop.get()) {
-                    return;
                 }
                 Boolean enable = ani.getEnable();
                 double score = ani.getScore();
@@ -54,8 +53,8 @@ public class BgmTask extends Thread {
                 }
             }
             AniUtil.sync();
-            ThreadUtil.sleep(12, TimeUnit.HOURS);
+        } finally {
+            log.info("BgmTask已结束");
         }
-        log.info("{} 任务已停止", getName());
     }
 }
