@@ -44,6 +44,7 @@ public class ConfigAction implements BaseAction {
         String password = login.getPassword();
         Double renameSleep = config.getRenameSleep();
         Integer sleep = config.getSleep();
+        Integer gcSleep = config.getGcSleep();
         String download = config.getDownload();
         BeanUtil.copyProperties(GsonStatic.fromJson(req.getBody(), Config.class), config);
         String host = config.getHost();
@@ -99,10 +100,14 @@ public class ConfigAction implements BaseAction {
         ConfigUtil.sync();
         Double newRenameSleep = config.getRenameSleep();
         Integer newSleep = config.getSleep();
+        Integer newGcSleep = config.getGcSleep();
 
         // 时间间隔发生改变，重启任务
-        if (!Objects.equals(newSleep, sleep) ||
-                !Objects.equals(newRenameSleep, renameSleep)) {
+        if (
+                !Objects.equals(newSleep, sleep) ||
+                        !Objects.equals(newRenameSleep, renameSleep) ||
+                        !Objects.equals(newGcSleep, gcSleep)
+        ) {
             TaskUtil.restart();
         }
         // 下载工具发生改变

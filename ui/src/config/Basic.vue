@@ -259,6 +259,14 @@
               </div>
             </div>
           </el-form-item>
+          <el-form-item label="自动GC间隔">
+            <el-input-number v-model:model-value="props.config.gcSleep"
+                             min="1">
+              <template #suffix>
+                <span>分钟</span>
+              </template>
+            </el-input-number>
+          </el-form-item>
         </el-form>
       </el-collapse-item>
     </el-collapse>
