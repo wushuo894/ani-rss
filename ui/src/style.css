@@ -63,10 +63,3 @@ html, body, #app {
     border-width: 0
 }
 
-a {
-    text-decoration: none;
-}
-
-a:hover {
-    text-decoration: underline;
-}
