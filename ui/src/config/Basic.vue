@@ -261,7 +261,7 @@
           </el-form-item>
           <el-form-item label="自动GC间隔">
             <el-input-number v-model:model-value="props.config.gcSleep"
-                             min="1">
+                             min="0">
               <template #suffix>
                 <span>分钟</span>
               </template>
