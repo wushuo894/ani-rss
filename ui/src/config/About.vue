@@ -137,12 +137,12 @@ let props = defineProps(['config'])
 
 <style>
 #button-list > button {
-  margin-top: 16px;
+  margin-top: 12px;
   margin-left: 0;
 }
 
 #button-list > button {
-  margin-right: 16px;
+  margin-right: 12px;
 }
 
 #button-list > button:last-child {
