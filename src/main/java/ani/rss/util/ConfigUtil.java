@@ -30,6 +30,7 @@ public class ConfigUtil {
         CONFIG.setSleep(15)
                 .setMikanHost("https://mikanime.tv")
                 .setRenameSleep(0.5)
+                .setGcSleep(10)
                 .setRename(true)
                 .setRss(true)
                 .setWatchErrorTorrent(true)

@@ -94,6 +94,11 @@ public class Config implements Serializable {
     private Double renameSleep;
 
     /**
+     * GC 间隔/分钟
+     */
+    private Integer gcSleep;
+
+    /**
      * 自动重命名
      */
     private Boolean rename;
