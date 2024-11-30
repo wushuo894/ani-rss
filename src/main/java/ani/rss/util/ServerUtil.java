@@ -156,7 +156,7 @@ public class ServerUtil {
         if (StrUtil.isBlank(ip)) {
             return false;
         }
-        String cacheKey = ipWhitelistStr + ":" + ip;
+        String cacheKey = AuthUtil.MD5.digestHex(ipWhitelistStr) + ":" + ip;
         try {
             if (!PatternPool.IPV4.matcher(ip).matches()) {
                 return false;

@@ -29,7 +29,7 @@ import java.util.stream.Collectors;
  */
 @Slf4j
 public class AuthUtil {
-    private static final MD5 MD5 = new MD5();
+    public static final MD5 MD5 = new MD5();
     private static final Map<String, Function<HttpServerRequest, Boolean>> MAP = new HashMap<>();
     private static final FIFOCache<String, String> CACHE = CacheUtil.newFIFOCache(1);
 
