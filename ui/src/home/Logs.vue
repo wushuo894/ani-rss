@@ -59,20 +59,24 @@ const htmlLogs = ref('')
 const loggerNames = ref([])
 const selectLoggerNames = ref([])
 
-const getHtmlLogs = async () => {
+const getHtmlLogs = () => {
   let log = logs.value
   log = log.filter(it => selectLevels.value.indexOf(it['level']) > -1)
   if (selectLoggerNames.value.length) {
     log = log.filter(it => selectLoggerNames.value.indexOf(it['loggerName']) > -1)
   }
   let code = log.map(it => it['message']).join('\r\n');
-  htmlLogs.value = await codeToHtml(code, {
+  codeToHtml(code, {
     lang: 'log',
     theme: 'nord'
+  }).then(res=>{
+    htmlLogs.value = res
+    scrollbarRef.value?
+        scrollbarRef.value.setScrollTop(innerRef.value.clientHeight)
+        :undefined
   })
-  setTimeout(() => {
-    scrollbarRef.value?.setScrollTop(innerRef.value.clientHeight)
-  })
+
+
 }
 
 const show = () => {
@@ -90,7 +94,7 @@ const clearLoading = ref(false)
 const clear = () => {
   clearLoading.value = true
   api.del('api/logs')
-      .then(res => {
+      .then(() => {
         getLogs();
       })
       .finally(() => {
@@ -101,7 +105,7 @@ const clear = () => {
 const getLogs = () => {
   getLogsLoading.value = true
   api.get('api/logs')
-      .then(async res => {
+      .then(res => {
         logs.value = res.data
         loggerNames.value = []
         for (let datum of res.data) {
