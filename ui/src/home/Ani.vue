@@ -148,6 +148,11 @@
       <el-button @click="items.show()" bg text icon="Grid">预览</el-button>
       <el-button icon="Check" type="primary" :loading="okLoading" @click="async ()=>{
         okLoading = true
+        emit('next',()=>okLoading = false)
+      }" text bg>保存并添加下一个
+      </el-button>
+      <el-button icon="Check" type="primary" :loading="okLoading" @click="async ()=>{
+        okLoading = true
         emit('ok',()=>okLoading = false)
       }" text bg>确定
       </el-button>
@@ -249,5 +254,5 @@ let downloadPath = () => {
 }
 
 let props = defineProps(['ani'])
-const emit = defineEmits(['ok'])
+const emit = defineEmits(['ok','next'])
 </script>

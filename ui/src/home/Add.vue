@@ -91,7 +91,7 @@
       </div>
     </div>
     <div v-else>
-      <Ani v-model:ani="ani" @ok="addAni"/>
+      <Ani v-model:ani="ani" @ok="addAni" @next="nextAni"/>
     </div>
   </el-dialog>
 </template>
@@ -158,6 +158,16 @@ const addAni = (fun) => {
         ElMessage.success(res.message)
         emit('load')
         dialogVisible.value = false
+      }).finally(fun)
+}
+
+const nextAni = (fun) => {
+  api.post('api/ani', ani.value)
+      .then(res => {
+        ElMessage.success(res.message)
+        emit('load')
+        dialogVisible.value = false
+        show()
       }).finally(fun)
 }
 
