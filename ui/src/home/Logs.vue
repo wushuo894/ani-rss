@@ -21,7 +21,9 @@
           />
         </el-select>
         <div style="width: 4px;"></div>
-        <el-button icon="Download" bg text @click="downloadLogs"/>
+        <el-button icon="Document" bg text @click="downloadConfig">导出配置</el-button>
+        <div style="width: 4px;"></div>
+        <el-button icon="Download" bg text @click="downloadLogs">下载日志</el-button>
         <div style="width: 4px;"></div>
         <el-button icon="Refresh" bg text @click="getLogs" :loading="getLogsLoading"/>
         <div style="width: 4px;"></div>
@@ -118,6 +120,20 @@ const getLogs = () => {
 
 let downloadLogs = () => {
   window.open(`api/downloadLogs?s=${authorization()}`)
+}
+
+let downloadConfig = () => {
+  api.get('api/config')
+      .then(res => {
+          const formattedConfig = JSON.stringify(res.data, null, 4);
+          const blob = new Blob([formattedConfig], {type: 'application/json'});
+          const url = URL.createObjectURL(blob);
+          const link = document.createElement('a');
+          link.href = url;
+          link.download = 'config.json';
+          link.click();
+          URL.revokeObjectURL(url);
+      })
 }
 
 let authorization = () => {
