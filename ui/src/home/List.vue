@@ -338,7 +338,7 @@ defineExpose({
   getList, yearMonth
 })
 
-let props = defineProps(['title', 'filter'])
+let props = defineProps(['title', 'filter', 'currentPage'])
 
 </script>
 
