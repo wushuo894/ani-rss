@@ -11,6 +11,7 @@ import ani.rss.enums.TorrentsTags;
 import cn.hutool.core.date.DateField;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.lang.Assert;
 import cn.hutool.core.text.StrFormatter;
 import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.core.util.*;
@@ -183,7 +184,9 @@ public class TorrentUtil {
             File saveTorrent = saveTorrent(ani, item);
             List<File> downloadPathList = getDownloadPath(ani);
 
-            deleteBackRss(ani, item);
+            if (saveTorrent.exists()) {
+                deleteBackRss(ani, item);
+            }
 
             String savePath = downloadPathList
                     .get(0)
@@ -364,6 +367,7 @@ public class TorrentUtil {
 
             return HttpReq.get(torrent, true)
                     .thenFunction(res -> {
+                        Assert.isTrue(res.isOk(), "status: {}", res.getStatus());
                         FileUtil.writeFromStream(res.bodyStream(), saveTorrentFile, true);
                         return saveTorrentFile;
                     });
@@ -610,10 +614,6 @@ public class TorrentUtil {
 
         if (!torrentFile.exists()) {
             log.error("种子下载出现问题 {} {}", name, torrentFile.getAbsolutePath());
-            MessageUtil.send(ConfigUtil.CONFIG, ani,
-                    StrFormatter.format("种子下载出现问题 {} {}", name, torrentFile.getAbsolutePath()),
-                    MessageEnum.ERROR
-            );
             return;
         }
         ThreadUtil.sleep(1000);
