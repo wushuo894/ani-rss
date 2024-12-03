@@ -43,7 +43,7 @@
             <el-icon :class="elIconClass()">
               <Plus/>
             </el-icon>
-            <template v-if="isMobile()">
+            <template v-if="isNotMobile()">
               添加
             </template>
           </el-button>
@@ -55,7 +55,7 @@
                 <el-icon :class="elIconClass()">
                   <Refresh/>
                 </el-icon>
-                <template v-if="isMobile()">
+                <template v-if="isNotMobile()">
                   刷新
                 </template>
               </el-button>
@@ -67,7 +67,7 @@
             <el-icon :class="elIconClass()">
               <Fold/>
             </el-icon>
-            <template v-if="isMobile()">
+            <template v-if="isNotMobile()">
               管理
             </template>
           </el-button>
@@ -78,7 +78,7 @@
               <el-icon :class="elIconClass()">
                 <Setting/>
               </el-icon>
-              <template v-if="isMobile()">
+              <template v-if="isNotMobile()">
                 设置
               </template>
             </el-button>
@@ -89,7 +89,7 @@
             <el-icon :class="elIconClass()">
               <Tickets/>
             </el-icon>
-            <template v-if="isMobile()">
+            <template v-if="isNotMobile()">
               日志
             </template>
           </el-button>
@@ -163,7 +163,7 @@ onMounted(() => {
 })
 
 let elIconClass = () => {
-  return isMobile() ? 'el-icon--left' : '';
+  return isNotMobile() ? 'el-icon--left' : '';
 }
 
 const about = ref({
@@ -191,7 +191,7 @@ let download = () => {
       })
 }
 
-let isMobile = () => {
+let isNotMobile = () => {
   return width.value > 800;
 }
 
