@@ -269,7 +269,6 @@ const getList = () => {
             })
             .finally(() => {
               loading.value = false
-              updateGridLayout()
             })
       })
 }
@@ -280,32 +279,11 @@ let authorization = () => {
 
 const itemsPerRow = ref(1)
 
-let updateGridLayout = () => {
-  const gridContainer = document.querySelectorAll('.grid-container');
-  if (!gridContainer.length) {
-    return
-  }
-  const windowWidth = window.innerWidth;
-  if (windowWidth) {
-    document.querySelector('.el-affix').style['width'] = windowWidth + 'px'
-  }
-  itemsPerRow.value = Math.max(1, Math.floor(windowWidth / 400));
-
-  for (let gridContainerElement of gridContainer) {
-    gridContainerElement.style.gridTemplateColumns = `repeat(${itemsPerRow.value}, 1fr)`;
-  }
-
-  if (itemsPerRow.value === 1) {
-    pagerCount.value = 4
-  }
-}
-
 onMounted(() => {
   let size = window.localStorage.getItem('pageSize')
   if (size) {
     pageSize.value = Number.parseInt(size)
   }
-  window.addEventListener('resize', updateGridLayout);
   getList()
 })
 
@@ -343,6 +321,10 @@ let props = defineProps(['title', 'filter'])
 </script>
 
 <style>
+.grid-container {
+  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+}
+
 .gtc3 {
   grid-template-columns: repeat(3, 1fr);
 }
