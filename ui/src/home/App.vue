@@ -43,7 +43,7 @@
             <el-icon :class="elIconClass()">
               <Plus/>
             </el-icon>
-            <template v-if="itemsPerRow > 1">
+            <template v-if="isMobile()">
               添加
             </template>
           </el-button>
@@ -55,7 +55,7 @@
                 <el-icon :class="elIconClass()">
                   <Refresh/>
                 </el-icon>
-                <template v-if="itemsPerRow > 1">
+                <template v-if="isMobile()">
                   刷新
                 </template>
               </el-button>
@@ -67,7 +67,7 @@
             <el-icon :class="elIconClass()">
               <Fold/>
             </el-icon>
-            <template v-if="itemsPerRow > 1">
+            <template v-if="isMobile()">
               管理
             </template>
           </el-button>
@@ -78,7 +78,7 @@
               <el-icon :class="elIconClass()">
                 <Setting/>
               </el-icon>
-              <template v-if="itemsPerRow > 1">
+              <template v-if="isMobile()">
                 设置
               </template>
             </el-button>
@@ -89,7 +89,7 @@
             <el-icon :class="elIconClass()">
               <Tickets/>
             </el-icon>
-            <template v-if="itemsPerRow > 1">
+            <template v-if="isMobile()">
               日志
             </template>
           </el-button>
@@ -113,6 +113,7 @@ import api from "../api.js";
 import {ElMessage} from "element-plus";
 import Popconfirm from "../other/Popconfirm.vue";
 import Manage from "./Manage.vue";
+import {useWindowSize} from "@vueuse/core";
 
 const manage = ref()
 
@@ -156,22 +157,13 @@ const logs = ref()
 const list = ref()
 
 const currentPage = ref(1)
-const itemsPerRow = ref(1)
 
 onMounted(() => {
-  function updateGridLayout() {
-    const windowWidth = window.innerWidth;
-    itemsPerRow.value = Math.max(1, Math.floor(windowWidth / 400));
-  }
-
-  window.addEventListener('resize', updateGridLayout);
-  updateGridLayout();
-
   enableSelectChange()
 })
 
 let elIconClass = () => {
-  return itemsPerRow.value > 1 ? 'el-icon--left' : '';
+  return isMobile() ? 'el-icon--left' : '';
 }
 
 const about = ref({
@@ -198,6 +190,12 @@ let download = () => {
         downloadLoading.value = false
       })
 }
+
+let isMobile = () => {
+  return width.value > 800;
+}
+
+const {width, height} = useWindowSize()
 
 </script>
 
