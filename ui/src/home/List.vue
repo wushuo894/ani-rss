@@ -267,6 +267,7 @@ const getList = () => {
         api.get('api/ani')
             .then(res => {
               list.value = res.data
+              updateGridLayout()
             })
             .finally(() => {
               loading.value = false
@@ -278,13 +279,25 @@ let authorization = () => {
   return window.authorization;
 }
 
-const itemsPerRow = ref(1)
+
+let updateGridLayout = () => {
+  const gridContainer = document.querySelectorAll('.grid-container');
+  if (!gridContainer.length) {
+    return
+  }
+  let itemsPerRow = Math.max(1, Math.floor(width.value / 400));
+
+  for (let gridContainerElement of gridContainer) {
+    gridContainerElement.style.gridTemplateColumns = `repeat(${itemsPerRow}, 1fr)`;
+  }
+}
 
 onMounted(() => {
   let size = window.localStorage.getItem('pageSize')
   if (size) {
     pageSize.value = Number.parseInt(size)
   }
+  window.addEventListener('resize', updateGridLayout);
   getList()
 })
 
@@ -328,9 +341,6 @@ let props = defineProps(['title', 'filter'])
 </script>
 
 <style>
-.grid-container {
-  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-}
 
 .gtc3 {
   grid-template-columns: repeat(3, 1fr);
