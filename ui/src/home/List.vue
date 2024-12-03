@@ -71,7 +71,7 @@
                         display: grid;
                         grid-gap: 4px;
                         "
-                             :class="itemsPerRow > 1 ? 'gtc3' : 'gtc2'"
+                             :class="isNotMobile() ? 'gtc3' : 'gtc2'"
                         >
                           <el-tag>
                             第 {{ item.season }} 季
@@ -82,7 +82,7 @@
                           <el-tag type="info" v-else>
                             未启用
                           </el-tag>
-                          <el-tag type="info" v-if="itemsPerRow > 1">
+                          <el-tag type="info" v-if="isNotMobile()">
                             {{ item['subgroup'] ? item['subgroup'] : '未知' }}
                           </el-tag>
                           <el-tag type="info" v-else>
@@ -133,7 +133,7 @@
         <div style="height: 80px;"></div>
       </div>
     </el-scrollbar>
-    <el-affix position="bottom">
+    <el-affix position="bottom" :style="`width: ${width}px`">
       <div style="width: 100%;
                                                       background: linear-gradient(to bottom,rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.01) );
                                                       backdrop-filter: blur(2px);padding-top: 10px;z-index: 99999"
@@ -146,7 +146,7 @@
                   <el-icon :class="elIconClass()">
                     <Back/>
                   </el-icon>
-                  <template v-if="itemsPerRow > 1">
+                  <template v-if="isNotMobile()">
                     退出登录
                   </template>
                 </el-button>
@@ -169,6 +169,7 @@ import Popconfirm from "../other/Popconfirm.vue";
 import PlayList from "../play/PlayList.vue";
 import Cover from "./Cover.vue";
 import Del from "./Del.vue";
+import {useWindowSize} from "@vueuse/core";
 
 const defaultWeekList = [
   {
@@ -293,7 +294,7 @@ let logout = () => {
 }
 
 let elIconClass = () => {
-  return itemsPerRow.value > 1 ? 'el-icon--left' : '';
+  return isNotMobile() ? 'el-icon--left' : '';
 }
 
 let yearMonth = () => {
@@ -312,6 +313,12 @@ let openBgmUrl = (it) => {
   }
 }
 
+let isNotMobile = () => {
+  return width.value > 800;
+}
+
+const {width, height} = useWindowSize()
+
 defineExpose({
   getList, yearMonth
 })
@@ -322,7 +329,7 @@ let props = defineProps(['title', 'filter'])
 
 <style>
 .grid-container {
-  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
 }
 
 .gtc3 {
