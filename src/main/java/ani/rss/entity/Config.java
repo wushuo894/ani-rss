@@ -309,9 +309,9 @@ public class Config implements Serializable {
     private Boolean tmdbId;
 
     /**
-     * 使用台湾翻译
+     * tmdb 语言
      */
-    private Boolean tmdbTw;
+    private String tmdbLanguage;
 
     /**
      * 开启ip白名单

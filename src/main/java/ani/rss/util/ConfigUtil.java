@@ -92,7 +92,7 @@ public class ConfigUtil {
                 .setWebHook(false)
                 .setTmdb(false)
                 .setTmdbId(false)
-                .setTmdbTw(false)
+                .setTmdbLanguage("zh-CN")
                 .setIpWhitelist(false)
                 .setIpWhitelistStr("")
                 .setWebHookBody("")

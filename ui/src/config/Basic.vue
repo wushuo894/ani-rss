@@ -56,14 +56,11 @@
               </el-text>
             </div>
           </el-form-item>
-          <el-form-item label="TMDB台湾">
-            <div>
-              <el-switch v-model:model-value="props.config.tmdbTw"/>
-              <br>
-              <el-text class="mx-1" size="small">
-                获取TMDB台湾地区的标题
-              </el-text>
-            </div>
+          <el-form-item label="TMDB语言">
+            <el-select v-model:model-value="props.config['tmdbLanguage']" style="width: 150px;">
+              <el-option v-for="language in ['zh-CN','zh-TW','ja-JP','en-US']" :value="language"
+                         :key="language"></el-option>
+            </el-select>
           </el-form-item>
           <el-form-item label="默认开启全局排除">
             <el-switch v-model:model-value="props.config.enabledExclude" :disabled="props.config.importExclude"/>
