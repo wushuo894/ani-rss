@@ -146,7 +146,6 @@ const config = ref({
   'autoTrackersUpdate': false,
   'renameMinSize': 100,
   'tmdbId': false,
-  'tmdbTw': false,
   'renameDelYear': false,
   'renameDelTmdbId': false,
   'messageTemplate': '',
