@@ -299,6 +299,11 @@ public class Config implements Serializable {
     private Boolean webHook;
 
     /**
+     * BGM日文标题
+     */
+    private Boolean bgmJpName;
+
+    /**
      * tmdb
      */
     private Boolean tmdb;
