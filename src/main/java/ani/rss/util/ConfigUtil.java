@@ -91,6 +91,7 @@ public class ConfigUtil {
                 .setTelegramFormat("")
                 .setWebHook(false)
                 .setTmdb(false)
+                .setBgmJpName(false)
                 .setTmdbId(false)
                 .setTmdbLanguage("zh-CN")
                 .setIpWhitelist(false)

@@ -127,6 +127,7 @@ public class AniUtil {
      * @return
      */
     public static Ani getAni(String url, String text, String type, String bgmUrl) {
+        Config config = ConfigUtil.CONFIG;
         type = StrUtil.blankToDefault(type, "mikan");
         int season = 1;
         String title = "无标题";
@@ -168,7 +169,13 @@ public class AniUtil {
             String nameCn = bgmInfo.getNameCn();
             String name = bgmInfo.getName();
 
-            title = StrUtil.blankToDefault(nameCn, name);
+            Boolean bgmJpName = config.getBgmJpName();
+            if (bgmJpName) {
+                title = name;
+            } else {
+                title = StrUtil.blankToDefault(nameCn, name);
+            }
+
             if (StrUtil.isBlank(title)) {
                 title = "无标题";
             }
@@ -209,7 +216,6 @@ public class AniUtil {
 
         Integer year = ani.getYear();
 
-        Config config = ConfigUtil.CONFIG;
         Boolean downloadNew = config.getDownloadNew();
         Boolean titleYear = config.getTitleYear();
         Boolean tmdb = config.getTmdb();

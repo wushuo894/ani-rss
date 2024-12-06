@@ -38,6 +38,9 @@
           <el-form-item label="自动推断剧集偏移">
             <el-switch v-model:model-value="props.config.offset"/>
           </el-form-item>
+          <el-form-item label="BGM日文标题">
+            <el-switch v-model:model-value="props.config['bgmJpName']"/>
+          </el-form-item>
           <el-form-item label="TMDB ID">
             <div>
               <el-switch v-model:model-value="props.config.tmdbId"/>
