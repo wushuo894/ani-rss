@@ -9,7 +9,7 @@
         </div>
         <h2 style="text-align: center">ANI-RSS</h2>
         <div style="height: 30px;"></div>
-        <el-form label-width="auto"
+        <el-form
                  @keyup.enter="login"
                  @submit="login">
           <el-form-item>
