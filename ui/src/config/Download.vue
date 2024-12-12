@@ -88,7 +88,7 @@
       </div>
     </el-form-item>
     <el-form-item label="延迟下载">
-      <el-input-number v-model:model-value="props.config.delayedDownload" min="0">
+      <el-input-number v-model:model-value="props.config.delayedDownload" :min="0">
         <template #suffix>
           <span>分钟</span>
         </template>
@@ -101,7 +101,7 @@
       <el-collapse-item title="qBittorrent设置">
         <el-form-item label="分享率">
           <div>
-            <el-input-number v-model:model-value="props.config.ratioLimit" min="-2"/>
+            <el-input-number v-model:model-value="props.config.ratioLimit" :min="-2"/>
             <br>
             <el-text class="mx-1" size="small">
               "-1"表示禁用, "-2"使用全局设置
@@ -110,7 +110,7 @@
         </el-form-item>
         <el-form-item label="总做种时长">
           <div>
-            <el-input-number v-model:model-value="props.config.seedingTimeLimit" min="-2">
+            <el-input-number v-model:model-value="props.config.seedingTimeLimit" :min="-2">
               <template #suffix>
                 <span>分钟</span>
               </template>
@@ -123,7 +123,7 @@
         </el-form-item>
         <el-form-item label="非活跃时长">
           <div>
-            <el-input-number v-model:model-value="props.config.inactiveSeedingTimeLimit" min="-2">
+            <el-input-number v-model:model-value="props.config.inactiveSeedingTimeLimit" :min="-2">
               <template #suffix>
                 <span>分钟</span>
               </template>
