@@ -81,7 +81,7 @@
     </el-form-item>
     <el-form-item label="同时下载限制">
       <div>
-        <el-input-number v-model:model-value="props.config.downloadCount" min="0"/>
+        <el-input-number v-model:model-value="props.config.downloadCount" :min="0"/>
         <div>
           设置为时 0 不做限制
         </div>
