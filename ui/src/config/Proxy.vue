@@ -8,8 +8,8 @@
                 placeholder="192.168.0.x"/>
     </el-form-item>
     <el-form-item label="端口">
-      <el-input-number v-model:model-value="props.config.proxyPort" :disabled="!props.config.proxy" min="1"
-                       max="65535"/>
+      <el-input-number v-model:model-value="props.config.proxyPort" :disabled="!props.config.proxy" :min="1"
+                       :max="65535"/>
     </el-form-item>
     <el-form-item label="用户名">
       <el-input v-model:model-value="props.config.proxyUsername" :disabled="!props.config.proxy"
