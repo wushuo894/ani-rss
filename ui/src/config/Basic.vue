@@ -80,7 +80,7 @@
           </el-form-item>
           <el-form-item label="重命名间隔">
             <el-input-number v-model:model-value="props.config.renameSleep" :step="0.5"
-                             min="0.5"
+                             :min="0.5"
                              :disabled="!config.rename">
               <template #suffix>
                 <span>分钟</span>
@@ -260,8 +260,7 @@
             </div>
           </el-form-item>
           <el-form-item label="自动GC间隔">
-            <el-input-number v-model:model-value="props.config.gcSleep"
-                             min="0">
+            <el-input-number v-model:model-value="props.config.gcSleep" :min="0">
               <template #suffix>
                 <span>分钟</span>
               </template>

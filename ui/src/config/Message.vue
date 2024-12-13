@@ -92,7 +92,7 @@
                     placeholder="smtp.xx.com"/>
         </el-form-item>
         <el-form-item label="SMTP端口">
-          <el-input-number v-model:model-value="props.config.mailAccount.port" min="1" max="65535"
+          <el-input-number v-model:model-value="props.config.mailAccount.port" :min="1" :max="65535"
                            :disabled="!config.mail"/>
         </el-form-item>
         <el-form-item label="发件人邮箱">
