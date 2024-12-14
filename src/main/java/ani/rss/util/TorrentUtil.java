@@ -198,6 +198,9 @@ public class TorrentUtil {
                 AniUtil.sync();
             }
 
+            if (!AniUtil.ANI_LIST.contains(ani)) {
+                return;
+            }
             download(ani, item, savePath, saveTorrent);
             if (master && !is5) {
                 currentDownloadCount++;
