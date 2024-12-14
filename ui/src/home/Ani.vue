@@ -103,7 +103,7 @@
             </div>
           </div>
         </el-form-item>
-        <el-form-item label="自定义下载">
+        <el-form-item label="自定义路径">
           <div style="width: 100%;">
             <div>
               <el-switch v-model:model-value="props.ani.customDownloadPath"/>
