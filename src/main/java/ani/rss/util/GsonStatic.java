@@ -24,12 +24,16 @@ public class GsonStatic {
         return gson.fromJson(jsonElement, clazz);
     }
 
-    public static <T> List<T> fromJsonList(String body, Class<T> clazz) {
-        JsonArray array = gson.fromJson(body, JsonArray.class);
+    public static <T> List<T> fromJsonList(JsonArray array, Class<T> clazz) {
         return array.asList()
                 .stream()
                 .map(it -> fromJson(it, clazz))
                 .collect(Collectors.toList());
+    }
+
+    public static <T> List<T> fromJsonList(String body, Class<T> clazz) {
+        JsonArray array = gson.fromJson(body, JsonArray.class);
+        return fromJsonList(array, clazz);
     }
 
     public static <T> T fromJson(String body, Class<T> tClass) {
