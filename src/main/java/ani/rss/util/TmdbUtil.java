@@ -66,8 +66,12 @@ public class TmdbUtil {
                         String firstAirDate = jsonObject.get("first_air_date").getAsString();
 
                         title = RenameUtil.getName(title);
-                        year.set(String.valueOf(DateUtil.year(DateUtil.parse(firstAirDate))));
                         tmdbId.set(id);
+
+                        if (StrUtil.isNotBlank(year.get())) {
+                            year.set(String.valueOf(DateUtil.year(DateUtil.parse(firstAirDate))));
+                        }
+
                         return StrUtil.blankToDefault(title, "");
                     });
         } catch (Exception e) {
