@@ -8,10 +8,12 @@ import cn.hutool.core.text.StrFormatter;
 import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.core.util.ReUtil;
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.util.URLUtil;
 import com.google.gson.JsonObject;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
 
 @Slf4j
@@ -46,7 +48,7 @@ public class TmdbUtil {
         try {
             String finalName = name;
             themoviedbName = HttpReq.get("https://api.themoviedb.org/3/search/" + type)
-                    .form("query", name)
+                    .form("query", URLUtil.encodeBlank(name))
                     .form("api_key", TMDB_API)
                     .form("language", tmdbLanguage)
                     .thenFunction(res -> {
@@ -62,14 +64,19 @@ public class TmdbUtil {
                         }
                         JsonObject jsonObject = results.get(0);
                         String id = jsonObject.get("id").getAsString();
-                        String title = jsonObject.get("name").getAsString();
-                        String firstAirDate = jsonObject.get("first_air_date").getAsString();
+                        String title = Optional.of(jsonObject)
+                                .map(o -> o.get("name"))
+                                .orElse(jsonObject.get("original_title")).getAsString();
+
+                        String date = Optional.of(jsonObject)
+                                .map(o -> o.get("first_air_date"))
+                                .orElse(jsonObject.get("release_date")).getAsString();
 
                         title = RenameUtil.getName(title);
                         tmdbId.set(id);
 
                         if (StrUtil.isNotBlank(year.get())) {
-                            year.set(String.valueOf(DateUtil.year(DateUtil.parse(firstAirDate))));
+                            year.set(String.valueOf(DateUtil.year(DateUtil.parse(date))));
                         }
 
                         return StrUtil.blankToDefault(title, "");
