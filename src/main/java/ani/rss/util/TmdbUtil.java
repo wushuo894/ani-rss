@@ -47,7 +47,7 @@ public class TmdbUtil {
         String themoviedbName;
         try {
             String finalName = name;
-            themoviedbName = HttpReq.get("https://api.themoviedb.org/3/search/" + type)
+            themoviedbName = HttpReq.get("https://api.themoviedb.org/3/search/" + type, true)
                     .form("query", URLUtil.encodeBlank(name))
                     .form("api_key", TMDB_API)
                     .form("language", tmdbLanguage)
