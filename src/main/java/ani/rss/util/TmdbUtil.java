@@ -66,7 +66,7 @@ public class TmdbUtil {
                         String id = jsonObject.get("id").getAsString();
                         String title = Optional.of(jsonObject)
                                 .map(o -> o.get("name"))
-                                .orElse(jsonObject.get("original_title")).getAsString();
+                                .orElse(jsonObject.get("title")).getAsString();
 
                         String date = Optional.of(jsonObject)
                                 .map(o -> o.get("first_air_date"))
