@@ -20,9 +20,10 @@ public class ThemoviedbAction implements BaseAction {
     @Override
     public void doAction(HttpServerRequest request, HttpServerResponse response) throws IOException {
         String s = request.getParam("method");
+        String type = request.getParam("type");
         if ("getThemoviedbName".equals(s)) {
             String name = request.getParam("name");
-            String themoviedbName = TmdbUtil.getName(name);
+            String themoviedbName = TmdbUtil.getName(name, type);
             Result<String> result = new Result<String>()
                     .setCode(HttpStatus.HTTP_OK)
                     .setMessage("获取TMDB成功")

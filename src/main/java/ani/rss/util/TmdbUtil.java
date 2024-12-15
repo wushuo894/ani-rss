@@ -2,19 +2,22 @@ package ani.rss.util;
 
 import ani.rss.entity.Config;
 import ani.rss.enums.StringEnum;
+import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.lang.Assert;
 import cn.hutool.core.text.StrFormatter;
 import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.core.util.ReUtil;
 import cn.hutool.core.util.StrUtil;
+import com.google.gson.JsonObject;
 import lombok.extern.slf4j.Slf4j;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Element;
 
-import java.util.Objects;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 
 @Slf4j
 public class TmdbUtil {
+
+    private static final String TMDB_API = "6bde7d268c5fd4b5baa41499612158e2";
 
     /**
      * 获取番剧在tmdb的名称
@@ -22,7 +25,7 @@ public class TmdbUtil {
      * @param name
      * @return
      */
-    public synchronized static String getName(String name) {
+    public synchronized static String getName(String name, String type) {
         name = name.trim();
         if (StrUtil.isBlank(name)) {
             return "";
@@ -37,42 +40,34 @@ public class TmdbUtil {
             return "";
         }
         Config config = ConfigUtil.CONFIG;
-        String acceptLanguage = config.getTmdbLanguage();
+        String tmdbLanguage = config.getTmdbLanguage();
         AtomicReference<String> tmdbId = new AtomicReference<>("");
         String themoviedbName;
         try {
             String finalName = name;
-            themoviedbName = HttpReq.get("https://www.themoviedb.org/search", true)
+            themoviedbName = HttpReq.get("https://api.themoviedb.org/3/search/" + type)
                     .form("query", name)
-                    .cookie("")
-                    .header("accept-language", acceptLanguage)
+                    .form("api_key", TMDB_API)
+                    .form("language", tmdbLanguage)
                     .thenFunction(res -> {
-                        org.jsoup.nodes.Document document = Jsoup.parse(res.body());
-                        Element element = document.selectFirst(".title h2");
-                        if (Objects.isNull(element)) {
+                        Assert.isTrue(res.isOk(), "status: {}", res.getStatus());
+                        List<JsonObject> results = GsonStatic.fromJsonList(GsonStatic.fromJson(res.body(), JsonObject.class)
+                                .getAsJsonArray("results"), JsonObject.class);
+                        if (results.isEmpty()) {
                             if (!finalName.contains(" ")) {
                                 return "";
                             }
                             ThreadUtil.sleep(500);
-                            return getName(finalName.split(" ")[0]);
+                            return getName(finalName.split(" ")[0], type);
                         }
-                        Element releaseDate = document.selectFirst(".release_date");
-                        if (Objects.nonNull(releaseDate) && StrUtil.isNotBlank(year.get())) {
-                            String s = "((19|20)\\d{2})";
-                            String text = releaseDate.text();
-                            if (ReUtil.contains(s, text)) {
-                                year.set(ReUtil.get(s, text, 1));
-                            }
-                        }
-                        String title = element.ownText();
+                        JsonObject jsonObject = results.get(0);
+                        String id = jsonObject.get("id").getAsString();
+                        String title = jsonObject.get("name").getAsString();
+                        String firstAirDate = jsonObject.get("first_air_date").getAsString();
+
                         title = RenameUtil.getName(title);
-
-                        Element a = document.selectFirst(".title a");
-                        if (Objects.nonNull(a)) {
-                            String href = a.attr("href");
-                            tmdbId.set(ReUtil.get("\\d+", href, 0));
-                        }
-
+                        year.set(String.valueOf(DateUtil.year(DateUtil.parse(firstAirDate))));
+                        tmdbId.set(id);
                         return StrUtil.blankToDefault(title, "");
                     });
         } catch (Exception e) {
