@@ -60,6 +60,10 @@
             </template>
           </el-table-column>
         </el-table>
+        <div v-if="data['omitList'].length">
+          <el-alert :title="`缺少集数: ${data['omitList'].slice(0,10).join('、')}`" type="warning" show-icon
+                    :closable="false"/>
+        </div>
       </div>
       <div style="margin: 4px 0;display: flex;justify-content: end;">
         <el-text class="mx-1" size="small">
@@ -102,7 +106,8 @@ const selectItems = ref([
 const dialogVisible = ref(false)
 const data = ref({
   'downloadPath': '',
-  'items': []
+  'items': [],
+  'omitList': []
 })
 const loading = ref(true)
 

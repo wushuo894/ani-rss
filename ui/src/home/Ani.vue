@@ -7,7 +7,7 @@
     ani.url = args.url
   }"/>
   <div style="height: 500px;">
-    <el-scrollbar style="padding: 0 12px;" height="500px;" ref="scrollbar">
+    <el-scrollbar style="padding: 0 12px;" height="500" ref="scrollbar">
       <el-form label-width="auto"
                @submit="(event)=>{
                 event.preventDefault()

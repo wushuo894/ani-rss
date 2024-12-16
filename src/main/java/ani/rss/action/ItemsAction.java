@@ -40,9 +40,12 @@ public class ItemsAction implements BaseAction {
             }
         }
 
+        List<Integer> omitList = ItemsUtil.omitList(ani, items);
+
         resultSuccess(Map.of(
                 "downloadPath", downloadPath,
-                "items", items
+                "items", items,
+                "omitList", omitList
         ));
     }
 }

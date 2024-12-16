@@ -26,6 +26,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+
 @Slf4j
 public class ItemsUtil {
 
@@ -238,6 +239,42 @@ public class ItemsUtil {
         return CollUtil.distinct(items, item -> item.getEpisode().toString(), true);
     }
 
+    public static synchronized List<Integer> omitList(Ani ani, List<Item> items) {
+        ArrayList<Integer> list = new ArrayList<>();
+        Config config = ConfigUtil.CONFIG;
+        Boolean omit = config.getOmit();
+        if (!omit) {
+            return list;
+        }
+        if (items.isEmpty()) {
+            return list;
+        }
+
+        if (!ani.getOmit()) {
+            return list;
+        }
+
+        Boolean ova = ani.getOva();
+        if (ova) {
+            return list;
+        }
+
+        int[] array = items.stream().mapToInt(o -> o.getEpisode().intValue()).distinct().toArray();
+        int max = ArrayUtil.max(array);
+        int min = ArrayUtil.min(array);
+        if (max == min) {
+            return list;
+        }
+
+        for (int i = min; i <= max; i++) {
+            if (ArrayUtil.contains(array, i)) {
+                continue;
+            }
+            list.add(i);
+        }
+        return list;
+    }
+
     /**
      * 检测是否缺集
      *
@@ -246,38 +283,18 @@ public class ItemsUtil {
      */
     public static synchronized void omit(Ani ani, List<Item> items) {
         Config config = ConfigUtil.CONFIG;
-        Boolean omit = config.getOmit();
-        if (!omit) {
-            return;
-        }
-        if (items.isEmpty()) {
+        List<Integer> list = omitList(ani, items);
+
+        if (list.isEmpty()) {
             return;
         }
 
-        if (!ani.getOmit()) {
-            return;
-        }
-
-        Boolean ova = ani.getOva();
-        if (ova) {
-            return;
-        }
-
-        int[] array = items.stream().mapToInt(o -> o.getEpisode().intValue()).distinct().toArray();
-        int max = ArrayUtil.max(array);
-        int min = ArrayUtil.min(array);
-        if (max == min) {
-            return;
-        }
         Integer season = ani.getSeason();
         String title = ani.getTitle();
 
-        List<String> sList = new ArrayList<>();
+        ArrayList<String> sList = new ArrayList<>();
 
-        for (int i = min; i <= max; i++) {
-            if (ArrayUtil.contains(array, i)) {
-                continue;
-            }
+        for (Integer i : list) {
             String s = StrFormatter.format("缺少集数 {} S{}E{}", title, String.format("%02d", season), String.format("%02d", i));
             if (messageCache.containsKey(s)) {
                 continue;
@@ -293,7 +310,6 @@ public class ItemsUtil {
         }
 
         MessageUtil.send(config, ani, CollUtil.join(sList, "\n"), MessageEnum.OMIT);
-
     }
 
     public static int currentEpisodeNumber(Ani ani, List<Item> items) {
