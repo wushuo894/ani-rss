@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.Objects;
 
 /**
- * 使用ehcache持久化存储
+ * 重命名缓存
  */
 @Slf4j
 public class RenameCacheUtil {
