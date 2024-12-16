@@ -123,7 +123,7 @@ public class ConfigUtil {
                 .setServerChan3ApiUrl("")
                 .setSystemMsg(false)
                 .setAutoTrackersUpdate(false)
-                .setTrackersUpdateUrls("https://cf.trackerslist.com/best.txt\nhttps://cdn.jsdelivr.net/gh/ngosang/trackerslist@master/trackers_all.txt")
+                .setTrackersUpdateUrls("https://cf.trackerslist.com/best.txt")
                 .setMessageTemplate("${text}")
                 .setAutoUpdate(false)
                 .setAlist(false)
