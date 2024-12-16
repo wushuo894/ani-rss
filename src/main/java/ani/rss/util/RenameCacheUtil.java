@@ -38,7 +38,7 @@ public class RenameCacheUtil {
 
             Statement statement = connection.createStatement();
 
-            String sql = StrFormatter.format("CREATE TABLE IF NOT EXISTS {} (K INTEGER PRIMARY KEY, V TEXT)", TABLE_NAME);
+            String sql = StrFormatter.format("CREATE TABLE IF NOT EXISTS {} (K TEXT PRIMARY KEY, V TEXT)", TABLE_NAME);
             statement.execute(sql);
 
             sqlConnRunner = DbUtil.newSqlConnRunner(connection);
