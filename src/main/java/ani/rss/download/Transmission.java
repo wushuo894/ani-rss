@@ -4,10 +4,10 @@ import ani.rss.entity.Config;
 import ani.rss.entity.Item;
 import ani.rss.entity.TorrentsInfo;
 import ani.rss.enums.TorrentsTags;
-import ani.rss.util.EhCacheUtil;
 import ani.rss.util.ExceptionUtil;
 import ani.rss.util.GsonStatic;
 import ani.rss.util.HttpReq;
+import ani.rss.util.RenameCacheUtil;
 import cn.hutool.core.codec.Base64;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.resource.ResourceUtil;
@@ -183,7 +183,7 @@ public class Transmission implements BaseDownload {
         Boolean watchErrorTorrent = config.getWatchErrorTorrent();
 
         if (!ova) {
-            EhCacheUtil.put(id, name);
+            RenameCacheUtil.put(id, name);
         }
 
         if (!watchErrorTorrent) {
@@ -230,7 +230,7 @@ public class Transmission implements BaseDownload {
 
         Assert.isTrue(!ReUtil.contains("^\\w{40}$", name), "{} 磁力链接还在获取原数据中", name);
 
-        String reName = EhCacheUtil.get(id);
+        String reName = RenameCacheUtil.get(id);
         if (StrUtil.isBlank(reName)) {
             log.debug("未获取到重命名 => id: {}", id);
             return;
@@ -252,7 +252,7 @@ public class Transmission implements BaseDownload {
                 .body(body)
                 .thenFunction(HttpResponse::isOk);
         Assert.isTrue(ok, "重命名失败 {} ==> {}", name, reName);
-        EhCacheUtil.remove(id);
+        RenameCacheUtil.remove(id);
 
         for (int i = 0; i < 10; i++) {
             ThreadUtil.sleep(1000);
