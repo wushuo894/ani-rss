@@ -3,9 +3,9 @@ package ani.rss.download;
 import ani.rss.entity.Config;
 import ani.rss.entity.Item;
 import ani.rss.entity.TorrentsInfo;
-import ani.rss.util.EhCacheUtil;
 import ani.rss.util.GsonStatic;
 import ani.rss.util.HttpReq;
+import ani.rss.util.RenameCacheUtil;
 import cn.hutool.core.codec.Base64;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.io.FileUtil;
@@ -141,7 +141,7 @@ public class Aria2 implements BaseDownload {
         Boolean watchErrorTorrent = config.getWatchErrorTorrent();
 
         if (!ova) {
-            EhCacheUtil.put(id, name);
+            RenameCacheUtil.put(id, name);
         }
 
         if (!watchErrorTorrent) {
@@ -195,7 +195,7 @@ public class Aria2 implements BaseDownload {
             return;
         }
 
-        String reName = EhCacheUtil.get(id);
+        String reName = RenameCacheUtil.get(id);
         if (StrUtil.isBlank(reName)) {
             log.debug("未获取到重命名 => id: {}", id);
             return;
@@ -230,7 +230,7 @@ public class Aria2 implements BaseDownload {
             FileUtil.move(src, newPath, false);
             log.info("重命名 {} ==> {}", name, newPath);
         }
-        EhCacheUtil.remove(id);
+        RenameCacheUtil.remove(id);
     }
 
     @Override
