@@ -272,7 +272,7 @@ public class AniUtil {
         if (items.size() == 1) {
             // 自定义集数获取规则
             if (items.get(0).getEpisode() == 1080) {
-                ani.setCustomEpisode(true);
+                return ani.setCustomEpisode(true);
             }
         }
 
