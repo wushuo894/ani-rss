@@ -612,9 +612,6 @@ public class TorrentUtil {
 
         ani = ObjectUtil.clone(ani).setSubgroup(subgroup);
 
-        Config config = ConfigUtil.CONFIG;
-        Boolean backRss = config.getBackRss();
-
         if (!torrentFile.exists()) {
             log.error("种子下载出现问题 {} {}", name, torrentFile.getAbsolutePath());
             return;
@@ -623,8 +620,8 @@ public class TorrentUtil {
         savePath = FileUtil.getAbsolutePath(savePath);
 
         String text = StrFormatter.format("{} 已更新", name);
-        if (backRss && !ani.getBackRssList().isEmpty()) {
-            text = StrFormatter.format("({}) {}", master ? "主RSS" : "备用RSS", text);
+        if (!master) {
+            text = StrFormatter.format("(备用RSS) {}", text);
         }
         MessageUtil.send(ConfigUtil.CONFIG, ani, text, MessageEnum.DOWNLOAD_START);
 
@@ -708,7 +705,11 @@ public class TorrentUtil {
         } catch (Exception e) {
             log.error(e.getMessage(), e);
         }
-        MessageUtil.send(ConfigUtil.CONFIG, ani, name + " 下载完成", MessageEnum.DOWNLOAD_END);
+        String text = StrFormatter.format("{} 下载完成", name);
+        if (tags.contains(TorrentsTags.BACK_RSS.getValue())) {
+            text = StrFormatter.format("(备用RSS) {}", text);
+        }
+        MessageUtil.send(ConfigUtil.CONFIG, ani, text, MessageEnum.DOWNLOAD_END);
     }
 
     /**
