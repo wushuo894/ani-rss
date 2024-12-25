@@ -103,7 +103,7 @@ public class Aria2 implements BaseDownload {
                                 .setName(name)
                                 .setHash(infoHash)
                                 .setState(state)
-                                .setDownloadDir(dir)
+                                .setDownloadDir(FileUtil.getAbsolutePath(dir))
                                 .setFiles(() -> files);
                         torrentsInfos.add(torrentsInfo);
                     }
