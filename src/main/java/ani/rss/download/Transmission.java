@@ -119,13 +119,15 @@ public class Transmission implements BaseDownload {
                             state = TorrentsInfo.State.pausedUP;
                         }
 
+                        String downloadDir = item.get("downloadDir").getAsString();
+
                         TorrentsInfo torrentsInfo = new TorrentsInfo();
                         torrentsInfo.setName(item.get("name").getAsString());
                         torrentsInfo.setTags(tags);
                         torrentsInfo.setHash(item.get("hashString").getAsString());
                         torrentsInfo.setState(state);
                         torrentsInfo.setId(item.get("id").getAsString());
-                        torrentsInfo.setDownloadDir(item.get("downloadDir").getAsString());
+                        torrentsInfo.setDownloadDir(FileUtil.getAbsolutePath(downloadDir));
                         torrentsInfo.setFiles(() -> files);
                         torrentsInfos.add(torrentsInfo);
                     }
