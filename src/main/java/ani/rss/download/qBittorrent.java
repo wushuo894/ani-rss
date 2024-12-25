@@ -93,7 +93,7 @@ public class qBittorrent implements BaseDownload {
                         TorrentsInfo torrentsInfo = new TorrentsInfo();
                         torrentsInfo.setName(name);
                         torrentsInfo.setHash(hash);
-                        torrentsInfo.setDownloadDir(savePath);
+                        torrentsInfo.setDownloadDir(FileUtil.getAbsolutePath(savePath));
                         torrentsInfo.setState(Objects.isNull(state) ?
                                 TorrentsInfo.State.downloading : EnumUtil.fromString(TorrentsInfo.State.class, state.getAsString(), TorrentsInfo.State.downloading)
                         );
