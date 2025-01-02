@@ -16,6 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Slf4j
@@ -51,6 +52,10 @@ public class TmdbUtil {
         } catch (Exception e) {
             String message = ExceptionUtil.getMessage(e);
             log.error(message, e);
+            return "";
+        }
+
+        if (Objects.isNull(tmdb)) {
             return "";
         }
 
