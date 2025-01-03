@@ -47,7 +47,7 @@
         导入全局排除
       </el-button>
       <el-text class="mx-1" size="small" v-if="props.showText">
-        支持 <a href="https://www.runoob.com/regexp/regexp-syntax.html" target="_blank">正则表达式</a>
+        支持 <el-link href="https://www.runoob.com/regexp/regexp-syntax.html" target="_blank" type="primary" :style="{ fontSize: 'inherit', verticalAlign: 'baseline' }">正则表达式</el-link>
       </el-text>
     </div>
   </div>
