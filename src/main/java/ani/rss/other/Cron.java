@@ -19,6 +19,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * 定时任务
@@ -51,16 +52,9 @@ public class Cron {
                         StrUtil.split(body, "\n")
                                 .stream()
                                 .filter(StrUtil::isNotBlank)
-                                .map(s -> s.replace("\"", ""))
-                                .map(String::trim)
-                                .filter(s -> {
-                                    for (String string : List.of("udp://", "wss://", "ws://", "https://", "http://")) {
-                                        if (s.startsWith(string)) {
-                                            return true;
-                                        }
-                                    }
-                                    return false;
-                                })
+                                .map(s -> s.replace("\"", "").trim())
+                                .filter(s -> Stream.of("udp://", "wss://", "ws://", "https://", "http://")
+                                        .anyMatch(s::startsWith))
                                 .forEach(trackers::add);
                     });
         }
