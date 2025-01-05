@@ -592,7 +592,11 @@ public class TorrentUtil {
             log.warn("下载位置未设置");
             return false;
         }
-        return baseDownload.login(ConfigUtil.CONFIG);
+        try {
+            return baseDownload.login(ConfigUtil.CONFIG);
+        } catch (Exception e) {
+            return false;
+        }
     }
 
     /**
