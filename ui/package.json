@@ -10,17 +10,17 @@
   },
   "dependencies": {
     "@element-plus/icons-vue": "^2.3.1",
-    "@vicons/fa": "^0.12.0",
-    "@vueuse/core": "^12.0.0",
+    "@vicons/fa": "^0.13.0",
+    "@vueuse/core": "^12.3.0",
     "artplayer": "^5.2.1",
     "artplayer-plugin-multiple-subtitles": "^1.1.0",
     "crypto-js": "^4.2.0",
-    "element-plus": "^2.9.1",
+    "element-plus": "^2.9.2",
     "vue": "^3.5.13"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^5.2.1",
-    "shiki": "^1.24.2",
-    "vite": "^6.0.3"
+    "shiki": "^1.26.1",
+    "vite": "^6.0.7"
   }
 }
