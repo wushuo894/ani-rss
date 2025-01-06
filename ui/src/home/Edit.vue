@@ -79,7 +79,7 @@ const editAni = () => {
         emit('load')
         dialogVisible.value = false
       })
-      .finally(callback);
+      .finally(callback.value);
 }
 
 const show = (item) => {
