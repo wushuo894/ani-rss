@@ -82,6 +82,7 @@ public class TmdbUtil {
         return HttpReq.get("https://api.themoviedb.org/3/search/" + type, true)
                 .form("query", URLUtil.encodeBlank(titleName))
                 .form("api_key", TMDB_API)
+                .form("include_adult", "true")
                 .form("language", tmdbLanguage)
                 .thenFunction(res -> {
                     Assert.isTrue(res.isOk(), "status: {}", res.getStatus());
