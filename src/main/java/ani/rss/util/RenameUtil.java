@@ -114,6 +114,8 @@ public class RenameUtil {
         title = getName(title);
         itemTitle = getName(itemTitle);
 
+        String resolution = getResolution(itemTitle);
+
         renameTemplate = renameTemplate.replace("${title}", title);
         renameTemplate = renameTemplate.replace("${seasonFormat}", seasonFormat);
         renameTemplate = renameTemplate.replace("${episodeFormat}", episodeFormat);
@@ -121,12 +123,37 @@ public class RenameUtil {
         renameTemplate = renameTemplate.replace("${episode}", episodeStr);
         renameTemplate = renameTemplate.replace("${subgroup}", subgroup);
         renameTemplate = renameTemplate.replace("${itemTitle}", itemTitle);
+        renameTemplate = renameTemplate.replace("${resolution}", resolution);
 
         String reName = renameTemplate.trim();
 
         item
                 .setReName(reName);
         return true;
+    }
+
+    /**
+     * 获取分辨率
+     *
+     * @param itemTitle
+     * @return
+     */
+    private static String getResolution(String itemTitle) {
+        Map<String, String> stringStringMap = Map.of(
+                "1920x1080", "1080p",
+                "3840x2160", "2160p",
+                "1280x720", "720p"
+        );
+        for (String s : stringStringMap.keySet()) {
+            itemTitle = itemTitle.replace(s, stringStringMap.get(s));
+        }
+
+        String resolutionReg = "(720|1080|2160)[Pp]";
+        String resolution = "none";
+        if (ReUtil.contains(resolutionReg, itemTitle)) {
+            resolution = ReUtil.get(resolutionReg, itemTitle, 0).toLowerCase();
+        }
+        return resolution;
     }
 
     public static String getName(String s) {
