@@ -226,6 +226,9 @@ public class BgmUtil {
             return;
         }
 
+        // 间隔 500 毫秒, 防止流控
+        ThreadUtil.sleep(500);
+
         HttpReq.put(host + "/v0/users/-/collections/-/episodes/" + episodeId, true)
                 .header("Authorization", "Bearer " + ConfigUtil.CONFIG.getBgmToken())
                 .contentType(ContentType.JSON.getValue())
