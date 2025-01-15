@@ -215,14 +215,14 @@ public class BgmUtil {
         ThreadUtil.sleep(500);
         Objects.requireNonNull(episodeId);
 
-        String body = HttpReq.get(host + "/v0/users/-/collections/-/episodes/" + episodeId, true)
+        // bgm点格子前先判断状态，防止刷屏 #142
+        JsonObject jsonObject = HttpReq.get(host + "/v0/users/-/collections/-/episodes/" + episodeId, true)
                 .header("Authorization", "Bearer " + ConfigUtil.CONFIG.getBgmToken())
-                .header("accept", ContentType.JSON.getValue())
-                .execute().body();
+                .contentType(ContentType.JSON.getValue())
+                .thenFunction(res -> GsonStatic.fromJson(res.body(), JsonObject.class));
 
-        JsonObject jsonObject = GsonStatic.fromJson(body, JsonObject.class);
         int typeNow = jsonObject.get("type").getAsInt();
-        if (type.equals(typeNow)) {
+        if (type == typeNow) {
             return;
         }
 
