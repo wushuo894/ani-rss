@@ -214,6 +214,21 @@ public class BgmUtil {
     public static void collectionsEpisodes(String episodeId, Integer type) {
         ThreadUtil.sleep(500);
         Objects.requireNonNull(episodeId);
+
+        // bgm点格子前先判断状态，防止刷屏 #142
+        JsonObject jsonObject = HttpReq.get(host + "/v0/users/-/collections/-/episodes/" + episodeId, true)
+                .header("Authorization", "Bearer " + ConfigUtil.CONFIG.getBgmToken())
+                .contentType(ContentType.JSON.getValue())
+                .thenFunction(res -> GsonStatic.fromJson(res.body(), JsonObject.class));
+
+        int typeNow = jsonObject.get("type").getAsInt();
+        if (type == typeNow) {
+            return;
+        }
+
+        // 间隔 500 毫秒, 防止流控
+        ThreadUtil.sleep(500);
+
         HttpReq.put(host + "/v0/users/-/collections/-/episodes/" + episodeId, true)
                 .header("Authorization", "Bearer " + ConfigUtil.CONFIG.getBgmToken())
                 .contentType(ContentType.JSON.getValue())
