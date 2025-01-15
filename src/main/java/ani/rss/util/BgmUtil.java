@@ -214,6 +214,18 @@ public class BgmUtil {
     public static void collectionsEpisodes(String episodeId, Integer type) {
         ThreadUtil.sleep(500);
         Objects.requireNonNull(episodeId);
+
+        String body = HttpReq.get(host + "/v0/users/-/collections/-/episodes/" + episodeId, true)
+                .header("Authorization", "Bearer " + ConfigUtil.CONFIG.getBgmToken())
+                .header("accept", ContentType.JSON.getValue())
+                .execute().body();
+
+        JsonObject jsonObject = GsonStatic.fromJson(body, JsonObject.class);
+        int typeNow = jsonObject.get("type").getAsInt();
+        if (type.equals(typeNow)) {
+            return;
+        }
+
         HttpReq.put(host + "/v0/users/-/collections/-/episodes/" + episodeId, true)
                 .header("Authorization", "Bearer " + ConfigUtil.CONFIG.getBgmToken())
                 .contentType(ContentType.JSON.getValue())
