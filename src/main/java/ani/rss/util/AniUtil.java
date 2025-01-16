@@ -267,6 +267,7 @@ public class AniUtil {
         }
 
         String s = HttpReq.get(url, true)
+                .timeout(config.getRssTimeout() * 1000)
                 .thenFunction(HttpResponse::body);
         List<Item> items = ItemsUtil.getItems(ani, s, new Item());
         if (items.size() == 1) {
