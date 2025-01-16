@@ -109,6 +109,11 @@ public class Config implements Serializable {
     private Boolean rss;
 
     /**
+     * rss 超时时间 秒
+     */
+    private Integer rssTimeout;
+
+    /**
      * 文件已下载自动跳过
      */
     private Boolean fileExist;

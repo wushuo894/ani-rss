@@ -43,7 +43,10 @@ public class ItemsUtil {
 
         List<Item> items = new ArrayList<>();
 
+        Config config = ConfigUtil.CONFIG;
+
         String s = HttpReq.get(url, true)
+                .timeout(config.getRssTimeout() * 1000)
                 .thenFunction(HttpResponse::body);
         String subgroup = StrUtil.blankToDefault(ani.getSubgroup(), "未知字幕组");
         items.addAll(ItemsUtil.getItems(ani, s, new Item().setSubgroup(subgroup))
@@ -51,7 +54,6 @@ public class ItemsUtil {
                 .peek(item -> item.setMaster(true))
                 .collect(Collectors.toList()));
 
-        Config config = ConfigUtil.CONFIG;
         if (!config.getBackRss()) {
             return items;
         }
@@ -60,6 +62,7 @@ public class ItemsUtil {
         for (Ani.BackRss rss : backRss) {
             ThreadUtil.sleep(1000);
             s = HttpReq.get(rss.getUrl(), true)
+                    .timeout(config.getRssTimeout() * 1000)
                     .thenFunction(HttpResponse::body);
             subgroup = StrUtil.blankToDefault(rss.getLabel(), "未知字幕组");
             Ani clone = ObjUtil.clone(ani);
