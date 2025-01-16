@@ -33,6 +33,7 @@ public class ConfigUtil {
                 .setGcSleep(10)
                 .setRename(true)
                 .setRss(true)
+                .setRssTimeout(6)
                 .setWatchErrorTorrent(true)
                 .setDelayedDownload(0)
                 .setFileExist(false)

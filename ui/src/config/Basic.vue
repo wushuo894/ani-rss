@@ -135,6 +135,14 @@
               </template>
             </el-input-number>
           </el-form-item>
+          <el-form-item label="RSS超时">
+            <el-input-number v-model:model-value="props.config['rssTimeout']"
+                             :min="6" :max="60">
+              <template #suffix>
+                <span>秒</span>
+              </template>
+            </el-input-number>
+          </el-form-item>
           <el-form-item label="自动跳过">
             <div style="width: 100%">
               <el-switch v-model:model-value="props.config.fileExist" :disabled="!config.rename"/>
