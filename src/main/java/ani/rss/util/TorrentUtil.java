@@ -90,6 +90,11 @@ public class TorrentUtil {
                 })
                 .count();
 
+        List<File> downloadPathList = getDownloadPath(ani);
+        String savePath = downloadPathList
+                .get(0)
+                .toString();
+
         for (Item item : items) {
             log.debug(JSONUtil.formatJsonStr(GsonStatic.toJson(item)));
             String reName = item.getReName();
@@ -104,7 +109,7 @@ public class TorrentUtil {
                 continue;
             }
             // .5 集
-            Boolean is5 = episode.intValue() != episode;
+            boolean is5 = episode.intValue() != episode;
 
             Date pubDate = item.getPubDate();
             if (Objects.nonNull(pubDate) && delayedDownload > 0) {
@@ -120,7 +125,14 @@ public class TorrentUtil {
                 TorrentsInfo backRSS = torrentsInfos
                         .stream()
                         .filter(torrentsInfo -> {
-                            if (!reName.equals(torrentsInfo.getName())) {
+                            if (!torrentsInfo.getDownloadDir().equals(savePath)) {
+                                return false;
+                            }
+                            if (!ReUtil.contains(StringEnum.SEASON_REG, torrentsInfo.getName())) {
+                                return false;
+                            }
+                            String s = ReUtil.get(StringEnum.SEASON_REG, torrentsInfo.getName(), 0);
+                            if (!s.equals(ReUtil.get(StringEnum.SEASON_REG, reName, 0))) {
                                 return false;
                             }
                             List<String> tags = torrentsInfo.getTags();
@@ -182,15 +194,10 @@ public class TorrentUtil {
 
             log.info("添加下载 {}", reName);
             File saveTorrent = saveTorrent(ani, item);
-            List<File> downloadPathList = getDownloadPath(ani);
 
             if (saveTorrent.exists()) {
                 deleteBackRss(ani, item);
             }
-
-            String savePath = downloadPathList
-                    .get(0)
-                    .toString();
 
             int size = ItemsUtil.currentEpisodeNumber(ani, items);
             if (size > 0 && ani.getCurrentEpisodeNumber() < size) {
