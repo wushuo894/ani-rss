@@ -265,11 +265,35 @@ public class TorrentUtil {
 
         List<File> downloadPathList = getDownloadPath(ani);
 
+        List<TorrentsInfo> torrentsInfos = getTorrentsInfos();
+
+        for (File file : downloadPathList) {
+            String finalReName = reName;
+            TorrentsInfo backRSS = torrentsInfos
+                    .stream()
+                    .filter(torrentsInfo -> {
+                        if (!torrentsInfo.getDownloadDir().equals(FileUtil.getAbsolutePath(file.toString()))) {
+                            return false;
+                        }
+                        if (!ReUtil.contains(StringEnum.SEASON_REG, torrentsInfo.getName())) {
+                            return false;
+                        }
+                        String s = ReUtil.get(StringEnum.SEASON_REG, torrentsInfo.getName(), 0);
+                        return s.equals(finalReName);
+                    })
+                    .findFirst()
+                    .orElse(null);
+            if (Objects.nonNull(backRSS)) {
+                TorrentUtil.delete(backRSS, true, true);
+            }
+        }
+
         List<File> files = downloadPathList.stream()
                 .filter(File::exists)
                 .filter(File::isDirectory)
                 .flatMap(downloadPath -> Stream.of(ObjectUtil.defaultIfNull(downloadPath.listFiles(), new File[]{})))
                 .collect(Collectors.toList());
+
         for (File file : files) {
             String fileMainName = FileUtil.mainName(file);
             if (StrUtil.isBlank(fileMainName)) {
