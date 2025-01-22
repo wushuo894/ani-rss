@@ -71,6 +71,12 @@
           <el-form-item label="默认导入全局排除">
             <el-switch v-model:model-value="props.config.importExclude" :disabled="props.config.enabledExclude"/>
           </el-form-item>
+          <el-form-item label="封面质量">
+            <el-select v-model:model-value="props.config['bgmImage']" style="width: 150px;">
+              <el-option v-for="item in ['small','grid','large','medium','common']" :value="item"
+                         :key="item"></el-option>
+            </el-select>
+          </el-form-item>
         </el-form>
       </el-collapse-item>
       <el-collapse-item title="重命名设置" name="3">
