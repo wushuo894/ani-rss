@@ -467,4 +467,9 @@ public class Config implements Serializable {
      * 版本
      */
     private String version;
+
+    /**
+     * 获取BGM封面图片质量
+     */
+    private String bgmImage;
 }
