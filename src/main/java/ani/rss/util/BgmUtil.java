@@ -2,6 +2,7 @@ package ani.rss.util;
 
 import ani.rss.entity.Ani;
 import ani.rss.entity.BgmInfo;
+import ani.rss.entity.Config;
 import cn.hutool.cache.Cache;
 import cn.hutool.cache.CacheUtil;
 import cn.hutool.core.convert.Convert;
@@ -281,7 +282,9 @@ public class BgmUtil {
 
             JsonObject images = jsonObject.getAsJsonObject("images");
             if (Objects.nonNull(images)) {
-                bgmInfo.setImage(images.get("common").getAsString());
+                Config config = ConfigUtil.CONFIG;
+                String bgmImage = config.getBgmImage();
+                bgmInfo.setImage(images.get(bgmImage).getAsString());
             }
 
             Set<String> tags = jsonObject.getAsJsonArray("tags")

@@ -131,7 +131,8 @@ public class ConfigUtil {
                 .setAlistPath("/")
                 .setAlistHost("")
                 .setAlistToken("")
-                .setVersion("");
+                .setVersion("")
+                .setBgmImage("large");
     }
 
     /**
