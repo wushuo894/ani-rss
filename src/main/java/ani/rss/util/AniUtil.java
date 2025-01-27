@@ -270,7 +270,9 @@ public class AniUtil {
                 .timeout(config.getRssTimeout() * 1000)
                 .thenFunction(HttpResponse::body);
         List<Item> items = ItemsUtil.getItems(ani, s, new Item());
-        if (items.size() == 1) {
+        if (items.isEmpty()) {
+            return ani.setCustomEpisode(true);
+        } else if (items.size() == 1) {
             // 自定义集数获取规则
             Double episode = items.get(0).getEpisode();
             if (episode == 1920 || episode == 1080) {
