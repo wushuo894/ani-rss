@@ -204,7 +204,7 @@ public class Ani implements Serializable {
                 .setBgmUrl("")
                 .setSubgroup("")
                 .setCustomEpisode(false)
-                .setCustomEpisodeStr("\\[\\d+(\\.5)?]|【\\d+(\\.5)?】|\\d+(\\.5)?")
+                .setCustomEpisodeStr("【\\d+(\\.5)?】|\\[\\d+(\\.5)?]|第\\d+(\\.5)?集| \\d+(\\.5)?")
                 .setCustomEpisodeGroupIndex(0)
                 .setOmit(true)
                 .setDownloadNew(false)
