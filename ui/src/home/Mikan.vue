@@ -3,7 +3,7 @@
     <div>
       <el-radio-group v-model="addAni.match">
         <div v-for="match in matchList" style="margin-right: 12px;">
-          <el-radio :label="match" :value="match">
+          <el-radio :label="JSON.stringify(match)" :value="JSON.stringify(match)">
             <el-tag v-if="match.length" v-for="item in match" style="margin-right: 4px;">{{ item }}</el-tag>
             <el-tag v-else type="success">全部</el-tag>
           </el-radio>
@@ -19,7 +19,7 @@
       </el-button>
     </div>
   </el-dialog>
-  <el-dialog v-model="dialogVisible" title="Mikan" center v-if="dialogVisible">
+  <el-dialog v-model="dialogVisible" center title="Mikan">
     <div style="min-height: 300px;">
       <div style="margin: 4px;">
         <div style="display: flex;justify-content: space-between;">
@@ -233,7 +233,7 @@ let matchDialogVisible = ref(false)
 
 let addAni = ref({
   'url': '',
-  'match': []
+  'match': ''
 })
 
 let matchList = ref([])
@@ -243,7 +243,7 @@ let add = (v) => {
   let all = []
   addAni.value.url = v.url
   addAni.value.group = v.group
-  addAni.value.match = all
+  addAni.value.match = JSON.stringify(all)
 
   if (matchList.value.length === 1 || props.match) {
     dialogVisible.value = false
