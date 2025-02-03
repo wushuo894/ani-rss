@@ -1,5 +1,5 @@
 <template>
-  <el-dialog v-if="dialogVisible" v-model="dialogVisible" center title="封面">
+  <el-dialog v-model="dialogVisible" center title="封面">
     <div style="width: 100%;display: flex;justify-content: space-between;">
       <div>
         <el-image :alt="ani.title"

@@ -5,7 +5,7 @@
     backRss[editIndex].label = args.group
     editIndex = -1
   }" match="false"/>
-  <el-dialog v-model="dialogVisible" title="备用订阅" center v-if="dialogVisible">
+  <el-dialog v-model="dialogVisible" center title="备用订阅">
     <div style="display: flex;width: 100%;">
       <div>
         <el-button text bg icon="Plus" @click="plus" type="primary"/>
