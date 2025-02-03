@@ -1,7 +1,7 @@
 <template>
   <Mikan ref="mikan" @add="args => {
     ani.url = args.url
-    ani.match = args.match.map(s => `{{${args.group}}}:${s}`)
+    ani.match = JSON.parse(args.match).map(s => `{{${args.group}}}:${s}`)
     getRss()
   }"/>
   <Bgm ref="bgmRef" @add="it => {
@@ -9,12 +9,11 @@
     ani.bgmUrl = it.url
   }"/>
   <el-dialog v-model="dialogVisible" center title="添加订阅">
-    <div v-if="showRss">
+    <div v-show="showRss">
       <el-tabs tab-position="left" v-model="activeName">
         <el-tab-pane label="Mikan" name="mikan">
           <el-form label-width="auto"
                    style="height: 260px"
-                   v-if="showRss"
                    @submit="(event)=>{
                 event.preventDefault()
              }">
@@ -47,7 +46,6 @@
         <el-tab-pane label="Other" name="other">
           <el-form label-width="auto"
                    style="height: 200px"
-                   v-if="showRss"
                    @submit="(event)=>{
                 event.preventDefault()
              }">
@@ -90,7 +88,7 @@
         <el-button :loading="rssButtonLoading" @click="getRss" text bg icon="Check">确定</el-button>
       </div>
     </div>
-    <div v-else>
+    <div v-if="!showRss">
       <Ani v-model:ani="ani" @ok="addAni"/>
     </div>
   </el-dialog>
