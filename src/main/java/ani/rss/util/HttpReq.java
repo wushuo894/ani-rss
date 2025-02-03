@@ -17,7 +17,7 @@ public class HttpReq {
     }
 
     private static void config(HttpRequest req) {
-        req.timeout(6000)
+        req.timeout(1000 * 20)
                 .setFollowRedirects(true);
     }
 
