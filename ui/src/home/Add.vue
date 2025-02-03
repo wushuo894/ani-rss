@@ -1,7 +1,7 @@
 <template>
   <Mikan ref="mikan" @add="args => {
     ani.url = args.url
-    ani.match = args.match
+    ani.match = args.match.map(s => `{{${args.group}}}:${s}`)
     getRss()
   }"/>
   <Bgm ref="bgmRef" @add="it => {
