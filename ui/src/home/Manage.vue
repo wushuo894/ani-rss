@@ -1,6 +1,6 @@
 <template>
   <Del ref="refDel" @load="getList"/>
-  <el-dialog v-model="dialogVisible" title="管理" center v-if="dialogVisible" class="manage-dialog">
+  <el-dialog v-model="dialogVisible" center class="manage-dialog" title="管理">
     <div style="min-height: 300px;" v-loading="loading">
       <div style="display: flex;justify-content: space-between;width: 100%;">
         <div style="width: 120px">

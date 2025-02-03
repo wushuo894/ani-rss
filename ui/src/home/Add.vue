@@ -8,7 +8,7 @@
     ani.title = it['name_cn']
     ani.bgmUrl = it.url
   }"/>
-  <el-dialog v-model="dialogVisible" title="添加订阅" center v-if="dialogVisible">
+  <el-dialog v-model="dialogVisible" center title="添加订阅">
     <div v-if="showRss">
       <el-tabs tab-position="left" v-model="activeName">
         <el-tab-pane label="Mikan" name="mikan">

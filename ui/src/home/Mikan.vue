@@ -1,5 +1,5 @@
 <template>
-  <el-dialog v-model="matchDialogVisible" title="匹配" center v-if="matchDialogVisible" width="500" align-center>
+  <el-dialog v-model="matchDialogVisible" align-center center title="匹配" width="500">
     <div>
       <el-radio-group v-model="addAni.match">
         <div v-for="match in matchList" style="margin-right: 12px;">

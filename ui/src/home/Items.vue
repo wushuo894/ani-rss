@@ -1,5 +1,5 @@
 <template class="items">
-  <el-dialog v-model="dialogVisible" title="预览" center v-if="dialogVisible" class="items-dialog">
+  <el-dialog v-model="dialogVisible" center class="items-dialog" title="预览">
     <div style="width: 100%;" v-loading="loading">
       <div style="margin: 4px 0;display: flex;">
         <el-select v-model:model-value="select" style="max-width: 120px;" @change="selectChange">
