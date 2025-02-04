@@ -1,6 +1,6 @@
 <template>
   <play-start ref="playStart"/>
-  <el-dialog v-model="dialogVisible" :title="ani.title" center v-if="dialogVisible">
+  <el-dialog v-model="dialogVisible" :title="ani.title" center>
     <div style="max-height: 500px;min-height: 200px;" v-loading="listLoading">
       <el-scrollbar>
         <div class="i-grid-container" style="max-height: 500px;">

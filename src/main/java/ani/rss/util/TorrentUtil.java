@@ -50,17 +50,6 @@ public class TorrentUtil {
 
         List<TorrentsInfo> torrentsInfos = getTorrentsInfos();
 
-        Set<String> downloadNameList = torrentsInfos.stream()
-                .map(TorrentsInfo::getName)
-                .map(String::trim)
-                .collect(Collectors.toSet());
-
-        Set<String> hashList = torrentsInfos
-                .stream().map(TorrentsInfo::getHash)
-                .map(String::trim)
-                .map(String::toLowerCase)
-                .collect(Collectors.toSet());
-
         int currentDownloadCount = 0;
         List<Item> items = ItemsUtil.getItems(ani);
 
@@ -91,9 +80,11 @@ public class TorrentUtil {
                 .count();
 
         List<File> downloadPathList = getDownloadPath(ani);
-        String savePath = downloadPathList
-                .get(0)
-                .toString();
+        String savePath = FileUtil.getAbsolutePath(
+                downloadPathList
+                        .get(0)
+                        .toString()
+        );
 
         for (Item item : items) {
             log.debug(JSONUtil.formatJsonStr(GsonStatic.toJson(item)));
@@ -151,14 +142,17 @@ public class TorrentUtil {
                         // 删除失败或者不允许删除
                         continue;
                     }
-                    hashList.remove(backRSS.getHash());
-                    downloadNameList.remove(backRSS.getName());
                     torrentsInfos.remove(backRSS);
                 }
             }
 
             // 已经下载过
-            if (hashList.contains(hash) || downloadNameList.contains(reName)) {
+            if (torrentsInfos
+                    .stream()
+                    .anyMatch(torrentsInfo ->
+                            // 文件名与下载位置相同 或 hash 相同
+                            (torrentsInfo.getDownloadDir().equals(savePath) && torrentsInfo.getName().equals(reName))
+                                    || torrentsInfo.getHash().equals(hash))) {
                 log.debug("已有下载任务 {}", reName);
                 if (master && !is5) {
                     currentDownloadCount++;
