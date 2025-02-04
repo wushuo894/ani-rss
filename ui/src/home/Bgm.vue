@@ -1,5 +1,5 @@
 <template>
-  <el-dialog v-model="dialogVisible" title="Bangumi" center v-if="dialogVisible">
+  <el-dialog v-model="dialogVisible" center title="Bangumi">
     <div style="min-height: 300px;">
       <div>
         <div style="display: flex;width: 100%;">
