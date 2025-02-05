@@ -20,4 +20,5 @@ public class MyMailAccount implements Serializable {
     private String from;
     private String pass;
     private Boolean sslEnable;
+    private Boolean starttlsEnable;
 }
