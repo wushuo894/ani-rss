@@ -32,7 +32,7 @@ public class MikanGroupAction implements BaseAction {
                 "繁", "简", "日",
                 "cht", "chs", "hevc",
                 "10bit", "h265", "h264",
-                "内嵌", "外挂",
+                "内嵌", "内封", "外挂",
                 "mp4", "mkv"
         );
 
