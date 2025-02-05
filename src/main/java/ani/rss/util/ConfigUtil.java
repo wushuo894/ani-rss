@@ -75,6 +75,7 @@ public class ConfigUtil {
                                 .setFrom("")
                                 .setPass("")
                                 .setSslEnable(false)
+                                .setStarttlsEnable(false)
                 )
                 .setLogin(new Login()
                         .setUsername("admin")

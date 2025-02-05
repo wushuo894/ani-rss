@@ -30,24 +30,24 @@
                    }">
         <el-form-item label="Api Host">
           <el-input v-model:model-value="props.config.telegramApiHost"
-                    :disabled="!config.telegram"
+                    :disabled="config.telegram"
                     placeholder="https://api.telegram.org"/>
         </el-form-item>
         <el-form-item label="Token">
-          <el-input v-model:model-value="props.config.telegramBotToken" :disabled="!config.telegram"
+          <el-input v-model:model-value="props.config.telegramBotToken" :disabled="config.telegram"
                     placeholder="123456:ABC-DEF1234ghIkl-zyx57W2v1u123ew11"/>
         </el-form-item>
         <el-form-item label="ChatId">
           <div>
             <div style="justify-content: space-between;width: 100%;" class="auto">
               <div style="margin-top: 4px;margin-right: 4px;">
-                <el-input v-model:model-value="props.config.telegramChatId" :disabled="!config.telegram"
+                <el-input v-model:model-value="props.config.telegramChatId" :disabled="config.telegram"
                           placeholder="123456789"/>
               </div>
               <div style="display: flex;margin-top: 4px;align-items: center;">
                 <div>
                   <el-select v-model:model-value="chatId" @change="chatIdChange" style="width: 160px"
-                             :disabled="!config.telegram">
+                             :disabled="config.telegram">
                     <el-option v-for="item in Object.keys(chatIdMap)"
                                :key="item"
                                :label="item"
@@ -56,17 +56,17 @@
                 </div>
                 <div style="margin-left: 4px;">
                   <el-button icon="Refresh" bg text @click="getUpdates" :loading="getUpdatesLoading"
-                             :disabled="!config.telegram"/>
+                             :disabled="config.telegram"/>
                 </div>
               </div>
             </div>
           </div>
         </el-form-item>
         <el-form-item label="图片">
-          <el-switch v-model:model-value="props.config.telegramImage" :disabled="!config.telegram"/>
+          <el-switch v-model:model-value="props.config.telegramImage" :disabled="config.telegram"/>
         </el-form-item>
         <el-form-item label="格式">
-          <el-select v-model:model-value="props.config.telegramFormat" :disabled="!config.telegram" placeholder="None">
+          <el-select v-model:model-value="props.config.telegramFormat" :disabled="config.telegram" placeholder="None">
             <el-option label="None" value=""/>
             <el-option label="Markdown" value="Markdown"/>
             <el-option label="HTML" value="HTML"/>
@@ -88,29 +88,32 @@
                       event.preventDefault()
                    }">
         <el-form-item label="SMTP地址">
-          <el-input v-model:model-value="props.config.mailAccount.host" :disabled="!config.mail"
+          <el-input v-model:model-value="props.config.mailAccount.host" :disabled="config.mail"
                     placeholder="smtp.xx.com"/>
         </el-form-item>
         <el-form-item label="SMTP端口">
           <el-input-number v-model:model-value="props.config.mailAccount.port" :min="1" :max="65535"
-                           :disabled="!config.mail"/>
+                           :disabled="config.mail"/>
         </el-form-item>
         <el-form-item label="发件人邮箱">
-          <el-input v-model:model-value="props.config.mailAccount.from" :disabled="!config.mail"
+          <el-input v-model:model-value="props.config.mailAccount.from" :disabled="config.mail"
                     placeholder="xx@xx.com"/>
         </el-form-item>
         <el-form-item label="密码">
-          <el-input v-model:model-value="props.config.mailAccount.pass" show-password :disabled="!config.mail"/>
+          <el-input v-model:model-value="props.config.mailAccount.pass" show-password :disabled="config.mail"/>
         </el-form-item>
         <el-form-item label="SSL">
-          <el-switch v-model:model-value="props.config.mailAccount.sslEnable" :disabled="!config.mail"/>
+          <el-switch v-model:model-value="props.config.mailAccount.sslEnable" :disabled="config.mail"/>
+        </el-form-item>
+        <el-form-item label="STARTTLS">
+          <el-switch v-model:model-value="props.config.mailAccount['starttlsEnable']" :disabled="config.mail"/>
         </el-form-item>
         <el-form-item label="收件人邮箱">
-          <el-input v-model:model-value="props.config.mailAddressee" :disabled="!config.mail"
+          <el-input v-model:model-value="props.config.mailAddressee" :disabled="config.mail"
                     placeholder="xx@xx.com"></el-input>
         </el-form-item>
         <el-form-item label="图片">
-          <el-switch v-model:model-value="props.config.mailImage" :disabled="!config.mail"/>
+          <el-switch v-model:model-value="props.config.mailImage" :disabled="config.mail"/>
         </el-form-item>
         <el-form-item label="开关">
           <div style="width: 100%;display: flex;justify-content: space-between;">
@@ -127,7 +130,7 @@
                       event.preventDefault()
                    }">
         <el-form-item label="Type">
-          <el-select v-model="props.config.serverChanType">
+          <el-select v-model="props.config.serverChanType" :disabled="config.serverChan">
             <el-option
                 v-for="(value, label) in { 'server酱': 'serverChan', 'server酱³': 'serverChan3' }"
                 :key="label"
@@ -137,10 +140,11 @@
           </el-select>
         </el-form-item>
         <el-form-item label="sendKey" v-if="props.config.serverChanType === 'serverChan'">
-          <el-input v-model="props.config.serverChanSendKey" placeholder="1234567890"></el-input>
+          <el-input v-model="props.config.serverChanSendKey" placeholder="1234567890" :disabled="config.serverChan"></el-input>
         </el-form-item>
         <el-form-item label="apiUrl" v-else-if="props.config.serverChanType === 'serverChan3'">
           <el-input v-model="props.config.serverChan3ApiUrl"
+                    :disabled="config.serverChan"
                     placeholder="https://<uid>.push.ft07.com/send/<sendKey>.send"></el-input>
         </el-form-item>
         <el-form-item label="开关">

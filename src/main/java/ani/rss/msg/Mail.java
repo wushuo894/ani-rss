@@ -6,6 +6,7 @@ import ani.rss.entity.MyMailAccount;
 import ani.rss.enums.MessageEnum;
 import ani.rss.util.ExceptionUtil;
 import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.bean.copier.CopyOptions;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.text.StrFormatter;
 import cn.hutool.extra.mail.MailAccount;
@@ -39,7 +40,9 @@ public class Mail implements Message {
         Assert.notBlank(mailAddressee, "收件人 为空");
 
         MailAccount mailAccount = new MailAccount();
-        BeanUtil.copyProperties(myMailAccount, mailAccount);
+        BeanUtil.copyProperties(myMailAccount, mailAccount, CopyOptions
+                .create()
+                .setIgnoreNullValue(true));
         mailAccount.setUser(from)
                 .setFrom(StrFormatter.format("ani-rss <{}>", from))
                 .setAuth(true);
