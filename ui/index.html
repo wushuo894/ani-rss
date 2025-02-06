@@ -11,13 +11,13 @@
 </head>
 <script>
     (() => {
-        if (!location.href.endsWith('.html')) {
+        if (location.href.endsWith('.html')) {
             return
         }
-        if (!location.href.endsWith('#')) {
+        if (location.href.endsWith('#')) {
             return
         }
-        if (!location.pathname.endsWith('/')) {
+        if (location.pathname.endsWith('/')) {
             return;
         }
         location.href = location.href + '/'
