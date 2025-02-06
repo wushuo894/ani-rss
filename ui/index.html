@@ -6,13 +6,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
     <title>ANI-RSS</title>
     <link rel="manifest" href="/manifest.json"/>
-    <meta content="#ffffff" media="(prefers-color-scheme: light)" name="theme-color" />
-    <meta content="#000000" media="(prefers-color-scheme: dark)" name="theme-color" />
+    <meta content="#ffffff" media="(prefers-color-scheme: light)" name="theme-color"/>
+    <meta content="#000000" media="(prefers-color-scheme: dark)" name="theme-color"/>
 </head>
 <script>
-    if (!location.pathname.endsWith('/') && !location.href.endsWith('#')) {
+    (() => {
+        if (location.href.endsWith('.html')) {
+            return
+        }
+        if (location.href.endsWith('#')) {
+            return
+        }
+        if (location.pathname.endsWith('/')) {
+            return;
+        }
         location.href = location.href + '/'
-    }
+    })()
 </script>
 <body>
 <div id="app"></div>
