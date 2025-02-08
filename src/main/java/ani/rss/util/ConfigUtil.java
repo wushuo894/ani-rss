@@ -118,7 +118,7 @@ public class ConfigUtil {
                         MessageEnum.OMIT,
                         MessageEnum.ERROR
                 ))
-                .setVerifyLoginIp(true)
+                .setVerifyLoginIp(false)
                 .setServerChan(false)
                 .setServerChanType(ServerChanTypeEnum.SERVER_CHAN.getType())
                 .setServerChanSendKey("")
