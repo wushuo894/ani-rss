@@ -117,7 +117,7 @@ public class FileAction implements BaseAction {
             response.setHeader("Accept-Ranges", "bytes");
             String rangeHeader = request.getHeader("Range");
             long fileLength = new File(filename).length();
-            if (rangeHeader != null && rangeHeader.startsWith("bytes=")) {
+            if (StrUtil.isNotBlank(rangeHeader) && rangeHeader.startsWith("bytes=")) {
                 String[] range = rangeHeader.substring(6).split("-");
                 start = Long.parseLong(range[0]);
                 long contentLength = fileLength - start;
