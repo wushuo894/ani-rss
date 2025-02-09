@@ -464,6 +464,11 @@ public class Config implements Serializable {
     private Boolean alist;
 
     /**
+     * 上传完成后删除原文件
+     */
+    private Boolean alistDelete;
+
+    /**
      * 版本
      */
     private String version;
