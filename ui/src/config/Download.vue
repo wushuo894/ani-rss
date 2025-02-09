@@ -165,6 +165,7 @@
                 自动将下载完成的文件上传至alist
               </el-text>
             </div>
+            <el-checkbox v-model:model-value="props.config['alistDelete']">上传完成后删除原文件</el-checkbox>
           </div>
         </el-form-item>
       </el-collapse-item>

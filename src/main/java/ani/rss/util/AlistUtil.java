@@ -104,6 +104,12 @@ public class AlistUtil {
                             .then(res -> {
                                 Assert.isTrue(res.isOk(), "上传失败 {} 状态码:{}", string, res.getStatus());
                                 log.info("已向alist添加上传任务 {}", string);
+
+                                // 上传完成后删除原文件
+                                Boolean alistDelete = config.getAlistDelete();
+                                if (alistDelete && TorrentUtil.login()) {
+                                    TorrentUtil.delete(torrentsInfo, true, true);
+                                }
                             });
                 } catch (Exception e) {
                     log.error(e.getMessage(), e);
