@@ -129,6 +129,7 @@ public class ConfigUtil {
                 .setMessageTemplate("${text}")
                 .setAutoUpdate(false)
                 .setAlist(false)
+                .setAlistDelete(false)
                 .setAlistPath("/")
                 .setAlistHost("")
                 .setAlistToken("")
