@@ -32,7 +32,7 @@
 ## 其他
 
 <a href="https://afdian.com/a/wushuo894" target="_blank">
-  <img src="https://docs.wushuo.top/support_aifadian.svg" alt="support_aifadian">
+  <img src="https://github.com/wushuo894/ani-rss-docs/raw/main/docs/public/support_aifadian.svg" alt="support_aifadian">
 </a>
 
 ### 推广须知
