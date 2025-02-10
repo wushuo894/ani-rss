@@ -55,6 +55,7 @@ public class ItemsUtil {
                 .collect(Collectors.toList()));
 
         if (!config.getBackRss()) {
+            items.sort(Comparator.comparingDouble(Item::getEpisode));
             return items;
         }
 
