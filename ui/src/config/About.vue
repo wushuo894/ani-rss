@@ -14,8 +14,6 @@
         <el-button bg text type="info" @click="openUrl('https://github.com/wushuo894/ani-rss')" :icon="Github">GitHub
         </el-button>
         <el-button bg text type="info" @click="openUrl('https://docs.wushuo.top')" :icon="Book">使用文档</el-button>
-        <el-button bg text type="info" @click="openUrl('https://afdian.com/a/wushuo894')" :icon="Bone">投喂作者
-        </el-button>
         <el-button bg text type="info" @click="openUrl('https://t.me/ani_rss')" :icon="Telegram">TG群</el-button>
         <el-button bg text type="info"
                    :icon="Qq"
@@ -42,6 +40,11 @@
           更新
         </el-button>
       </el-badge>
+    </div>
+    <div style="margin-top: 12px;">
+      <a href="https://afdian.com/a/wushuo894" target="_blank">
+        <img :src="support_aifadian" alt="support_aifadian">
+      </a>
     </div>
   </div>
   <el-dialog title="版本更新" v-model="dialogVisible" v-if="dialogVisible" width="400" align-center center>
@@ -80,7 +83,8 @@ import {onMounted, ref} from "vue";
 import api from "../api.js";
 import {ElMessage, ElText} from "element-plus";
 import Popconfirm from "../other/Popconfirm.vue";
-import {Bone, Book, Github, Qq, Telegram} from "@vicons/fa";
+import {Book, Github, Qq, Telegram} from "@vicons/fa";
+import support_aifadian from "../icon/support_aifadian.svg";
 
 const actionLoading = ref(false)
 
