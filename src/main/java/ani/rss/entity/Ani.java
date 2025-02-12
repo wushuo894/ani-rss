@@ -7,6 +7,7 @@ import lombok.experimental.Accessors;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -214,7 +215,13 @@ public class Ani implements Serializable {
                 .setCustomEpisodeGroupIndex(0)
                 .setOmit(true)
                 .setDownloadNew(false)
-                .setNotDownload(new ArrayList<>());
+                .setNotDownload(new ArrayList<>())
+                .setTmdb(
+                        new TmdbUtil.Tmdb()
+                                .setId("")
+                                .setName("")
+                                .setDate(new Date())
+                );
     }
 
     @Data

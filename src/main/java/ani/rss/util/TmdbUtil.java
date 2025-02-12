@@ -32,8 +32,9 @@ public class TmdbUtil {
      * @param ani
      * @return
      */
-    public synchronized static String getName(String name, String type, Ani ani) {
-        name = name.trim();
+    public synchronized static String getName(Ani ani) {
+        String type = ani.getOva() ? "movie" : "tv";
+        String name = ani.getTitle().trim();
         if (StrUtil.isBlank(name)) {
             return "";
         }
@@ -56,7 +57,7 @@ public class TmdbUtil {
             log.error(message, e);
             return "";
         }
-        if (null != ani) {
+        if (Objects.nonNull(ani)) {
             ani.setTmdb(tmdb);
         }
 
