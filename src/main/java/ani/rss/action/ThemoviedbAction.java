@@ -23,7 +23,7 @@ public class ThemoviedbAction implements BaseAction {
         String type = request.getParam("type");
         if ("getThemoviedbName".equals(s)) {
             String name = request.getParam("name");
-            String themoviedbName = TmdbUtil.getName(name, type);
+            String themoviedbName = TmdbUtil.getName(name, type, null);
             Result<String> result = new Result<String>()
                     .setCode(HttpStatus.HTTP_OK)
                     .setMessage("获取TMDB成功")
