@@ -1,5 +1,6 @@
 package ani.rss.util;
 
+import ani.rss.entity.Ani;
 import ani.rss.entity.Config;
 import ani.rss.enums.StringEnum;
 import cn.hutool.core.date.DateUtil;
@@ -14,6 +15,7 @@ import lombok.Data;
 import lombok.experimental.Accessors;
 import lombok.extern.slf4j.Slf4j;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
@@ -28,10 +30,12 @@ public class TmdbUtil {
      * 获取番剧在tmdb的名称
      *
      * @param name
+     * @param ani
      * @return
      */
-    public synchronized static String getName(String name, String type) {
-        name = name.trim();
+    public synchronized static String getName(Ani ani) {
+        String type = ani.getOva() ? "movie" : "tv";
+        String name = ani.getTitle().trim();
         if (StrUtil.isBlank(name)) {
             return "";
         }
@@ -54,6 +58,8 @@ public class TmdbUtil {
             log.error(message, e);
             return "";
         }
+        ani.setTmdb(tmdb);
+
 
         if (Objects.isNull(tmdb)) {
             return "";
@@ -117,7 +123,7 @@ public class TmdbUtil {
 
     @Data
     @Accessors(chain = true)
-    public static class Tmdb {
+    public static class Tmdb implements Serializable {
         private String id;
         private String name;
         private Date date;
