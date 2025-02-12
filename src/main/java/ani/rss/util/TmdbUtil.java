@@ -15,6 +15,7 @@ import lombok.Data;
 import lombok.experimental.Accessors;
 import lombok.extern.slf4j.Slf4j;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
@@ -124,7 +125,7 @@ public class TmdbUtil {
 
     @Data
     @Accessors(chain = true)
-    public static class Tmdb {
+    public static class Tmdb implements Serializable {
         private String id;
         private String name;
         private Date date;
