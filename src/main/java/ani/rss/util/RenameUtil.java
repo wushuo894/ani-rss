@@ -115,6 +115,7 @@ public class RenameUtil {
         itemTitle = getName(itemTitle);
 
         String resolution = getResolution(itemTitle);
+        TmdbUtil.Tmdb tmdb = ani.getTmdb();
 
         renameTemplate = renameTemplate.replace("${title}", title);
         renameTemplate = renameTemplate.replace("${seasonFormat}", seasonFormat);
@@ -124,6 +125,7 @@ public class RenameUtil {
         renameTemplate = renameTemplate.replace("${subgroup}", subgroup);
         renameTemplate = renameTemplate.replace("${itemTitle}", itemTitle);
         renameTemplate = renameTemplate.replace("${resolution}", resolution);
+        renameTemplate = renameTemplate.replace("${tmdbid}", tmdb.getId());
 
         String reName = renameTemplate.trim();
 
