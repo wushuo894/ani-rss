@@ -25,6 +25,10 @@
           <el-form-item label="显示视频列表">
             <el-switch v-model:model-value="props.config.showPlaylist"/>
           </el-form-item>
+          <el-form-item label="自定义CSS">
+            <el-input v-model:model-value="props.config['customCss']" type="textarea"
+                      placeholder="" :autosize="{ minRows: 2, maxRows: 4 }"/>
+          </el-form-item>
         </el-form>
       </el-collapse-item>
       <el-collapse-item title="添加订阅" name="2">

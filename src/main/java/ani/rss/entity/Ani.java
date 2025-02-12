@@ -1,11 +1,13 @@
 package ani.rss.entity;
 
+import ani.rss.util.TmdbUtil;
 import cn.hutool.core.lang.UUID;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -179,6 +181,11 @@ public class Ani implements Serializable {
      */
     private List<Double> notDownload;
 
+    /**
+     * tmdb 相关信息
+     */
+    private TmdbUtil.Tmdb tmdb;
+
     public static Ani bulidAni() {
         Ani newAni = new Ani();
         return newAni
@@ -208,7 +215,13 @@ public class Ani implements Serializable {
                 .setCustomEpisodeGroupIndex(0)
                 .setOmit(true)
                 .setDownloadNew(false)
-                .setNotDownload(new ArrayList<>());
+                .setNotDownload(new ArrayList<>())
+                .setTmdb(
+                        new TmdbUtil.Tmdb()
+                                .setId("")
+                                .setName("")
+                                .setDate(new Date())
+                );
     }
 
     @Data
