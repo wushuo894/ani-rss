@@ -227,7 +227,7 @@ public class AniUtil {
             title = StrFormatter.format("{} ({})", title, year);
         }
 
-        String themoviedbName = TmdbUtil.getName(title, ani.getOva() ? "movie" : "tv");
+        String themoviedbName = TmdbUtil.getName(title, ani.getOva() ? "movie" : "tv", ani);
 
         if (StrUtil.isNotBlank(themoviedbName) && tmdb) {
             title = themoviedbName;

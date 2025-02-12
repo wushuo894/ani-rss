@@ -1,5 +1,6 @@
 package ani.rss.util;
 
+import ani.rss.entity.Ani;
 import ani.rss.entity.Config;
 import ani.rss.enums.StringEnum;
 import cn.hutool.core.date.DateUtil;
@@ -28,9 +29,10 @@ public class TmdbUtil {
      * 获取番剧在tmdb的名称
      *
      * @param name
+     * @param ani
      * @return
      */
-    public synchronized static String getName(String name, String type) {
+    public synchronized static String getName(String name, String type, Ani ani) {
         name = name.trim();
         if (StrUtil.isBlank(name)) {
             return "";
@@ -54,6 +56,10 @@ public class TmdbUtil {
             log.error(message, e);
             return "";
         }
+        if (null != ani) {
+            ani.setTmdb(tmdb);
+        }
+
 
         if (Objects.isNull(tmdb)) {
             return "";
