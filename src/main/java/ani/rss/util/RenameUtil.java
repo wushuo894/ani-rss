@@ -13,6 +13,7 @@ import com.google.gson.JsonElement;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -115,7 +116,9 @@ public class RenameUtil {
         itemTitle = getName(itemTitle);
 
         String resolution = getResolution(itemTitle);
-        TmdbUtil.Tmdb tmdb = ani.getTmdb();
+        String tmdbId = Optional.ofNullable(ani.getTmdb())
+                .map(TmdbUtil.Tmdb::getId)
+                .orElse("");
 
         renameTemplate = renameTemplate.replace("${title}", title);
         renameTemplate = renameTemplate.replace("${seasonFormat}", seasonFormat);
@@ -125,7 +128,7 @@ public class RenameUtil {
         renameTemplate = renameTemplate.replace("${subgroup}", subgroup);
         renameTemplate = renameTemplate.replace("${itemTitle}", itemTitle);
         renameTemplate = renameTemplate.replace("${resolution}", resolution);
-        renameTemplate = renameTemplate.replace("${tmdbid}", tmdb.getId());
+        renameTemplate = renameTemplate.replace("${tmdbid}", tmdbId);
 
         String reName = renameTemplate.trim();
 
