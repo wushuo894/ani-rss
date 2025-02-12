@@ -185,7 +185,8 @@ let getThemoviedbName = () => {
   api.post('api/tmdb?method=getThemoviedbName', props.ani)
       .then(res => {
         ElMessage.success(res.message)
-        props.ani = res.data
+        props.ani['themoviedbName'] = res.data['themoviedbName']
+        props.ani['tmdb'] = res.data['tmdb']
       })
       .finally(() => {
         getThemoviedbNameLoading.value = false
