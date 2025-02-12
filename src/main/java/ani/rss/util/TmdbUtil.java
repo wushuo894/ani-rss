@@ -58,9 +58,7 @@ public class TmdbUtil {
             log.error(message, e);
             return "";
         }
-        if (Objects.nonNull(ani)) {
-            ani.setTmdb(tmdb);
-        }
+        ani.setTmdb(tmdb);
 
 
         if (Objects.isNull(tmdb)) {
