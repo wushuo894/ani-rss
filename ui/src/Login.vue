@@ -2,7 +2,7 @@
   <div
       style="display: flex;align-items: center;justify-content: space-between;flex-flow: column; height: 100%;width: 100%;"
       v-if="!authorization">
-    <div style="justify-content: center;align-items: center;display: flex;flex: 1">
+    <div style="justify-content: center;align-items: center;display: flex;flex: 1" id="login-page">
       <div id="form" style="max-width: 200px;">
         <div style="text-align: center;">
           <img src="../public/icon.svg" height="80" width="80" alt="icon.svg"/>
