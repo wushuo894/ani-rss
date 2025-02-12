@@ -1,5 +1,6 @@
 package ani.rss.entity;
 
+import ani.rss.util.TmdbUtil;
 import cn.hutool.core.lang.UUID;
 import lombok.Data;
 import lombok.experimental.Accessors;
@@ -178,6 +179,11 @@ public class Ani implements Serializable {
      * 不进行下载的集
      */
     private List<Double> notDownload;
+
+    /**
+     * tmdb 相关信息
+     */
+    private TmdbUtil.Tmdb tmdb;
 
     public static Ani bulidAni() {
         Ani newAni = new Ani();
