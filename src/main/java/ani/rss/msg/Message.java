@@ -4,6 +4,7 @@ import ani.rss.entity.Ani;
 import ani.rss.entity.Config;
 import ani.rss.enums.MessageEnum;
 import ani.rss.enums.StringEnum;
+import ani.rss.util.TmdbUtil;
 import cn.hutool.core.lang.func.Func1;
 import cn.hutool.core.lang.func.LambdaUtil;
 import cn.hutool.core.text.StrFormatter;
@@ -11,6 +12,7 @@ import cn.hutool.core.util.ReUtil;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 public interface Message {
 
@@ -58,6 +60,12 @@ public interface Message {
             } catch (Exception ignored) {
             }
         }
+
+        String tmdbId = Optional.ofNullable(ani.getTmdb())
+                .map(TmdbUtil.Tmdb::getId)
+                .orElse("");
+        messageTemplate = messageTemplate.replace("${tmdbid}", tmdbId);
+
         return messageTemplate;
     }
 }
