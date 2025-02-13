@@ -114,11 +114,9 @@ useDark()
 
 onMounted(() => {
   test()
-  let {username, password} = rememberThePassword.value;
-  if (username) {
+  let {remember, username, password} = rememberThePassword.value;
+  if (remember && username && password) {
     user.value.username = username
-  }
-  if (password) {
     user.value.password = password
   }
 })
