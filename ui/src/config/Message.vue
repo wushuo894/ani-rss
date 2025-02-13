@@ -66,11 +66,13 @@
           <el-switch v-model:model-value="props.config.telegramImage" :disabled="config.telegram"/>
         </el-form-item>
         <el-form-item label="格式">
-          <el-select v-model:model-value="props.config.telegramFormat" :disabled="config.telegram" placeholder="None">
-            <el-option label="None" value=""/>
-            <el-option label="Markdown" value="Markdown"/>
-            <el-option label="HTML" value="HTML"/>
-          </el-select>
+          <div style="width: 160px;">
+            <el-select v-model:model-value="props.config.telegramFormat" :disabled="config.telegram" placeholder="None">
+              <el-option label="None" value=""/>
+              <el-option label="Markdown" value="Markdown"/>
+              <el-option label="HTML" value="HTML"/>
+            </el-select>
+          </div>
         </el-form-item>
         <el-form-item label="开关">
           <div style="width: 100%;display: flex;justify-content: space-between;">
@@ -140,7 +142,8 @@
           </el-select>
         </el-form-item>
         <el-form-item label="sendKey" v-if="props.config.serverChanType === 'serverChan'">
-          <el-input v-model="props.config.serverChanSendKey" placeholder="1234567890" :disabled="config.serverChan"></el-input>
+          <el-input v-model="props.config.serverChanSendKey" placeholder="1234567890"
+                    :disabled="config.serverChan"></el-input>
         </el-form-item>
         <el-form-item label="apiUrl" v-else-if="props.config.serverChanType === 'serverChan3'">
           <el-input v-model="props.config.serverChan3ApiUrl"
