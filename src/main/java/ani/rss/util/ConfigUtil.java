@@ -135,7 +135,8 @@ public class ConfigUtil {
                 .setAlistToken("")
                 .setVersion("")
                 .setBgmImage("large")
-                .setCustomCss("");
+                .setCustomCss("")
+                .setCustomJs("");
     }
 
     /**
