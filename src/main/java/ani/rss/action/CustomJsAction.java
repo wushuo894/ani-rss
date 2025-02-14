@@ -15,16 +15,16 @@ import java.io.OutputStream;
 
 @Slf4j
 @Auth(value = false)
-@Path("/custom.css")
-public class CustomCssAction implements BaseAction {
+@Path("/custom.js")
+public class CustomJsAction implements BaseAction {
     @Override
     public void doAction(HttpServerRequest request, HttpServerResponse response) throws IOException {
-        response.setContentType("text/css");
+        response.setContentType("application/javascript; charset=utf-8");
         response.setHeader(Header.CACHE_CONTROL, "no-store, no-cache, must-revalidate, max-age=0");
         response.setHeader(Header.PRAGMA, "no-cache");
         response.setHeader("Expires", "0");
         @Cleanup
         OutputStream out = response.getOut();
-        IoUtil.writeUtf8(out, true, ConfigUtil.CONFIG.getCustomCss());
+        IoUtil.writeUtf8(out, true, ConfigUtil.CONFIG.getCustomJs());
     }
 }

@@ -482,4 +482,9 @@ public class Config implements Serializable {
      * 自定义CSS
      */
     private String customCss;
+
+    /**
+     * 自定义JS
+     */
+    private String customJs;
 }
