@@ -28,7 +28,7 @@ public class ThemoviedbAction implements BaseAction {
             Result<Ani> result = new Result<Ani>()
                     .setCode(HttpStatus.HTTP_OK)
                     .setMessage("获取TMDB成功")
-                    .setData(ani);
+                    .setData(ani.setThemoviedbName(themoviedbName));
             if (StrUtil.isBlank(themoviedbName)) {
                 result.setCode(HttpStatus.HTTP_INTERNAL_ERROR)
                         .setMessage("获取TMDB失败");
