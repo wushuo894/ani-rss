@@ -22,14 +22,18 @@
               <el-button @click="props.ani.title = ani.themoviedbName"
                          icon="DocumentAdd"
                          :disabled="props.ani.title === ani.themoviedbName || !ani.themoviedbName.length" bg text>
-                使用TMDB
+                使用TMDB标题
               </el-button>
             </div>
           </div>
         </el-form-item>
         <el-form-item label="TMDB">
           <div style="display: flex;width: 100%;justify-content: space-between;">
-            <el-input v-model:model-value="props.ani.themoviedbName" disabled/>
+            <el-link v-if="props.ani?.tmdb?.id" type="primary"
+                     :href="`https://www.themoviedb.org/tv/${props.ani.tmdb.id}`" target="_blank">
+              {{ props.ani.themoviedbName }}
+            </el-link>
+            <el-input v-else v-model:model-value="props.ani.themoviedbName" disabled/>
             <div style="width: 4px;"></div>
             <el-button icon="Refresh" bg text @click="getThemoviedbName" :loading="getThemoviedbNameLoading"/>
           </div>
