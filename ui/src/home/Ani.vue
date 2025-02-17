@@ -29,7 +29,15 @@
         </el-form-item>
         <el-form-item label="TMDB">
           <div style="display: flex;width: 100%;justify-content: space-between;">
-            <el-input v-model:model-value="props.ani.themoviedbName" disabled/>
+            <div class="el-input is-disabled">
+              <div class="el-input__wrapper" tabindex="-1"
+                   style="pointer-events: auto;cursor: auto;justify-content: left;">
+                <el-link v-if="props.ani?.tmdb?.id" type="primary"
+                         :href="`https://www.themoviedb.org/tv/${props.ani.tmdb.id}`" target="_blank">
+                  {{ props.ani.themoviedbName }}
+                </el-link>
+              </div>
+            </div>
             <div style="width: 4px;"></div>
             <el-button icon="Refresh" bg text @click="getThemoviedbName" :loading="getThemoviedbNameLoading"/>
           </div>
