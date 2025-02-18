@@ -283,9 +283,6 @@ public class AniUtil {
 
         // 自动推断剧集偏移
         if (config.getOffset()) {
-            if (items.isEmpty()) {
-                return ani;
-            }
             Double offset = -(items.stream()
                     .map(Item::getEpisode)
                     .min(Comparator.comparingDouble(i -> i))
