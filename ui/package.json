@@ -11,7 +11,7 @@
   "dependencies": {
     "@element-plus/icons-vue": "^2.3.1",
     "@vicons/fa": "^0.13.0",
-    "@vueuse/core": "^12.5.0",
+    "@vueuse/core": "^12.7.0",
     "artplayer": "^5.2.2",
     "artplayer-plugin-multiple-subtitles": "^1.1.0",
     "crypto-js": "^4.2.0",
@@ -20,7 +20,7 @@
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^5.2.1",
-    "shiki": "^2.3.2",
+    "shiki": "^2.4.1",
     "vite": "^6.1.0"
   }
 }
