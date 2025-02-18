@@ -56,11 +56,6 @@ public class TorrentUtil {
         ItemsUtil.omit(ani, items);
         log.debug("{} 共 {} 个", title, items.size());
 
-        if (downloadNew && !items.isEmpty()) {
-            log.debug("{} 已开启只下载最新集", title);
-            items = List.of(items.get(items.size() - 1));
-        }
-
         long count = torrentsInfos
                 .stream()
                 .filter(it -> {
@@ -95,12 +90,26 @@ public class TorrentUtil {
                     .trim().toLowerCase();
 
             Double episode = item.getEpisode();
+            // .5 集
+            boolean is5 = episode.intValue() != episode;
+
             if (notDownload.contains(episode)) {
+                if (master && !is5) {
+                    currentDownloadCount++;
+                }
                 log.debug("已被禁止下载: {}", reName);
                 continue;
             }
-            // .5 集
-            boolean is5 = episode.intValue() != episode;
+
+            // 只下载最新集
+            if (downloadNew) {
+                if (item != items.get(items.size() - 1)) {
+                    if (master && !is5) {
+                        currentDownloadCount++;
+                    }
+                    continue;
+                }
+            }
 
             Date pubDate = item.getPubDate();
             if (Objects.nonNull(pubDate) && delayedDownload > 0) {
