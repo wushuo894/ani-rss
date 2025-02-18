@@ -36,6 +36,7 @@
                          :href="`https://www.themoviedb.org/tv/${props.ani.tmdb.id}`" target="_blank">
                   {{ props.ani.themoviedbName }}
                 </el-link>
+                <span v-else>{{ props.ani.themoviedbName }}</span>
               </div>
             </div>
             <div style="width: 4px;"></div>
