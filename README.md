@@ -27,7 +27,7 @@
 
 </div>
 
-![image](https://github.com/wushuo894/ani-rss-docs/raw/main/docs/image/Xnip2024-11-05_05-31-50.png)
+![image](https://github.com/wushuo894/ani-rss-docs/raw/main/docs/public/screenshot/62f73859bd2fb7063f7f1eff12545fec-screenshot.png)
 
 ## 其他
 
