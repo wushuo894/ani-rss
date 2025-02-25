@@ -18,13 +18,15 @@ public class Main {
         Main.ARGS = List.of(ObjectUtil.defaultIfNull(args, new String[]{}));
         try {
             ConfigUtil.load();
+            MenuUtil.start();
+            ServerUtil.start();
+
+            AniUtil.load();
             TaskUtil.start();
             String version = MavenUtil.getVersion();
             log.info("version {}", version);
 
-            MenuUtil.start();
             Cron.start();
-            ServerUtil.start();
         } catch (Exception e) {
             String message = ExceptionUtil.getMessage(e);
             log.error(message, e);
