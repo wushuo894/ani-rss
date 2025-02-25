@@ -111,7 +111,7 @@ const update = () => {
         setTimeout(() => {
           localStorage.removeItem("authorization")
           location.reload()
-        }, 5000)
+        }, 1000 * 10)
       })
       .finally(() => {
         actionLoading.value = false
