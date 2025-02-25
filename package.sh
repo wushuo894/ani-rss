@@ -14,3 +14,8 @@ wget https://github.com/wushuo894/ani-rss-update/releases/download/latest/ani-rs
 mv ani-rss-update.exe ../src/main/resources/ani-rss-update.exe
 cd ..
 mvn -B package -DskipTests --file pom.xml
+
+
+md5sum target/ani-rss-jar-with-dependencies.jar > target/ani-rss-jar-with-dependencies.jar.md5
+md5sum target/ani-rss-launcher.exe > target/ani-rss-launcher.exe.md5
+
