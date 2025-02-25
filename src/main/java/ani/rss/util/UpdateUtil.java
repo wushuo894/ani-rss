@@ -82,6 +82,17 @@ public class UpdateUtil {
 
         FileUtil.del(file);
         String downloadUrl = about.getDownloadUrl();
+        String downloadMd5 = HttpReq.get(downloadUrl + ".md5", true)
+                .thenFunction(res -> {
+                    int status = res.getStatus();
+                    Assert.isTrue(res.isOk(), "Error: {}", status);
+                    String md5 = res.body();
+                    if (StrUtil.isNotBlank(md5)) {
+                        md5 = md5.split("\n")[0].trim();
+                    }
+                    Assert.isTrue(Md5Util.isValidMD5(md5), "获取更新文件MD5失败");
+                    return md5;
+                });
         HttpReq.get(downloadUrl, true)
                 .then(res -> {
                     int status = res.getStatus();
@@ -92,6 +103,12 @@ public class UpdateUtil {
                         log.error("下载出现问题");
                         throw new RuntimeException("下载出现问题");
                     }
+
+                    if (!Md5Util.digestHex(file).equals(downloadMd5)) {
+                        log.error("更新文件的MD5不匹配");
+                        throw new RuntimeException("更新文件的MD5不匹配");
+                    }
+
                     ThreadUtil.execute(() -> {
                         ThreadUtil.sleep(1000);
                         if ("jar".equals(extName)) {
