@@ -4,14 +4,10 @@ import ani.rss.annotation.Auth;
 import ani.rss.auth.enums.AuthType;
 import ani.rss.entity.Config;
 import ani.rss.entity.Login;
-import ani.rss.util.ConfigUtil;
-import ani.rss.util.ExceptionUtil;
-import ani.rss.util.GsonStatic;
-import ani.rss.util.ServerUtil;
+import ani.rss.util.*;
 import cn.hutool.cache.CacheUtil;
 import cn.hutool.cache.impl.FIFOCache;
 import cn.hutool.core.util.*;
-import cn.hutool.crypto.digest.MD5;
 import cn.hutool.http.server.HttpServerRequest;
 import com.sun.net.httpserver.HttpExchange;
 import lombok.Synchronized;
@@ -29,7 +25,6 @@ import java.util.stream.Collectors;
  */
 @Slf4j
 public class AuthUtil {
-    public static final MD5 MD5 = new MD5();
     private static final Map<String, Function<HttpServerRequest, Boolean>> MAP = new HashMap<>();
     private static final FIFOCache<String, String> CACHE = CacheUtil.newFIFOCache(1);
 
@@ -70,7 +65,7 @@ public class AuthUtil {
             key = resetKey();
         }
         login.setKey(key);
-        return MD5.digestHex(GsonStatic.toJson(login)) + ":" + key;
+        return Md5Util.digestHex(GsonStatic.toJson(login)) + ":" + key;
     }
 
     public static Login getLogin() {

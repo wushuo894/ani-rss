@@ -6,10 +6,10 @@ import ani.rss.annotation.Path;
 import ani.rss.auth.enums.AuthType;
 import ani.rss.entity.Result;
 import ani.rss.util.ConfigUtil;
+import ani.rss.util.Md5Util;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.net.multipart.MultipartFormData;
 import cn.hutool.core.net.multipart.UploadFile;
-import cn.hutool.crypto.digest.MD5;
 import cn.hutool.http.server.HttpServerRequest;
 import cn.hutool.http.server.HttpServerResponse;
 import lombok.extern.slf4j.Slf4j;
@@ -30,7 +30,7 @@ public class UploadAction implements BaseAction {
             return;
         }
         byte[] fileContent = file.getFileContent();
-        String s = MD5.create().digestHex(fileContent);
+        String s = Md5Util.digestHex(fileContent);
         String fileName = file.getFileName();
         String saveName = s + "." + FileUtil.extName(fileName);
 
