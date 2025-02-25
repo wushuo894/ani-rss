@@ -10,4 +10,4 @@ unzip java-17-openjdk-17.0.3.0.6-1.jre.win.x86_64.zip
 mv java-17-openjdk-17.0.3.0.6-1.jre.win.x86_64 ani-rss/jre
 zip -r ani-rss.win.x86_64.zip ani-rss
 
-ls ani-rss.win.x86_64.zip -al
+md5sum ani-rss.win.x86_64.zip > ani-rss.win.x86_64.zip.md5
