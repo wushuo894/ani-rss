@@ -10,7 +10,6 @@ import cn.hutool.core.bean.copier.CopyOptions;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.lang.Validator;
-import cn.hutool.crypto.digest.MD5;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.File;
@@ -26,7 +25,7 @@ public class ConfigUtil {
       默认配置
      */
     static {
-        String password = MD5.create().digestHex("admin");
+        String password = Md5Util.digestHex("admin");
         CONFIG.setSleep(15)
                 .setMikanHost("https://mikanime.tv")
                 .setRenameSleep(0.5)
