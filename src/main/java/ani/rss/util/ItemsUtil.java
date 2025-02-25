@@ -313,6 +313,11 @@ public class ItemsUtil {
             return;
         }
 
+        // 缺少集数大于10个时可能是误判。因此不进行通知
+        if (sList.size() > 10) {
+            return;
+        }
+
         MessageUtil.send(config, ani, CollUtil.join(sList, "\n"), MessageEnum.OMIT);
     }
 
