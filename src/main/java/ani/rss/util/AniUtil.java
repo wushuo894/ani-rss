@@ -32,10 +32,6 @@ public class AniUtil {
 
     public static final List<Ani> ANI_LIST = new CopyOnWriteArrayList<>();
 
-    static {
-        load();
-    }
-
     /**
      * 获取订阅配置文件
      *
@@ -87,7 +83,6 @@ public class AniUtil {
                 rss.setOffset(offset);
             }
         }
-        AniUtil.sync();
     }
 
     /**
