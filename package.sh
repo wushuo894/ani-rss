@@ -16,6 +16,6 @@ cd ..
 mvn -B package -DskipTests --file pom.xml
 
 
-md5sum target/ani-rss-jar-with-dependencies.jar > target/ani-rss-jar-with-dependencies.jar.md5
-md5sum target/ani-rss-launcher.exe > target/ani-rss-launcher.exe.md5
+md5sum target/ani-rss-jar-with-dependencies.jar | awk '{print $1}' > target/ani-rss-jar-with-dependencies.jar.md5
+md5sum target/ani-rss-launcher.exe | awk '{print $1}' > target/ani-rss-launcher.exe.md5
 
