@@ -26,8 +26,15 @@
             <el-switch v-model:model-value="props.config.showPlaylist"/>
           </el-form-item>
           <el-form-item label="自定义CSS">
-            <el-input v-model:model-value="props.config['customCss']" type="textarea"
-                      placeholder="" :autosize="{ minRows: 2, maxRows: 4 }"/>
+            <div style="width: 100%;">
+              <el-input v-model:model-value="props.config['customCss']" type="textarea"
+                        placeholder="" :autosize="{ minRows: 2, maxRows: 4 }"/>
+              <br>
+              <div style="display: flex;justify-content:end; width: 100%;">
+                <a href="https://github.com/wushuo894/ani-rss-css"
+                   target="_blank">更多CSS</a>
+              </div>
+            </div>
           </el-form-item>
           <el-form-item label="自定义JS">
             <el-input v-model:model-value="props.config['customJs']" type="textarea"
