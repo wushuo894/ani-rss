@@ -293,6 +293,11 @@ public class ItemsUtil {
             return;
         }
 
+        // 缺少集数大于10个时可能是误判。因此不进行通知
+        if (list.size() > 10) {
+            return;
+        }
+
         Integer season = ani.getSeason();
         String title = ani.getTitle();
 
@@ -310,11 +315,6 @@ public class ItemsUtil {
         }
 
         if (sList.isEmpty()) {
-            return;
-        }
-
-        // 缺少集数大于10个时可能是误判。因此不进行通知
-        if (sList.size() > 10) {
             return;
         }
 
