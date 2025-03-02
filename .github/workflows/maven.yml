@@ -40,8 +40,8 @@ jobs:
             ./target/ani-rss-jar-with-dependencies.jar.md5
             ./target/ani-rss-launcher.exe
             ./target/ani-rss-launcher.exe.md5
-            ./ani-rss.win.x86_64.zip
-            ./ani-rss.win.x86_64.zip.md5
+            ./target/ani-rss.win.x86_64.zip
+            ./target/ani-rss.win.x86_64.zip.md5
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
       - name: Set up Docker Buildx
