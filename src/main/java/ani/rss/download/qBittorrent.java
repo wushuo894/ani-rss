@@ -350,6 +350,7 @@ public class qBittorrent implements BaseDownload {
                 });
 
         preferences.addProperty("add_trackers", CollUtil.join(trackers, "\n"));
+        preferences.addProperty("add_trackers_enabled", true);
 
         HttpReq.post(host + "/api/v2/app/setPreferences", false)
                 .form("json", GsonStatic.toJson(preferences))

@@ -11,7 +11,7 @@
   "dependencies": {
     "@element-plus/icons-vue": "^2.3.1",
     "@vicons/fa": "^0.13.0",
-    "@vueuse/core": "^12.7.0",
+    "@vueuse/core": "^12.8.0",
     "artplayer": "^5.2.2",
     "artplayer-plugin-multiple-subtitles": "^1.1.0",
     "crypto-js": "^4.2.0",
