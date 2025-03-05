@@ -70,6 +70,8 @@ public class ServerUtil {
             Boolean isInnerIP = config.getInnerIP();
             try {
                 String ip = getIp();
+
+                // 仅允许内网ip访问
                 if (isInnerIP) {
                     if (!PatternPool.IPV4.matcher(ip).matches()) {
                         res.send404("404 Not Found");
