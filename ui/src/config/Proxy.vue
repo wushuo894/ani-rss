@@ -44,6 +44,7 @@
 <script setup>
 import {onMounted, ref} from "vue";
 import api from "../api.js";
+import {ElMessage} from "element-plus";
 
 let urls = ref([
   'https://mikanani.me',
@@ -72,6 +73,7 @@ let test = () => {
       .then(res => {
         status.value = res.data.status
         time.value = res.data.time
+        ElMessage.success(res.message)
       })
       .finally(() => {
         testLoading.value = false
