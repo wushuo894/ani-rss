@@ -3,17 +3,20 @@ package ani.rss.action;
 import ani.rss.annotation.Auth;
 import ani.rss.annotation.Path;
 import ani.rss.entity.Config;
+import ani.rss.entity.ProxyTest;
+import ani.rss.entity.Result;
 import ani.rss.util.HttpReq;
 import cn.hutool.core.codec.Base64;
 import cn.hutool.core.date.LocalDateTimeUtil;
+import cn.hutool.core.text.StrFormatter;
 import cn.hutool.http.HttpRequest;
-import cn.hutool.http.HttpResponse;
+import cn.hutool.http.HttpStatus;
 import cn.hutool.http.server.HttpServerRequest;
 import cn.hutool.http.server.HttpServerResponse;
 import lombok.extern.slf4j.Slf4j;
+import org.jsoup.Jsoup;
 
 import java.io.IOException;
-import java.util.Map;
 
 /**
  * 代理
@@ -34,12 +37,27 @@ public class ProxyAction implements BaseAction {
         HttpRequest httpRequest = HttpReq.get(url, false);
         HttpReq.setProxy(httpRequest, config);
 
+        ProxyTest proxyTest = new ProxyTest();
+        Result<ProxyTest> result = Result.success(proxyTest);
+
         long start = LocalDateTimeUtil.toEpochMilli(LocalDateTimeUtil.now());
-        Integer status = httpRequest
-                .thenFunction(HttpResponse::getStatus);
+        try {
+            httpRequest
+                    .then(res -> {
+                        int status = res.getStatus();
+                        proxyTest.setStatus(status);
+
+                        String title = Jsoup.parse(res.body())
+                                .title();
+                        result.setMessage(StrFormatter.format("测试成功 {}", title));
+                    });
+        } catch (Exception e) {
+            result.setMessage(e.getMessage())
+                    .setCode(HttpStatus.HTTP_INTERNAL_ERROR);
+        }
 
         long end = LocalDateTimeUtil.toEpochMilli(LocalDateTimeUtil.now());
-
-        resultSuccess(Map.of("status", status, "time", end - start));
+        proxyTest.setTime(end - start);
+        result(result);
     }
 }
