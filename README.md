@@ -54,7 +54,7 @@
 ## 爱发电
 
 <a href="https://afdian.com/a/wushuo894" target="_blank">
-  <img src="https://github.com/wushuo894/ani-rss-docs/raw/main/docs/image/support_aifadian.svg" alt="support_aifadian">
+  <img src="https://github.com/wushuo894/ani-rss-docs/raw/master/docs/image/support_aifadian.svg" alt="support_aifadian">
 </a>
 
 ## 致谢声明
