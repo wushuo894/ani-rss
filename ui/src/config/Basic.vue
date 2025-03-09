@@ -30,7 +30,7 @@
               <el-input v-model:model-value="props.config['customCss']" type="textarea"
                         placeholder="" :autosize="{ minRows: 2, maxRows: 4 }"/>
               <br>
-              <div style="display: flex;justify-content:end; width: 100%;">
+              <div class="flex" style="justify-content:end; width: 100%;">
                 <a href="https://github.com/wushuo894/ani-rss-css"
                    target="_blank">更多CSS</a>
               </div>
@@ -200,7 +200,7 @@
           <el-form-item label="备用RSS">
             <div>
               <el-switch v-model:model-value="props.config.backRss"/>
-              <div style="display: flex;width: 100%;justify-content: end;">
+              <div class="flex" style="width: 100%;justify-content: end;">
                 <el-text class="mx-1" size="small">
                   <a href="https://docs.wushuo.top/config/basic.html#back-rss"
                      target="_blank">详细说明</a>
@@ -220,7 +220,7 @@
                           style="width: 100%" type="textarea"/>
               </div>
               <div style="height: 12px;"/>
-              <div style="display: flex;justify-content: space-between;">
+              <div class="flex" style="justify-content: space-between;">
                 <el-checkbox v-model:model-value="props.config.autoTrackersUpdate" label="每天1:00自动更新"/>
                 <el-button :loading="trackersUpdateLoading" bg text @click="trackersUpdate">更新</el-button>
               </div>

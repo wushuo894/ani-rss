@@ -1,8 +1,9 @@
 <template>
   <div
-      style="display: flex;align-items: center;justify-content: space-between;flex-flow: column; height: 100%;width: 100%;"
+      class="flex-center"
+      style="justify-content: space-between;flex-flow: column; height: 100%;width: 100%;"
       v-if="!authorization">
-    <div style="justify-content: center;align-items: center;display: flex;flex: 1" id="login-page">
+    <div id="login-page" class="flex-center" style="flex: 1">
       <div id="form" style="max-width: 200px;">
         <div style="text-align: center;">
           <img src="../public/icon.svg" height="80" width="80" alt="icon.svg"/>
@@ -19,7 +20,7 @@
             <el-input style="width: 200px;" v-model:model-value="user.password" show-password
                       placeholder="密码"></el-input>
           </el-form-item>
-          <div style="display: flex;width: 100%;justify-content: space-between;align-items: center;">
+          <div class="flex-center" style="width: 100%;justify-content: space-between;">
             <el-checkbox v-model:model-value="rememberThePassword.remember">记住密码</el-checkbox>
             <el-button @click="login" :loading="loading" text bg icon="Right">登录</el-button>
           </div>

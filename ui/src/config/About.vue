@@ -1,6 +1,6 @@
 <template>
-  <div style="display: flex;width: 100%;justify-content: center;align-items: center;flex-flow: column;">
-    <div style="margin-bottom: 12px;display: flex;align-items: end;">
+  <div class="flex-center" style="width: 100%;flex-flow: column;">
+    <div class="flex" style="margin-bottom: 12px;align-items: end;">
       <img alt="icon.svg" height="80" src="../../public/icon.svg" width="80"/>
       <div>
         <h1>ANI-RSS</h1>
@@ -9,7 +9,7 @@
         </el-text>
       </div>
     </div>
-    <div style="margin-bottom: 12px;align-items: center;display: flex;">
+    <div class="flex" style="margin-bottom: 12px;align-items: center;">
       <div id="button-list">
         <el-button :icon="Github" bg text type="info" @click="openUrl('https://github.com/wushuo894/ani-rss')">GitHub
         </el-button>
@@ -17,7 +17,7 @@
         <el-button :icon="Telegram" bg text type="info" @click="openUrl('https://t.me/ani_rss')">TG群</el-button>
       </div>
     </div>
-    <div v-loading.fullscreen.lock="actionLoading" style="display: flex;">
+    <div v-loading.fullscreen.lock="actionLoading" class="flex">
       <popconfirm title="你确定重启吗?" @confirm="stop(0)">
         <template #reference>
           <el-button bg icon="RefreshRight" text type="warning">重启</el-button>
@@ -61,7 +61,7 @@
           />
         </el-form-item>
       </el-form>
-      <div style="width: 100%;justify-content: end;display: flex;">
+      <div class="flex" style="width: 100%;justify-content: end;">
         <el-button :disabled="!about.update" bg icon="Check" text type="primary" @click="update">确定
         </el-button>
         <el-button bg icon="Close" text @click="dialogVisible = false">取消</el-button>

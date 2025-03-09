@@ -5,7 +5,7 @@
         <div style="margin-bottom: 12px;margin-top: 4px;">
           <el-input v-model:model-value="props.config.messageTemplate" type="textarea"
                     placeholder="${text}" :autosize="{ minRows: 2}"/>
-          <div style="width: 100%;display: flex;justify-content: end;">
+          <div class="flex" style="width: 100%;justify-content: end;">
             <a target="_blank" href="https://docs.wushuo.top/config/message.html">通知模版示例</a>
           </div>
         </div>
@@ -44,7 +44,7 @@
                 <el-input v-model:model-value="props.config.telegramChatId" :disabled="config.telegram"
                           placeholder="123456789"/>
               </div>
-              <div style="display: flex;margin-top: 4px;align-items: center;">
+              <div class="flex" style="margin-top: 4px;align-items: center;">
                 <div>
                   <el-select v-model:model-value="chatId" @change="chatIdChange" style="width: 160px"
                              :disabled="config.telegram">

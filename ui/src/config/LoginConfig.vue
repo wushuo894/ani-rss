@@ -45,7 +45,7 @@
       </div>
     </el-form-item>
     <el-form-item label="Api Key">
-      <div style="display: flex;width: 100%;">
+      <div class="flex" style="width: 100%;">
         <el-input v-model:model-value="props.config.apiKey" clearable/>
         <div style="width: 4px;"></div>
         <el-button bg text @click="createApiKey">生成</el-button>
