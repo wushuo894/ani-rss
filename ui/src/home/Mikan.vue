@@ -1,4 +1,16 @@
 <template>
+  <el-dialog v-model="batchAdditionDialogVisible" align-center center title="正在批量添加订阅"
+             width="500"
+             :close-on-click-modal="false"
+             :close-on-press-escape="false"
+             :show-close="false">
+    <div>
+      <el-progress :percentage="Number.parseInt((batchAdditionNum / rssList.length) * 100.0)"/>
+    </div>
+    <div>
+      {{ batchAdditionNum }} / {{ rssList.length }}
+    </div>
+  </el-dialog>
   <el-dialog v-model="matchDialogVisible" align-center center title="匹配" width="500">
     <div>
       <el-radio-group v-model="addAni.match">
@@ -20,7 +32,7 @@
     </div>
   </el-dialog>
   <el-dialog v-model="dialogVisible" center title="Mikan">
-    <el-checkbox-group v-model="rssList" v-loading.fullscreen.lock="fullscreenLoading">
+    <el-checkbox-group v-model="rssList">
       <div style="min-height: 300px;">
         <div style="margin: 4px;">
           <div style="display: flex;justify-content: space-between;">
@@ -126,8 +138,7 @@ import api from "../api.js";
 import {ElMessage, ElText} from "element-plus";
 
 // 批量添加订阅
-let rssList = ref([])
-let fullscreenLoading = ref(false);
+let rssList = ref([]);
 
 let groupLoading = ref(false)
 let activeName = ref("")
@@ -278,8 +289,13 @@ defineExpose({show})
 let props = defineProps(['match'])
 let emit = defineEmits(['add'])
 
+
+let batchAdditionNum = ref(0)
+let batchAdditionDialogVisible = ref(false)
+
 let batchAddition = async () => {
-  fullscreenLoading.value = true
+  batchAdditionNum.value = 0
+  batchAdditionDialogVisible.value = true
   let getBangumiId = (url) => {
     console.log(url);
     const parsedUrl = new URL(url);
@@ -319,13 +335,18 @@ let batchAddition = async () => {
               }
             })
       }
+      batchAdditionNum.value += item.length
       await api.post('api/ani', ani)
     }
     ElMessage.success("添加成功")
+
+    setTimeout(() => {
+      location.reload()
+    }, 1000)
   } catch (e) {
     ElMessage.error(e)
   } finally {
-    fullscreenLoading.value = false
+    batchAdditionDialogVisible.value = false
   }
 }
 
