@@ -6,7 +6,7 @@
     editIndex = -1
   }" match="false"/>
   <el-dialog v-model="dialogVisible" center title="备用订阅">
-    <div style="display: flex;width: 100%;">
+    <div class="flex" style="width: 100%;">
       <div>
         <el-button text bg icon="Plus" @click="plus" type="primary"/>
       </div>
@@ -48,7 +48,7 @@
         </el-table-column>
         <el-table-column label="操作" width="115">
           <template #default="it">
-            <div style="display: flex;">
+            <div class="flex">
               <div>
                 <el-button bg text icon="Edit" @click="editIndex = it.$index" v-if="editIndex !== it.$index"/>
                 <el-button bg text icon="Check" @click="check" type="primary" v-else/>
@@ -62,7 +62,7 @@
         </el-table-column>
       </el-table>
     </div>
-    <div style="display: flex;width: 100%;justify-content: end;margin-top: 10px">
+    <div class="flex" style="width: 100%;justify-content: end;margin-top: 10px">
       <el-button icon="Check" bg text @click="ok" :disabled="editIndex > -1">确定</el-button>
     </div>
   </el-dialog>
