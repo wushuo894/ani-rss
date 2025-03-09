@@ -1,7 +1,7 @@
 <template>
   <el-dialog v-model="dialogVisible" :title="ani.title+' '+playItem.title" center v-if="dialogVisible">
     <div
-        style="display: flex;width: 100%;justify-content: center;align-items: center;max-height: 500px;min-height: 200px;">
+        class="flex-center" style="width: 100%;max-height: 500px;min-height: 200px;">
       <Artplayer :src="src" :subtitles="subtitles"/>
     </div>
   </el-dialog>

@@ -9,7 +9,7 @@
         <el-input placeholder="如 720、简、\d-\d" v-model="exclude"></el-input>
       </el-form-item>
     </el-form>
-    <div style="width: 100%;display: flex;justify-content: end;margin-top: 8px;">
+    <div class="flex" style="width: 100%;justify-content: end;margin-top: 8px;">
       <el-button bg text @click="addExclude">添加</el-button>
     </div>
   </el-dialog>
@@ -38,7 +38,7 @@
         +
       </el-button>
     </div>
-    <div style="margin-top: 4px;width: 100%;display: flex; justify-content: space-between;">
+    <div class="flex" style="margin-top: 4px;width: 100%;justify-content: space-between;">
       <el-button bg text size="small" @click="importExclude" v-if="props.importExclude"
                  :disabled="disabledImportExclude" :loading="importExcludeLoading">
         <el-icon>

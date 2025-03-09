@@ -51,11 +51,7 @@
                   <el-collapse-item v-for="it in item.items" :name="it.url">
                     <template #title>
                       <img :src="img(it)" height="40" width="40" @click.stop="open(it.url)">
-                      <div style="margin-left: 5px;
-                                         max-width: 70%;
-                                         overflow: hidden;
-                                         white-space: nowrap;
-                                         text-overflow: ellipsis;">
+                      <div class="single-line" style="margin-left: 5px;max-width: 70%;">
                         {{ it.title }}
                       </div>
                       <el-badge value="已订阅" class="item" type="primary" v-if="it['exists']"/>
@@ -66,10 +62,7 @@
                         <el-collapse-item v-for="group in groups[it.url]">
                           <template #title>
                             <div style="width: 100%;display: flex;justify-content: space-between;">
-                              <div style="flex: 1;text-align: start;
-                                         overflow: hidden;
-                                         white-space: nowrap;
-                                         text-overflow: ellipsis;">
+                              <div class="single-line" style="flex: 1;text-align: start;">
                                 {{ group.label }}
                                 <el-text class="mx-1" size="small">{{ group['updateDay'] }}</el-text>
                               </div>
