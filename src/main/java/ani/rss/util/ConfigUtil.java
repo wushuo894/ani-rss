@@ -109,7 +109,7 @@ public class ConfigUtil {
                 .setScoreShow(true)
                 .setDownloadNew(false)
                 .setInnerIP(false)
-                .setRenameTemplate("${title} S${seasonFormat}E${episodeFormat}")
+                .setRenameTemplate("[${subgroup}] ${title} S${seasonFormat}E${episodeFormat}")
                 .setRenameDelYear(false)
                 .setRenameDelTmdbId(false)
                 .setMessageList(List.of(

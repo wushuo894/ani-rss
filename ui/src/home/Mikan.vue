@@ -109,9 +109,13 @@
                                     <h5>
                                       {{ ti.name }}
                                     </h5>
-                                    <div style="width: 100%;display: flex;justify-content: end;">
-                                      {{ ti['sizeStr'] }}
-                                      {{ ti['dateStr'] }}
+                                    <div style="width: 100%;display: flex;justify-content: end;align-items: center;">
+                                      <p>
+                                        {{ ti['sizeStr'] }}
+                                        {{ ti['dateStr'] }}
+                                        &nbsp;
+                                      </p>
+                                      <el-button :icon="DocumentCopy" bg text @click="copy(ti['magnet'])">复制磁链</el-button>
                                     </div>
                                   </div>
                                 </el-card>
@@ -136,6 +140,7 @@
 import {ref} from "vue";
 import api from "../api.js";
 import {ElMessage, ElText} from "element-plus";
+import {DocumentCopy} from "@element-plus/icons-vue";
 
 // 批量添加订阅
 let rssList = ref([]);
@@ -348,6 +353,16 @@ let batchAddition = async () => {
   } finally {
     batchAdditionDialogVisible.value = false
   }
+}
+
+let copy = (v) => {
+  const input = document.createElement('input');
+  input.value = v;
+  document.body.appendChild(input);
+  input.select();
+  document.execCommand('copy');
+  document.body.removeChild(input);
+  ElMessage.success('已复制')
 }
 
 </script>
