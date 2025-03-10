@@ -36,6 +36,11 @@ public class TorrentsInfo implements Serializable {
     private List<String> tags;
 
     /**
+     * 磁链
+     */
+    private String magnet;
+
+    /**
      * 大小
      */
     private String sizeStr;

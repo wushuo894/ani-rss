@@ -165,11 +165,13 @@ public class MikanUtil {
                         Element tbody = table.selectFirst("tbody");
                         for (Element tr : tbody.children()) {
                             String s = tr.select("a").get(0).ownText();
+                            String magnet = tr.select("a").get(1).attr("data-clipboard-text");
                             String sizeStr = tr.select("td").get(1).text().trim();
                             String dataStr = tr.select("td").get(2).text().trim();
                             torrentsInfos.add(
                                     new TorrentsInfo()
                                             .setName(s)
+                                            .setMagnet(magnet)
                                             .setSizeStr(sizeStr)
                                             .setDateStr(dataStr)
                             );
