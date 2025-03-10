@@ -42,7 +42,8 @@
       </a>
     </div>
   </div>
-  <el-dialog v-if="dialogVisible" v-model="dialogVisible" align-center center title="版本更新" width="400">
+  <el-dialog v-if="dialogVisible" v-model="dialogVisible" align-center center title="版本更新"
+             style="max-width: 500px;">
     <div v-if="about.update">
       <el-form label-width="auto">
         <el-form-item label="版本号">
@@ -53,12 +54,14 @@
           {{ about.date }}
         </el-form-item>
         <el-form-item label="更新内容">
-          <div style="margin-bottom: 16px;" v-html="about.markdownBody"></div>
-          <el-alert
-              :closable="false"
-              title="更新依赖于Github, 需要网络环境支持"
-              type="info"
-          />
+          <el-scrollbar style="margin-bottom: 16px;" :always="true">
+            <div style="width: 800px;" v-html="about.markdownBody"></div>
+            <el-alert
+                :closable="false"
+                title="更新依赖于Github, 需要网络环境支持"
+                type="info"
+            />
+          </el-scrollbar>
         </el-form-item>
       </el-form>
       <div class="flex" style="width: 100%;justify-content: end;">
