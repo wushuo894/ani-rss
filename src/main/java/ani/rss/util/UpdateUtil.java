@@ -44,7 +44,7 @@ public class UpdateUtil {
                         about.setUpdate(VersionComparator.INSTANCE.compare(latest, version) > 0)
                                 .setLatest(latest);
                         Element markdownBody = box.selectFirst(".markdown-body");
-                        about.setMarkdownBody(markdownBody.html());
+                        about.setMarkdownBody(markdownBody.outerHtml());
                         String filename = "ani-rss-jar-with-dependencies.jar";
                         File jar = getJar();
                         if ("exe".equals(FileUtil.extName(jar))) {
