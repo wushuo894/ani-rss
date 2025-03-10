@@ -56,7 +56,7 @@
           <el-table-column prop="size" label="大小" width="120"/>
           <el-table-column label="种子" width="90">
             <template #default="it">
-              <el-button bg text @click="copy(showItems[it.$index])">复制</el-button>
+              <el-button bg text @click="copy(showItems[it.$index]['torrent'])">复制</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -111,9 +111,9 @@ const data = ref({
 })
 const loading = ref(true)
 
-let copy = (it) => {
+let copy = (v) => {
   const input = document.createElement('input');
-  input.value = it['torrent'];
+  input.value = v
   document.body.appendChild(input);
   input.select();
   document.execCommand('copy');
