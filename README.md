@@ -85,6 +85,6 @@
 - [sqlite-jdbc](https://github.com/xerial/sqlite-jdbc)
 - [TinyPinyin](https://github.com/promeG/TinyPinyin)
 - [Vue.js](https://cn.vuejs.org/)
-- [VitePress](https://vuepress.vuejs.org/)
+- [VitePress](https://vitepress.dev/zh/)
 - [jsoup](https://github.com/jhy/jsoup)
 
