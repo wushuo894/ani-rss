@@ -6,7 +6,7 @@
           <el-input v-model:model-value="props.config.messageTemplate" type="textarea"
                     placeholder="${text}" :autosize="{ minRows: 2}"/>
           <div class="flex" style="width: 100%;justify-content: end;">
-            <a target="_blank" href="https://docs.wushuo.top/config/message.html">通知模版示例</a>
+            <a target="_blank" href="https://docs.wushuo.top/config/message">通知模版示例</a>
           </div>
         </div>
         <div>
@@ -208,7 +208,7 @@
           </div>
         </el-form-item>
         <div style="display: flex;justify-content: end;">
-          <a target="_blank" href="https://docs.wushuo.top/config/message.html">通知模版示例</a>
+          <a target="_blank" href="https://docs.wushuo.top/config/message">通知模版示例</a>
         </div>
       </el-form>
     </el-collapse-item>
