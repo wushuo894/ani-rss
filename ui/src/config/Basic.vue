@@ -119,7 +119,7 @@
                         placeholder="${title} S${seasonFormat}E${episodeFormat}"/>
               <br>
               <el-text class="mx-1" size="small">
-                <a href="https://docs.wushuo.top/config/basic/rename.html#rename-template"
+                <a href="https://docs.wushuo.top/config/basic/rename#rename-template"
                    target="_blank">详细说明</a>
               </el-text>
             </div>
@@ -202,7 +202,7 @@
               <el-switch v-model:model-value="props.config.backRss"/>
               <div class="flex" style="width: 100%;justify-content: end;">
                 <el-text class="mx-1" size="small">
-                  <a href="https://docs.wushuo.top/config/basic/rss.html#back-rss"
+                  <a href="https://docs.wushuo.top/config/basic/rss#back-rss"
                      target="_blank">详细说明</a>
                 </el-text>
               </div>
