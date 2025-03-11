@@ -119,7 +119,7 @@
                         placeholder="${title} S${seasonFormat}E${episodeFormat}"/>
               <br>
               <el-text class="mx-1" size="small">
-                <a href="https://docs.wushuo.top/config/basic.html#rename-template"
+                <a href="https://docs.wushuo.top/config/basic/rename.html#rename-template"
                    target="_blank">详细说明</a>
               </el-text>
             </div>
@@ -170,7 +170,7 @@
               <br>
               <el-text class="mx-1" size="small">
                 文件已下载自动跳过 此选项必须启用 自动重命名。确保 下载工具 与本程序 docker 映射挂载路径一致
-                <a href="https://docs.wushuo.top/config/basic#auto-skip"
+                <a href="https://docs.wushuo.top/config/basic/rss#auto-skip"
                    target="_blank">详细说明</a>
               </el-text>
             </div>
@@ -202,7 +202,7 @@
               <el-switch v-model:model-value="props.config.backRss"/>
               <div class="flex" style="width: 100%;justify-content: end;">
                 <el-text class="mx-1" size="small">
-                  <a href="https://docs.wushuo.top/config/basic.html#back-rss"
+                  <a href="https://docs.wushuo.top/config/basic/rss.html#back-rss"
                      target="_blank">详细说明</a>
                 </el-text>
               </div>
@@ -246,7 +246,7 @@
                   你可以在 <a target="_blank" href="https://next.bgm.tv/demo/access-token">https://next.bgm.tv/demo/access-token</a>
                   生成一个 Access Token
                   <br>
-                  <a target="_blank" href="http://docs.wushuo.top/config/basic#emby-webhook">支持自动点格子</a>
+                  <a href="http://docs.wushuo.top/config/basic/other#emby-webhook" target="_blank">支持自动点格子</a>
                 </el-text>
               </div>
             </div>
