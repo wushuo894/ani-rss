@@ -13,7 +13,7 @@
 |
 [常见问题](https://docs.wushuo.top/faq)
 |
-[参与开发](https://docs.wushuo.top/dev)
+[参与开发](https://docs.wushuo.top/dev/basic)
 
 [![GitHub](https://img.shields.io/badge/-GitHub-181717?logo=github)](https://github.com/wushuo894/ani-rss)
 ![GitHub License](https://img.shields.io/github/license/wushuo894/ani-rss)
