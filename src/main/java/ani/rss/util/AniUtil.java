@@ -261,22 +261,15 @@ public class AniUtil {
             return ani;
         }
 
-        String s = HttpReq.get(url, true)
-                .timeout(config.getRssTimeout() * 1000)
-                .thenFunction(HttpResponse::body);
-        List<Item> items = ItemsUtil.getItems(ani, s, new Item());
-        if (items.isEmpty()) {
-            return ani.setCustomEpisode(true);
-        } else if (items.size() == 1) {
-            // 自定义集数获取规则
-            Double episode = items.get(0).getEpisode();
-            if (episode == 1920 || episode == 1080) {
-                return ani.setCustomEpisode(true);
-            }
-        }
-
         // 自动推断剧集偏移
         if (config.getOffset()) {
+            String s = HttpReq.get(url, true)
+                    .timeout(config.getRssTimeout() * 1000)
+                    .thenFunction(HttpResponse::body);
+            List<Item> items = ItemsUtil.getItems(ani, s, new Item());
+            if (items.isEmpty()) {
+                return ani;
+            }
             Double offset = -(items.stream()
                     .map(Item::getEpisode)
                     .min(Comparator.comparingDouble(i -> i))
