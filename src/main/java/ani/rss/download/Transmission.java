@@ -4,7 +4,6 @@ import ani.rss.entity.Config;
 import ani.rss.entity.Item;
 import ani.rss.entity.TorrentsInfo;
 import ani.rss.enums.TorrentsTags;
-import ani.rss.util.ExceptionUtil;
 import ani.rss.util.GsonStatic;
 import ani.rss.util.HttpReq;
 import ani.rss.util.RenameCacheUtil;
@@ -61,78 +60,75 @@ public class Transmission implements BaseDownload {
             log.error("登录 Transmission 失败");
             return false;
         }
-        try {
-            getTorrentsInfos();
-        } catch (Exception e) {
-            String message = ExceptionUtil.getMessage(e);
-            log.error(message, e);
-            log.error("登录 Transmission 失败 {}", message);
-            return false;
-        }
+        getTorrentsInfos();
         return true;
     }
 
     @Override
     public List<TorrentsInfo> getTorrentsInfos() {
         String body = ResourceUtil.readUtf8Str("transmission/torrent-get.json");
-
-        return HttpReq.post(host + "/transmission/rpc", false)
-                .header(Header.AUTHORIZATION, authorization)
-                .header("X-Transmission-Session-Id", sessionId)
-                .body(body)
-                .thenFunction(res -> {
-                    String id = res.header("X-Transmission-Session-Id");
-                    if (StrUtil.isNotBlank(id)) {
-                        sessionId = id;
-                        return getTorrentsInfos();
-                    }
-                    List<TorrentsInfo> torrentsInfos = new ArrayList<>();
-                    JsonObject jsonObject = GsonStatic.fromJson(res.body(), JsonObject.class);
-                    JsonArray torrents = jsonObject.get("arguments")
-                            .getAsJsonObject()
-                            .get("torrents")
-                            .getAsJsonArray();
-                    for (JsonElement jsonElement : torrents.asList()) {
-                        JsonObject item = jsonElement.getAsJsonObject();
-                        List<String> tags = item.get("labels").getAsJsonArray()
-                                .asList().stream().map(JsonElement::getAsString).collect(Collectors.toList());
-                        if (!tags.contains(TorrentsTags.ANI_RSS.getValue())) {
-                            continue;
+        try {
+            return HttpReq.post(host + "/transmission/rpc", false)
+                    .header(Header.AUTHORIZATION, authorization)
+                    .header("X-Transmission-Session-Id", sessionId)
+                    .body(body)
+                    .thenFunction(res -> {
+                        String id = res.header("X-Transmission-Session-Id");
+                        if (StrUtil.isNotBlank(id)) {
+                            sessionId = id;
+                            return getTorrentsInfos();
                         }
-                        List<String> files = item.get("files").getAsJsonArray().asList()
-                                .stream().map(JsonElement::getAsJsonObject)
-                                .map(o -> o.get("name").getAsString())
-                                .collect(Collectors.toList());
+                        List<TorrentsInfo> torrentsInfos = new ArrayList<>();
+                        JsonObject jsonObject = GsonStatic.fromJson(res.body(), JsonObject.class);
+                        JsonArray torrents = jsonObject.get("arguments")
+                                .getAsJsonObject()
+                                .get("torrents")
+                                .getAsJsonArray();
+                        for (JsonElement jsonElement : torrents.asList()) {
+                            JsonObject item = jsonElement.getAsJsonObject();
+                            List<String> tags = item.get("labels").getAsJsonArray()
+                                    .asList().stream().map(JsonElement::getAsString).collect(Collectors.toList());
+                            if (!tags.contains(TorrentsTags.ANI_RSS.getValue())) {
+                                continue;
+                            }
+                            List<String> files = item.get("files").getAsJsonArray().asList()
+                                    .stream().map(JsonElement::getAsJsonObject)
+                                    .map(o -> o.get("name").getAsString())
+                                    .collect(Collectors.toList());
 
 
-                        // 状态： https://github.com/jayzcoder/TrguiNG/blob/zh/src/rpc/transmission.ts
+                            // 状态： https://github.com/jayzcoder/TrguiNG/blob/zh/src/rpc/transmission.ts
 
-                        TorrentsInfo.State state = TorrentsInfo.State.downloading;
+                            TorrentsInfo.State state = TorrentsInfo.State.downloading;
 
-                        // 做种中
-                        if (item.get("status").getAsInt() == 6) {
-                            state = TorrentsInfo.State.stalledUP;
+                            // 做种中
+                            if (item.get("status").getAsInt() == 6) {
+                                state = TorrentsInfo.State.stalledUP;
+                            }
+
+                            // 已完成
+                            if (item.get("isFinished").getAsBoolean()) {
+                                state = TorrentsInfo.State.pausedUP;
+                            }
+
+                            String downloadDir = item.get("downloadDir").getAsString();
+
+                            TorrentsInfo torrentsInfo = new TorrentsInfo();
+                            torrentsInfo.setName(item.get("name").getAsString());
+                            torrentsInfo.setTags(tags);
+                            torrentsInfo.setHash(item.get("hashString").getAsString());
+                            torrentsInfo.setState(state);
+                            torrentsInfo.setId(item.get("id").getAsString());
+                            torrentsInfo.setDownloadDir(FileUtil.getAbsolutePath(downloadDir));
+                            torrentsInfo.setFiles(() -> files);
+                            torrentsInfos.add(torrentsInfo);
                         }
-
-                        // 已完成
-                        if (item.get("isFinished").getAsBoolean()) {
-                            state = TorrentsInfo.State.pausedUP;
-                        }
-
-                        String downloadDir = item.get("downloadDir").getAsString();
-
-                        TorrentsInfo torrentsInfo = new TorrentsInfo();
-                        torrentsInfo.setName(item.get("name").getAsString());
-                        torrentsInfo.setTags(tags);
-                        torrentsInfo.setHash(item.get("hashString").getAsString());
-                        torrentsInfo.setState(state);
-                        torrentsInfo.setId(item.get("id").getAsString());
-                        torrentsInfo.setDownloadDir(FileUtil.getAbsolutePath(downloadDir));
-                        torrentsInfo.setFiles(() -> files);
-                        torrentsInfos.add(torrentsInfo);
-                    }
-                    return torrentsInfos;
-                });
+                        return torrentsInfos;
+                    });
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+        }
+        return new ArrayList<>();
     }
 
     @Override
@@ -193,9 +189,9 @@ public class Transmission implements BaseDownload {
             return true;
         }
 
-        List<TorrentsInfo> torrentsInfos = getTorrentsInfos();
         for (int i = 0; i < 6; i++) {
             ThreadUtil.sleep(1000 * 10);
+            List<TorrentsInfo> torrentsInfos = getTorrentsInfos();
             Optional<TorrentsInfo> optionalTorrentsInfo = torrentsInfos
                     .stream()
                     .filter(torrentsInfo -> torrentsInfo.getId().equals(id))
