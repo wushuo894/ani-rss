@@ -1,5 +1,6 @@
 package ani.rss.entity;
 
+import ani.rss.util.ConfigUtil;
 import ani.rss.util.TmdbUtil;
 import cn.hutool.core.lang.UUID;
 import lombok.Data;
@@ -188,6 +189,7 @@ public class Ani implements Serializable {
 
     public static Ani bulidAni() {
         Ani newAni = new Ani();
+        Config config = ConfigUtil.CONFIG;
         return newAni
                 .setId(UUID.fastUUID().toString())
                 .setBackRss(new ArrayList<>())
@@ -210,9 +212,9 @@ public class Ani implements Serializable {
                 .setExclude(List.of("720[Pp]", "\\d-\\d", "合集", "特别篇"))
                 .setBgmUrl("")
                 .setSubgroup("")
-                .setCustomEpisode(false)
-                .setCustomEpisodeStr("【\\d+(\\.5)?】|\\[\\d+(\\.5)?]|第\\d+(\\.5)?集| \\d+(\\.5)?")
-                .setCustomEpisodeGroupIndex(0)
+                .setCustomEpisode(config.getCustomEpisode())
+                .setCustomEpisodeStr(config.getCustomEpisodeStr())
+                .setCustomEpisodeGroupIndex(config.getCustomEpisodeGroupIndex())
                 .setOmit(true)
                 .setDownloadNew(false)
                 .setNotDownload(new ArrayList<>())

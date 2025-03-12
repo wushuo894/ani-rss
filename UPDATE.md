@@ -1,4 +1,4 @@
-优化坏种检测逻辑
+支持设置新订阅的默认自定义集数规则
 
 <img src="https://github.com/user-attachments/assets/3af5a124-954d-4d1c-8c74-2741be2d7bcd" height="90" width="90">
 

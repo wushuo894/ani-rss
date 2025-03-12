@@ -487,4 +487,19 @@ public class Config implements Serializable {
      * 自定义JS
      */
     private String customJs;
+
+    /**
+     * 自定义集数获取规则
+     */
+    private Boolean customEpisode;
+
+    /**
+     * 自定义集数获取规则
+     */
+    private String customEpisodeStr;
+
+    /**
+     * 自定义集数获取规则 groupIndex
+     */
+    private Integer customEpisodeGroupIndex;
 }
