@@ -684,12 +684,7 @@ public class TorrentUtil {
      */
     public static synchronized List<TorrentsInfo> getTorrentsInfos() {
         ThreadUtil.sleep(1000);
-        try {
-            return baseDownload.getTorrentsInfos();
-        } catch (Exception e) {
-            log.error(e.getMessage(), e);
-        }
-        return new ArrayList<>();
+        return baseDownload.getTorrentsInfos();
     }
 
     /**
