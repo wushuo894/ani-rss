@@ -52,8 +52,12 @@ public class Aria2 implements BaseDownload {
     public List<TorrentsInfo> getTorrentsInfos() {
         List<TorrentsInfo> torrentsInfos = new ArrayList<>();
         ThreadUtil.sleep(1000);
-        torrentsInfos.addAll(getTorrentsInfos("aria2/tellActive.json"));
-        torrentsInfos.addAll(getTorrentsInfos("aria2/tellStopped.json"));
+        try {
+            torrentsInfos.addAll(getTorrentsInfos("aria2/tellActive.json"));
+            torrentsInfos.addAll(getTorrentsInfos("aria2/tellStopped.json"));
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+        }
         return torrentsInfos;
     }
 
