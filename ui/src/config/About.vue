@@ -72,6 +72,11 @@
     </div>
     <div v-else>
       <el-empty description="无更新"></el-empty>
+      <div class="flex" style="width: 100%;justify-content: end;">
+        <el-button bg icon="Tickets" text @click="openUrl('https://docs.wushuo.top/history')" type="primary">更新历史
+        </el-button>
+        <el-button bg icon="Close" text @click="dialogVisible = false">取消</el-button>
+      </div>
     </div>
   </el-dialog>
 </template>
