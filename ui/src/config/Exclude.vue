@@ -10,12 +10,12 @@
       </el-form-item>
     </el-form>
     <div class="flex" style="width: 100%;justify-content: end;margin-top: 8px;">
-      <el-button bg text @click="addExclude">添加</el-button>
+      <el-button bg text @click="addExclude" icon="Plus">添加</el-button>
     </div>
   </el-dialog>
 
   <div style="width: 100%;">
-    <div class="flex gap-2">
+    <div class="gap-2">
       <el-tag v-if="!props.exclude.length"
               type="info"
               style="margin-right: 4px;margin-bottom: 4px;">
