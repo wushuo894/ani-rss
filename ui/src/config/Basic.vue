@@ -92,6 +92,19 @@
                          :key="item"></el-option>
             </el-select>
           </el-form-item>
+          <el-form-item label="自定义集数规则">
+            <div style="width: 100%;">
+              <div>
+                <el-switch v-model:model-value="props.config.customEpisode"/>
+              </div>
+              <div style="display: flex;width: 100%;">
+                <el-input style="width: 100%"
+                          v-model:model-value="props.config.customEpisodeStr"/>
+                <div style="width: 4px;"></div>
+                <el-input-number v-model:model-value="props.config.customEpisodeGroupIndex"/>
+              </div>
+            </div>
+          </el-form-item>
         </el-form>
       </el-collapse-item>
       <el-collapse-item title="重命名设置" name="3">
