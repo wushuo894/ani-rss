@@ -21,7 +21,6 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.io.File;
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * Aria2
@@ -98,7 +97,7 @@ public class Aria2 implements BaseDownload {
                                 .asList()
                                 .stream().map(JsonElement::getAsJsonObject)
                                 .map(o -> o.get("path").getAsString())
-                                .collect(Collectors.toList());
+                                .toList();
 
                         TorrentsInfo torrentsInfo = new TorrentsInfo();
                         torrentsInfo
@@ -220,7 +219,7 @@ public class Aria2 implements BaseDownload {
                     return videoFormat.contains(extName) || subtitleFormat.contains(extName);
                 })
                 .sorted(Comparator.comparingLong(file -> Long.MAX_VALUE - file.length()))
-                .collect(Collectors.toList());
+                .toList();
 
         Assert.notEmpty(files);
 

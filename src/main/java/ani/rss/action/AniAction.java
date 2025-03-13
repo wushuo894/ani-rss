@@ -27,7 +27,6 @@ import lombok.extern.slf4j.Slf4j;
 import java.io.File;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.stream.Collectors;
 
 /**
  * 订阅 增删改查
@@ -246,10 +245,10 @@ public class AniAction implements BaseAction {
         JsonArray jsonArray = getBody(JsonArray.class);
         List<String> ids = jsonArray.asList()
                 .stream().map(JsonElement::getAsString)
-                .collect(Collectors.toList());
+                .toList();
         List<Ani> anis = AniUtil.ANI_LIST.stream()
                 .filter(it -> ids.contains(it.getId()))
-                .collect(Collectors.toList());
+                .toList();
         if (anis.isEmpty()) {
             resultErrorMsg("删除失败");
             return;
@@ -280,7 +279,7 @@ public class AniAction implements BaseAction {
                     .stream()
                     .map(TorrentUtil::getDownloadPath)
                     .flatMap(List::stream)
-                    .collect(Collectors.toList());
+                    .toList();
 
             Boolean login = TorrentUtil.login();
             List<TorrentsInfo> torrentsInfos = new ArrayList<>();
@@ -291,7 +290,7 @@ public class AniAction implements BaseAction {
                 List<TorrentsInfo> collect = torrentsInfos
                         .stream()
                         .filter(torrentsInfo -> torrentsInfo.getDownloadDir().equals(file.toString()))
-                        .collect(Collectors.toList());
+                        .toList();
                 for (TorrentsInfo torrentsInfo : collect) {
                     TorrentUtil.delete(torrentsInfo, true, true);
                 }

@@ -27,7 +27,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 /**
  * Transmission
@@ -87,15 +86,15 @@ public class Transmission implements BaseDownload {
                         for (JsonElement jsonElement : torrents.asList()) {
                             JsonObject item = jsonElement.getAsJsonObject();
                             List<String> tags = item.get("labels").getAsJsonArray()
-                                    .asList().stream().map(JsonElement::getAsString).collect(Collectors.toList());
+                                    .asList().stream().map(JsonElement::getAsString)
+                                    .toList();
                             if (!tags.contains(TorrentsTags.ANI_RSS.getValue())) {
                                 continue;
                             }
                             List<String> files = item.get("files").getAsJsonArray().asList()
                                     .stream().map(JsonElement::getAsJsonObject)
                                     .map(o -> o.get("name").getAsString())
-                                    .collect(Collectors.toList());
-
+                                    .toList();
 
                             // 状态： https://github.com/jayzcoder/TrguiNG/blob/zh/src/rpc/transmission.ts
 

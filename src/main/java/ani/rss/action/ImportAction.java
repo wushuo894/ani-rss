@@ -14,7 +14,6 @@ import lombok.Synchronized;
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 /**
  * 导入订阅
@@ -31,7 +30,7 @@ public class ImportAction implements BaseAction {
         JsonArray jsonArray = getBody(JsonArray.class);
         List<Ani> anis = jsonArray.asList().stream()
                 .map(it -> GsonStatic.fromJson(it, Ani.class))
-                .collect(Collectors.toList());
+                .toList();
         if (anis.isEmpty()) {
             resultErrorMsg("导入列表为空");
             return;
