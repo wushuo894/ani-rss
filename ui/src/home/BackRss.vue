@@ -6,6 +6,13 @@
     editIndex = -1
   }" match="false"/>
   <el-dialog v-model="dialogVisible" center title="备用订阅">
+    <el-alert v-if="!config.backRss" :closable="false"
+              show-icon
+              style="margin-bottom: 8px;" type="warning">
+      <template #title>
+        当前备用RSS功能并未开启, 可前往 <strong>设置-基本设置-RSS设置-备用RSS</strong> 启用
+      </template>
+    </el-alert>
     <div class="flex" style="width: 100%;">
       <div>
         <el-button text bg icon="Plus" @click="plus" type="primary"/>
@@ -72,17 +79,26 @@
 
 import {ref} from "vue";
 import Mikan from "./Mikan.vue";
+import api from "../api.js";
 
 const editIndex = ref(-1)
 
 const dialogVisible = ref(false)
 const backRss = ref()
 const mikan = ref()
+const config = ref({
+  backRss: true
+})
 
 let show = () => {
   editIndex.value = -1
   dialogVisible.value = true
   backRss.value = JSON.parse(JSON.stringify(props.ani.backRssList))
+
+  api.get('api/config')
+      .then(res => {
+        config.value = res.data;
+      })
 }
 
 let plus = () => {
