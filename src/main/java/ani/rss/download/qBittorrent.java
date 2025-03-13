@@ -26,7 +26,6 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.io.File;
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * qBittorrent
@@ -99,7 +98,8 @@ public class qBittorrent implements BaseDownload {
                                     TorrentsInfo.State.downloading : EnumUtil.fromString(TorrentsInfo.State.class, state.getAsString(), TorrentsInfo.State.downloading)
                             );
                             torrentsInfo.setTags(tagList);
-                            torrentsInfo.setFiles(() -> files(torrentsInfo).stream().map(FileEntity::getName).collect(Collectors.toList()));
+                            torrentsInfo.setFiles(() -> files(torrentsInfo).stream().map(FileEntity::getName)
+                                    .toList());
                             // 包含标签
                             if (tagList.contains(TorrentsTags.ANI_RSS.getValue())) {
                                 torrentsInfoList.add(torrentsInfo);
@@ -225,7 +225,7 @@ public class qBittorrent implements BaseDownload {
                     .map(File::new)
                     .filter(File::exists)
                     .filter(File::isDirectory)
-                    .collect(Collectors.toList());
+                    .toList();
 
             // 清空剩余文件夹
             for (File file : dirList) {
@@ -267,7 +267,7 @@ public class qBittorrent implements BaseDownload {
                                 return videoFormat.contains(extName) || subtitleFormat.contains(extName);
                             })
                             .sorted(Comparator.comparingLong(fileEntity -> Long.MAX_VALUE - fileEntity.getSize()))
-                            .collect(Collectors.toList());
+                            .toList();
                 });
     }
 
