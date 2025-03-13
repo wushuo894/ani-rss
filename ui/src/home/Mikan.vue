@@ -69,10 +69,12 @@
                         <div class="single-line" style="margin-left: 5px;max-width: 70%;">
                           {{ it.title }}
                         </div>
-                        &nbsp;
-                        <h4 style="color: #E800A4;">
-                          {{ it['score'].toFixed(1) }}
-                        </h4>
+                        <template v-if="it['score'] > 0">
+                          &nbsp;
+                          <h4 style="color: #E800A4;">
+                            {{ it['score'].toFixed(1) }}
+                          </h4>
+                        </template>
                         <el-badge v-if="it['exists']" class="item" type="primary" value="已订阅"/>
                       </template>
                       <div v-if="selectName === it.url" v-loading="groupLoading"
@@ -119,7 +121,8 @@
                                         {{ ti['dateStr'] }}
                                         &nbsp;
                                       </p>
-                                      <el-button :icon="DocumentCopy" bg text @click="copy(ti['magnet'])">复制磁链</el-button>
+                                      <el-button :icon="DocumentCopy" bg text @click="copy(ti['magnet'])">复制磁链
+                                      </el-button>
                                     </div>
                                   </div>
                                 </el-card>
