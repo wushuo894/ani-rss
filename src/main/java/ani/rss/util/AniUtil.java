@@ -25,7 +25,6 @@ import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.stream.Collectors;
 
 @Slf4j
 public class AniUtil {
@@ -231,7 +230,7 @@ public class AniUtil {
         if (importExclude) {
             exclude = new ArrayList<>(exclude);
             exclude.addAll(ani.getExclude());
-            exclude = exclude.stream().distinct().collect(Collectors.toList());
+            exclude = exclude.stream().distinct().toList();
             ani.setExclude(exclude);
         }
 

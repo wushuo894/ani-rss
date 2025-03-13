@@ -20,7 +20,6 @@ import cn.hutool.http.server.HttpServerResponse;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * 视频列表
@@ -44,7 +43,8 @@ public class PlaylistAction implements BaseAction {
 
         List<File> downloadPath = TorrentUtil.getDownloadPath(ani);
         List<PlayItem> collect = downloadPath.stream()
-                .flatMap(file -> getPlayItem(file).stream()).collect(Collectors.toList());
+                .flatMap(file -> getPlayItem(file).stream())
+                .toList();
         collect = CollUtil.distinct(collect, PlayItem::getTitle, false);
         collect = CollUtil.sort(collect, Comparator.comparingDouble(it -> Double.parseDouble(ReUtil.get(StringEnum.SEASON_REG, it.getTitle(), 2))));
         resultSuccess(collect);
@@ -79,7 +79,7 @@ public class PlaylistAction implements BaseAction {
                             .setHtml(name.toUpperCase())
                             .setUrl(Base64.encode(FileUtil.getAbsolutePath(f)))
                             .setType(FileUtil.extName(f));
-                }).collect(Collectors.toList());
+                }).toList();
         subtitles = CollUtil.distinct(subtitles, PlayItem.Subtitles::getName, true);
         PlayItem playItem = new PlayItem();
         playItem.setSubtitles(subtitles);

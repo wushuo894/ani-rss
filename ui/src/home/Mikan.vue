@@ -69,6 +69,10 @@
                         <div class="single-line" style="margin-left: 5px;max-width: 70%;">
                           {{ it.title }}
                         </div>
+                        &nbsp;
+                        <h4 style="color: #E800A4;">
+                          {{ it['score'].toFixed(1) }}
+                        </h4>
                         <el-badge v-if="it['exists']" class="item" type="primary" value="已订阅"/>
                       </template>
                       <div v-if="selectName === it.url" v-loading="groupLoading"

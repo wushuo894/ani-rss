@@ -4,21 +4,24 @@ import ani.rss.entity.Ani;
 import ani.rss.entity.Config;
 import ani.rss.entity.Mikan;
 import ani.rss.entity.TorrentsInfo;
+import cn.hutool.core.collection.ListUtil;
+import cn.hutool.core.lang.Opt;
 import cn.hutool.core.util.ReUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.core.util.URLUtil;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import lombok.extern.slf4j.Slf4j;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+@Slf4j
 public class MikanUtil {
     public static String getMikanHost() {
         Config config = ConfigUtil.CONFIG;
@@ -52,6 +55,8 @@ public class MikanUtil {
                 url = url + "/Home/BangumiCoverFlowByDayOfWeek?year=" + year + "&seasonStr=" + seasonStr;
             }
         }
+        JsonObject score = getScore();
+
         return HttpReq.get(url, true)
                 .thenFunction(res -> {
                     Mikan mikan = new Mikan();
@@ -96,14 +101,19 @@ public class MikanUtil {
 
                             String id = ReUtil.get("\\d+(/)?$", href, 0);
                             id = StrUtil.blankToDefault(id, "");
-
                             anis.add(new Ani()
                                     .setCover(img)
                                     .setTitle(title)
                                     .setUrl(href)
-                                    .setExists(bangumiIdSet.contains(id)));
+                                    .setExists(bangumiIdSet.contains(id))
+                                    .setScore(
+                                            Opt.ofNullable(score.get(id))
+                                                    .map(JsonElement::getAsDouble)
+                                                    .orElse(0.0)
+                                    )
+                            );
                         }
-                        return anis;
+                        return ListUtil.sort(anis, Comparator.comparingDouble(Ani::getScore).reversed());
                     };
 
                     Elements skBangumis = document.select(".sk-bangumi");
@@ -220,4 +230,16 @@ public class MikanUtil {
                     }
                 });
     }
+
+    public static JsonObject getScore() {
+        JsonObject jsonObject = new JsonObject();
+        try {
+            jsonObject = HttpReq.get("https://bgm-cache.wushuo.top/bgm/score.json", true)
+                    .thenFunction(res -> GsonStatic.fromJson(res.body(), JsonObject.class));
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+        }
+        return jsonObject;
+    }
+
 }
