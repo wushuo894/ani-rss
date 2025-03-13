@@ -24,7 +24,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 
 
 @Slf4j
@@ -41,18 +40,16 @@ public class ItemsUtil {
     public static synchronized List<Item> getItems(Ani ani) {
         String url = ani.getUrl();
 
-        List<Item> items = new ArrayList<>();
-
         Config config = ConfigUtil.CONFIG;
 
         String s = HttpReq.get(url, true)
                 .timeout(config.getRssTimeout() * 1000)
                 .thenFunction(HttpResponse::body);
         String subgroup = StrUtil.blankToDefault(ani.getSubgroup(), "未知字幕组");
-        items.addAll(ItemsUtil.getItems(ani, s, new Item().setSubgroup(subgroup))
+        List<Item> items = new ArrayList<>(ItemsUtil.getItems(ani, s, new Item().setSubgroup(subgroup))
                 .stream()
                 .peek(item -> item.setMaster(true))
-                .collect(Collectors.toList()));
+                .toList());
 
         if (!config.getBackRss()) {
             items.sort(Comparator.comparingDouble(Item::getEpisode));
@@ -71,7 +68,7 @@ public class ItemsUtil {
             items.addAll(ItemsUtil.getItems(clone, s, new Item().setSubgroup(subgroup))
                     .stream()
                     .peek(item -> item.setMaster(false))
-                    .collect(Collectors.toList()));
+                    .toList());
         }
         items = CollUtil.distinct(items, it -> it.getEpisode().toString(), false);
         items.sort(Comparator.comparingDouble(Item::getEpisode));
@@ -239,7 +236,7 @@ public class ItemsUtil {
                         log.error(e.getMessage(), e);
                     }
                     return false;
-                }).collect(Collectors.toList());
+                }).toList();
         return CollUtil.distinct(items, item -> item.getEpisode().toString(), true);
     }
 

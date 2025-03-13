@@ -60,7 +60,8 @@ public class BgmUtil {
                     }
                     return jsonObject.get("list").getAsJsonArray()
                             .asList()
-                            .stream().map(JsonElement::getAsJsonObject).collect(Collectors.toList());
+                            .stream().map(JsonElement::getAsJsonObject)
+                            .toList();
                 });
     }
 
@@ -151,7 +152,7 @@ public class BgmUtil {
                                 }
                                 return true;
                             })
-                            .collect(Collectors.toList());
+                            .toList();
                 });
     }
 

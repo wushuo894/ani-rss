@@ -295,7 +295,7 @@ public class TorrentUtil {
                 .filter(File::exists)
                 .filter(File::isDirectory)
                 .flatMap(downloadPath -> Stream.of(ObjectUtil.defaultIfNull(downloadPath.listFiles(), new File[]{})))
-                .collect(Collectors.toList());
+                .toList();
 
         for (File file : files) {
             String fileMainName = FileUtil.mainName(file);
@@ -467,7 +467,7 @@ public class TorrentUtil {
                     }
                     return Stream.of(ObjectUtil.defaultIfNull(file.listFiles(), new File[]{}));
                 })
-                .collect(Collectors.toList());
+                .toList();
 
         if (files.stream()
                 .filter(file -> {
@@ -526,7 +526,7 @@ public class TorrentUtil {
             List<File> files = StrUtil.split(aniDownloadPath, "\n", true, true)
                     .stream()
                     .map(File::new)
-                    .collect(Collectors.toList());
+                    .toList();
             if (!files.isEmpty()) {
                 return files;
             }

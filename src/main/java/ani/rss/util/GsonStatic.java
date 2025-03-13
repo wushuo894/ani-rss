@@ -10,7 +10,6 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
 import java.util.TimeZone;
-import java.util.stream.Collectors;
 
 @Slf4j
 public class GsonStatic {
@@ -28,7 +27,7 @@ public class GsonStatic {
         return array.asList()
                 .stream()
                 .map(it -> fromJson(it, clazz))
-                .collect(Collectors.toList());
+                .toList();
     }
 
     public static <T> List<T> fromJsonList(String body, Class<T> clazz) {
