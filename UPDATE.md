@@ -1,4 +1,4 @@
-添加mikan时可以看到各个番剧的对应评分了
+优化mikan的加载速度
 
 <img src="https://github.com/user-attachments/assets/3af5a124-954d-4d1c-8c74-2741be2d7bcd" height="90" width="90">
 
