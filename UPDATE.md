@@ -1,4 +1,4 @@
-优化mikan的加载速度
+修复添加订阅时选择bgm列表有空白名称的问题
 
 <img src="https://github.com/user-attachments/assets/3af5a124-954d-4d1c-8c74-2741be2d7bcd" height="90" width="90">
 
