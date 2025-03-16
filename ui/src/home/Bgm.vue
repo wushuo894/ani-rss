@@ -18,11 +18,17 @@
                  width="78px">
           </template>
         </el-table-column>
-        <el-table-column prop="name_cn" label="名称" width="200"/>
-        <el-table-column prop="url" label="url" width="200"/>
+        <el-table-column label="名称" width="200">
+          <template #default="it">
+            <span>{{ list[it.$index]['name_cn'] ? list[it.$index]['name_cn'] : list[it.$index]['name'] }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="url" prop="url" width="240"/>
         <el-table-column>
           <template #default="it">
-            <el-button bg text @click="ok(list[it.$index])">选择</el-button>
+            <div class="flex flex-center" style="width: 100%;">
+              <el-button bg text @click="ok(list[it.$index])">选择</el-button>
+            </div>
           </template>
         </el-table-column>
       </el-table>
