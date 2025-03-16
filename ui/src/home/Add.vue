@@ -63,7 +63,7 @@
                   />
                 </div>
                 <div style="width: 4px;"></div>
-                <el-button text bg icon="Search" @click="bgmRef?.show(ani.title)" :disabled="rssButtonLoading"/>
+                <el-button :disabled="rssButtonLoading" bg icon="Search" text type="primary" @click="bgmRef?.show(ani.title)"/>
               </div>
             </el-form-item>
             <el-form-item label="BgmUrl">
