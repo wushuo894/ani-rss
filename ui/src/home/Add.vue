@@ -59,7 +59,7 @@
                   <el-input
                       :disabled="rssButtonLoading"
                       v-model:model-value="ani.title"
-                      placeholder="可以为空 如果获取失败建议补全"
+                      placeholder="请勿留空"
                   />
                 </div>
                 <div style="width: 4px;"></div>
@@ -139,6 +139,12 @@ const ani = ref({
 const rssButtonLoading = ref(false)
 
 const getRss = () => {
+  if (activeName.value === 'other') {
+    if (!ani.value.bgmUrl) {
+      ElMessage.error('请选择在 Bangumi 中所对应的番剧')
+      return
+    }
+  }
   rssButtonLoading.value = true
   ani.value.type = activeName.value
   api.post('api/rss', ani.value)
