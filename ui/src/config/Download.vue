@@ -19,7 +19,7 @@
       <el-input v-model:model-value="props.config.password" placeholder="" show-password></el-input>
     </el-form-item>
     <el-form-item v-if="props.config.download === 'Alist'" label="AlistToken">
-      <el-input v-model:model-value="props.config.password" placeholder="" show-password></el-input>
+      <el-input v-model:model-value="props.config.password" placeholder="alist-xxxxxx" show-password></el-input>
     </el-form-item>
     <template v-else>
       <el-form-item label="用户名">
@@ -148,7 +148,7 @@
           </div>
         </el-form-item>
       </el-collapse-item>
-      <el-collapse-item title="Alist">
+      <el-collapse-item title="Alist自动上传">
         <el-form-item label="AlistHost">
           <el-input v-model:model-value="props.config['alistHost']" placeholder="http://127.0.0.1:5244"/>
         </el-form-item>
