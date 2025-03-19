@@ -19,7 +19,7 @@
         </div>
         <div>
           <el-text class="mx-1" size="small">
-            下载完成通知暂不支持 Aria2
+            下载完成通知暂不支持 Aria2、Alist
           </el-text>
         </div>
       </div>

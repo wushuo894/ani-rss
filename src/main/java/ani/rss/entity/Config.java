@@ -502,4 +502,6 @@ public class Config implements Serializable {
      * 自定义集数获取规则 groupIndex
      */
     private Integer customEpisodeGroupIndex;
+
+    private String provider;
 }
