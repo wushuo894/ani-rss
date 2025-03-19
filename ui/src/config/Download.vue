@@ -15,7 +15,13 @@
     <el-form-item label="地址">
       <el-input v-model:model-value="props.config.host" placeholder="http://192.168.1.x:8080"></el-input>
     </el-form-item>
-    <template v-if="props.config.download !== 'Aria2'">
+    <el-form-item v-if="props.config.download === 'Aria2'" label="RPC 密钥">
+      <el-input v-model:model-value="props.config.password" placeholder="" show-password></el-input>
+    </el-form-item>
+    <el-form-item v-if="props.config.download === 'Alist'" label="AlistToken">
+      <el-input v-model:model-value="props.config.password" placeholder="" show-password></el-input>
+    </el-form-item>
+    <template v-else>
       <el-form-item label="用户名">
         <el-input v-model:model-value="props.config.username" placeholder="username"></el-input>
       </el-form-item>
@@ -23,9 +29,6 @@
         <el-input v-model:model-value="props.config.password" placeholder="password" show-password/>
       </el-form-item>
     </template>
-    <el-form-item label="RPC 密钥" v-else>
-      <el-input show-password v-model:model-value="props.config.password" placeholder=""></el-input>
-    </el-form-item>
     <el-form-item>
       <div style="display:flex;width: 100%;justify-content: end;">
         <el-button @click="downloadLoginTest" bg text :loading="downloadLoginTestLoading" icon="Odometer">测试
@@ -184,7 +187,8 @@ import {ElMessage} from "element-plus";
 const downloadSelect = ref([
   'qBittorrent',
   'Transmission',
-  'Aria2'
+  'Aria2',
+  'Alist'
 ])
 
 const downloadLoginTestLoading = ref(false)
