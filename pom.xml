@@ -6,7 +6,7 @@
 
     <groupId>ani.rss</groupId>
     <artifactId>ani-rss</artifactId>
-    <version>1.1.321</version>
+    <version>1.1.322</version>
 
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
@@ -15,6 +15,11 @@
     </properties>
 
     <dependencies>
+        <dependency>
+            <groupId>org.eclipse</groupId>
+            <artifactId>bittorrent</artifactId>
+            <version>0.3.0-v20070627-1030</version>
+        </dependency>
         <dependency>
             <groupId>org.xerial</groupId>
             <artifactId>sqlite-jdbc</artifactId>

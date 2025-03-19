@@ -19,6 +19,7 @@ import cn.hutool.extra.pinyin.PinyinUtil;
 import cn.hutool.json.JSONUtil;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import org.eclipse.bittorrent.TorrentFile;
 
 import java.io.File;
 import java.util.*;
@@ -985,6 +986,30 @@ public class TorrentUtil {
                 .findFirst()
                 .ifPresent(TorrentUtil::setBaseDownload);
         log.info("下载工具 {}", download);
+    }
+
+    /**
+     * 通过种子获取到磁力链接
+     *
+     * @param file
+     * @return
+     */
+    public static synchronized String getMagnet(File file) {
+        String hexHash = FileUtil.mainName(file);
+        if (file.length() < 1) {
+            return StrFormatter.format("magnet:?xt=urn:btih:{}", hexHash);
+        }
+        if (FileUtil.extName(file).equals("txt")) {
+            return FileUtil.readUtf8String(file);
+        }
+        try {
+            TorrentFile torrentFile = new TorrentFile(file);
+            hexHash = torrentFile.getHexHash();
+        } catch (Exception e) {
+            log.error("转换种子为磁力链接时出现错误 {}", file.getAbsolutePath());
+            log.error(e.getMessage(), e);
+        }
+        return StrFormatter.format("magnet:?xt=urn:btih:{}", hexHash);
     }
 
 }
