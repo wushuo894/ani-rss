@@ -72,6 +72,7 @@
 ## 依赖项目列表
 
 - [alist](https://github.com/AlistGo/alist)
+- [bittorrent](https://www.eclipse.org/)
 - [gson](https://github.com/google/gson)
 - [hutool](https://hutool.cn/)
 - [launch4j-maven-plugin](https://github.com/orphan-oss/launch4j-maven-plugin)
