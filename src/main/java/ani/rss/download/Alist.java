@@ -19,7 +19,7 @@ import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.Header;
 import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpResponse;
-import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import lombok.Data;
 import lombok.experimental.Accessors;
@@ -28,6 +28,7 @@ import lombok.extern.slf4j.Slf4j;
 import java.io.File;
 import java.io.Serializable;
 import java.util.*;
+import java.util.stream.Stream;
 
 @Slf4j
 public class Alist implements BaseDownload {
@@ -68,7 +69,7 @@ public class Alist implements BaseDownload {
                         Assert.isTrue(write, "没有写入权限");
 
                         String provider = data.get("provider").getAsString();
-                        if (!List.of("115 Cloud", "ThunderExpert", "PikPak").contains(provider)) {
+                        if (!List.of("115 Cloud", "Thunder", "PikPak").contains(provider)) {
                             throw new IllegalArgumentException(StrFormatter.format("不支持的网盘类型 {}", provider));
                         }
                         config.setProvider(provider);
@@ -124,24 +125,20 @@ public class Alist implements BaseDownload {
                         Assert.isTrue(jsonObject.get("code").getAsInt() == 200, "添加离线下载失败 {}", reName);
                     });
             log.info("添加离线下载成功");
-            for (int i = 0; i < 10; i++) {
-                Thread.sleep(5000);
-                List<AlistFileInfo> alistFileInfos = ls(path);
-                if (alistFileInfos.isEmpty()) {
-                    continue;
-                }
-                String parentName = alistFileInfos.get(0).getName();
-                alistFileInfos = ls(path + "/" + parentName);
-                if (alistFileInfos.isEmpty()) {
-                    continue;
-                }
+            for (int i = 0; i < 5; i++) {
+                Thread.sleep(2000);
+                List<AlistFileInfo> alistFileInfos = findFiles(path);
 
                 // 取大小最大的一个视频文件
                 AlistFileInfo videoFile = alistFileInfos.stream()
                         .filter(alistFileInfo ->
                                 videoFormat.contains(FileUtil.extName(alistFileInfo.getName())))
                         .findFirst()
-                        .orElse(new AlistFileInfo());
+                        .orElse(null);
+
+                if (Objects.isNull(videoFile)) {
+                    continue;
+                }
 
                 List<AlistFileInfo> subtitleList = alistFileInfos.stream()
                         .filter(alistFileInfo ->
@@ -174,7 +171,7 @@ public class Alist implements BaseDownload {
                         }).toList();
                 fsApi("batch_rename")
                         .body(GsonStatic.toJson(Map.of(
-                                "src_dir", path + "/" + parentName,
+                                "src_dir", videoFile.getPath(),
                                 "rename_objects", rename_objects
                         ))).then(res -> log.info(res.body()));
 
@@ -184,7 +181,7 @@ public class Alist implements BaseDownload {
                         .toList();
                 fsApi("recursive_move")
                         .body(GsonStatic.toJson(Map.of(
-                                "src_dir", path + "/" + parentName,
+                                "src_dir", videoFile.getPath(),
                                 "dst_dir", savePath,
                                 "names", names
                         ))).then(res -> log.info(res.body()));
@@ -239,12 +236,23 @@ public class Alist implements BaseDownload {
                     )))
                     .thenFunction(res -> {
                         JsonObject jsonObject = GsonStatic.fromJson(res.body(), JsonObject.class);
-                        JsonObject data = jsonObject.getAsJsonObject("data");
-                        if (Objects.isNull(data)) {
+                        int code = jsonObject.get("code").getAsInt();
+                        if (code != 200) {
                             return List.of();
                         }
-                        JsonArray jsonArray = data.getAsJsonArray("content");
-                        List<AlistFileInfo> infos = GsonStatic.fromJsonList(jsonArray, AlistFileInfo.class);
+                        JsonElement data = jsonObject.get("data");
+                        if (Objects.isNull(data) || data.isJsonNull()) {
+                            return List.of();
+                        }
+                        JsonElement content = data.getAsJsonObject()
+                                .get("content");
+                        if (Objects.isNull(content) || content.isJsonNull()) {
+                            return List.of();
+                        }
+                        List<AlistFileInfo> infos = GsonStatic.fromJsonList(content.getAsJsonArray(), AlistFileInfo.class);
+                        for (AlistFileInfo info : infos) {
+                            info.setPath(path);
+                        }
                         return ListUtil.sort(new ArrayList<>(infos), Comparator.comparing(fileInfo -> {
                             Long size = fileInfo.getSize();
                             return Long.MAX_VALUE - ObjectUtil.defaultIfNull(size, 0L);
@@ -256,6 +264,28 @@ public class Alist implements BaseDownload {
         return List.of();
     }
 
+    /**
+     * 获取目录下及子目录的文件
+     *
+     * @param path
+     * @return
+     */
+    public synchronized List<AlistFileInfo> findFiles(String path) {
+        List<AlistFileInfo> alistFileInfos = ls(path);
+        List<AlistFileInfo> list = alistFileInfos.stream()
+                .flatMap(alistFileInfo -> {
+                    if (alistFileInfo.getIs_dir()) {
+                        return findFiles(path + "/" + alistFileInfo.getName()).stream();
+                    }
+                    return Stream.of(alistFileInfo);
+                }).toList();
+
+        return ListUtil.sort(new ArrayList<>(list), Comparator.comparing(fileInfo -> {
+            Long size = fileInfo.getSize();
+            return Long.MAX_VALUE - ObjectUtil.defaultIfNull(size, 0L);
+        }));
+    }
+
     @Data
     @Accessors(chain = true)
     public static class AlistFileInfo implements Serializable {
@@ -264,6 +294,7 @@ public class Alist implements BaseDownload {
         private Boolean is_dir;
         private Date modified;
         private Date created;
+        private String path;
     }
 
     /**
