@@ -13,17 +13,23 @@
       </el-select>
     </el-form-item>
     <el-form-item label="地址">
-      <el-input v-model:model-value="props.config.host" placeholder="http://192.168.1.x:8080"></el-input>
+      <el-input v-model:model-value="props.config.host" placeholder="http://192.168.1.x:8080"/>
     </el-form-item>
     <el-form-item v-if="props.config.download === 'Aria2'" label="RPC 密钥">
       <el-input v-model:model-value="props.config.password" placeholder="" show-password></el-input>
     </el-form-item>
-    <el-form-item v-if="props.config.download === 'Alist'" label="AlistToken">
-      <el-input v-model:model-value="props.config.password" placeholder="alist-xxxxxx" show-password></el-input>
+    <el-form-item v-else-if="props.config.download === 'Alist'" label="AlistToken">
+      <el-input v-model:model-value="props.config.password" placeholder="alist-xxxxxx" show-password/>
+      <br/>
+      <el-text class="mx-1" size="small">
+        请设置好 <strong>保存位置</strong> 才能通过测试<br/>
+        请在 alist -> 设置-> 其他 -> 配置临时目录<br/>
+        支持离线下载到 115、PikPak
+      </el-text>
     </el-form-item>
     <template v-else>
       <el-form-item label="用户名">
-        <el-input v-model:model-value="props.config.username" placeholder="username"></el-input>
+        <el-input v-model:model-value="props.config.username" placeholder="username"/>
       </el-form-item>
       <el-form-item label="密码">
         <el-input v-model:model-value="props.config.password" placeholder="password" show-password/>
