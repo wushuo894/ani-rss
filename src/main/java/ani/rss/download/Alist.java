@@ -8,10 +8,12 @@ import ani.rss.util.ExceptionUtil;
 import ani.rss.util.GsonStatic;
 import ani.rss.util.HttpReq;
 import ani.rss.util.TorrentUtil;
+import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.text.StrFormatter;
 import cn.hutool.core.thread.ThreadUtil;
+import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.ReUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.Header;
@@ -133,14 +135,41 @@ public class Alist implements BaseDownload {
                 if (alistFileInfos.isEmpty()) {
                     continue;
                 }
+
+                // 取大小最大的一个视频文件
+                AlistFileInfo videoFile = alistFileInfos.stream()
+                        .filter(alistFileInfo ->
+                                videoFormat.contains(FileUtil.extName(alistFileInfo.getName())))
+                        .findFirst()
+                        .orElse(new AlistFileInfo());
+
+                List<AlistFileInfo> subtitleList = alistFileInfos.stream()
+                        .filter(alistFileInfo ->
+                                subtitleFormat.contains(FileUtil.extName(alistFileInfo.getName())))
+                        .toList();
+
+                Map<String, String> renameMap = new HashMap<>();
+                renameMap.put(videoFile.getName(), reName + "." + FileUtil.extName(videoFile.getName()));
+                for (AlistFileInfo alistFileInfo : subtitleList) {
+                    String name = alistFileInfo.getName();
+                    String extName = FileUtil.extName(name);
+                    String newName = reName;
+                    String lang = FileUtil.extName(FileUtil.mainName(name));
+                    if (StrUtil.isNotBlank(lang)) {
+                        newName = newName + "." + lang;
+                    }
+                    renameMap.put(name, newName + "." + extName);
+                }
+
                 // 重命名
-                List<Map<String, String>> rename_objects = alistFileInfos.stream()
-                        .map(alistFileInfo -> {
-                            String newName = reName + "." + FileUtil.extName(alistFileInfo.getName());
-                            log.info("重命名 {} ==> {}", alistFileInfo.getName(), newName);
+                List<Map<String, String>> rename_objects = renameMap.entrySet().stream()
+                        .map(map -> {
+                            String srcName = map.getKey();
+                            String newName = map.getValue();
+                            log.info("重命名 {} ==> {}", srcName, newName);
                             return Map.of(
-                                    "src_name", alistFileInfo.getName(),
-                                    "new_name", reName + "." + FileUtil.extName(alistFileInfo.getName())
+                                    "src_name", srcName,
+                                    "new_name", newName
                             );
                         }).toList();
                 fsApi("batch_rename")
@@ -150,8 +179,8 @@ public class Alist implements BaseDownload {
                         ))).then(res -> log.info(res.body()));
 
                 // 移动
-                List<String> names = alistFileInfos.stream()
-                        .map(alistFileInfo -> reName + "." + FileUtil.extName(alistFileInfo.getName()))
+                List<String> names = renameMap.values()
+                        .stream()
                         .toList();
                 fsApi("recursive_move")
                         .body(GsonStatic.toJson(Map.of(
@@ -215,7 +244,11 @@ public class Alist implements BaseDownload {
                             return List.of();
                         }
                         JsonArray jsonArray = data.getAsJsonArray("content");
-                        return GsonStatic.fromJsonList(jsonArray, AlistFileInfo.class);
+                        List<AlistFileInfo> infos = GsonStatic.fromJsonList(jsonArray, AlistFileInfo.class);
+                        return ListUtil.sort(new ArrayList<>(infos), Comparator.comparing(fileInfo -> {
+                            Long size = fileInfo.getSize();
+                            return Long.MAX_VALUE - ObjectUtil.defaultIfNull(size, 0L);
+                        }));
                     });
         } catch (Exception e) {
             log.error(e.getMessage(), e);
@@ -240,7 +273,7 @@ public class Alist implements BaseDownload {
      * @return
      */
     public synchronized HttpRequest fsApi(String action) {
-        ThreadUtil.sleep(1000);
+        ThreadUtil.sleep(2000);
         String host = config.getHost();
         String password = config.getPassword();
         return HttpReq.post(host + "/api/fs/" + action, false)
