@@ -24,7 +24,7 @@
       <el-text class="mx-1" size="small">
         请设置好 <strong>保存位置</strong> 才能通过测试<br/>
         请在 alist -> 设置-> 其他 -> 配置临时目录<br/>
-        支持离线下载到 115、PikPak
+        支持离线下载到 115、PikPak、迅雷云盘
       </el-text>
     </el-form-item>
     <template v-else>
