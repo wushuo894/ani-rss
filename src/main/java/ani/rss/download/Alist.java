@@ -179,7 +179,7 @@ public class Alist implements BaseDownload {
                 List<String> names = renameMap.values()
                         .stream()
                         .toList();
-                fsApi("recursive_move")
+                fsApi("move")
                         .body(GsonStatic.toJson(Map.of(
                                 "src_dir", videoFile.getPath(),
                                 "dst_dir", savePath,
