@@ -55,7 +55,7 @@
         </el-form-item>
         <el-form-item label="更新内容">
           <el-scrollbar style="margin-bottom: 16px;" :always="true">
-            <div style="width: 800px;" v-html="md.render(about.body)"></div>
+            <div class="markdown-body" style="width: 800px;" v-html="md.render(about.body)"></div>
             <el-alert
                 show-icon
                 :closable="false"
