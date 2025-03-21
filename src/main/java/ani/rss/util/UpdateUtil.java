@@ -36,6 +36,9 @@ public class UpdateUtil {
                     .timeout(3000)
                     .then(response -> {
                         JsonArray jsonArray = GsonStatic.fromJson(response.body(), JsonArray.class);
+                        if (jsonArray.isEmpty()) {
+                            return;
+                        }
                         JsonObject jsonObject = jsonArray.get(0).getAsJsonObject();
                         String latest = jsonObject.get("name").getAsString().replace("v", "");
                         about.setUpdate(VersionComparator.INSTANCE.compare(latest, version) > 0)
