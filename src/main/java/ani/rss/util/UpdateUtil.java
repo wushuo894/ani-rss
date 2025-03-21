@@ -12,10 +12,9 @@ import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.RuntimeUtil;
 import cn.hutool.core.util.StrUtil;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 import lombok.extern.slf4j.Slf4j;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
 
 import java.io.File;
 import java.io.InputStream;
@@ -31,20 +30,20 @@ public class UpdateUtil {
                 .setVersion(version)
                 .setUpdate(false)
                 .setLatest("")
-                .setMarkdownBody("");
+                .setBody("");
         try {
-            HttpReq.get("https://github.com/wushuo894/ani-rss/releases/latest", true)
+            HttpReq.get("https://api.github.com/repos/wushuo894/ani-rss/releases?page=1&per_page=1", true)
                     .timeout(3000)
                     .then(response -> {
-                        String body = response.body();
-                        Document document = Jsoup.parse(body);
-                        Element box = document.selectFirst(".Box");
-                        Element element = box.selectFirst("h1");
-                        String latest = element.text().replace("v", "").trim();
+                        JsonArray jsonArray = GsonStatic.fromJson(response.body(), JsonArray.class);
+                        if (jsonArray.isEmpty()) {
+                            return;
+                        }
+                        JsonObject jsonObject = jsonArray.get(0).getAsJsonObject();
+                        String latest = jsonObject.get("name").getAsString().replace("v", "");
                         about.setUpdate(VersionComparator.INSTANCE.compare(latest, version) > 0)
                                 .setLatest(latest);
-                        Element markdownBody = box.selectFirst(".markdown-body");
-                        about.setMarkdownBody(markdownBody.outerHtml());
+                        about.setBody(jsonObject.get("body").getAsString());
                         String filename = "ani-rss-jar-with-dependencies.jar";
                         File jar = getJar();
                         if ("exe".equals(FileUtil.extName(jar))) {
@@ -54,8 +53,7 @@ public class UpdateUtil {
                         about.setDownloadUrl(downloadUrl);
 
                         try {
-                            Element relativeTime = box.selectFirst("relative-time");
-                            String datetime = relativeTime.attr("datetime");
+                            String datetime = jsonObject.get("created_at").getAsString();
                             about.setDate(DateUtil.parse(datetime));
                         } catch (Exception ignored) {
                         }
