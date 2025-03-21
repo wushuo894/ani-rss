@@ -158,26 +158,31 @@ public class Alist implements BaseDownload {
                     renameMap.put(name, newName + "." + extName);
                 }
 
-                // 重命名
-                List<Map<String, String>> rename_objects = renameMap.entrySet().stream()
-                        .map(map -> {
-                            String srcName = map.getKey();
-                            String newName = map.getValue();
-                            log.info("重命名 {} ==> {}", srcName, newName);
-                            return Map.of(
-                                    "src_name", srcName,
-                                    "new_name", newName
-                            );
-                        }).toList();
-                fsApi("batch_rename")
-                        .body(GsonStatic.toJson(Map.of(
-                                "src_dir", videoFile.getPath(),
-                                "rename_objects", rename_objects
-                        ))).then(res -> log.info(res.body()));
+                Boolean rename = config.getRename();
+
+                if (rename) {
+                    // 重命名
+                    List<Map<String, String>> rename_objects = renameMap.entrySet().stream()
+                            .map(map -> {
+                                String srcName = map.getKey();
+                                String newName = map.getValue();
+                                log.info("重命名 {} ==> {}", srcName, newName);
+                                return Map.of(
+                                        "src_name", srcName,
+                                        "new_name", newName
+                                );
+                            }).toList();
+                    fsApi("batch_rename")
+                            .body(GsonStatic.toJson(Map.of(
+                                    "src_dir", videoFile.getPath(),
+                                    "rename_objects", rename_objects
+                            ))).then(res -> log.info(res.body()));
+                }
 
                 // 移动
-                List<String> names = renameMap.values()
+                List<String> names = renameMap.entrySet()
                         .stream()
+                        .map(m -> rename ? m.getValue() : m.getKey())
                         .toList();
                 fsApi("move")
                         .body(GsonStatic.toJson(Map.of(
