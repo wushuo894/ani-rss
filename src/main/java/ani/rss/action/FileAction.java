@@ -9,6 +9,7 @@ import ani.rss.util.HttpReq;
 import cn.hutool.core.codec.Base64;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IoUtil;
+import cn.hutool.core.text.StrFormatter;
 import cn.hutool.core.util.ReflectUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.core.util.URLUtil;
@@ -106,13 +107,12 @@ public class FileAction implements BaseAction {
 
         String mimeType = FileUtil.getMimeType(filename);
 
+        response.setHeader("Content-Disposition", StrFormatter.format("inline; filename=\"{}\"", URLUtil.encode(new File(filename).getName())));
         if (StrUtil.isBlank(mimeType)) {
             response.setContentType(ContentType.OCTET_STREAM.getValue());
-            response.setHeader("Content-Disposition", "inline; filename=\"" + new File(filename).getName() + "\"");
         } else if (mimeType.startsWith("video/")) {
             String extName = FileUtil.extName(filename);
             response.setHeader("Content-Type", "video/" + extName);
-            response.setHeader("Content-Disposition", "inline;filename=1." + extName);
             response.setHeader("Accept-Ranges", "bytes");
             String rangeHeader = request.getHeader("Range");
             long fileLength = new File(filename).length();
@@ -128,7 +128,6 @@ public class FileAction implements BaseAction {
             }
         } else {
             response.setContentType(mimeType);
-            response.setHeader("Content-Disposition", "inline; filename=\"" + new File(filename).getName() + "\"");
         }
 
         try {
