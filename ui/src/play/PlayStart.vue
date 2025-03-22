@@ -18,9 +18,9 @@ let playItem = ref()
 let subtitles = ref([])
 
 let show = (i, pi) => {
-  src.value = `api/files?filename=${pi.filename}&s=${window.authorization}&config=false`
+  src.value = `api/files?filename=${pi.filename}&s=${window.authorization}`
   for (let subtitle of pi.subtitles) {
-    subtitle.url = `api/files?filename=${subtitle.url}&s=${window.authorization}&config=false`
+    subtitle.url = `api/files?filename=${subtitle.url}&s=${window.authorization}`
   }
   subtitles = pi.subtitles
   ani.value = i

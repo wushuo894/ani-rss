@@ -92,7 +92,6 @@ public class FileAction implements BaseAction {
 
 
         String filename = request.getParam("filename");
-        String s = request.getParam("config");
 
         boolean hasRange = false;
         long start = 0;
@@ -133,10 +132,8 @@ public class FileAction implements BaseAction {
         }
 
         try {
-            File file;
-            if ("false".equals(s)) {
-                file = new File(filename);
-            } else {
+            File file = new File(filename);
+            if (!file.exists()) {
                 File configDir = ConfigUtil.getConfigDir();
                 file = new File(configDir + "/files/" + filename);
             }
