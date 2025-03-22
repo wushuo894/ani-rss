@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="artplayer-app"></div>
-    <div class="flex" style="margin-top: 8px;width: 100%;justify-content: end;">
+    <div style="margin-top: 8px;">
       <el-button bg text @click="openUrl(`potplayer://${src}`)">
         <template #icon>
           <img alt="PotPlayer" class="el-icon--left" height="20" src="../icon/icon-PotPlayer.webp" width="20"/>
