@@ -34,9 +34,9 @@
       </el-button>
       <el-button bg text @click="openUrl(`ddplay:${encodeUrl(src)}`)">
         <template #icon>
-          <img alt="MPV" class="el-icon--left" height="20" src="../icon/icon-MPV.webp" width="20"/>
+          <img alt="DandanPlay" class="el-icon--left" height="20" src="../icon/icon-DandanPlay.webp" width="20"/>
         </template>
-        MPV
+        弹弹Play
       </el-button>
     </div>
   </div>
