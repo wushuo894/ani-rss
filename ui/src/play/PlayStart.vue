@@ -1,5 +1,5 @@
 <template>
-  <el-dialog v-model="dialogVisible" :title="ani.title+' '+playItem.title" center v-if="dialogVisible">
+  <el-dialog v-if="dialogVisible" v-model="dialogVisible" :title="playItem.name" center>
     <div
         class="flex-center" style="width: 100%;max-height: 500px;min-height: 200px;">
       <Artplayer :src="src" :subtitles="subtitles"/>

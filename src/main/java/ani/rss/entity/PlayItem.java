@@ -17,6 +17,8 @@ public class PlayItem implements Serializable {
 
     private String filename;
 
+    private String name;
+
     private List<Subtitles> subtitles;
 
     @Data
