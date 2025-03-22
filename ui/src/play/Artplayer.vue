@@ -14,11 +14,29 @@
         </template>
         VLC
       </el-button>
-      <el-button bg text @click="openUrl(`iina://weblink?url=${src}`)">
+      <el-button bg text @click="openUrl(`iina://weblink?url=${encodeUrl(src)}`)">
         <template #icon>
           <img alt="IINA" class="el-icon--left" height="20" src="../icon/icon-IINA.webp" width="20"/>
         </template>
         IINA
+      </el-button>
+      <el-button bg text @click="openUrl(`intent:${src}`)">
+        <template #icon>
+          <img alt="MXPlayer" class="el-icon--left" height="20" src="../icon/icon-MXPlayer.webp" width="20"/>
+        </template>
+        MX
+      </el-button>
+      <el-button bg text @click="openUrl(`mpv://play/${encodeToBase64(src)}`)">
+        <template #icon>
+          <img alt="MPV" class="el-icon--left" height="20" src="../icon/icon-MPV.webp" width="20"/>
+        </template>
+        MPV
+      </el-button>
+      <el-button bg text @click="openUrl(`ddplay:${encodeUrl(src)}`)">
+        <template #icon>
+          <img alt="MPV" class="el-icon--left" height="20" src="../icon/icon-MPV.webp" width="20"/>
+        </template>
+        MPV
       </el-button>
     </div>
   </div>
@@ -38,8 +56,15 @@ let openUrl = (url) => {
 
 let src = ref('')
 
+// 加密为 Base64
+let encodeToBase64 = (str) =>
+    btoa(str);
+
+let encodeUrl = (str) =>
+    encodeURIComponent(str);
+
 onMounted(() => {
-  src.value = encodeURI(location.href + props.src)
+  src.value = location.href + props.src
 
   let selector = props.subtitles
   let defaultName = ''
