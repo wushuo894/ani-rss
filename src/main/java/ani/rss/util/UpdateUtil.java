@@ -12,7 +12,7 @@ import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.RuntimeUtil;
 import cn.hutool.core.util.StrUtil;
-import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import lombok.extern.slf4j.Slf4j;
 
@@ -20,6 +20,7 @@ import java.io.File;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Slf4j
 public class UpdateUtil {
@@ -32,14 +33,16 @@ public class UpdateUtil {
                 .setLatest("")
                 .setBody("");
         try {
-            HttpReq.get("https://api.github.com/repos/wushuo894/ani-rss/releases?page=1&per_page=1", true)
+            HttpReq.get("https://api.github.com/repos/wushuo894/ani-rss/releases/latest", true)
                     .timeout(3000)
                     .then(response -> {
-                        JsonArray jsonArray = GsonStatic.fromJson(response.body(), JsonArray.class);
-                        if (jsonArray.isEmpty()) {
+                        Assert.isTrue(response.isOk(), "status: {}", response.getStatus());
+                        JsonObject jsonObject = GsonStatic.fromJson(response.body(), JsonObject.class);
+                        JsonElement jsonElement = jsonObject.get("message");
+                        if (Objects.nonNull(jsonElement)) {
+                            log.error(jsonElement.getAsString());
                             return;
                         }
-                        JsonObject jsonObject = jsonArray.get(0).getAsJsonObject();
                         String latest = jsonObject.get("name").getAsString().replace("v", "");
                         about.setUpdate(VersionComparator.INSTANCE.compare(latest, version) > 0)
                                 .setLatest(latest);
