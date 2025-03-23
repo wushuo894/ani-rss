@@ -111,7 +111,6 @@ public class UpdateUtil {
                     }
 
                     ThreadUtil.execute(() -> {
-                        ThreadUtil.sleep(1000);
                         if ("jar".equals(extName)) {
                             FileUtil.rename(file, jar.getName(), true);
                             ServerUtil.stop();
