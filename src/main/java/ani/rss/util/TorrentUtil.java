@@ -94,6 +94,15 @@ public class TorrentUtil {
             // .5 集
             boolean is5 = episode.intValue() != episode;
 
+            // 已经下载过
+            if (torrent.exists()) {
+                log.debug("种子记录已存在 {}", reName);
+                if (master && !is5) {
+                    currentDownloadCount++;
+                }
+                continue;
+            }
+
             if (notDownload.contains(episode)) {
                 if (master && !is5) {
                     currentDownloadCount++;
@@ -163,16 +172,7 @@ public class TorrentUtil {
                             // 文件名与下载位置相同 或 hash 相同
                             (torrentsInfo.getDownloadDir().equals(savePath) && torrentsInfo.getName().equals(reName))
                                     || torrentsInfo.getHash().equals(hash))) {
-                log.debug("已有下载任务 {}", reName);
-                if (master && !is5) {
-                    currentDownloadCount++;
-                }
-                continue;
-            }
-
-            // 已经下载过
-            if (torrent.exists()) {
-                log.debug("种子记录已存在 {}", reName);
+                log.info("已有下载任务 hash:{} name:{}", hash, reName);
                 if (master && !is5) {
                     currentDownloadCount++;
                 }
@@ -181,7 +181,7 @@ public class TorrentUtil {
 
             // 未开启rename不进行检测
             if (itemDownloaded(ani, item, true)) {
-                log.debug("本地文件已存在 {}", reName);
+                log.info("本地文件已存在 {}", reName);
                 if (master && !is5) {
                     currentDownloadCount++;
                 }
