@@ -35,6 +35,7 @@ public class UpdateUtil {
             HttpReq.get("https://api.github.com/repos/wushuo894/ani-rss/releases?page=1&per_page=1", true)
                     .timeout(3000)
                     .then(response -> {
+                        Assert.isTrue(response.isOk(), "status: {}", response.getStatus());
                         JsonArray jsonArray = GsonStatic.fromJson(response.body(), JsonArray.class);
                         if (jsonArray.isEmpty()) {
                             return;
