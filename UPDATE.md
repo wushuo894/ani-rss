@@ -1,3 +1,3 @@
-优化跳过下载时的日志
+alist上传失败后会重试2次
 
 **在1.1.300版本时已将jdk升级到了17，docker部署的请更新容器与镜像！[点此查看更新教程](https://github.com/wushuo894/ani-rss/discussions/204)**
