@@ -35,7 +35,7 @@ public class About implements Serializable {
     /**
      * 更新内容
      */
-    private String body;
+    private String markdownBody;
 
     /**
      * 发布时间

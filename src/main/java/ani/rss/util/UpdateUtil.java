@@ -12,15 +12,15 @@ import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.RuntimeUtil;
 import cn.hutool.core.util.StrUtil;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 import lombok.extern.slf4j.Slf4j;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
 
 import java.io.File;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 @Slf4j
 public class UpdateUtil {
@@ -31,22 +31,21 @@ public class UpdateUtil {
                 .setVersion(version)
                 .setUpdate(false)
                 .setLatest("")
-                .setBody("");
+                .setMarkdownBody("");
         try {
-            HttpReq.get("https://api.github.com/repos/wushuo894/ani-rss/releases/latest", true)
+            // 直接爬取html, 因为千人骑 ip 访问 github api 会被流控
+            HttpReq.get("https://github.com/wushuo894/ani-rss/releases/latest", true)
                     .timeout(3000)
                     .then(response -> {
-                        Assert.isTrue(response.isOk(), "status: {}", response.getStatus());
-                        JsonObject jsonObject = GsonStatic.fromJson(response.body(), JsonObject.class);
-                        JsonElement jsonElement = jsonObject.get("message");
-                        if (Objects.nonNull(jsonElement)) {
-                            log.error(jsonElement.getAsString());
-                            return;
-                        }
-                        String latest = jsonObject.get("name").getAsString().replace("v", "");
+                        String body = response.body();
+                        Document document = Jsoup.parse(body);
+                        Element box = document.selectFirst(".Box");
+                        Element element = box.selectFirst("h1");
+                        String latest = element.text().replace("v", "").trim();
                         about.setUpdate(VersionComparator.INSTANCE.compare(latest, version) > 0)
                                 .setLatest(latest);
-                        about.setBody(jsonObject.get("body").getAsString());
+                        Element markdownBody = box.selectFirst(".markdown-body");
+                        about.setMarkdownBody(markdownBody.outerHtml());
                         String filename = "ani-rss-jar-with-dependencies.jar";
                         File jar = getJar();
                         if ("exe".equals(FileUtil.extName(jar))) {
@@ -56,7 +55,8 @@ public class UpdateUtil {
                         about.setDownloadUrl(downloadUrl);
 
                         try {
-                            String datetime = jsonObject.get("created_at").getAsString();
+                            Element relativeTime = box.selectFirst("relative-time");
+                            String datetime = relativeTime.attr("datetime");
                             about.setDate(DateUtil.parse(datetime));
                         } catch (Exception ignored) {
                         }
@@ -111,7 +111,6 @@ public class UpdateUtil {
                     }
 
                     ThreadUtil.execute(() -> {
-                        ThreadUtil.sleep(1000);
                         if ("jar".equals(extName)) {
                             FileUtil.rename(file, jar.getName(), true);
                             ServerUtil.stop();

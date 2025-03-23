@@ -80,39 +80,42 @@ public class AlistUtil {
                     return;
                 }
                 log.info("上传 {} ==> {}", file, finalFilePath);
-                try {
-                    String url = alistHost;
-                    if (url.endsWith("/")) {
-                        url = url.substring(0, url.length() - 1);
+                for (int i = 0; i < 3; i++) {
+                    try {
+                        String url = alistHost;
+                        if (url.endsWith("/")) {
+                            url = url.substring(0, url.length() - 1);
+                        }
+                        // 使用流式上传
+                        url += "/api/fs/form";
+
+                        // 50M 上传
+                        HttpConfig httpConfig = new HttpConfig()
+                                .setBlockSize(1024 * 1024 * 50);
+
+                        HttpReq
+                                .put(url)
+                                .timeout(1000 * 60 * 2)
+                                .setConfig(httpConfig)
+                                .header(Header.AUTHORIZATION, alistToken)
+                                .header("As-Task", "true")
+                                .header("File-Path", URLUtil.encode(finalFilePath))
+                                .header(Header.CONTENT_LENGTH, String.valueOf(file.length()))
+                                .form("file", file)
+                                .then(res -> {
+                                    Assert.isTrue(res.isOk(), "上传失败 {} 状态码:{}", string, res.getStatus());
+                                    log.info("已向alist添加上传任务 {}", string);
+
+                                    // 上传完成后删除原文件
+                                    Boolean alistDelete = config.getAlistDelete();
+                                    if (alistDelete && TorrentUtil.login()) {
+                                        TorrentUtil.delete(torrentsInfo, true, true);
+                                    }
+                                });
+                        return;
+                    } catch (Exception e) {
+                        log.error(e.getMessage(), e);
                     }
-                    // 使用流式上传
-                    url += "/api/fs/form";
-
-                    // 50M 上传
-                    HttpConfig httpConfig = new HttpConfig()
-                            .setBlockSize(1024 * 1024 * 50);
-
-                    HttpReq
-                            .put(url)
-                            .timeout(1000 * 60 * 2)
-                            .setConfig(httpConfig)
-                            .header(Header.AUTHORIZATION, alistToken)
-                            .header("As-Task", "true")
-                            .header("File-Path", URLUtil.encode(finalFilePath))
-                            .header(Header.CONTENT_LENGTH, String.valueOf(file.length()))
-                            .form("file", file)
-                            .then(res -> {
-                                Assert.isTrue(res.isOk(), "上传失败 {} 状态码:{}", string, res.getStatus());
-                                log.info("已向alist添加上传任务 {}", string);
-
-                                // 上传完成后删除原文件
-                                Boolean alistDelete = config.getAlistDelete();
-                                if (alistDelete && TorrentUtil.login()) {
-                                    TorrentUtil.delete(torrentsInfo, true, true);
-                                }
-                            });
-                } catch (Exception e) {
-                    log.error(e.getMessage(), e);
                 }
             });
         }
