@@ -82,6 +82,7 @@ const config = ref({
   'awaitStalledUP': true,
   'delete': false,
   'deleteBackRSSOnly': false,
+  'deleteFiles': false,
   'offset': false,
   'acronym': false,
   'titleYear': false,
