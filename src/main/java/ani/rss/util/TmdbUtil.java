@@ -10,6 +10,7 @@ import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.core.util.ReUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.core.util.URLUtil;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import lombok.Data;
 import lombok.experimental.Accessors;
@@ -92,8 +93,21 @@ public class TmdbUtil {
                 .form("language", tmdbLanguage)
                 .thenFunction(res -> {
                     Assert.isTrue(res.isOk(), "status: {}", res.getStatus());
-                    List<JsonObject> results = GsonStatic.fromJsonList(GsonStatic.fromJson(res.body(), JsonObject.class)
-                            .getAsJsonArray("results"), JsonObject.class);
+                    JsonObject body = GsonStatic.fromJson(res.body(), JsonObject.class);
+
+                    List<JsonObject> results =
+                            GsonStatic.fromJsonList(body.getAsJsonArray("results"), JsonObject.class);
+
+                    // 过滤出动漫 genreIds 16
+                    results = results.stream()
+                            .filter(it -> {
+                                JsonElement genreIds = it.get("genre_ids");
+                                if (Objects.isNull(genreIds) || genreIds.isJsonNull()) {
+                                    return false;
+                                }
+                                return GsonStatic.fromJsonList(genreIds.getAsJsonArray(), Integer.class).contains(16);
+                            }).toList();
+
                     if (results.isEmpty()) {
                         if (!titleName.contains(" ")) {
                             return null;
@@ -102,22 +116,30 @@ public class TmdbUtil {
                         return getTmdb(titleName.split(" ")[0], type);
                     }
 
-                    JsonObject jsonObject = results.get(0);
-                    String id = jsonObject.get("id").getAsString();
-                    String title = Optional.of(jsonObject)
-                            .map(o -> o.get("name"))
-                            .orElse(jsonObject.get("title")).getAsString();
+                    List<Tmdb> tmdbList = results.stream()
+                            .map(jsonObject -> {
+                                String id = jsonObject.get("id").getAsString();
+                                String title = Optional.of(jsonObject)
+                                        .map(o -> o.get("name"))
+                                        .orElse(jsonObject.get("title")).getAsString();
 
-                    String date = Optional.of(jsonObject)
-                            .map(o -> o.get("first_air_date"))
-                            .orElse(jsonObject.get("release_date")).getAsString();
+                                String date = Optional.of(jsonObject)
+                                        .map(o -> o.get("first_air_date"))
+                                        .orElse(jsonObject.get("release_date")).getAsString();
 
-                    title = RenameUtil.getName(title);
+                                title = RenameUtil.getName(title);
 
-                    return new Tmdb()
-                            .setId(id)
-                            .setName(title)
-                            .setDate(DateUtil.parse(date));
+                                return new Tmdb()
+                                        .setId(id)
+                                        .setName(title)
+                                        .setDate(DateUtil.parse(date));
+                            }).toList();
+
+                    // 优先使用名称完全匹配
+                    return tmdbList.stream()
+                            .filter(tmdb -> tmdb.getName().equals(titleName))
+                            .findFirst()
+                            .orElse(tmdbList.get(0));
                 });
     }
 

@@ -1,5 +1,6 @@
 package ani.rss.util;
 
+import ani.rss.action.ClearCacheAction;
 import ani.rss.download.BaseDownload;
 import ani.rss.entity.Ani;
 import ani.rss.entity.Config;
@@ -904,11 +905,13 @@ public class TorrentUtil {
         }
         ThreadUtil.sleep(500);
         Boolean b = baseDownload.delete(torrentsInfo, deleteFiles);
-        if (b) {
-            log.info("删除任务成功 {}", name);
-        } else {
+        if (!b) {
             log.error("删除任务失败 {}", name);
+            return b;
         }
+        log.info("删除任务成功 {}", name);
+        // 清理空文件夹
+        ClearCacheAction.clearParentFile(new File(torrentsInfo.getDownloadDir() + "/" + name));
         return b;
     }
 
@@ -919,7 +922,17 @@ public class TorrentUtil {
      * @param torrentsInfo
      */
     public static synchronized Boolean delete(TorrentsInfo torrentsInfo) {
-        return delete(torrentsInfo, false, false);
+        Config config = ConfigUtil.CONFIG;
+        Boolean deleteFiles = config.getDeleteFiles();
+        Boolean alist = config.getAlist();
+        if (!deleteFiles || !alist) {
+            return delete(torrentsInfo, false, false);
+        }
+        // 开启 alist上传 后删除源文件的行为需要等待 alist上传完成
+        if (torrentsInfo.getTags().contains(TorrentsTags.A_LIST.getValue())) {
+            return delete(torrentsInfo, false, true);
+        }
+        return false;
     }
 
     /**

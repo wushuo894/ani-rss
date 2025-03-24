@@ -52,7 +52,7 @@
         <el-switch v-model:model-value="props.config.delete"/>
         <br>
         <el-text class="mx-1" size="small">
-          自动删除已完成的任务, 不会删除本地文件
+          自动删除已完成的任务
           <br>
           如果同时开启了 <strong>备用rss功能</strong> 将会自动删除对应洗版视频, 以实现 <strong>主rss</strong> 的替换
         </el-text>
@@ -66,7 +66,15 @@
                      label="仅在主RSS更新后删除备用RSS"/>
         <br>
         <el-text class="mx-1" size="small">
-          主RSS将不会自动删除，仅在其更新后删除对应备用RSS的任务与文件
+          <strong>主RSS</strong> 将 <span style="color: red;">不会自动删除</span>，仅在其更新后删除对应备用RSS的任务与文件
+        </el-text>
+        <br>
+        <el-checkbox v-model:model-value="props.config.deleteFiles">
+          <span style="color: red;">删除本地文件</span>
+        </el-checkbox>
+        <br>
+        <el-text class="mx-1" size="small">
+          删除本地文件, 如果同时开启了 <strong>alist上传</strong> 将只会在上传成功后删除
         </el-text>
       </div>
     </el-form-item>
@@ -164,6 +172,9 @@
         <el-form-item label="AlistPath">
           <el-input v-model:model-value="props.config['alistPath']" placeholder="/"/>
         </el-form-item>
+        <el-form-item label="失败重试次数">
+          <el-input-number v-model:model-value="props.config['alistRetry']" :max="100" :min="1"/>
+        </el-form-item>
         <el-form-item label="开关">
           <div style="width: 100%">
             <div>
@@ -174,7 +185,6 @@
                 自动将下载完成的文件上传至alist
               </el-text>
             </div>
-            <el-checkbox v-model:model-value="props.config['alistDelete']">上传完成后删除原文件</el-checkbox>
           </div>
         </el-form-item>
       </el-collapse-item>

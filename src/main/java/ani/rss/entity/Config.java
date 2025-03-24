@@ -134,6 +134,11 @@ public class Config implements Serializable {
     private Boolean deleteBackRSSOnly;
 
     /**
+     * 删除本地文件
+     */
+    private Boolean deleteFiles;
+
+    /**
      * 自动推断剧集偏移
      */
     private Boolean offset;
@@ -464,9 +469,9 @@ public class Config implements Serializable {
     private Boolean alist;
 
     /**
-     * 上传完成后删除原文件
+     * alist上传失败时的重试次数
      */
-    private Boolean alistDelete;
+    private Integer alistRetry;
 
     /**
      * 版本

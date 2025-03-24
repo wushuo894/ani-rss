@@ -2,6 +2,7 @@ package ani.rss.util;
 
 import ani.rss.entity.Config;
 import ani.rss.entity.TorrentsInfo;
+import ani.rss.enums.TorrentsTags;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.thread.ExecutorBuilder;
@@ -38,6 +39,7 @@ public class AlistUtil {
         String alistHost = config.getAlistHost();
         String alistPath = config.getAlistPath();
         String alistToken = config.getAlistToken();
+        Integer alistRetry = config.getAlistRetry();
 
         if (!alist) {
             return;
@@ -80,7 +82,7 @@ public class AlistUtil {
                     return;
                 }
                 log.info("上传 {} ==> {}", file, finalFilePath);
-                for (int i = 0; i < 3; i++) {
+                for (int i = 0; i < alistRetry; i++) {
                     try {
                         String url = alistHost;
                         if (url.endsWith("/")) {
@@ -105,12 +107,7 @@ public class AlistUtil {
                                 .then(res -> {
                                     Assert.isTrue(res.isOk(), "上传失败 {} 状态码:{}", string, res.getStatus());
                                     log.info("已向alist添加上传任务 {}", string);
-
-                                    // 上传完成后删除原文件
-                                    Boolean alistDelete = config.getAlistDelete();
-                                    if (alistDelete && TorrentUtil.login()) {
-                                        TorrentUtil.delete(torrentsInfo, true, true);
-                                    }
+                                    TorrentUtil.addTags(torrentsInfo, TorrentsTags.A_LIST.getValue());
                                 });
                         return;
                     } catch (Exception e) {
