@@ -9,7 +9,8 @@ public enum TorrentsTags {
     ANI_RSS("ani-rss"),
     RENAME("RENAME"),
     BACK_RSS("备用RSS"),
-    DOWNLOAD_COMPLETE("下载完成");
+    DOWNLOAD_COMPLETE("下载完成"),
+    A_LIST("alist");
 
     private final String value;
 }

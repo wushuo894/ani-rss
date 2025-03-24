@@ -919,7 +919,17 @@ public class TorrentUtil {
      * @param torrentsInfo
      */
     public static synchronized Boolean delete(TorrentsInfo torrentsInfo) {
-        return delete(torrentsInfo, false, false);
+        Config config = ConfigUtil.CONFIG;
+        Boolean deleteFiles = config.getDeleteFiles();
+        Boolean alist = config.getAlist();
+        if (!deleteFiles || !alist) {
+            return delete(torrentsInfo, false, false);
+        }
+        // 开启 alist上传 后删除源文件的行为需要等待 alist上传完成
+        if (torrentsInfo.getTags().contains(TorrentsTags.A_LIST.getValue())) {
+            return delete(torrentsInfo, false, true);
+        }
+        return false;
     }
 
     /**
