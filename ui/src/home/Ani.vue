@@ -33,7 +33,8 @@
               <div class="el-input__wrapper" tabindex="-1"
                    style="pointer-events: auto;cursor: auto;justify-content: left;">
                 <el-link v-if="props.ani?.tmdb?.id" type="primary"
-                         :href="`https://www.themoviedb.org/tv/${props.ani.tmdb.id}`" target="_blank">
+                         :href="`https://www.themoviedb.org/${props.ani.ova ? 'movie' : 'tv'}/${props.ani.tmdb.id}`"
+                         target="_blank">
                   {{ props.ani.themoviedbName }}
                 </el-link>
                 <span v-else>{{ props.ani.themoviedbName }}</span>
