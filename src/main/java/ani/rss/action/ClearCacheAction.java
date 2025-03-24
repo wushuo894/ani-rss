@@ -28,7 +28,7 @@ public class ClearCacheAction implements BaseAction {
     /**
      * 清理父级空文件夹
      *
-     * @param !file
+     * @param file
      */
     public static void clearParentFile(File file) {
         if (file.exists()) {
