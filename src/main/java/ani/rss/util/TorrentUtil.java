@@ -1,5 +1,6 @@
 package ani.rss.util;
 
+import ani.rss.action.ClearCacheAction;
 import ani.rss.download.BaseDownload;
 import ani.rss.entity.Ani;
 import ani.rss.entity.Config;
@@ -904,11 +905,13 @@ public class TorrentUtil {
         }
         ThreadUtil.sleep(500);
         Boolean b = baseDownload.delete(torrentsInfo, deleteFiles);
-        if (b) {
-            log.info("删除任务成功 {}", name);
-        } else {
+        if (!b) {
             log.error("删除任务失败 {}", name);
+            return b;
         }
+        log.info("删除任务成功 {}", name);
+        // 清理空文件夹
+        ClearCacheAction.clearParentFile(new File(torrentsInfo.getDownloadDir() + "/" + name));
         return b;
     }
 
