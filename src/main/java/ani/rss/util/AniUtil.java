@@ -177,7 +177,11 @@ public class AniUtil {
             int eps = bgmInfo.getEps();
             String subjectId = bgmInfo.getSubjectId();
             if (eps > 0) {
-                eps = BgmUtil.getEpisodes(subjectId, 0).size();
+                try {
+                    eps = BgmUtil.getEpisodes(subjectId, 0).size();
+                } catch (Exception e) {
+                    log.error(e.getMessage(), e);
+                }
             }
             String image = bgmInfo.getImage();
 
