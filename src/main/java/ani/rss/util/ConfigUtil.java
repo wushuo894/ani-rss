@@ -140,7 +140,8 @@ public class ConfigUtil {
                 .setCustomEpisode(false)
                 .setCustomEpisodeStr("\\[\\d+(\\.5)? ?([Vv]2)]?|第\\d+(\\.5)?集|【\\d+(\\.5)? ?([Vv]2)?】| \\d+(\\.5)?")
                 .setCustomEpisodeGroupIndex(0)
-                .setProvider("");
+                .setProvider("")
+                .setUpload(true);
     }
 
     /**

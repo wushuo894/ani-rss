@@ -105,6 +105,9 @@
               </div>
             </div>
           </el-form-item>
+          <el-form-item label="自动上传">
+            <el-switch v-model:model-value="props.config['upload']"/>
+          </el-form-item>
         </el-form>
       </el-collapse-item>
       <el-collapse-item title="重命名设置" name="3">

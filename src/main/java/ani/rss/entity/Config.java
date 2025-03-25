@@ -508,5 +508,13 @@ public class Config implements Serializable {
      */
     private Integer customEpisodeGroupIndex;
 
+    /**
+     * alist driver
+     */
     private String provider;
+
+    /**
+     * 添加行订阅是是否开启自动上传
+     */
+    private Boolean upload;
 }
