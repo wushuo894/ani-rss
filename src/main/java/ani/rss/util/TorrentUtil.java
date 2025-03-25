@@ -719,7 +719,6 @@ public class TorrentUtil {
         if (!b) {
             return;
         }
-        AlistUtil.upload(torrentsInfo);
         Ani ani = null;
         try {
             ani = findAniByName(name);
@@ -740,6 +739,7 @@ public class TorrentUtil {
         } catch (Exception e) {
             log.error(e.getMessage(), e);
         }
+        AlistUtil.upload(torrentsInfo, ani);
         String text = StrFormatter.format("{} 下载完成", name);
         if (tags.contains(TorrentsTags.BACK_RSS.getValue())) {
             text = StrFormatter.format("(备用RSS) {}", text);

@@ -1,5 +1,6 @@
 package ani.rss.util;
 
+import ani.rss.entity.Ani;
 import ani.rss.entity.Config;
 import ani.rss.entity.TorrentsInfo;
 import ani.rss.enums.TorrentsTags;
@@ -14,6 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.io.File;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.LinkedBlockingQueue;
 
@@ -33,7 +35,15 @@ public class AlistUtil {
      *
      * @param torrentsInfo 任务
      */
-    public static void upload(TorrentsInfo torrentsInfo) {
+    public static void upload(TorrentsInfo torrentsInfo, Ani ani) {
+        if (Objects.nonNull(ani)) {
+            Boolean upload = ani.getUpload();
+            // 禁止自动上传
+            if (!upload) {
+                return;
+            }
+        }
+
         Config config = ConfigUtil.CONFIG;
         Boolean alist = config.getAlist();
         String alistHost = config.getAlistHost();
