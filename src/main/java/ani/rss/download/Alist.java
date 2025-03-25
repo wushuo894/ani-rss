@@ -46,7 +46,7 @@ public class Alist implements BaseDownload {
         String downloadPath = config.getDownloadPath();
         Assert.notBlank(downloadPath, "未设置下载位置");
         try {
-            return fsApi("list")
+            return postApi("fs/list")
                     .body(GsonStatic.toJson(Map.of(
                             "path", downloadPath,
                             "page", 1,
@@ -105,7 +105,7 @@ public class Alist implements BaseDownload {
                         .map(AlistFileInfo::getName)
                         .filter(name -> name.contains(s))
                         .forEach(name -> {
-                            fsApi("remove")
+                            postApi("fs/remove")
                                     .body(GsonStatic.toJson(Map.of(
                                             "dir", savePath,
                                             "names", List.of(name)
@@ -113,92 +113,127 @@ public class Alist implements BaseDownload {
                             log.info("已开启备用RSS, 自动删除 {}/{}", savePath, name);
                         });
             }
-            fsApi("add_offline_download")
+            String tid = postApi("fs/add_offline_download")
                     .body(GsonStatic.toJson(Map.of(
                             "path", path,
                             "urls", List.of(magnet),
                             "tool", config.getProvider(),
                             "delete_policy", "delete_on_upload_succeed"
                     )))
-                    .then(res -> {
+                    .thenFunction(res -> {
                         JsonObject jsonObject = GsonStatic.fromJson(res.body(), JsonObject.class);
                         Assert.isTrue(jsonObject.get("code").getAsInt() == 200, "添加离线下载失败 {}", reName);
+                        log.info("添加离线下载成功 {}", reName);
+                        return jsonObject.getAsJsonObject("data")
+                                .getAsJsonArray("tasks")
+                                .get(0).getAsJsonObject()
+                                .get("id").getAsString();
                     });
-            log.info("添加离线下载成功");
-            for (int i = 0; i < 5; i++) {
-                Thread.sleep(2000);
-                List<AlistFileInfo> alistFileInfos = findFiles(path);
 
-                // 取大小最大的一个视频文件
-                AlistFileInfo videoFile = alistFileInfos.stream()
-                        .filter(alistFileInfo ->
-                                videoFormat.contains(FileUtil.extName(alistFileInfo.getName())))
-                        .findFirst()
-                        .orElse(null);
-
-                if (Objects.isNull(videoFile)) {
+            // 重试次数
+            int retry = 0;
+            while (true) {
+                // https://github.com/AlistGo/alist/blob/main/pkg/task/task.go
+                JsonObject taskInfo = taskInfo(tid);
+                String error = taskInfo.get("error").getAsString();
+                int state = taskInfo
+                        .get("state").getAsInt();
+                // errored 重试
+                if (state > 5) {
+                    // 已到达最大重试次数 5 次
+                    if (retry == 5) {
+                        log.error("离线下载失败 {}", error);
+                        return false;
+                    }
+                    retry++;
+                    taskRetry(tid);
                     continue;
                 }
 
-                List<AlistFileInfo> subtitleList = alistFileInfos.stream()
-                        .filter(alistFileInfo ->
-                                subtitleFormat.contains(FileUtil.extName(alistFileInfo.getName())))
-                        .toList();
-
-                Map<String, String> renameMap = new HashMap<>();
-                renameMap.put(videoFile.getName(), reName + "." + FileUtil.extName(videoFile.getName()));
-                for (AlistFileInfo alistFileInfo : subtitleList) {
-                    String name = alistFileInfo.getName();
-                    String extName = FileUtil.extName(name);
-                    String newName = reName;
-                    String lang = FileUtil.extName(FileUtil.mainName(name));
-                    if (StrUtil.isNotBlank(lang)) {
-                        newName = newName + "." + lang;
-                    }
-                    renameMap.put(name, newName + "." + extName);
+                if (List.of(3, 4).contains(state)) {
+                    log.error("离线任务已被取消 {}", reName);
+                    return false;
                 }
 
-                Boolean rename = config.getRename();
-
-                if (rename) {
-                    // 重命名
-                    List<Map<String, String>> rename_objects = renameMap.entrySet().stream()
-                            .map(map -> {
-                                String srcName = map.getKey();
-                                String newName = map.getValue();
-                                log.info("重命名 {} ==> {}", srcName, newName);
-                                return Map.of(
-                                        "src_name", srcName,
-                                        "new_name", newName
-                                );
-                            }).toList();
-                    fsApi("batch_rename")
-                            .body(GsonStatic.toJson(Map.of(
-                                    "src_dir", videoFile.getPath(),
-                                    "rename_objects", rename_objects
-                            ))).then(res -> log.info(res.body()));
+                // 成功
+                if (state == 2) {
+                    log.info("离线下载完成, 自动删除已完成任务");
+                    taskDelete(tid);
+                    break;
                 }
+            }
 
-                // 移动
-                List<String> names = renameMap.entrySet()
-                        .stream()
-                        .map(m -> rename ? m.getValue() : m.getKey())
-                        .toList();
-                fsApi("move")
+            List<AlistFileInfo> alistFileInfos = findFiles(path);
+
+            // 取大小最大的一个视频文件
+            AlistFileInfo videoFile = alistFileInfos.stream()
+                    .filter(alistFileInfo ->
+                            videoFormat.contains(FileUtil.extName(alistFileInfo.getName())))
+                    .findFirst()
+                    .orElse(null);
+
+            if (Objects.isNull(videoFile)) {
+                return false;
+            }
+
+            List<AlistFileInfo> subtitleList = alistFileInfos.stream()
+                    .filter(alistFileInfo ->
+                            subtitleFormat.contains(FileUtil.extName(alistFileInfo.getName())))
+                    .toList();
+
+            Map<String, String> renameMap = new HashMap<>();
+            renameMap.put(videoFile.getName(), reName + "." + FileUtil.extName(videoFile.getName()));
+            for (AlistFileInfo alistFileInfo : subtitleList) {
+                String name = alistFileInfo.getName();
+                String extName = FileUtil.extName(name);
+                String newName = reName;
+                String lang = FileUtil.extName(FileUtil.mainName(name));
+                if (StrUtil.isNotBlank(lang)) {
+                    newName = newName + "." + lang;
+                }
+                renameMap.put(name, newName + "." + extName);
+            }
+
+            Boolean rename = config.getRename();
+
+            if (rename) {
+                // 重命名
+                List<Map<String, String>> rename_objects = renameMap.entrySet().stream()
+                        .map(map -> {
+                            String srcName = map.getKey();
+                            String newName = map.getValue();
+                            log.info("重命名 {} ==> {}", srcName, newName);
+                            return Map.of(
+                                    "src_name", srcName,
+                                    "new_name", newName
+                            );
+                        }).toList();
+                postApi("fs/batch_rename")
                         .body(GsonStatic.toJson(Map.of(
                                 "src_dir", videoFile.getPath(),
-                                "dst_dir", savePath,
-                                "names", names
+                                "rename_objects", rename_objects
                         ))).then(res -> log.info(res.body()));
-
-                // 删除残留文件夹
-                fsApi("remove")
-                        .body(GsonStatic.toJson(Map.of(
-                                "dir", savePath,
-                                "names", List.of(reName)
-                        ))).then(HttpResponse::isOk);
-                return true;
             }
+
+            // 移动
+            List<String> names = renameMap.entrySet()
+                    .stream()
+                    .map(m -> rename ? m.getValue() : m.getKey())
+                    .toList();
+            postApi("fs/move")
+                    .body(GsonStatic.toJson(Map.of(
+                            "src_dir", videoFile.getPath(),
+                            "dst_dir", savePath,
+                            "names", names
+                    ))).then(res -> log.info(res.body()));
+
+            // 删除残留文件夹
+            postApi("fs/remove")
+                    .body(GsonStatic.toJson(Map.of(
+                            "dir", savePath,
+                            "names", List.of(reName)
+                    ))).then(HttpResponse::isOk);
+            return true;
         } catch (Exception e) {
             log.error(e.getMessage(), e);
         }
@@ -230,9 +265,15 @@ public class Alist implements BaseDownload {
 
     }
 
+    /**
+     * 文件列表
+     *
+     * @param path
+     * @return
+     */
     public List<AlistFileInfo> ls(String path) {
         try {
-            return fsApi("list")
+            return postApi("fs/list")
                     .body(GsonStatic.toJson(Map.of(
                             "path", path,
                             "page", 1,
@@ -267,6 +308,42 @@ public class Alist implements BaseDownload {
             log.error(e.getMessage(), e);
         }
         return List.of();
+    }
+
+    /**
+     * 查看任务
+     *
+     * @param tid
+     * @return
+     */
+    public JsonObject taskInfo(String tid) {
+        return postApi("task/offline_download/info?tid=" + tid)
+                .thenFunction(res -> {
+                    JsonObject jsonObject = GsonStatic.fromJson(res.body(), JsonObject.class);
+                    return jsonObject.get("data").getAsJsonObject();
+                });
+    }
+
+    /**
+     * 重试任务
+     *
+     * @param tid
+     */
+    public void taskRetry(String tid) {
+        postApi("task/offline_download/retry")
+                .form("tid", tid)
+                .thenFunction(HttpResponse::isOk);
+    }
+
+    /**
+     * 删除任务
+     *
+     * @param tid
+     */
+    public void taskDelete(String tid) {
+        postApi("task/offline_download/delete_some")
+                .body(GsonStatic.toJson(List.of(tid)))
+                .thenFunction(HttpResponse::isOk);
     }
 
     /**
@@ -308,11 +385,11 @@ public class Alist implements BaseDownload {
      * @param action
      * @return
      */
-    public synchronized HttpRequest fsApi(String action) {
+    public synchronized HttpRequest postApi(String action) {
         ThreadUtil.sleep(2000);
         String host = config.getHost();
         String password = config.getPassword();
-        return HttpReq.post(host + "/api/fs/" + action, false)
+        return HttpReq.post(host + "/api/" + action, false)
                 .header(Header.AUTHORIZATION, password);
     }
 
