@@ -187,6 +187,13 @@ public class Ani implements Serializable {
      */
     private TmdbUtil.Tmdb tmdb;
 
+    /**
+     * 自动上传
+     *
+     * @return
+     */
+    private Boolean upload;
+
     public static Ani bulidAni() {
         Ani newAni = new Ani();
         Config config = ConfigUtil.CONFIG;
@@ -223,7 +230,8 @@ public class Ani implements Serializable {
                                 .setId("")
                                 .setName("")
                                 .setDate(new Date())
-                );
+                )
+                .setUpload(config.getUpload());
     }
 
     @Data
