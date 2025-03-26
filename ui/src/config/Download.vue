@@ -169,8 +169,11 @@
         <el-form-item label="AlistToken">
           <el-input v-model:model-value="props.config['alistToken']" placeholder="alist-xxxxxx"/>
         </el-form-item>
-        <el-form-item label="AlistPath">
+        <el-form-item label="上传位置">
           <el-input v-model:model-value="props.config['alistPath']" placeholder="/"/>
+        </el-form-item>
+        <el-form-item label="剧场版上传位置">
+          <el-input v-model:model-value="props.config['alistOvaPath']" placeholder="/"/>
         </el-form-item>
         <el-form-item label="失败重试次数">
           <el-input-number v-model:model-value="props.config['alistRetry']" :max="100" :min="1"/>
