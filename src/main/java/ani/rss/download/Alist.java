@@ -157,10 +157,13 @@ public class Alist implements BaseDownload {
 
                 // 成功
                 if (state == 2) {
-                    log.info("离线下载完成, 自动删除已完成任务");
-                    taskDelete(tid);
                     break;
                 }
+            }
+
+            if (delete) {
+                log.info("离线下载完成, 自动删除已完成任务");
+                taskDelete(tid);
             }
 
             List<AlistFileInfo> alistFileInfos = findFiles(path);
