@@ -47,7 +47,8 @@ public class AlistUtil {
         Config config = ConfigUtil.CONFIG;
         Boolean alist = config.getAlist();
         String alistHost = config.getAlistHost();
-        String alistPath = config.getAlistPath();
+        String alistPath = FileUtil.getAbsolutePath(config.getAlistPath());
+        String alistOvaPath = FileUtil.getAbsolutePath(config.getAlistOvaPath());
         String alistToken = config.getAlistToken();
         Integer alistRetry = config.getAlistRetry();
 
@@ -68,14 +69,27 @@ public class AlistUtil {
             return;
         }
 
+        List<String> tags = torrentsInfo.getTags();
+        if (tags.contains(TorrentsTags.A_LIST.getValue())) {
+            return;
+        }
+
+        TorrentUtil.addTags(torrentsInfo, TorrentsTags.A_LIST.getValue());
+
         String downloadDir = FileUtil.getAbsolutePath(torrentsInfo.getDownloadDir());
 
         String downloadPath = FileUtil.getAbsolutePath(config.getDownloadPath());
         String ovaDownloadPath = FileUtil.getAbsolutePath(config.getOvaDownloadPath());
 
-        List<String> strings = torrentsInfo.getFiles().get();
-        for (String string : strings) {
-            String filePath = FileUtil.getAbsolutePath(alistPath);
+        List<String> files = torrentsInfo.getFiles().get();
+        for (String fileName : files) {
+            String filePath = alistPath;
+
+            Boolean ova = ani.getOva();
+            if (ova) {
+                filePath = StrUtil.blankToDefault(alistOvaPath, filePath);
+            }
+
             if (StrUtil.isNotBlank(downloadPath) && downloadDir.startsWith(downloadPath)) {
                 filePath += downloadDir.substring(downloadPath.length());
             } else if (StrUtil.isNotBlank(ovaDownloadPath) && downloadDir.startsWith(ovaDownloadPath)) {
@@ -83,14 +97,15 @@ public class AlistUtil {
             } else {
                 filePath += downloadDir;
             }
-            filePath += "/" + string;
+            filePath += "/" + fileName;
             String finalFilePath = filePath;
+            File file = new File(downloadDir + "/" + fileName);
+            if (!file.exists()) {
+                log.error("文件不存在 {}", file);
+                return;
+            }
+
             EXECUTOR.execute(() -> {
-                File file = new File(downloadDir + "/" + string);
-                if (!file.exists()) {
-                    log.error("文件不存在 {}", file);
-                    return;
-                }
                 log.info("上传 {} ==> {}", file, finalFilePath);
                 for (int i = 0; i < alistRetry; i++) {
                     try {
@@ -115,9 +130,8 @@ public class AlistUtil {
                                 .header(Header.CONTENT_LENGTH, String.valueOf(file.length()))
                                 .form("file", file)
                                 .then(res -> {
-                                    Assert.isTrue(res.isOk(), "上传失败 {} 状态码:{}", string, res.getStatus());
-                                    log.info("已向alist添加上传任务 {}", string);
-                                    TorrentUtil.addTags(torrentsInfo, TorrentsTags.A_LIST.getValue());
+                                    Assert.isTrue(res.isOk(), "上传失败 {} 状态码:{}", fileName, res.getStatus());
+                                    log.info("已向alist添加上传任务 {}", fileName);
                                 });
                         return;
                     } catch (Exception e) {

@@ -131,6 +131,7 @@ public class ConfigUtil {
                 .setAlist(false)
                 .setAlistRetry(5)
                 .setAlistPath("/")
+                .setAlistOvaPath("")
                 .setAlistHost("")
                 .setAlistToken("")
                 .setVersion("")
