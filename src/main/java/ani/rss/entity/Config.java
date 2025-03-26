@@ -464,6 +464,11 @@ public class Config implements Serializable {
     private String alistPath;
 
     /**
+     * 剧场版上传位置
+     */
+    private String alistOvaPath;
+
+    /**
      * 启用alist
      */
     private Boolean alist;
