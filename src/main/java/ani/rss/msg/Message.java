@@ -18,7 +18,7 @@ public interface Message {
 
     Boolean send(Config config, Ani ani, String text, MessageEnum messageEnum);
 
-    default String replaceMessageTemplate(Ani ani, String messageTemplate, String text) {
+    default String replaceMessageTemplate(Ani ani, String messageTemplate, String text, MessageEnum messageEnum) {
         messageTemplate = messageTemplate.replace("${text}", text);
         // 集数
         Double episode = 1.0;
@@ -65,6 +65,11 @@ public interface Message {
                 .map(TmdbUtil.Tmdb::getId)
                 .orElse("");
         messageTemplate = messageTemplate.replace("${tmdbid}", tmdbId);
+
+
+        String emoji = messageEnum.getEmoji();
+
+        messageTemplate = messageTemplate.replace("${emoji}", emoji);
 
         return messageTemplate;
     }

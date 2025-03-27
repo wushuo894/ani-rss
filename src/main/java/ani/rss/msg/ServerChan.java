@@ -22,7 +22,7 @@ public class ServerChan implements Message {
 
     @Override
     public Boolean send(Config config, Ani ani, String text, MessageEnum messageEnum) {
-        text = replaceMessageTemplate(ani, config.getMessageTemplate(), text);
+        text = replaceMessageTemplate(ani, config.getMessageTemplate(), text, messageEnum);
         text = text.replace("\n", "\n\n");
         String type = config.getServerChanType();
         String sendKey = config.getServerChanSendKey();

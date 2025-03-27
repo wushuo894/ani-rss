@@ -21,14 +21,14 @@ public class WebHook implements Message {
     public Boolean send(Config config, Ani ani, String text, MessageEnum messageEnum) {
         String messageTemplate = config.getMessageTemplate();
         messageTemplate = messageTemplate.replace("\n", "\\n");
-        String message = replaceMessageTemplate(ani, messageTemplate, text);
+        String message = replaceMessageTemplate(ani, messageTemplate, text, messageEnum);
 
         String webHookMethod = config.getWebHookMethod();
         String webHookUrl = config.getWebHookUrl();
         String webHookBody = config.getWebHookBody();
 
-        webHookUrl = replaceMessageTemplate(ani, webHookUrl, text);
-        webHookBody = replaceMessageTemplate(ani, webHookBody, text);
+        webHookUrl = replaceMessageTemplate(ani, webHookUrl, text, messageEnum);
+        webHookBody = replaceMessageTemplate(ani, webHookBody, text, messageEnum);
 
         if (StrUtil.isBlank(webHookUrl)) {
             log.warn("webhook url is blank");
