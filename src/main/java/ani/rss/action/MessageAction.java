@@ -5,6 +5,7 @@ import ani.rss.annotation.Path;
 import ani.rss.entity.Ani;
 import ani.rss.entity.BgmInfo;
 import ani.rss.entity.Config;
+import ani.rss.enums.MessageEnum;
 import ani.rss.msg.Message;
 import ani.rss.util.AniUtil;
 import ani.rss.util.BgmUtil;
@@ -46,7 +47,7 @@ public class MessageAction implements BaseAction {
                 .setThemoviedbName("test")
                 .setYear(2024)
                 .setSubgroup("未知字幕组");
-        Boolean test = message.send(config, ani, "test", null);
+        Boolean test = message.send(config, ani, "test", MessageEnum.DOWNLOAD_START);
         if (test) {
             resultSuccess();
             return;
