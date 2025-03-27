@@ -16,7 +16,7 @@ import java.util.Objects;
 public class SystemMsg implements Message {
     @Override
     public Boolean send(Config config, Ani ani, String text, MessageEnum messageEnum) {
-        text = replaceMessageTemplate(ani, config.getMessageTemplate(), text);
+        text = replaceMessageTemplate(ani, config.getMessageTemplate(), text, messageEnum);
         if (!SystemTray.isSupported()) {
             log.error("SystemTray is not supported");
             return false;

@@ -73,7 +73,7 @@ public class Telegram implements Message {
     }
 
     public Boolean send(Config config, Ani ani, String text, MessageEnum messageEnum) {
-        text = replaceMessageTemplate(ani, config.getMessageTemplate(), text);
+        text = replaceMessageTemplate(ani, config.getMessageTemplate(), text, messageEnum);
         String telegramBotToken = config.getTelegramBotToken();
         String telegramChatId = config.getTelegramChatId();
         String telegramApiHost = config.getTelegramApiHost();
