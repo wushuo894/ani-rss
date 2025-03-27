@@ -23,7 +23,7 @@ import java.util.Objects;
 public class Mail implements Message {
     @Override
     public Boolean send(Config config, Ani ani, String text, MessageEnum messageEnum) {
-        String messageBody = replaceMessageTemplate(ani, config.getMessageTemplate(), text);
+        String messageBody = replaceMessageTemplate(ani, config.getMessageTemplate(), text, messageEnum);
         Boolean mail = config.getMail();
         MyMailAccount myMailAccount = config.getMailAccount();
         String mailAddressee = config.getMailAddressee();
