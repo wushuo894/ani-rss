@@ -1,4 +1,4 @@
-FROM eclipse-temurin:17-jre
+FROM ibm-semeru-runtimes:open-17-jre
 COPY docker/run.sh /run.sh
 COPY target/ani-rss-jar-with-dependencies.jar /usr/app/ani-rss-jar-with-dependencies.jar
 WORKDIR /usr/app
