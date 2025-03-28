@@ -228,7 +228,7 @@
       </el-collapse-item>
       <el-collapse-item name="5" title="Trackers">
         <el-form label-width="auto">
-          <el-form-item label="trackers更新地址">
+          <el-form-item label="更新地址">
             <div style="width: 100%">
               <div>
                 <el-input v-model:model-value="props.config.trackersUpdateUrls" placeholder="换行输入多个"
