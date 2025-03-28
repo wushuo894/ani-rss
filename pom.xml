@@ -116,9 +116,17 @@
                             <restartOnCrash>false</restartOnCrash>
                             <icon>ui/public/favicon.ico</icon>
                             <jre>
-                                <path>jre/bin;%JAVA_HOME%;%PATH%</path>
+                                <path>jre/bin;%JAVA_HOME%/bin;%PATH%</path>
                                 <minVersion>17</minVersion>
                             </jre>
+                            <versionInfo>
+                                <fileDescription>https://docs.wushuo.top/</fileDescription>
+                                <copyright>Copyright (C) 2024-2025</copyright>
+                                <productName>${artifactId}</productName>
+                                <internalName>${artifactId}</internalName>
+                                <originalFilename>ani-rss-launcher.exe</originalFilename>
+                                <language>SIMPLIFIED_CHINESE</language>
+                            </versionInfo>
                         </configuration>
                     </execution>
                 </executions>
