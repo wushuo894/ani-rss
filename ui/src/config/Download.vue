@@ -117,10 +117,18 @@
     <el-collapse>
       <el-collapse-item title="qBittorrent设置">
         <el-form-item label="下载速度限制">
-          <el-input-number v-model:model-value="props.config['dlLimit']" :min="0"/>
+          <el-input-number v-model:model-value="props.config['dlLimit']" :min="0">
+            <template #suffix>
+              <span>kiB/s</span>
+            </template>
+          </el-input-number>
         </el-form-item>
         <el-form-item label="上传速度限制">
-          <el-input-number v-model:model-value="props.config['upLimit']" :min="0"/>
+          <el-input-number v-model:model-value="props.config['upLimit']" :min="0">
+            <template #suffix>
+              <span>kiB/s</span>
+            </template>
+          </el-input-number>
         </el-form-item>
         <el-form-item label="分享率">
           <div>
