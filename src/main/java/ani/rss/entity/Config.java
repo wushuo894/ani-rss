@@ -522,4 +522,14 @@ public class Config implements Serializable {
      * 添加行订阅是是否开启自动上传
      */
     private Boolean upload;
+
+    /**
+     * 上传速度限制
+     */
+    private Long upLimit;
+
+    /**
+     * 下载速度限制
+     */
+    private Long dlLimit;
 }

@@ -145,12 +145,15 @@ public class qBittorrent implements BaseDownload {
         Integer seedingTimeLimit = config.getSeedingTimeLimit();
         Integer inactiveSeedingTimeLimit = config.getInactiveSeedingTimeLimit();
 
+        Long upLimit = config.getUpLimit() * 1024;
+        Long dlLimit = config.getDlLimit() * 1024;
+
         HttpRequest httpRequest = HttpReq.post(host + "/api/v2/torrents/add", false)
                 .form("addToTopOfQueue", false)
                 .form("autoTMM", false)
                 .form("category", TorrentsTags.ANI_RSS.getValue())
                 .form("contentLayout", "Original")
-                .form("dlLimit", 0)
+                .form("dlLimit", dlLimit)
                 .form("firstLastPiecePrio", false)
                 .form("paused", false)
                 .form("rename", name)
@@ -158,7 +161,7 @@ public class qBittorrent implements BaseDownload {
                 .form("sequentialDownload", false)
                 .form("skip_checking", false)
                 .form("stopCondition", "None")
-                .form("upLimit", 0)
+                .form("upLimit", upLimit)
                 .form("useDownloadPath", qbUseDownloadPath)
                 .form("tags", CollUtil.join(tags, ","))
                 .form("ratioLimit", ratioLimit)
