@@ -134,7 +134,14 @@ public class ItemsUtil {
                         infoHash = FileUtil.mainName(torrent);
                     }
                 }
-                if (itemChildNodeName.equals("nyaa:infoHash")) {
+
+                if ("guid".equals(itemChildNodeName)) {
+                    if (ReUtil.isMatch("^([a-z]|[0-9])+$", itemChild.getTextContent())) {
+                        infoHash = itemChild.getTextContent();
+                    }
+                }
+
+                if ("nyaa:infoHash".equals(itemChildNodeName)) {
                     infoHash = itemChild.getTextContent();
                 }
                 if (itemChildNodeName.equals("nyaa:size")) {
