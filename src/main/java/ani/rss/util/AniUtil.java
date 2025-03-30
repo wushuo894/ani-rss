@@ -6,13 +6,11 @@ import ani.rss.entity.Config;
 import ani.rss.entity.Item;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.bean.copier.CopyOptions;
-import cn.hutool.core.convert.Convert;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.resource.ResourceUtil;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.text.StrFormatter;
 import cn.hutool.core.util.ObjectUtil;
-import cn.hutool.core.util.ReUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.core.util.URLUtil;
 import cn.hutool.http.HttpResponse;
@@ -204,13 +202,6 @@ public class AniUtil {
         String image = ani.getImage();
         ani.setCover(saveJpg(image));
 
-        String seasonReg = StrFormatter.format("第({}{1,2})季", ReUtil.RE_CHINESE);
-        if (ReUtil.contains(seasonReg, title)) {
-            season = Convert.chineseToNumber(ReUtil.get(seasonReg, title, 1));
-            title = ReUtil.replaceAll(title, seasonReg, "").trim();
-        }
-        title = title.replace("剧场版", "").trim();
-
         Integer year = ani.getYear();
 
         Boolean downloadNew = config.getDownloadNew();
@@ -219,6 +210,8 @@ public class AniUtil {
         Boolean enabledExclude = config.getEnabledExclude();
         Boolean importExclude = config.getImportExclude();
         List<String> exclude = config.getExclude();
+
+        title = title.trim();
 
         if (titleYear && Objects.nonNull(year) && year > 0) {
             title = StrFormatter.format("{} ({})", title, year);
