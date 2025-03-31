@@ -100,6 +100,7 @@ const getList = () => {
       .then(res => {
         list.value = res.data
         selectChange()
+        emit('load')
       })
       .finally(() => {
         loading.value = false
@@ -144,7 +145,6 @@ let importData = () => {
       api.post('api/ani/import', JSON.parse(fileContent.toString()))
           .then(res => {
             ElMessage.success(res.message)
-            emit('load')
             getList()
           })
           .finally(() => {
