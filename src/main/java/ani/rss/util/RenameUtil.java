@@ -4,30 +4,16 @@ import ani.rss.entity.Ani;
 import ani.rss.entity.Config;
 import ani.rss.entity.Item;
 import ani.rss.enums.StringEnum;
-import cn.hutool.core.io.resource.ResourceUtil;
-import cn.hutool.core.text.StrFormatter;
 import cn.hutool.core.util.ReUtil;
 import cn.hutool.core.util.StrUtil;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Slf4j
 public class RenameUtil {
-    public static final String REG_STR;
-
-    static {
-        String s = ResourceUtil.readUtf8Str("reg.json");
-        JsonArray jsonElements = GsonStatic.fromJson(s, JsonArray.class);
-        String ss = jsonElements.asList()
-                .stream().map(JsonElement::getAsString)
-                .collect(Collectors.joining("|"));
-        REG_STR = StrFormatter.format("(.*|\\[.*\\])({})(.*)", ss);
-    }
+    public static final String REG_STR = "( - |Vol |[Ee][Pp]?)\\d+(\\.5)?|【\\d+(\\.5)?】|\\[\\d+(\\.5)?( ?[vV]\\d)?( ?END)?( ?完)?]|第?\\d+(\\.5)?[话話集]( - END)?|^\\[TOC].* \\d+";
 
     public static Boolean rename(Ani ani, Item item) {
         Config config = ConfigUtil.CONFIG;
@@ -77,7 +63,7 @@ public class RenameUtil {
         if (customEpisode) {
             e = ReUtil.get(customEpisodeStr, itemTitle, customEpisodeGroupIndex);
         } else {
-            e = ReUtil.get(REG_STR, itemTitle, 2);
+            e = ReUtil.get(REG_STR, itemTitle, 0);
         }
 
         if (StrUtil.isBlank(e)) {
