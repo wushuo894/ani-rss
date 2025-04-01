@@ -5,7 +5,7 @@
     getRss()
   }"/>
   <Bgm ref="bgmRef" @add="it => {
-    ani.title = it['name_cn']
+    ani.title = it['name_cn'] ? it['name_cn'] : it['name']
     ani.bgmUrl = it.url
   }"/>
   <el-dialog v-model="dialogVisible" center title="添加订阅"
