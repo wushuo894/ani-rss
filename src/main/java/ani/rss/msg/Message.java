@@ -66,10 +66,11 @@ public interface Message {
                 .orElse("");
         messageTemplate = messageTemplate.replace("${tmdbid}", tmdbId);
 
-
         String emoji = messageEnum.getEmoji();
+        String action = messageEnum.getAction();
 
         messageTemplate = messageTemplate.replace("${emoji}", emoji);
+        messageTemplate = messageTemplate.replace("${action}", action);
 
         return messageTemplate;
     }

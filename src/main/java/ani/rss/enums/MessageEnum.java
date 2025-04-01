@@ -7,23 +7,25 @@ public enum MessageEnum {
     /**
      * 开始下载
      */
-    DOWNLOAD_START("🎈"),
+    DOWNLOAD_START("🎈", "开始下载"),
     /**
      * 下载完成
      */
-    DOWNLOAD_END("🎉"),
+    DOWNLOAD_END("🎉", "下载完成"),
     /**
      * 缺集
      */
-    OMIT("⚠"),
+    OMIT("⚠", "缺少集数"),
     /**
      * 错误
      */
-    ERROR("❌");
+    ERROR("❌", "发生错误");
 
     private final String emoji;
+    private final String action;
 
-    MessageEnum(String emoji) {
+    MessageEnum(String emoji, String action) {
         this.emoji = emoji;
+        this.action = action;
     }
 }
