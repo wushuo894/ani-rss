@@ -12,7 +12,6 @@ import ani.rss.enums.TorrentsTags;
 import cn.hutool.core.date.DateField;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.io.FileUtil;
-import cn.hutool.core.lang.Assert;
 import cn.hutool.core.text.StrFormatter;
 import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.core.util.*;
@@ -406,9 +405,17 @@ public class TorrentUtil {
 
             return HttpReq.get(torrent, true)
                     .thenFunction(res -> {
-                        Assert.isTrue(res.isOk(), "status: {}", res.getStatus());
-                        FileUtil.writeFromStream(res.bodyStream(), saveTorrentFile, true);
-                        return saveTorrentFile;
+                        if (res.isOk()) {
+                            FileUtil.writeFromStream(res.bodyStream(), saveTorrentFile, true);
+                            return saveTorrentFile;
+                        }
+                        int status = res.getStatus();
+                        if (status == 404) {
+                            // 如果为 404 则写入空文件 已在 getMagnet 处理过
+                            FileUtil.writeUtf8String("", saveTorrentFile);
+                            return saveTorrentFile;
+                        }
+                        throw new IllegalArgumentException(StrFormatter.format("status: {}", res.getStatus()));
                     });
         } catch (Exception e) {
             String message = ExceptionUtil.getMessage(e);
@@ -907,12 +914,12 @@ public class TorrentUtil {
         Boolean b = baseDownload.delete(torrentsInfo, deleteFiles);
         if (!b) {
             log.error("删除任务失败 {}", name);
-            return b;
+            return false;
         }
         log.info("删除任务成功 {}", name);
         // 清理空文件夹
         ClearCacheAction.clearParentFile(new File(torrentsInfo.getDownloadDir() + "/" + name));
-        return b;
+        return true;
     }
 
 
