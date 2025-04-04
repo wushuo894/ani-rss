@@ -6,35 +6,40 @@
   <div style="height: 100%;display: flex;flex-direction: column;">
     <div id="header">
       <div style="margin: 10px;" class="auto">
-        <el-input
-            v-model:model-value="title"
-            placeholder="搜索"
-            style="min-width: 210px"
-            prefix-icon="Search"
-            clearable/>
+        <div>
+          <el-input
+              v-model:model-value="title"
+              clearable
+              placeholder="搜索"
+              prefix-icon="Search"
+              style="min-width: 210px"/>
+        </div>
         <div style="height: 8px;width: 8px;"></div>
         <div style="min-width: 300px;display: flex">
-          <el-select
-              v-model:model-value="yearMonth"
-              @change="enableSelectChange"
-              style="min-width: 120px"
-              clearable
-          >
-            <el-option v-for="it in list?.yearMonth()"
-                       :value="it" :label="it" :key="it"
-            />
-          </el-select>
-          <div style="height: 8px;width: 8px;"></div>
-          <el-select v-model:model-value="enable"
-                     @change="enableSelectChange">
-            <el-option v-for="selectItem in enableSelect"
-                       :key="selectItem.label"
-                       :label="selectItem.label"
-                       :value="selectItem.label"
-
+          <div style="flex: 1;">
+            <el-select
+                v-model:model-value="yearMonth"
+                clearable
+                @change="enableSelectChange"
             >
-            </el-option>
-          </el-select>
+              <el-option v-for="it in list?.yearMonth()"
+                         :key="it" :label="it" :value="it"
+              />
+            </el-select>
+          </div>
+          <div style="height: 8px;width: 8px;"></div>
+          <div style="flex: 1;">
+            <el-select v-model:model-value="enable"
+                       @change="enableSelectChange">
+              <el-option v-for="selectItem in enableSelect"
+                         :key="selectItem.label"
+                         :label="selectItem.label"
+                         :value="selectItem.label"
+
+              >
+              </el-option>
+            </el-select>
+          </div>
         </div>
       </div>
       <div style="margin: 10px;display: flex;justify-content: flex-end;">

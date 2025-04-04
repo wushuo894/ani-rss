@@ -3,13 +3,27 @@
   <el-dialog v-model="dialogVisible" center class="manage-dialog" title="管理">
     <div style="min-height: 300px;" v-loading="loading">
       <div style="display: flex;justify-content: space-between;width: 100%;">
-        <div style="width: 120px">
-          <el-select v-model:model-value="selectFilter" @change="selectChange">
-            <el-option v-for="filter in selectFilters"
-                       :label="filter.label"
-                       :key="filter.label"
-                       :value="filter.label"/>
-          </el-select>
+        <div class="auto">
+          <div style="width: 120px;">
+            <el-select v-model:model-value="selectFilter"
+                       @change="selectChange">
+              <el-option v-for="filter in selectFilters"
+                         :key="filter.label"
+                         :label="filter.label"
+                         :value="filter.label"/>
+            </el-select>
+          </div>
+          <div style="height: 8px;width: 8px;"></div>
+          <div style="width: 120px;">
+            <el-select
+                v-model:model-value="yearMonthValue"
+                clearable
+                @change="selectChange">
+              <el-option v-for="it in yearMonth(list)"
+                         :key="it" :label="it" :value="it"
+              />
+            </el-select>
+          </div>
         </div>
         <div>
           <el-button :disabled="!selectList.length" bg icon="Upload" text @click="exportData">
@@ -57,6 +71,14 @@ import api from "../api.js";
 import {ElMessage} from "element-plus";
 import Del from "./Del.vue";
 
+let yearMonth = (list) => {
+  return new Set(
+      list
+          .map(it => `${it['year']}-${it['month'] < 10 ? '0' + it['month'] : it['month']}`)
+          .sort((a, b) => a > b ? -1 : 1)
+  );
+}
+
 let refDel = ref()
 
 let selectFilter = ref('全部')
@@ -79,13 +101,16 @@ let selectFilters = ref([
 let searchList = ref([])
 
 let selectChange = () => {
-  searchList.value = list.value.filter(selectFilters.value.filter(item => selectFilter.value === item.label)[0].fun)
+  searchList.value = list.value
+      .filter(it => !yearMonthValue.value || yearMonthValue.value === `${it.year}-${it.month < 10 ? '0' + it.month : it.month}`)
+      .filter(selectFilters.value.filter(item => selectFilter.value === item.label)[0].fun)
 }
 
 let dialogVisible = ref(false)
 let loading = ref(false)
 
 let show = () => {
+  yearMonthValue.value = ''
   selectFilter.value = '全部'
   dialogVisible.value = true
   selectList.value = []
@@ -156,6 +181,8 @@ let importData = () => {
   });
   input.click();
 }
+
+let yearMonthValue = ref('')
 
 defineExpose({show})
 const emit = defineEmits(['load'])
