@@ -18,10 +18,7 @@ import cn.hutool.http.HttpResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.w3c.dom.*;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 
@@ -234,10 +231,12 @@ public class ItemsUtil {
             items.add(addNewItem);
         }
 
+        Map<Integer, String> episodeTitleMap = TmdbUtil.getEpisodeTitleMap(ani);
+
         items = items.stream()
                 .filter(item -> {
                     try {
-                        return RenameUtil.rename(ani, item);
+                        return RenameUtil.rename(ani, item, episodeTitleMap);
                     } catch (Exception e) {
                         log.error("解析rss视频集次出现问题");
                         log.error(e.getMessage(), e);
