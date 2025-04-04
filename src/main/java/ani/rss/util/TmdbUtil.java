@@ -191,8 +191,14 @@ public class TmdbUtil {
                                 body.getAsJsonArray("episodes"), JsonObject.class
                         );
                         for (JsonObject episode : episodes) {
+                            int seasonNumber = episode.get("season_number").getAsInt();
                             int episodeNumber = episode.get("episode_number").getAsInt();
                             String name = episode.get("name").getAsString();
+
+                            if (seasonNumber != season) {
+                                continue;
+                            }
+
                             map.put(episodeNumber, name);
                         }
                     });
