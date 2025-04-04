@@ -27,7 +27,6 @@ public class TmdbUtil {
     /**
      * 获取番剧在tmdb的名称
      *
-     * @param name
      * @param ani
      * @return
      */
@@ -141,6 +140,12 @@ public class TmdbUtil {
                 });
     }
 
+    /**
+     * 获取每集的标题
+     *
+     * @param ani
+     * @return
+     */
     public static Map<Integer, String> getEpisodeTitleMap(Ani ani) {
         Config config = ConfigUtil.CONFIG;
 
@@ -170,6 +175,13 @@ public class TmdbUtil {
         return getEpisodeTitleMap(tmdb, season);
     }
 
+    /**
+     * 获取每集的标题
+     *
+     * @param tmdb
+     * @param season
+     * @return
+     */
     public static Map<Integer, String> getEpisodeTitleMap(Tmdb tmdb, Integer season) {
         Map<Integer, String> map = new HashMap<>();
         try {
