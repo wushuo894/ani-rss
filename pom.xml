@@ -6,7 +6,7 @@
 
     <groupId>ani.rss</groupId>
     <artifactId>ani-rss</artifactId>
-    <version>1.1.342</version>
+    <version>1.1.345</version>
 
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
@@ -54,7 +54,7 @@
         <dependency>
             <groupId>cn.hutool</groupId>
             <artifactId>hutool-all</artifactId>
-            <version>5.8.28</version>
+            <version>5.8.37</version>
         </dependency>
         <dependency>
             <groupId>org.jsoup</groupId>
