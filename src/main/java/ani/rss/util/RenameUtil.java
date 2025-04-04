@@ -15,7 +15,7 @@ import java.util.Optional;
 public class RenameUtil {
     public static final String REG_STR = "( - |Vol |[Ee][Pp]?)\\d+(\\.5)?|【\\d+(\\.5)?】|\\[\\d+(\\.5)?( ?[vV]\\d)?( ?END)?( ?完)?]|第?\\d+(\\.5)?[话話集]( - END)?|^\\[TOC].* \\d+";
 
-    public static Boolean rename(Ani ani, Item item) {
+    public static Boolean rename(Ani ani, Item item, Map<Integer, String> episodeTitleMap) {
         Config config = ConfigUtil.CONFIG;
 
         int offset = ani.getOffset();
@@ -115,6 +115,9 @@ public class RenameUtil {
         renameTemplate = renameTemplate.replace("${itemTitle}", itemTitle);
         renameTemplate = renameTemplate.replace("${resolution}", resolution);
         renameTemplate = renameTemplate.replace("${tmdbid}", tmdbId);
+
+        String episodeTitle = is5 ? "" : episodeTitleMap.getOrDefault((int) episode, "");
+        renameTemplate = renameTemplate.replace("${episodeTitle}", episodeTitle);
 
         String reName = renameTemplate.trim();
 

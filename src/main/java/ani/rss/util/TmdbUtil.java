@@ -17,10 +17,7 @@ import lombok.experimental.Accessors;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.Serializable;
-import java.util.Date;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 
 @Slf4j
 public class TmdbUtil {
@@ -87,6 +84,7 @@ public class TmdbUtil {
         String tmdbLanguage = config.getTmdbLanguage();
 
         return HttpReq.get("https://api.themoviedb.org/3/search/" + type, true)
+                .timeout(5000)
                 .form("query", URLUtil.encodeBlank(titleName))
                 .form("api_key", TMDB_API)
                 .form("include_adult", "true")
@@ -142,6 +140,68 @@ public class TmdbUtil {
                             .orElse(tmdbList.get(0));
                 });
     }
+
+    public static Map<Integer, String> getEpisodeTitleMap(Ani ani) {
+        Config config = ConfigUtil.CONFIG;
+
+        String renameTemplate = config.getRenameTemplate();
+
+        TmdbUtil.Tmdb tmdb = ani.getTmdb();
+        Integer season = ani.getSeason();
+        Boolean ova = ani.getOva();
+
+        if (ova) {
+            return Map.of();
+        }
+
+        if (Objects.isNull(tmdb)) {
+            return Map.of();
+        }
+
+        if (StrUtil.isBlank(tmdb.getId())) {
+            return Map.of();
+        }
+
+        if (!renameTemplate.contains("${episodeTitle}")) {
+            return Map.of();
+        }
+
+
+        return getEpisodeTitleMap(tmdb, season);
+    }
+
+    public static Map<Integer, String> getEpisodeTitleMap(Tmdb tmdb, Integer season) {
+        Map<Integer, String> map = new HashMap<>();
+        try {
+            String id = tmdb.getId();
+            String url = StrFormatter.format("https://api.themoviedb.org/3/tv/{}/season/{}", id, season);
+
+            Config config = ConfigUtil.CONFIG;
+            String tmdbLanguage = config.getTmdbLanguage();
+
+            HttpReq.get(url, true)
+                    .timeout(5000)
+                    .form("api_key", TMDB_API)
+                    .form("include_adult", "true")
+                    .form("language", tmdbLanguage)
+                    .then(res -> {
+                        Assert.isTrue(res.isOk(), "status: {}", res.getStatus());
+                        JsonObject body = GsonStatic.fromJson(res.body(), JsonObject.class);
+                        List<JsonObject> episodes = GsonStatic.fromJsonList(
+                                body.getAsJsonArray("episodes"), JsonObject.class
+                        );
+                        for (JsonObject episode : episodes) {
+                            int episodeNumber = episode.get("episode_number").getAsInt();
+                            String name = episode.get("name").getAsString();
+                            map.put(episodeNumber, name);
+                        }
+                    });
+        } catch (Exception e) {
+            log.error(ExceptionUtil.getMessage(e), e);
+        }
+        return map;
+    }
+
 
     @Data
     @Accessors(chain = true)
