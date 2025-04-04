@@ -69,6 +69,12 @@
 
 感谢大家的支持！❤️
 
+## Sponsors
+
+[![image](https://github.com/wushuo894/ani-rss-docs/raw/master/docs/image/support.nodeget.com_page_promotion_id%3D88.png)](https://yxvm.com/)
+
+[NodeSupport](https://github.com/NodeSeekDev/NodeSupport)赞助了本项目
+
 ## 依赖项目列表
 
 - [alist](https://github.com/AlistGo/alist)
