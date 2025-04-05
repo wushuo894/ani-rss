@@ -71,7 +71,7 @@
 
 ## Sponsors
 
-[![image](https://github.com/wushuo894/ani-rss-docs/raw/master/docs/image/support.nodeget.com_page_promotion_id%3D88.png)](https://yxvm.com/)
+[![image](https://github.com/wushuo894/ani-rss-docs/raw/master/docs/image/support.nodeget.com_page_promotion_id%3D88.webp)](https://yxvm.com/)
 
 [NodeSupport](https://github.com/NodeSeekDev/NodeSupport)赞助了本项目
 
