@@ -16,6 +16,7 @@ public class AfdianUtil {
     public static JsonObject verifyNo(String no) {
         Assert.notBlank(no, "订单号为空");
         return HttpReq.post("https://afdian.wushuo.top?out_trade_no=" + no)
+                .timeout(1000 * 5)
                 .thenFunction(res ->
                         GsonStatic.fromJson(res.body(), JsonObject.class)
                 );

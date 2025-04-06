@@ -3,13 +3,26 @@
     <div v-loading="loading">
       <el-tabs v-model:model-value="activeName" style="margin: 0 15px;">
         <el-tab-pane label="下载设置" name="download" :lazy="true">
+          <template #label>
+            <div v-if="activeName !== 'download'" style="margin-left: 20px"/>
+            <el-icon>
+              <DownloadIcon/>
+            </el-icon>
+            <span>下载设置</span>
+          </template>
           <div style="height: 500px;">
             <el-scrollbar style="padding: 0 12px">
               <Download v-model:config="config"/>
             </el-scrollbar>
           </div>
         </el-tab-pane>
-        <el-tab-pane label="基本设置" :lazy="true">
+        <el-tab-pane :lazy="true" label="基本设置" name="basic">
+          <template #label>
+            <el-icon>
+              <Operation/>
+            </el-icon>
+            <span>基本设置</span>
+          </template>
           <div style="height: 500px;">
             <el-scrollbar style="padding: 0 12px">
               <Basic v-model:config="config"/>
@@ -17,15 +30,39 @@
           </div>
         </el-tab-pane>
         <el-tab-pane label="全局排除" :lazy="true">
+          <template #label>
+            <el-icon>
+              <Filter/>
+            </el-icon>
+            <span>全局排除</span>
+          </template>
           <Exclude ref="exclude" v-model:exclude="config.exclude" :show-text="true"/>
         </el-tab-pane>
         <el-tab-pane label="代理设置" :lazy="true">
+          <template #label>
+            <el-icon>
+              <Promotion/>
+            </el-icon>
+            <span>代理设置</span>
+          </template>
           <Proxy v-model:config="config"/>
         </el-tab-pane>
         <el-tab-pane label="登录设置" :lazy="true">
+          <template #label>
+            <el-icon>
+              <User/>
+            </el-icon>
+            <span>登录设置</span>
+          </template>
           <LoginConfig :config="config"/>
         </el-tab-pane>
         <el-tab-pane label="通知" :lazy="true">
+          <template #label>
+            <el-icon>
+              <ChatRound/>
+            </el-icon>
+            <span>通知</span>
+          </template>
           <div style="height: 500px;">
             <el-scrollbar style="padding: 0 12px">
               <Message ref="messageRef" v-model:config="config" v-model:message-active-name="messageActiveName"/>
@@ -33,7 +70,22 @@
           </div>
           <div style="height: 4px;"></div>
         </el-tab-pane>
+        <el-tab-pane :lazy="true" label="捐赠" name="afdian">
+          <template #label>
+            <el-icon>
+              <Mug/>
+            </el-icon>
+            <span>捐赠</span>
+          </template>
+          <Afdian :config="config"/>
+        </el-tab-pane>
         <el-tab-pane label="关于" name="about" :lazy="true">
+          <template #label>
+            <el-icon>
+              <InfoFilled/>
+            </el-icon>
+            <span>关于</span>
+          </template>
           <About :config="config"/>
         </el-tab-pane>
       </el-tabs>
@@ -58,6 +110,17 @@ import Download from "../config/Download.vue";
 import Basic from "../config/Basic.vue";
 import About from "../config/About.vue";
 import LoginConfig from "../config/LoginConfig.vue";
+import Afdian from "../config/Afdian.vue";
+import {
+  ChatRound,
+  Download as DownloadIcon,
+  Filter,
+  InfoFilled,
+  Mug,
+  Operation,
+  Promotion,
+  User
+} from "@element-plus/icons-vue";
 
 const dialogVisible = ref(false)
 const configButtonLoading = ref(false)
@@ -200,3 +263,15 @@ defineExpose({
 const emit = defineEmits(['load'])
 
 </script>
+
+<style scoped>
+.el-tabs__item > span {
+  display: none;
+}
+
+.is-active > span {
+  display: initial;
+  margin-left: 5px;
+}
+
+</style>
