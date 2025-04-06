@@ -532,4 +532,24 @@ public class Config implements Serializable {
      * 下载速度限制
      */
     private Long dlLimit;
+
+    /**
+     * 捐赠过期时间
+     */
+    private Long expirationTime;
+
+    /**
+     * 爱发电订单号
+     */
+    private String outTradeNo;
+
+    /**
+     * 捐赠或试用是否过期
+     */
+    private Boolean verifyExpirationTime;
+
+    /**
+     * 试用
+     */
+    private Boolean tryOut;
 }
