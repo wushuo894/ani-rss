@@ -155,20 +155,22 @@ public class TmdbUtil {
         Integer season = ani.getSeason();
         Boolean ova = ani.getOva();
 
+        HashMap<Integer, String> map = new HashMap<>();
+
         if (ova) {
-            return Map.of();
+            return map;
         }
 
         if (Objects.isNull(tmdb)) {
-            return Map.of();
+            return map;
         }
 
         if (StrUtil.isBlank(tmdb.getId())) {
-            return Map.of();
+            return map;
         }
 
         if (!renameTemplate.contains("${episodeTitle}")) {
-            return Map.of();
+            return map;
         }
 
 

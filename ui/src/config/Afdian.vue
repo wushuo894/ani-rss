@@ -22,10 +22,14 @@
       </div>
     </el-form-item>
   </el-form>
-  <div>
+  <div class="flex" style="justify-content: space-between">
     <a href="https://afdian.com/a/wushuo894" target="_blank">
       <img :src="support_aifadian" alt="support_aifadian">
     </a>
+    <div style="flex: 1;padding-left: 8px;">
+      <h3>捐赠后解锁</h3>
+      <el-tag v-for="it in ['订阅完结通知','Emby媒体库刷新']" style="margin: 4px 4px 0 0;">{{ it }}</el-tag>
+    </div>
   </div>
   <div style="margin-top: 18px">
     <el-text class="mx-1" size="small">
