@@ -293,7 +293,9 @@ const getEmbyViews = () => {
 }
 
 onMounted(() => {
-  getEmbyViews()
+  if (props.config['embyHost'] && props.config['embyApiKey']) {
+    getEmbyViews()
+  }
 })
 
 const getUpdates = () => {
