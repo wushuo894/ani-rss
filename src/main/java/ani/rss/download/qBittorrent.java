@@ -1,5 +1,6 @@
 package ani.rss.download;
 
+import ani.rss.entity.Ani;
 import ani.rss.entity.Config;
 import ani.rss.entity.Item;
 import ani.rss.entity.TorrentsInfo;
@@ -127,7 +128,7 @@ public class qBittorrent implements BaseDownload {
     }
 
     @Override
-    public Boolean download(Item item, String savePath, File torrentFile, Boolean ova) {
+    public Boolean download(Ani ani, Item item, String savePath, File torrentFile, Boolean ova) {
         String name = item.getReName();
         Boolean master = item.getMaster();
         String subgroup = item.getSubgroup();

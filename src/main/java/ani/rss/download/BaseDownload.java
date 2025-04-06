@@ -1,5 +1,6 @@
 package ani.rss.download;
 
+import ani.rss.entity.Ani;
 import ani.rss.entity.Config;
 import ani.rss.entity.Item;
 import ani.rss.entity.TorrentsInfo;
@@ -40,13 +41,14 @@ public interface BaseDownload {
     /**
      * 下载
      *
+     * @param ani         订阅
      * @param item        下载项
      * @param savePath    保存位置
      * @param torrentFile 种子文件
      * @param ova         是否剧场版/OVA
      * @return 下载状态
      */
-    Boolean download(Item item, String savePath, File torrentFile, Boolean ova);
+    Boolean download(Ani ani, Item item, String savePath, File torrentFile, Boolean ova);
 
     /**
      * 删除已完成任务
