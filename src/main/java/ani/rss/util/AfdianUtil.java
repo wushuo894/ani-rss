@@ -1,6 +1,7 @@
 package ani.rss.util;
 
 import ani.rss.entity.Config;
+import cn.hutool.core.lang.Assert;
 import com.google.gson.JsonObject;
 
 import java.util.Date;
@@ -13,6 +14,7 @@ public class AfdianUtil {
      * @return
      */
     public static JsonObject verifyNo(String no) {
+        Assert.notBlank(no, "订单号为空");
         return HttpReq.post("https://afdian.wushuo.top?out_trade_no=" + no)
                 .thenFunction(res ->
                         GsonStatic.fromJson(res.body(), JsonObject.class)
