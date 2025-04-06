@@ -13,6 +13,7 @@ import cn.hutool.core.lang.Validator;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -148,7 +149,11 @@ public class ConfigUtil {
                 .setExpirationTime(0L)
                 .setOutTradeNo("")
                 .setTryOut(false)
-                .setVerifyExpirationTime(false);
+                .setVerifyExpirationTime(false)
+                .setEmbyRefresh(false)
+                .setEmbyApiKey("")
+                .setEmbyRefreshViewIds(new ArrayList<>())
+                .setEmbyDelayed(0L);
     }
 
     /**
