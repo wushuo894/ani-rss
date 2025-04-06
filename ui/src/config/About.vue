@@ -17,7 +17,7 @@
         <el-button :icon="Telegram" bg text type="info" @click="openUrl('https://t.me/ani_rss')">TG群</el-button>
       </div>
     </div>
-    <div v-loading.fullscreen.lock="actionLoading" class="flex">
+    <div v-loading.fullscreen.lock="actionLoading" class="flex" style="margin-bottom: 8px;">
       <popconfirm title="你确定重启吗?" @confirm="stop(0)">
         <template #reference>
           <el-button bg icon="RefreshRight" text type="warning">重启</el-button>
@@ -35,11 +35,6 @@
           更新
         </el-button>
       </el-badge>
-    </div>
-    <div style="margin-top: 12px;">
-      <a href="https://afdian.com/a/wushuo894" target="_blank">
-        <img :src="support_aifadian" alt="support_aifadian">
-      </a>
     </div>
   </div>
   <el-dialog v-if="dialogVisible" v-model="dialogVisible" align-center center title="版本更新"
@@ -89,7 +84,6 @@ import api from "../api.js";
 import {ElMessage, ElText} from "element-plus";
 import Popconfirm from "../other/Popconfirm.vue";
 import {Book, Github, Telegram} from "@vicons/fa";
-import support_aifadian from "../icon/support_aifadian.svg";
 
 import 'markdown-it-github-alerts/styles/github-colors-light.css'
 import 'markdown-it-github-alerts/styles/github-colors-dark-media.css'

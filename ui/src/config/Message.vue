@@ -1,6 +1,6 @@
 <template>
-  <Afdian ref="afdian" :config="props.config"></Afdian>
-  <el-collapse v-model:model-value="messageActiveName" accordion>
+  <AfdianDialog ref="afdian" :config="props.config"/>
+  <el-collapse v-model="messageActiveName" accordion>
     <el-collapse-item title="通知设置" name="0">
       <div style="margin-bottom: 12px;">
         <div style="margin-bottom: 12px;margin-top: 4px;">
@@ -241,7 +241,7 @@
           <el-button :loading="getEmbyViewsLoading" bg icon="Refresh" text @click="getEmbyViews"/>
         </el-form-item>
         <el-form-item label="延迟">
-          <el-input-number v-model="props.config['embyDelayed']" min="0">
+          <el-input-number v-model="props.config['embyDelayed']" :min="0">
             <template #suffix>
               <span>秒</span>
             </template>
@@ -270,7 +270,7 @@
 import {onMounted, ref} from "vue";
 import {ElMessage} from "element-plus";
 import api from "../api.js";
-import Afdian from "../home/Afdian.vue";
+import AfdianDialog from "./AfdianDialog.vue";
 
 const afdian = ref()
 const chatIdMap = ref({})
@@ -341,7 +341,7 @@ const messageTest = (type) => {
       })
 }
 
-const messageActiveName = ref('')
+const messageActiveName = ref('0')
 
 let props = defineProps(['config'])
 
