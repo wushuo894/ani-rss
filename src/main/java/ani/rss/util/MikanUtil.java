@@ -240,7 +240,7 @@ public class MikanUtil {
                         }
                         String ownText = subgroupText.ownText().trim();
                         if (StrUtil.isNotBlank(ownText)) {
-                            ani.setSubgroup(ownText);
+                            ani.setSubgroup(ownText.replace("/", " or "));
                             continue;
                         }
                         ani.setSubgroup(subgroupText.selectFirst("a").text().trim());

@@ -235,6 +235,7 @@ public class TorrentUtil {
         if (currentDownloadCount >= totalEpisodeNumber) {
             ani.setEnable(false);
             log.info("{} 第 {} 季 共 {} 集 已全部下载完成, 自动停止订阅", title, season, totalEpisodeNumber);
+            MessageUtil.send(config, ani, StrFormatter.format("{} 订阅已完结", title), MessageEnum.COMPLETED);
             AniUtil.sync();
         }
     }

@@ -28,6 +28,11 @@ public class MessageUtil {
             }
         }
 
+        if (MessageEnum.COMPLETED == messageEnum && !AfdianUtil.verifyExpirationTime()) {
+            log.info("未解锁捐赠, 无法使用订阅完结通知");
+            return;
+        }
+
         Set<Class<?>> classes = ClassUtil.scanPackage("ani.rss.msg");
         DynaBean dynaBean = DynaBean.create(config);
         for (Class<?> aClass : classes) {
