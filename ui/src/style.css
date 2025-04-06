@@ -90,3 +90,9 @@ html, body, #app {
     background-color: #656c7633;
     border-radius: 6px;
 }
+
+.markdown-body blockquote {
+    padding: 0 1em;
+    color: #59636e;
+    border-left: .25em solid #d1d9e0;
+}
