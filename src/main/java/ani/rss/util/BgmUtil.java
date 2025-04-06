@@ -14,11 +14,13 @@ import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.core.util.ReUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.ContentType;
+import cn.hutool.http.Header;
 import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpResponse;
 import cn.hutool.json.JSONUtil;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.*;
 import java.util.concurrent.TimeUnit;
@@ -28,6 +30,7 @@ import java.util.stream.Collectors;
 /**
  * BGM
  */
+@Slf4j
 public class BgmUtil {
     static final Cache<String, String> collectionsCache = CacheUtil.newFIFOCache(64);
     static final Cache<String, List<JsonObject>> getEpisodeIdCache = CacheUtil.newFIFOCache(64);
@@ -38,8 +41,7 @@ public class BgmUtil {
         name = name.replace("1/2", "½");
         HttpRequest httpRequest = HttpReq.get(host + "/search/subject/" + name, true);
 
-        setToken(httpRequest);
-        return httpRequest
+        return setToken(httpRequest)
                 .form("type", 2)
                 .form("responseGroup", "small")
                 .thenFunction(res -> {
@@ -166,10 +168,8 @@ public class BgmUtil {
             return;
         }
         collectionsCache.put(subjectId, "1", TimeUnit.MINUTES.toMillis(1));
-        ThreadUtil.sleep(500);
         Objects.requireNonNull(subjectId);
-        HttpReq.post(host + "/v0/users/-/collections/" + subjectId, true)
-                .header("Authorization", "Bearer " + ConfigUtil.CONFIG.getBgmToken())
+        setToken(HttpReq.post(host + "/v0/users/-/collections/" + subjectId, true))
                 .contentType(ContentType.JSON.getValue())
                 .body(GsonStatic.toJson(Map.of("type", 3)))
                 .thenFunction(HttpResponse::isOk);
@@ -218,8 +218,7 @@ public class BgmUtil {
         Objects.requireNonNull(episodeId);
 
         // bgm点格子前先判断状态，防止刷屏 #142
-        JsonObject jsonObject = HttpReq.get(host + "/v0/users/-/collections/-/episodes/" + episodeId, true)
-                .header("Authorization", "Bearer " + ConfigUtil.CONFIG.getBgmToken())
+        JsonObject jsonObject = setToken(HttpReq.get(host + "/v0/users/-/collections/-/episodes/" + episodeId, true))
                 .contentType(ContentType.JSON.getValue())
                 .thenFunction(res -> GsonStatic.fromJson(res.body(), JsonObject.class));
 
@@ -231,8 +230,7 @@ public class BgmUtil {
         // 间隔 500 毫秒, 防止流控
         ThreadUtil.sleep(500);
 
-        HttpReq.put(host + "/v0/users/-/collections/-/episodes/" + episodeId, true)
-                .header("Authorization", "Bearer " + ConfigUtil.CONFIG.getBgmToken())
+        setToken(HttpReq.put(host + "/v0/users/-/collections/-/episodes/" + episodeId, true))
                 .contentType(ContentType.JSON.getValue())
                 .body(GsonStatic.toJson(Map.of("type", type)))
                 .thenFunction(HttpResponse::isOk);
@@ -310,8 +308,7 @@ public class BgmUtil {
 
         try {
             HttpRequest httpRequest = HttpReq.get(host + "/v0/subjects/" + subjectId, true);
-            setToken(httpRequest);
-            return httpRequest.thenFunction(fun);
+            return setToken(httpRequest).thenFunction(fun);
         } catch (Exception e) {
             if (!isCache) {
                 throw e;
@@ -322,11 +319,65 @@ public class BgmUtil {
         }
     }
 
-    public static void setToken(HttpRequest httpRequest) {
+    public static synchronized HttpRequest setToken(HttpRequest httpRequest) {
         String bgmToken = ConfigUtil.CONFIG.getBgmToken();
         if (StrUtil.isNotBlank(bgmToken)) {
-            httpRequest.header("Authorization", "Bearer " + bgmToken);
+            httpRequest.header(Header.AUTHORIZATION, "Bearer " + bgmToken);
         }
+        ThreadUtil.sleep(1000);
+        return httpRequest;
+    }
+
+    /**
+     * 获取每集的标题
+     *
+     * @param ani
+     * @return
+     */
+    public static Map<Integer, String> getEpisodeTitleMap(Ani ani) {
+        Map<Integer, String> episodeTitleMap = new HashMap<>();
+
+        String subjectId = getSubjectId(ani);
+
+        if (StrUtil.isBlank(subjectId)) {
+            return episodeTitleMap;
+        }
+
+        Config config = ConfigUtil.CONFIG;
+
+        String renameTemplate = config.getRenameTemplate();
+
+        if (!renameTemplate.contains("${bgmEpisodeTitle}")) {
+            return episodeTitleMap;
+        }
+
+        try {
+            HttpRequest httpRequest = HttpReq.get(host + "/v0/episodes", true);
+            setToken(httpRequest)
+                    .form("subject_id", subjectId)
+                    .form("type", 0)
+                    .form("limit", 1000)
+                    .form("offset", 0)
+                    .then(res -> {
+                        Assert.isTrue(res.isOk(), "status: {}", res.getStatus());
+                        JsonObject body = GsonStatic.fromJson(res.body(), JsonObject.class);
+                        List<JsonObject> data = GsonStatic.fromJsonList(body.getAsJsonArray("data"), JsonObject.class);
+                        for (JsonObject it : data) {
+                            int ep = it.get("ep").getAsInt();
+                            String name = it.get("name_cn").getAsString();
+                            name = StrUtil.blankToDefault(name, it.get("name").getAsString());
+                            name = RenameUtil.getName(name);
+                            if (StrUtil.isBlank(name)) {
+                                continue;
+                            }
+                            episodeTitleMap.put(ep, name);
+                        }
+                    });
+
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+        }
+        return episodeTitleMap;
     }
 
 

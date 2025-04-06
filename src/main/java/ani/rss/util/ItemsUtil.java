@@ -232,6 +232,9 @@ public class ItemsUtil {
         }
 
         Map<Integer, String> episodeTitleMap = TmdbUtil.getEpisodeTitleMap(ani);
+        if (episodeTitleMap.isEmpty()) {
+            episodeTitleMap.putAll(BgmUtil.getEpisodeTitleMap(ani));
+        }
 
         items = items.stream()
                 .filter(item -> {
