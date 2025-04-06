@@ -54,6 +54,8 @@
   <img src="https://github.com/wushuo894/ani-rss-docs/raw/master/docs/image/support_aifadian.svg" alt="support_aifadian">
 </a>
 
+您的每一次 star ⭐ 和 赞助 🎁 都是我持续优化的动力。让我们一起维护这个用爱发电的项目！
+
 ## 致谢声明
 
 非常感谢所有为本项目做出贡献的开发者、测试人员、文档撰写者以及社区成员。正是因为你们的努力和奉献，本项目才能不断成长和完善。
