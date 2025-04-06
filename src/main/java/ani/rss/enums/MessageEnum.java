@@ -19,7 +19,11 @@ public enum MessageEnum {
     /**
      * 错误
      */
-    ERROR("❌", "发生错误");
+    ERROR("❌", "发生错误"),
+    /**
+     * 订阅完结
+     */
+    COMPLETED("🎊", "订阅完结");
 
     private final String emoji;
     private final String action;

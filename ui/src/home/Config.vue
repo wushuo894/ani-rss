@@ -153,7 +153,8 @@ const config = ref({
   'ratioLimit': -2,
   'seedingTimeLimit': -2,
   'inactiveSeedingTimeLimit': -2,
-  'autoUpdate': false
+  'autoUpdate': false,
+  'outTradeNo': ''
 })
 
 const activeName = ref('download')
