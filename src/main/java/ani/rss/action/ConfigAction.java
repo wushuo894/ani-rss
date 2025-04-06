@@ -6,6 +6,7 @@ import ani.rss.entity.Config;
 import ani.rss.entity.Login;
 import ani.rss.util.*;
 import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.bean.copier.CopyOptions;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.ReUtil;
@@ -30,7 +31,8 @@ public class ConfigAction implements BaseAction {
             String version = MavenUtil.getVersion();
             Config config = ObjectUtil.clone(ConfigUtil.CONFIG);
             config.getLogin().setPassword("");
-            config.setVersion(version);
+            config.setVersion(version)
+                    .setVerifyExpirationTime(AfdianUtil.verifyExpirationTime());
             resultSuccess(config);
             return;
         }
@@ -46,7 +48,14 @@ public class ConfigAction implements BaseAction {
         Integer sleep = config.getSleep();
         Integer gcSleep = config.getGcSleep();
         String download = config.getDownload();
-        BeanUtil.copyProperties(GsonStatic.fromJson(req.getBody(), Config.class), config);
+        BeanUtil.copyProperties(
+                GsonStatic.fromJson(req.getBody(), Config.class)
+                        .setExpirationTime(null)
+                        .setOutTradeNo(null)
+                , config,
+                CopyOptions
+                        .create()
+                        .setIgnoreNullValue(true));
         String host = config.getHost();
         if (StrUtil.isNotBlank(host)) {
             if (host.endsWith("/")) {

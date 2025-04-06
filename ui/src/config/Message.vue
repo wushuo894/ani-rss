@@ -1,4 +1,5 @@
 <template>
+  <Afdian ref="afdian" :config="props.config"></Afdian>
   <el-collapse v-model:model-value="messageActiveName" accordion>
     <el-collapse-item title="通知设置" name="0">
       <div style="margin-bottom: 12px;">
@@ -15,11 +16,18 @@
             <el-checkbox label="下载完成" value="DOWNLOAD_END"/>
             <el-checkbox label="缺集" value="OMIT"/>
             <el-checkbox label="错误" value="ERROR"/>
+            <el-checkbox :disabled="!props.config['verifyExpirationTime']" label="订阅完结" value="COMPLETED"/>
           </el-checkbox-group>
         </div>
         <div>
           <el-text class="mx-1" size="small">
             下载完成通知暂不支持 Aria2、Alist
+          </el-text>
+          <br>
+          <el-text class="mx-1" size="small">
+            需要
+            <el-button bg icon="Mug" size="small" text type="primary" @click="afdian?.show">捐赠</el-button>
+            后才可解锁 <strong>订阅完结</strong> 通知
           </el-text>
         </div>
       </div>
@@ -219,7 +227,9 @@
 import {ref} from "vue";
 import {ElMessage} from "element-plus";
 import api from "../api.js";
+import Afdian from "../home/Afdian.vue";
 
+const afdian = ref()
 const chatIdMap = ref({})
 const chatId = ref('')
 const getUpdatesLoading = ref(false)

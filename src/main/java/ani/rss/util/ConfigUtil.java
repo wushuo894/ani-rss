@@ -144,7 +144,11 @@ public class ConfigUtil {
                 .setProvider("")
                 .setUpload(true)
                 .setUpLimit(0L)
-                .setDlLimit(0L);
+                .setDlLimit(0L)
+                .setExpirationTime(0L)
+                .setOutTradeNo("")
+                .setTryOut(false)
+                .setVerifyExpirationTime(false);
     }
 
     /**
