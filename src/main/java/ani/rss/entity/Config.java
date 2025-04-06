@@ -552,4 +552,29 @@ public class Config implements Serializable {
      * 试用
      */
     private Boolean tryOut;
+
+    /**
+     * emby扫描媒体库
+     */
+    private Boolean embyRefresh;
+
+    /**
+     * emby地址
+     */
+    private String embyHost;
+
+    /**
+     * emby api密钥
+     */
+    private String embyApiKey;
+
+    /**
+     * emby扫描媒体库
+     */
+    private List<String> embyRefreshViewIds;
+
+    /**
+     * emby延迟扫描
+     */
+    private Long embyDelayed;
 }

@@ -29,7 +29,7 @@ public class MessageUtil {
         }
 
         if (MessageEnum.COMPLETED == messageEnum && !AfdianUtil.verifyExpirationTime()) {
-            log.info("未解锁捐赠, 无法使用订阅完结通知");
+            log.warn("未解锁捐赠, 无法使用订阅完结通知");
             return;
         }
 
