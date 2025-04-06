@@ -50,7 +50,6 @@ public class BgmTask extends Thread {
                         String message = ExceptionUtil.getMessage(e);
                         log.error(message, e);
                     }
-                    ThreadUtil.sleep(1000);
                 }
             }
             AniUtil.sync();
