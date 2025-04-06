@@ -220,11 +220,54 @@
         </div>
       </el-form>
     </el-collapse-item>
+    <el-collapse-item name="6" title="Emby媒体库刷新">
+      <el-form label-width="auto" @submit="(event)=>{
+                      event.preventDefault()
+                   }">
+        <el-form-item label="EmbyHost">
+          <el-input v-model="props.config['embyHost']" placeholder="http://x.x.x.x:8096"/>
+        </el-form-item>
+        <el-form-item label="Emby密钥">
+          <el-input v-model="props.config['embyApiKey']"/>
+        </el-form-item>
+        <el-form-item label="媒体库">
+          <el-checkbox-group v-model="props.config['embyRefreshViewIds']">
+            <el-checkbox
+                v-for="view in views"
+                :key="view.id"
+                :label="view.name"
+                :value="view.id"/>
+          </el-checkbox-group>
+          <el-button :loading="getEmbyViewsLoading" bg icon="Refresh" text @click="getEmbyViews"/>
+        </el-form-item>
+        <el-form-item label="延迟">
+          <el-input-number v-model="props.config['embyDelayed']" min="0">
+            <template #suffix>
+              <span>秒</span>
+            </template>
+          </el-input-number>
+        </el-form-item>
+        <el-form-item label="开启">
+          <el-switch v-model="props.config['embyRefresh']" :disabled="!props.config['verifyExpirationTime']"/>
+        </el-form-item>
+        <div class="flex" style="justify-content: space-between;width: 100%;">
+          <el-text class="mx-1" size="small">
+            需要
+            <el-button bg icon="Mug" size="small" text type="primary" @click="afdian?.show">捐赠</el-button>
+            后才可解锁 <strong>Emby媒体库刷新</strong>
+          </el-text>
+          <el-button :loading="messageTestLoading" bg
+                     icon="Odometer"
+                     text @click="messageTest('EmbyRefresh')">测试
+          </el-button>
+        </div>
+      </el-form>
+    </el-collapse-item>
   </el-collapse>
 </template>
 
 <script setup>
-import {ref} from "vue";
+import {onMounted, ref} from "vue";
 import {ElMessage} from "element-plus";
 import api from "../api.js";
 import Afdian from "../home/Afdian.vue";
@@ -233,6 +276,25 @@ const afdian = ref()
 const chatIdMap = ref({})
 const chatId = ref('')
 const getUpdatesLoading = ref(false)
+
+const views = ref([])
+
+const getEmbyViewsLoading = ref(false)
+
+const getEmbyViews = () => {
+  getEmbyViewsLoading.value = true
+  api.post('api/emby?type=getViews', props.config)
+      .then(res => {
+        views.value = res.data
+      })
+      .finally(() => {
+        getEmbyViewsLoading.value = false
+      })
+}
+
+onMounted(() => {
+  getEmbyViews()
+})
 
 const getUpdates = () => {
   if (!props.config.telegramBotToken.length) {
@@ -264,7 +326,11 @@ const messageTestType = ref('')
 const messageTest = (type) => {
   messageTestType.value = type
   messageTestLoading.value = true
-  api.post("api/message?type=" + type, props.config)
+
+  let config = JSON.parse(JSON.stringify(props.config))
+  config.embyDelayed = 0
+
+  api.post("api/message?type=" + type, config)
       .then(res => {
         ElMessage.success(res.message)
       })

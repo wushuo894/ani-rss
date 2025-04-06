@@ -1,13 +1,12 @@
 package ani.rss.download;
 
+import ani.rss.entity.Ani;
 import ani.rss.entity.Config;
 import ani.rss.entity.Item;
 import ani.rss.entity.TorrentsInfo;
+import ani.rss.enums.MessageEnum;
 import ani.rss.enums.StringEnum;
-import ani.rss.util.ExceptionUtil;
-import ani.rss.util.GsonStatic;
-import ani.rss.util.HttpReq;
-import ani.rss.util.TorrentUtil;
+import ani.rss.util.*;
 import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.lang.Assert;
@@ -90,7 +89,7 @@ public class Alist implements BaseDownload {
     }
 
     @Override
-    public Boolean download(Item item, String savePath, File torrentFile, Boolean ova) {
+    public Boolean download(Ani ani, Item item, String savePath, File torrentFile, Boolean ova) {
         String magnet = TorrentUtil.getMagnet(torrentFile);
         String reName = item.getReName();
         String path = savePath + "/" + reName;
@@ -236,6 +235,11 @@ public class Alist implements BaseDownload {
                             "dir", savePath,
                             "names", List.of(reName)
                     ))).then(HttpResponse::isOk);
+
+            MessageUtil.send(config, ani,
+                    StrFormatter.format("{} 下载完成", item.getReName()),
+                    MessageEnum.DOWNLOAD_END
+            );
             return true;
         } catch (Exception e) {
             log.error(e.getMessage(), e);
