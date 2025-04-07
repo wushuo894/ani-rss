@@ -13,7 +13,6 @@ import cn.hutool.core.text.StrFormatter;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.core.util.URLUtil;
-import cn.hutool.http.HttpResponse;
 import cn.hutool.http.HttpUtil;
 import cn.hutool.json.JSONUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -261,7 +260,10 @@ public class AniUtil {
         if (config.getOffset()) {
             String s = HttpReq.get(url, true)
                     .timeout(config.getRssTimeout() * 1000)
-                    .thenFunction(HttpResponse::body);
+                    .thenFunction(res -> {
+                        Assert.isTrue(res.isOk(), "status: {}", res.getStatus());
+                        return res.body();
+                    });
             List<Item> items = ItemsUtil.getItems(ani, s, new Item());
             if (items.isEmpty()) {
                 return ani;

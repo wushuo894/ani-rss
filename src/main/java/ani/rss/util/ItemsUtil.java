@@ -11,6 +11,7 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.date.DateTime;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.lang.Assert;
 import cn.hutool.core.text.StrFormatter;
 import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.core.util.*;
@@ -41,7 +42,10 @@ public class ItemsUtil {
 
         String s = HttpReq.get(url, true)
                 .timeout(config.getRssTimeout() * 1000)
-                .thenFunction(HttpResponse::body);
+                .thenFunction(res -> {
+                    Assert.isTrue(res.isOk(), "status: {}", res.getStatus());
+                    return res.body();
+                });
         String subgroup = StrUtil.blankToDefault(ani.getSubgroup(), "未知字幕组");
         List<Item> items = new ArrayList<>(ItemsUtil.getItems(ani, s, new Item().setSubgroup(subgroup))
                 .stream()
@@ -84,6 +88,8 @@ public class ItemsUtil {
         List<String> match = ani.getMatch();
 
         List<Item> items = new ArrayList<>();
+
+        Assert.notBlank(xml, "xml is blank");
 
         Document document = XmlUtil.readXML(xml);
         Node channel = document.getElementsByTagName("channel").item(0);
