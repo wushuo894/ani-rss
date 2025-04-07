@@ -269,9 +269,9 @@ const emit = defineEmits(['load'])
   display: none;
 }
 
-.is-active > span {
+.is-active > span,
+.el-tabs__item:hover > span {
   display: initial;
   margin-left: 5px;
 }
-
 </style>
