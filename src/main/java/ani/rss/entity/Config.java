@@ -159,6 +159,11 @@ public class Config implements Serializable {
     private Boolean quarter;
 
     /**
+     * 季度合并
+     */
+    private Boolean quarterMerge;
+
+    /**
      * 自动禁用已完结番剧的订阅
      */
     private Boolean autoDisabled;

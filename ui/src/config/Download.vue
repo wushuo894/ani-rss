@@ -92,7 +92,14 @@
         <el-switch v-model:model-value="props.config.quarter" :disabled="props.config.acronym"></el-switch>
         <br>
         <el-text class="mx-1" size="small">
-          按季度存放, 如 2024-07
+          按季度月份存放, 如 2024-07
+        </el-text>
+        <br/>
+        <div>
+          <el-checkbox v-model="props.config['quarterMerge']" :disabled="!props.config.quarter" label="季度合并"/>
+        </div>
+        <el-text class="mx-1" size="small">
+          将 2024-1、2024-2、2024-3 合并为 2024-1
         </el-text>
       </div>
     </el-form-item>

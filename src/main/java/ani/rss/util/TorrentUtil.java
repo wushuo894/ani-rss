@@ -553,6 +553,7 @@ public class TorrentUtil {
         Boolean acronym = config.getAcronym();
         // 根据季度存放
         Boolean quarter = config.getQuarter();
+        Boolean quarterMerge = config.getQuarterMerge();
         Boolean fileExist = config.getFileExist();
         if (ova && StrUtil.isNotBlank(ovaDownloadPath)) {
             downloadPath = ovaDownloadPath;
@@ -569,6 +570,17 @@ public class TorrentUtil {
         } else if (quarter) {
             Integer year = ani.getYear();
             Integer month = ani.getMonth();
+            if (quarterMerge) {
+                if (List.of(1, 2, 3).contains(month)) {
+                    month = 1;
+                } else if (List.of(4, 5, 6).contains(month)) {
+                    month = 4;
+                } else if (List.of(7, 8, 9).contains(month)) {
+                    month = 7;
+                } else {
+                    month = 10;
+                }
+            }
             downloadPath = StrFormatter.format("{}/{}-{}", downloadPath, year, String.format("%02d", month));
         }
         if (ova) {
@@ -674,7 +686,7 @@ public class TorrentUtil {
         MessageUtil.send(ConfigUtil.CONFIG, ani, text, MessageEnum.DOWNLOAD_START);
 
         try {
-            if (baseDownload.download(ani,item, savePath, torrentFile, ova)) {
+            if (baseDownload.download(ani, item, savePath, torrentFile, ova)) {
                 return;
             }
         } catch (Exception e) {
