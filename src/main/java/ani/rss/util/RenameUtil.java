@@ -116,7 +116,7 @@ public class RenameUtil {
         renameTemplate = renameTemplate.replace("${resolution}", resolution);
         renameTemplate = renameTemplate.replace("${tmdbid}", tmdbId);
 
-        String episodeTitle = is5 ? "" : episodeTitleMap.getOrDefault((int) episode, "");
+        String episodeTitle = is5 ? "第" + episode + "集" : episodeTitleMap.getOrDefault((int) episode, "第" + (int) episode + "集");
         renameTemplate = renameTemplate.replace("${episodeTitle}", episodeTitle);
         renameTemplate = renameTemplate.replace("${bgmEpisodeTitle}", episodeTitle);
 
