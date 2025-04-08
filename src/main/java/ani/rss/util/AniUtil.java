@@ -188,7 +188,7 @@ public class AniUtil {
                     .setOva(bgmInfo.getOva())
                     .setScore(bgmInfo.getScore())
                     .setYear(DateUtil.year(date))
-                    .setMonth(DateUtil.month(date))
+                    .setMonth(DateUtil.month(date) + 1)
                     .setDate(DateUtil.dayOfMonth(date))
                     .setImage(image);
         } catch (Exception e) {
