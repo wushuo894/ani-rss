@@ -11,6 +11,7 @@ import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.text.StrFormatter;
 import cn.hutool.core.thread.ThreadUtil;
+import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.ReUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.ContentType;
@@ -23,7 +24,9 @@ import com.google.gson.JsonObject;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -345,17 +348,48 @@ public class BgmUtil {
             return bgmInfo;
         };
 
-        try {
+        if (!isCache) {
+            // 不使用缓存
             HttpRequest httpRequest = HttpReq.get(host + "/v0/subjects/" + subjectId, true);
             return setToken(httpRequest).thenFunction(fun);
-        } catch (Exception e) {
-            if (!isCache) {
-                throw e;
-            }
-            return HttpReq
-                    .get("https://bgm-cache.wushuo.top/bgm/" + subjectId.charAt(0) + "/" + subjectId + ".json", true)
-                    .thenFunction(fun);
         }
+
+        AtomicReference<BgmInfo> bgmInfoAR = new AtomicReference<>();
+        AtomicReference<BgmInfo> bgmInfoCacheAR = new AtomicReference<>();
+
+        // 并行获取bgm信息
+        CompletableFuture.allOf(
+                CompletableFuture.runAsync(() -> {
+                    // 不使用缓存
+                    HttpRequest httpRequest = HttpReq.get(host + "/v0/subjects/" + subjectId, true);
+                    try {
+                        BgmInfo bgmInfo = setToken(httpRequest)
+                                .thenFunction(fun);
+                        bgmInfoAR.set(bgmInfo);
+                    } catch (Exception e) {
+                        log.error(e.getMessage(), e);
+                    }
+                }),
+                CompletableFuture.runAsync(() -> {
+                    HttpRequest httpRequest = HttpReq
+                            .get("https://bgm-cache.wushuo.top/bgm/" + subjectId.charAt(0) + "/" + subjectId + ".json", true);
+                    try {
+                        BgmInfo bgmInfo = httpRequest
+                                .thenFunction(fun);
+                        bgmInfoCacheAR.set(bgmInfo);
+                    } catch (Exception e) {
+                        log.error(e.getMessage(), e);
+                    }
+                })
+        ).join();
+
+        BgmInfo bgmInfo = bgmInfoAR.get();
+
+        bgmInfo = ObjectUtil.defaultIfNull(bgmInfo, bgmInfoCacheAR.get());
+
+        Assert.notNull(bgmInfo, "获取 bgmInfo 失败!");
+
+        return bgmInfo;
     }
 
     public static synchronized HttpRequest setToken(HttpRequest httpRequest) {
