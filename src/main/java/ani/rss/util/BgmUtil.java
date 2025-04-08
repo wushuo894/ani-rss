@@ -330,18 +330,46 @@ public class BgmUtil {
 
             Set<String> tags = jsonObject.getAsJsonArray("tags")
                     .asList()
-                    .stream().map(JsonElement::getAsJsonObject)
+                    .stream()
+                    .map(JsonElement::getAsJsonObject)
                     .map(o -> o.get("name").getAsString())
                     .filter(StrUtil::isNotBlank)
                     .collect(Collectors.toSet());
 
             int season = 1;
+
+
+            // 从标签获取季
             for (String tag : tags) {
-                String seasonReg = StrFormatter.format("^第({}{1,2})季$", ReUtil.RE_CHINESE);
+                String seasonReg = StrFormatter.format("第({}+)季", ReUtil.RE_CHINESE);
                 if (!ReUtil.contains(seasonReg, tag)) {
                     continue;
                 }
-                season = Convert.chineseToNumber(ReUtil.get(seasonReg, tag, 1));
+                try {
+                    season = Convert.chineseToNumber(ReUtil.get(seasonReg, tag, 1));
+                } catch (Exception e) {
+                    log.error(e.getMessage(), e);
+                }
+            }
+
+            // 从中文标题获取季
+            String seasonReg = StrFormatter.format("第({}+)季", ReUtil.RE_CHINESE);
+            if (ReUtil.contains(seasonReg, nameCn)) {
+                try {
+                    season = Convert.chineseToNumber(ReUtil.get(seasonReg, nameCn, 1));
+                } catch (Exception e) {
+                    log.error(e.getMessage(), e);
+                }
+            }
+
+            // 从原标题获取季
+            seasonReg = "[Ss]eason ?(\\d+)";
+            if (ReUtil.contains(seasonReg, name)) {
+                try {
+                    season = Integer.parseInt(ReUtil.get(seasonReg, name, 1));
+                } catch (Exception e) {
+                    log.error(e.getMessage(), e);
+                }
             }
 
             bgmInfo.setSeason(season);
