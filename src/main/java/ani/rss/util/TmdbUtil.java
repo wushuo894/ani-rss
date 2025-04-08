@@ -7,7 +7,6 @@ import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.text.StrFormatter;
 import cn.hutool.core.thread.ThreadUtil;
-import cn.hutool.core.util.ReUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.core.util.URLUtil;
 import com.google.gson.JsonElement;
@@ -37,16 +36,18 @@ public class TmdbUtil {
             return "";
         }
 
-        boolean year = ReUtil.contains(StringEnum.YEAR_REG, name);
+        Config config = ConfigUtil.CONFIG;
 
+        boolean year = config.getTitleYear();
         if (year) {
             name = name.replaceAll(StringEnum.YEAR_REG, "")
                     .trim();
         }
+
         if (StrUtil.isBlank(name)) {
             return "";
         }
-        Config config = ConfigUtil.CONFIG;
+
         Tmdb tmdb;
         try {
             tmdb = getTmdb(name, type);

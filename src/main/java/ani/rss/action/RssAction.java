@@ -30,7 +30,6 @@ public class RssAction implements BaseAction {
         Ani ani = getBody(Ani.class);
         String url = ani.getUrl();
         String type = ani.getType();
-        String title = ani.getTitle();
         String bgmUrl = ani.getBgmUrl();
         Assert.notBlank(url, "RSS地址 不能为空");
         if (!ReUtil.contains("http(s*)://", url)) {
@@ -38,8 +37,7 @@ public class RssAction implements BaseAction {
         }
         url = URLUtil.decode(url, "utf-8");
         try {
-            title = title.replace("/", " ");
-            Ani newAni = AniUtil.getAni(url, title, type, bgmUrl);
+            Ani newAni = AniUtil.getAni(url, type, bgmUrl);
             resultSuccess(newAni);
         } catch (Exception e) {
             String message = ExceptionUtil.getMessage(e);
