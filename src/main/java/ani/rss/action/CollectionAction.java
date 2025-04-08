@@ -4,16 +4,16 @@ import ani.rss.annotation.Auth;
 import ani.rss.annotation.Path;
 import ani.rss.download.qBittorrent;
 import ani.rss.entity.*;
-import ani.rss.util.ConfigUtil;
-import ani.rss.util.HttpReq;
-import ani.rss.util.RenameUtil;
-import ani.rss.util.TorrentUtil;
+import ani.rss.enums.StringEnum;
+import ani.rss.util.*;
 import cn.hutool.core.codec.Base64;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.text.StrFormatter;
 import cn.hutool.core.util.NumberUtil;
+import cn.hutool.core.util.ReUtil;
+import cn.hutool.core.util.StrUtil;
 import cn.hutool.crypto.digest.MD5;
 import cn.hutool.http.HttpResponse;
 import cn.hutool.http.server.HttpServerRequest;
@@ -22,11 +22,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.eclipse.bittorrent.TorrentFile;
 
 import java.io.File;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -48,8 +46,46 @@ public class CollectionAction implements BaseAction {
         long[] lengths = torrentFile.getLengths();
         AtomicInteger index = new AtomicInteger(0);
 
+        List<String> match = ani.getMatch();
+        List<String> exclude = ani.getExclude();
+        Boolean globalExclude = ani.getGlobalExclude();
+        Config config = ConfigUtil.CONFIG;
+        List<String> globalExcludeList = config.getExclude();
+
+        Function<String, String> map = s -> {
+            String subgroup = ReUtil.get(StringEnum.SUBGROUP_REG_STR, s, 1);
+            if (StrUtil.isBlank(subgroup)) {
+                return s;
+            }
+            if (subgroup.equals(ani.getSubgroup())) {
+                return ReUtil.get(StringEnum.SUBGROUP_REG_STR, s, 2);
+            }
+            return "";
+        };
+
         return Arrays.stream(torrentFile.getFilenames())
                 .map(FileUtil::getName)
+                .filter(name -> {
+                    // 排除
+                    if (!exclude.isEmpty()) {
+                        if (exclude.stream().map(map).filter(StrUtil::isNotBlank).anyMatch(s -> ReUtil.contains(s, name))) {
+                            return false;
+                        }
+                    }
+
+                    // 匹配
+                    if (!match.isEmpty()) {
+                        if (match.stream().map(map).filter(StrUtil::isNotBlank).anyMatch(s -> !ReUtil.contains(s, name))) {
+                            return false;
+                        }
+                    }
+
+                    // 全局排除
+                    if (globalExclude) {
+                        return globalExcludeList.stream().map(map).filter(StrUtil::isNotBlank).noneMatch(s -> ReUtil.contains(s, name));
+                    }
+                    return true;
+                })
                 .map(fileName -> {
                     long length = lengths[index.getAndIncrement()];
 
@@ -65,11 +101,16 @@ public class CollectionAction implements BaseAction {
 
                     String reName = item.getReName();
 
+                    if (StrUtil.isBlank(reName)) {
+                        return null;
+                    }
+
                     reName = reName + "." + FileUtil.extName(fileName);
 
                     return item.setReName(reName)
                             .setLength(length);
                 })
+                .filter(Objects::nonNull)
                 .toList();
     }
 
@@ -128,6 +169,8 @@ public class CollectionAction implements BaseAction {
             return;
         }
 
+        Assert.isTrue(AfdianUtil.verifyExpirationTime(), "未解锁捐赠, 无法使用添加合集");
+
         File tempFile = FileUtil.createTempFile();
         Base64.decodeToFile(torrent, tempFile);
         TorrentFile torrentFile;
@@ -179,6 +222,7 @@ public class CollectionAction implements BaseAction {
                 log.error("重命名失败 {} ==> {}", name, newPath);
             }
         }
+        resultSuccess();
     }
 
 

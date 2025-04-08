@@ -27,18 +27,23 @@
               </div>
             </el-form-item>
             <template v-if="data.show">
+              <el-form-item label="字幕组">
+                <div class="flex" style="width: 100%;justify-content: end;">
+                  <el-input v-model:model-value="data.ani.subgroup" placeholder="字幕组" style="width: 150px"/>
+                </div>
+              </el-form-item>
               <el-form-item label="季">
-                <div style="display: flex;justify-content: end;width: 100%;">
+                <div class="flex" style="justify-content: end;width: 100%;">
                   <el-input-number v-model:model-value="data.ani.season" :min="0" style="max-width: 200px"/>
                 </div>
               </el-form-item>
               <el-form-item label="集数偏移">
-                <div style="display: flex;justify-content: end;width: 100%;">
+                <div class="flex" style="justify-content: end;width: 100%;">
                   <el-input-number v-model:model-value="data.ani.offset"/>
                 </div>
               </el-form-item>
               <el-form-item label="日期">
-                <div style="display: flex;width: 100%;justify-content: end;">
+                <div class="flex" style="width: 100%;justify-content: end;">
                   <el-date-picker
                       v-model="date"
                       style="max-width: 150px;"
@@ -58,11 +63,9 @@
               <el-form-item label="自定义集数规则">
                 <div style="display: flex;width: 100%;">
                   <el-input v-model:model-value="data.ani.customEpisodeStr"
-                            :disabled="!data.ani.customEpisode"
                             style="width: 100%"/>
                   <div style="width: 4px;"></div>
-                  <el-input-number v-model:model-value="data.ani.customEpisodeGroupIndex"
-                                   :disabled="!data.ani.customEpisode"/>
+                  <el-input-number v-model:model-value="data.ani.customEpisodeGroupIndex"/>
                 </div>
               </el-form-item>
               <el-form-item label="下载位置">
@@ -70,6 +73,11 @@
                   <el-input v-model:model-value="data.ani.downloadPath" :autosize="{ minRows: 2}"
                             style="width: 100%"
                             type="textarea"/>
+                </div>
+                <div style="margin-top: 6px;">
+                  <el-button :disabled="!data.ani.customDownloadPath" :loading="downloadPathLoading" bg icon="Refresh"
+                             text
+                             @click="downloadPath"/>
                 </div>
               </el-form-item>
               <el-form-item label="Torrent">
@@ -108,7 +116,8 @@
         </div>
       </el-scrollbar>
     </div>
-    <div class="flex" style="justify-content: end;width: 100%;margin-top: 10px;">
+    <div class="flex" style="justify-content: space-between;width: 100%;margin-top: 10px;">
+      <AfdianPrompt name="添加合集"/>
       <div>
         <el-button :disabled="!data.filename" bg
                    icon="Grid"
@@ -137,18 +146,32 @@ import Bgm from "./Bgm.vue";
 import api from "../api.js";
 import Exclude from "../config/Exclude.vue";
 import CollectionPreview from "./CollectionPreview.vue";
+import AfdianPrompt from "../other/AfdianPrompt.vue";
 
 let start = () => {
   startLoading.value = true
   api.post('api/collection?type=start', data.value)
       .then((res) => {
-        console.log(res);
+        ElMessage.success(res.message)
       })
       .finally(() => {
         startLoading.value = false
       })
 }
 
+let downloadPathLoading = ref(false)
+let downloadPath = () => {
+  downloadPathLoading.value = true
+  let newAni = JSON.parse(JSON.stringify(data.value.ani))
+  newAni.customDownloadPath = false
+  api.post('api/downloadPath', newAni)
+      .then(res => {
+        data.value.ani.downloadPath = res.data.downloadPath
+      })
+      .finally(() => {
+        downloadPathLoading.value = false
+      })
+}
 
 let collectionPreviewRef = ref()
 
@@ -184,9 +207,11 @@ let bgmAdd = (bgm) => {
   loading.value = true
   api.post('api/bgm?type=getAniBySubjectId&id=' + bgm['id'])
       .then((res) => {
-        console.log(res.data);
         data.value.ani = res.data
+        data.value.ani.subgroup = '未知字幕组'
+        data.value.ani.customEpisode = true
         data.value.show = true
+        data.value.ani.match = ['\.(mp4|mkv|ass)$']
       })
       .finally(() => {
         loading.value = false
@@ -250,12 +275,12 @@ let data = ref({
 
 let beforeAvatarUpload = (rawFile) => {
   data.value.filename = rawFile.name
-  if (!['application/x-bittorrent'].includes(rawFile.type)) {
-    ElMessage.error('Avatar picture must be application/x-bittorrent format!')
+  if (!rawFile.name.includes('.torrent')) {
+    ElMessage.error('Avatar picture must be .torrent format!')
     return false
   }
   if (rawFile.size / 1024 / 1024 > 10) {
-    ElMessage.error('Avatar picture size can not exceed 5MB!')
+    ElMessage.error('Avatar picture size can not exceed 10MB!')
     return false
   }
   return true
