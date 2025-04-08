@@ -44,24 +44,26 @@
       </div>
       <div style="margin: 10px;display: flex;justify-content: flex-end;">
         <div style="margin: 0 4px;">
-          <el-button type="primary" @click="add?.show" bg text>
-            <el-icon :class="elIconClass()">
-              <Plus/>
-            </el-icon>
-            <template v-if="isNotMobile()">
-              添加订阅
+          <el-dropdown trigger="click">
+            <el-button bg text type="primary">
+              <el-icon :class="elIconClass()">
+                <Plus/>
+              </el-icon>
+              <template v-if="isNotMobile()">
+                添加
+              </template>
+            </el-button>
+            <template #dropdown>
+              <el-dropdown-menu>
+                <el-dropdown-item @click="add?.show">
+                  添加订阅
+                </el-dropdown-item>
+                <el-dropdown-item @click="collection?.show">
+                  添加合集
+                </el-dropdown-item>
+              </el-dropdown-menu>
             </template>
-          </el-button>
-        </div>
-        <div style="margin: 0 4px;">
-          <el-button bg text type="primary" @click="collection?.show">
-            <el-icon :class="elIconClass()">
-              <Plus/>
-            </el-icon>
-            <template v-if="isNotMobile()">
-              添加合集
-            </template>
-          </el-button>
+          </el-dropdown>
         </div>
         <div style="margin: 0 4px;">
           <popconfirm title="立即刷新全部订阅?" @confirm="download">
