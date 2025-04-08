@@ -4,7 +4,7 @@ import lombok.Data;
 import lombok.experimental.Accessors;
 
 import java.io.Serializable;
-import java.time.LocalDateTime;
+import java.util.Date;
 
 /**
  * Bgm番剧信息
@@ -42,7 +42,7 @@ public class BgmInfo implements Serializable {
     /**
      * 时间
      */
-    private LocalDateTime date;
+    private Date date;
 
     /**
      * 图片
