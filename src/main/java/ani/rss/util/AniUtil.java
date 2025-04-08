@@ -105,16 +105,6 @@ public class AniUtil {
      * @param url
      * @return
      */
-    public static Ani getAni(String url) {
-        return getAni(url, "mikan", "");
-    }
-
-    /**
-     * 获取动漫信息
-     *
-     * @param url
-     * @return
-     */
     public static Ani getAni(String url, String type, String bgmUrl) {
         Config config = ConfigUtil.CONFIG;
         type = StrUtil.blankToDefault(type, "mikan");
@@ -312,6 +302,13 @@ public class AniUtil {
         Assert.notNull(offset, "集数偏移不能为空");
     }
 
+
+    /**
+     * 获取蜜柑的bangumiId
+     *
+     * @param ani
+     * @return
+     */
     public static String getBangumiId(Ani ani) {
         String url = ani.getUrl();
         if (StrUtil.isBlank(url)) {
