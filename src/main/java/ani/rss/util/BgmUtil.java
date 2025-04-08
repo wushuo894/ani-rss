@@ -7,7 +7,7 @@ import cn.hutool.cache.Cache;
 import cn.hutool.cache.CacheUtil;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.date.DatePattern;
-import cn.hutool.core.date.LocalDateTimeUtil;
+import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.text.StrFormatter;
 import cn.hutool.core.thread.ThreadUtil;
@@ -274,7 +274,7 @@ public class BgmUtil {
                     .setSubjectId(subjectId)
                     .setNameCn(nameCn)
                     .setName(name)
-                    .setDate(LocalDateTimeUtil.parse(date, DatePattern.NORM_DATE_PATTERN))
+                    .setDate(DateUtil.parse(date, DatePattern.NORM_DATE_PATTERN))
                     .setEps(eps)
                     .setScore(score)
                     .setOva(List.of("OVA", "剧场版").contains(platform.toUpperCase()));
