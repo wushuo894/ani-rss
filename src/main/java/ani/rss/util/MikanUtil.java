@@ -9,6 +9,7 @@ import cn.hutool.core.lang.Opt;
 import cn.hutool.core.util.ReUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.core.util.URLUtil;
+import cn.hutool.http.HttpUtil;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import lombok.extern.slf4j.Slf4j;
@@ -17,6 +18,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.atomic.AtomicReference;
@@ -246,6 +248,24 @@ public class MikanUtil {
                         ani.setSubgroup(subgroupText.selectFirst("a").text().trim());
                     }
                 });
+    }
+
+    /**
+     * 从rss中获得字幕组id
+     *
+     * @param url
+     * @return
+     */
+    public static String getSubgroupId(String url) {
+        Map<String, String> decodeParamMap = HttpUtil.decodeParamMap(url, StandardCharsets.UTF_8);
+
+        for (String k : decodeParamMap.keySet()) {
+            String v = decodeParamMap.get(k);
+            if (k.equalsIgnoreCase("subgroupid")) {
+                return v;
+            }
+        }
+        return "";
     }
 
     public static JsonObject getScore() {

@@ -10,7 +10,6 @@ import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.resource.ResourceUtil;
 import cn.hutool.core.lang.Assert;
-import cn.hutool.core.text.StrFormatter;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.core.util.URLUtil;
@@ -107,7 +106,7 @@ public class AniUtil {
      * @return
      */
     public static Ani getAni(String url) {
-        return getAni(url, "", "", "");
+        return getAni(url, "mikan", "");
     }
 
     /**
@@ -116,117 +115,87 @@ public class AniUtil {
      * @param url
      * @return
      */
-    public static Ani getAni(String url, String text, String type, String bgmUrl) {
+    public static Ani getAni(String url, String type, String bgmUrl) {
         Config config = ConfigUtil.CONFIG;
         type = StrUtil.blankToDefault(type, "mikan");
-        int season = 1;
-        String title = "无标题";
-
-        Map<String, String> decodeParamMap = HttpUtil.decodeParamMap(url, StandardCharsets.UTF_8);
-
-        String subgroupid = "";
-        for (String k : decodeParamMap.keySet()) {
-            String v = decodeParamMap.get(k);
-            if (k.equalsIgnoreCase("subgroupid")) {
-                subgroupid = v;
-            }
-        }
+        String subgroupId = MikanUtil.getSubgroupId(url);
 
         Ani ani = Ani.bulidAni();
         ani.setUrl(url.trim());
 
-        if ("other".equals(type)) {
-            if (StrUtil.isNotBlank(text)) {
-                title = text;
-            }
-
-            if (StrUtil.isNotBlank(bgmUrl)) {
-                String subjectId = BgmUtil.getSubjectId(new Ani().setBgmUrl(bgmUrl));
-                log.info("subjectId: {}", subjectId);
-                ani.setBgmUrl("https://bgm.tv/subject/" + subjectId);
-            }
-        } else {
+        if ("mikan".equals(type)) {
             try {
-                MikanUtil.getMikanInfo(ani, subgroupid);
+                MikanUtil.getMikanInfo(ani, subgroupId);
             } catch (Exception e) {
                 throw new RuntimeException("获取失败");
             }
+        } else {
+            ani.setBgmUrl(bgmUrl)
+                    .setSubgroup("未知字幕组");
         }
 
-        try {
-            BgmInfo bgmInfo = BgmUtil.getBgmInfo(ani, true);
+        BgmInfo bgmInfo = BgmUtil.getBgmInfo(ani, true);
 
-            String nameCn = bgmInfo.getNameCn();
-            String name = bgmInfo.getName();
+        String title = BgmUtil.getName(bgmInfo);
 
-            Boolean bgmJpName = config.getBgmJpName();
-            if (bgmJpName) {
-                title = name;
-            } else {
-                title = StrUtil.blankToDefault(nameCn, name);
-            }
-
-            if (StrUtil.isBlank(title)) {
-                title = "无标题";
-            }
-
-            season = bgmInfo.getSeason();
-            int eps = bgmInfo.getEps();
-            String subjectId = bgmInfo.getSubjectId();
-            if (eps > 0) {
-                try {
-                    eps = BgmUtil.getEpisodes(subjectId, 0).size();
-                } catch (Exception e) {
-                    log.error(e.getMessage(), e);
-                }
-            }
-            String image = bgmInfo.getImage();
-
-            Date date = bgmInfo.getDate();
-
-            ani.setTotalEpisodeNumber(eps)
-                    .setOva(bgmInfo.getOva())
-                    .setScore(bgmInfo.getScore())
-                    .setYear(DateUtil.year(date))
-                    .setMonth(DateUtil.month(date) + 1)
-                    .setDate(DateUtil.dayOfMonth(date))
-                    .setImage(image);
-        } catch (Exception e) {
-            String message = ExceptionUtil.getMessage(e);
-            log.error(message, e);
-            if (StrUtil.isNotBlank(bgmUrl)) {
-                throw new RuntimeException("获取bgm信息失败");
+        int eps = bgmInfo.getEps();
+        String subjectId = bgmInfo.getSubjectId();
+        if (eps > 0) {
+            try {
+                eps = BgmUtil.getEpisodes(subjectId, 0).size();
+            } catch (Exception e) {
+                log.error(e.getMessage(), e);
             }
         }
 
-        String image = ani.getImage();
-        ani.setCover(saveJpg(image));
+        String image = bgmInfo.getImage();
 
-        Integer year = ani.getYear();
+        Date date = bgmInfo.getDate();
 
+        ani
+                // 标题
+                .setTitle(title)
+                // 季
+                .setSeason(bgmInfo.getSeason())
+                // 总集数
+                .setTotalEpisodeNumber(eps)
+                // 剧场版
+                .setOva(bgmInfo.getOva())
+                // 评分
+                .setScore(bgmInfo.getScore())
+                // 年
+                .setYear(DateUtil.year(date))
+                // 月
+                .setMonth(DateUtil.month(date) + 1)
+                // 日
+                .setDate(DateUtil.dayOfMonth(date))
+                // 图片http地址
+                .setImage(image)
+                // 本地图片地址
+                .setCover(saveJpg(image));
+
+        // 只下载最新集
         Boolean downloadNew = config.getDownloadNew();
-        Boolean titleYear = config.getTitleYear();
+        // 使用tmdb标题
         Boolean tmdb = config.getTmdb();
-        Boolean tmdbId = config.getTmdbId();
+        // 默认启用全局排除
         Boolean enabledExclude = config.getEnabledExclude();
+        // 默认导入全局排除
         Boolean importExclude = config.getImportExclude();
+        // 全局排除
         List<String> exclude = config.getExclude();
 
-        title = title.trim();
-
-        if (titleYear && Objects.nonNull(year) && year > 0) {
-            title = StrFormatter.format("{} ({})", title, year);
-        }
-
-        ani.setTitle(title);
+        // 获取tmdb标题
         String themoviedbName = TmdbUtil.getName(ani);
 
+        // 是否使用tmdb标题
         if (StrUtil.isNotBlank(themoviedbName) && tmdb) {
             title = themoviedbName;
-        } else if (tmdbId && Objects.nonNull(ani.getTmdb())) {
-            title = StrFormatter.format("{} [tmdbid={}]", title, ani.getTmdb().getId());
+        } else {
+            title = BgmUtil.getName(bgmInfo, ani.getTmdb());
         }
 
+        // 默认导入全局排除
         if (importExclude) {
             exclude = new ArrayList<>(exclude);
             exclude.addAll(ani.getExclude());
@@ -234,24 +203,22 @@ public class AniUtil {
             ani.setExclude(exclude);
         }
 
+        // 去除特殊符号
         title = RenameUtil.getName(title);
 
         ani
-                .setDownloadNew(downloadNew)
-                .setGlobalExclude(enabledExclude)
-                .setType(type)
-                .setSeason(season)
+                // 再次保存标题
                 .setTitle(title)
+                // 只下载最新集
+                .setDownloadNew(downloadNew)
+                // 是否启用全局排除
+                .setGlobalExclude(enabledExclude)
+                // type mikan or other
+                .setType(type)
+                // tmdb标题
                 .setThemoviedbName(themoviedbName);
 
-        Boolean ova = ani.getOva();
-        if (ova) {
-            String ovaDownloadPath = config.getOvaDownloadPath();
-            if (StrUtil.isNotBlank(ovaDownloadPath)) {
-                ani.setDownloadPath(FileUtil.getAbsolutePath(ovaDownloadPath));
-            }
-        }
-
+        // 下载位置
         String downloadPath = FileUtil.getAbsolutePath(TorrentUtil.getDownloadPath(ani).get(0));
         ani.setDownloadPath(downloadPath);
 

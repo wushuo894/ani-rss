@@ -37,6 +37,45 @@ public class BgmUtil {
     private static final String host = "https://api.bgm.tv";
     private static final Cache<String, String> nameCache = CacheUtil.newFIFOCache(64);
 
+    public static synchronized String getName(BgmInfo bgmInfo) {
+        Config config = ConfigUtil.CONFIG;
+
+        Boolean bgmJpName = config.getBgmJpName();
+
+        String name = bgmInfo.getName();
+        String nameCn = bgmInfo.getNameCn();
+        String title = StrUtil.blankToDefault(nameCn, name);
+
+        if (bgmJpName) {
+            title = name;
+        }
+
+        if (StrUtil.isBlank(title)) {
+            title = "无标题";
+        }
+
+        return title.trim();
+    }
+
+    public static synchronized String getName(BgmInfo bgmInfo, TmdbUtil.Tmdb tmdb) {
+        Config config = ConfigUtil.CONFIG;
+        Boolean titleYear = config.getTitleYear();
+        Boolean tmdbId = config.getTmdbId();
+
+        String title = getName(bgmInfo);
+
+        Date date = bgmInfo.getDate();
+
+        if (titleYear) {
+            title = StrFormatter.format("{} ({})", title, DateUtil.year(date));
+        }
+
+        if (tmdbId && Objects.nonNull(tmdb)) {
+            title = StrFormatter.format("{} [tmdbid={}]", title, tmdb.getId());
+        }
+        return title;
+    }
+
     public static List<JsonObject> search(String name) {
         name = name.replace("1/2", "½");
         HttpRequest httpRequest = HttpReq.get(host + "/search/subject/" + name, true);
