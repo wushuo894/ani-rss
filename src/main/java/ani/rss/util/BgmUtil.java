@@ -12,6 +12,7 @@ import cn.hutool.core.lang.Assert;
 import cn.hutool.core.text.StrFormatter;
 import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.core.util.RandomUtil;
 import cn.hutool.core.util.ReUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.ContentType;
@@ -425,7 +426,7 @@ public class BgmUtil {
         if (StrUtil.isNotBlank(bgmToken)) {
             httpRequest.header(Header.AUTHORIZATION, "Bearer " + bgmToken);
         }
-        ThreadUtil.sleep(1000);
+        ThreadUtil.sleep(RandomUtil.randomInt(500, 1000));
         return httpRequest;
     }
 
