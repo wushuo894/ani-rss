@@ -222,7 +222,7 @@ public class AniUtil {
 
         if (StrUtil.isNotBlank(themoviedbName) && tmdb) {
             title = themoviedbName;
-        } else {
+        } else if (Objects.nonNull(ani.getTmdb())) {
             title = StrFormatter.format("{} [tmdbid={}]", title, ani.getTmdb().getId());
         }
 
