@@ -3,6 +3,7 @@
   <Add ref="add" @load="list?.getList"/>
   <Logs ref="logs"/>
   <Manage ref="manage" @load="list?.getList"/>
+  <Collection ref="collection"/>
   <div style="height: 100%;display: flex;flex-direction: column;">
     <div id="header">
       <div style="margin: 10px;" class="auto">
@@ -35,7 +36,6 @@
                          :key="selectItem.label"
                          :label="selectItem.label"
                          :value="selectItem.label"
-
               >
               </el-option>
             </el-select>
@@ -49,7 +49,17 @@
               <Plus/>
             </el-icon>
             <template v-if="isNotMobile()">
-              添加
+              添加订阅
+            </template>
+          </el-button>
+        </div>
+        <div style="margin: 0 4px;">
+          <el-button bg text type="primary" @click="collection?.show">
+            <el-icon :class="elIconClass()">
+              <Plus/>
+            </el-icon>
+            <template v-if="isNotMobile()">
+              添加合集
             </template>
           </el-button>
         </div>
@@ -119,7 +129,9 @@ import {ElMessage} from "element-plus";
 import Popconfirm from "../other/Popconfirm.vue";
 import Manage from "./Manage.vue";
 import {useWindowSize} from "@vueuse/core";
+import Collection from "./Collection.vue";
 
+const collection = ref()
 const manage = ref()
 
 const title = ref('')
