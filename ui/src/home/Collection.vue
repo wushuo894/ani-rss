@@ -5,15 +5,15 @@
              center
              title="添加合集"
              @close="data.torrent = ''">
-    <div style="height: 500px;">
+    <div v-loading="loading" style="height: 500px;">
       <el-scrollbar style="padding: 0 12px;">
-        <div v-loading="loading">
+        <div>
           <el-form label-width="auto"
                    @submit="(event)=>{
                 event.preventDefault()
              }">
             <el-form-item label="番剧名称">
-              <div style="display: flex;width: 100%;">
+              <div class="flex flex-center" style="width: 100%;">
                 <div style="flex: 1">
                   <el-input
                       v-model:model-value="data.ani.title"
@@ -26,82 +26,84 @@
                            @click="bgmRef?.show(data.ani.title)"/>
               </div>
             </el-form-item>
-            <el-form-item label="季">
-              <div style="display: flex;justify-content: end;width: 100%;">
-                <el-input-number v-model:model-value="data.ani.season" :min="0" style="max-width: 200px"/>
-              </div>
-            </el-form-item>
-            <el-form-item label="集数偏移">
-              <div style="display: flex;justify-content: end;width: 100%;">
-                <el-input-number v-model:model-value="data.ani.offset"/>
-              </div>
-            </el-form-item>
-            <el-form-item label="日期">
-              <div style="display: flex;width: 100%;justify-content: end;">
-                <el-date-picker
-                    v-model="date"
-                    style="max-width: 150px;"
-                    @change="dateChange"
-                />
-              </div>
-            </el-form-item>
-            <el-form-item label="匹配">
-              <Exclude ref="match" v-model:exclude="data.ani.match" :import-exclude="false"/>
-            </el-form-item>
-            <el-form-item label="排除">
-              <Exclude ref="exclude" v-model:exclude="data.ani.exclude" :import-exclude="true"/>
-            </el-form-item>
-            <el-form-item label="全局排除">
-              <el-switch v-model:model-value="data.ani['globalExclude']"/>
-            </el-form-item>
-            <el-form-item label="自定义集数规则">
-              <div style="display: flex;width: 100%;">
-                <el-input v-model:model-value="data.ani.customEpisodeStr"
-                          :disabled="!data.ani.customEpisode"
-                          style="width: 100%"/>
-                <div style="width: 4px;"></div>
-                <el-input-number v-model:model-value="data.ani.customEpisodeGroupIndex"
-                                 :disabled="!data.ani.customEpisode"/>
-              </div>
-            </el-form-item>
-            <el-form-item label="下载位置">
-              <div style="width: 100%;">
-                <el-input v-model:model-value="data.ani.downloadPath" :autosize="{ minRows: 2}"
-                          style="width: 100%"
-                          type="textarea"/>
-              </div>
-            </el-form-item>
-            <el-form-item label="Torrent">
-              <el-tag v-if="data.filename" closable @close="()=>{
+            <template v-if="data.show">
+              <el-form-item label="季">
+                <div style="display: flex;justify-content: end;width: 100%;">
+                  <el-input-number v-model:model-value="data.ani.season" :min="0" style="max-width: 200px"/>
+                </div>
+              </el-form-item>
+              <el-form-item label="集数偏移">
+                <div style="display: flex;justify-content: end;width: 100%;">
+                  <el-input-number v-model:model-value="data.ani.offset"/>
+                </div>
+              </el-form-item>
+              <el-form-item label="日期">
+                <div style="display: flex;width: 100%;justify-content: end;">
+                  <el-date-picker
+                      v-model="date"
+                      style="max-width: 150px;"
+                      @change="dateChange"
+                  />
+                </div>
+              </el-form-item>
+              <el-form-item label="匹配">
+                <Exclude ref="match" v-model:exclude="data.ani.match" :import-exclude="false"/>
+              </el-form-item>
+              <el-form-item label="排除">
+                <Exclude ref="exclude" v-model:exclude="data.ani.exclude" :import-exclude="true"/>
+              </el-form-item>
+              <el-form-item label="全局排除">
+                <el-switch v-model:model-value="data.ani['globalExclude']"/>
+              </el-form-item>
+              <el-form-item label="自定义集数规则">
+                <div style="display: flex;width: 100%;">
+                  <el-input v-model:model-value="data.ani.customEpisodeStr"
+                            :disabled="!data.ani.customEpisode"
+                            style="width: 100%"/>
+                  <div style="width: 4px;"></div>
+                  <el-input-number v-model:model-value="data.ani.customEpisodeGroupIndex"
+                                   :disabled="!data.ani.customEpisode"/>
+                </div>
+              </el-form-item>
+              <el-form-item label="下载位置">
+                <div style="width: 100%;">
+                  <el-input v-model:model-value="data.ani.downloadPath" :autosize="{ minRows: 2}"
+                            style="width: 100%"
+                            type="textarea"/>
+                </div>
+              </el-form-item>
+              <el-form-item label="Torrent">
+                <el-tag v-if="data.filename" closable @close="()=>{
                 data.filename = ''
                 data.torrent = ''
               }">
-                {{ data.filename }}
-              </el-tag>
-              <el-upload
-                  v-else
-                  :action="`api/upload?type=getBase64&s${authorization()}`"
-                  :before-upload="beforeAvatarUpload"
-                  :on-success="onSuccess"
-                  :show-file-list="false"
-                  class="upload-demo"
-                  drag
-                  multiple
-                  style="width: 100%"
-              >
-                <el-icon class="el-icon--upload">
-                  <upload-filled/>
-                </el-icon>
-                <div class="el-upload__text">
-                  在这里拖放 .torrent 文件或<em>点击上传</em>
-                </div>
-                <template #tip>
-                  <div class="el-upload__tip" style="display: flex;justify-content: end;">
-                    .torrent 文件小于 5M
+                  {{ data.filename }}
+                </el-tag>
+                <el-upload
+                    v-else
+                    :action="`api/upload?type=getBase64&s=${authorization()}`"
+                    :before-upload="beforeAvatarUpload"
+                    :on-success="onSuccess"
+                    :show-file-list="false"
+                    class="upload-demo"
+                    drag
+                    multiple
+                    style="width: 100%"
+                >
+                  <el-icon class="el-icon--upload">
+                    <upload-filled/>
+                  </el-icon>
+                  <div class="el-upload__text">
+                    在这里拖放 .torrent 文件或<em>点击上传</em>
                   </div>
-                </template>
-              </el-upload>
-            </el-form-item>
+                  <template #tip>
+                    <div class="el-upload__tip" style="display: flex;justify-content: end;">
+                      .torrent 文件小于 5M
+                    </div>
+                  </template>
+                </el-upload>
+              </el-form-item>
+            </template>
           </el-form>
         </div>
       </el-scrollbar>
@@ -206,7 +208,7 @@ let data = ref({
     "id": "6881c84d-31e1-4361-8cc6-fe4a3a00573b",
     "backRss": [],
     "backRssList": [],
-    "title": "全修。",
+    "title": "",
     "offset": 0,
     "year": 2025,
     "month": 1,
@@ -252,7 +254,7 @@ let beforeAvatarUpload = (rawFile) => {
     ElMessage.error('Avatar picture must be application/x-bittorrent format!')
     return false
   }
-  if (rawFile.size / 1024 / 1024 > 5) {
+  if (rawFile.size / 1024 / 1024 > 10) {
     ElMessage.error('Avatar picture size can not exceed 5MB!')
     return false
   }
@@ -264,6 +266,8 @@ let dialogVisible = ref(false)
 
 let show = () => {
   init()
+  data.value.show = false
+  data.value.ani.title = ''
   data.value.torrent = ''
   data.value.filename = ''
   dialogVisible.value = true
