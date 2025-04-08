@@ -482,5 +482,45 @@ public class BgmUtil {
         return episodeTitleMap;
     }
 
+    public static Ani toAni(BgmInfo bgmInfo, Ani ani) {
+        String title = BgmUtil.getName(bgmInfo);
+
+        int eps = bgmInfo.getEps();
+        String subjectId = bgmInfo.getSubjectId();
+        if (eps > 0) {
+            try {
+                eps = BgmUtil.getEpisodes(subjectId, 0).size();
+            } catch (Exception e) {
+                log.error(e.getMessage(), e);
+            }
+        }
+
+        String image = bgmInfo.getImage();
+
+        Date date = bgmInfo.getDate();
+
+        return ani
+                // 标题
+                .setTitle(title)
+                // 季
+                .setSeason(bgmInfo.getSeason())
+                // 总集数
+                .setTotalEpisodeNumber(eps)
+                // 剧场版
+                .setOva(bgmInfo.getOva())
+                // 评分
+                .setScore(bgmInfo.getScore())
+                // 年
+                .setYear(DateUtil.year(date))
+                // 月
+                .setMonth(DateUtil.month(date) + 1)
+                // 日
+                .setDate(DateUtil.dayOfMonth(date))
+                // 图片http地址
+                .setImage(image)
+                // 本地图片地址
+                .setCover(AniUtil.saveJpg(image));
+    }
+
 
 }
