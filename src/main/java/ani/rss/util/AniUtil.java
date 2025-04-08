@@ -207,6 +207,7 @@ public class AniUtil {
         Boolean downloadNew = config.getDownloadNew();
         Boolean titleYear = config.getTitleYear();
         Boolean tmdb = config.getTmdb();
+        Boolean tmdbId = config.getTmdbId();
         Boolean enabledExclude = config.getEnabledExclude();
         Boolean importExclude = config.getImportExclude();
         List<String> exclude = config.getExclude();
@@ -222,7 +223,7 @@ public class AniUtil {
 
         if (StrUtil.isNotBlank(themoviedbName) && tmdb) {
             title = themoviedbName;
-        } else if (Objects.nonNull(ani.getTmdb())) {
+        } else if (tmdbId && Objects.nonNull(ani.getTmdb())) {
             title = StrFormatter.format("{} [tmdbid={}]", title, ani.getTmdb().getId());
         }
 
