@@ -11,6 +11,7 @@ import cn.hutool.core.util.StrUtil;
 import cn.hutool.core.util.URLUtil;
 import cn.hutool.http.Header;
 import cn.hutool.http.HttpConfig;
+import com.google.gson.JsonObject;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.File;
@@ -131,6 +132,10 @@ public class AlistUtil {
                                 .form("file", file)
                                 .then(res -> {
                                     Assert.isTrue(res.isOk(), "上传失败 {} 状态码:{}", fileName, res.getStatus());
+                                    JsonObject jsonObject = GsonStatic.fromJson(res.body(), JsonObject.class);
+                                    int code = jsonObject.get("code").getAsInt();
+                                    log.info(jsonObject.toString());
+                                    Assert.isTrue(code != 200, "上传失败 {} 状态码:{}", fileName, code);
                                     log.info("已向alist添加上传任务 {}", fileName);
                                 });
                         return;
