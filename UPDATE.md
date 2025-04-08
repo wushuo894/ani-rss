@@ -1,6 +1,6 @@
 ### 改动
 
-- 修复使用重命名模板 `${episodeTitle}`、`${bgmEpisodeTitle}` 可能会出现的下载完成通知异常
+- 添加订阅时可以选择使用bangumi标题 closes #254
 
 ### 疑惑为什么增加赞助功能的可以看一下我发的 discussion
 

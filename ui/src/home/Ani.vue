@@ -19,6 +19,11 @@
               <el-input v-model:model-value="props.ani.title"/>
             </div>
             <div style="width: 100%;justify-content: end;display: flex;margin-top: 12px;">
+              <el-button :loading="getBgmNameLoading"
+                         bg
+                         icon="DocumentAdd" text @click="getBgmName">
+                使用Bangumi
+              </el-button>
               <el-button @click="props.ani.title = ani.themoviedbName"
                          icon="DocumentAdd"
                          :disabled="props.ani.title === ani.themoviedbName || !ani.themoviedbName.length" bg text>
@@ -259,6 +264,19 @@ let downloadPath = () => {
       })
       .finally(() => {
         downloadPathLoading.value = false
+      })
+}
+
+let getBgmNameLoading = ref(false)
+
+let getBgmName = () => {
+  getBgmNameLoading.value = true
+  api.post('api/bgm?type=getTitle', props.ani)
+      .then(res => {
+        props.ani.title = res.data
+      })
+      .finally(() => {
+        getBgmNameLoading.value = false
       })
 }
 

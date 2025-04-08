@@ -6,6 +6,7 @@ import ani.rss.entity.Config;
 import ani.rss.entity.Item;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.bean.copier.CopyOptions;
+import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.resource.ResourceUtil;
 import cn.hutool.core.lang.Assert;
@@ -19,7 +20,6 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.io.File;
 import java.nio.charset.StandardCharsets;
-import java.time.LocalDateTime;
 import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -182,13 +182,14 @@ public class AniUtil {
             }
             String image = bgmInfo.getImage();
 
-            LocalDateTime date = bgmInfo.getDate();
+            Date date = bgmInfo.getDate();
+
             ani.setTotalEpisodeNumber(eps)
                     .setOva(bgmInfo.getOva())
                     .setScore(bgmInfo.getScore())
-                    .setYear(date.getYear())
-                    .setMonth(date.getMonthValue())
-                    .setDate(date.getDayOfMonth())
+                    .setYear(DateUtil.year(date))
+                    .setMonth(DateUtil.month(date))
+                    .setDate(DateUtil.dayOfMonth(date))
                     .setImage(image);
         } catch (Exception e) {
             String message = ExceptionUtil.getMessage(e);
@@ -221,6 +222,8 @@ public class AniUtil {
 
         if (StrUtil.isNotBlank(themoviedbName) && tmdb) {
             title = themoviedbName;
+        } else {
+            title = StrFormatter.format("{} [tmdbid={}]", title, ani.getTmdb().getId());
         }
 
         if (importExclude) {
