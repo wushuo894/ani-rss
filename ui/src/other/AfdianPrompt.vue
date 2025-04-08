@@ -1,10 +1,12 @@
 <template>
   <AfdianDialog ref="afdian" :config="myConfig"/>
-  <el-text class="mx-1" size="small">
-    需要
-    <el-button bg icon="Mug" size="small" text type="primary" @click="afdian?.show">捐赠</el-button>
-    后才可解锁 <strong>{{ props.name }}</strong>
-  </el-text>
+  <div>
+    <el-text v-if="!myConfig['verifyExpirationTime']" class="mx-1" size="small">
+      需要
+      <el-button bg icon="Mug" size="small" text type="primary" @click="afdian?.show">捐赠</el-button>
+      后才可解锁 <strong>{{ props.name }}</strong>
+    </el-text>
+  </div>
 </template>
 
 <script setup>
@@ -14,7 +16,9 @@ import api from "../api.js";
 
 let afdian = ref()
 
-let myConfig = ref()
+let myConfig = ref({
+  verifyExpirationTime: false
+})
 
 onMounted(() => {
   if (props.config) {

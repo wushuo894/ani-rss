@@ -95,7 +95,8 @@ public class CollectionAction implements BaseAction {
 
                     Item item = new Item()
                             .setTitle(fileName)
-                            .setSize(size);
+                            .setSize(size)
+                            .setSubgroup(ani.getSubgroup());
 
                     RenameUtil.rename(ani, item, new HashMap<>());
 

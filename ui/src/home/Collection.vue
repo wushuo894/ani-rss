@@ -212,6 +212,9 @@ let bgmAdd = (bgm) => {
         data.value.ani.customEpisode = true
         data.value.show = true
         data.value.ani.match = ['\.(mp4|mkv|ass)$']
+        data.value.ani.exclude.push('Web Preview')
+        data.value.ani.exclude.push('\\[NCED')
+        data.value.ani.exclude.push('\\[OP')
       })
       .finally(() => {
         loading.value = false
