@@ -11,6 +11,8 @@ import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.text.StrFormatter;
 import cn.hutool.core.thread.ThreadUtil;
+import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.core.util.RandomUtil;
 import cn.hutool.core.util.ReUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.ContentType;
@@ -23,7 +25,9 @@ import com.google.gson.JsonObject;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -327,35 +331,94 @@ public class BgmUtil {
 
             Set<String> tags = jsonObject.getAsJsonArray("tags")
                     .asList()
-                    .stream().map(JsonElement::getAsJsonObject)
+                    .stream()
+                    .map(JsonElement::getAsJsonObject)
                     .map(o -> o.get("name").getAsString())
                     .filter(StrUtil::isNotBlank)
                     .collect(Collectors.toSet());
 
             int season = 1;
+
+
+            // 从标签获取季
             for (String tag : tags) {
-                String seasonReg = StrFormatter.format("^第({}{1,2})季$", ReUtil.RE_CHINESE);
+                String seasonReg = StrFormatter.format("第({}+)季", ReUtil.RE_CHINESE);
                 if (!ReUtil.contains(seasonReg, tag)) {
                     continue;
                 }
-                season = Convert.chineseToNumber(ReUtil.get(seasonReg, tag, 1));
+                try {
+                    season = Convert.chineseToNumber(ReUtil.get(seasonReg, tag, 1));
+                } catch (Exception e) {
+                    log.error(e.getMessage(), e);
+                }
+            }
+
+            // 从中文标题获取季
+            String seasonReg = StrFormatter.format("第({}+)季", ReUtil.RE_CHINESE);
+            if (ReUtil.contains(seasonReg, nameCn)) {
+                try {
+                    season = Convert.chineseToNumber(ReUtil.get(seasonReg, nameCn, 1));
+                } catch (Exception e) {
+                    log.error(e.getMessage(), e);
+                }
+            }
+
+            // 从原标题获取季
+            seasonReg = "[Ss]eason ?(\\d+)";
+            if (ReUtil.contains(seasonReg, name)) {
+                try {
+                    season = Integer.parseInt(ReUtil.get(seasonReg, name, 1));
+                } catch (Exception e) {
+                    log.error(e.getMessage(), e);
+                }
             }
 
             bgmInfo.setSeason(season);
             return bgmInfo;
         };
 
-        try {
+        if (!isCache) {
+            // 不使用缓存
             HttpRequest httpRequest = HttpReq.get(host + "/v0/subjects/" + subjectId, true);
             return setToken(httpRequest).thenFunction(fun);
-        } catch (Exception e) {
-            if (!isCache) {
-                throw e;
-            }
-            return HttpReq
-                    .get("https://bgm-cache.wushuo.top/bgm/" + subjectId.charAt(0) + "/" + subjectId + ".json", true)
-                    .thenFunction(fun);
         }
+
+        AtomicReference<BgmInfo> bgmInfoAR = new AtomicReference<>();
+        AtomicReference<BgmInfo> bgmInfoCacheAR = new AtomicReference<>();
+
+        // 并行获取bgm信息
+        CompletableFuture.allOf(
+                CompletableFuture.runAsync(() -> {
+                    // 不使用缓存
+                    HttpRequest httpRequest = HttpReq.get(host + "/v0/subjects/" + subjectId, true);
+                    try {
+                        BgmInfo bgmInfo = setToken(httpRequest)
+                                .thenFunction(fun);
+                        bgmInfoAR.set(bgmInfo);
+                    } catch (Exception e) {
+                        log.error(e.getMessage(), e);
+                    }
+                }),
+                CompletableFuture.runAsync(() -> {
+                    HttpRequest httpRequest = HttpReq
+                            .get("https://bgm-cache.wushuo.top/bgm/" + subjectId.charAt(0) + "/" + subjectId + ".json", true);
+                    try {
+                        BgmInfo bgmInfo = httpRequest
+                                .thenFunction(fun);
+                        bgmInfoCacheAR.set(bgmInfo);
+                    } catch (Exception e) {
+                        log.error(e.getMessage(), e);
+                    }
+                })
+        ).join();
+
+        BgmInfo bgmInfo = bgmInfoAR.get();
+
+        bgmInfo = ObjectUtil.defaultIfNull(bgmInfo, bgmInfoCacheAR.get());
+
+        Assert.notNull(bgmInfo, "获取 bgmInfo 失败!");
+
+        return bgmInfo;
     }
 
     public static synchronized HttpRequest setToken(HttpRequest httpRequest) {
@@ -363,7 +426,7 @@ public class BgmUtil {
         if (StrUtil.isNotBlank(bgmToken)) {
             httpRequest.header(Header.AUTHORIZATION, "Bearer " + bgmToken);
         }
-        ThreadUtil.sleep(1000);
+        ThreadUtil.sleep(RandomUtil.randomInt(500, 1000));
         return httpRequest;
     }
 
