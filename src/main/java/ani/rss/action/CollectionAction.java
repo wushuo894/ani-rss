@@ -12,6 +12,7 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.text.StrFormatter;
+import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.NumberUtil;
 import cn.hutool.core.util.ReUtil;
 import cn.hutool.core.util.StrUtil;
@@ -65,10 +66,20 @@ public class CollectionAction implements BaseAction {
         };
 
         return Arrays.stream(torrentFile.getFilenames())
-                .map(name ->
-                        ReUtil.replaceAll(name, "[\\\\/]$", "")
-                )
-                .filter(name -> {
+                .map(name -> {
+                    name = CharsetUtil.convert(name, "ISO-8859-1", CharsetUtil.UTF_8);
+                    name = ReUtil.replaceAll(name, "[\\\\/]$", "");
+                    Item item = new Item();
+                    return item.setTitle(name)
+                            .setLength(lengths[index.getAndIncrement()]);
+                })
+                .filter(item -> {
+                    String name = item.getTitle();
+
+                    if (name.startsWith("_____padding_file_") && name.contains("BitComet")) {
+                        return false;
+                    }
+
                     // 排除
                     if (!exclude.isEmpty()) {
                         if (exclude.stream().map(map).filter(StrUtil::isNotBlank).anyMatch(s -> ReUtil.contains(s, name))) {
@@ -89,15 +100,14 @@ public class CollectionAction implements BaseAction {
                     }
                     return true;
                 })
-                .map(fileName -> {
-                    long length = lengths[index.getAndIncrement()];
+                .map(item -> {
+                    long length = item.getLength();
 
                     Double l = length / 1024.0 / 1024;
 
                     String size = NumberUtil.decimalFormat("0.00", l) + "MB";
 
-                    Item item = new Item()
-                            .setTitle(fileName)
+                    item
                             .setSize(size)
                             .setSubgroup(ani.getSubgroup());
 
@@ -108,10 +118,13 @@ public class CollectionAction implements BaseAction {
                     if (StrUtil.isBlank(reName)) {
                         return null;
                     }
-                    String extName = FileUtil.extName(fileName);
+
+                    String title = item.getTitle();
+
+                    String extName = FileUtil.extName(title);
 
                     if (BaseDownload.subtitleFormat.contains(extName)) {
-                        String lang = FileUtil.extName(FileUtil.mainName(fileName));
+                        String lang = FileUtil.extName(FileUtil.mainName(title));
                         if (StrUtil.isNotBlank(lang)) {
                             reName += "." + lang;
                         }
