@@ -72,59 +72,30 @@ public class qBittorrent implements BaseDownload {
         return false;
     }
 
-    @Override
-    public List<TorrentsInfo> getTorrentsInfos() {
+    public static synchronized List<FileEntity> files(TorrentsInfo torrentsInfo, Config config) {
+        String hash = torrentsInfo.getHash();
         String host = config.getHost();
-        try {
-            return HttpReq.get(host + "/api/v2/torrents/info", false)
-                    .thenFunction(res -> {
-                        List<TorrentsInfo> torrentsInfoList = new ArrayList<>();
-                        JsonArray jsonElements = GsonStatic.fromJson(res.body(), JsonArray.class);
-                        for (JsonElement jsonElement : jsonElements) {
-                            JsonObject jsonObject = jsonElement.getAsJsonObject();
-                            String tags = jsonObject.get("tags").getAsString();
 
-                            if (StrUtil.isBlank(tags)) {
-                                continue;
-                            }
-
-                            String hash = jsonObject.get("hash").getAsString();
-                            String name = jsonObject.get("name").getAsString();
-                            String savePath = jsonObject.get("save_path").getAsString();
-                            JsonElement state = jsonObject.get("state");
-
-                            List<String> tagList = StrUtil.split(tags, ",", true, true);
-
-                            TorrentsInfo torrentsInfo = new TorrentsInfo();
-                            torrentsInfo.setName(name);
-                            torrentsInfo.setHash(hash);
-                            torrentsInfo.setDownloadDir(FileUtil.getAbsolutePath(savePath));
-                            torrentsInfo.setState(Objects.isNull(state) ?
-                                    TorrentsInfo.State.downloading : EnumUtil.fromString(TorrentsInfo.State.class, state.getAsString(), TorrentsInfo.State.downloading)
-                            );
-                            torrentsInfo.setTags(tagList);
-                            torrentsInfo.setFiles(() -> files(torrentsInfo).stream().map(FileEntity::getName)
-                                    .toList());
-                            // 包含标签
-                            if (tagList.contains(TorrentsTags.ANI_RSS.getValue())) {
-                                torrentsInfoList.add(torrentsInfo);
-                                continue;
-                            }
-
-                            JsonElement category = jsonObject.get("category");
-                            if (Objects.isNull(category)) {
-                                continue;
-                            }
-                            if (category.getAsString().equals(TorrentsTags.ANI_RSS.getValue())) {
-                                torrentsInfoList.add(torrentsInfo);
-                            }
-                        }
-                        return torrentsInfoList;
-                    });
-        } catch (Exception e) {
-            log.error(e.getMessage(), e);
-        }
-        return new ArrayList<>();
+        return HttpReq.get(host + "/api/v2/torrents/files", false)
+                .form("hash", hash)
+                .thenFunction(res -> {
+                    Assert.isTrue(res.isOk(), "status: {}", res.getStatus());
+                    return GsonStatic.fromJsonList(res.body(), FileEntity.class).stream()
+                            .filter(fileEntity -> {
+                                String name = fileEntity.getName();
+                                String extName = FileUtil.extName(name);
+                                if (StrUtil.isBlank(extName)) {
+                                    return false;
+                                }
+                                Long size = fileEntity.getSize();
+                                if (size < 1) {
+                                    return false;
+                                }
+                                return videoFormat.contains(extName) || subtitleFormat.contains(extName);
+                            })
+                            .sorted(Comparator.comparingLong(fileEntity -> Long.MAX_VALUE - fileEntity.getSize()))
+                            .toList();
+                });
     }
 
     @Override
@@ -208,11 +179,66 @@ public class qBittorrent implements BaseDownload {
     }
 
     @Override
+    public List<TorrentsInfo> getTorrentsInfos() {
+        String host = config.getHost();
+        try {
+            return HttpReq.get(host + "/api/v2/torrents/info", false)
+                    .thenFunction(res -> {
+                        List<TorrentsInfo> torrentsInfoList = new ArrayList<>();
+                        JsonArray jsonElements = GsonStatic.fromJson(res.body(), JsonArray.class);
+                        for (JsonElement jsonElement : jsonElements) {
+                            JsonObject jsonObject = jsonElement.getAsJsonObject();
+                            String tags = jsonObject.get("tags").getAsString();
+
+                            if (StrUtil.isBlank(tags)) {
+                                continue;
+                            }
+
+                            String hash = jsonObject.get("hash").getAsString();
+                            String name = jsonObject.get("name").getAsString();
+                            String savePath = jsonObject.get("save_path").getAsString();
+                            JsonElement state = jsonObject.get("state");
+
+                            List<String> tagList = StrUtil.split(tags, ",", true, true);
+
+                            TorrentsInfo torrentsInfo = new TorrentsInfo();
+                            torrentsInfo.setName(name);
+                            torrentsInfo.setHash(hash);
+                            torrentsInfo.setDownloadDir(FileUtil.getAbsolutePath(savePath));
+                            torrentsInfo.setState(Objects.isNull(state) ?
+                                    TorrentsInfo.State.downloading : EnumUtil.fromString(TorrentsInfo.State.class, state.getAsString(), TorrentsInfo.State.downloading)
+                            );
+                            torrentsInfo.setTags(tagList);
+                            torrentsInfo.setFiles(() -> files(torrentsInfo, config).stream().map(FileEntity::getName)
+                                    .toList());
+                            // 包含标签
+                            if (tagList.contains(TorrentsTags.ANI_RSS.getValue())) {
+                                torrentsInfoList.add(torrentsInfo);
+                                continue;
+                            }
+
+                            JsonElement category = jsonObject.get("category");
+                            if (Objects.isNull(category)) {
+                                continue;
+                            }
+                            if (category.getAsString().equals(TorrentsTags.ANI_RSS.getValue())) {
+                                torrentsInfoList.add(torrentsInfo);
+                            }
+                        }
+                        return torrentsInfoList;
+                    });
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+        }
+        return new ArrayList<>();
+    }
+
+    @Override
     public Boolean delete(TorrentsInfo torrentsInfo, Boolean deleteFiles) {
         String host = config.getHost();
         String hash = torrentsInfo.getHash();
         try {
-            List<FileEntity> files = files(torrentsInfo);
+            List<FileEntity> files = files(torrentsInfo, config);
             boolean b = HttpReq.post(host + "/api/v2/torrents/delete", false)
                     .form("hashes", hash)
                     .form("deleteFiles", deleteFiles)
@@ -251,32 +277,6 @@ public class qBittorrent implements BaseDownload {
             log.error(e.getMessage(), e);
             return false;
         }
-    }
-
-    public synchronized List<FileEntity> files(TorrentsInfo torrentsInfo) {
-        String hash = torrentsInfo.getHash();
-        String host = config.getHost();
-
-        return HttpReq.get(host + "/api/v2/torrents/files", false)
-                .form("hash", hash)
-                .thenFunction(res -> {
-                    Assert.isTrue(res.isOk(), "status: {}", res.getStatus());
-                    return GsonStatic.fromJsonList(res.body(), FileEntity.class).stream()
-                            .filter(fileEntity -> {
-                                String name = fileEntity.getName();
-                                String extName = FileUtil.extName(name);
-                                if (StrUtil.isBlank(extName)) {
-                                    return false;
-                                }
-                                Long size = fileEntity.getSize();
-                                if (size < 1) {
-                                    return false;
-                                }
-                                return videoFormat.contains(extName) || subtitleFormat.contains(extName);
-                            })
-                            .sorted(Comparator.comparingLong(fileEntity -> Long.MAX_VALUE - fileEntity.getSize()))
-                            .toList();
-                });
     }
 
     @Override

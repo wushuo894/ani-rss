@@ -3,6 +3,7 @@
   <Add ref="add" @load="list?.getList"/>
   <Logs ref="logs"/>
   <Manage ref="manage" @load="list?.getList"/>
+  <Collection ref="collection"/>
   <div style="height: 100%;display: flex;flex-direction: column;">
     <div id="header">
       <div style="margin: 10px;" class="auto">
@@ -35,7 +36,6 @@
                          :key="selectItem.label"
                          :label="selectItem.label"
                          :value="selectItem.label"
-
               >
               </el-option>
             </el-select>
@@ -44,14 +44,26 @@
       </div>
       <div style="margin: 10px;display: flex;justify-content: flex-end;">
         <div style="margin: 0 4px;">
-          <el-button type="primary" @click="add?.show" bg text>
-            <el-icon :class="elIconClass()">
-              <Plus/>
-            </el-icon>
-            <template v-if="isNotMobile()">
-              添加
+          <el-dropdown trigger="click">
+            <el-button bg text type="primary">
+              <el-icon :class="elIconClass()">
+                <Plus/>
+              </el-icon>
+              <template v-if="isNotMobile()">
+                添加
+              </template>
+            </el-button>
+            <template #dropdown>
+              <el-dropdown-menu>
+                <el-dropdown-item @click="add?.show">
+                  添加订阅
+                </el-dropdown-item>
+                <el-dropdown-item @click="collection?.show">
+                  添加合集
+                </el-dropdown-item>
+              </el-dropdown-menu>
             </template>
-          </el-button>
+          </el-dropdown>
         </div>
         <div style="margin: 0 4px;">
           <popconfirm title="立即刷新全部订阅?" @confirm="download">
@@ -119,7 +131,9 @@ import {ElMessage} from "element-plus";
 import Popconfirm from "../other/Popconfirm.vue";
 import Manage from "./Manage.vue";
 import {useWindowSize} from "@vueuse/core";
+import Collection from "./Collection.vue";
 
+const collection = ref()
 const manage = ref()
 
 const title = ref('')

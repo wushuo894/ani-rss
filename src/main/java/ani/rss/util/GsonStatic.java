@@ -15,6 +15,8 @@ import java.util.TimeZone;
 public class GsonStatic {
     public static Gson gson = new GsonBuilder()
             .disableHtmlEscaping()
+            .disableJdkUnsafe()
+            .disableInnerClassSerialization()
             .setDateFormat(DatePattern.NORM_DATETIME_PATTERN)
             .registerTypeAdapter(TimeZone.class, new TimeZoneSerializer())
             .create();
