@@ -211,8 +211,7 @@ let bgmAdd = (bgm) => {
         data.value.ani.customEpisode = true
         data.value.show = true
         data.value.ani.match.push('\\.(mp4|mkv|ass)$')
-        data.value.ani.exclude.push('^(SPs|CDs|Scans)')
-        data.value.ani.exclude.push('\\[Fonts]')
+        data.value.ani.exclude = ['^(SPs|CDs|Scans)', '\\[Fonts]']
       })
       .finally(() => {
         loading.value = false
