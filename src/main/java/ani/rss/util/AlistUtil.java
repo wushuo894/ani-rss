@@ -135,7 +135,7 @@ public class AlistUtil {
                                     JsonObject jsonObject = GsonStatic.fromJson(res.body(), JsonObject.class);
                                     int code = jsonObject.get("code").getAsInt();
                                     log.info(jsonObject.toString());
-                                    Assert.isTrue(code != 200, "上传失败 {} 状态码:{}", fileName, code);
+                                    Assert.isTrue(code == 200, "上传失败 {} 状态码:{}", fileName, code);
                                     log.info("已向alist添加上传任务 {}", fileName);
                                 });
                         return;
