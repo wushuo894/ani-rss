@@ -35,7 +35,14 @@ trap 'sigterm_handler' SIGTERM
 
 while :
 do
-    java -Xmx1g -Xss512k -XX:+UseG1GC -XX:+UseStringDeduplication -XX:+ShrinkHeapInSteps -XX:TieredStopAtLevel=1 -jar $jar_path --port $port &
+    java -Xmx1g -Xss512k \
+      -XX:+UseG1GC \
+      -XX:+UseStringDeduplication \
+      -XX:+ShrinkHeapInSteps \
+      -XX:TieredStopAtLevel=1 \
+      --add-opens=java.base/java.net=ALL-UNNAMED \
+      --add-opens=java.base/sun.net.www.protocol.https=ALL-UNNAMED \
+      -jar $jar_path --port $port &
     wait $!
     if [ $? -ne 0 ]; then
         break
