@@ -2,6 +2,7 @@ package ani.rss.action;
 
 import ani.rss.annotation.Auth;
 import ani.rss.annotation.Path;
+import ani.rss.download.BaseDownload;
 import ani.rss.download.qBittorrent;
 import ani.rss.entity.*;
 import ani.rss.enums.StringEnum;
@@ -64,7 +65,9 @@ public class CollectionAction implements BaseAction {
         };
 
         return Arrays.stream(torrentFile.getFilenames())
-                .map(FileUtil::getName)
+                .map(name ->
+                        ReUtil.replaceAll(name, "[\\\\/]$", "")
+                )
                 .filter(name -> {
                     // 排除
                     if (!exclude.isEmpty()) {
@@ -105,8 +108,16 @@ public class CollectionAction implements BaseAction {
                     if (StrUtil.isBlank(reName)) {
                         return null;
                     }
+                    String extName = FileUtil.extName(fileName);
 
-                    reName = reName + "." + FileUtil.extName(fileName);
+                    if (BaseDownload.subtitleFormat.contains(extName)) {
+                        String lang = FileUtil.extName(FileUtil.mainName(fileName));
+                        if (StrUtil.isNotBlank(lang)) {
+                            reName += "." + lang;
+                        }
+                    }
+
+                    reName = reName + "." + extName;
 
                     return item.setReName(reName)
                             .setLength(length);
@@ -198,7 +209,7 @@ public class CollectionAction implements BaseAction {
         Map<String, String> reNameMap = preview(collectionInfo)
                 .stream()
                 .collect(Collectors.toMap(
-                        item -> md5.digestHex(item.getTitle() + item.getLength()),
+                        item -> md5.digestHex(new File(item.getTitle()).getName() + item.getLength()),
                         Item::getReName)
                 );
 
