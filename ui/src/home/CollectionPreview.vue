@@ -1,8 +1,7 @@
 <template>
   <el-dialog v-model="dialogVisible"
              center
-             title="合集预览"
-             @close="data.torrent = ''">
+             title="合集预览">
     <div v-loading="loading">
       <el-table :data="list" height="500"
                 scrollbar-always-on
@@ -13,7 +12,7 @@
         <el-table-column label="大小" min-width="100" prop="size"/>
       </el-table>
     </div>
-    <div v-if="subgroup" style="margin-top:12px;">
+    <div v-if="subgroup !== props.data.ani.subgroup" style="margin-top:12px;">
       <el-alert close-text="应用" show-icon @close="closeAlert">
         <template #title>
           <div class="flex" style="width:100%;justify-content: space-between;">
@@ -43,6 +42,7 @@ let list = ref([])
 let subgroup = ref('')
 
 let show = () => {
+  subgroup.value = ''
   dialogVisible.value = true
   loading.value = true
   api.post('api/collection?type=preview', props.data)
@@ -74,7 +74,7 @@ let getSubgroup = () => {
 }
 
 let closeAlert = () => {
-  props.data.ani.subgroup = subgroup
+  props.data.ani.subgroup = subgroup.value
   show()
 }
 
