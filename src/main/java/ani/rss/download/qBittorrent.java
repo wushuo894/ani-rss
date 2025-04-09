@@ -138,8 +138,6 @@ public class qBittorrent implements BaseDownload {
                 .form("contentLayout", "Original")
                 .form("dlLimit", dlLimit)
                 .form("firstLastPiecePrio", false)
-                .form("paused", true)
-                .form("stopped", true)
                 .form("rename", name)
                 .form("savepath", savePath)
                 .form("sequentialDownload", false)
@@ -157,9 +155,14 @@ public class qBittorrent implements BaseDownload {
             httpRequest.form("urls", FileUtil.readUtf8String(torrentFile));
         } else {
             if (torrentFile.length() > 0) {
-                httpRequest.form("torrents", torrentFile);
+                httpRequest.form("paused", true)
+                        .form("stopped", true)
+                        .form("torrents", torrentFile);
             } else {
-                httpRequest.form("urls", "magnet:?xt=urn:btih:" + FileUtil.mainName(torrentFile));
+                httpRequest
+                        .form("paused", false)
+                        .form("stopped", false)
+                        .form("urls", "magnet:?xt=urn:btih:" + FileUtil.mainName(torrentFile));
             }
         }
         httpRequest.thenFunction(HttpResponse::isOk);
