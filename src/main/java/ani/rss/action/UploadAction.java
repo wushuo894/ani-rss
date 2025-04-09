@@ -7,6 +7,7 @@ import ani.rss.auth.enums.AuthType;
 import ani.rss.entity.Result;
 import ani.rss.util.ConfigUtil;
 import ani.rss.util.Md5Util;
+import cn.hutool.core.codec.Base64;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.net.multipart.MultipartFormData;
 import cn.hutool.core.net.multipart.UploadFile;
@@ -23,6 +24,7 @@ import java.io.IOException;
 public class UploadAction implements BaseAction {
     @Override
     public void doAction(HttpServerRequest request, HttpServerResponse response) throws IOException {
+        String type = request.getParam("type");
         MultipartFormData multipart = request.getMultipart();
         UploadFile file = multipart.getFile("file");
         if (file.size() > 1024 * 1024 * 50) {
@@ -30,6 +32,11 @@ public class UploadAction implements BaseAction {
             return;
         }
         byte[] fileContent = file.getFileContent();
+        if ("getBase64".equals(type)) {
+            resultSuccess(Base64.encode(fileContent));
+            return;
+        }
+
         String s = Md5Util.digestHex(fileContent);
         String fileName = file.getFileName();
         String saveName = s + "." + FileUtil.extName(fileName);

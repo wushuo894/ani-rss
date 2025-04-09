@@ -43,6 +43,11 @@ public class Item implements Serializable {
     private String size;
 
     /**
+     * 大小
+     */
+    private Long length;
+
+    /**
      * 本地已存在
      */
     private Boolean local;

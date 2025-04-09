@@ -1,0 +1,303 @@
+<template>
+  <Bgm ref="bgmRef" @add="bgmAdd"/>
+  <CollectionPreview ref="collectionPreviewRef" v-model:data="data"/>
+  <el-dialog v-model="dialogVisible"
+             center
+             title="添加合集">
+    <div v-loading="loading" style="height: 500px;">
+      <el-scrollbar style="padding: 0 12px;">
+        <div>
+          <el-form label-width="auto"
+                   @submit="(event)=>{
+                event.preventDefault()
+             }">
+            <el-form-item label="番剧名称">
+              <div class="flex flex-center" style="width: 100%;">
+                <div style="flex: 1">
+                  <el-input
+                      v-model:model-value="data.ani.title"
+                      :disabled="rssButtonLoading"
+                      placeholder="请勿留空"
+                  />
+                </div>
+                <div style="width: 4px;"></div>
+                <el-button :disabled="rssButtonLoading" bg icon="Search" text type="primary"
+                           @click="bgmRef?.show(data.ani.title)"/>
+              </div>
+            </el-form-item>
+            <template v-if="data.show">
+              <el-form-item label="字幕组">
+                <div class="flex" style="width: 100%;justify-content: end;">
+                  <el-input v-model:model-value="data.ani.subgroup" placeholder="字幕组" style="width: 150px"/>
+                </div>
+              </el-form-item>
+              <el-form-item label="季">
+                <div class="flex" style="justify-content: end;width: 100%;">
+                  <el-input-number v-model:model-value="data.ani.season" :min="0" style="max-width: 200px"/>
+                </div>
+              </el-form-item>
+              <el-form-item label="集数偏移">
+                <div class="flex" style="justify-content: end;width: 100%;">
+                  <el-input-number v-model:model-value="data.ani.offset"/>
+                </div>
+              </el-form-item>
+              <el-form-item label="日期">
+                <div class="flex" style="width: 100%;justify-content: end;">
+                  <el-date-picker
+                      v-model="date"
+                      style="max-width: 150px;"
+                      @change="dateChange"
+                  />
+                </div>
+              </el-form-item>
+              <el-form-item label="匹配">
+                <Exclude ref="match" v-model:exclude="data.ani.match" :import-exclude="false"/>
+              </el-form-item>
+              <el-form-item label="排除">
+                <Exclude ref="exclude" v-model:exclude="data.ani.exclude" :import-exclude="true"/>
+              </el-form-item>
+              <el-form-item label="全局排除">
+                <el-switch v-model:model-value="data.ani['globalExclude']"/>
+              </el-form-item>
+              <el-form-item label="自定义集数规则">
+                <div style="display: flex;width: 100%;">
+                  <el-input v-model:model-value="data.ani.customEpisodeStr"
+                            style="width: 100%"/>
+                  <div style="width: 4px;"></div>
+                  <el-input-number v-model:model-value="data.ani.customEpisodeGroupIndex"/>
+                </div>
+              </el-form-item>
+              <el-form-item label="下载位置">
+                <div style="width: 100%;">
+                  <el-input v-model:model-value="data.ani.downloadPath" :autosize="{ minRows: 2}"
+                            style="width: 100%"
+                            type="textarea"/>
+                </div>
+                <div style="margin-top: 6px;">
+                  <el-button :disabled="!data.ani.customDownloadPath" :loading="downloadPathLoading" bg icon="Refresh"
+                             text
+                             @click="downloadPath"/>
+                </div>
+              </el-form-item>
+              <el-form-item label="Torrent">
+                <el-tag v-if="data.filename" closable @close="()=>{
+                data.filename = ''
+                data.torrent = ''
+              }">
+                  {{ data.filename }}
+                </el-tag>
+                <el-upload
+                    v-else
+                    :action="`api/upload?type=getBase64&s=${authorization()}`"
+                    :before-upload="beforeAvatarUpload"
+                    :on-success="onSuccess"
+                    :show-file-list="false"
+                    class="upload-demo"
+                    drag
+                    multiple
+                    style="width: 100%"
+                >
+                  <el-icon class="el-icon--upload">
+                    <upload-filled/>
+                  </el-icon>
+                  <div class="el-upload__text">
+                    在这里拖放 .torrent 文件或<em>点击上传</em>
+                  </div>
+                  <template #tip>
+                    <div class="el-upload__tip" style="display: flex;justify-content: end;">
+                      .torrent 文件小于 5M
+                    </div>
+                  </template>
+                </el-upload>
+              </el-form-item>
+            </template>
+          </el-form>
+        </div>
+      </el-scrollbar>
+    </div>
+    <div class="flex" style="justify-content: space-between;width: 100%;margin-top: 10px;">
+      <AfdianPrompt name="添加合集"/>
+      <div>
+        <el-button :disabled="!data.filename" bg
+                   icon="Grid"
+                   text
+                   @click="collectionPreviewRef?.show">
+          预览
+        </el-button>
+        <el-button :disabled="!data.filename"
+                   :loading="startLoading"
+                   bg
+                   icon="Check"
+                   text
+                   type="primary" @click="start">
+          开始
+        </el-button>
+      </div>
+    </div>
+  </el-dialog>
+</template>
+
+<script setup>
+import {ref} from "vue";
+import {UploadFilled} from "@element-plus/icons-vue";
+import {ElMessage} from "element-plus";
+import Bgm from "./Bgm.vue";
+import api from "../api.js";
+import Exclude from "../config/Exclude.vue";
+import CollectionPreview from "./CollectionPreview.vue";
+import AfdianPrompt from "../other/AfdianPrompt.vue";
+
+let start = () => {
+  startLoading.value = true
+  api.post('api/collection?type=start', data.value)
+      .then((res) => {
+        ElMessage.success(res.message)
+      })
+      .finally(() => {
+        startLoading.value = false
+      })
+}
+
+let downloadPathLoading = ref(false)
+let downloadPath = () => {
+  downloadPathLoading.value = true
+  let newAni = JSON.parse(JSON.stringify(data.value.ani))
+  newAni.customDownloadPath = false
+  api.post('api/downloadPath', newAni)
+      .then(res => {
+        data.value.ani.downloadPath = res.data.downloadPath
+      })
+      .finally(() => {
+        downloadPathLoading.value = false
+      })
+}
+
+let collectionPreviewRef = ref()
+
+let startLoading = ref(false);
+
+let date = ref()
+
+let dateChange = () => {
+  if (!date.value) {
+    return
+  }
+  data.value.ani.year = date.value.getFullYear()
+  data.value.ani.month = date.value.getMonth() + 1
+  data.value.ani.date = date.value.getDate()
+  let minYear = 1970
+  if (data.value.ani.year < minYear) {
+    data.value.ani.year = minYear
+    init()
+    ElMessage.error(`最小年份为 ${minYear}`)
+  }
+}
+
+let init = () => {
+  date.value = new Date(data.value.ani.year, data.value.ani.month - 1, data.value.ani.date);
+}
+
+let bgmRef = ref()
+
+let rssButtonLoading = ref(false)
+let loading = ref(false)
+
+let bgmAdd = (bgm) => {
+  loading.value = true
+  api.post('api/bgm?type=getAniBySubjectId&id=' + bgm['id'])
+      .then((res) => {
+        data.value.ani = res.data
+        data.value.ani.subgroup = '未知字幕组'
+        data.value.ani.customEpisode = true
+        data.value.show = true
+        data.value.ani.match.push('\\.(mp4|mkv|ass)$')
+        data.value.ani.exclude.push('^(SPs|CDs|Scans)')
+        data.value.ani.exclude.push('\\[Fonts]')
+      })
+      .finally(() => {
+        loading.value = false
+      })
+}
+
+let onSuccess = (res) => {
+  data.value.torrent = res.data
+}
+
+let authorization = () => {
+  return window.authorization
+}
+
+let data = ref({
+  filename: '',
+  torrent: '',
+  ani: {
+    "id": "6881c84d-31e1-4361-8cc6-fe4a3a00573b",
+    "backRss": [],
+    "backRssList": [],
+    "title": "",
+    "offset": 0,
+    "year": 2025,
+    "month": 1,
+    "date": 5,
+    "season": 1,
+    "cover": "d/d4cb4751611021999e78c45cb0e8d17d.jpg",
+    "image": "https://lain.bgm.tv/pic/cover/l/40/cc/486039_8O5kv.jpg",
+    "subgroup": "",
+    "match": [],
+    "exclude": [
+      "720[Pp]",
+      "\\d-\\d",
+      "合集",
+      "特别篇"
+    ],
+    "globalExclude": false,
+    "enable": true,
+    "currentEpisodeNumber": 0,
+    "totalEpisodeNumber": 12,
+    "themoviedbName": "",
+    "bgmUrl": "",
+    "customDownloadPath": false,
+    "downloadPath": "",
+    "score": 6.7,
+    "customEpisode": false,
+    "customEpisodeStr": "\\[\\d+(\\.5)? ?([Vv]2)]?|第\\d+(\\.5)?集|【\\d+(\\.5)? ?([Vv]2)?】| \\d+(\\.5)?",
+    "customEpisodeGroupIndex": 0,
+    "omit": true,
+    "downloadNew": false,
+    "notDownload": [],
+    "tmdb": {
+      "id": "",
+      "name": "",
+      "date": "2025-04-08 16:55:49"
+    },
+  },
+  show: false,
+})
+
+let beforeAvatarUpload = (rawFile) => {
+  data.value.filename = rawFile.name
+  if (!rawFile.name.includes('.torrent')) {
+    ElMessage.error('Avatar picture must be .torrent format!')
+    return false
+  }
+  if (rawFile.size / 1024 / 1024 > 10) {
+    ElMessage.error('Avatar picture size can not exceed 10MB!')
+    return false
+  }
+  return true
+}
+
+let dialogVisible = ref(false)
+
+let show = () => {
+  init()
+  data.value.show = false
+  data.value.ani.title = ''
+  data.value.torrent = ''
+  data.value.filename = ''
+  dialogVisible.value = true
+}
+
+defineExpose({show})
+
+</script>

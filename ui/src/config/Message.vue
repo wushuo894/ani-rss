@@ -1,5 +1,4 @@
 <template>
-  <AfdianDialog ref="afdian" :config="props.config"/>
   <el-collapse v-model="messageActiveName" accordion>
     <el-collapse-item title="通知设置" name="0">
       <div style="margin-bottom: 12px;">
@@ -24,11 +23,7 @@
             下载完成通知暂不支持 Aria2、Alist
           </el-text>
           <br>
-          <el-text class="mx-1" size="small">
-            需要
-            <el-button bg icon="Mug" size="small" text type="primary" @click="afdian?.show">捐赠</el-button>
-            后才可解锁 <strong>订阅完结</strong> 通知
-          </el-text>
+          <AfdianPrompt :config="props.config" name="订阅完结"/>
         </div>
       </div>
     </el-collapse-item>
@@ -251,11 +246,7 @@
           <el-switch v-model="props.config['embyRefresh']" :disabled="!props.config['verifyExpirationTime']"/>
         </el-form-item>
         <div class="flex" style="justify-content: space-between;width: 100%;">
-          <el-text class="mx-1" size="small">
-            需要
-            <el-button bg icon="Mug" size="small" text type="primary" @click="afdian?.show">捐赠</el-button>
-            后才可解锁 <strong>Emby媒体库刷新</strong>
-          </el-text>
+          <AfdianPrompt :config="props.config" name="Emby媒体库刷新"/>
           <el-button :loading="messageTestLoading" bg
                      icon="Odometer"
                      text @click="messageTest('EmbyRefresh')">测试
@@ -270,9 +261,8 @@
 import {onMounted, ref} from "vue";
 import {ElMessage} from "element-plus";
 import api from "../api.js";
-import AfdianDialog from "./AfdianDialog.vue";
+import AfdianPrompt from "../other/AfdianPrompt.vue";
 
-const afdian = ref()
 const chatIdMap = ref({})
 const chatId = ref('')
 const getUpdatesLoading = ref(false)

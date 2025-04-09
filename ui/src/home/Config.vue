@@ -4,7 +4,6 @@
       <el-tabs v-model:model-value="activeName" style="margin: 0 15px;">
         <el-tab-pane label="下载设置" name="download" :lazy="true">
           <template #label>
-            <div v-if="activeName !== 'download'" style="margin-left: 20px"/>
             <el-icon>
               <DownloadIcon/>
             </el-icon>
@@ -265,13 +264,7 @@ const emit = defineEmits(['load'])
 </script>
 
 <style scoped>
-.el-tabs__item > span {
+.el-tabs__item > .el-icon {
   display: none;
-}
-
-.is-active > span,
-.el-tabs__item:hover > span {
-  display: initial;
-  margin-left: 5px;
 }
 </style>

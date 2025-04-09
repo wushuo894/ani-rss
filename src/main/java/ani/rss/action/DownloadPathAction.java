@@ -39,7 +39,7 @@ public class DownloadPathAction implements BaseAction {
             change = !downloadPath.get(0).toString().equals(oldDownloadPath.get(0).toString());
         }
 
-        String downloadPathStr = FileUtil.getAbsolutePath(downloadPath.get(0));
+        String downloadPathStr = FileUtil.getAbsolutePath(downloadPath.get(0).getAbsolutePath());
         resultSuccess(Map.of(
                 "change", change,
                 "downloadPath", downloadPathStr
