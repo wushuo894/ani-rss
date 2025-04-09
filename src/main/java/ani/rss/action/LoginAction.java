@@ -32,8 +32,8 @@ public class LoginAction implements BaseAction {
         String myUsername = myLogin.getUsername();
         String myPassword = myLogin.getPassword();
 
-        Assert.notBlank(myUsername, "密码不能为空");
-        Assert.notBlank(myPassword, "用户名不能为空");
+        Assert.notBlank(myUsername, "用户名不能为空");
+        Assert.notBlank(myPassword, "密码不能为空");
 
         String username = login.getUsername();
         String password = login.getPassword();
