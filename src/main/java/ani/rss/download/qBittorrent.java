@@ -206,7 +206,14 @@ public class qBittorrent implements BaseDownload {
      */
     public static Boolean start(TorrentsInfo torrentsInfo, Config config) {
         String host = config.getHost();
-        return HttpReq.post(host + "/api/v2/torrents/start")
+        boolean b = HttpReq.post(host + "/api/v2/torrents/start")
+                .form("hashes", torrentsInfo.getHash())
+                .thenFunction(HttpResponse::isOk);
+        if (b) {
+            return true;
+        }
+
+        return HttpReq.post(host + "/api/v2/torrents/resume")
                 .form("hashes", torrentsInfo.getHash())
                 .thenFunction(HttpResponse::isOk);
     }
@@ -372,7 +379,13 @@ public class qBittorrent implements BaseDownload {
             Assert.isTrue(b, "重命名失败 {} ==> {}", name, newPath);
         }
 
-        start(torrentsInfo, config);
+        for (int i = 0; i < 10; i++) {
+            Boolean b = start(torrentsInfo, config);
+            if (b) {
+                break;
+            }
+            ThreadUtil.sleep(1000);
+        }
 
         if (newNames.isEmpty()) {
             return;
