@@ -2,6 +2,7 @@ package ani.rss.util;
 
 import ani.rss.Main;
 import cn.hutool.core.io.resource.ResourceUtil;
+import cn.hutool.core.thread.ThreadUtil;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.swing.*;
@@ -10,6 +11,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.geom.AffineTransform;
 import java.net.URL;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 @Slf4j
 public class MenuUtil {
@@ -76,7 +78,7 @@ public class MenuUtil {
         };
         jPopupMenu.setSize(100, 30);
 
-        //添加菜单选项
+        // 添加菜单选项
         JMenuItem webui = jPopupMenu.add(new JMenuItem("打开webui"));
         webui.addActionListener(e -> {
             if (Desktop.isDesktopSupported()) {
@@ -93,19 +95,29 @@ public class MenuUtil {
             System.exit(0);
         });
 
+        // 防止连点
+        AtomicBoolean clicked = new AtomicBoolean(true);
+
         // 给托盘图标添加鼠标监听
         trayIcon.addMouseListener(new MouseAdapter() {
             @Override
-            public void mouseReleased(MouseEvent e) {
-                //左键点击
-                if (e.getButton() == 1) {
+            public synchronized void mouseReleased(MouseEvent e) {
+                // 左键点击
+                if (e.getButton() == 1 && clicked.get()) {
                     // 直接打开webui
                     try {
                         Desktop.getDesktop().browse(new URL("http://127.0.0.1:" + ServerUtil.PORT).toURI());
                     } catch (Exception ex) {
                         log.error("打开webui失败", ex);
                     }
-                } else if (e.getButton() == 3 && e.isPopupTrigger()) {
+                    clicked.set(false);
+                    ThreadUtil.execute(() -> {
+                        ThreadUtil.sleep(1000);
+                        clicked.set(true);
+                    });
+                }
+
+                if (e.getButton() == 3 && e.isPopupTrigger()) {
                     // 右键点击弹出JPopupMenu绑定的载体以及JPopupMenu
                     // 适配非1倍缩放的屏幕
                     jDialog.setLocation((int) (e.getX() / uiScaleX + 5),

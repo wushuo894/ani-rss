@@ -127,6 +127,7 @@ public class qBittorrent implements BaseDownload {
         Integer ratioLimit = config.getRatioLimit();
         Integer seedingTimeLimit = config.getSeedingTimeLimit();
         Integer inactiveSeedingTimeLimit = config.getInactiveSeedingTimeLimit();
+        Boolean rename = config.getRename();
 
         Long upLimit = config.getUpLimit() * 1024;
         Long dlLimit = config.getDlLimit() * 1024;
@@ -158,8 +159,9 @@ public class qBittorrent implements BaseDownload {
                     .form("urls", FileUtil.readUtf8String(torrentFile));
         } else {
             if (torrentFile.length() > 0) {
-                httpRequest.form("paused", true)
-                        .form("stopped", true)
+                // 开启了重命名则在重命名后再开始下载
+                httpRequest.form("paused", rename)
+                        .form("stopped", rename)
                         .form("torrents", torrentFile);
             } else {
                 httpRequest

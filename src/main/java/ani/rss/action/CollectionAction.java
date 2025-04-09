@@ -69,6 +69,7 @@ public class CollectionAction implements BaseAction {
                 .map(name -> {
                     name = CharsetUtil.convert(name, "ISO-8859-1", CharsetUtil.UTF_8);
                     name = ReUtil.replaceAll(name, "[\\\\/]$", "");
+                    name = name.replace("\\", "/");
                     Item item = new Item();
                     return item.setTitle(name)
                             .setLength(lengths[index.getAndIncrement()]);
