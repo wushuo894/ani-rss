@@ -6,7 +6,7 @@
 
     <groupId>ani.rss</groupId>
     <artifactId>ani-rss</artifactId>
-    <version>1.2.4</version>
+    <version>1.2.5</version>
 
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
@@ -118,6 +118,10 @@
                             <jre>
                                 <path>jre/bin;%JAVA_HOME%/bin;%PATH%</path>
                                 <minVersion>17</minVersion>
+                                <opts>
+                                    <opt>--add-opens=java.base/java.net=ALL-UNNAMED</opt>
+                                    <opt>--add-opens=java.base/sun.net.www.protocol.https=ALL-UNNAMED</opt>
+                                </opts>
                             </jre>
                             <versionInfo>
                                 <fileDescription>https://docs.wushuo.top/</fileDescription>
