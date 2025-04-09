@@ -80,6 +80,7 @@ public class TorrentsInfo implements Serializable {
         /**
          * 已暂停
          */
+        stoppedDL,
         pausedDL,
         /**
          * 队列中
