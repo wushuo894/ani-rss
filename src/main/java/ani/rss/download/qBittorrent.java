@@ -72,7 +72,15 @@ public class qBittorrent implements BaseDownload {
         return false;
     }
 
-    public static synchronized List<FileEntity> files(TorrentsInfo torrentsInfo, Config config) {
+    /**
+     * 获取对应任务的文件列表
+     *
+     * @param torrentsInfo
+     * @param filter       过滤出视频与字幕
+     * @param config
+     * @return
+     */
+    public static synchronized List<FileEntity> files(TorrentsInfo torrentsInfo, Boolean filter, Config config) {
         String hash = torrentsInfo.getHash();
         String host = config.getHost();
 
@@ -82,6 +90,9 @@ public class qBittorrent implements BaseDownload {
                     Assert.isTrue(res.isOk(), "status: {}", res.getStatus());
                     return GsonStatic.fromJsonList(res.body(), FileEntity.class).stream()
                             .filter(fileEntity -> {
+                                if (!filter) {
+                                    return true;
+                                }
                                 String name = fileEntity.getName();
                                 String extName = FileUtil.extName(name);
                                 if (StrUtil.isBlank(extName)) {
@@ -185,7 +196,7 @@ public class qBittorrent implements BaseDownload {
      * @param torrentsInfo
      * @return
      */
-    public Boolean start(TorrentsInfo torrentsInfo) {
+    public static Boolean start(TorrentsInfo torrentsInfo, Config config) {
         String host = config.getHost();
         return HttpReq.post(host + "/api/v2/torrents/start")
                 .form("hashes", torrentsInfo.getHash())
@@ -224,7 +235,7 @@ public class qBittorrent implements BaseDownload {
                             );
                             torrentsInfo.setTags(tagList);
                             torrentsInfo.setFiles(() ->
-                                    files(torrentsInfo, config)
+                                    files(torrentsInfo, true, config)
                                             .stream()
                                             .map(FileEntity::getName)
                                             .toList());
@@ -255,7 +266,7 @@ public class qBittorrent implements BaseDownload {
         String host = config.getHost();
         String hash = torrentsInfo.getHash();
         try {
-            List<FileEntity> files = files(torrentsInfo, config);
+            List<FileEntity> files = files(torrentsInfo, false, config);
             boolean b = HttpReq.post(host + "/api/v2/torrents/delete", false)
                     .form("hashes", hash)
                     .form("deleteFiles", deleteFiles)
@@ -310,7 +321,7 @@ public class qBittorrent implements BaseDownload {
 
         String host = config.getHost();
 
-        List<FileEntity> files = files(torrentsInfo, config);
+        List<FileEntity> files = files(torrentsInfo, true, config);
 
         List<String> names = files.stream()
                 .map(FileEntity::getName)
@@ -353,7 +364,7 @@ public class qBittorrent implements BaseDownload {
             Assert.isTrue(b, "重命名失败 {} ==> {}", name, newPath);
         }
 
-        start(torrentsInfo);
+        start(torrentsInfo, config);
 
         if (newNames.isEmpty()) {
             return;

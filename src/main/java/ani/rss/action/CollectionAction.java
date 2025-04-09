@@ -164,7 +164,8 @@ public class CollectionAction implements BaseAction {
                 .form("contentLayout", "Original")
                 .form("dlLimit", dlLimit)
                 .form("firstLastPiecePrio", false)
-                .form("paused", false)
+                .form("paused", true)
+                .form("stopped", true)
                 .form("rename", name)
                 .form("savepath", savePath)
                 .form("sequentialDownload", false)
@@ -228,11 +229,16 @@ public class CollectionAction implements BaseAction {
 
         String host = config.getHost();
 
-        List<qBittorrent.FileEntity> files = qBittorrent.files(torrentsInfo, config);
+        List<qBittorrent.FileEntity> files = qBittorrent.files(torrentsInfo, false, config);
         for (qBittorrent.FileEntity file : files) {
             name = new File(file.getName()).getName();
             String key = md5.digestHex(name + file.getSize());
             if (!reNameMap.containsKey(key)) {
+                HttpReq.post(host + "/api/v2/torrents/filePrio", false)
+                        .form("hash", torrentFile.getHexHash())
+                        .form("id", file.getIndex())
+                        .form("priority", 0)
+                        .thenFunction(HttpResponse::isOk);
                 continue;
             }
             String newPath = reNameMap.get(key);
@@ -247,6 +253,7 @@ public class CollectionAction implements BaseAction {
                 log.error("重命名失败 {} ==> {}", name, newPath);
             }
         }
+        qBittorrent.start(torrentsInfo, config);
         resultSuccess();
     }
 
