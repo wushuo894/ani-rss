@@ -127,7 +127,8 @@ public class qBittorrent implements BaseDownload {
                 .form("contentLayout", "Original")
                 .form("dlLimit", dlLimit)
                 .form("firstLastPiecePrio", false)
-                .form("paused", false)
+                .form("paused", true)
+                .form("stopped", true)
                 .form("rename", name)
                 .form("savepath", savePath)
                 .form("sequentialDownload", false)
@@ -178,6 +179,19 @@ public class qBittorrent implements BaseDownload {
         return false;
     }
 
+    /**
+     * 开始下载
+     *
+     * @param torrentsInfo
+     * @return
+     */
+    public Boolean start(TorrentsInfo torrentsInfo) {
+        String host = config.getHost();
+        return HttpReq.post(host + "/api/v2/torrents/start")
+                .form("hashes", torrentsInfo.getHash())
+                .thenFunction(HttpResponse::isOk);
+    }
+
     @Override
     public List<TorrentsInfo> getTorrentsInfos() {
         String host = config.getHost();
@@ -209,8 +223,11 @@ public class qBittorrent implements BaseDownload {
                                     TorrentsInfo.State.downloading : EnumUtil.fromString(TorrentsInfo.State.class, state.getAsString(), TorrentsInfo.State.downloading)
                             );
                             torrentsInfo.setTags(tagList);
-                            torrentsInfo.setFiles(() -> files(torrentsInfo, config).stream().map(FileEntity::getName)
-                                    .toList());
+                            torrentsInfo.setFiles(() ->
+                                    files(torrentsInfo, config)
+                                            .stream()
+                                            .map(FileEntity::getName)
+                                            .toList());
                             // 包含标签
                             if (tagList.contains(TorrentsTags.ANI_RSS.getValue())) {
                                 torrentsInfoList.add(torrentsInfo);
@@ -293,19 +310,30 @@ public class qBittorrent implements BaseDownload {
 
         String host = config.getHost();
 
-        List<String> names = torrentsInfo.getFiles().get();
+        List<FileEntity> files = files(torrentsInfo, config);
 
-        Assert.notEmpty(names, "{} 磁力链接还在获取原数据中", hash);
+        List<String> names = files.stream()
+                .map(FileEntity::getName)
+                .toList();
+
+        Assert.notEmpty(files, "{} 磁力链接还在获取原数据中", hash);
 
         List<String> newNames = new ArrayList<>();
 
-        for (String name : names) {
+        for (FileEntity fileEntity : files) {
+            String name = fileEntity.getName();
             String newPath = getFileReName(name, reName);
 
             if (names.contains(newPath)) {
                 continue;
             }
             if (newNames.contains(newPath)) {
+                // 停止不必要的文件下载
+                HttpReq.post(host + "/api/v2/torrents/filePrio", false)
+                        .form("hash", hash)
+                        .form("id", fileEntity.getIndex())
+                        .form("priority", 0)
+                        .thenFunction(HttpResponse::isOk);
                 continue;
             }
             newNames.add(newPath);
@@ -324,6 +352,8 @@ public class qBittorrent implements BaseDownload {
                     .thenFunction(HttpResponse::isOk);
             Assert.isTrue(b, "重命名失败 {} ==> {}", name, newPath);
         }
+
+        start(torrentsInfo);
 
         if (newNames.isEmpty()) {
             return;
@@ -398,6 +428,7 @@ public class qBittorrent implements BaseDownload {
     @Data
     @Accessors(chain = true)
     public static class FileEntity {
+        private Integer index;
         private String name;
         private Long size;
     }
