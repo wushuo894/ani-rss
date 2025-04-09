@@ -1,10 +1,9 @@
 <template>
   <Bgm ref="bgmRef" @add="bgmAdd"/>
-  <CollectionPreview ref="collectionPreviewRef" :data="data"/>
+  <CollectionPreview ref="collectionPreviewRef" v-model:data="data"/>
   <el-dialog v-model="dialogVisible"
              center
-             title="添加合集"
-             @close="data.torrent = ''">
+             title="添加合集">
     <div v-loading="loading" style="height: 500px;">
       <el-scrollbar style="padding: 0 12px;">
         <div>
@@ -211,10 +210,9 @@ let bgmAdd = (bgm) => {
         data.value.ani.subgroup = '未知字幕组'
         data.value.ani.customEpisode = true
         data.value.show = true
-        data.value.ani.match = ['\.(mp4|mkv|ass)$']
-        data.value.ani.exclude.push('Web Preview')
-        data.value.ani.exclude.push('\\[NCED')
-        data.value.ani.exclude.push('\\[OP')
+        data.value.ani.match.push('\\.(mp4|mkv|ass)$')
+        data.value.ani.exclude.push('^(SPs|CDs|Scans)')
+        data.value.ani.exclude.push('\\[Fonts]')
       })
       .finally(() => {
         loading.value = false
@@ -288,7 +286,6 @@ let beforeAvatarUpload = (rawFile) => {
   }
   return true
 }
-
 
 let dialogVisible = ref(false)
 
