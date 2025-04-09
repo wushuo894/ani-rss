@@ -152,7 +152,10 @@ public class qBittorrent implements BaseDownload {
 
         String extName = FileUtil.extName(torrentFile);
         if ("txt".equals(extName)) {
-            httpRequest.form("urls", FileUtil.readUtf8String(torrentFile));
+            httpRequest
+                    .form("paused", false)
+                    .form("stopped", false)
+                    .form("urls", FileUtil.readUtf8String(torrentFile));
         } else {
             if (torrentFile.length() > 0) {
                 httpRequest.form("paused", true)
