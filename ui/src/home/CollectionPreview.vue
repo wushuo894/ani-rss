@@ -12,7 +12,7 @@
         <el-table-column label="大小" min-width="100" prop="size"/>
       </el-table>
     </div>
-    <div v-if="subgroup !== props.data.ani.subgroup" style="margin-top:12px;">
+    <div v-if="subgroup !== props.data.ani.subgroup && subgroup" style="margin-top:12px;">
       <el-alert close-text="应用" show-icon @close="closeAlert">
         <template #title>
           <div class="flex" style="width:100%;justify-content: space-between;">
@@ -62,7 +62,7 @@ let getSubgroup = () => {
 
   let subgroups = list.value
       .map(item => item['title'])
-      .map(item => item.match(/^\[(.+)] /))
+      .map(item => item.match(/^\[(.+?)]/))
       .filter(item => item)
       .map(item => item[1])
 
