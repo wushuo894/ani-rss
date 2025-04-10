@@ -325,13 +325,16 @@ public class qBittorrent implements BaseDownload {
     @Override
     public void rename(TorrentsInfo torrentsInfo) {
         String reName = torrentsInfo.getName();
-        if (StrUtil.isBlank(reName)) {
+
+        if (StrUtil.isBlank(reName) || !ReUtil.contains(StringEnum.SEASON_REG, reName)) {
+            Boolean start = start(torrentsInfo, config);
+            Assert.isTrue(start, "开始任务失败 {}", reName);
+            if (start) {
+                log.info("开始任务 {}", reName);
+            }
             return;
         }
 
-        if (!ReUtil.contains(StringEnum.SEASON_REG, reName)) {
-            return;
-        }
         String hash = torrentsInfo.getHash();
 
         String host = config.getHost();
