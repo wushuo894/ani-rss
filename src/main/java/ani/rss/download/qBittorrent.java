@@ -464,6 +464,10 @@ public class qBittorrent implements BaseDownload {
         private Integer index;
         private String name;
         private Long size;
+        /**
+         * 1 允许下载。2 禁止下载
+         */
+        private Integer priority;
     }
 
 

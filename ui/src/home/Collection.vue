@@ -140,7 +140,7 @@
 <script setup>
 import {ref} from "vue";
 import {UploadFilled} from "@element-plus/icons-vue";
-import {ElMessage} from "element-plus";
+import {ElMessage, ElMessageBox} from "element-plus";
 import Bgm from "./Bgm.vue";
 import api from "../api.js";
 import Exclude from "../config/Exclude.vue";
@@ -151,7 +151,16 @@ let start = () => {
   startLoading.value = true
   api.post('api/collection?type=start', data.value)
       .then((res) => {
-        ElMessage.success(res.message)
+        ElMessageBox.confirm(
+            res.message,
+            'success',
+            {
+              confirmButtonText: 'OK',
+              type: 'success',
+              center: true,
+              showCancelButton: false
+            }
+        )
       })
       .finally(() => {
         startLoading.value = false

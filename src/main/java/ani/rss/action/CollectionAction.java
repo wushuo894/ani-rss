@@ -12,11 +12,11 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.text.StrFormatter;
+import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.NumberUtil;
 import cn.hutool.core.util.ReUtil;
 import cn.hutool.core.util.StrUtil;
-import cn.hutool.crypto.digest.MD5;
 import cn.hutool.http.HttpResponse;
 import cn.hutool.http.server.HttpServerRequest;
 import cn.hutool.http.server.HttpServerResponse;
@@ -219,43 +219,80 @@ public class CollectionAction implements BaseAction {
 
         Config config = ConfigUtil.CONFIG;
 
-        MD5 md5 = MD5.create();
+        List<qBittorrent.FileEntity> files = new ArrayList<>();
+        for (int i = 0; i < 5; i++) {
+            ThreadUtil.sleep(500);
+            try {
+                files.addAll(qBittorrent.files(torrentsInfo, false, config));
+            } catch (Exception e) {
+                log.error(e.getMessage(), e);
+            }
+            if (!files.isEmpty()) {
+                // 添加下载完成
+                break;
+            }
+        }
 
         Map<String, String> reNameMap = preview(collectionInfo)
                 .stream()
+                .map(item -> {
+                    Optional<qBittorrent.FileEntity> fileEntity = files.stream()
+                            .filter(f -> new File(f.getName()).getName().equals(item.getTitle()))
+                            .filter(f -> f.getSize().longValue() == item.getLength())
+                            .findFirst();
+                    if (fileEntity.isEmpty()) {
+                        return null;
+                    }
+                    String oldPath = fileEntity.get().getName();
+                    return item.setTitle(oldPath);
+                })
+                .filter(Objects::nonNull)
                 .collect(Collectors.toMap(
-                        item -> md5.digestHex(new File(item.getTitle()).getName() + item.getLength()),
-                        Item::getReName)
-                );
+                        Item::getTitle,
+                        Item::getReName
+                ));
 
         String host = config.getHost();
 
-        List<qBittorrent.FileEntity> files = qBittorrent.files(torrentsInfo, false, config);
-        for (qBittorrent.FileEntity file : files) {
-            name = new File(file.getName()).getName();
-            String key = md5.digestHex(name + file.getSize());
-            if (!reNameMap.containsKey(key)) {
-                HttpReq.post(host + "/api/v2/torrents/filePrio", false)
-                        .form("hash", torrentFile.getHexHash())
-                        .form("id", file.getIndex())
-                        .form("priority", 0)
-                        .thenFunction(HttpResponse::isOk);
-                continue;
-            }
-            String newPath = reNameMap.get(key);
+        for (int i = 0; i < 5; i++) {
+            for (qBittorrent.FileEntity file : files) {
+                String oldPath = file.getName();
+                String newPath = reNameMap.get(oldPath);
 
-            log.info("重命名 {} ==> {}", name, newPath);
-            Boolean b = HttpReq.post(host + "/api/v2/torrents/renameFile", false)
-                    .form("hash", torrentFile.getHexHash())
-                    .form("oldPath", file.getName())
-                    .form("newPath", newPath)
-                    .thenFunction(HttpResponse::isOk);
-            if (!b) {
-                log.error("重命名失败 {} ==> {}", name, newPath);
+                if (!reNameMap.containsKey(oldPath)) {
+                    if (!reNameMap.containsValue(oldPath) && file.getPriority() > 0) {
+                        HttpReq.post(host + "/api/v2/torrents/filePrio", false)
+                                .form("hash", torrentFile.getHexHash())
+                                .form("id", file.getIndex())
+                                .form("priority", 0)
+                                .thenFunction(HttpResponse::isOk);
+                    }
+                    continue;
+                }
+                log.info("重命名 {} ==> {}", name, newPath);
+                HttpReq.post(host + "/api/v2/torrents/renameFile", false)
+                        .form("hash", torrentFile.getHexHash())
+                        .form("oldPath", oldPath)
+                        .form("newPath", newPath)
+                        .thenFunction(HttpResponse::isOk);
             }
+            files.clear();
+            files.addAll(qBittorrent.files(torrentsInfo, false, config));
+
+            if (CollUtil.containsAll(reNameMap.values(), files.stream()
+                    .map(qBittorrent.FileEntity::getName)
+                    .toList())) {
+                // 所有命名已完成
+                break;
+            }
+            // 命名有遗漏 继续
+            ThreadUtil.sleep(500);
         }
+
         qBittorrent.start(torrentsInfo, config);
-        resultSuccess();
+        resultSuccess(result ->
+                result.setMessage("已经开始下载合集")
+        );
     }
 
 

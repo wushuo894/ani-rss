@@ -11,6 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Objects;
+import java.util.function.Consumer;
 
 public interface BaseAction extends Action {
 
@@ -35,6 +36,12 @@ public interface BaseAction extends Action {
         result(Result.success());
     }
 
+    default <T> void resultSuccess(Consumer<Result<Object>> consumer) {
+        Result<Object> success = Result.success();
+        consumer.accept(success);
+        result(success);
+    }
+
     default <T> void resultSuccess(T t) {
         result(Result.success(t));
     }
@@ -45,6 +52,12 @@ public interface BaseAction extends Action {
 
     default <T> void resultError() {
         result(Result.error());
+    }
+
+    default <T> void resultError(Consumer<Result<Object>> consumer) {
+        Result<Object> error = Result.error();
+        consumer.accept(error);
+        result(error);
     }
 
     default <T> void resultError(T t) {

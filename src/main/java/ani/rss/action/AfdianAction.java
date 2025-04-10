@@ -3,7 +3,6 @@ package ani.rss.action;
 import ani.rss.annotation.Auth;
 import ani.rss.annotation.Path;
 import ani.rss.entity.Config;
-import ani.rss.entity.Result;
 import ani.rss.util.AfdianUtil;
 import ani.rss.util.ConfigUtil;
 import cn.hutool.core.date.DateUtil;
@@ -32,8 +31,8 @@ public class AfdianAction implements BaseAction {
             JsonObject jsonObject = AfdianUtil.verifyNo(outTradeNo);
             int code = jsonObject.get("code").getAsInt();
             String message = jsonObject.get("message").getAsString();
-            result(
-                    Result.success()
+            resultSuccess(result ->
+                    result
                             .setCode(code)
                             .setMessage(message)
             );
@@ -52,8 +51,8 @@ public class AfdianAction implements BaseAction {
         if (type.equals("tryOut")) {
             Config config = ConfigUtil.CONFIG;
             if (AfdianUtil.verifyExpirationTime()) {
-                result(
-                        Result.error()
+                resultError(result ->
+                        result
                                 .setMessage("还在试用中!")
                 );
                 return;
@@ -62,8 +61,8 @@ public class AfdianAction implements BaseAction {
             config.setExpirationTime(time)
                     .setTryOut(true);
             ConfigUtil.sync();
-            result(
-                    Result.success()
+            resultSuccess(result ->
+                    result
                             .setMessage("试用续期成功!")
                             .setData(time)
             );
