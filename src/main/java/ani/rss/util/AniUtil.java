@@ -127,28 +127,16 @@ public class AniUtil {
 
         BgmUtil.toAni(bgmInfo, ani);
 
-        String title;
+        String title = ani.getTitle();
 
         // 只下载最新集
         Boolean downloadNew = config.getDownloadNew();
-        // 使用tmdb标题
-        Boolean tmdb = config.getTmdb();
         // 默认启用全局排除
         Boolean enabledExclude = config.getEnabledExclude();
         // 默认导入全局排除
         Boolean importExclude = config.getImportExclude();
         // 全局排除
         List<String> exclude = config.getExclude();
-
-        // 获取tmdb标题
-        String themoviedbName = TmdbUtil.getName(ani);
-
-        // 是否使用tmdb标题
-        if (StrUtil.isNotBlank(themoviedbName) && tmdb) {
-            title = themoviedbName;
-        } else {
-            title = BgmUtil.getName(bgmInfo, ani.getTmdb());
-        }
 
         // 默认导入全局排除
         if (importExclude) {
@@ -158,9 +146,6 @@ public class AniUtil {
             ani.setExclude(exclude);
         }
 
-        // 去除特殊符号
-        title = RenameUtil.getName(title);
-
         ani
                 // 再次保存标题
                 .setTitle(title)
@@ -169,9 +154,7 @@ public class AniUtil {
                 // 是否启用全局排除
                 .setGlobalExclude(enabledExclude)
                 // type mikan or other
-                .setType(type)
-                // tmdb标题
-                .setThemoviedbName(themoviedbName);
+                .setType(type);
 
         // 下载位置
         String downloadPath = FileUtil.getAbsolutePath(TorrentUtil.getDownloadPath(ani).get(0));

@@ -485,6 +485,9 @@ public class BgmUtil {
     public static Ani toAni(BgmInfo bgmInfo, Ani ani) {
         String title = BgmUtil.getName(bgmInfo);
 
+        // 去除特殊符号
+        title = RenameUtil.getName(title);
+
         int eps = bgmInfo.getEps();
         String subjectId = bgmInfo.getSubjectId();
         if (eps > 0) {
@@ -499,7 +502,12 @@ public class BgmUtil {
 
         Date date = bgmInfo.getDate();
 
-        return ani
+        Config config = ConfigUtil.CONFIG;
+        // 使用tmdb标题
+        Boolean tmdb = config.getTmdb();
+
+
+        ani
                 // 标题
                 .setTitle(title)
                 // 季
@@ -520,6 +528,21 @@ public class BgmUtil {
                 .setImage(image)
                 // 本地图片地址
                 .setCover(AniUtil.saveJpg(image));
+
+        // 获取tmdb标题
+        String themoviedbName = TmdbUtil.getName(ani);
+
+        // 是否使用tmdb标题
+        if (StrUtil.isNotBlank(themoviedbName) && tmdb) {
+            title = themoviedbName;
+            // 去除特殊符号
+            title = RenameUtil.getName(title);
+        }
+
+        return ani
+                .setTitle(title)
+                // tmdb 标题
+                .setThemoviedbName(themoviedbName);
     }
 
 

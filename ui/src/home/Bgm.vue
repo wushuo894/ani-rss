@@ -14,7 +14,7 @@
         <el-table-column prop="id" label="id" width="80"/>
         <el-table-column label="封面" width="120">
           <template #default="it">
-            <img :src="img(list[it.$index]['images']['small'])" :alt="list[it.$index]['name']" height="100px"
+            <img :alt="list[it.$index]['name']" :src="img(list[it.$index]['images']['large'])" height="100px"
                  width="78px">
           </template>
         </el-table-column>
