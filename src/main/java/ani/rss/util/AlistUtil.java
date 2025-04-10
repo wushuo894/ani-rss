@@ -122,7 +122,7 @@ public class AlistUtil {
                                 .setBlockSize(1024 * 1024 * 50);
 
                         HttpReq
-                                .put(url)
+                                .put(url, false)
                                 .timeout(1000 * 60 * 2)
                                 .setConfig(httpConfig)
                                 .header(Header.AUTHORIZATION, alistToken)

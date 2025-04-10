@@ -206,14 +206,14 @@ public class qBittorrent implements BaseDownload {
      */
     public static Boolean start(TorrentsInfo torrentsInfo, Config config) {
         String host = config.getHost();
-        boolean b = HttpReq.post(host + "/api/v2/torrents/start")
+        boolean b = HttpReq.post(host + "/api/v2/torrents/start", false)
                 .form("hashes", torrentsInfo.getHash())
                 .thenFunction(HttpResponse::isOk);
         if (b) {
             return true;
         }
 
-        return HttpReq.post(host + "/api/v2/torrents/resume")
+        return HttpReq.post(host + "/api/v2/torrents/resume", false)
                 .form("hashes", torrentsInfo.getHash())
                 .thenFunction(HttpResponse::isOk);
     }
@@ -443,11 +443,11 @@ public class qBittorrent implements BaseDownload {
     @Override
     public void setSavePath(TorrentsInfo torrentsInfo, String path) {
         String host = config.getHost();
-        HttpReq.post(host + "/api/v2/torrents/setAutoManagement")
+        HttpReq.post(host + "/api/v2/torrents/setAutoManagement", false)
                 .form("hashes", torrentsInfo.getHash())
                 .form("enable", false)
                 .thenFunction(HttpResponse::isOk);
-        HttpReq.post(host + "/api/v2/torrents/setSavePath")
+        HttpReq.post(host + "/api/v2/torrents/setSavePath", false)
                 .form("id", torrentsInfo.getHash())
                 .form("path", path)
                 .then(req -> {
