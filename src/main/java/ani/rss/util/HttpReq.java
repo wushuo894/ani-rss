@@ -13,7 +13,7 @@ import java.util.Objects;
 public class HttpReq {
 
     public static HttpRequest post(String url) {
-        return post(url, true);
+        return post(url, false);
     }
 
     private static void config(HttpRequest req) {
