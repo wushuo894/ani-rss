@@ -12,20 +12,54 @@
                 event.preventDefault()
              }">
             <el-form-item label="番剧名称">
-              <div class="flex flex-center" style="width: 100%;">
-                <div style="flex: 1">
-                  <el-input
-                      v-model:model-value="data.ani.title"
-                      :disabled="rssButtonLoading"
-                      placeholder="请勿留空"
-                  />
+              <div style="width: 100%;">
+                <div class="flex flex-center" style="width: 100%;">
+                  <div style="flex: 1">
+                    <el-input
+                        v-model:model-value="data.ani.title"
+                        :disabled="rssButtonLoading"
+                        placeholder="请勿留空"
+                    />
+                  </div>
+                  <div style="width: 4px;"></div>
+                  <el-button :disabled="rssButtonLoading" bg icon="Search" text type="primary"
+                             @click="bgmRef?.show(data.ani.title)"/>
                 </div>
-                <div style="width: 4px;"></div>
-                <el-button :disabled="rssButtonLoading" bg icon="Search" text type="primary"
-                           @click="bgmRef?.show(data.ani.title)"/>
+                <div v-if="data.show" style="width: 100%;justify-content: end;display: flex;margin-top: 12px;">
+                  <el-button :loading="getBgmNameLoading"
+                             bg
+                             icon="DocumentAdd" text @click="getBgmName">
+                    使用Bangumi
+                  </el-button>
+                  <el-button :disabled="data.ani.title === data.ani.themoviedbName || !data.ani.themoviedbName.length"
+                             bg
+                             icon="DocumentAdd"
+                             text
+                             @click="data.ani.title = data.ani.themoviedbName">
+                    使用TMDB
+                  </el-button>
+                </div>
               </div>
             </el-form-item>
+
             <template v-if="data.show">
+              <el-form-item label="TMDB">
+                <div style="display: flex;width: 100%;justify-content: space-between;">
+                  <div class="el-input is-disabled">
+                    <div class="el-input__wrapper" style="pointer-events: auto;cursor: auto;justify-content: left;"
+                         tabindex="-1">
+                      <el-link v-if="data.ani?.tmdb?.id" :href="`https://www.themoviedb.org/${data.ani.ova ? 'movie' : 'tv'}/${data.ani.tmdb.id}`"
+                               target="_blank"
+                               type="primary">
+                        {{ data.ani.themoviedbName }}
+                      </el-link>
+                      <span v-else>{{ data.ani.themoviedbName }}</span>
+                    </div>
+                  </div>
+                  <div style="width: 4px;"></div>
+                  <el-button :loading="getThemoviedbNameLoading" bg icon="Refresh" text @click="getThemoviedbName"/>
+                </div>
+              </el-form-item>
               <el-form-item label="字幕组">
                 <div class="flex" style="width: 100%;justify-content: end;">
                   <el-input v-model:model-value="data.ani.subgroup" placeholder="字幕组" style="width: 150px"/>
@@ -221,6 +255,8 @@ let bgmAdd = (bgm) => {
         data.value.show = true
         data.value.ani.match.push('\\.(mp4|mkv|ass)$')
         data.value.ani.exclude = ['^(SPs|CDs|Scans|PV|menu)', 'Fonts|NCED|NCOP|迷你动画']
+        data.value.torrent = ''
+        data.value.filename = ''
       })
       .finally(() => {
         loading.value = false
@@ -305,6 +341,39 @@ let show = () => {
   data.value.filename = ''
   dialogVisible.value = true
 }
+
+let getBgmNameLoading = ref(false)
+
+let getBgmName = () => {
+  getBgmNameLoading.value = true
+  api.post('api/bgm?type=getTitle', data.value.ani)
+      .then(res => {
+        data.value.ani.title = res.data
+      })
+      .finally(() => {
+        getBgmNameLoading.value = false
+      })
+}
+
+let getThemoviedbNameLoading = ref(false)
+
+let getThemoviedbName = () => {
+  if (!data.value.ani.title.length) {
+    return
+  }
+
+  getThemoviedbNameLoading.value = true
+  api.post('api/tmdb?method=getThemoviedbName', data.value.ani)
+      .then(res => {
+        ElMessage.success(res.message)
+        data.value.ani['themoviedbName'] = res.data['themoviedbName']
+        data.value.ani['tmdb'] = res.data['tmdb']
+      })
+      .finally(() => {
+        getThemoviedbNameLoading.value = false
+      })
+}
+
 
 defineExpose({show})
 
