@@ -379,12 +379,10 @@ public class qBittorrent implements BaseDownload {
             Assert.isTrue(b, "重命名失败 {} ==> {}", name, newPath);
         }
 
-        for (int i = 0; i < 10; i++) {
-            Boolean b = start(torrentsInfo, config);
-            if (b) {
-                break;
-            }
-            ThreadUtil.sleep(1000);
+        Boolean start = start(torrentsInfo, config);
+        Assert.isTrue(start, "开始任务失败 {}", reName);
+        if (start) {
+            log.info("开始任务 {}", reName);
         }
 
         if (newNames.isEmpty()) {
