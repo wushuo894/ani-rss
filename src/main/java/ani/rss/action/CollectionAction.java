@@ -269,7 +269,7 @@ public class CollectionAction implements BaseAction {
                     }
                     continue;
                 }
-                log.info("重命名 {} ==> {}", name, newPath);
+                log.info("重命名 {} ==> {}", oldPath, newPath);
                 HttpReq.post(host + "/api/v2/torrents/renameFile", false)
                         .form("hash", torrentFile.getHexHash())
                         .form("oldPath", oldPath)
