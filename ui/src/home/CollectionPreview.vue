@@ -23,7 +23,10 @@
         </template>
       </el-alert>
     </div>
-    <div style="margin-top: 12px;display: flex;justify-content: end;">
+    <div style="margin-top: 12px;display: flex;justify-content: space-between;">
+      <div>
+        <span>共 {{ list.length }} 项</span>
+      </div>
       <el-button bg icon="Close" text @click="dialogVisible = false">关闭</el-button>
     </div>
   </el-dialog>

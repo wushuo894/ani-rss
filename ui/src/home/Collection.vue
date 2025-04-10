@@ -247,6 +247,9 @@ let loading = ref(false)
 
 let bgmAdd = (bgm) => {
   loading.value = true
+  data.value.show = false
+  data.value.torrent = ''
+  data.value.filename = ''
   api.post('api/bgm?type=getAniBySubjectId&id=' + bgm['id'])
       .then((res) => {
         data.value.ani = res.data
@@ -255,8 +258,6 @@ let bgmAdd = (bgm) => {
         data.value.show = true
         data.value.ani.match.push('\\.(mp4|mkv|ass)$')
         data.value.ani.exclude = ['^(SPs|CDs|Scans|PV|menu)', 'Fonts|NCED|NCOP|迷你动画']
-        data.value.torrent = ''
-        data.value.filename = ''
       })
       .finally(() => {
         loading.value = false
