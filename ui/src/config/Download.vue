@@ -74,7 +74,7 @@
         </el-checkbox>
         <br>
         <el-text class="mx-1" size="small">
-          删除本地文件, 如果同时开启了 <strong>alist上传</strong> 将只会在上传成功后删除
+          删除本地文件, 仅在同时开启了 <strong>alist上传</strong> 并上传成功后删除
         </el-text>
       </div>
     </el-form-item>

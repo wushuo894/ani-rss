@@ -935,20 +935,8 @@ public class TorrentUtil {
         if (!deleteFiles) {
             return true;
         }
-        ThreadUtil.execute(() -> {
-            ThreadUtil.sleep(3000);
-            String downloadDir = torrentsInfo.getDownloadDir();
-            for (String fileName : files) {
-                try {
-                    FileUtil.del(downloadDir + File.separator + fileName);
-                } catch (Exception e) {
-                    log.error("删除文件失败 {}", downloadDir + File.separator + fileName);
-                    log.error(e.getMessage(), e);
-                }
-            }
-            // 清理空文件夹
-            ClearCacheAction.clearParentFile(new File(downloadDir + "/" + name));
-        });
+        // 清理空文件夹
+        ClearCacheAction.clearParentFile(new File(torrentsInfo.getDownloadDir() + "/" + name));
         return true;
     }
 
