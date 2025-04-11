@@ -197,12 +197,18 @@ public class MikanUtil {
                             String magnet = tr.select("a").get(1).attr("data-clipboard-text");
                             String sizeStr = tr.select("td").get(1).text().trim();
                             String dataStr = tr.select("td").get(2).text().trim();
+
+                            String torrent = tr.select("a").get(2).attr("href");
+
+                            String mikanHost = getMikanHost();
+
                             torrentsInfos.add(
                                     new TorrentsInfo()
                                             .setName(s)
                                             .setMagnet(magnet)
                                             .setSizeStr(sizeStr)
                                             .setDateStr(dataStr)
+                                            .setTorrent(mikanHost + torrent)
                             );
                         }
                     }

@@ -115,14 +115,16 @@
                                     <h5>
                                       {{ ti.name }}
                                     </h5>
-                                    <div style="width: 100%;display: flex;justify-content: end;align-items: center;">
+                                    <div
+                                        style="width: 100%;display: flex;justify-content: space-between;align-items: center;">
                                       <p>
                                         {{ ti['sizeStr'] }}
                                         {{ ti['dateStr'] }}
-                                        &nbsp;
                                       </p>
-                                      <el-button :icon="DocumentCopy" bg text @click="copy(ti['magnet'])">复制磁链
-                                      </el-button>
+                                      <div>
+                                        <el-button :icon="DocumentCopy" bg text @click="copy(ti['magnet'])"/>
+                                        <el-button :icon="DownloadIcon" bg text @click="openUrl(ti['torrent'])"/>
+                                      </div>
                                     </div>
                                   </div>
                                 </el-card>
@@ -147,7 +149,7 @@
 import {ref} from "vue";
 import api from "../api.js";
 import {ElMessage, ElText} from "element-plus";
-import {DocumentCopy} from "@element-plus/icons-vue";
+import {DocumentCopy, Download as DownloadIcon} from "@element-plus/icons-vue";
 
 // 批量添加订阅
 let rssList = ref([]);
@@ -371,6 +373,8 @@ let copy = (v) => {
   document.body.removeChild(input);
   ElMessage.success('已复制')
 }
+
+let openUrl = (url) => window.open(url)
 
 </script>
 
