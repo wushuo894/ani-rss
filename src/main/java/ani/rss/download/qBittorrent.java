@@ -252,6 +252,7 @@ public class qBittorrent implements BaseDownload {
                             torrentsInfo.setFiles(() ->
                                     files(torrentsInfo, true, config)
                                             .stream()
+                                            .filter(fileEntity -> fileEntity.getPriority() > 0)
                                             .map(FileEntity::getName)
                                             .toList());
                             // 包含标签
