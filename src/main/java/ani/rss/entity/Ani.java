@@ -194,6 +194,11 @@ public class Ani implements Serializable {
      */
     private Boolean upload;
 
+    /**
+     * 摸鱼
+     */
+    private Boolean procrastinating;
+
     public static Ani bulidAni() {
         Ani newAni = new Ani();
         Config config = ConfigUtil.CONFIG;
@@ -231,7 +236,8 @@ public class Ani implements Serializable {
                                 .setName("")
                                 .setDate(new Date())
                 )
-                .setUpload(config.getUpload());
+                .setUpload(config.getUpload())
+                .setProcrastinating(true);
     }
 
     @Data

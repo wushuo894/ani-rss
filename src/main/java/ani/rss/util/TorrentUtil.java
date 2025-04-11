@@ -82,6 +82,8 @@ public class TorrentUtil {
                         .toString()
         );
 
+        ItemsUtil.procrastinating(ani, items);
+
         for (Item item : items) {
             log.debug(JSONUtil.formatJsonStr(GsonStatic.toJson(item)));
             String reName = item.getReName();
@@ -169,9 +171,8 @@ public class TorrentUtil {
             if (torrentsInfos
                     .stream()
                     .anyMatch(torrentsInfo ->
-                            // 文件名与下载位置相同 或 hash 相同
-                            (torrentsInfo.getDownloadDir().equals(savePath) && torrentsInfo.getName().equals(reName))
-                                    || torrentsInfo.getHash().equals(hash))) {
+                            // hash 相同
+                            torrentsInfo.getHash().equals(hash))) {
                 log.info("已有下载任务 hash:{} name:{}", hash, reName);
                 if (master && !is5) {
                     currentDownloadCount++;

@@ -16,6 +16,7 @@
             <el-checkbox label="缺集" value="OMIT"/>
             <el-checkbox label="错误" value="ERROR"/>
             <el-checkbox :disabled="!props.config['verifyExpirationTime']" label="订阅完结" value="COMPLETED"/>
+            <el-checkbox :disabled="!props.config['verifyExpirationTime']" label="摸鱼检测" value="PROCRASTINATING"/>
           </el-checkbox-group>
         </div>
         <div>
@@ -23,7 +24,7 @@
             下载完成通知暂不支持 Aria2、Alist
           </el-text>
           <br>
-          <AfdianPrompt :config="props.config" name="订阅完结"/>
+          <AfdianPrompt :config="props.config" name="订阅完结、摸鱼检测"/>
         </div>
       </div>
     </el-collapse-item>

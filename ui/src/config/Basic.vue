@@ -213,6 +213,26 @@
               </el-text>
             </div>
           </el-form-item>
+          <el-form-item label="摸鱼检测">
+            <div>
+              <div>
+                <el-switch v-model="props.config['procrastinating']" :disabled="!props.config['verifyExpirationTime']"/>
+              </div>
+              <div>
+                <el-input-number v-model="props.config['procrastinatingDay']" :disabled="!props.config['procrastinating']" :max="365"
+                                 :min="7">
+                  <template #suffix>
+                    <span>天</span>
+                  </template>
+                </el-input-number>
+              </div>
+              <AfdianPrompt :config="props.config" name="订阅完结"/>
+              <el-text class="mx-1" size="small">
+                检测到主RSS更新摸鱼会发送通知<br>
+                建议配合 <strong>自动禁用订阅</strong> 食用
+              </el-text>
+            </div>
+          </el-form-item>
           <el-form-item label="备用RSS">
             <div>
               <el-switch v-model:model-value="props.config.backRss"/>
@@ -323,6 +343,7 @@ import {ElMessage, ElText} from "element-plus";
 import {ref} from "vue";
 import api from "../api.js";
 import {useColorMode, useLocalStorage} from "@vueuse/core";
+import AfdianPrompt from "../other/AfdianPrompt.vue";
 
 const {system, store} = useColorMode()
 
