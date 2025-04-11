@@ -249,16 +249,18 @@ public class TorrentUtil {
      */
     public static void deleteBackRss(Ani ani, Item item) {
         Config config = ConfigUtil.CONFIG;
+        Boolean backRss = config.getBackRss();
         Boolean delete = config.getDelete();
         String reName = item.getReName();
 
         if (!delete) {
             return;
         }
-        List<Ani.BackRss> backRssList = ani.getBackRssList();
-        if (backRssList.isEmpty()) {
+
+        if (!backRss) {
             return;
         }
+
         if (!ReUtil.contains(StringEnum.SEASON_REG, reName)) {
             return;
         }
