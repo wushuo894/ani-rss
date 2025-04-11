@@ -11,10 +11,14 @@
       </div>
       <div v-else>
         <el-tag v-if="props.config['verifyExpirationTime']" type="success">
-          <el-icon>
-            <Mug/>
-          </el-icon>
-          已捐赠
+          <div class="flex" style="align-items: center;">
+            <el-icon>
+              <Mug/>
+            </el-icon>
+            <span>
+            已捐赠
+            </span>
+          </div>
         </el-tag>
         <el-tag v-else type="info">
           未捐赠

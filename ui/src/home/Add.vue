@@ -54,16 +54,15 @@
                 event.preventDefault()
              }">
             <el-form-item label="番剧名称">
-              <div style="display: flex;width: 100%;">
-                <div style="flex: 1">
-                  <el-input
-                      :disabled="rssButtonLoading"
-                      v-model:model-value="ani.title"
-                      placeholder="请勿留空"
-                  />
-                </div>
+              <div class="flex" style="width: 100%;">
+                <el-input
+                    v-model:model-value="ani.title"
+                    :disabled="rssButtonLoading"
+                    placeholder="请勿留空"
+                />
                 <div style="width: 4px;"></div>
-                <el-button :disabled="rssButtonLoading" bg icon="Search" text type="primary" @click="bgmRef?.show(ani.title)"/>
+                <el-button :disabled="rssButtonLoading" bg icon="Search" text type="primary"
+                           @click="bgmRef?.show(ani.title)"/>
               </div>
             </el-form-item>
             <el-form-item label="BgmUrl">

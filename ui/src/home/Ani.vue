@@ -36,7 +36,7 @@
           <div style="display: flex;width: 100%;justify-content: space-between;">
             <div class="el-input is-disabled">
               <div class="el-input__wrapper" tabindex="-1"
-                   style="pointer-events: auto;cursor: auto;justify-content: left;">
+                   style="pointer-events: auto;cursor: auto;justify-content: left;padding: 0 11px;">
                 <el-link v-if="props.ani?.tmdb?.id" type="primary"
                          :href="`https://www.themoviedb.org/${props.ani.ova ? 'movie' : 'tv'}/${props.ani.tmdb.id}`"
                          target="_blank">
