@@ -537,13 +537,17 @@ public class BgmUtil {
             title = themoviedbName;
             // 去除特殊符号
             title = RenameUtil.getName(title);
+            ani
+                    .setTitle(title);
         }
 
         // 下载位置
-        String downloadPath = FileUtil.getAbsolutePath(TorrentUtil.getDownloadPath(ani).get(0));
+        String downloadPath = FileUtil.getAbsolutePath(
+                TorrentUtil.getDownloadPath(ani)
+                        .get(0).toString()
+        );
 
         return ani
-                .setTitle(title)
                 // tmdb 标题
                 .setThemoviedbName(themoviedbName)
                 .setDownloadPath(downloadPath);
