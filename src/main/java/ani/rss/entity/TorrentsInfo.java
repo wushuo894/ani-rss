@@ -56,6 +56,11 @@ public class TorrentsInfo implements Serializable {
     private String downloadDir;
 
     /**
+     * 种子地址
+     */
+    private String torrent;
+
+    /**
      * 文件列表
      */
     private Supplier<List<String>> files;
