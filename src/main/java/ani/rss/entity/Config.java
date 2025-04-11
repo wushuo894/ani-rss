@@ -582,4 +582,14 @@ public class Config implements Serializable {
      * emby延迟扫描
      */
     private Long embyDelayed;
+
+    /**
+     * 摸鱼
+     */
+    private Boolean procrastinating;
+
+    /**
+     * 摸鱼天数
+     */
+    private Integer procrastinatingDay;
 }

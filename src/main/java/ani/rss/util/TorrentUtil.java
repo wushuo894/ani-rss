@@ -10,6 +10,8 @@ import ani.rss.enums.MessageEnum;
 import ani.rss.enums.StringEnum;
 import ani.rss.enums.TorrentsTags;
 import cn.hutool.core.date.DateField;
+import cn.hutool.core.date.DateTime;
+import cn.hutool.core.date.DateUnit;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.text.StrFormatter;
@@ -81,6 +83,8 @@ public class TorrentUtil {
                         .get(0)
                         .toString()
         );
+
+        procrastinating(ani, items);
 
         for (Item item : items) {
             log.debug(JSONUtil.formatJsonStr(GsonStatic.toJson(item)));
@@ -342,6 +346,49 @@ public class TorrentUtil {
                 }
             }
         }
+    }
+
+    /**
+     * 摸鱼检测
+     *
+     * @param ani
+     * @param items
+     */
+    public static void procrastinating(Ani ani, List<Item> items) {
+        Config config = ConfigUtil.CONFIG;
+        Boolean procrastinating = config.getProcrastinating();
+        Integer procrastinatingDay = config.getProcrastinatingDay();
+        if (!procrastinating) {
+            return;
+        }
+
+        if (!AfdianUtil.verifyExpirationTime()) {
+            log.info("未解锁捐赠, 无法使用摸鱼检测");
+            return;
+        }
+
+        items.stream()
+                .filter(Item::getMaster)
+                .map(Item::getPubDate)
+                .filter(Objects::nonNull)
+                .mapToLong(Date::getTime)
+                .max()
+                .ifPresent(t -> {
+                    DateTime date = DateUtil.date(t);
+                    DateTime now = DateTime.now();
+
+                    // 时间不对
+                    if (now.getTime() <= t) {
+                        return;
+                    }
+                    long day = DateUtil.between(date, now, DateUnit.DAY);
+                    if (procrastinatingDay > day) {
+                        // 未达到指定摸鱼时间
+                        return;
+                    }
+                    String text = StrFormatter.format("检测到{},已摸鱼{}天", ani.getTitle(), day);
+                    MessageUtil.send(config, ani, text, MessageEnum.PROCRASTINATING);
+                });
     }
 
     public static File getTorrentDir(Ani ani) {

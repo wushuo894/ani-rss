@@ -23,7 +23,11 @@ public enum MessageEnum {
     /**
      * 订阅完结
      */
-    COMPLETED("🎊", "订阅完结");
+    COMPLETED("🎊", "订阅完结"),
+    /**
+     * 摸鱼检测
+     */
+    PROCRASTINATING("🎊", "摸鱼检测");;
 
     private final String emoji;
     private final String action;
