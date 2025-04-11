@@ -370,6 +370,12 @@ public class ItemsUtil {
             return;
         }
 
+        procrastinating = ani.getProcrastinating();
+
+        if (!procrastinating) {
+            return;
+        }
+
         if (!AfdianUtil.verifyExpirationTime()) {
             log.info("未解锁捐赠, 无法使用摸鱼检测");
             return;
