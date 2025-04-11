@@ -154,7 +154,9 @@ public class ConfigUtil {
                 .setEmbyRefresh(false)
                 .setEmbyApiKey("")
                 .setEmbyRefreshViewIds(new ArrayList<>())
-                .setEmbyDelayed(0L);
+                .setEmbyDelayed(0L)
+                .setProcrastinating(false)
+                .setProcrastinatingDay(14);
     }
 
     /**

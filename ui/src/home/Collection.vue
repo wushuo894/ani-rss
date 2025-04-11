@@ -13,14 +13,13 @@
              }">
             <el-form-item label="番剧名称">
               <div style="width: 100%;">
-                <div class="flex flex-center" style="width: 100%;">
-                  <div style="flex: 1">
-                    <el-input
-                        v-model:model-value="data.ani.title"
-                        :disabled="rssButtonLoading"
-                        placeholder="请勿留空"
-                    />
-                  </div>
+                <div class="flex" style="width: 100%;">
+                  <el-input
+                      v-model:model-value="data.ani.title"
+                      :disabled="rssButtonLoading"
+                      placeholder="请勿留空"
+                      @keyup.enter="bgmRef?.show(data.ani.title)"
+                  />
                   <div style="width: 4px;"></div>
                   <el-button :disabled="rssButtonLoading" bg icon="Search" text type="primary"
                              @click="bgmRef?.show(data.ani.title)"/>
@@ -41,14 +40,15 @@
                 </div>
               </div>
             </el-form-item>
-
             <template v-if="data.show">
               <el-form-item label="TMDB">
                 <div style="display: flex;width: 100%;justify-content: space-between;">
                   <div class="el-input is-disabled">
-                    <div class="el-input__wrapper" style="pointer-events: auto;cursor: auto;justify-content: left;"
+                    <div class="el-input__wrapper"
+                         style="pointer-events: auto;cursor: auto;justify-content: left;padding: 0 11px;"
                          tabindex="-1">
-                      <el-link v-if="data.ani?.tmdb?.id" :href="`https://www.themoviedb.org/${data.ani.ova ? 'movie' : 'tv'}/${data.ani.tmdb.id}`"
+                      <el-link v-if="data.ani?.tmdb?.id"
+                               :href="`https://www.themoviedb.org/${data.ani.ova ? 'movie' : 'tv'}/${data.ani.tmdb.id}`"
                                target="_blank"
                                type="primary">
                         {{ data.ani.themoviedbName }}
@@ -108,7 +108,8 @@
                             type="textarea"/>
                 </div>
                 <div style="margin-top: 6px;">
-                  <el-button :disabled="!data.ani.customDownloadPath" :loading="downloadPathLoading" bg icon="Refresh"
+                  <el-button :disabled="!data.ani.customDownloadPath"
+                             :loading="downloadPathLoading" bg icon="Refresh"
                              text
                              @click="downloadPath"/>
                 </div>

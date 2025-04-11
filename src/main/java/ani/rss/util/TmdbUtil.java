@@ -214,6 +214,8 @@ public class TmdbUtil {
                                 continue;
                             }
 
+                            name = RenameUtil.getName(name);
+
                             map.put(episodeNumber, name);
                         }
                     });

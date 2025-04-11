@@ -82,6 +82,8 @@ public class TorrentUtil {
                         .toString()
         );
 
+        ItemsUtil.procrastinating(ani, items);
+
         for (Item item : items) {
             log.debug(JSONUtil.formatJsonStr(GsonStatic.toJson(item)));
             String reName = item.getReName();
@@ -169,9 +171,8 @@ public class TorrentUtil {
             if (torrentsInfos
                     .stream()
                     .anyMatch(torrentsInfo ->
-                            // 文件名与下载位置相同 或 hash 相同
-                            (torrentsInfo.getDownloadDir().equals(savePath) && torrentsInfo.getName().equals(reName))
-                                    || torrentsInfo.getHash().equals(hash))) {
+                            // hash 相同
+                            torrentsInfo.getHash().equals(hash))) {
                 log.info("已有下载任务 hash:{} name:{}", hash, reName);
                 if (master && !is5) {
                     currentDownloadCount++;
@@ -248,15 +249,10 @@ public class TorrentUtil {
      */
     public static void deleteBackRss(Ani ani, Item item) {
         Config config = ConfigUtil.CONFIG;
-        Boolean backRss = config.getBackRss();
         Boolean delete = config.getDelete();
         String reName = item.getReName();
 
         if (!delete) {
-            return;
-        }
-
-        if (!backRss) {
             return;
         }
         List<Ani.BackRss> backRssList = ani.getBackRssList();
@@ -924,12 +920,17 @@ public class TorrentUtil {
             log.info("删除已完成任务 {}", name);
         }
         ThreadUtil.sleep(500);
+        List<String> files = torrentsInfo.getFiles().get();
+
         Boolean b = baseDownload.delete(torrentsInfo, deleteFiles);
         if (!b) {
             log.error("删除任务失败 {}", name);
             return false;
         }
         log.info("删除任务成功 {}", name);
+        if (!deleteFiles) {
+            return true;
+        }
         // 清理空文件夹
         ClearCacheAction.clearParentFile(new File(torrentsInfo.getDownloadDir() + "/" + name));
         return true;

@@ -9,6 +9,7 @@ import cn.hutool.cache.Cache;
 import cn.hutool.cache.CacheUtil;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.date.DateTime;
+import cn.hutool.core.date.DateUnit;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.lang.Assert;
@@ -318,6 +319,7 @@ public class ItemsUtil {
         for (Integer i : list) {
             String s = StrFormatter.format("缺少集数 {} S{}E{}", title, String.format("%02d", season), String.format("%02d", i));
             if (messageCache.containsKey(s)) {
+                // 一天内已经提醒过了
                 continue;
             }
             log.info(s);
@@ -352,6 +354,62 @@ public class ItemsUtil {
                     .filter(it -> it.getEpisode() == it.getEpisode().intValue()).count();
         }
         return currentEpisodeNumber;
+    }
+
+    /**
+     * 摸鱼检测
+     *
+     * @param ani
+     * @param items
+     */
+    public static void procrastinating(Ani ani, List<Item> items) {
+        Config config = ConfigUtil.CONFIG;
+        Boolean procrastinating = config.getProcrastinating();
+        Integer procrastinatingDay = config.getProcrastinatingDay();
+        if (!procrastinating) {
+            return;
+        }
+
+        procrastinating = ani.getProcrastinating();
+
+        if (!procrastinating) {
+            return;
+        }
+
+        if (!AfdianUtil.verifyExpirationTime()) {
+            log.info("未解锁捐赠, 无法使用摸鱼检测");
+            return;
+        }
+
+        items.stream()
+                .filter(Item::getMaster)
+                .map(Item::getPubDate)
+                .filter(Objects::nonNull)
+                .mapToLong(Date::getTime)
+                .max()
+                .ifPresent(t -> {
+                    DateTime date = DateUtil.date(t);
+                    DateTime now = DateTime.now();
+
+                    // 时间不对
+                    if (now.getTime() <= t) {
+                        return;
+                    }
+                    long day = DateUtil.between(date, now, DateUnit.DAY);
+                    if (procrastinatingDay > day) {
+                        // 未达到指定摸鱼时间
+                        return;
+                    }
+                    String text = StrFormatter.format("检测到{}, 已摸鱼{}天", ani.getTitle(), day);
+
+                    if (messageCache.containsKey(text)) {
+                        // 一天内已经提醒过了
+                        return;
+                    }
+
+                    messageCache.put(text, "1", TimeUnit.DAYS.toMillis(1));
+                    MessageUtil.send(config, ani, text, MessageEnum.PROCRASTINATING);
+                });
     }
 
 }

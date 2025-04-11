@@ -8,6 +8,7 @@ import cn.hutool.cache.CacheUtil;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.date.DatePattern;
 import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.text.StrFormatter;
 import cn.hutool.core.thread.ThreadUtil;
@@ -506,7 +507,6 @@ public class BgmUtil {
         // 使用tmdb标题
         Boolean tmdb = config.getTmdb();
 
-
         ani
                 // 标题
                 .setTitle(title)
@@ -537,12 +537,20 @@ public class BgmUtil {
             title = themoviedbName;
             // 去除特殊符号
             title = RenameUtil.getName(title);
+            ani
+                    .setTitle(title);
         }
 
+        // 下载位置
+        String downloadPath = FileUtil.getAbsolutePath(
+                TorrentUtil.getDownloadPath(ani)
+                        .get(0).toString()
+        );
+
         return ani
-                .setTitle(title)
                 // tmdb 标题
-                .setThemoviedbName(themoviedbName);
+                .setThemoviedbName(themoviedbName)
+                .setDownloadPath(downloadPath);
     }
 
 

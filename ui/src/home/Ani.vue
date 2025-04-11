@@ -36,7 +36,7 @@
           <div style="display: flex;width: 100%;justify-content: space-between;">
             <div class="el-input is-disabled">
               <div class="el-input__wrapper" tabindex="-1"
-                   style="pointer-events: auto;cursor: auto;justify-content: left;">
+                   style="pointer-events: auto;cursor: auto;justify-content: left;padding: 0 11px;">
                 <el-link v-if="props.ani?.tmdb?.id" type="primary"
                          :href="`https://www.themoviedb.org/${props.ani.ova ? 'movie' : 'tv'}/${props.ani.tmdb.id}`"
                          target="_blank">
@@ -138,14 +138,11 @@
             </div>
           </div>
         </el-form-item>
-        <el-form-item label="遗漏检测">
-          <el-switch v-model:model-value="props.ani.omit"/>
-        </el-form-item>
-        <el-form-item label="自动上传">
-          <el-switch v-model:model-value="props.ani['upload']"/>
-        </el-form-item>
-        <el-form-item label="只下载最新集">
-          <el-switch v-model:model-value="props.ani.downloadNew"/>
+        <el-form-item label="其它">
+          <el-checkbox v-model="props.ani.omit" label="遗漏检测"/>
+          <el-checkbox v-model="props.ani.upload" label="自动上传"/>
+          <el-checkbox v-model="props.ani.downloadNew" label="只下载最新集"/>
+          <el-checkbox v-model="props.ani['procrastinating']" label="摸鱼检测"/>
         </el-form-item>
         <el-form-item label="启用">
           <el-switch v-model:model-value="props.ani.enable"/>

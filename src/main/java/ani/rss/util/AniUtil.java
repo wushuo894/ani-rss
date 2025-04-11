@@ -127,8 +127,6 @@ public class AniUtil {
 
         BgmUtil.toAni(bgmInfo, ani);
 
-        String title = ani.getTitle();
-
         // 只下载最新集
         Boolean downloadNew = config.getDownloadNew();
         // 默认启用全局排除
@@ -147,18 +145,12 @@ public class AniUtil {
         }
 
         ani
-                // 再次保存标题
-                .setTitle(title)
                 // 只下载最新集
                 .setDownloadNew(downloadNew)
                 // 是否启用全局排除
                 .setGlobalExclude(enabledExclude)
                 // type mikan or other
                 .setType(type);
-
-        // 下载位置
-        String downloadPath = FileUtil.getAbsolutePath(TorrentUtil.getDownloadPath(ani).get(0));
-        ani.setDownloadPath(downloadPath);
 
         log.debug("获取到动漫信息 {}", JSONUtil.formatJsonStr(GsonStatic.toJson(ani)));
         if (ani.getOva()) {
