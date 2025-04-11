@@ -13,10 +13,7 @@ import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.text.StrFormatter;
 import cn.hutool.core.thread.ThreadUtil;
-import cn.hutool.core.util.CharsetUtil;
-import cn.hutool.core.util.NumberUtil;
-import cn.hutool.core.util.ReUtil;
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.util.*;
 import cn.hutool.http.HttpResponse;
 import cn.hutool.http.server.HttpServerRequest;
 import cn.hutool.http.server.HttpServerResponse;
@@ -189,7 +186,12 @@ public class CollectionAction implements BaseAction {
         String torrent = collectionInfo.getTorrent();
 
         if (type.equals("preview")) {
-            resultSuccess(preview(collectionInfo));
+            List<Item> preview = preview(collectionInfo);
+            preview = CollUtil.sort(new ArrayList<>(preview), Comparator.comparingDouble(it -> {
+                Double episode = it.getEpisode();
+                return ObjectUtil.defaultIfNull(episode, 0.0);
+            }));
+            resultSuccess(preview);
         }
 
         if (!type.equals("start")) {
