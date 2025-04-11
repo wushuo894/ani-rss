@@ -27,7 +27,7 @@ public enum MessageEnum {
     /**
      * 摸鱼检测
      */
-    PROCRASTINATING("🎊", "摸鱼检测");;
+    PROCRASTINATING("🐟", "摸鱼检测");;
 
     private final String emoji;
     private final String action;
