@@ -197,12 +197,14 @@ public class TorrentUtil {
                 }
             }
 
-            log.info("添加下载 {}", reName);
             File saveTorrent = saveTorrent(ani, item);
 
-            if (saveTorrent.exists()) {
-                deleteBackRss(ani, item);
+            if (!saveTorrent.exists()) {
+                // 种子下载失败
+                continue;
             }
+
+            deleteBackRss(ani, item);
 
             int size = ItemsUtil.currentEpisodeNumber(ani, items);
             if (size > 0 && ani.getCurrentEpisodeNumber() < size) {
@@ -662,13 +664,16 @@ public class TorrentUtil {
      * @param torrentFile
      */
     public static synchronized void download(Ani ani, Item item, String savePath, File torrentFile) {
+        ani = ObjectUtil.clone(ani);
+
         String name = item.getReName();
         Boolean ova = ani.getOva();
         Boolean master = item.getMaster();
         String subgroup = item.getSubgroup();
         subgroup = StrUtil.blankToDefault(subgroup, "未知字幕组");
+        ani.setSubgroup(subgroup);
 
-        ani = ObjectUtil.clone(ani).setSubgroup(subgroup);
+        log.info("添加下载 {}", name);
 
         if (!torrentFile.exists()) {
             log.error("种子下载出现问题 {} {}", name, torrentFile.getAbsolutePath());
