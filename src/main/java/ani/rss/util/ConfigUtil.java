@@ -142,7 +142,7 @@ public class ConfigUtil {
                 .setCustomJs("")
                 .setCustomEpisode(false)
                 .setCustomEpisodeStr(RenameUtil.REG_STR)
-                .setCustomEpisodeGroupIndex(0)
+                .setCustomEpisodeGroupIndex(2)
                 .setProvider("")
                 .setUpload(true)
                 .setUpLimit(0L)

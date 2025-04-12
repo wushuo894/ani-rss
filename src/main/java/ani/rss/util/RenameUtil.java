@@ -13,7 +13,7 @@ import java.util.Optional;
 
 @Slf4j
 public class RenameUtil {
-    public static final String REG_STR = "( - |Vol |[Ee][Pp]?)\\d+(\\.5)?|【\\d+(\\.5)?】|\\[\\d+(\\.5)?( ?[vV]\\d)?( ?END)?( ?完)?]|第?\\d+(\\.5)?[话話集]( - END)?|^\\[TOC].* \\d+";
+    public static final String REG_STR = "(.*|\\[.*])(( - |Vol |[Ee][Pp]?)\\d+(\\.5)?|【\\d+(\\.5)?】|\\[\\d+(\\.5)?( ?[vV]\\d)?( ?END)?( ?完)?]|第?\\d+(\\.5)?[话話集]( - END)?|^\\[TOC].* \\d+)";
 
     public static Boolean rename(Ani ani, Item item, Map<Integer, String> episodeTitleMap) {
         Config config = ConfigUtil.CONFIG;
@@ -63,7 +63,7 @@ public class RenameUtil {
         if (customEpisode) {
             e = ReUtil.get(customEpisodeStr, itemTitle, customEpisodeGroupIndex);
         } else {
-            e = ReUtil.get(REG_STR, itemTitle, 0);
+            e = ReUtil.get(REG_STR, itemTitle, 2);
         }
 
         if (StrUtil.isBlank(e)) {
