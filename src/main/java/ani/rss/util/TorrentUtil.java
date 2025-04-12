@@ -422,6 +422,8 @@ public class TorrentUtil {
             String message = ExceptionUtil.getMessage(e);
             log.error("下载种子时出现问题 {}", message);
             log.error(message, e);
+            // 种子未下载异常，删除
+            FileUtil.del(saveTorrentFile);
         }
         return saveTorrentFile;
     }
