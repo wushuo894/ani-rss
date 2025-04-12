@@ -385,9 +385,7 @@ public class qBittorrent implements BaseDownload {
 
         Boolean start = start(torrentsInfo, config);
         Assert.isTrue(start, "开始任务失败 {}", reName);
-        if (start) {
-            log.info("开始任务 {}", reName);
-        }
+        log.info("开始任务 {}", reName);
 
         if (newNames.isEmpty()) {
             return;
