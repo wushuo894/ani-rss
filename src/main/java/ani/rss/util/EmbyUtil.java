@@ -71,7 +71,7 @@ public class EmbyUtil {
 
         List<EmbyViews> viewsList = new ArrayList<>();
 
-        getAdmin();
+        getAdmin(config);
 
         JsonArray items = HttpReq.get(embyHost + "/Users/" + ADMIN_USER_ID + "/Views?api_key=" + embyApiKey, false)
                 .thenFunction(res -> {
@@ -96,11 +96,10 @@ public class EmbyUtil {
     /**
      * 获取管理员账户
      */
-    public static void getAdmin() {
+    public static void getAdmin(Config config) {
         if (StrUtil.isNotBlank(ADMIN_USER_ID)) {
             return;
         }
-        Config config = ConfigUtil.CONFIG;
         String host = config.getEmbyHost();
         String key = config.getEmbyApiKey();
 
