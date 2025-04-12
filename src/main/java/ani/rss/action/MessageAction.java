@@ -9,6 +9,7 @@ import ani.rss.enums.MessageEnum;
 import ani.rss.msg.Message;
 import ani.rss.util.AniUtil;
 import ani.rss.util.BgmUtil;
+import ani.rss.util.TmdbUtil;
 import cn.hutool.core.util.ClassUtil;
 import cn.hutool.core.util.ReflectUtil;
 import cn.hutool.core.util.StrUtil;
@@ -16,6 +17,7 @@ import cn.hutool.http.server.HttpServerRequest;
 import cn.hutool.http.server.HttpServerResponse;
 
 import java.io.IOException;
+import java.util.Date;
 
 /**
  * 通知
@@ -39,14 +41,20 @@ public class MessageAction implements BaseAction {
         String image = bgmInfo.getImage();
         ani.setCover(AniUtil.saveJpg(image))
                 .setImage(image)
-                .setTitle("test")
+                .setTitle("不时用俄语小声说真心话的邻桌艾莉同学")
                 .setSeason(1)
                 .setCurrentEpisodeNumber(2)
                 .setTotalEpisodeNumber(12)
                 .setScore(8.0)
                 .setThemoviedbName("test")
                 .setYear(2024)
-                .setSubgroup("未知字幕组");
+                .setSubgroup("未知字幕组")
+                .setTmdb(
+                        new TmdbUtil.Tmdb()
+                                .setId("235758")
+                                .setName("不时用俄语小声说真心话的邻桌艾莉同学")
+                                .setDate(new Date())
+                );
         Boolean test = message.send(config, ani, "test", MessageEnum.DOWNLOAD_START);
         if (test) {
             resultSuccess();

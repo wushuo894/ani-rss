@@ -9,6 +9,7 @@ import cn.hutool.core.lang.func.Func1;
 import cn.hutool.core.lang.func.LambdaUtil;
 import cn.hutool.core.text.StrFormatter;
 import cn.hutool.core.util.ReUtil;
+import cn.hutool.core.util.StrUtil;
 
 import java.util.List;
 import java.util.Objects;
@@ -65,6 +66,13 @@ public interface Message {
                 .map(TmdbUtil.Tmdb::getId)
                 .orElse("");
         messageTemplate = messageTemplate.replace("${tmdbid}", tmdbId);
+
+        String tmdbUrl = "";
+        if (StrUtil.isNotBlank(tmdbId)) {
+            String type = ani.getOva() ? "movie" : "tv";
+            tmdbUrl = StrFormatter.format("https://www.themoviedb.org/{}/{}", type, tmdbId);
+        }
+        messageTemplate = messageTemplate.replace("${tmdburl}", tmdbUrl);
 
         String emoji = messageEnum.getEmoji();
         String action = messageEnum.getAction();

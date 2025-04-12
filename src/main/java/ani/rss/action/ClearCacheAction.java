@@ -9,12 +9,15 @@ import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.NumberUtil;
 import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.core.util.ReUtil;
 import cn.hutool.http.server.HttpServerRequest;
 import cn.hutool.http.server.HttpServerResponse;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -35,7 +38,15 @@ public class ClearCacheAction implements BaseAction {
             return;
         }
         File parentFile = file.getParentFile();
-        String[] list = ObjectUtil.defaultIfNull(parentFile.list(), new String[]{});
+        List<String> list = Arrays.asList(ObjectUtil.defaultIfNull(parentFile.list(), new String[]{}));
+        list = list.stream()
+                .filter(f -> !f.endsWith(".nfo"))
+                .filter(f -> !f.endsWith("-thumb.jpg"))
+                .filter(f -> !f.equals("poster.jpg"))
+                .filter(f -> !f.equals("clearlogo.png"))
+                .filter(f -> !ReUtil.contains("^season\\d+-poster.jpg$", f))
+                .filter(f -> !ReUtil.contains("^fanart\\d*.jpg$", f))
+                .toList();
         if (ArrayUtil.isNotEmpty(list)) {
             return;
         }
