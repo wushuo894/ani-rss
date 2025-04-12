@@ -44,6 +44,9 @@ public class ClearCacheAction implements BaseAction {
                 .filter(f -> !f.endsWith("-thumb.jpg"))
                 .filter(f -> !f.equals("poster.jpg"))
                 .filter(f -> !f.equals("clearlogo.png"))
+                .filter(f -> !f.equals(".DS_Store"))
+                .filter(f -> !f.equals("banner.jpg"))
+                .filter(f -> !f.equals("season-specials-poster.jpg"))
                 .filter(f -> !ReUtil.contains("^season\\d+-poster.jpg$", f))
                 .filter(f -> !ReUtil.contains("^fanart\\d*.jpg$", f))
                 .toList();

@@ -407,8 +407,7 @@ public class BgmUtil {
                         BgmInfo bgmInfo = httpRequest
                                 .thenFunction(fun);
                         bgmInfoCacheAR.set(bgmInfo);
-                    } catch (Exception e) {
-                        log.error(e.getMessage(), e);
+                    } catch (Exception ignored) {
                     }
                 })
         ).join();
