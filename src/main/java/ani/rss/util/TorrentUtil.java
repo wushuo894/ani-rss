@@ -327,6 +327,12 @@ public class TorrentUtil {
                     isDel = true;
                     break;
                 }
+                if (extName.equals("nfo")) {
+                    isDel = true;
+                }
+                if (file.getName().endsWith("-thumb.jpg")) {
+                    isDel = true;
+                }
             }
             if (file.isDirectory()) {
                 isDel = true;
