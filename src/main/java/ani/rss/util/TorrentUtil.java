@@ -319,13 +319,9 @@ public class TorrentUtil {
                 if (StrUtil.isBlank(extName)) {
                     continue;
                 }
-                for (String en : BaseDownload.videoFormat) {
-                    // 后缀匹配不上 跳过
-                    if (!extName.equalsIgnoreCase(en)) {
-                        continue;
-                    }
+                extName = extName.toLowerCase();
+                if (BaseDownload.videoFormat.contains(extName)) {
                     isDel = true;
-                    break;
                 }
                 if (extName.equals("nfo")) {
                     isDel = true;
