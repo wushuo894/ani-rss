@@ -1,6 +1,9 @@
 package ani.rss.util;
 
+import ani.rss.entity.Config;
 import cn.hutool.core.net.url.UrlBuilder;
+import cn.hutool.core.text.StrFormatter;
+import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpResponse;
 import cn.hutool.http.Method;
@@ -16,7 +19,21 @@ public class HttpRequestPlus extends HttpRequest {
     }
 
     public static HttpRequest of(UrlBuilder url) {
-        return new HttpRequestPlus(url);
+        String host = url.getHost();
+        if (!"github.com".equals(host)) {
+            return new HttpRequestPlus(url);
+        }
+
+        Config config = ConfigUtil.CONFIG;
+        String github = config.getGithub();
+        if (StrUtil.isBlank(github) || github.equals("None")) {
+            return new HttpRequestPlus(url);
+        }
+
+        // 处理github加速
+        String newUrl = StrFormatter.format("https://{}/{}", github, url.toString());
+        log.info("github 已加速: {}", newUrl);
+        return new HttpRequestPlus(UrlBuilder.ofHttp(newUrl, StandardCharsets.UTF_8));
     }
 
     public static HttpRequest of(String url) {

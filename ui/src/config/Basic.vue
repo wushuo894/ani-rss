@@ -219,7 +219,8 @@
                 <el-switch v-model="props.config['procrastinating']" :disabled="!props.config['verifyExpirationTime']"/>
               </div>
               <div>
-                <el-input-number v-model="props.config['procrastinatingDay']" :disabled="!props.config['procrastinating']" :max="365"
+                <el-input-number v-model="props.config['procrastinatingDay']"
+                                 :disabled="!props.config['procrastinating']" :max="365"
                                  :min="7">
                   <template #suffix>
                     <span>天</span>
@@ -310,6 +311,11 @@
               </div>
             </div>
           </el-form-item>
+          <el-form-item label="GitHub加速">
+            <el-radio-group v-model="props.config['github']">
+              <el-radio-button v-for="it in githubList" :label="it" :value="it"/>
+            </el-radio-group>
+          </el-form-item>
           <el-form-item label="DEBUG">
             <el-switch v-model:model-value="props.config.debug"/>
           </el-form-item>
@@ -326,7 +332,7 @@
             </div>
           </el-form-item>
           <el-form-item label="自动GC间隔">
-            <el-input-number v-model:model-value="props.config.gcSleep" :min="0">
+            <el-input-number v-model:model-value="props.config['gcSleep']" :min="0">
               <template #suffix>
                 <span>分钟</span>
               </template>
@@ -345,7 +351,16 @@ import api from "../api.js";
 import {useColorMode, useLocalStorage} from "@vueuse/core";
 import AfdianPrompt from "../other/AfdianPrompt.vue";
 
-const {system, store} = useColorMode()
+
+let githubList = [
+  'None',
+  'github.moeyy.xyz',
+  'ghfast.top',
+  'pd.zwc365.com',
+  'ghproxy.cfd'
+]
+
+const {store} = useColorMode()
 
 let activeName = ref('1')
 

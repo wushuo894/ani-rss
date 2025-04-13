@@ -156,7 +156,8 @@ public class ConfigUtil {
                 .setEmbyRefreshViewIds(new ArrayList<>())
                 .setEmbyDelayed(0L)
                 .setProcrastinating(false)
-                .setProcrastinatingDay(14);
+                .setProcrastinatingDay(14)
+                .setGithub("None");
     }
 
     /**
