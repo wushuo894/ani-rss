@@ -592,4 +592,9 @@ public class Config implements Serializable {
      * 摸鱼天数
      */
     private Integer procrastinatingDay;
+
+    /**
+     * github 加速
+     */
+    private String github;
 }
