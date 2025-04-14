@@ -25,7 +25,12 @@ jobs:
         run: |
           bash ./package.sh
           bash ./package-win.sh
+
+          time=$(date +%s%3N)
           version=$(cat pom.xml | grep -oPm1 '(?<=<version>).*?(?=</version>)')
+          markdown=$(cat UPDATE.md | sed ':a;N;$!ba;s/\n/\\n/g')
+          echo "{\"time\":$time,\"version\":\"$version\",\"markdown\":\"$markdown\"}" > info.json
+
           echo "version=v$version" >> $GITHUB_ENV
       - name: Release
         uses: softprops/action-gh-release@v2
@@ -42,6 +47,7 @@ jobs:
             ./target/ani-rss-launcher.exe.md5
             ./target/ani-rss.win.x86_64.zip
             ./target/ani-rss.win.x86_64.zip.md5
+            ./info.json
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
       - name: Set up Docker Buildx
