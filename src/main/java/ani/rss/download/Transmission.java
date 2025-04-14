@@ -189,7 +189,7 @@ public class Transmission implements BaseDownload {
             return true;
         }
 
-        for (int i = 0; i < 6; i++) {
+        for (int i = 0; i < 3; i++) {
             ThreadUtil.sleep(1000 * 10);
             List<TorrentsInfo> torrentsInfos = getTorrentsInfos();
             Optional<TorrentsInfo> optionalTorrentsInfo = torrentsInfos
