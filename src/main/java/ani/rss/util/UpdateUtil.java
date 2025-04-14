@@ -2,6 +2,7 @@ package ani.rss.util;
 
 import ani.rss.Main;
 import ani.rss.entity.About;
+import ani.rss.entity.Config;
 import cn.hutool.cache.CacheUtil;
 import cn.hutool.cache.impl.FIFOCache;
 import cn.hutool.core.comparator.VersionComparator;
@@ -28,13 +29,16 @@ public class UpdateUtil {
     static FIFOCache<String, About> cache = CacheUtil.newFIFOCache(1);
 
     public static synchronized About about() {
-        String version = MavenUtil.getVersion();
+        Config config = ConfigUtil.CONFIG;
+        String github = config.getGithub();
 
-        About cacheAbout = cache.get(version);
+        About cacheAbout = cache.get(github);
 
         if (Objects.nonNull(cacheAbout)) {
             return cacheAbout;
         }
+
+        String version = MavenUtil.getVersion();
 
         About about = new About()
                 .setVersion(version)
@@ -69,7 +73,7 @@ public class UpdateUtil {
                     });
 
             // 缓存一分钟 防止加速网站风控
-            cache.put(version, about, 1000 * 60);
+            cache.put(github, about, 1000 * 60);
         } catch (Exception e) {
             String message = ExceptionUtil.getMessage(e);
             log.error("检测更新失败 {}", message);
