@@ -103,6 +103,9 @@
         </el-text>
       </div>
     </el-form-item>
+    <el-form-item label="失败重试次数">
+      <el-input-number v-model:model-value="props.config['downloadRetry']" :max="100" :min="3"/>
+    </el-form-item>
     <el-form-item label="同时下载限制">
       <div>
         <el-input-number v-model:model-value="props.config.downloadCount" :min="0"/>
