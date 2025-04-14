@@ -2,8 +2,9 @@ package ani.rss.util;
 
 import ani.rss.Main;
 import ani.rss.entity.About;
+import cn.hutool.cache.CacheUtil;
+import cn.hutool.cache.impl.FIFOCache;
 import cn.hutool.core.comparator.VersionComparator;
-import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.resource.ResourceUtil;
 import cn.hutool.core.lang.Assert;
@@ -12,20 +13,28 @@ import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.RuntimeUtil;
 import cn.hutool.core.util.StrUtil;
+import com.google.gson.JsonObject;
 import lombok.extern.slf4j.Slf4j;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
 
 import java.io.File;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 @Slf4j
 public class UpdateUtil {
-    public static About about() {
+    static FIFOCache<String, About> cache = CacheUtil.newFIFOCache(1);
+
+    public static synchronized About about() {
         String version = MavenUtil.getVersion();
+
+        About cacheAbout = cache.get(version);
+
+        if (Objects.nonNull(cacheAbout)) {
+            return cacheAbout;
+        }
 
         About about = new About()
                 .setVersion(version)
@@ -34,18 +43,16 @@ public class UpdateUtil {
                 .setMarkdownBody("");
         try {
             // 直接爬取html, 因为千人骑 ip 访问 github api 会被流控
-            HttpReq.get("https://github.com/wushuo894/ani-rss/releases/latest", true)
+            HttpReq.get("https://github.com/wushuo894/ani-rss/releases/latest/download/info.json", true)
                     .timeout(3000)
                     .then(response -> {
-                        String body = response.body();
-                        Document document = Jsoup.parse(body);
-                        Element box = document.selectFirst(".Box");
-                        Element element = box.selectFirst("h1");
-                        String latest = element.text().replace("v", "").trim();
-                        about.setUpdate(VersionComparator.INSTANCE.compare(latest, version) > 0)
-                                .setLatest(latest);
-                        Element markdownBody = box.selectFirst(".markdown-body");
-                        about.setMarkdownBody(markdownBody.outerHtml());
+                        Assert.isTrue(response.isOk(), "status: {}", response.getStatus());
+                        JsonObject jsonObject = GsonStatic.fromJson(response.body(), JsonObject.class);
+                        String latest = jsonObject.get("version").getAsString();
+                        about
+                                .setUpdate(VersionComparator.INSTANCE.compare(latest, version) > 0)
+                                .setLatest(latest)
+                                .setMarkdownBody(jsonObject.get("markdown").getAsString());
                         String filename = "ani-rss-jar-with-dependencies.jar";
                         File jar = getJar();
                         if ("exe".equals(FileUtil.extName(jar))) {
@@ -55,12 +62,14 @@ public class UpdateUtil {
                         about.setDownloadUrl(downloadUrl);
 
                         try {
-                            Element relativeTime = box.selectFirst("relative-time");
-                            String datetime = relativeTime.attr("datetime");
-                            about.setDate(DateUtil.parse(datetime));
+                            long time = jsonObject.get("time").getAsLong();
+                            about.setDate(new Date(time));
                         } catch (Exception ignored) {
                         }
                     });
+
+            // 缓存一分钟 防止加速网站风控
+            cache.put(version, about, 1000 * 60);
         } catch (Exception e) {
             String message = ExceptionUtil.getMessage(e);
             log.error("检测更新失败 {}", message);
@@ -69,7 +78,7 @@ public class UpdateUtil {
         return about;
     }
 
-    public static void update(About about) {
+    public static synchronized void update(About about) {
         Boolean update = about.getUpdate();
         if (!update) {
             return;

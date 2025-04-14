@@ -312,9 +312,9 @@
             </div>
           </el-form-item>
           <el-form-item label="GitHub加速">
-            <el-radio-group v-model="props.config['github']">
-              <el-radio-button v-for="it in githubList" :label="it" :value="it"/>
-            </el-radio-group>
+            <el-select v-model="props.config['github']" style="width: 150px;">
+              <el-option v-for="it in githubList" :key="it" :label="it" :value="it"/>
+            </el-select>
           </el-form-item>
           <el-form-item label="DEBUG">
             <el-switch v-model:model-value="props.config.debug"/>
@@ -354,6 +354,7 @@ import AfdianPrompt from "../other/AfdianPrompt.vue";
 
 let githubList = [
   'None',
+  'gh-proxy.com',
   'github.moeyy.xyz',
   'ghfast.top',
   'pd.zwc365.com',

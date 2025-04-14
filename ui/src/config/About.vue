@@ -50,7 +50,7 @@
         </el-form-item>
         <el-form-item label="更新内容">
           <el-scrollbar style="margin-bottom: 16px;" :always="true">
-            <div style="width: 800px;" v-html="about.markdownBody"></div>
+            <div class="markdown-body" style="width: 800px;" v-html="md.render(about.markdownBody)"></div>
             <el-alert
                 show-icon
                 :closable="false"
@@ -85,9 +85,17 @@ import {ElMessage, ElText} from "element-plus";
 import Popconfirm from "../other/Popconfirm.vue";
 import {Book, Github, Telegram} from "@vicons/fa";
 
+import markdownit from 'markdown-it'
+import MarkdownItGitHubAlerts from 'markdown-it-github-alerts'
 import 'markdown-it-github-alerts/styles/github-colors-light.css'
 import 'markdown-it-github-alerts/styles/github-colors-dark-media.css'
 import 'markdown-it-github-alerts/styles/github-base.css'
+
+let md = markdownit({
+  html: true,
+})
+
+md.use(MarkdownItGitHubAlerts)
 
 const actionLoading = ref(false)
 
