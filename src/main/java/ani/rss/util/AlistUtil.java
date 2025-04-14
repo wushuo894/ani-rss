@@ -6,6 +6,7 @@ import ani.rss.entity.TorrentsInfo;
 import ani.rss.enums.TorrentsTags;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.lang.Assert;
+import cn.hutool.core.lang.Opt;
 import cn.hutool.core.thread.ExecutorBuilder;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.core.util.URLUtil;
@@ -16,7 +17,6 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.io.File;
 import java.util.List;
-import java.util.Objects;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.LinkedBlockingQueue;
 
@@ -37,12 +37,12 @@ public class AlistUtil {
      * @param torrentsInfo 任务
      */
     public static void upload(TorrentsInfo torrentsInfo, Ani ani) {
-        if (Objects.nonNull(ani)) {
-            Boolean upload = ani.getUpload();
-            // 禁止自动上传
-            if (!upload) {
-                return;
-            }
+        Boolean upload = Opt.ofNullable(ani)
+                .map(Ani::getUpload)
+                .orElse(true);
+        // 禁止自动上传
+        if (!upload) {
+            return;
         }
 
         Config config = ConfigUtil.CONFIG;
@@ -86,7 +86,9 @@ public class AlistUtil {
         for (String fileName : files) {
             String filePath = alistPath;
 
-            Boolean ova = ani.getOva();
+            Boolean ova = Opt.ofNullable(ani)
+                    .map(Ani::getOva)
+                    .orElse(false);
             if (ova) {
                 filePath = StrUtil.blankToDefault(alistOvaPath, filePath);
             }
