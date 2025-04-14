@@ -51,6 +51,7 @@ public class ConfigUtil {
                 .setOvaDownloadPath(FileUtil.getAbsolutePath(new File("/Media/剧场版")))
                 .setHost("")
                 .setDownload("qBittorrent")
+                .setDownloadRetry(3)
                 .setUsername("")
                 .setPassword("")
                 .setQbUseDownloadPath(false)

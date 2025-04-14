@@ -24,6 +24,11 @@ public class Config implements Serializable {
     private String download;
 
     /**
+     * 下载重试次数
+     */
+    private Integer downloadRetry;
+
+    /**
      * 地址
      */
     private String host;

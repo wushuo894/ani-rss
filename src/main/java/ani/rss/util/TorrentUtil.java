@@ -115,7 +115,22 @@ public class TorrentUtil {
 
             // 只下载最新集
             if (downloadNew) {
-                if (item != items.get(items.size() - 1)) {
+                Item newItem = items.get(items.size() - 1);
+
+                // 日期一致也可下载, 防止字幕组同时发多集
+                Date pubDate = item.getPubDate();
+                Date newPubDate = newItem.getPubDate();
+                if (Objects.nonNull(pubDate) && Objects.nonNull(newPubDate)) {
+                    String pubDateFormat = DateUtil.format(pubDate, "yyyy-MM-dd");
+                    String newPubDateFormat = DateUtil.format(newPubDate, "yyyy-MM-dd");
+                    // 日期不一致则跳过
+                    if (!pubDateFormat.equals(newPubDateFormat)) {
+                        if (master && !is5) {
+                            currentDownloadCount++;
+                        }
+                        continue;
+                    }
+                } else if (item != newItem) {
                     if (master && !is5) {
                         currentDownloadCount++;
                     }
@@ -692,13 +707,18 @@ public class TorrentUtil {
         }
         MessageUtil.send(ConfigUtil.CONFIG, ani, text, MessageEnum.DOWNLOAD_START);
 
-        try {
-            if (baseDownload.download(ani, item, savePath, torrentFile, ova)) {
-                return;
+        Config config = ConfigUtil.CONFIG;
+        Integer downloadRetry = config.getDownloadRetry();
+        for (int i = 1; i <= downloadRetry; i++) {
+            try {
+                if (baseDownload.download(ani, item, savePath, torrentFile, ova)) {
+                    return;
+                }
+            } catch (Exception e) {
+                String message = ExceptionUtil.getMessage(e);
+                log.error(message, e);
             }
-        } catch (Exception e) {
-            String message = ExceptionUtil.getMessage(e);
-            log.error(message, e);
+            log.error("{} 下载失败将进行重试, 当前重试次数为{}次", name, i);
         }
         log.error("{} 添加失败，疑似为坏种", name);
         MessageUtil.send(ConfigUtil.CONFIG, ani,
