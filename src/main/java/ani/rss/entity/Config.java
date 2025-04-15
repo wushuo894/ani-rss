@@ -184,6 +184,11 @@ public class Config implements Serializable {
     private Boolean backRss;
 
     /**
+     * 多字幕组共存模式
+     */
+    private Boolean coexist;
+
+    /**
      * 最大日志条数
      */
     private Integer logsMax;
