@@ -280,6 +280,7 @@ public class qBittorrent implements BaseDownload {
     @Override
     public Boolean delete(TorrentsInfo torrentsInfo, Boolean deleteFiles) {
         String host = config.getHost();
+        String name = torrentsInfo.getName();
         String hash = torrentsInfo.getHash();
         try {
             List<FileEntity> files = files(torrentsInfo, false, config);
@@ -289,6 +290,11 @@ public class qBittorrent implements BaseDownload {
                     .thenFunction(HttpResponse::isOk);
             if (!b) {
                 return false;
+            }
+
+            // 剧场版不用进行残留的文件夹清理
+            if (!ReUtil.contains(StringEnum.SEASON_REG, name)) {
+                return true;
             }
 
             String downloadDir = torrentsInfo.getDownloadDir();
