@@ -72,7 +72,13 @@ public class ItemsUtil {
                     .peek(item -> item.setMaster(false))
                     .toList());
         }
-        items = CollUtil.distinct(items, it -> it.getEpisode().toString(), false);
+        // 多字幕组共存模式
+        Boolean coexist = config.getCoexist();
+        if (coexist) {
+            items = CollUtil.distinct(items, Item::getReName, false);
+        } else {
+            items = CollUtil.distinct(items, it -> it.getEpisode().toString(), false);
+        }
         items.sort(Comparator.comparingDouble(Item::getEpisode));
         return items;
     }

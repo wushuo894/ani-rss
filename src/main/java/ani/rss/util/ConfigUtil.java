@@ -60,6 +60,7 @@ public class ConfigUtil {
                 .setInactiveSeedingTimeLimit(-2)
                 .setSkip5(true)
                 .setBackRss(false)
+                .setCoexist(false)
                 .setLogsMax(2048)
                 .setDebug(false)
                 .setProxy(false)

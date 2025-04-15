@@ -95,9 +95,10 @@ public class Alist implements BaseDownload {
         String path = savePath + "/" + reName;
         Boolean backRss = config.getBackRss();
         Boolean delete = config.getDelete();
+        Boolean coexist = config.getCoexist();
         try {
             // 洗版，删除备 用RSS 所下载的视频
-            if (backRss && delete) {
+            if (backRss && delete && !coexist) {
                 String s = ReUtil.get(StringEnum.SEASON_REG, reName, 0);
                 ls(savePath)
                         .stream()

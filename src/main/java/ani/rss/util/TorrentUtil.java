@@ -267,6 +267,7 @@ public class TorrentUtil {
     public static void deleteBackRss(Ani ani, Item item) {
         Config config = ConfigUtil.CONFIG;
         Boolean backRss = config.getBackRss();
+        Boolean coexist = config.getCoexist();
         Boolean delete = config.getDelete();
         String reName = item.getReName();
 
@@ -275,6 +276,11 @@ public class TorrentUtil {
         }
 
         if (!backRss) {
+            return;
+        }
+
+        if (coexist) {
+            // 开启多字幕组共存将不会进行洗版
             return;
         }
 
