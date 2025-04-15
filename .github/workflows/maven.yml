@@ -28,7 +28,7 @@ jobs:
 
           time=$(date +%s%3N)
           version=$(cat pom.xml | grep -oPm1 '(?<=<version>).*?(?=</version>)')
-          markdown=$(cat UPDATE.md | sed ':a;N;$!ba;s/\n/\\n/g')
+          markdown=$(cat UPDATE.md | sed ':a;N;$!ba;s/\n/\\n/g;s/"/\\"/g')
           echo "{\"time\":$time,\"version\":\"$version\",\"markdown\":\"$markdown\"}" > info.json
 
           echo "version=v$version" >> $GITHUB_ENV

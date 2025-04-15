@@ -351,15 +351,48 @@ import api from "../api.js";
 import {useColorMode, useLocalStorage} from "@vueuse/core";
 import AfdianPrompt from "../other/AfdianPrompt.vue";
 
-
-let githubList = [
+let githubList = new Set([
   'None',
   'gh-proxy.com',
+  'gh.h233.eu.org',
+  'ghproxy.1888866.xyz',
+  'slink.ltd',
+  'hub.gitmirror.com',
+  'github.boki.moe',
   'github.moeyy.xyz',
+  'gh-proxy.net',
   'ghfast.top',
   'pd.zwc365.com',
-  'ghproxy.cfd'
-]
+  'ghproxy.cfd',
+  'gh.jasonzeng.dev',
+  'gh.monlor.com',
+  'github.tbedu.top',
+  'github.geekery.cn',
+  'gh-proxy.linioi.com',
+  'mirrors.chenby.cn',
+  'github.ednovas.xyz',
+  'ghp.keleyaa.com',
+  'github.wuzhij.com',
+  'gh.cache.cloudns.org',
+  'gh.chjina.com',
+  'ghpxy.hwinzniej.top',
+  'cdn.crashmc.com',
+  'gitproxy.mrhjx.cn',
+  'gh.xxooo.cf',
+  'gh.944446.xyz',
+  'api-gh.muran.eu.org',
+  'gh.zwnes.xyz',
+  'gh.llkk.cc',
+  'gh-proxy.ygxz.in',
+  'gh.nxnow.top',
+  'gh-proxy.ygxz.in',
+  'gh.zwy.one',
+  'ghproxy.monkeyray.net',
+  'gh.xx9527.cn',
+  'ghfast.top'
+])
+
+console.log(githubList);
 
 const {store} = useColorMode()
 
