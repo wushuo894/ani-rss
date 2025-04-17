@@ -65,13 +65,9 @@
                     :closable="false"/>
         </div>
       </div>
-      <div style="margin: 4px 0;display: flex;justify-content: end;">
-        <el-text class="mx-1" size="small">
-          检测 <strong>本地是否存在</strong> 需要开启 <strong>文件已下载自动跳过</strong> 与 <strong>自动重命名</strong>
-        </el-text>
-      </div>
     </div>
-    <div style="margin-top: 12px;display: flex;justify-content: end;">
+    <div class="flex" style="margin-top: 12px;justify-content: space-between;">
+      <span>共 {{ showItems.length }} 项</span>
       <el-button bg text @click="dialogVisible = false" icon="Close">关闭</el-button>
     </div>
   </el-dialog>
@@ -80,7 +76,7 @@
 <script setup>
 import {ref} from "vue";
 import api from "../api.js";
-import {ElMessage, ElText} from "element-plus";
+import {ElMessage} from "element-plus";
 import Popconfirm from "../other/Popconfirm.vue";
 
 let selectViews = ref([])

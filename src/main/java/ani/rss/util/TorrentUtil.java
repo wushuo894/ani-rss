@@ -221,12 +221,6 @@ public class TorrentUtil {
 
             deleteBackRss(ani, item);
 
-            int size = ItemsUtil.currentEpisodeNumber(ani, items);
-            if (size > 0 && ani.getCurrentEpisodeNumber() < size) {
-                ani.setCurrentEpisodeNumber(size);
-                AniUtil.sync();
-            }
-
             if (!AniUtil.ANI_LIST.contains(ani)) {
                 return;
             }
@@ -239,6 +233,7 @@ public class TorrentUtil {
 
         int size = ItemsUtil.currentEpisodeNumber(ani, items);
         if (size > 0 && ani.getCurrentEpisodeNumber() != size) {
+            // 当前集数发生变动
             ani.setCurrentEpisodeNumber(size);
             AniUtil.sync();
         }

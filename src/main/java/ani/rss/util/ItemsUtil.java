@@ -342,24 +342,36 @@ public class ItemsUtil {
     }
 
     public static int currentEpisodeNumber(Ani ani, List<Item> items) {
+        Config config = ConfigUtil.CONFIG;
+        Boolean backRss = config.getBackRss();
+        Boolean coexist = config.getCoexist();
+        if (backRss && coexist) {
+            // 开启多字幕组共存模式则只计算主rss集数
+            items = items.stream()
+                    .filter(Item::getMaster)
+                    .toList();
+        }
+
+        // 过滤掉x.5集
+        items = items
+                .stream()
+                .filter(it -> it.getEpisode() == it.getEpisode().intValue())
+                .toList();
+
         if (items.isEmpty()) {
             return 0;
         }
 
-        int currentEpisodeNumber;
         Boolean downloadNew = ani.getDownloadNew();
         if (downloadNew) {
-            currentEpisodeNumber = items
+            return items
                     .stream()
                     .filter(it -> it.getEpisode() == it.getEpisode().intValue())
                     .mapToInt(item -> item.getEpisode().intValue())
-                    .max().orElse(0);
-        } else {
-            currentEpisodeNumber = (int) items
-                    .stream()
-                    .filter(it -> it.getEpisode() == it.getEpisode().intValue()).count();
+                    .max()
+                    .orElse(0);
         }
-        return currentEpisodeNumber;
+        return items.size();
     }
 
     /**
