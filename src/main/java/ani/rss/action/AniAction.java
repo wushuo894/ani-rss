@@ -108,11 +108,6 @@ public class AniAction implements BaseAction {
             return;
         }
 
-        List<Item> items = ItemsUtil.getItems(ani);
-
-        int currentEpisodeNumber = ItemsUtil.currentEpisodeNumber(ani, items);
-        ani.setCurrentEpisodeNumber(currentEpisodeNumber);
-
         AniUtil.ANI_LIST.add(ani);
         AniUtil.sync();
         Boolean enable = ani.getEnable();
@@ -120,6 +115,17 @@ public class AniAction implements BaseAction {
             ThreadUtil.execute(() -> {
                 if (TorrentUtil.login()) {
                     TorrentUtil.downloadAni(ani);
+                }
+            });
+        } else {
+            // 如果未开启订阅则只获取一下集数
+            ThreadUtil.execute(() -> {
+                try {
+                    List<Item> items = ItemsUtil.getItems(ani);
+                    int currentEpisodeNumber = ItemsUtil.currentEpisodeNumber(ani, items);
+                    ani.setCurrentEpisodeNumber(currentEpisodeNumber);
+                } catch (Exception e) {
+                    log.error(ExceptionUtil.getMessage(e), e);
                 }
             });
         }

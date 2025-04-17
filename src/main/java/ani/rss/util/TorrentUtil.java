@@ -221,12 +221,6 @@ public class TorrentUtil {
 
             deleteBackRss(ani, item);
 
-            int size = ItemsUtil.currentEpisodeNumber(ani, items);
-            if (size > 0 && ani.getCurrentEpisodeNumber() < size) {
-                ani.setCurrentEpisodeNumber(size);
-                AniUtil.sync();
-            }
-
             if (!AniUtil.ANI_LIST.contains(ani)) {
                 return;
             }
@@ -239,6 +233,7 @@ public class TorrentUtil {
 
         int size = ItemsUtil.currentEpisodeNumber(ani, items);
         if (size > 0 && ani.getCurrentEpisodeNumber() != size) {
+            // 当前集数发生变动
             ani.setCurrentEpisodeNumber(size);
             AniUtil.sync();
         }
@@ -801,12 +796,25 @@ public class TorrentUtil {
     }
 
     /**
-     * 根据通知反查订阅
+     * 根据任务反查订阅
      *
      * @param name
      * @return
      */
     public static synchronized Ani findAniByName(String name) {
+        String id = RenameCacheUtil.get("name");
+        if (StrUtil.isNotBlank(id)) {
+            // 根据id搜索到对应的订阅
+            Ani ani = AniUtil.ANI_LIST.stream()
+                    .filter(it -> id.equals(it.getId()))
+                    .findFirst()
+                    .orElse(null);
+            if (Objects.nonNull(ani)) {
+                RenameCacheUtil.remove(name);
+                return ani;
+            }
+        }
+
         String tempName = name
                 .replaceAll(StringEnum.YEAR_REG, "")
                 .replaceAll(StringEnum.TMDB_ID_REG, "")

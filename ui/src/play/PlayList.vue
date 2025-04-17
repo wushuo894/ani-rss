@@ -3,7 +3,7 @@
   <el-dialog v-model="dialogVisible" :title="ani.title" center>
     <div style="max-height: 500px;min-height: 200px;" v-loading="listLoading">
       <el-scrollbar>
-        <div class="i-grid-container" style="max-height: 500px;">
+        <div v-if="list.length" class="i-grid-container" style="max-height: 500px;">
           <div v-for="it in list">
             <el-card shadow="never">
               <div style="width: 100%;display: flex;justify-content: space-between;align-items: center;">
@@ -15,6 +15,9 @@
             </el-card>
             <div style="height: 4px;"/>
           </div>
+        </div>
+        <div v-else>
+          <el-alert :closable="false" center show-icon title="未下载集数或docker映射存在问题" type="error"/>
         </div>
       </el-scrollbar>
     </div>
