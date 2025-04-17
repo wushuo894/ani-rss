@@ -366,7 +366,6 @@ public class ItemsUtil {
         if (downloadNew) {
             return items
                     .stream()
-                    .filter(it -> it.getEpisode() == it.getEpisode().intValue())
                     .mapToInt(item -> item.getEpisode().intValue())
                     .max()
                     .orElse(0);
