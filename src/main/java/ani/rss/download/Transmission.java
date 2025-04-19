@@ -182,6 +182,7 @@ public class Transmission implements BaseDownload {
 
         if (!ova) {
             RenameCacheUtil.put(id, name);
+            RenameCacheUtil.put(name, ani.getId());
         }
 
         if (!watchErrorTorrent) {
