@@ -5,6 +5,7 @@ import ani.rss.annotation.Path;
 import ani.rss.entity.Ani;
 import ani.rss.util.AniUtil;
 import ani.rss.util.ConfigUtil;
+import ani.rss.util.FilePathUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.NumberUtil;
@@ -61,12 +62,12 @@ public class ClearCacheAction implements BaseAction {
     @Override
     public synchronized void doAction(HttpServerRequest request, HttpServerResponse response) throws IOException {
         File configDir = ConfigUtil.getConfigDir();
-        String configDirStr = FileUtil.getAbsolutePath(configDir);
+        String configDirStr = FilePathUtil.getAbsolutePath(configDir);
 
         Set<String> covers = AniUtil.ANI_LIST
                 .stream()
                 .map(Ani::getCover)
-                .map(s -> FileUtil.getAbsolutePath(new File(configDirStr + "/files/" + s)))
+                .map(s -> FilePathUtil.getAbsolutePath(new File(configDirStr + "/files/" + s)))
                 .collect(Collectors.toSet());
 
         FileUtil.mkdir(configDirStr + "/files");
@@ -75,7 +76,7 @@ public class ClearCacheAction implements BaseAction {
         Set<File> files = FileUtil.loopFiles(configDirStr + "/files")
                 .stream()
                 .filter(file -> {
-                    String fileName = FileUtil.getAbsolutePath(file);
+                    String fileName = FilePathUtil.getAbsolutePath(file);
                     return !covers.contains(fileName);
                 }).collect(Collectors.toSet());
         long filesSize = files.stream()

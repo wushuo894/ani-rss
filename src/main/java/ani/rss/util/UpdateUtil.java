@@ -138,7 +138,7 @@ public class UpdateUtil {
                             ServerUtil.stop();
                             List<String> strings = new ArrayList<>();
                             strings.add(updateExe.toString());
-                            strings.add(FileUtil.getAbsolutePath(jar));
+                            strings.add(FilePathUtil.getAbsolutePath(jar));
                             strings.addAll(Main.ARGS);
                             String[] array = ArrayUtil.toArray(strings, String.class);
                             RuntimeUtil.exec(array);

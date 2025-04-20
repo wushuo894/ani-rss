@@ -7,6 +7,7 @@ import ani.rss.entity.TorrentsInfo;
 import ani.rss.enums.StringEnum;
 import ani.rss.enums.TorrentsTags;
 import ani.rss.util.ExceptionUtil;
+import ani.rss.util.FilePathUtil;
 import ani.rss.util.GsonStatic;
 import ani.rss.util.HttpReq;
 import cn.hutool.core.collection.CollUtil;
@@ -244,7 +245,7 @@ public class qBittorrent implements BaseDownload {
                             TorrentsInfo torrentsInfo = new TorrentsInfo();
                             torrentsInfo.setName(name);
                             torrentsInfo.setHash(hash);
-                            torrentsInfo.setDownloadDir(FileUtil.getAbsolutePath(savePath));
+                            torrentsInfo.setDownloadDir(FilePathUtil.getAbsolutePath(savePath));
                             torrentsInfo.setState(Objects.isNull(state) ?
                                     TorrentsInfo.State.downloading : EnumUtil.fromString(TorrentsInfo.State.class, state.getAsString(), TorrentsInfo.State.downloading)
                             );

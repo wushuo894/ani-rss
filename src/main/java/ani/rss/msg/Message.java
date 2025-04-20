@@ -4,9 +4,9 @@ import ani.rss.entity.Ani;
 import ani.rss.entity.Config;
 import ani.rss.enums.MessageEnum;
 import ani.rss.enums.StringEnum;
+import ani.rss.util.FilePathUtil;
 import ani.rss.util.TmdbUtil;
 import ani.rss.util.TorrentUtil;
-import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.lang.func.Func1;
 import cn.hutool.core.lang.func.LambdaUtil;
 import cn.hutool.core.text.StrFormatter;
@@ -82,7 +82,7 @@ public interface Message {
         messageTemplate = messageTemplate.replace("${emoji}", emoji);
         messageTemplate = messageTemplate.replace("${action}", action);
 
-        String downloadPath = FileUtil.getAbsolutePath(TorrentUtil.getDownloadPath(ani).get(0).toString());
+        String downloadPath = FilePathUtil.getAbsolutePath(TorrentUtil.getDownloadPath(ani).get(0));
         messageTemplate = messageTemplate.replace("${downloadPath}", downloadPath);
 
         return messageTemplate;

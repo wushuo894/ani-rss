@@ -7,7 +7,6 @@ import ani.rss.entity.Login;
 import ani.rss.util.*;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.bean.copier.CopyOptions;
-import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.ReUtil;
 import cn.hutool.core.util.StrUtil;
@@ -89,8 +88,8 @@ public class ConfigAction implements BaseAction {
         }
 
         // 下载地址后面不要带 斜杠
-        String downloadPath = FileUtil.getAbsolutePath(config.getDownloadPath());
-        String ovaDownloadPath = FileUtil.getAbsolutePath(config.getOvaDownloadPath());
+        String downloadPath = FilePathUtil.getAbsolutePath(config.getDownloadPath());
+        String ovaDownloadPath = FilePathUtil.getAbsolutePath(config.getOvaDownloadPath());
         if (downloadPath.endsWith("/")) {
             downloadPath = downloadPath.substring(0, downloadPath.length() - 1);
         }

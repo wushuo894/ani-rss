@@ -5,6 +5,7 @@ import ani.rss.entity.Config;
 import ani.rss.entity.Item;
 import ani.rss.entity.TorrentsInfo;
 import ani.rss.enums.TorrentsTags;
+import ani.rss.util.FilePathUtil;
 import ani.rss.util.GsonStatic;
 import ani.rss.util.HttpReq;
 import ani.rss.util.RenameCacheUtil;
@@ -119,7 +120,7 @@ public class Transmission implements BaseDownload {
                             torrentsInfo.setHash(item.get("hashString").getAsString());
                             torrentsInfo.setState(state);
                             torrentsInfo.setId(item.get("id").getAsString());
-                            torrentsInfo.setDownloadDir(FileUtil.getAbsolutePath(downloadDir));
+                            torrentsInfo.setDownloadDir(FilePathUtil.getAbsolutePath(downloadDir));
                             torrentsInfo.setFiles(() -> files);
                             torrentsInfos.add(torrentsInfo);
                         }

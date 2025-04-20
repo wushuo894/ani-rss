@@ -7,6 +7,7 @@ import ani.rss.entity.Ani;
 import ani.rss.entity.PlayItem;
 import ani.rss.enums.StringEnum;
 import ani.rss.util.AniUtil;
+import ani.rss.util.FilePathUtil;
 import ani.rss.util.TorrentUtil;
 import cn.hutool.core.codec.Base64;
 import cn.hutool.core.collection.CollUtil;
@@ -77,13 +78,13 @@ public class PlaylistAction implements BaseAction {
                     return new PlayItem.Subtitles()
                             .setName(name)
                             .setHtml(name.toUpperCase())
-                            .setUrl(Base64.encode(FileUtil.getAbsolutePath(f)))
+                            .setUrl(Base64.encode(FilePathUtil.getAbsolutePath(f)))
                             .setType(FileUtil.extName(f));
                 }).toList();
         subtitles = CollUtil.distinct(subtitles, PlayItem.Subtitles::getName, true);
         PlayItem playItem = new PlayItem();
         playItem.setSubtitles(subtitles);
-        playItem.setFilename(Base64.encode(FileUtil.getAbsolutePath(file)))
+        playItem.setFilename(Base64.encode(FilePathUtil.getAbsolutePath(file)))
                 .setName(file.getName())
                 .setTitle(ReUtil.get(StringEnum.SEASON_REG, file.getName(), 0));
         playItems.add(playItem);
