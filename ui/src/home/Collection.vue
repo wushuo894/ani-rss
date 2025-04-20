@@ -267,6 +267,11 @@ let bgmAdd = (bgm) => {
 
 let onSuccess = (res) => {
   data.value.torrent = res.data
+  // 获取字幕组
+  api.post('api/collection?type=subgroup', data.value)
+      .then(res => {
+        data.value.ani.subgroup = res.data
+      })
 }
 
 let authorization = () => {
