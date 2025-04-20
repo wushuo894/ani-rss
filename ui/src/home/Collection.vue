@@ -271,6 +271,9 @@ let onSuccess = (res) => {
   api.post('api/collection?type=subgroup', data.value)
       .then(res => {
         data.value.ani.subgroup = res.data
+        if (res.data !== '未知字幕组') {
+          ElMessage.success(`字幕组已更新为 ${res.data}`)
+        }
       })
 }
 
