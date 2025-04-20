@@ -185,15 +185,32 @@ public class CollectionAction implements BaseAction {
         CollectionInfo collectionInfo = getBody(CollectionInfo.class);
         String torrent = collectionInfo.getTorrent();
 
-        if (type.equals("preview")) {
+        // 预览
+        if (type.equals("preview") || type.equals("subgroup")) {
             List<Item> preview = preview(collectionInfo);
             preview = CollUtil.sort(new ArrayList<>(preview), Comparator.comparingDouble(it -> {
                 Double episode = it.getEpisode();
                 return ObjectUtil.defaultIfNull(episode, 0.0);
             }));
+
+            if (type.equals("subgroup")) {
+                String subgroup = "未知字幕组";
+                String reg = "^\\[(.+?)]";
+                for (Item item : preview) {
+                    String name = new File(item.getTitle()).getName();
+                    if (!ReUtil.contains(reg, name)) {
+                        continue;
+                    }
+                    subgroup = ReUtil.get(reg, name, 1);
+                    break;
+                }
+                resultSuccess(subgroup);
+                return;
+            }
             resultSuccess(preview);
         }
 
+        // 开始下载
         if (!type.equals("start")) {
             return;
         }
@@ -213,7 +230,7 @@ public class CollectionAction implements BaseAction {
         String subgroup = ani.getSubgroup();
         String downloadPath = ani.getDownloadPath();
 
-        String name = StrFormatter.format("[ANI-RSS合集下载] {}", title);
+        String name = StrFormatter.format("[{}] {} 第{}季", subgroup, title, ani.getSeason());
         download(name, tempFile, downloadPath, List.of("ANI-RSS合集下载", subgroup));
 
         TorrentsInfo torrentsInfo = new TorrentsInfo()

@@ -4,8 +4,8 @@ import ani.rss.annotation.Auth;
 import ani.rss.annotation.Path;
 import ani.rss.entity.Ani;
 import ani.rss.util.AniUtil;
+import ani.rss.util.FilePathUtil;
 import ani.rss.util.TorrentUtil;
-import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.http.server.HttpServerRequest;
 import cn.hutool.http.server.HttpServerResponse;
@@ -39,7 +39,7 @@ public class DownloadPathAction implements BaseAction {
             change = !downloadPath.get(0).toString().equals(oldDownloadPath.get(0).toString());
         }
 
-        String downloadPathStr = FileUtil.getAbsolutePath(downloadPath.get(0).getAbsolutePath());
+        String downloadPathStr = FilePathUtil.getAbsolutePath(downloadPath.get(0));
         resultSuccess(Map.of(
                 "change", change,
                 "downloadPath", downloadPathStr

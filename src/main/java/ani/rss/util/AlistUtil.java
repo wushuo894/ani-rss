@@ -4,7 +4,6 @@ import ani.rss.entity.Ani;
 import ani.rss.entity.Config;
 import ani.rss.entity.TorrentsInfo;
 import ani.rss.enums.TorrentsTags;
-import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.lang.Opt;
 import cn.hutool.core.thread.ExecutorBuilder;
@@ -48,8 +47,8 @@ public class AlistUtil {
         Config config = ConfigUtil.CONFIG;
         Boolean alist = config.getAlist();
         String alistHost = config.getAlistHost();
-        String alistPath = FileUtil.getAbsolutePath(config.getAlistPath());
-        String alistOvaPath = FileUtil.getAbsolutePath(config.getAlistOvaPath());
+        String alistPath = FilePathUtil.getAbsolutePath(config.getAlistPath());
+        String alistOvaPath = FilePathUtil.getAbsolutePath(config.getAlistOvaPath());
         String alistToken = config.getAlistToken();
         Integer alistRetry = config.getAlistRetry();
 
@@ -77,10 +76,10 @@ public class AlistUtil {
 
         TorrentUtil.addTags(torrentsInfo, TorrentsTags.A_LIST.getValue());
 
-        String downloadDir = FileUtil.getAbsolutePath(torrentsInfo.getDownloadDir());
+        String downloadDir = FilePathUtil.getAbsolutePath(torrentsInfo.getDownloadDir());
 
-        String downloadPath = FileUtil.getAbsolutePath(config.getDownloadPath());
-        String ovaDownloadPath = FileUtil.getAbsolutePath(config.getOvaDownloadPath());
+        String downloadPath = FilePathUtil.getAbsolutePath(config.getDownloadPath());
+        String ovaDownloadPath = FilePathUtil.getAbsolutePath(config.getOvaDownloadPath());
 
         List<String> files = torrentsInfo.getFiles().get();
         for (String fileName : files) {

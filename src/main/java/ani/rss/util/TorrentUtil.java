@@ -76,10 +76,9 @@ public class TorrentUtil {
                 .count();
 
         List<File> downloadPathList = getDownloadPath(ani);
-        String savePath = FileUtil.getAbsolutePath(
+        String savePath = FilePathUtil.getAbsolutePath(
                 downloadPathList
                         .get(0)
-                        .toString()
         );
 
         ItemsUtil.procrastinating(ani, items);
@@ -293,7 +292,7 @@ public class TorrentUtil {
             TorrentsInfo backRSS = torrentsInfos
                     .stream()
                     .filter(torrentsInfo -> {
-                        if (!torrentsInfo.getDownloadDir().equals(FileUtil.getAbsolutePath(file.toString()))) {
+                        if (!torrentsInfo.getDownloadDir().equals(FilePathUtil.getAbsolutePath(file))) {
                             return false;
                         }
                         if (!ReUtil.contains(StringEnum.SEASON_REG, torrentsInfo.getName())) {
@@ -350,12 +349,12 @@ public class TorrentUtil {
                 isDel = true;
             }
             if (isDel) {
-                log.info("已开启备用RSS, 自动删除 {}", file.getAbsolutePath());
+                log.info("已开启备用RSS, 自动删除 {}", FilePathUtil.getAbsolutePath(file));
                 try {
                     FileUtil.del(file);
-                    log.info("删除成功 {}", file.getAbsolutePath());
+                    log.info("删除成功 {}", FilePathUtil.getAbsolutePath(file));
                 } catch (Exception e) {
-                    log.error("删除失败 {}", file.getAbsolutePath());
+                    log.error("删除失败 {}", FilePathUtil.getAbsolutePath(file));
                     log.error(e.getMessage(), e);
                 }
             }
@@ -461,7 +460,7 @@ public class TorrentUtil {
             return false;
         }
 
-        String downloadPath = FileUtil.getAbsolutePath(config.getDownloadPath());
+        String downloadPath = FilePathUtil.getAbsolutePath(config.getDownloadPath());
 
         if (StrUtil.isBlank(downloadPath)) {
             return false;
@@ -567,8 +566,8 @@ public class TorrentUtil {
         Boolean ova = ani.getOva();
 
         Config config = ConfigUtil.CONFIG;
-        String downloadPath = FileUtil.getAbsolutePath(config.getDownloadPath());
-        String ovaDownloadPath = FileUtil.getAbsolutePath(config.getOvaDownloadPath());
+        String downloadPath = FilePathUtil.getAbsolutePath(config.getDownloadPath());
+        String ovaDownloadPath = FilePathUtil.getAbsolutePath(config.getOvaDownloadPath());
         // 按拼音首字母存放
         Boolean acronym = config.getAcronym();
         // 根据季度存放
@@ -696,11 +695,11 @@ public class TorrentUtil {
         log.info("添加下载 {}", name);
 
         if (!torrentFile.exists()) {
-            log.error("种子下载出现问题 {} {}", name, torrentFile.getAbsolutePath());
+            log.error("种子下载出现问题 {} {}", name, FilePathUtil.getAbsolutePath(torrentFile));
             return;
         }
         ThreadUtil.sleep(1000);
-        savePath = FileUtil.getAbsolutePath(savePath);
+        savePath = FilePathUtil.getAbsolutePath(savePath);
 
         String text = StrFormatter.format("{} 已更新", name);
         if (!master) {
@@ -806,7 +805,7 @@ public class TorrentUtil {
         return AniUtil.ANI_LIST
                 .stream()
                 .filter(ani -> {
-                    String path = FileUtil.getAbsolutePath(TorrentUtil.getDownloadPath(ani).get(0).toString());
+                    String path = FilePathUtil.getAbsolutePath(TorrentUtil.getDownloadPath(ani).get(0));
                     return path.equals(downloadDir);
                 })
                 .findFirst()
@@ -992,7 +991,7 @@ public class TorrentUtil {
             TorrentFile torrentFile = new TorrentFile(file);
             hexHash = torrentFile.getHexHash();
         } catch (Exception e) {
-            log.error("转换种子为磁力链接时出现错误 {}", file.getAbsolutePath());
+            log.error("转换种子为磁力链接时出现错误 {}", FilePathUtil.getAbsolutePath(file));
             log.error(e.getMessage(), e);
         }
         return StrFormatter.format("magnet:?xt=urn:btih:{}", hexHash);
