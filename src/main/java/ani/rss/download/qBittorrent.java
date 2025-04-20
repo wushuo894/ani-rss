@@ -9,7 +9,6 @@ import ani.rss.enums.TorrentsTags;
 import ani.rss.util.ExceptionUtil;
 import ani.rss.util.GsonStatic;
 import ani.rss.util.HttpReq;
-import ani.rss.util.RenameCacheUtil;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.lang.Assert;
@@ -151,8 +150,6 @@ public class qBittorrent implements BaseDownload {
                 .form("ratioLimit", ratioLimit)
                 .form("seedingTimeLimit", seedingTimeLimit)
                 .form("inactiveSeedingTimeLimit", inactiveSeedingTimeLimit);
-
-        RenameCacheUtil.put(name, ani.getId());
 
         String extName = FileUtil.extName(torrentFile);
         if ("txt".equals(extName)) {
