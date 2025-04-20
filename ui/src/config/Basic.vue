@@ -240,7 +240,8 @@
                 <el-switch v-model:model-value="props.config.backRss"/>
               </div>
               <div>
-                <el-checkbox v-model="props.config['coexist']" :disabled="!props.config.backRss" label="多字幕组共存模式"/>
+                <el-checkbox v-model="props.config['coexist']" :disabled="!props.config.backRss"
+                             label="多字幕组共存模式"/>
               </div>
               <div class="flex" style="width: 100%;justify-content: end;">
                 <el-text class="mx-1" size="small">

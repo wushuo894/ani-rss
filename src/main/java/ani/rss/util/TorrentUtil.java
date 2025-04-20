@@ -769,7 +769,7 @@ public class TorrentUtil {
         }
         Ani ani = null;
         try {
-            ani = findAniByName(name);
+            ani = findAniByDownloadPath(torrentsInfo);
 
             Set<String> allTags = Arrays.stream(TorrentsTags.values())
                     .map(TorrentsTags::getValue)
@@ -798,112 +798,19 @@ public class TorrentUtil {
     /**
      * 根据任务反查订阅
      *
-     * @param name
+     * @param torrentsInfo
      * @return
      */
-    public static synchronized Ani findAniByName(String name) {
-        String id = RenameCacheUtil.get("name");
-        if (StrUtil.isNotBlank(id)) {
-            // 根据id搜索到对应的订阅
-            Ani ani = AniUtil.ANI_LIST.stream()
-                    .filter(it -> id.equals(it.getId()))
-                    .findFirst()
-                    .orElse(null);
-            if (Objects.nonNull(ani)) {
-                RenameCacheUtil.remove(name);
-                return ani;
-            }
-        }
-
-        String tempName = name
-                .replaceAll(StringEnum.YEAR_REG, "")
-                .replaceAll(StringEnum.TMDB_ID_REG, "")
-                .trim();
-
-        Optional<Ani> first = AniUtil.ANI_LIST.stream()
-                .filter(it -> it.getSeason() == 1)
-                .filter(it -> {
-                    String title = it.getTitle();
-                    title = title.replaceAll(StringEnum.YEAR_REG, "");
-                    title = title.replaceAll(StringEnum.TMDB_ID_REG, "");
-                    title = title.trim();
-                    return title.equals(tempName);
+    public static synchronized Ani findAniByDownloadPath(TorrentsInfo torrentsInfo) {
+        String downloadDir = torrentsInfo.getDownloadDir();
+        return AniUtil.ANI_LIST
+                .stream()
+                .filter(ani -> {
+                    String path = FileUtil.getAbsolutePath(TorrentUtil.getDownloadPath(ani).get(0).toString());
+                    return path.equals(downloadDir);
                 })
-                .findFirst();
-        if (first.isPresent()) {
-            return first.get();
-        }
-
-        if (!ReUtil.contains(StringEnum.SEASON_REG, name)) {
-            return AniUtil.ANI_LIST
-                    .stream()
-                    .filter(ani -> ani.getTitle().equals(name))
-                    .findFirst()
-                    .orElse(null);
-        }
-        Config config = ConfigUtil.CONFIG;
-        String renameTemplate = config.getRenameTemplate();
-        renameTemplate = renameTemplate
-                .replace(".", "\\.")
-                .replace("(", "\\(")
-                .replace(")", "\\)")
-                .replace("[", "\\[")
-                .replace("]", "\\]");
-
-        String title;
-        int season;
-
-        int titleIndex = renameTemplate.indexOf("${title}");
-
-        if (titleIndex < 0) {
-            return null;
-        }
-
-        int seasonIndex = renameTemplate.indexOf("${seasonFormat}");
-
-        if (seasonIndex < 1) {
-            seasonIndex = renameTemplate.indexOf("${season}");
-        }
-
-        if (seasonIndex < 1) {
-            return null;
-        }
-
-        renameTemplate = renameTemplate
-                .replace("${title}", "(.+)")
-                .replace("${seasonFormat}", "(\\d+)")
-                .replace("${season}", "(\\d+)");
-
-        renameTemplate = renameTemplate.replaceAll("\\$\\{\\w+}", ".+");
-
-        title = ReUtil.get(renameTemplate, name, titleIndex < seasonIndex ? 1 : 2);
-        season = Integer.parseInt(ReUtil.get(renameTemplate, name, titleIndex < seasonIndex ? 2 : 1));
-
-        title = title.replaceAll(StringEnum.YEAR_REG, "");
-        title = title.replaceAll(StringEnum.TMDB_ID_REG, "");
-        while (title.contains("  ")) {
-            title = title.replace("  ", " ");
-        }
-        title = title.trim();
-
-        for (Ani ani : AniUtil.ANI_LIST) {
-            String aniTitle = ani.getTitle();
-            aniTitle = aniTitle.replaceAll(StringEnum.YEAR_REG, "");
-            aniTitle = aniTitle.replaceAll(StringEnum.TMDB_ID_REG, "");
-            while (aniTitle.contains("  ")) {
-                aniTitle = aniTitle.replace("  ", " ");
-            }
-            aniTitle = aniTitle.trim();
-            if (!title.equals(aniTitle)) {
-                continue;
-            }
-            if (season != ani.getSeason()) {
-                continue;
-            }
-            return ObjectUtil.clone(ani);
-        }
-
-        return null;
+                .findFirst()
+                .orElse(null);
     }
 
     /**
