@@ -1,6 +1,7 @@
 package ani.rss.util;
 
 import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.util.ReUtil;
 
 import java.io.File;
 
@@ -13,7 +14,18 @@ public class FilePathUtil {
      * @return
      */
     public static String getAbsolutePath(File file) {
-        String absolutePath = file.getAbsolutePath();
+        String absolutePath = file.getPath();
+        if (absolutePath.startsWith("/")) {
+            // 已是绝对路径
+            return FileUtil.normalize(absolutePath);
+        }
+
+        if (ReUtil.contains("^[A-z]:", absolutePath)) {
+            // 已是绝对路径
+            return FileUtil.normalize(absolutePath);
+        }
+
+        absolutePath = file.getAbsolutePath();
         return FileUtil.normalize(absolutePath);
     }
 
@@ -24,6 +36,6 @@ public class FilePathUtil {
      * @return
      */
     public static String getAbsolutePath(String file) {
-        return FileUtil.getAbsolutePath(file);
+        return getAbsolutePath(new File(file));
     }
 }
