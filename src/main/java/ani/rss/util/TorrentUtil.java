@@ -808,6 +808,7 @@ public class TorrentUtil {
                     String path = FilePathUtil.getAbsolutePath(TorrentUtil.getDownloadPath(ani).get(0));
                     return path.equals(downloadDir);
                 })
+                .map(ObjectUtil::clone)
                 .findFirst()
                 .orElse(null);
     }
