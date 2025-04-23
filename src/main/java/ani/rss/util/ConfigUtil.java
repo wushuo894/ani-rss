@@ -8,8 +8,6 @@ import ani.rss.enums.ServerChanTypeEnum;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.bean.copier.CopyOptions;
 import cn.hutool.core.io.FileUtil;
-import cn.hutool.core.lang.Assert;
-import cn.hutool.core.lang.Validator;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.File;
@@ -206,19 +204,6 @@ public class ConfigUtil {
      * 将设置保存到磁盘
      */
     public static synchronized void sync() {
-        Boolean mail = CONFIG.getMail();
-        MyMailAccount mailAccount = CONFIG.getMailAccount();
-        String from = mailAccount.getFrom();
-        String pass = mailAccount.getPass();
-        String host = mailAccount.getHost();
-        String mailAddressee = CONFIG.getMailAddressee();
-        if (mail) {
-            Assert.notBlank(host, "SMTP地址 不能为空");
-            Assert.notBlank(pass, "发件人密码 不能为空");
-            Assert.isTrue(Validator.isEmail(mailAddressee, true), "收件人 邮箱格式不正确");
-            Assert.isTrue(Validator.isEmail(from, true), "发件人 邮箱格式不正确");
-        }
-
         File configFile = getConfigFile();
         log.debug("保存配置 {}", configFile);
         try {
