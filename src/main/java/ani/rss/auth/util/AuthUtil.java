@@ -51,9 +51,18 @@ public class AuthUtil {
      */
     @Synchronized("CACHE")
     public static String resetKey() {
-        String key = RandomUtil.randomString(128);
         Config config = ConfigUtil.CONFIG;
+
+        Boolean multiLoginForbidden = config.getMultiLoginForbidden();
+        // 未开启禁止多端登录
+        if (!multiLoginForbidden) {
+            return "";
+        }
+
+        // 登录有效时间/小时
         Integer loginEffectiveHours = config.getLoginEffectiveHours();
+
+        String key = RandomUtil.randomString(128);
         CACHE.put("key", key, TimeUnit.HOURS.toMillis(loginEffectiveHours));
         return key;
     }

@@ -15,17 +15,9 @@
         </template>
       </el-input-number>
     </el-form-item>
-    <el-form-item label="IP校验">
-      <div>
-        <div>
-          <el-switch v-model:model-value="props.config.verifyLoginIp"/>
-        </div>
-        <div>
-          <el-text class="mx-1" size="small">
-            如果IP发生改变登录将失效
-          </el-text>
-        </div>
-      </div>
+    <el-form-item label="其他">
+      <el-checkbox v-model:model-value="props.config.verifyLoginIp" label="如果IP发生改变登录将失效"/>
+      <el-checkbox v-model:model-value="props.config['multiLoginForbidden']" label="禁止多端登录"/>
     </el-form-item>
     <el-form-item label="IP白名单">
       <div style="width: 100%;">

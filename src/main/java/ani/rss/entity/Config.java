@@ -254,6 +254,11 @@ public class Config implements Serializable {
     private Login login;
 
     /**
+     * 禁止多端登录
+     */
+    private Boolean multiLoginForbidden;
+
+    /**
      * 登录有效时间/小时
      */
     private Integer loginEffectiveHours;
