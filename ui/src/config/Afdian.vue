@@ -47,7 +47,7 @@
         <div style="width: 8px"></div>
         <el-button :loading="verifyNoLoading" bg text type="primary" @click="verifyNo">验证</el-button>
       </div>
-      <div>
+      <div style="margin-left: 8px;">
         <el-button :disabled="props.config['verifyExpirationTime']" :loading="tryOutLoading"
                    bg
                    text
