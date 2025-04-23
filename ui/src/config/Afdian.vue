@@ -41,19 +41,20 @@
     <el-text class="mx-1" size="small">
       已经捐赠？在这里输入您的订单号以激活您的捐赠
     </el-text>
-    <div style="display: flex;width: 100%;margin-top: 8px">
-      <el-input v-model:model-value="props.config.outTradeNo" style="max-width: 200px;"/>
-      <div style="width: 8px"></div>
-      <el-button :loading="verifyNoLoading" bg text type="primary" @click="verifyNo">验证</el-button>
-      <div class="flex flex-center">
-        &nbsp;或者&nbsp;
+    <div class="flex" style="width: 100%;margin-top: 8px;justify-content: space-between;">
+      <div class="flex">
+        <el-input v-model:model-value="props.config.outTradeNo" style="max-width: 200px;"/>
+        <div style="width: 8px"></div>
+        <el-button :loading="verifyNoLoading" bg text type="primary" @click="verifyNo">验证</el-button>
       </div>
-      <el-button :disabled="props.config['tryOut'] || props.config['verifyExpirationTime']" :loading="tryOutLoading"
-                 bg
-                 text
-                 @click="tryOut">
-        试用15天
-      </el-button>
+      <div>
+        <el-button :disabled="props.config['verifyExpirationTime']" :loading="tryOutLoading"
+                   bg
+                   text
+                   @click="tryOut">
+          试用15天
+        </el-button>
+      </div>
     </div>
     <div style="margin-top: 8px">
       <el-alert :closable="false" show-icon title="可以无限试用"/>
