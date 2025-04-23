@@ -85,6 +85,7 @@ public class ConfigUtil {
                         .setUsername("admin")
                         .setPassword(password)
                 )
+                .setMultiLoginForbidden(true)
                 .setLoginEffectiveHours(3)
                 .setExclude(List.of("720[Pp]", "\\d-\\d", "合集", "特别篇"))
                 .setImportExclude(false)
