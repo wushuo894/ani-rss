@@ -174,6 +174,7 @@ public class TorrentUtil {
                         continue;
                     }
                     if (!delete(backRSS)) {
+                        log.debug("备用RSS可能还未做种完成 {}", backRSS.getName());
                         // 删除失败或者不允许删除
                         continue;
                     }

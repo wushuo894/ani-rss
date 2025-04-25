@@ -1,4 +1,5 @@
 <template>
+  <TryOut ref="tryOutRef" :config="props.config"/>
   <el-form>
     <el-form-item label="捐赠状态">
       <div v-if="props.config['tryOut']">
@@ -48,10 +49,10 @@
         <el-button :loading="verifyNoLoading" bg text type="primary" @click="verifyNo">验证</el-button>
       </div>
       <div style="margin-left: 8px;">
-        <el-button :disabled="props.config['verifyExpirationTime']" :loading="tryOutLoading"
+        <el-button :disabled="props.config['verifyExpirationTime']"
                    bg
                    text
-                   @click="tryOut">
+                   @click="tryOutRef?.show">
           试用15天
         </el-button>
       </div>
@@ -69,6 +70,9 @@ import support_aifadian from "../icon/support_aifadian.svg";
 import api from "../api.js";
 import {ElMessage} from "element-plus";
 import {Mug} from "@element-plus/icons-vue";
+import TryOut from "./TryOut.vue";
+
+let tryOutRef = ref()
 
 function timestampToDate(timestamp) {
   const date = new Date(timestamp);
@@ -97,22 +101,6 @@ let verifyNo = () => {
   }).finally(() => {
     verifyNoLoading.value = false
   })
-}
-
-let tryOutLoading = ref(false)
-
-let tryOut = () => {
-  tryOutLoading.value = true
-  api.post('api/afdian?type=tryOut')
-      .then(res => {
-        ElMessage.success(res.message)
-        props.config['expirationTime'] = res.data
-        props.config['verifyExpirationTime'] = true
-        props.config['tryOut'] = true
-      })
-      .finally(() => {
-        tryOutLoading.value = false
-      })
 }
 
 let props = defineProps(['config'])

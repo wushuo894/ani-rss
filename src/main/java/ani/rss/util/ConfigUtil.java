@@ -158,7 +158,8 @@ public class ConfigUtil {
                 .setEmbyDelayed(0L)
                 .setProcrastinating(false)
                 .setProcrastinatingDay(14)
-                .setGithub("None");
+                .setGithub("None")
+                .setGithubToken("");
     }
 
     /**

@@ -612,4 +612,9 @@ public class Config implements Serializable {
      * github 加速
      */
     private String github;
+
+    /**
+     * github Token
+     */
+    private String githubToken;
 }
