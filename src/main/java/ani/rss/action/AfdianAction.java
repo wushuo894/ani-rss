@@ -71,7 +71,9 @@ public class AfdianAction implements BaseAction {
             Assert.isTrue(ok, "未点击star");
 
             long time = DateUtil.offsetDay(new Date(), 15).getTime();
-            config.setExpirationTime(time)
+            ConfigUtil.CONFIG
+                    .setGithubToken(githubToken)
+                    .setExpirationTime(time)
                     .setTryOut(true);
             ConfigUtil.sync();
             resultSuccess(result ->
