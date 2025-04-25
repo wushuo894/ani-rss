@@ -284,7 +284,7 @@
           </el-form-item>
           <el-form-item label="BgmToken">
             <div style="width: 100%;">
-              <el-input v-model:model-value="props.config.bgmToken"/>
+              <el-input v-model:model-value="props.config.bgmToken" type="password"/>
               <div>
                 <el-text class="mx-1" size="small">
                   你可以在 <a target="_blank" href="https://next.bgm.tv/demo/access-token">https://next.bgm.tv/demo/access-token</a>

@@ -5,7 +5,10 @@ import ani.rss.annotation.Path;
 import ani.rss.entity.Config;
 import ani.rss.util.AfdianUtil;
 import ani.rss.util.ConfigUtil;
+import ani.rss.util.HttpReq;
 import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.lang.Assert;
+import cn.hutool.http.HttpResponse;
 import cn.hutool.http.server.HttpServerRequest;
 import cn.hutool.http.server.HttpServerResponse;
 import com.google.gson.JsonObject;
@@ -49,7 +52,7 @@ public class AfdianAction implements BaseAction {
         }
 
         if (type.equals("tryOut")) {
-            Config config = ConfigUtil.CONFIG;
+            Config config = getBody(Config.class);
             if (AfdianUtil.verifyExpirationTime()) {
                 resultError(result ->
                         result
@@ -57,6 +60,16 @@ public class AfdianAction implements BaseAction {
                 );
                 return;
             }
+
+            String githubToken = config.getGithubToken();
+            Assert.notBlank(githubToken, "GithubToken 不能为空");
+
+            Boolean ok = HttpReq.get("https://api.github.com/user/starred/wushuo894/ani-rss")
+                    .header("Authorization", "Bearer " + githubToken)
+                    .thenFunction(HttpResponse::isOk);
+
+            Assert.isTrue(ok, "未点击star");
+
             long time = DateUtil.offsetDay(new Date(), 15).getTime();
             config.setExpirationTime(time)
                     .setTryOut(true);
