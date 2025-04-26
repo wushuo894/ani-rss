@@ -1,5 +1,6 @@
 package ani.rss.entity;
 
+import cn.hutool.core.util.NumberUtil;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
@@ -41,6 +42,21 @@ public class TorrentsInfo implements Serializable {
     private String magnet;
 
     /**
+     * 已下载的大小
+     */
+    private Long completed;
+
+    /**
+     * 大小
+     */
+    private Long size;
+
+    /**
+     * 进度
+     */
+    private Double progress;
+
+    /**
      * 大小
      */
     private String sizeStr;
@@ -64,6 +80,14 @@ public class TorrentsInfo implements Serializable {
      * 文件列表
      */
     private Supplier<List<String>> files;
+
+    public TorrentsInfo progress(long completed, long size) {
+        this.setCompleted(completed);
+        this.setSize(size);
+        this.setSizeStr(NumberUtil.roundStr((size * 1.0) / 1024 / 1024, 2));
+        this.setProgress(NumberUtil.round((completed * 1.0 / size) * 100, 2).doubleValue());
+        return this;
+    }
 
     public enum State {
         /**

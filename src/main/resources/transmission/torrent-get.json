@@ -9,7 +9,9 @@
       "isStalled",
       "id",
       "downloadDir",
-      "status"
+      "status",
+      "totalSize",
+      "haveValid"
     ]
   },
   "method": "torrent-get"

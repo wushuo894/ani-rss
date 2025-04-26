@@ -4,6 +4,7 @@
   <Logs ref="logs"/>
   <Manage ref="manage" @load="list?.getList"/>
   <Collection ref="collection"/>
+  <TorrentsInfos ref="torrentsInfosRef"/>
   <div style="height: 100%;display: flex;flex-direction: column;">
     <div id="header">
       <div style="margin: 10px;" class="auto">
@@ -64,6 +65,16 @@
               </el-dropdown-menu>
             </template>
           </el-dropdown>
+        </div>
+        <div style="margin: 0 4px;">
+          <el-button bg text @click="torrentsInfosRef?.show">
+            <el-icon :class="elIconClass()">
+              <Download/>
+            </el-icon>
+            <template v-if="isNotMobile()">
+              下载
+            </template>
+          </el-button>
         </div>
         <div style="margin: 0 4px;">
           <popconfirm title="立即刷新全部订阅?" @confirm="download">
@@ -132,9 +143,11 @@ import Popconfirm from "../other/Popconfirm.vue";
 import Manage from "./Manage.vue";
 import {useWindowSize} from "@vueuse/core";
 import Collection from "./Collection.vue";
+import TorrentsInfos from "./TorrentsInfos.vue";
 
 const collection = ref()
 const manage = ref()
+const torrentsInfosRef = ref()
 
 const title = ref('')
 const enable = ref('已启用')
