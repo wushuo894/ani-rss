@@ -1,6 +1,6 @@
 ### 改动
 
-- 支持展示下载任务列表
+- 调用MPV兼容项目 [northsea4/mpvplay-protocol](https://github.com/northsea4/mpvplay-protocols)
 
 ### 疑惑为什么增加赞助功能的可以看一下我发的 discussion
 
