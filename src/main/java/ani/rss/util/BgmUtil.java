@@ -321,9 +321,12 @@ public class BgmUtil {
                     .setScore(score)
                     .setOva(List.of("OVA", "剧场版").contains(platform.toUpperCase()));
 
-            if (jsonObject.has("date")) {
-                String date = jsonObject.get("date").getAsString();
-                bgmInfo.setDate(DateUtil.parse(date, DatePattern.NORM_DATE_PATTERN));
+            JsonElement date = jsonObject.get("date");
+
+            if (Objects.nonNull(date) && !date.isJsonNull()) {
+                bgmInfo.setDate(
+                        DateUtil.parse(date.getAsString(), DatePattern.NORM_DATE_PATTERN)
+                );
             } else {
                 bgmInfo.setDate(new Date());
             }
