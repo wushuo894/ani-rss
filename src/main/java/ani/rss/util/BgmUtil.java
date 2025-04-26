@@ -317,7 +317,6 @@ public class BgmUtil {
                     .setSubjectId(subjectId)
                     .setNameCn(nameCn)
                     .setName(name)
-
                     .setEps(eps)
                     .setScore(score)
                     .setOva(List.of("OVA", "剧场版").contains(platform.toUpperCase()));
