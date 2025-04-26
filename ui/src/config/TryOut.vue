@@ -10,7 +10,7 @@
       <el-button bg icon="Star" text type="info" @click="openUrl('https://github.com/wushuo894/ani-rss')">去点个Star
       </el-button>
       <el-button :icon="Github" bg text type="info"
-                 @click="openUrl('https://github.com/login/oauth/authorize?client_id=Ov23li1dD89l7iGKhYa3&redirect_uri=https://github-app.wushuo.top/&scope=user,repo,read:user,read:org')">
+                 @click="openUrl('https://github.com/login/oauth/authorize?client_id=Ov23li1dD89l7iGKhYa3&redirect_uri=https://github-app.wushuo.top/&scope=read:user')">
         获取GithubToken
       </el-button>
       <el-button :loading="tryOutLoading" bg icon="Select" text type="primary" @click="tryOut">开始试用</el-button>
