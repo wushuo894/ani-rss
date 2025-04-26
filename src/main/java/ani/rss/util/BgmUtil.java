@@ -304,7 +304,7 @@ public class BgmUtil {
 
             String name = jsonObject.get("name").getAsString();
             String nameCn = jsonObject.get("name_cn").getAsString();
-            String date = jsonObject.get("date").getAsString();
+
             String platform = jsonObject.get("platform").getAsString();
             int eps = jsonObject.get("eps").getAsInt();
 
@@ -317,10 +317,20 @@ public class BgmUtil {
                     .setSubjectId(subjectId)
                     .setNameCn(nameCn)
                     .setName(name)
-                    .setDate(DateUtil.parse(date, DatePattern.NORM_DATE_PATTERN))
                     .setEps(eps)
                     .setScore(score)
                     .setOva(List.of("OVA", "剧场版").contains(platform.toUpperCase()));
+
+            JsonElement date = jsonObject.get("date");
+
+            if (Objects.nonNull(date) && !date.isJsonNull()) {
+                bgmInfo.setDate(
+                        DateUtil.parse(date.getAsString(), DatePattern.NORM_DATE_PATTERN)
+                );
+            } else {
+                bgmInfo.setDate(new Date());
+            }
+
 
             JsonObject images = jsonObject.getAsJsonObject("images");
             if (Objects.nonNull(images)) {
