@@ -238,24 +238,30 @@ public class qBittorrent implements BaseDownload {
                             String hash = jsonObject.get("hash").getAsString();
                             String name = jsonObject.get("name").getAsString();
                             String savePath = jsonObject.get("save_path").getAsString();
+                            long completed = jsonObject.get("completed").getAsLong();
+                            long size = jsonObject.get("size").getAsLong();
                             JsonElement state = jsonObject.get("state");
 
                             List<String> tagList = StrUtil.split(tags, ",", true, true);
 
                             TorrentsInfo torrentsInfo = new TorrentsInfo();
-                            torrentsInfo.setName(name);
-                            torrentsInfo.setHash(hash);
-                            torrentsInfo.setDownloadDir(FilePathUtil.getAbsolutePath(savePath));
+
                             torrentsInfo.setState(Objects.isNull(state) ?
                                     TorrentsInfo.State.downloading : EnumUtil.fromString(TorrentsInfo.State.class, state.getAsString(), TorrentsInfo.State.downloading)
                             );
-                            torrentsInfo.setTags(tagList);
-                            torrentsInfo.setFiles(() ->
-                                    files(torrentsInfo, true, config)
-                                            .stream()
-                                            .filter(fileEntity -> fileEntity.getPriority() > 0)
-                                            .map(FileEntity::getName)
-                                            .toList());
+
+                            torrentsInfo
+                                    .progress(completed, size)
+                                    .setName(name)
+                                    .setHash(hash)
+                                    .setDownloadDir(FilePathUtil.getAbsolutePath(savePath))
+                                    .setTags(tagList)
+                                    .setFiles(() ->
+                                            files(torrentsInfo, true, config)
+                                                    .stream()
+                                                    .filter(fileEntity -> fileEntity.getPriority() > 0)
+                                                    .map(FileEntity::getName)
+                                                    .toList());
                             // 包含标签
                             if (tagList.contains(TorrentsTags.ANI_RSS.getValue())) {
                                 torrentsInfoList.add(torrentsInfo);

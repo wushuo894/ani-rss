@@ -101,8 +101,12 @@ public class Aria2 implements BaseDownload {
                                 .map(o -> o.get("path").getAsString())
                                 .toList();
 
+                        long size = asJsonObject.get("totalLength").getAsLong();
+                        long completed = asJsonObject.get("completedLength").getAsLong();
+
                         TorrentsInfo torrentsInfo = new TorrentsInfo();
                         torrentsInfo
+                                .progress(completed, size)
                                 .setTags(List.of())
                                 .setId(gid)
                                 .setName(name)
