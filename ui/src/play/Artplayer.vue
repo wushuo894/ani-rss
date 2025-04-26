@@ -26,7 +26,7 @@
         </template>
         MX
       </el-button>
-      <el-button bg text @click="openUrl(`mpv://play/${encodeToBase64(src)}`)">
+      <el-button bg text @click="openUrl(`mpvplay://${src}`)">
         <template #icon>
           <img alt="MPV" class="el-icon--left" height="20" src="../icon/icon-MPV.webp" width="20"/>
         </template>
