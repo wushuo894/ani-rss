@@ -17,6 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.io.File;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
@@ -57,18 +58,7 @@ public class AlistUtil {
         String alistToken = config.getAlistToken();
         Integer alistRetry = config.getAlistRetry();
 
-        if (StrUtil.isBlank(alistHost)) {
-            log.error("alistHost 未配置");
-            return;
-        }
-        if (StrUtil.isBlank(alistToken)) {
-            log.error("alistToken 未配置");
-            return;
-        }
-        if (StrUtil.isBlank(alistPath)) {
-            log.error("alistPath 未配置");
-            return;
-        }
+        verify();
 
         List<String> tags = torrentsInfo.getTags();
         if (tags.contains(TorrentsTags.A_LIST.getValue())) {
@@ -89,6 +79,7 @@ public class AlistUtil {
             Boolean ova = Opt.ofNullable(ani)
                     .map(Ani::getOva)
                     .orElse(false);
+
             if (ova) {
                 filePath = StrUtil.blankToDefault(alistOvaPath, filePath);
             }
@@ -163,30 +154,18 @@ public class AlistUtil {
         String alistOvaPath = FilePathUtil.getAbsolutePath(config.getAlistOvaPath());
         String alistToken = config.getAlistToken();
 
-        if (StrUtil.isBlank(alistHost)) {
-            log.error("alistHost 未配置");
-            return;
-        }
-        if (StrUtil.isBlank(alistToken)) {
-            log.error("alistToken 未配置");
-            return;
-        }
-        if (StrUtil.isBlank(alistPath)) {
-            log.error("alistPath 未配置");
-            return;
-        }
-
-        String filePath = alistPath;
+        verify();
 
         Boolean ova = Opt.ofNullable(ani)
                 .map(Ani::getOva)
                 .orElse(false);
-        final String resolvedFilePath = ova ? StrUtil.blankToDefault(alistOvaPath, filePath) : filePath;
+
+        String resolvedFilePath = ova ? StrUtil.blankToDefault(alistOvaPath, alistPath) : alistPath;
         EXECUTOR.execute(() -> {
             Long getAlistRefreshDelay = config.getAlistRefreshDelayed();
-        if (getAlistRefreshDelay > 0) {
-            ThreadUtil.sleep(getAlistRefreshDelay, TimeUnit.SECONDS);
-        }
+            if (getAlistRefreshDelay > 0) {
+                ThreadUtil.sleep(getAlistRefreshDelay, TimeUnit.SECONDS);
+            }
             log.info("刷新 Alist 路径: {}", resolvedFilePath);
 
             try {
@@ -195,11 +174,16 @@ public class AlistUtil {
                     url = url.substring(0, url.length() - 1);
                 }
                 url += "/api/fs/list";
+
+                Map<String, Object> map = Map.of(
+                        "path", resolvedFilePath,
+                        "refresh", true
+                );
+
                 HttpReq.post(url)
-                        .timeout(1000 * 60 * 2)
+                        .timeout(1000 * 20)
                         .header(Header.AUTHORIZATION, alistToken)
-                        .header("Content-Type", "application/json")
-                        .body("{\n    \"path\": \"" + resolvedFilePath + "\",\n    \"refresh\": true\n}")
+                        .body(GsonStatic.toJson(map))
                         .then(res -> {
                             Assert.isTrue(res.isOk(), "刷新失败 路径: {} 状态码: {}", resolvedFilePath, res.getStatus());
                             JsonObject jsonObject = GsonStatic.fromJson(res.body(), JsonObject.class);
@@ -212,4 +196,16 @@ public class AlistUtil {
             }
         });
     }
+
+    public static void verify() {
+        Config config = ConfigUtil.CONFIG;
+        String alistHost = config.getAlistHost();
+        String alistPath = FilePathUtil.getAbsolutePath(config.getAlistPath());
+        String alistToken = config.getAlistToken();
+
+        Assert.notBlank(alistHost, "alistHost 未配置");
+        Assert.notBlank(alistPath, "alistPath 未配置");
+        Assert.notBlank(alistToken, "alistToken 未配置");
+    }
+
 }

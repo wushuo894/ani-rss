@@ -787,8 +787,16 @@ public class TorrentUtil {
         } catch (Exception e) {
             log.error(e.getMessage(), e);
         }
-        AlistUtil.upload(torrentsInfo, ani);
-        AlistUtil.refresh(ani);
+        try {
+            AlistUtil.upload(torrentsInfo, ani);
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+        }
+        try {
+            AlistUtil.refresh(ani);
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+        }
         String text = StrFormatter.format("{} 下载完成", name);
         if (tags.contains(TorrentsTags.BACK_RSS.getValue())) {
             text = StrFormatter.format("(备用RSS) {}", text);
