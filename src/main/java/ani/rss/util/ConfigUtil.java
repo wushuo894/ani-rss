@@ -159,7 +159,9 @@ public class ConfigUtil {
                 .setProcrastinating(false)
                 .setProcrastinatingDay(14)
                 .setGithub("None")
-                .setGithubToken("");
+                .setGithubToken("")
+                .setAlistRefresh(false)
+                .setAlistRefreshDelayed(0L);
     }
 
     /**
