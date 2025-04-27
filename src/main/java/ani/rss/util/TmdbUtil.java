@@ -3,6 +3,8 @@ package ani.rss.util;
 import ani.rss.entity.Ani;
 import ani.rss.entity.Config;
 import ani.rss.enums.StringEnum;
+import cn.hutool.cache.CacheUtil;
+import cn.hutool.cache.impl.FIFOCache;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.text.StrFormatter;
@@ -141,13 +143,15 @@ public class TmdbUtil {
                 });
     }
 
+    static FIFOCache<String, Map<Integer, String>> cache = CacheUtil.newFIFOCache(8);
+
     /**
      * 获取每集的标题
      *
      * @param ani
      * @return
      */
-    public static Map<Integer, String> getEpisodeTitleMap(Ani ani) {
+    public static synchronized Map<Integer, String> getEpisodeTitleMap(Ani ani) {
         TmdbUtil.Tmdb tmdb = ani.getTmdb();
         Integer season = ani.getSeason();
         Boolean ova = ani.getOva();
@@ -166,7 +170,16 @@ public class TmdbUtil {
             return map;
         }
 
-        return getEpisodeTitleMap(tmdb, season);
+        String key = tmdb.getId() + ":" + season;
+
+        Map<Integer, String> cacheMap = TmdbUtil.cache.get(key);
+        if (Objects.nonNull(cacheMap)) {
+            return cacheMap;
+        }
+
+        Map<Integer, String> episodeTitleMap = getEpisodeTitleMap(tmdb, season);
+        cache.put(key, episodeTitleMap);
+        return episodeTitleMap;
     }
 
     /**

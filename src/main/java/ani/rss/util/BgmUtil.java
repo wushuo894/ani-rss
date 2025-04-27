@@ -5,6 +5,7 @@ import ani.rss.entity.BgmInfo;
 import ani.rss.entity.Config;
 import cn.hutool.cache.Cache;
 import cn.hutool.cache.CacheUtil;
+import cn.hutool.cache.impl.FIFOCache;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.date.DatePattern;
 import cn.hutool.core.date.DateUtil;
@@ -442,13 +443,15 @@ public class BgmUtil {
         return httpRequest;
     }
 
+    static FIFOCache<String, Map<Integer, Function<Boolean, String>>> cache = CacheUtil.newFIFOCache(8);
+
     /**
      * 获取每集的标题
      *
      * @param ani
      * @return
      */
-    public static Map<Integer, Function<Boolean, String>> getEpisodeTitleMap(Ani ani) {
+    public static synchronized Map<Integer, Function<Boolean, String>> getEpisodeTitleMap(Ani ani) {
         Map<Integer, Function<Boolean, String>> episodeTitleMap = new HashMap<>();
 
         String subjectId = getSubjectId(ani);
@@ -459,6 +462,11 @@ public class BgmUtil {
 
         if (ani.getOva()) {
             return episodeTitleMap;
+        }
+
+        Map<Integer, Function<Boolean, String>> cacheMap = cache.get(subjectId);
+        if (Objects.nonNull(cacheMap)) {
+            return cacheMap;
         }
 
         try {
@@ -486,6 +494,7 @@ public class BgmUtil {
         } catch (Exception e) {
             log.error(e.getMessage(), e);
         }
+        cache.put(subjectId, episodeTitleMap, TimeUnit.MINUTES.toMillis(5));
         return episodeTitleMap;
     }
 
