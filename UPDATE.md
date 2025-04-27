@@ -1,9 +1,8 @@
 ### 改动
 
-- 修复windows下alist上传失败的问题
+- 重命名模板增加 `${bgmJpEpisodeTitle}` 用于获取bgm日文集标题
 
-> [!TIP]
-> 狗日的 windows 文件路径是 `\`, 那个天才发明出来的
+close #328
 
 ### 疑惑为什么增加赞助功能的可以看一下我发的 discussion
 
