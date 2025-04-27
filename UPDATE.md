@@ -1,6 +1,9 @@
 ### 改动
 
-- 调用MPV兼容项目 [northsea4/mpvplay-protocol](https://github.com/northsea4/mpvplay-protocols)
+- 修复windows下alist上传失败的问题
+
+> [!TIP]
+> 狗日的 windows 文件路径是 `\`, 那个天才发明出来的
 
 ### 疑惑为什么增加赞助功能的可以看一下我发的 discussion
 
