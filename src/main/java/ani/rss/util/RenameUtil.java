@@ -10,14 +10,16 @@ import cn.hutool.core.util.ReUtil;
 import cn.hutool.core.util.StrUtil;
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.Function;
 
 @Slf4j
 public class RenameUtil {
     public static final String REG_STR = "(.*|\\[.*])(( - |Vol |[Ee][Pp]?)\\d+(\\.5)?|【\\d+(\\.5)?】|\\[\\d+(\\.5)?( ?[vV]\\d)?( ?END)?( ?完)?]|第\\d+(\\.5)?[话話集]( - END)?|^\\[TOC].* \\d+)";
 
-    public static Boolean rename(Ani ani, Item item, Map<Integer, String> episodeTitleMap) {
+    public static Boolean rename(Ani ani, Item item) {
         Config config = ConfigUtil.CONFIG;
 
         int offset = ani.getOffset();
@@ -118,21 +120,10 @@ public class RenameUtil {
         renameTemplate = renameTemplate.replace("${resolution}", resolution);
         renameTemplate = renameTemplate.replace("${tmdbid}", tmdbId);
 
-        String episodeTitle = is5 ? "第" + episode + "集" : episodeTitleMap.getOrDefault((int) episode, "第" + (int) episode + "集");
-        renameTemplate = renameTemplate.replace("${episodeTitle}", episodeTitle);
-        renameTemplate = renameTemplate.replace("${bgmEpisodeTitle}", episodeTitle);
-        renameTemplate = renameTemplate.replace("${bgmJpEpisodeTitle}", episodeTitle);
+        renameTemplate = replaceEpisodeTitle(renameTemplate, episode, ani);
 
         if (renameTemplate.contains("${jpTitle}")) {
-            String jpTitle = Opt.ofNullable(ani)
-                    .map(Ani::getJpTitle)
-                    .filter(StrUtil::isNotBlank)
-                    .orElseGet(() -> {
-                        BgmInfo bgmInfo = BgmUtil.getBgmInfo(ani, true);
-                        String name = bgmInfo.getName();
-                        ani.setJpTitle(name);
-                        return name;
-                    });
+            String jpTitle = getJpTitle(ani);
             renameTemplate = renameTemplate.replace("${jpTitle}", jpTitle);
         }
 
@@ -144,10 +135,71 @@ public class RenameUtil {
     }
 
     /**
+     * 替换集标题
+     *
+     * @param template 模板
+     * @param episode  集数
+     * @param ani      订阅
+     * @return 替换结果
+     */
+    public static String replaceEpisodeTitle(String template, Double episode, Ani ani) {
+        boolean is5 = episode != (int) episode.doubleValue();
+
+        Map<Integer, String> episodeTitleMap = new HashMap<>();
+        Map<Integer, Function<Boolean, String>> bgmEpisodeTitleMap = new HashMap<>();
+
+        if (template.contains("${episodeTitle}")) {
+            episodeTitleMap = TmdbUtil.getEpisodeTitleMap(ani);
+        }
+
+        if (template.contains("${bgmEpisodeTitle}") || template.contains("${bgmJpEpisodeTitle}")) {
+            bgmEpisodeTitleMap = BgmUtil.getEpisodeTitleMap(ani);
+        }
+
+        String defaultEpisodeTitle = "第" + episode + "集";
+
+        String episodeTitle = is5 ? defaultEpisodeTitle : episodeTitleMap
+                .getOrDefault(episode.intValue(), defaultEpisodeTitle);
+
+        String bgmEpisodeTitle = is5 ? defaultEpisodeTitle : bgmEpisodeTitleMap
+                .getOrDefault(episode.intValue(), jp -> defaultEpisodeTitle)
+                .apply(false);
+
+        String bgmJpEpisodeTitle = is5 ? defaultEpisodeTitle : bgmEpisodeTitleMap
+                .getOrDefault(episode.intValue(), jp -> defaultEpisodeTitle)
+                .apply(true);
+
+        template = template.replace("${episodeTitle}", episodeTitle);
+        template = template.replace("${bgmEpisodeTitle}", bgmEpisodeTitle);
+        template = template.replace("${bgmJpEpisodeTitle}", bgmJpEpisodeTitle);
+
+        return template;
+    }
+
+
+    /**
+     * 获取bgm日文标题
+     *
+     * @param ani 订阅
+     * @return 日文标题
+     */
+    public static String getJpTitle(Ani ani) {
+        return Opt.ofNullable(ani)
+                .map(Ani::getJpTitle)
+                .filter(StrUtil::isNotBlank)
+                .orElseGet(() -> {
+                    BgmInfo bgmInfo = BgmUtil.getBgmInfo(ani, true);
+                    String name = bgmInfo.getName();
+                    ani.setJpTitle(name);
+                    return name;
+                });
+    }
+
+    /**
      * 获取分辨率
      *
-     * @param itemTitle
-     * @return
+     * @param itemTitle 标题
+     * @return 分辨率
      */
     private static String getResolution(String itemTitle) {
         Map<String, String> stringStringMap = Map.of(

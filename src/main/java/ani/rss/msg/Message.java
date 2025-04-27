@@ -5,6 +5,7 @@ import ani.rss.entity.Config;
 import ani.rss.enums.MessageEnum;
 import ani.rss.enums.StringEnum;
 import ani.rss.util.FilePathUtil;
+import ani.rss.util.RenameUtil;
 import ani.rss.util.TmdbUtil;
 import ani.rss.util.TorrentUtil;
 import cn.hutool.core.lang.func.Func1;
@@ -84,6 +85,13 @@ public interface Message {
 
         String downloadPath = FilePathUtil.getAbsolutePath(TorrentUtil.getDownloadPath(ani).get(0));
         messageTemplate = messageTemplate.replace("${downloadPath}", downloadPath);
+
+        if (messageTemplate.contains("${jpTitle}")) {
+            String jpTitle = RenameUtil.getJpTitle(ani);
+            messageTemplate = messageTemplate.replace("${jpTitle}", jpTitle);
+        }
+
+        messageTemplate = RenameUtil.replaceEpisodeTitle(messageTemplate, episode, ani);
 
         return messageTemplate;
     }

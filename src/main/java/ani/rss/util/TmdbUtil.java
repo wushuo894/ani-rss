@@ -148,10 +148,6 @@ public class TmdbUtil {
      * @return
      */
     public static Map<Integer, String> getEpisodeTitleMap(Ani ani) {
-        Config config = ConfigUtil.CONFIG;
-
-        String renameTemplate = config.getRenameTemplate();
-
         TmdbUtil.Tmdb tmdb = ani.getTmdb();
         Integer season = ani.getSeason();
         Boolean ova = ani.getOva();
@@ -169,11 +165,6 @@ public class TmdbUtil {
         if (StrUtil.isBlank(tmdb.getId())) {
             return map;
         }
-
-        if (!renameTemplate.contains("${episodeTitle}")) {
-            return map;
-        }
-
 
         return getEpisodeTitleMap(tmdb, season);
     }

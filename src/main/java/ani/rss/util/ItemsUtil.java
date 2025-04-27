@@ -244,15 +244,10 @@ public class ItemsUtil {
             items.add(addNewItem);
         }
 
-        Map<Integer, String> episodeTitleMap = TmdbUtil.getEpisodeTitleMap(ani);
-        if (episodeTitleMap.isEmpty()) {
-            episodeTitleMap.putAll(BgmUtil.getEpisodeTitleMap(ani));
-        }
-
         items = items.stream()
                 .filter(item -> {
                     try {
-                        return RenameUtil.rename(ani, item, episodeTitleMap);
+                        return RenameUtil.rename(ani, item);
                     } catch (Exception e) {
                         log.error("解析rss视频集次出现问题");
                         log.error(e.getMessage(), e);
