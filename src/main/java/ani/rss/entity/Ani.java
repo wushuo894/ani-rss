@@ -47,6 +47,11 @@ public class Ani implements Serializable {
     private String title;
 
     /**
+     * 日文标题 来源于BGM
+     */
+    private String jpTitle;
+
+    /**
      * 剧集偏移
      */
     private Integer offset;

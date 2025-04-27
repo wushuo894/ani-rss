@@ -318,8 +318,8 @@ public class BgmUtil {
             }
             bgmInfo
                     .setSubjectId(subjectId)
-                    .setNameCn(nameCn)
-                    .setName(name)
+                    .setNameCn(RenameUtil.getName(nameCn))
+                    .setName(RenameUtil.getName(name))
                     .setEps(eps)
                     .setScore(score)
                     .setOva(List.of("OVA", "剧场版").contains(platform.toUpperCase()));
@@ -494,9 +494,6 @@ public class BgmUtil {
     public static Ani toAni(BgmInfo bgmInfo, Ani ani) {
         String title = BgmUtil.getName(bgmInfo);
 
-        // 去除特殊符号
-        title = RenameUtil.getName(title);
-
         int eps = bgmInfo.getEps();
         String subjectId = bgmInfo.getSubjectId();
         if (eps > 0) {
@@ -518,6 +515,7 @@ public class BgmUtil {
         ani
                 // 标题
                 .setTitle(title)
+                .setJpTitle(bgmInfo.getName())
                 // 季
                 .setSeason(bgmInfo.getSeason())
                 // 总集数

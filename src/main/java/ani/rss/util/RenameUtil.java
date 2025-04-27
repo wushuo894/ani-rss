@@ -1,9 +1,11 @@
 package ani.rss.util;
 
 import ani.rss.entity.Ani;
+import ani.rss.entity.BgmInfo;
 import ani.rss.entity.Config;
 import ani.rss.entity.Item;
 import ani.rss.enums.StringEnum;
+import cn.hutool.core.lang.Opt;
 import cn.hutool.core.util.ReUtil;
 import cn.hutool.core.util.StrUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -120,6 +122,19 @@ public class RenameUtil {
         renameTemplate = renameTemplate.replace("${episodeTitle}", episodeTitle);
         renameTemplate = renameTemplate.replace("${bgmEpisodeTitle}", episodeTitle);
         renameTemplate = renameTemplate.replace("${bgmJpEpisodeTitle}", episodeTitle);
+
+        if (renameTemplate.contains("${jpTitle}")) {
+            String jpTitle = Opt.ofNullable(ani)
+                    .map(Ani::getJpTitle)
+                    .filter(StrUtil::isNotBlank)
+                    .orElseGet(() -> {
+                        BgmInfo bgmInfo = BgmUtil.getBgmInfo(ani, true);
+                        String name = bgmInfo.getName();
+                        ani.setJpTitle(name);
+                        return name;
+                    });
+            renameTemplate = renameTemplate.replace("${jpTitle}", jpTitle);
+        }
 
         String reName = renameTemplate.trim();
 
