@@ -9,7 +9,6 @@ import ani.rss.util.RenameUtil;
 import ani.rss.util.TmdbUtil;
 import ani.rss.util.TorrentUtil;
 import cn.hutool.core.lang.func.Func1;
-import cn.hutool.core.lang.func.LambdaUtil;
 import cn.hutool.core.text.StrFormatter;
 import cn.hutool.core.util.ReUtil;
 import cn.hutool.core.util.StrUtil;
@@ -55,15 +54,7 @@ public interface Message {
                 Ani::getSubgroup
         );
 
-        for (Func1<Ani, Object> func1 : list) {
-            try {
-                String fieldName = LambdaUtil.getFieldName(func1);
-                String s = StrFormatter.format("${{}}", fieldName);
-                String v = func1.callWithRuntimeException(ani).toString();
-                messageTemplate = messageTemplate.replace(s, v);
-            } catch (Exception ignored) {
-            }
-        }
+        messageTemplate = RenameUtil.replaceField(messageTemplate, ani, list);
 
         String tmdbId = Optional.ofNullable(ani.getTmdb())
                 .map(TmdbUtil.Tmdb::getId)

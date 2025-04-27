@@ -6,13 +6,14 @@ import ani.rss.entity.Config;
 import ani.rss.entity.Item;
 import ani.rss.enums.StringEnum;
 import cn.hutool.core.lang.Opt;
+import cn.hutool.core.lang.func.Func1;
+import cn.hutool.core.lang.func.LambdaUtil;
+import cn.hutool.core.text.StrFormatter;
 import cn.hutool.core.util.ReUtil;
 import cn.hutool.core.util.StrUtil;
 import lombok.extern.slf4j.Slf4j;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.Function;
 
 @Slf4j
@@ -102,7 +103,6 @@ public class RenameUtil {
             episodeStr = episodeStr + ".5";
         }
 
-        title = getName(title);
         itemTitle = getName(itemTitle);
 
         String resolution = getResolution(itemTitle);
@@ -110,7 +110,6 @@ public class RenameUtil {
                 .map(TmdbUtil.Tmdb::getId)
                 .orElse("");
 
-        renameTemplate = renameTemplate.replace("${title}", title);
         renameTemplate = renameTemplate.replace("${seasonFormat}", seasonFormat);
         renameTemplate = renameTemplate.replace("${episodeFormat}", episodeFormat);
         renameTemplate = renameTemplate.replace("${season}", String.valueOf(season));
@@ -119,6 +118,7 @@ public class RenameUtil {
         renameTemplate = renameTemplate.replace("${itemTitle}", itemTitle);
         renameTemplate = renameTemplate.replace("${resolution}", resolution);
         renameTemplate = renameTemplate.replace("${tmdbid}", tmdbId);
+        renameTemplate = renameTemplate.replace("${title}", title);
 
         renameTemplate = replaceEpisodeTitle(renameTemplate, episode, ani);
 
@@ -127,11 +127,35 @@ public class RenameUtil {
             renameTemplate = renameTemplate.replace("${jpTitle}", jpTitle);
         }
 
+        List<Func1<Ani, Object>> list = List.of(
+                Ani::getThemoviedbName
+        );
+
+        renameTemplate = replaceField(renameTemplate, ani, list);
+
+
         String reName = renameTemplate.trim();
 
         item
                 .setReName(reName);
         return true;
+    }
+
+    public static <T> String replaceField(String template, T object, List<Func1<T, Object>> list) {
+        if (Objects.isNull(object)) {
+            return template;
+        }
+        for (Func1<T, Object> func1 : list) {
+            try {
+                String fieldName = LambdaUtil.getFieldName(func1);
+                String s = StrFormatter.format("${{}}", fieldName);
+                String v = func1.callWithRuntimeException(object).toString();
+                v = getName(v);
+                template = template.replace(s, v);
+            } catch (Exception ignored) {
+            }
+        }
+        return template;
     }
 
     /**

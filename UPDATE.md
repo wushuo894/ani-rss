@@ -1,6 +1,6 @@
 ### 改动
 
-- 重命名模板增加 `${jpTitle}` 来源于bgm的日文标题
+- 重命名模板增加 `${themoviedbName}`、`${jpTitle}`(来源于bgm的日文标题)
 - 通知模板增加 `${jpTitle}`、`${episodeTitle}`、`${bgmEpisodeTitle}`、`${bgmJpEpisodeTitle}`
 
 ### 疑惑为什么增加赞助功能的可以看一下我发的 discussion
