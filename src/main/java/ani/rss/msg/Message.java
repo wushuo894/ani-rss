@@ -5,10 +5,10 @@ import ani.rss.entity.Config;
 import ani.rss.enums.MessageEnum;
 import ani.rss.enums.StringEnum;
 import ani.rss.util.FilePathUtil;
+import ani.rss.util.RenameUtil;
 import ani.rss.util.TmdbUtil;
 import ani.rss.util.TorrentUtil;
 import cn.hutool.core.lang.func.Func1;
-import cn.hutool.core.lang.func.LambdaUtil;
 import cn.hutool.core.text.StrFormatter;
 import cn.hutool.core.util.ReUtil;
 import cn.hutool.core.util.StrUtil;
@@ -54,15 +54,7 @@ public interface Message {
                 Ani::getSubgroup
         );
 
-        for (Func1<Ani, Object> func1 : list) {
-            try {
-                String fieldName = LambdaUtil.getFieldName(func1);
-                String s = StrFormatter.format("${{}}", fieldName);
-                String v = func1.callWithRuntimeException(ani).toString();
-                messageTemplate = messageTemplate.replace(s, v);
-            } catch (Exception ignored) {
-            }
-        }
+        messageTemplate = RenameUtil.replaceField(messageTemplate, ani, list);
 
         String tmdbId = Optional.ofNullable(ani.getTmdb())
                 .map(TmdbUtil.Tmdb::getId)
@@ -84,6 +76,13 @@ public interface Message {
 
         String downloadPath = FilePathUtil.getAbsolutePath(TorrentUtil.getDownloadPath(ani).get(0));
         messageTemplate = messageTemplate.replace("${downloadPath}", downloadPath);
+
+        if (messageTemplate.contains("${jpTitle}")) {
+            String jpTitle = RenameUtil.getJpTitle(ani);
+            messageTemplate = messageTemplate.replace("${jpTitle}", jpTitle);
+        }
+
+        messageTemplate = RenameUtil.replaceEpisodeTitle(messageTemplate, episode, ani);
 
         return messageTemplate;
     }

@@ -318,8 +318,8 @@ public class BgmUtil {
             }
             bgmInfo
                     .setSubjectId(subjectId)
-                    .setNameCn(nameCn)
-                    .setName(name)
+                    .setNameCn(RenameUtil.getName(nameCn))
+                    .setName(RenameUtil.getName(name))
                     .setEps(eps)
                     .setScore(score)
                     .setOva(List.of("OVA", "剧场版").contains(platform.toUpperCase()));
@@ -448,8 +448,8 @@ public class BgmUtil {
      * @param ani
      * @return
      */
-    public static Map<Integer, String> getEpisodeTitleMap(Ani ani) {
-        Map<Integer, String> episodeTitleMap = new HashMap<>();
+    public static Map<Integer, Function<Boolean, String>> getEpisodeTitleMap(Ani ani) {
+        Map<Integer, Function<Boolean, String>> episodeTitleMap = new HashMap<>();
 
         String subjectId = getSubjectId(ani);
 
@@ -457,33 +457,31 @@ public class BgmUtil {
             return episodeTitleMap;
         }
 
-        Config config = ConfigUtil.CONFIG;
-
-        String renameTemplate = config.getRenameTemplate();
-
-        if (!renameTemplate.contains("${bgmEpisodeTitle}") &&
-                !renameTemplate.contains("${bgmJpEpisodeTitle}")) {
+        if (ani.getOva()) {
             return episodeTitleMap;
         }
-
-        boolean jpEpisodeTitle = renameTemplate.contains("${bgmJpEpisodeTitle}");
 
         try {
             List<JsonObject> data = getEpisodes(subjectId, 0);
             for (JsonObject it : data) {
                 int ep = it.get("ep").getAsInt();
-                String name;
-                if (jpEpisodeTitle) {
-                    name = it.get("name").getAsString();
-                } else {
-                    name = it.get("name_cn").getAsString();
-                    name = StrUtil.blankToDefault(name, it.get("name").getAsString());
-                }
-                name = RenameUtil.getName(name);
-                if (StrUtil.isBlank(name)) {
-                    continue;
-                }
-                episodeTitleMap.put(ep, name);
+                String jpTitle = it.get("name").getAsString();
+
+                String title = it.get("name_cn").getAsString();
+                title = StrUtil.blankToDefault(title, it.get("name").getAsString());
+
+                title = RenameUtil.getName(title);
+                jpTitle = RenameUtil.getName(jpTitle);
+
+                String defaultEpisodeTitle = "第" + ep + "集";
+
+                title = StrUtil.blankToDefault(title, defaultEpisodeTitle);
+                jpTitle = StrUtil.blankToDefault(jpTitle, defaultEpisodeTitle);
+
+                AtomicReference<String> titleRef = new AtomicReference<>(title);
+                AtomicReference<String> jpTitleRef = new AtomicReference<>(jpTitle);
+
+                episodeTitleMap.put(ep, jp -> jp ? jpTitleRef.get() : titleRef.get());
             }
         } catch (Exception e) {
             log.error(e.getMessage(), e);
@@ -493,9 +491,6 @@ public class BgmUtil {
 
     public static Ani toAni(BgmInfo bgmInfo, Ani ani) {
         String title = BgmUtil.getName(bgmInfo);
-
-        // 去除特殊符号
-        title = RenameUtil.getName(title);
 
         int eps = bgmInfo.getEps();
         String subjectId = bgmInfo.getSubjectId();
@@ -518,6 +513,7 @@ public class BgmUtil {
         ani
                 // 标题
                 .setTitle(title)
+                .setJpTitle(bgmInfo.getName())
                 // 季
                 .setSeason(bgmInfo.getSeason())
                 // 总集数

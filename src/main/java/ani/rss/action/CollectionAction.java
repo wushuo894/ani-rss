@@ -109,7 +109,7 @@ public class CollectionAction implements BaseAction {
                             .setSize(size)
                             .setSubgroup(ani.getSubgroup());
 
-                    RenameUtil.rename(ani, item, new HashMap<>());
+                    RenameUtil.rename(ani, item);
 
                     String reName = item.getReName();
 
