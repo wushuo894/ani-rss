@@ -1,8 +1,12 @@
 ### 改动
 
-- 重命名模板增加 `${bgmJpEpisodeTitle}` 用于获取bgm日文集标题
+- 增加 Alist Refresh 功能
 
-close #328
+合并了 #330
+
+### 贡献者
+
+@uchouT
 
 ### 疑惑为什么增加赞助功能的可以看一下我发的 discussion
 
