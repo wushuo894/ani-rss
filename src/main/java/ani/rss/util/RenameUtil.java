@@ -133,8 +133,7 @@ public class RenameUtil {
 
         renameTemplate = replaceField(renameTemplate, ani, list);
 
-
-        String reName = renameTemplate.trim();
+        String reName = getName(renameTemplate);
 
         item
                 .setReName(reName);
@@ -150,7 +149,6 @@ public class RenameUtil {
                 String fieldName = LambdaUtil.getFieldName(func1);
                 String s = StrFormatter.format("${{}}", fieldName);
                 String v = func1.callWithRuntimeException(object).toString();
-                v = getName(v);
                 template = template.replace(s, v);
             } catch (Exception ignored) {
             }
