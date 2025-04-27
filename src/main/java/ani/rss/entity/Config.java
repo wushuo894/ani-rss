@@ -617,4 +617,14 @@ public class Config implements Serializable {
      * github Token
      */
     private String githubToken;
+
+    /**
+     * 开启 Alist 列表刷新
+     */
+    private Boolean alistRefresh;
+
+    /**
+     * Alist 刷新延迟
+     */
+    private Long alistRefreshDelayed;
 }
