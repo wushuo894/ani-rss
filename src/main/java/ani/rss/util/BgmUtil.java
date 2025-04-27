@@ -175,6 +175,9 @@ public class BgmUtil {
 
         return httpRequest
                 .form("subject_id", subjectId)
+                .form("type", 0)
+                .form("limit", 1000)
+                .form("offset", 0)
                 .thenFunction(res -> {
                     if (!res.isOk()) {
                         return List.of();
@@ -458,33 +461,30 @@ public class BgmUtil {
 
         String renameTemplate = config.getRenameTemplate();
 
-        if (!renameTemplate.contains("${bgmEpisodeTitle}")) {
+        if (!renameTemplate.contains("${bgmEpisodeTitle}") &&
+                !renameTemplate.contains("${bgmJpEpisodeTitle}")) {
             return episodeTitleMap;
         }
 
-        try {
-            HttpRequest httpRequest = HttpReq.get(host + "/v0/episodes", true);
-            setToken(httpRequest)
-                    .form("subject_id", subjectId)
-                    .form("type", 0)
-                    .form("limit", 1000)
-                    .form("offset", 0)
-                    .then(res -> {
-                        Assert.isTrue(res.isOk(), "status: {}", res.getStatus());
-                        JsonObject body = GsonStatic.fromJson(res.body(), JsonObject.class);
-                        List<JsonObject> data = GsonStatic.fromJsonList(body.getAsJsonArray("data"), JsonObject.class);
-                        for (JsonObject it : data) {
-                            int ep = it.get("ep").getAsInt();
-                            String name = it.get("name_cn").getAsString();
-                            name = StrUtil.blankToDefault(name, it.get("name").getAsString());
-                            name = RenameUtil.getName(name);
-                            if (StrUtil.isBlank(name)) {
-                                continue;
-                            }
-                            episodeTitleMap.put(ep, name);
-                        }
-                    });
+        boolean jpEpisodeTitle = renameTemplate.contains("${bgmJpEpisodeTitle}");
 
+        try {
+            List<JsonObject> data = getEpisodes(subjectId, 0);
+            for (JsonObject it : data) {
+                int ep = it.get("ep").getAsInt();
+                String name;
+                if (jpEpisodeTitle) {
+                    name = it.get("name").getAsString();
+                } else {
+                    name = it.get("name_cn").getAsString();
+                    name = StrUtil.blankToDefault(name, it.get("name").getAsString());
+                }
+                name = RenameUtil.getName(name);
+                if (StrUtil.isBlank(name)) {
+                    continue;
+                }
+                episodeTitleMap.put(ep, name);
+            }
         } catch (Exception e) {
             log.error(e.getMessage(), e);
         }

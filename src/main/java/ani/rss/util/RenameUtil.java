@@ -119,6 +119,7 @@ public class RenameUtil {
         String episodeTitle = is5 ? "第" + episode + "集" : episodeTitleMap.getOrDefault((int) episode, "第" + (int) episode + "集");
         renameTemplate = renameTemplate.replace("${episodeTitle}", episodeTitle);
         renameTemplate = renameTemplate.replace("${bgmEpisodeTitle}", episodeTitle);
+        renameTemplate = renameTemplate.replace("${bgmJpEpisodeTitle}", episodeTitle);
 
         String reName = renameTemplate.trim();
 
