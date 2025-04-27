@@ -194,6 +194,7 @@ public class AlistUtil {
             } catch (Exception e) {
                 log.error(e.getMessage(), e);
             }
+            ThreadUtil.sleep(3000);
         });
     }
 
