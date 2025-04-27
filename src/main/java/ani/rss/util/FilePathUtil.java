@@ -32,10 +32,21 @@ public class FilePathUtil {
     /**
      * 获取绝对路径 并把 windows 狗日的 \ 转换为 /
      *
-     * @param file
+     * @param absolutePath
      * @return
      */
-    public static String getAbsolutePath(String file) {
-        return getAbsolutePath(new File(file));
+    public static String getAbsolutePath(String absolutePath) {
+        if (absolutePath.startsWith("/")) {
+            // 已是绝对路径
+            return FileUtil.normalize(absolutePath);
+        }
+
+        if (ReUtil.contains("^[A-z]:", absolutePath)) {
+            // 已是绝对路径
+            return FileUtil.normalize(absolutePath);
+        }
+
+        absolutePath = new File(absolutePath).getAbsolutePath();
+        return FileUtil.normalize(absolutePath);
     }
 }
