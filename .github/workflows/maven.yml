@@ -28,7 +28,6 @@ jobs:
 
           time=$(date +%s%3N)
           version=$(cat pom.xml | grep -oPm1 '(?<=<version>).*?(?=</version>)')
-          markdown=$(cat UPDATE.md | sed ':a;N;$!ba;s/\n/\\n/g;s/"/\\"/g')
           echo "{\"time\":$time,\"version\":\"$version\"}" > info.json
           jq --arg content "$(cat UPDATE.md)" '. += {markdown: $content}' info.json > temp.json && mv temp.json info.json
 
