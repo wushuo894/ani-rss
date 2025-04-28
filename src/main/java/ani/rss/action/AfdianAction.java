@@ -3,8 +3,10 @@ package ani.rss.action;
 import ani.rss.annotation.Auth;
 import ani.rss.annotation.Path;
 import ani.rss.entity.Config;
+import ani.rss.entity.TryOut;
 import ani.rss.util.AfdianUtil;
 import ani.rss.util.ConfigUtil;
+import ani.rss.util.GsonStatic;
 import ani.rss.util.HttpReq;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.lang.Assert;
@@ -70,7 +72,25 @@ public class AfdianAction implements BaseAction {
 
             Assert.isTrue(ok, "未点击star");
 
-            long time = DateUtil.offsetDay(new Date(), 15).getTime();
+            TryOut tryOut = HttpReq.get("https://docs.wushuo.top/TryOut.json")
+                    .thenFunction(res -> {
+                        Assert.isTrue(res.isOk(), "status: {}", res.getStatus());
+                        return GsonStatic.fromJson(res.body(), TryOut.class);
+                    });
+
+            Boolean enable = tryOut.getEnable();
+            Boolean renewal = tryOut.getRenewal();
+            Integer day = tryOut.getDay();
+            String message = tryOut.getMessage();
+
+            Assert.isTrue(enable, message);
+
+            if (config.getTryOut()) {
+                // 已经有过试用
+                Assert.isTrue(renewal, message);
+            }
+
+            long time = DateUtil.offsetDay(new Date(), day).getTime();
             ConfigUtil.CONFIG
                     .setGithubToken(githubToken)
                     .setExpirationTime(time)
@@ -78,10 +98,10 @@ public class AfdianAction implements BaseAction {
             ConfigUtil.sync();
             resultSuccess(result ->
                     result
-                            .setMessage("试用续期成功!")
+                            .setMessage(message)
                             .setData(time)
             );
         }
-
     }
+
 }

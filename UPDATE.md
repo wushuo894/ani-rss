@@ -1,6 +1,9 @@
 ### 改动
 
-- 优化了使用日文标题匹配tmdb的准确率
+- 支持自定义 `TmdbApi`、`TmdbApiKey`
+- 增加Alist上传通知
+
+close #335
 
 ### 疑惑为什么增加赞助功能的可以看一下我发的 discussion
 

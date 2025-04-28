@@ -3,6 +3,7 @@
   <PlayList ref="playList"/>
   <Cover ref="refCover" @load="getList"/>
   <Del ref="refDel" @load="getList"/>
+  <BgmRate ref="bgmRateRef"/>
   <div style="height: 100%;overflow: hidden;">
     <el-scrollbar>
       <div style="margin: 0 10px;min-height: 500px" v-loading="loading">
@@ -40,7 +41,7 @@
                           </div>
                         </el-tooltip>
                         <div style="margin-bottom: 8px;" v-if="scoreShow">
-                          <h4 style="color: #E800A4;">
+                          <h4 style="color: #E800A4;cursor: pointer;" @click="bgmRateRef?.show(item)">
                             {{ item['score'].toFixed(1) }}
                           </h4>
                         </div>
@@ -168,6 +169,7 @@ import PlayList from "../play/PlayList.vue";
 import Cover from "./Cover.vue";
 import Del from "./Del.vue";
 import {useWindowSize} from "@vueuse/core";
+import BgmRate from "./BgmRate.vue";
 
 const defaultWeekList = [
   {
@@ -201,7 +203,6 @@ const defaultWeekList = [
 ]
 const weekList = ref(defaultWeekList)
 
-const pagerCount = ref(10)
 const refEdit = ref()
 const refDel = ref()
 const pageSize = ref(40)
@@ -210,6 +211,7 @@ const playList = ref()
 const scoreShow = ref(false)
 const showPlaylist = ref(false)
 const refCover = ref()
+const bgmRateRef = ref()
 
 const searchList = (week) => {
   const text = props.title.trim()
