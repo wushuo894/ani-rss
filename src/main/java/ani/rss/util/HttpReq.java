@@ -2,6 +2,7 @@ package ani.rss.util;
 
 import ani.rss.entity.Config;
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.http.Header;
 import cn.hutool.http.HttpRequest;
 import lombok.extern.slf4j.Slf4j;
 
@@ -19,6 +20,10 @@ public class HttpReq {
     private static void config(HttpRequest req) {
         req.timeout(1000 * 20)
                 .setFollowRedirects(true);
+
+        String ua = "wushuo894/ani-rss (https://github.com/wushuo894/ani-rss)";
+
+        req.header(Header.USER_AGENT, ua);
     }
 
     public static HttpRequest post(String url, Boolean proxy) {

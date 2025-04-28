@@ -10,6 +10,7 @@ import cn.hutool.core.convert.Convert;
 import cn.hutool.core.date.DatePattern;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.lang.Assert;
+import cn.hutool.core.lang.Opt;
 import cn.hutool.core.text.StrFormatter;
 import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.core.util.ObjectUtil;
@@ -203,6 +204,64 @@ public class BgmUtil {
                             })
                             .toList();
                 });
+    }
+
+    /**
+     * 获取用户名
+     *
+     * @return
+     */
+    public static String username() {
+        String username = collectionsCache.get("username");
+        if (StrUtil.isNotBlank(username)) {
+            return username;
+        }
+
+        Config config = ConfigUtil.CONFIG;
+        String bgmToken = config.getBgmToken();
+        Assert.notBlank(bgmToken, "BgmToken 未填写");
+        username = setToken(HttpReq.get(host + "/v0/me", true))
+                .thenFunction(res -> {
+                    Assert.isTrue(res.isOk(), "status: {}", res.getStatus());
+                    JsonObject jsonObject = GsonStatic.fromJson(res.body(), JsonObject.class);
+                    return Opt.of(jsonObject)
+                            .map(o -> o.get("username"))
+                            .filter(Objects::nonNull)
+                            .map(JsonElement::getAsString)
+                            .filter(StrUtil::isNotBlank)
+                            .orElse(String.valueOf(jsonObject.get("id").getAsInt()));
+                });
+
+        collectionsCache.put("username", username, TimeUnit.MINUTES.toMillis(10));
+        return username;
+    }
+
+    /**
+     * 对番剧进行评分
+     */
+    public static Integer rate(String subjectId, Integer rate) {
+        if (Objects.isNull(rate)) {
+            // 获取评分
+            String username = username();
+            return setToken(HttpReq.get(host + "/v0/users/" + username + "/collections/" + subjectId, true))
+                    .thenFunction(res -> {
+                        if (res.getStatus() == 404) {
+                            return 0;
+                        }
+                        Assert.isTrue(res.isOk(), "status: {}", res.getStatus());
+                        JsonObject jsonObject = GsonStatic.fromJson(res.body(), JsonObject.class);
+                        return jsonObject.get("rate").getAsInt();
+                    });
+        }
+
+        setToken(HttpReq.post(host + "/v0/users/-/collections/" + subjectId, true))
+                .contentType(ContentType.JSON.getValue())
+                .body(GsonStatic.toJson(Map.of(
+                        "type", 3,
+                        "rate", rate
+                )))
+                .then(res -> Assert.isTrue(res.isOk(), "status: {}", res.getStatus()));
+        return rate;
     }
 
     /**
