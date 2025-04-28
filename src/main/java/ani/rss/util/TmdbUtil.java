@@ -5,10 +5,13 @@ import ani.rss.entity.Config;
 import ani.rss.enums.StringEnum;
 import cn.hutool.cache.CacheUtil;
 import cn.hutool.cache.impl.FIFOCache;
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.lang.Assert;
+import cn.hutool.core.lang.Opt;
 import cn.hutool.core.text.StrFormatter;
 import cn.hutool.core.thread.ThreadUtil;
+import cn.hutool.core.util.ReUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.core.util.URLUtil;
 import com.google.gson.JsonElement;
@@ -85,6 +88,14 @@ public class TmdbUtil {
         Config config = ConfigUtil.CONFIG;
         String tmdbLanguage = config.getTmdbLanguage();
 
+        titleName = ReUtil.replaceAll(titleName, StringEnum.TMDB_ID_REG, "");
+        titleName = ReUtil.replaceAll(titleName, StringEnum.YEAR_REG, "");
+        titleName = titleName.trim();
+        if (StrUtil.isBlank(titleName)) {
+            return null;
+        }
+
+        String finalTitleName = titleName;
         return HttpReq.get("https://api.themoviedb.org/3/search/" + type, true)
                 .timeout(5000)
                 .form("query", URLUtil.encodeBlank(titleName))
@@ -109,35 +120,51 @@ public class TmdbUtil {
                             }).toList();
 
                     if (results.isEmpty()) {
-                        if (!titleName.contains(" ")) {
+                        List<String> split = StrUtil.split(finalTitleName, " ", true, true);
+                        if (split.size() < 2) {
                             return null;
                         }
                         ThreadUtil.sleep(500);
-                        return getTmdb(titleName.split(" ")[0], type);
+
+                        split.remove(split.size() - 1);
+                        return getTmdb(CollUtil.join(split, " "), type);
                     }
 
                     List<Tmdb> tmdbList = results.stream()
                             .map(jsonObject -> {
                                 String id = jsonObject.get("id").getAsString();
-                                String title = Optional.of(jsonObject)
+                                String title = Opt.of(jsonObject)
                                         .map(o -> o.get("name"))
-                                        .orElse(jsonObject.get("title")).getAsString();
+                                        .orElse(jsonObject.get("title"))
+                                        .getAsString();
 
-                                String date = Optional.of(jsonObject)
+                                String originalName = Opt.of(jsonObject)
+                                        .map(o -> o.get("original_name"))
+                                        .filter(Objects::nonNull)
+                                        .map(JsonElement::getAsString)
+                                        .orElse("");
+
+                                String date = Opt.of(jsonObject)
                                         .map(o -> o.get("first_air_date"))
-                                        .orElse(jsonObject.get("release_date")).getAsString();
+                                        .orElse(jsonObject.get("release_date"))
+                                        .getAsString();
 
                                 title = RenameUtil.getName(title);
 
                                 return new Tmdb()
                                         .setId(id)
                                         .setName(title)
+                                        .setOriginalName(originalName)
                                         .setDate(DateUtil.parse(date));
                             }).toList();
 
                     // 优先使用名称完全匹配
                     return tmdbList.stream()
-                            .filter(tmdb -> tmdb.getName().equals(titleName))
+                            .filter(tmdb -> {
+                                String name = tmdb.getName();
+                                String originalName = tmdb.getOriginalName();
+                                return List.of(name, originalName).contains(finalTitleName);
+                            })
                             .findFirst()
                             .orElse(tmdbList.get(0));
                 });
@@ -235,6 +262,7 @@ public class TmdbUtil {
     public static class Tmdb implements Serializable {
         private String id;
         private String name;
+        private String originalName;
         private Date date;
     }
 }
