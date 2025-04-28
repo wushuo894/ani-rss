@@ -3,9 +3,11 @@ package ani.rss.util;
 import ani.rss.entity.Ani;
 import ani.rss.entity.Config;
 import ani.rss.entity.TorrentsInfo;
+import ani.rss.enums.MessageEnum;
 import ani.rss.enums.TorrentsTags;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.lang.Opt;
+import cn.hutool.core.text.StrFormatter;
 import cn.hutool.core.thread.ExecutorBuilder;
 import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.core.util.StrUtil;
@@ -107,12 +109,17 @@ public class AlistUtil {
                                     int code = jsonObject.get("code").getAsInt();
                                     log.info(jsonObject.toString());
                                     Assert.isTrue(code == 200, "上传失败 {} 状态码:{}", fileName, code);
-                                    log.info("已向alist添加上传任务 {}", fileName);
+                                    String text = StrFormatter.format("已向alist添加上传任务 {}", fileName);
+                                    log.info(text);
+                                    MessageUtil.send(config, ani, text, MessageEnum.ALIST_UPLOAD);
                                 });
                         return;
                     } catch (Exception e) {
                         log.error(e.getMessage(), e);
                     }
+                }
+                if (AfdianUtil.verifyExpirationTime()) {
+                    MessageUtil.send(config, ani, "alist上传失败 " + fileName, MessageEnum.ERROR);
                 }
             });
         }

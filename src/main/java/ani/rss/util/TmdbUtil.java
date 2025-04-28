@@ -25,8 +25,21 @@ import java.util.*;
 
 @Slf4j
 public class TmdbUtil {
+    public static String getTmdbApi() {
+        Config config = ConfigUtil.CONFIG;
+        String tmdbApi = config.getTmdbApi();
+        tmdbApi = StrUtil.blankToDefault(tmdbApi, "https://api.themoviedb.org");
+        if (tmdbApi.endsWith("/")) {
+            tmdbApi = tmdbApi.substring(0, tmdbApi.length() - 1);
+        }
+        return tmdbApi;
+    }
 
-    private static final String TMDB_API = "6bde7d268c5fd4b5baa41499612158e2";
+    public static String getTmdbApiKey() {
+        Config config = ConfigUtil.CONFIG;
+        String tmdbApiKey = config.getTmdbApiKey();
+        return StrUtil.blankToDefault(tmdbApiKey, "6bde7d268c5fd4b5baa41499612158e2");
+    }
 
     /**
      * 获取番剧在tmdb的名称
@@ -95,11 +108,14 @@ public class TmdbUtil {
             return null;
         }
 
+        String tmdbApi = getTmdbApi();
+        String tmdbApiKey = getTmdbApiKey();
+
         String finalTitleName = titleName;
-        return HttpReq.get("https://api.themoviedb.org/3/search/" + type, true)
+        return HttpReq.get(tmdbApi + "/3/search/" + type, true)
                 .timeout(5000)
                 .form("query", URLUtil.encodeBlank(titleName))
-                .form("api_key", TMDB_API)
+                .form("api_key", tmdbApiKey)
                 .form("include_adult", "true")
                 .form("language", tmdbLanguage)
                 .thenFunction(res -> {
@@ -217,17 +233,21 @@ public class TmdbUtil {
      * @return
      */
     public static Map<Integer, String> getEpisodeTitleMap(Tmdb tmdb, Integer season) {
+
+        String tmdbApi = getTmdbApi();
+        String tmdbApiKey = getTmdbApiKey();
+
         Map<Integer, String> map = new HashMap<>();
         try {
             String id = tmdb.getId();
-            String url = StrFormatter.format("https://api.themoviedb.org/3/tv/{}/season/{}", id, season);
+            String url = StrFormatter.format("{}/3/tv/{}/season/{}", tmdbApi, id, season);
 
             Config config = ConfigUtil.CONFIG;
             String tmdbLanguage = config.getTmdbLanguage();
 
             HttpReq.get(url, true)
                     .timeout(5000)
-                    .form("api_key", TMDB_API)
+                    .form("api_key", tmdbApiKey)
                     .form("include_adult", "true")
                     .form("language", tmdbLanguage)
                     .then(res -> {

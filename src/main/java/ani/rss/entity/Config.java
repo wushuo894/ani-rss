@@ -19,6 +19,16 @@ public class Config implements Serializable {
     private String mikanHost;
 
     /**
+     * tmdbApi
+     */
+    private String tmdbApi;
+
+    /**
+     * tmdbApiKey
+     */
+    private String tmdbApiKey;
+
+    /**
      * 下载工具
      */
     private String download;
