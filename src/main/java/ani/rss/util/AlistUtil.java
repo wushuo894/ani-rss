@@ -121,7 +121,7 @@ public class AlistUtil {
     /**
      * 刷新 Alist 路径
      */
-    public static void refresh(TorrentsInfo torrentsInfo ,Ani ani) {
+    public static void refresh(TorrentsInfo torrentsInfo, Ani ani) {
         Config config = ConfigUtil.CONFIG;
         Boolean refresh = config.getAlistRefresh();
         if (!refresh) {
@@ -133,7 +133,7 @@ public class AlistUtil {
         verify();
 
         String finalPath = getPath(torrentsInfo, ani);
-        String rootPath = getRootPath(torrentsInfo, ani) + "/";
+        String rootPath = getRootPath(ani) + "/";
         EXECUTOR.execute(() -> {
             Long getAlistRefreshDelay = config.getAlistRefreshDelayed();
             if (getAlistRefreshDelay > 0) {
@@ -194,13 +194,13 @@ public class AlistUtil {
         Assert.notBlank(alistPath, "alistPath 未配置");
         Assert.notBlank(alistToken, "alistToken 未配置");
     }
-    
-    private static String getPath(TorrentsInfo torrentsInfo,Ani ani) {
+
+    private static String getPath(TorrentsInfo torrentsInfo, Ani ani) {
         Config config = ConfigUtil.CONFIG;
         String downloadDir = FilePathUtil.getAbsolutePath(torrentsInfo.getDownloadDir());
         String downloadPath = FilePathUtil.getAbsolutePath(config.getDownloadPath());
         String ovaDownloadPath = FilePathUtil.getAbsolutePath(config.getOvaDownloadPath());
-        String filePath = getRootPath(torrentsInfo, ani);
+        String filePath = getRootPath(ani);
 
         if (StrUtil.isNotBlank(downloadPath) && downloadDir.startsWith(downloadPath)) {
             filePath += downloadDir.substring(downloadPath.length());
@@ -212,23 +212,22 @@ public class AlistUtil {
         return filePath;
     }
 
-    private static String getRootPath(TorrentsInfo torrentsInfo,Ani ani) {
+    private static String getRootPath(Ani ani) {
         Config config = ConfigUtil.CONFIG;
         String alistOvaPath = FilePathUtil.getAbsolutePath(config.getAlistOvaPath());
-        String alistPath = FilePathUtil.getAbsolutePath(config.getAlistPath());
-        String filePath = alistPath;
+        String filePath = FilePathUtil.getAbsolutePath(config.getAlistPath());
 
-            Boolean ova = Opt.ofNullable(ani)
-                    .map(Ani::getOva)
-                    .orElse(false);
+        Boolean ova = Opt.ofNullable(ani)
+                .map(Ani::getOva)
+                .orElse(false);
 
-            if (ova) {
-                filePath = StrUtil.blankToDefault(alistOvaPath, filePath);
-            }
-            if (filePath.endsWith("/")) {
-                filePath = filePath.substring(0, filePath.length() - 1);
-                
-            }
-            return filePath;
+        if (ova) {
+            filePath = StrUtil.blankToDefault(alistOvaPath, filePath);
+        }
+        if (filePath.endsWith("/")) {
+            filePath = filePath.substring(0, filePath.length() - 1);
+
+        }
+        return filePath;
     }
 }
