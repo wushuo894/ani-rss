@@ -53,8 +53,6 @@ public class AlistUtil {
             return;
         }
         String alistHost = config.getAlistHost();
-        String alistPath = FilePathUtil.getAbsolutePath(config.getAlistPath());
-        String alistOvaPath = FilePathUtil.getAbsolutePath(config.getAlistOvaPath());
         String alistToken = config.getAlistToken();
         Integer alistRetry = config.getAlistRetry();
 
@@ -69,30 +67,10 @@ public class AlistUtil {
 
         String downloadDir = FilePathUtil.getAbsolutePath(torrentsInfo.getDownloadDir());
 
-        String downloadPath = FilePathUtil.getAbsolutePath(config.getDownloadPath());
-        String ovaDownloadPath = FilePathUtil.getAbsolutePath(config.getOvaDownloadPath());
-
         List<String> files = torrentsInfo.getFiles().get();
+        String filePath = getPath(torrentsInfo, ani);
         for (String fileName : files) {
-            String filePath = alistPath;
-
-            Boolean ova = Opt.ofNullable(ani)
-                    .map(Ani::getOva)
-                    .orElse(false);
-
-            if (ova) {
-                filePath = StrUtil.blankToDefault(alistOvaPath, filePath);
-            }
-
-            if (StrUtil.isNotBlank(downloadPath) && downloadDir.startsWith(downloadPath)) {
-                filePath += downloadDir.substring(downloadPath.length());
-            } else if (StrUtil.isNotBlank(ovaDownloadPath) && downloadDir.startsWith(ovaDownloadPath)) {
-                filePath += downloadDir.substring(ovaDownloadPath.length());
-            } else {
-                filePath += downloadDir;
-            }
-            filePath += "/" + fileName;
-            String finalFilePath = filePath;
+            String finalFilePath = filePath + "/" + fileName;
             File file = new File(downloadDir + "/" + fileName);
             if (!file.exists()) {
                 log.error("文件不存在 {}", file);
@@ -143,30 +121,25 @@ public class AlistUtil {
     /**
      * 刷新 Alist 路径
      */
-    public static void refresh(Ani ani) {
+    public static void refresh(TorrentsInfo torrentsInfo ,Ani ani) {
         Config config = ConfigUtil.CONFIG;
         Boolean refresh = config.getAlistRefresh();
         if (!refresh) {
             return;
         }
         String alistHost = config.getAlistHost();
-        String alistPath = FilePathUtil.getAbsolutePath(config.getAlistPath());
-        String alistOvaPath = FilePathUtil.getAbsolutePath(config.getAlistOvaPath());
         String alistToken = config.getAlistToken();
 
         verify();
 
-        Boolean ova = Opt.ofNullable(ani)
-                .map(Ani::getOva)
-                .orElse(false);
-
-        String resolvedFilePath = ova ? StrUtil.blankToDefault(alistOvaPath, alistPath) : alistPath;
+        String finalPath = getPath(torrentsInfo, ani);
+        String rootPath = getRootPath(torrentsInfo, ani) + "/";
         EXECUTOR.execute(() -> {
             Long getAlistRefreshDelay = config.getAlistRefreshDelayed();
             if (getAlistRefreshDelay > 0) {
                 ThreadUtil.sleep(getAlistRefreshDelay, TimeUnit.SECONDS);
             }
-            log.info("刷新 Alist 路径: {}", resolvedFilePath);
+            log.info("刷新 Alist 路径: {}", finalPath);
 
             try {
                 String url = alistHost;
@@ -175,21 +148,34 @@ public class AlistUtil {
                 }
                 url += "/api/fs/list";
 
-                Map<String, Object> map = Map.of(
-                        "path", resolvedFilePath,
+                Map<String, Object> resolved = Map.of(
+                        "path", finalPath,
                         "refresh", true
                 );
-
+                Map<String, Object> root = Map.of(
+                        "path", rootPath,
+                        "refresh", true
+                );
                 HttpReq.post(url)
                         .timeout(1000 * 20)
                         .header(Header.AUTHORIZATION, alistToken)
-                        .body(GsonStatic.toJson(map))
+                        .body(GsonStatic.toJson(root))
                         .then(res -> {
-                            Assert.isTrue(res.isOk(), "刷新失败 路径: {} 状态码: {}", resolvedFilePath, res.getStatus());
+                            Assert.isTrue(res.isOk(), "刷新失败 路径: {} 状态码: {}", rootPath, res.getStatus());
                             JsonObject jsonObject = GsonStatic.fromJson(res.body(), JsonObject.class);
                             int code = jsonObject.get("code").getAsInt();
-                            Assert.isTrue(code == 200, "刷新失败 路径: {} 状态码: {}", resolvedFilePath, code);
-                            log.info("已成功刷新 Alist 路径: {}", resolvedFilePath);
+                            Assert.isTrue(code == 200, "刷新失败 路径: {} 状态码: {}", rootPath, code);
+                        });
+                HttpReq.post(url)
+                        .timeout(1000 * 20)
+                        .header(Header.AUTHORIZATION, alistToken)
+                        .body(GsonStatic.toJson(resolved))
+                        .then(res -> {
+                            Assert.isTrue(res.isOk(), "刷新失败 路径: {} 状态码: {}", finalPath, res.getStatus());
+                            JsonObject jsonObject = GsonStatic.fromJson(res.body(), JsonObject.class);
+                            int code = jsonObject.get("code").getAsInt();
+                            Assert.isTrue(code == 200, "刷新失败 路径: {} 状态码: {}", finalPath, code);
+                            log.info("已成功刷新 Alist 路径: {}", finalPath);
                         });
             } catch (Exception e) {
                 log.error(e.getMessage(), e);
@@ -208,5 +194,41 @@ public class AlistUtil {
         Assert.notBlank(alistPath, "alistPath 未配置");
         Assert.notBlank(alistToken, "alistToken 未配置");
     }
+    
+    private static String getPath(TorrentsInfo torrentsInfo,Ani ani) {
+        Config config = ConfigUtil.CONFIG;
+        String downloadDir = FilePathUtil.getAbsolutePath(torrentsInfo.getDownloadDir());
+        String downloadPath = FilePathUtil.getAbsolutePath(config.getDownloadPath());
+        String ovaDownloadPath = FilePathUtil.getAbsolutePath(config.getOvaDownloadPath());
+        String filePath = getRootPath(torrentsInfo, ani);
 
+        if (StrUtil.isNotBlank(downloadPath) && downloadDir.startsWith(downloadPath)) {
+            filePath += downloadDir.substring(downloadPath.length());
+        } else if (StrUtil.isNotBlank(ovaDownloadPath) && downloadDir.startsWith(ovaDownloadPath)) {
+            filePath += downloadDir.substring(ovaDownloadPath.length());
+        } else {
+            filePath += downloadDir;
+        }
+        return filePath;
+    }
+
+    private static String getRootPath(TorrentsInfo torrentsInfo,Ani ani) {
+        Config config = ConfigUtil.CONFIG;
+        String alistOvaPath = FilePathUtil.getAbsolutePath(config.getAlistOvaPath());
+        String alistPath = FilePathUtil.getAbsolutePath(config.getAlistPath());
+        String filePath = alistPath;
+
+            Boolean ova = Opt.ofNullable(ani)
+                    .map(Ani::getOva)
+                    .orElse(false);
+
+            if (ova) {
+                filePath = StrUtil.blankToDefault(alistOvaPath, filePath);
+            }
+            if (filePath.endsWith("/")) {
+                filePath = filePath.substring(0, filePath.length() - 1);
+                
+            }
+            return filePath;
+    }
 }
