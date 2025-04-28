@@ -282,9 +282,15 @@
           <el-form-item label="Mikan">
             <el-input v-model:model-value="props.config.mikanHost" placeholder="https://mikanime.tv"/>
           </el-form-item>
+          <el-form-item label="TmdbApi">
+            <el-input v-model:model-value="props.config['tmdbApi']" placeholder="https://api.themoviedb.org"/>
+          </el-form-item>
+          <el-form-item label="TmdbApiKey">
+            <el-input v-model:model-value="props.config['tmdbApiKey']" placeholder="请自备 API 密钥, 留空使用系统默认"/>
+          </el-form-item>
           <el-form-item label="BgmToken">
             <div style="width: 100%;">
-              <el-input v-model:model-value="props.config.bgmToken" type="password"/>
+              <el-input v-model:model-value="props.config.bgmToken" show-password type="password"/>
               <div>
                 <el-text class="mx-1" size="small">
                   你可以在 <a target="_blank" href="https://next.bgm.tv/demo/access-token">https://next.bgm.tv/demo/access-token</a>

@@ -28,9 +28,15 @@ public class MessageUtil {
             }
         }
 
-        if (MessageEnum.COMPLETED == messageEnum && !AfdianUtil.verifyExpirationTime()) {
-            log.warn("未解锁捐赠, 无法使用订阅完结通知");
-            return;
+        if (!AfdianUtil.verifyExpirationTime()) {
+            if (MessageEnum.COMPLETED == messageEnum) {
+                log.warn("未解锁捐赠, 无法使用订阅完结通知");
+                return;
+            }
+            if (MessageEnum.ALIST_UPLOAD == messageEnum) {
+                log.warn("未解锁捐赠, 无法使用Alist上传通知");
+                return;
+            }
         }
 
         Set<Class<?>> classes = ClassUtil.scanPackage("ani.rss.msg");

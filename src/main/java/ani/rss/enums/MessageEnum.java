@@ -21,13 +21,17 @@ public enum MessageEnum {
      */
     ERROR("❌", "发生错误"),
     /**
+     * Alist上传通知
+     */
+    ALIST_UPLOAD("🙌", "Alist上传通知"),
+    /**
      * 订阅完结
      */
     COMPLETED("🎊", "订阅完结"),
     /**
      * 摸鱼检测
      */
-    PROCRASTINATING("🐟", "摸鱼检测");;
+    PROCRASTINATING("🐟", "摸鱼检测");
 
     private final String emoji;
     private final String action;

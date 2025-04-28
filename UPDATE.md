@@ -1,11 +1,9 @@
 ### 改动
 
-- 支持直接在程序内对bgm番剧打分
-- alist刷新优化 #337
+- 支持自定义 `TmdbApi`、`TmdbApiKey`
+- 增加Alist上传通知
 
-### 贡献者
-
-@uchouT
+close #335
 
 ### 疑惑为什么增加赞助功能的可以看一下我发的 discussion
 

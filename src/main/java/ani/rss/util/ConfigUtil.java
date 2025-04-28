@@ -27,6 +27,8 @@ public class ConfigUtil {
         String password = Md5Util.digestHex("admin");
         CONFIG.setSleep(15)
                 .setMikanHost("https://mikanime.tv")
+                .setTmdbApi("https://api.themoviedb.org")
+                .setTmdbApiKey("")
                 .setRenameSleep(0.5)
                 .setGcSleep(10)
                 .setRename(true)
