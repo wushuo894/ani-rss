@@ -205,7 +205,10 @@
         <el-form-item label="上传开关">
           <div style="width: 100%">
             <div>
-              <el-switch v-model:model-value="props.config['alist']"/>
+              <el-switch v-model="props.config['alist']"/>
+            </div>
+            <div>
+              <el-checkbox v-model="props.config['alistTask']" :disabled="!props.config['alist']" label="添加为任务"/>
             </div>
             <div>
               <el-text class="mx-1" size="small">

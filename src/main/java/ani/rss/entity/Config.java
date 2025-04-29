@@ -509,6 +509,11 @@ public class Config implements Serializable {
     private Integer alistRetry;
 
     /**
+     * alist添加上传任务
+     */
+    private Boolean alistTask;
+
+    /**
      * 版本
      */
     private String version;

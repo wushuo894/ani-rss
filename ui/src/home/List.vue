@@ -85,7 +85,7 @@
                             <el-tooltip :content="item['subgroup']">
                               <p
                                   class="single-line"
-                                  style="text-align: center;display: inline-block;max-width: 60px;column-count: 1;"
+                                  style="text-align: center;display: inline-block;max-width: 60px;column-count: 1;cursor: pointer;"
                               >
                                 {{ item['subgroup'] ? item['subgroup'] : '未知字幕组' }}
                               </p>

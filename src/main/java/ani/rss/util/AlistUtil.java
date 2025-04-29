@@ -81,6 +81,9 @@ public class AlistUtil {
 
             EXECUTOR.execute(() -> {
                 log.info("上传 {} ==> {}", file, finalFilePath);
+
+                Boolean alistTask = config.getAlistTask();
+
                 for (int i = 0; i < alistRetry; i++) {
                     try {
                         String url = alistHost;
@@ -99,7 +102,7 @@ public class AlistUtil {
                                 .timeout(1000 * 60 * 2)
                                 .setConfig(httpConfig)
                                 .header(Header.AUTHORIZATION, alistToken)
-                                .header("As-Task", "true")
+                                .header("As-Task", Boolean.toString(alistTask))
                                 .header("File-Path", URLUtil.encode(finalFilePath))
                                 .header(Header.CONTENT_LENGTH, String.valueOf(file.length()))
                                 .form("file", file)
@@ -109,7 +112,11 @@ public class AlistUtil {
                                     int code = jsonObject.get("code").getAsInt();
                                     log.info(jsonObject.toString());
                                     Assert.isTrue(code == 200, "上传失败 {} 状态码:{}", fileName, code);
-                                    String text = StrFormatter.format("已向alist添加上传任务 {}", fileName);
+
+                                    String text = StrFormatter.format("alist上传完成 {}", fileName);
+                                    if (alistTask) {
+                                        text = StrFormatter.format("已向alist添加上传任务 {}", fileName);
+                                    }
                                     log.info(text);
                                     MessageUtil.send(config, ani, text, MessageEnum.ALIST_UPLOAD);
                                 });
