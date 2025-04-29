@@ -64,6 +64,9 @@ public class AlistUtil {
         if (tags.contains(TorrentsTags.A_LIST.getValue())) {
             return;
         }
+        if (tags.contains(TorrentsTags.UPLOAD_COMPLETED.getValue())) {
+            return;
+        }
 
         TorrentUtil.addTags(torrentsInfo, TorrentsTags.A_LIST.getValue());
 
@@ -120,6 +123,7 @@ public class AlistUtil {
                                     log.info(text);
                                     MessageUtil.send(config, ani, text, MessageEnum.ALIST_UPLOAD);
                                 });
+                        TorrentUtil.addTags(torrentsInfo, TorrentsTags.UPLOAD_COMPLETED.getValue());
                         return;
                     } catch (Exception e) {
                         log.error(e.getMessage(), e);
