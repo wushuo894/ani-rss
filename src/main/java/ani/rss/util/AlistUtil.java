@@ -95,49 +95,35 @@ public class AlistUtil {
                         // 50M 上传
                         HttpConfig httpConfig = new HttpConfig()
                                 .setBlockSize(1024 * 1024 * 50);
-                        if (alistTask) {
-                            HttpReq
-                                    .put(url, false)
-                                    .timeout(1000 * 60 * 2)
-                                    .setConfig(httpConfig)
-                                    .header(Header.AUTHORIZATION, alistToken)
-                                    .header("As-Task", "true")
-                                    .header("File-Path", URLUtil.encode(finalFilePath))
-                                    .header(Header.CONTENT_LENGTH, String.valueOf(file.length()))
-                                    .form("file", file)
-                                    .then(res -> {
-                                        Assert.isTrue(res.isOk(), "上传失败 {} 状态码:{}", fileName, res.getStatus());
-                                        JsonObject jsonObject = GsonStatic.fromJson(res.body(), JsonObject.class);
-                                        int code = jsonObject.get("code").getAsInt();
-                                        String taskID = jsonObject.getAsJsonObject("data").getAsJsonObject("alistTask")
+
+                        HttpReq
+                                .put(url, false)
+                                .timeout(1000 * 60 * 2)
+                                .setConfig(httpConfig)
+                                .header(Header.AUTHORIZATION, alistToken)
+                                .header("As-Task", Boolean.toString(alistTask))
+                                .header("File-Path", URLUtil.encode(finalFilePath))
+                                .header(Header.CONTENT_LENGTH, String.valueOf(file.length()))
+                                .form("file", file)
+                                .then(res -> {
+                                    Assert.isTrue(res.isOk(), "上传失败 {} 状态码:{}", fileName, res.getStatus());
+                                    JsonObject jsonObject = GsonStatic.fromJson(res.body(), JsonObject.class);
+                                    int code = jsonObject.get("code").getAsInt();
+                                    log.info(jsonObject.toString());
+                                    Assert.isTrue(code == 200, "上传失败 {} 状态码:{}", fileName, code);
+                                    if (alistTask) {
+                                        String taskID = jsonObject.getAsJsonObject("data").getAsJsonObject("task")
                                                 .get("id")
                                                 .getAsString();
                                         uploadMonitor(torrentsInfo, ani, taskID, alistHost, alistToken, fileName);
-                                        Assert.isTrue(code == 200, "上传失败 {} 状态码:{}", fileName, code);
-                                        String text = StrFormatter.format("已向 alist 添加上传任务 {}", fileName);
-                                        log.info(text);
-                                        MessageUtil.send(config, ani, text, MessageEnum.ALIST_UPLOAD);
-                                    });
-                        } else {
-                            HttpReq
-                                    .put(url, false)
-                                    .timeout(1000 * 60 * 2)
-                                    .setConfig(httpConfig)
-                                    .header(Header.AUTHORIZATION, alistToken)
-                                    .header("As-Task", "false")
-                                    .header("File-Path", URLUtil.encode(finalFilePath))
-                                    .header(Header.CONTENT_LENGTH, String.valueOf(file.length()))
-                                    .form("file", file)
-                                    .then(res -> {
-                                        Assert.isTrue(res.isOk(), "上传失败 {} 状态码:{}", fileName, res.getStatus());
-                                        JsonObject jsonObject = GsonStatic.fromJson(res.body(), JsonObject.class);
-                                        int code = jsonObject.get("code").getAsInt();
-                                        Assert.isTrue(code == 200, "上传失败 {} 状态码:{}", fileName, code);
-                                        String text = StrFormatter.format("已向 alist 添加上传任务 {}", fileName);
-                                        log.info(text);
-                                        MessageUtil.send(config, ani, text, MessageEnum.ALIST_UPLOAD);
-                                    });
-                        }
+                                    }
+                                    String text = StrFormatter.format("alist上传完成 {}", fileName);
+                                    if (alistTask) {
+                                        text = StrFormatter.format("已向alist添加上传任务 {}", fileName);
+                                    }
+                                    log.info(text);
+                                    MessageUtil.send(config, ani, text, MessageEnum.ALIST_UPLOAD);
+                                });
                         return;
                     } catch (Exception e) {
                         log.error(e.getMessage(), e);
