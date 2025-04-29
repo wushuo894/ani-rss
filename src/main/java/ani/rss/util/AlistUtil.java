@@ -23,8 +23,6 @@ import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Alist
@@ -109,9 +107,9 @@ public class AlistUtil {
                                     Assert.isTrue(res.isOk(), "上传失败 {} 状态码:{}", fileName, res.getStatus());
                                     JsonObject jsonObject = GsonStatic.fromJson(res.body(), JsonObject.class);
                                     int code = jsonObject.get("code").getAsInt();
-                                    String taskID = jsonObject.getAsJsonObject("task").get("id").getAsString();
-                                    uploadMonitor(ani,taskID, alistHost, alistToken, fileName);
-                                    log.info(jsonObject.toString());
+                                    String taskID = jsonObject.getAsJsonObject("data").getAsJsonObject("task").get("id")
+                                            .getAsString();
+                                    uploadMonitor(torrentsInfo, ani, taskID, alistHost, alistToken, fileName);
                                     Assert.isTrue(code == 200, "上传失败 {} 状态码:{}", fileName, code);
                                     String text = StrFormatter.format("已向 alist 添加上传任务 {}", fileName);
                                     log.info(text);
@@ -132,23 +130,31 @@ public class AlistUtil {
     /**
      * 刷新 Alist 路径
      */
-    public static void refresh(TorrentsInfo torrentsInfo, Ani ani) {
+    public static void refreshDelay(TorrentsInfo torrentsInfo, Ani ani) {
         Config config = ConfigUtil.CONFIG;
         Boolean refresh = config.getAlistRefresh();
         if (!refresh) {
             return;
         }
+        Boolean alist = config.getAlist();
+        // Alist 开启上传无需刷新
+        if (alist) {
+            return;
+        }
+        Long delay = config.getAlistRefreshDelayed();
+        refresh(torrentsInfo, ani, delay);
+    }
+
+    private static void refresh(TorrentsInfo torrentsInfo, Ani ani, Long delay) {
+        Config config = ConfigUtil.CONFIG;
         String alistHost = config.getAlistHost();
         String alistToken = config.getAlistToken();
-
         verify();
-
         String finalPath = getPath(torrentsInfo, ani);
         String rootPath = getRootPath(ani) + "/";
         EXECUTOR.execute(() -> {
-            Long getAlistRefreshDelay = config.getAlistRefreshDelayed();
-            if (getAlistRefreshDelay > 0) {
-                ThreadUtil.sleep(getAlistRefreshDelay, TimeUnit.SECONDS);
+            if (delay > 0) {
+                ThreadUtil.sleep(delay, TimeUnit.SECONDS);
             }
             log.info("刷新 Alist 路径: {}", finalPath);
 
@@ -240,45 +246,47 @@ public class AlistUtil {
         return filePath;
     }
 
-    private static void uploadMonitor(Ani ani, String taskID, String alistHost, String alistToken, String fileName) {
+    private static void uploadMonitor(TorrentsInfo torrentsInfo, Ani ani, String taskID, String alistHost,
+            String alistToken, String fileName) {
         EXECUTOR.execute(() -> {
-            AtomicBoolean isCompleted = new AtomicBoolean(false);
-            long retryDelay = 1000 * 60;
+            boolean[] isCompleted = { false };
+            long retryDelay = 1000 * 10;
             int maxRetry = 10;
             String url = alistHost;
             if (url.endsWith("/")) {
                 url = url.substring(0, url.length() - 1);
             }
-            url += "/api/admin/task/upload/info?tid=" + taskID;
+            url += "/api/task/upload/info?tid=" + taskID;
             try {
-                AtomicInteger retry = new AtomicInteger(0);
-                while (!isCompleted.get() && retry.get() < maxRetry) {
+                int[] retry = { 0 };
+                while (!isCompleted[0] && retry[0] < maxRetry) {
                     Thread.sleep(retryDelay);
                     HttpReq.post(url)
                             .timeout(1000 * 20)
                             .header(Header.AUTHORIZATION, alistToken)
                             .then(res -> {
                                 JsonObject jsonObject = GsonStatic.fromJson(res.body(), JsonObject.class);
-                                JsonObject data = jsonObject.getAsJsonArray("data").get(0).getAsJsonObject();
                                 int code = jsonObject.get("code").getAsInt();
                                 if (code != 200) {
-                                    retry.incrementAndGet();
-                                    log.warn("上传任务 {} 状态码异常，当前重试次数: {}/{}", fileName, retry.get(), maxRetry);
+                                    retry[0]++;
+                                    log.warn("上传任务 {} 状态码异常，当前重试次数: {}/{}", fileName, retry[0], maxRetry);
                                 } else {
-                                    retry.set(0);
-                                    String state = data.get("state").getAsString();
-                                    if ("successed".equals(state)) {
-                                        String text = StrFormatter.format("已向 alist 上传完成 {}", fileName);
+                                    retry[0] = 0;
+                                    JsonObject data = jsonObject.getAsJsonObject("data");
+                                    int state = data.get("state").getAsInt();
+                                    if (state == 2) {
+                                        isCompleted[0] = true;
+                                        String text = StrFormatter.format("Alist 上传完成 {}", fileName);
                                         log.info(text);
                                         Config config = ConfigUtil.CONFIG;
                                         MessageUtil.send(config, ani, text, MessageEnum.ALIST_UPLOAD);
-                                        isCompleted.set(true);
+                                        // 上传完成自动刷新路径
+                                        refresh(torrentsInfo, ani, 3L);
                                     }
                                 }
-                                ;
                             });
                 }
-                Assert.isTrue(isCompleted.get(), "上传失败 {}", fileName);
+                Assert.isTrue(isCompleted[0], "上传失败 {}", fileName);
             } catch (Exception e) {
                 log.error(e.getMessage(), e);
             }

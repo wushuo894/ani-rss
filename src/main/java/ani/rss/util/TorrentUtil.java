@@ -793,7 +793,7 @@ public class TorrentUtil {
             log.error(e.getMessage(), e);
         }
         try {
-            AlistUtil.refresh(torrentsInfo, ani);
+            AlistUtil.refreshDelay(torrentsInfo, ani);
         } catch (Exception e) {
             log.error(e.getMessage(), e);
         }
