@@ -911,8 +911,8 @@ public class TorrentUtil {
         if (!deleteFiles || !alist) {
             return delete(torrentsInfo, false, false);
         }
-        // 开启 alist上传 后删除源文件的行为需要等待 alist上传完成
-        if (torrentsInfo.getTags().contains(TorrentsTags.A_LIST.getValue())) {
+        // 开启 alist上传 后删除源文件的行为需要等待 alist 上传完成
+        if (torrentsInfo.getTags().contains(TorrentsTags.UPLOAD_COMPLETED.getValue())) {
             return delete(torrentsInfo, false, true);
         }
         return false;
