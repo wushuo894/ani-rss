@@ -81,11 +81,15 @@
                           <el-tag type="info" v-else>
                             未启用
                           </el-tag>
-                          <el-tag type="info" v-if="isNotMobile()">
-                            {{ item['subgroup'] ? item['subgroup'] : '未知' }}
-                          </el-tag>
-                          <el-tag type="info" v-else>
-                            {{ (item['subgroup'] ? item['subgroup'] : '未知').substr(0, 6) }}
+                          <el-tag type="info">
+                            <el-tooltip :content="item['subgroup']">
+                              <p
+                                  class="single-line"
+                                  style="text-align: center;display: inline-block;max-width: 60px;column-count: 1;"
+                              >
+                                {{ item['subgroup'] ? item['subgroup'] : '未知字幕组' }}
+                              </p>
+                            </el-tooltip>
                           </el-tag>
                           <el-tag type="warning">
                             {{ item['currentEpisodeNumber'] }} /
