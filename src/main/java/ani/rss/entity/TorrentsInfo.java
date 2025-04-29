@@ -82,10 +82,18 @@ public class TorrentsInfo implements Serializable {
     private Supplier<List<String>> files;
 
     public TorrentsInfo progress(long completed, long size) {
+        if (size < 1) {
+            size = 1;
+            this.setProgress(0.0);
+        } else {
+            this.setProgress(
+                    NumberUtil.round((completed * 1.0 / size) * 100, 2).doubleValue()
+            );
+        }
+
         this.setCompleted(completed);
         this.setSize(size);
         this.setSizeStr(NumberUtil.roundStr((size * 1.0) / 1024 / 1024, 2));
-        this.setProgress(NumberUtil.round((completed * 1.0 / size) * 100, 2).doubleValue());
         return this;
     }
 
