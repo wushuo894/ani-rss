@@ -1,9 +1,6 @@
 ### 改动
 
-- 支持自定义 `TmdbApi`、`TmdbApiKey`
-- 增加Alist上传通知
-
-close #335
+- alist上传可以选择是否添加为任务
 
 ### 疑惑为什么增加赞助功能的可以看一下我发的 discussion
 

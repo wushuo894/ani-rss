@@ -93,7 +93,14 @@ import 'markdown-it-github-alerts/styles/github-base.css'
 
 let md = markdownit({
   html: true,
+  linkify: true
 })
+
+md.renderer.rules.link_open = (tokens, idx, options, env, self) => {
+  const token = tokens[idx]
+  token.attrSet('target', '_blank') // 强制添加属性
+  return self.renderToken(tokens, idx, options)
+}
 
 md.use(MarkdownItGitHubAlerts)
 

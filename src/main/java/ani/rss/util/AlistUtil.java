@@ -81,6 +81,8 @@ public class AlistUtil {
 
             EXECUTOR.execute(() -> {
                 log.info("上传 {} ==> {}", file, finalFilePath);
+
+                Boolean alistTask = config.getAlistTask();
                 for (int i = 0; i < alistRetry; i++) {
                     try {
                         String url = alistHost;
@@ -93,8 +95,7 @@ public class AlistUtil {
                         // 50M 上传
                         HttpConfig httpConfig = new HttpConfig()
                                 .setBlockSize(1024 * 1024 * 50);
-                        Boolean task = config.getAlistUploadAsTask();
-                        if (task) {
+                        if (alistTask) {
                             HttpReq
                                     .put(url, false)
                                     .timeout(1000 * 60 * 2)
@@ -108,7 +109,7 @@ public class AlistUtil {
                                         Assert.isTrue(res.isOk(), "上传失败 {} 状态码:{}", fileName, res.getStatus());
                                         JsonObject jsonObject = GsonStatic.fromJson(res.body(), JsonObject.class);
                                         int code = jsonObject.get("code").getAsInt();
-                                        String taskID = jsonObject.getAsJsonObject("data").getAsJsonObject("task")
+                                        String taskID = jsonObject.getAsJsonObject("data").getAsJsonObject("alistTask")
                                                 .get("id")
                                                 .getAsString();
                                         uploadMonitor(torrentsInfo, ani, taskID, alistHost, alistToken, fileName);
