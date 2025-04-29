@@ -637,4 +637,9 @@ public class Config implements Serializable {
      * Alist 刷新延迟
      */
     private Long alistRefreshDelayed;
+
+    /**
+     * Alist 作为任务上传
+     */
+    private Boolean alistUploadAsTask;
 }

@@ -202,6 +202,18 @@
         <el-form-item label="失败重试次数">
           <el-input-number v-model:model-value="props.config['alistRetry']" :max="100" :min="1"/>
         </el-form-item>
+        <el-form-item label="上传为任务">
+          <div style="width: 100%">
+            <div>
+              <el-switch v-model:model-value="props.config['alistUploadAsTask']"/>
+            </div>
+            <div>
+              <el-text class="mx-1" size="small">
+                将上传添加为任务
+              </el-text>
+            </div>
+          </div>
+        </el-form-item>
         <el-form-item label="上传开关">
           <div style="width: 100%">
             <div>
