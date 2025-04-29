@@ -23,6 +23,8 @@ import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Alist
@@ -107,9 +109,11 @@ public class AlistUtil {
                                     Assert.isTrue(res.isOk(), "上传失败 {} 状态码:{}", fileName, res.getStatus());
                                     JsonObject jsonObject = GsonStatic.fromJson(res.body(), JsonObject.class);
                                     int code = jsonObject.get("code").getAsInt();
+                                    String taskID = jsonObject.getAsJsonObject("task").get("id").getAsString();
+                                    uploadMonitor(ani,taskID, alistHost, alistToken, fileName);
                                     log.info(jsonObject.toString());
                                     Assert.isTrue(code == 200, "上传失败 {} 状态码:{}", fileName, code);
-                                    String text = StrFormatter.format("已向alist添加上传任务 {}", fileName);
+                                    String text = StrFormatter.format("已向 alist 添加上传任务 {}", fileName);
                                     log.info(text);
                                     MessageUtil.send(config, ani, text, MessageEnum.ALIST_UPLOAD);
                                 });
@@ -157,12 +161,10 @@ public class AlistUtil {
 
                 Map<String, Object> resolved = Map.of(
                         "path", finalPath,
-                        "refresh", true
-                );
+                        "refresh", true);
                 Map<String, Object> root = Map.of(
                         "path", rootPath,
-                        "refresh", true
-                );
+                        "refresh", true);
                 HttpReq.post(url)
                         .timeout(1000 * 20)
                         .header(Header.AUTHORIZATION, alistToken)
@@ -236,5 +238,50 @@ public class AlistUtil {
 
         }
         return filePath;
+    }
+
+    private static void uploadMonitor(Ani ani, String taskID, String alistHost, String alistToken, String fileName) {
+        EXECUTOR.execute(() -> {
+            AtomicBoolean isCompleted = new AtomicBoolean(false);
+            long retryDelay = 1000 * 60;
+            int maxRetry = 10;
+            String url = alistHost;
+            if (url.endsWith("/")) {
+                url = url.substring(0, url.length() - 1);
+            }
+            url += "/api/admin/task/upload/info?tid=" + taskID;
+            try {
+                AtomicInteger retry = new AtomicInteger(0);
+                while (!isCompleted.get() && retry.get() < maxRetry) {
+                    Thread.sleep(retryDelay);
+                    HttpReq.post(url)
+                            .timeout(1000 * 20)
+                            .header(Header.AUTHORIZATION, alistToken)
+                            .then(res -> {
+                                JsonObject jsonObject = GsonStatic.fromJson(res.body(), JsonObject.class);
+                                JsonObject data = jsonObject.getAsJsonArray("data").get(0).getAsJsonObject();
+                                int code = jsonObject.get("code").getAsInt();
+                                if (code != 200) {
+                                    retry.incrementAndGet();
+                                    log.warn("上传任务 {} 状态码异常，当前重试次数: {}/{}", fileName, retry.get(), maxRetry);
+                                } else {
+                                    retry.set(0);
+                                    String state = data.get("state").getAsString();
+                                    if ("successed".equals(state)) {
+                                        String text = StrFormatter.format("已向 alist 上传完成 {}", fileName);
+                                        log.info(text);
+                                        Config config = ConfigUtil.CONFIG;
+                                        MessageUtil.send(config, ani, text, MessageEnum.ALIST_UPLOAD);
+                                        isCompleted.set(true);
+                                    }
+                                }
+                                ;
+                            });
+                }
+                Assert.isTrue(isCompleted.get(), "上传失败 {}", fileName);
+            } catch (Exception e) {
+                log.error(e.getMessage(), e);
+            }
+        });
     }
 }
