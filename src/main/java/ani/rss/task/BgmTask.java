@@ -43,7 +43,8 @@ public class BgmTask extends Thread {
                 BgmInfo bgmInfo;
                 try {
                     bgmInfo = BgmUtil.getBgmInfo(ani);
-                } catch (Exception ignored) {
+                } catch (Exception e) {
+                    log.error(e.getMessage(), e);
                     continue;
                 }
 
