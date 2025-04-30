@@ -642,4 +642,9 @@ public class Config implements Serializable {
      * Alist 刷新延迟
      */
     private Long alistRefreshDelayed;
+
+    /**
+     * 自动更新总集数信息
+     */
+    private Boolean updateTotalEpisodeNumber;
 }

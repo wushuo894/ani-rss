@@ -198,6 +198,9 @@
               <el-text class="mx-1" size="small">
                 根据 Bangumi 获取总集数 当所有集数都已下载时自动禁用该订阅
               </el-text>
+              <div>
+                <el-checkbox v-model="props.config['updateTotalEpisodeNumber']" label="自动更新总集数"/>
+              </div>
             </div>
           </el-form-item>
           <el-form-item label="自动跳过X.5集">

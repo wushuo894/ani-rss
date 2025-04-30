@@ -2,11 +2,11 @@ package ani.rss.task;
 
 import ani.rss.entity.Ani;
 import ani.rss.entity.BgmInfo;
+import ani.rss.entity.Config;
 import ani.rss.util.AniUtil;
 import ani.rss.util.BgmUtil;
-import ani.rss.util.ExceptionUtil;
+import ani.rss.util.ConfigUtil;
 import cn.hutool.core.thread.ThreadUtil;
-import cn.hutool.core.util.StrUtil;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
@@ -32,24 +32,31 @@ public class BgmTask extends Thread {
         while (loop.get()) {
             List<Ani> aniList = AniUtil.ANI_LIST;
             for (Ani ani : aniList) {
-                String bgmUrl = ani.getBgmUrl();
-                if (StrUtil.isBlank(bgmUrl)) {
-                    continue;
-                }
                 if (!loop.get()) {
                     return;
                 }
                 Boolean enable = ani.getEnable();
-                double score = ani.getScore();
-                if (enable || score < 1) {
-                    try {
-                        BgmInfo bgmInfo = BgmUtil.getBgmInfo(ani);
-                        score = bgmInfo.getScore();
-                        ani.setScore(score);
-                    } catch (Exception e) {
-                        String message = ExceptionUtil.getMessage(e);
-                        log.error(message, e);
-                    }
+                if (!enable) {
+                    continue;
+                }
+                int totalEpisodeNumber = ani.getTotalEpisodeNumber();
+                BgmInfo bgmInfo;
+                try {
+                    bgmInfo = BgmUtil.getBgmInfo(ani);
+                } catch (Exception ignored) {
+                    continue;
+                }
+
+                double score = bgmInfo.getScore();
+                ani.setScore(score);
+
+                Config config = ConfigUtil.CONFIG;
+                Boolean updateTotalEpisodeNumber = config.getUpdateTotalEpisodeNumber();
+
+                if (totalEpisodeNumber < 1 && updateTotalEpisodeNumber) {
+                    // 自动更新总集数信息
+                    totalEpisodeNumber = BgmUtil.getEps(bgmInfo);
+                    ani.setTotalEpisodeNumber(totalEpisodeNumber);
                 }
             }
             AniUtil.sync();
