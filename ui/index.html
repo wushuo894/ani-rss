@@ -12,16 +12,10 @@
 </head>
 <script>
     (() => {
-        if (location.href.endsWith('.html')) {
-            return
-        }
-        if (location.href.endsWith('#')) {
-            return
-        }
         if (location.pathname.endsWith('/')) {
             return;
         }
-        location.href = location.href + '/'
+        location.pathname += '/'
     })()
 </script>
 <body>
