@@ -557,9 +557,13 @@ public class BgmUtil {
         return episodeTitleMap;
     }
 
-    public static Ani toAni(BgmInfo bgmInfo, Ani ani) {
-        String title = BgmUtil.getName(bgmInfo);
-
+    /**
+     * 获取集数 排除ova
+     *
+     * @param bgmInfo
+     * @return
+     */
+    public static Integer getEps(BgmInfo bgmInfo) {
         int eps = bgmInfo.getEps();
         String subjectId = bgmInfo.getSubjectId();
         if (eps > 0) {
@@ -569,6 +573,13 @@ public class BgmUtil {
                 log.error(e.getMessage(), e);
             }
         }
+        return eps;
+    }
+
+    public static Ani toAni(BgmInfo bgmInfo, Ani ani) {
+        String title = BgmUtil.getName(bgmInfo);
+
+        int eps = getEps(bgmInfo);
 
         String image = bgmInfo.getImage();
 
