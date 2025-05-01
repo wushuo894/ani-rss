@@ -7,7 +7,7 @@
           试用中 过期时间: {{ timestampToDate(props.config['expirationTime']) }}
         </el-tag>
         <el-tag v-else type="warning">
-          试用已过期 可继续试用
+          试用已过期
         </el-tag>
       </div>
       <div v-else>
@@ -54,7 +54,7 @@
                    bg
                    text
                    @click="tryOutRef?.show">
-          试用15天
+          试用
         </el-button>
       </div>
     </div>

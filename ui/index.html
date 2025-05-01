@@ -8,19 +8,14 @@
     <link rel="manifest" href="/manifest.json"/>
     <meta content="#ffffff" media="(prefers-color-scheme: light)" name="theme-color"/>
     <meta content="#000000" media="(prefers-color-scheme: dark)" name="theme-color"/>
+    <meta content="noindex" name="robots">
 </head>
 <script>
     (() => {
-        if (location.href.endsWith('.html')) {
-            return
-        }
-        if (location.href.endsWith('#')) {
-            return
-        }
         if (location.pathname.endsWith('/')) {
             return;
         }
-        location.href = location.href + '/'
+        location.pathname += '/'
     })()
 </script>
 <body>

@@ -574,6 +574,8 @@ public class TorrentUtil {
         // 根据季度存放
         Boolean quarter = config.getQuarter();
         Boolean quarterMerge = config.getQuarterMerge();
+        // 按照年份存放
+        Boolean yearStorage = config.getYearStorage();
         Boolean fileExist = config.getFileExist();
         if (ova && StrUtil.isNotBlank(ovaDownloadPath)) {
             downloadPath = ovaDownloadPath;
@@ -602,6 +604,9 @@ public class TorrentUtil {
                 }
             }
             downloadPath = StrFormatter.format("{}/{}-{}", downloadPath, year, String.format("%02d", month));
+        } else if (yearStorage) {
+            Integer year = ani.getYear();
+            downloadPath = StrFormatter.format("{}/{}", downloadPath, year);
         }
         if (ova) {
             return List.of(new File(downloadPath + "/" + title));

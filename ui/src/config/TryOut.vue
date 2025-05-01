@@ -1,7 +1,7 @@
 <template>
-  <el-dialog v-model="dialogVisible" align-center center style="max-width: 600px;" title="试用15天">
+  <el-dialog v-model="dialogVisible" align-center center style="max-width: 600px;" title="试用">
     <el-text class="mx-1" size="small">
-      给本项目点一个 <strong>Star</strong> 并获取 <strong>GithubToken</strong>, 检测通过后可试用 15 天
+      给本项目点一个 <strong>Star</strong> 并获取 <strong>GithubToken</strong>, 检测通过后可进行试用
     </el-text>
     <div style="margin: 8px 0 8px 0">
       <el-input v-model="props.config['githubToken']" clearable placeholder="在此处输入GithubToken"/>
