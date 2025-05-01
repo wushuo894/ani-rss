@@ -46,6 +46,7 @@ public class ConfigUtil {
                 .setAcronym(false)
                 .setQuarter(false)
                 .setQuarterMerge(false)
+                .setYearStorage(false)
                 .setAutoDisabled(false)
                 .setDownloadPath(FilePathUtil.getAbsolutePath(new File("/Media/番剧")))
                 .setOvaDownloadPath(FilePathUtil.getAbsolutePath(new File("/Media/剧场版")))
