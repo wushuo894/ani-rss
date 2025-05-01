@@ -55,14 +55,9 @@ public class qBittorrent implements BaseDownload {
                     .form("password", password)
                     .setFollowRedirects(true)
                     .thenFunction(res -> {
-                        if (!res.isOk()) {
-                            log.error("登录 qBittorrent 失败");
-                            return false;
-                        }
-                        if (!res.body().equals("Ok.")) {
-                            log.error("登录 qBittorrent 失败");
-                            return false;
-                        }
+                        Assert.isTrue(res.isOk(), "status: {}", res.getStatus());
+                        String body = res.body();
+                        Assert.isTrue("Ok.".equals(body), "body: {}", body);
                         return true;
                     });
         } catch (Exception e) {
