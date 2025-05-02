@@ -48,13 +48,15 @@ public class ConfigAction implements BaseAction {
         Integer gcSleep = config.getGcSleep();
         String download = config.getDownload();
         BeanUtil.copyProperties(
-                GsonStatic.fromJson(req.getBody(), Config.class)
+                getBody(Config.class)
                         .setExpirationTime(null)
                         .setOutTradeNo(null)
-                , config,
+                        .setTryOut(null),
+                config,
                 CopyOptions
                         .create()
-                        .setIgnoreNullValue(true));
+                        .setIgnoreNullValue(true)
+        );
         String host = config.getHost();
         if (StrUtil.isNotBlank(host)) {
             if (host.endsWith("/")) {
