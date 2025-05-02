@@ -125,15 +125,19 @@ public class TmdbUtil {
                     List<JsonObject> results =
                             GsonStatic.fromJsonList(body.getAsJsonArray("results"), JsonObject.class);
 
-                    // 过滤出动漫 genreIds 16
-                    results = results.stream()
-                            .filter(it -> {
-                                JsonElement genreIds = it.get("genre_ids");
-                                if (Objects.isNull(genreIds) || genreIds.isJsonNull()) {
-                                    return false;
-                                }
-                                return GsonStatic.fromJsonList(genreIds.getAsJsonArray(), Integer.class).contains(16);
-                            }).toList();
+                    Boolean tmdbAnime = config.getTmdbAnime();
+
+                    if (tmdbAnime) {
+                        // 过滤出动漫 genreIds 16
+                        results = results.stream()
+                                .filter(it -> {
+                                    JsonElement genreIds = it.get("genre_ids");
+                                    if (Objects.isNull(genreIds) || genreIds.isJsonNull()) {
+                                        return false;
+                                    }
+                                    return GsonStatic.fromJsonList(genreIds.getAsJsonArray(), Integer.class).contains(16);
+                                }).toList();
+                    }
 
                     if (results.isEmpty()) {
                         List<String> split = StrUtil.split(finalTitleName, " ", true, true);
