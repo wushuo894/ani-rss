@@ -72,6 +72,8 @@
               <el-text class="mx-1" size="small">
                 自动使用TMDB的标题
               </el-text>
+              <br>
+              <el-checkbox v-model="props.config['tmdbAnime']" label="仅获取动漫"/>
             </div>
           </el-form-item>
           <el-form-item label="TMDB语言">

@@ -29,6 +29,11 @@ public class Config implements Serializable {
     private String tmdbApiKey;
 
     /**
+     * 仅获取动漫
+     */
+    private Boolean tmdbAnime;
+
+    /**
      * 下载工具
      */
     private String download;
