@@ -52,7 +52,7 @@ public class AfdianUtil {
      * @return
      */
     public static TryOut getTryOut() {
-        return HttpReq.get("https://docs.wushuo.top/TryOut.json")
+        return HttpReq.get("https://docs.wushuo.top/TryOut.json", true)
                 .thenFunction(res -> {
                     Assert.isTrue(res.isOk(), "status: {}", res.getStatus());
                     return GsonStatic.fromJson(res.body(), TryOut.class);
