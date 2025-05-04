@@ -8,6 +8,8 @@ import ani.rss.enums.MessageEnum;
 import ani.rss.enums.StringEnum;
 import ani.rss.util.*;
 import cn.hutool.core.collection.ListUtil;
+import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.date.TimeInterval;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.text.StrFormatter;
@@ -89,7 +91,7 @@ public class Alist implements BaseDownload {
     }
 
     @Override
-    public Boolean download(Ani ani, Item item, String savePath, File torrentFile, Boolean ova) {
+    public synchronized Boolean download(Ani ani, Item item, String savePath, File torrentFile, Boolean ova) {
         String magnet = TorrentUtil.getMagnet(torrentFile);
         String reName = item.getReName();
         String path = savePath + "/" + reName;
@@ -130,11 +132,27 @@ public class Alist implements BaseDownload {
                                 .get("id").getAsString();
                     });
 
+            TimeInterval timer = DateUtil.timer();
             // 重试次数
             int retry = 0;
             while (true) {
+                if (timer.intervalMinute() > 30) {
+                    // 30 分钟还未下载完成
+                    timer.clear();
+                    log.error("{} 30 分钟还未下载完成, 停止检测下载", reName);
+                    return false;
+                }
+
                 // https://github.com/AlistGo/alist/blob/main/pkg/task/task.go
-                JsonObject taskInfo = taskInfo(tid);
+                JsonObject taskInfo;
+
+                try {
+                    taskInfo = taskInfo(tid);
+                } catch (Exception e) {
+                    log.error(e.getMessage(), e);
+                    continue;
+                }
+
                 String error = taskInfo.get("error").getAsString();
                 int state = taskInfo
                         .get("state").getAsInt();
