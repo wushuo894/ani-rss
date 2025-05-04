@@ -164,7 +164,6 @@
 
 <script setup>
 import {onMounted, ref} from "vue";
-import {ElMessage} from 'element-plus'
 import {Back, Delete, Edit as EditIcon, Files} from "@element-plus/icons-vue"
 import Edit from "./Edit.vue";
 import api from "../api.js";
@@ -177,33 +176,33 @@ import BgmRate from "./BgmRate.vue";
 
 const defaultWeekList = [
   {
-    i: 1,
+    i: 0,
     label: '星期日'
   },
   {
-    i: 2,
-    label: '星期一'
-  },
-  {
-    i: 3,
-    label: '星期二'
-  },
-  {
-    i: 4,
-    label: '星期三'
+    i: 6,
+    label: '星期六'
   },
   {
     i: 5,
-    label: '星期四'
-  },
-  {
-    i: 6,
     label: '星期五'
   },
   {
-    i: 7,
-    label: '星期六'
-  }
+    i: 4,
+    label: '星期四'
+  },
+  {
+    i: 3,
+    label: '星期三'
+  },
+  {
+    i: 2,
+    label: '星期二'
+  },
+  {
+    i: 1,
+    label: '星期一'
+  },
 ]
 const weekList = ref(defaultWeekList)
 
@@ -240,22 +239,12 @@ const searchList = (week) => {
       });
 }
 
-const delAni = (ani) => {
-  ani['deleteLoading'] = true
-  api.del('api/ani', [ani.id])
-      .then(res => {
-        ElMessage.success(res.message)
-        getList()
-      })
-      .finally(() => {
-        ani['deleteLoading'] = false
-      })
-}
-
 const list = ref([])
 const weekShow = ref(false)
 
 const getList = () => {
+  loading.value = true
+
   api.get('api/config')
       .then(res => {
         showPlaylist.value = res.data.showPlaylist
@@ -263,8 +252,16 @@ const getList = () => {
         scoreShow.value = res.data.scoreShow
         if (weekShow.value) {
           weekList.value = defaultWeekList;
+
+          // 0表示周日，1表示周一
           let day = new Date().getDay()
-          weekList.value = weekList.value.slice(day, weekList.value.length).concat(weekList.value.slice(0, day))
+
+          let currentDay = weekList.value.find(it => it.i === day)
+          let currentDayIndex = weekList.value.indexOf(currentDay)
+
+          weekList.value = weekList.value
+              .slice(currentDayIndex, weekList.value.length)
+              .concat(weekList.value.slice(0, currentDayIndex))
         } else {
           weekList.value = [{i: 1, label: ''}];
         }

@@ -238,8 +238,8 @@ public class AniAction implements BaseAction {
             Integer month = ani.getMonth();
             Integer day = ani.getDate();
             DateTime dateTime = DateUtil.parseDate(StrFormatter.format("{}-{}-{}", year, month, day));
-            // 1表示周日，2表示周一
-            ani.setWeek(DateUtil.dayOfWeek(dateTime));
+            // 0表示周日，1表示周一
+            ani.setWeek(DateUtil.dayOfWeek(dateTime) - 1);
         }
         resultSuccess(list);
     }
