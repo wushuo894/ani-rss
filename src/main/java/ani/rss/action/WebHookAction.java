@@ -10,8 +10,6 @@ import ani.rss.util.AniUtil;
 import ani.rss.util.BgmUtil;
 import ani.rss.util.ConfigUtil;
 import ani.rss.util.TorrentUtil;
-import cn.hutool.core.convert.Convert;
-import cn.hutool.core.text.StrFormatter;
 import cn.hutool.core.thread.ExecutorBuilder;
 import cn.hutool.core.util.ReUtil;
 import cn.hutool.core.util.StrUtil;
@@ -27,7 +25,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * WebHook
@@ -86,7 +83,6 @@ public class WebHookAction implements BaseAction {
 
         int type = "item.markunplayed".equalsIgnoreCase(body.get("Event").getAsString()) ? 0 : 2;
 
-        AtomicReference<String> seriesNameAtomic = new AtomicReference<>(seriesName);
         EXECUTOR.execute(() -> {
             log.info("{} 标记为 [{}]", fileName, List.of("未看过", "想看", "看过").get(type));
             String episodeId;
@@ -129,15 +125,7 @@ public class WebHookAction implements BaseAction {
                         .findFirst();
             }
 
-            if (first.isPresent()) {
-                subjectId = first.get();
-            } else {
-                if (s > 1) {
-                    seriesNameAtomic.set(StrFormatter.format("{} 第{}季", seriesName, Convert.numberToChinese(s, false)));
-                }
-                subjectId = BgmUtil.getSubjectId(seriesNameAtomic.get());
-            }
-
+            subjectId = first.orElseGet(() -> BgmUtil.getSubjectId(seriesName, s));
             episodeId = BgmUtil.getEpisodeId(subjectId, e);
 
             if (StrUtil.isBlank(episodeId)) {
