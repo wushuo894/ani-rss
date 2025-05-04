@@ -116,9 +116,10 @@ public class BgmUtil {
      * 查找番剧id
      *
      * @param name 名称
+     * @param s    季度
      * @return 番剧id
      */
-    public static synchronized String getSubjectId(String name) {
+    public static synchronized String getSubjectId(String name, Integer s) {
         if (StrUtil.isBlank(name)) {
             return "";
         }
@@ -131,12 +132,27 @@ public class BgmUtil {
             return "";
         }
 
+        String tempName = StrFormatter.format("{} 第{}季", name, Convert.numberToChinese(s, false));
+
         String id = "";
         // 优先使用名称完全匹配的
         for (JsonObject itemObject : list) {
             String nameCn = itemObject.get("name_cn").getAsString();
-            if (nameCn.equalsIgnoreCase(name)) {
+
+            if (StrUtil.isBlank(nameCn)) {
+                continue;
+            }
+
+            if (s == 1) {
+                if (nameCn.equalsIgnoreCase(name)) {
+                    id = itemObject.get("id").getAsString();
+                    break;
+                }
+            }
+
+            if (nameCn.equalsIgnoreCase(tempName)) {
                 id = itemObject.get("id").getAsString();
+                break;
             }
         }
         // 次之使用第一个
