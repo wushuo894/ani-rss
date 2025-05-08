@@ -28,7 +28,7 @@ import java.util.function.Function;
 @Slf4j
 public class ItemsUtil {
 
-    static Cache<String, String> messageCache = CacheUtil.newFIFOCache(40960);
+    static Cache<String, String> messageCache = CacheUtil.newFIFOCache(256);
 
     /**
      * 获取视频列表

@@ -136,10 +136,11 @@ public class Alist implements BaseDownload {
             // 重试次数
             int retry = 0;
             while (true) {
-                if (timer.intervalMinute() > 30) {
-                    // 30 分钟还未下载完成
+                Integer alistDownloadTimeout = config.getAlistDownloadTimeout();
+                if (timer.intervalMinute() > alistDownloadTimeout) {
+                    // 超过下载超时限制
                     timer.clear();
-                    log.error("{} 30 分钟还未下载完成, 停止检测下载", reName);
+                    log.error("{} {} 分钟还未下载完成, 停止检测下载", reName, alistDownloadTimeout);
                     return false;
                 }
 

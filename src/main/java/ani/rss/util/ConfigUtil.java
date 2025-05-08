@@ -168,7 +168,8 @@ public class ConfigUtil {
                 .setGithubToken("")
                 .setAlistRefresh(false)
                 .setAlistRefreshDelayed(0L)
-                .setUpdateTotalEpisodeNumber(false);
+                .setUpdateTotalEpisodeNumber(false)
+                .setAlistDownloadTimeout(60);
     }
 
     /**
