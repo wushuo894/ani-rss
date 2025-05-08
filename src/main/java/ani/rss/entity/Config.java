@@ -662,4 +662,9 @@ public class Config implements Serializable {
      * alist离线超时 分钟
      */
     private Integer alistDownloadTimeout;
+
+    /**
+     * tvshow.nfo
+     */
+    private Boolean tvShowNfo;
 }

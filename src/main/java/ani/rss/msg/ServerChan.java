@@ -41,7 +41,7 @@ public class ServerChan implements Message {
             if (StrUtil.isNotBlank(ani.getImage())) {
                 image = ani.getImage();
             }
-            title = ani.getTitle();
+            title = messageEnum.getAction() + "#" + truncateMessage(ani.getTitle(), 10);
         }
 
         String serverChanUrl = "";
@@ -89,5 +89,15 @@ public class ServerChan implements Message {
         }
 
         return true;
+    }
+
+    private String truncateMessage(String message, int maxLength) {
+        if (StrUtil.isBlank(message)) {
+            return "";
+        }
+        if (message.length() > maxLength) {
+            return message.substring(0, maxLength - 3) + "...";
+        }
+        return message;
     }
 }
