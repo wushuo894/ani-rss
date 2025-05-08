@@ -657,4 +657,9 @@ public class Config implements Serializable {
      * 自动更新总集数信息
      */
     private Boolean updateTotalEpisodeNumber;
+
+    /**
+     * alist离线超时 分钟
+     */
+    private Integer alistDownloadTimeout;
 }

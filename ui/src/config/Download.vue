@@ -18,15 +18,24 @@
     <el-form-item v-if="props.config.download === 'Aria2'" label="RPC 密钥">
       <el-input v-model:model-value="props.config.password" placeholder="" show-password></el-input>
     </el-form-item>
-    <el-form-item v-else-if="props.config.download === 'Alist'" label="AlistToken">
-      <el-input v-model:model-value="props.config.password" placeholder="alist-xxxxxx" show-password/>
-      <br/>
-      <el-text class="mx-1" size="small">
-        请设置好 <strong>保存位置</strong> 才能通过测试<br/>
-        请在 alist -> 设置-> 其他 -> 配置临时目录<br/>
-        支持离线下载到 115、PikPak、迅雷云盘
-      </el-text>
-    </el-form-item>
+    <template v-else-if="props.config.download === 'Alist'">
+      <el-form-item label="AlistToken">
+        <el-input v-model:model-value="props.config.password" placeholder="alist-xxxxxx" show-password/>
+        <br/>
+        <el-text class="mx-1" size="small">
+          请设置好 <strong>保存位置</strong> 才能通过测试<br/>
+          请在 alist -> 设置-> 其他 -> 配置临时目录<br/>
+          支持离线下载到 115、PikPak、迅雷云盘
+        </el-text>
+      </el-form-item>
+      <el-form-item label="离线超时">
+        <el-input-number v-model:model-value="props.config['alistDownloadTimeout']" :min="1">
+          <template #suffix>
+            <span>分钟</span>
+          </template>
+        </el-input-number>
+      </el-form-item>
+    </template>
     <template v-else>
       <el-form-item label="用户名">
         <el-input v-model:model-value="props.config.username" placeholder="username"/>
@@ -80,7 +89,8 @@
     </el-form-item>
     <el-form-item label="拼音首字母">
       <div>
-        <el-switch v-model:model-value="props.config.acronym" :disabled="props.config.quarter || props.config['yearStorage']"/>
+        <el-switch v-model:model-value="props.config.acronym"
+                   :disabled="props.config.quarter || props.config['yearStorage']"/>
         <br>
         <el-text class="mx-1" size="small">
           存放到 #,0,A-Z 文件夹下
@@ -89,7 +99,8 @@
     </el-form-item>
     <el-form-item label="年份">
       <div>
-        <el-switch v-model:model-value="props.config['yearStorage']" :disabled="props.config.acronym || props.config.quarter"/>
+        <el-switch v-model:model-value="props.config['yearStorage']"
+                   :disabled="props.config.acronym || props.config.quarter"/>
         <br>
         <el-text class="mx-1" size="small">
           按年份存放, 如 2023、2024、2025
@@ -98,7 +109,8 @@
     </el-form-item>
     <el-form-item label="季度">
       <div>
-        <el-switch v-model:model-value="props.config.quarter" :disabled="props.config.acronym || props.config['yearStorage']"/>
+        <el-switch v-model:model-value="props.config.quarter"
+                   :disabled="props.config.acronym || props.config['yearStorage']"/>
         <br>
         <el-text class="mx-1" size="small">
           按季度月份存放, 如 2024-07
