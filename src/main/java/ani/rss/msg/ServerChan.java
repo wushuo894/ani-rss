@@ -92,8 +92,8 @@ public class ServerChan implements Message {
     }
 
     private String truncateMessage(String message, int maxLength) {
-        if (message == null) {
-            return null;
+        if (StrUtil.isBlank(message)) {
+            return "";
         }
         if (message.length() > maxLength) {
             return message.substring(0, maxLength - 3) + "...";

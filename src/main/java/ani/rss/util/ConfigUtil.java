@@ -169,7 +169,8 @@ public class ConfigUtil {
                 .setAlistRefresh(false)
                 .setAlistRefreshDelayed(0L)
                 .setUpdateTotalEpisodeNumber(false)
-                .setAlistDownloadTimeout(60);
+                .setAlistDownloadTimeout(60)
+                .setTvShowNfo(false);
     }
 
     /**
