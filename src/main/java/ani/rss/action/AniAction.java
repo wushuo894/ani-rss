@@ -324,6 +324,7 @@ public class AniAction implements BaseAction {
             }
             ani.setEnable(enable);
         }
+        AniUtil.sync();
         resultSuccessMsg("修改完成");
     }
 
