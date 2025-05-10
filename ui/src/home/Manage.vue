@@ -32,6 +32,12 @@
           <el-button :loading="importDataLoading" bg icon="Download" text @click="importData">
             导入
           </el-button>
+          <el-button type="primary" :disabled="!selectList.length" bg icon="CircleCheck" text @click="batchEnable(true)">
+            启用
+          </el-button>
+          <el-button type="warning" :disabled="!selectList.length" bg icon="CircleClose" text @click="batchEnable(false)">
+            禁用
+          </el-button>
           <el-button icon="Remove" bg text :disabled="!selectList.length" type="danger"
                      @click="refDel?.show(selectList)">删除
           </el-button>
@@ -180,6 +186,15 @@ let importData = () => {
     reader.readAsText(file);
   });
   input.click();
+}
+
+let batchEnable = (value) => {
+  loading.value = true
+  api.post('api/ani?type=batchEnable&value=' + value, selectList.value.map(it => it['id']))
+      .then(res => {
+        ElMessage.success(res.message)
+        getList()
+      })
 }
 
 let yearMonthValue = ref('')
