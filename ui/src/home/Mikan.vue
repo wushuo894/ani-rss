@@ -65,17 +65,19 @@
                   <el-collapse accordion @change="collapseChange">
                     <el-collapse-item v-for="it in item.items" :name="it.url">
                       <template #title>
-                        <img :src="img(it)" height="40" width="40" @click.stop="open(it.url)">
-                        <div class="single-line" style="margin-left: 5px;max-width: 70%;">
-                          {{ it.title }}
+                        <div class="flex">
+                          <img :src="img(it)" height="40" width="40" @click.stop="open(it.url)">
+                          <div class="single-line" style="margin-left: 5px;max-width: 70%;">
+                            {{ it.title }}
+                          </div>
+                          <template v-if="it['score'] > 0">
+                            &nbsp;
+                            <h4 style="color: #E800A4;">
+                              {{ it['score'].toFixed(1) }}
+                            </h4>
+                          </template>
+                          <el-badge v-if="it['exists']" class="item" type="primary" value="已订阅"/>
                         </div>
-                        <template v-if="it['score'] > 0">
-                          &nbsp;
-                          <h4 style="color: #E800A4;">
-                            {{ it['score'].toFixed(1) }}
-                          </h4>
-                        </template>
-                        <el-badge v-if="it['exists']" class="item" type="primary" value="已订阅"/>
                       </template>
                       <div v-if="selectName === it.url" v-loading="groupLoading"
                            style="margin-left: 15px;min-height: 50px;">
