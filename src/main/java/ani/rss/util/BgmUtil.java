@@ -3,9 +3,6 @@ package ani.rss.util;
 import ani.rss.entity.Ani;
 import ani.rss.entity.BgmInfo;
 import ani.rss.entity.Config;
-import cn.hutool.cache.Cache;
-import cn.hutool.cache.CacheUtil;
-import cn.hutool.cache.impl.FIFOCache;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.date.DatePattern;
 import cn.hutool.core.date.DateUtil;
@@ -38,10 +35,7 @@ import java.util.stream.Collectors;
  */
 @Slf4j
 public class BgmUtil {
-    static final Cache<String, String> collectionsCache = CacheUtil.newFIFOCache(64);
-    static final Cache<String, List<JsonObject>> getEpisodeIdCache = CacheUtil.newFIFOCache(64);
     private static final String host = "https://api.bgm.tv";
-    private static final Cache<String, String> nameCache = CacheUtil.newFIFOCache(64);
 
     public static synchronized String getName(BgmInfo bgmInfo) {
         Config config = ConfigUtil.CONFIG;
@@ -124,8 +118,10 @@ public class BgmUtil {
             return "";
         }
 
-        if (nameCache.containsKey(name)) {
-            return nameCache.get(name);
+        String key = "BGM_getSubjectId:" + name;
+
+        if (MyCacheUtil.containsKey(key)) {
+            return MyCacheUtil.get(key);
         }
         List<JsonObject> list = search(name);
         if (list.isEmpty()) {
@@ -160,7 +156,7 @@ public class BgmUtil {
             id = list.get(0).get("id").getAsString();
         }
         ThreadUtil.sleep(1000);
-        nameCache.put(name, id, TimeUnit.DAYS.toMillis(1));
+        MyCacheUtil.put(key, id, TimeUnit.MINUTES.toMillis(10));
         return id;
     }
 
@@ -228,7 +224,9 @@ public class BgmUtil {
      * @return
      */
     public static String username() {
-        String username = collectionsCache.get("username");
+        String key = "BGM_username";
+
+        String username = MyCacheUtil.get(key);
         if (StrUtil.isNotBlank(username)) {
             return username;
         }
@@ -248,7 +246,7 @@ public class BgmUtil {
                             .orElse(String.valueOf(jsonObject.get("id").getAsInt()));
                 });
 
-        collectionsCache.put("username", username, TimeUnit.MINUTES.toMillis(10));
+        MyCacheUtil.put(key, username, TimeUnit.MINUTES.toMillis(10));
         return username;
     }
 
@@ -286,10 +284,11 @@ public class BgmUtil {
      * @param subjectId 番剧id
      */
     public static void collections(String subjectId) {
-        if (collectionsCache.containsKey(subjectId)) {
+        String key = "BGM_collections:" + subjectId;
+        if (MyCacheUtil.containsKey(key)) {
             return;
         }
-        collectionsCache.put(subjectId, "1", TimeUnit.MINUTES.toMillis(1));
+        MyCacheUtil.put(key, subjectId, TimeUnit.MINUTES.toMillis(5));
         Objects.requireNonNull(subjectId);
         setToken(HttpReq.post(host + "/v0/users/-/collections/" + subjectId, true))
                 .contentType(ContentType.JSON.getValue())
@@ -308,10 +307,12 @@ public class BgmUtil {
         String epId = "";
         String sortId = "";
 
-        List<JsonObject> episodes = getEpisodeIdCache.get(subjectId);
+        String key = "BGM_getEpisodeId:" + subjectId;
+
+        List<JsonObject> episodes = MyCacheUtil.get(key);
         if (Objects.isNull(episodes)) {
             episodes = getEpisodes(subjectId, 0);
-            getEpisodeIdCache.put(subjectId, episodes, TimeUnit.MINUTES.toMillis(10));
+            MyCacheUtil.put(key, episodes, TimeUnit.MINUTES.toMillis(10));
         }
         for (JsonObject itemObject : episodes) {
             double ep = itemObject.get("ep").getAsDouble();
@@ -518,8 +519,6 @@ public class BgmUtil {
         return httpRequest;
     }
 
-    static FIFOCache<String, Map<Integer, Function<Boolean, String>>> cache = CacheUtil.newFIFOCache(8);
-
     /**
      * 获取每集的标题
      *
@@ -539,7 +538,9 @@ public class BgmUtil {
             return episodeTitleMap;
         }
 
-        Map<Integer, Function<Boolean, String>> cacheMap = cache.get(subjectId);
+        String key = "BGM_getEpisodeTitleMap:" + subjectId;
+
+        Map<Integer, Function<Boolean, String>> cacheMap = MyCacheUtil.get(key);
         if (Objects.nonNull(cacheMap)) {
             return cacheMap;
         }
@@ -569,7 +570,7 @@ public class BgmUtil {
         } catch (Exception e) {
             log.error(e.getMessage(), e);
         }
-        cache.put(subjectId, episodeTitleMap, TimeUnit.MINUTES.toMillis(5));
+        MyCacheUtil.put(key, episodeTitleMap, TimeUnit.MINUTES.toMillis(5));
         return episodeTitleMap;
     }
 

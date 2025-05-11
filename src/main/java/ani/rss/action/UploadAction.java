@@ -18,6 +18,9 @@ import lombok.extern.slf4j.Slf4j;
 import java.io.File;
 import java.io.IOException;
 
+/**
+ * 上传文件
+ */
 @Slf4j
 @Auth(type = AuthType.FORM)
 @Path("/upload")

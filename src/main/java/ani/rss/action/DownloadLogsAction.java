@@ -13,6 +13,9 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
+/**
+ * 下载日志
+ */
 @Auth(type = AuthType.FORM)
 @Path("/downloadLogs")
 public class DownloadLogsAction implements BaseAction {

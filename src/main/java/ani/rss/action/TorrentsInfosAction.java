@@ -11,6 +11,9 @@ import lombok.extern.slf4j.Slf4j;
 import java.io.IOException;
 import java.util.List;
 
+/**
+ * 下载器任务列表
+ */
 @Slf4j
 @Auth
 @Path("/torrentsInfos")

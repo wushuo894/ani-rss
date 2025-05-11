@@ -241,7 +241,7 @@ let dateChange = () => {
 let downloadLoading = ref(false)
 let download = () => {
   downloadLoading.value = true
-  api.post('api/ani?download=true', props.ani)
+  api.post('api/ani?type=download', props.ani)
       .then(res => {
         ElMessage.success(res.message)
       })

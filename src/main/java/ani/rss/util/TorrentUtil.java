@@ -20,6 +20,10 @@ import cn.hutool.json.JSONUtil;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.eclipse.bittorrent.TorrentFile;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 import java.io.File;
 import java.util.*;
@@ -713,7 +717,11 @@ public class TorrentUtil {
         }
         MessageUtil.send(ConfigUtil.CONFIG, ani, text, MessageEnum.DOWNLOAD_START);
 
-        createTvShowNfo(savePath, ani);
+        try {
+            createTvShowNfo(savePath, ani);
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+        }
 
         Config config = ConfigUtil.CONFIG;
 
@@ -766,19 +774,52 @@ public class TorrentUtil {
             return;
         }
 
-        File tvshowFile = new File(new File(savePath).getParent() + "/tvshow.nfo");
+        ThreadUtil.execute(() -> {
+            File tvshowFile = new File(new File(savePath).getParent() + "/tvshow.nfo");
 
-        if (tvshowFile.exists()) {
-            return;
-        }
+            Integer season = ani.getSeason();
 
-        String s = """
-                <?xml version="1.0" encoding="utf-8" standalone="yes"?>
-                <tvshow>
-                    <tmdbid>{}</tmdbid>
-                </tvshow>
-                """;
-        FileUtil.writeUtf8String(StrFormatter.format(s, tmdbId), tvshowFile);
+            String tmdbegid = "";
+
+            if (TmdbUtil.isTmdbGroup(tmdb, season)) {
+                tmdbegid = TmdbUtil.getTmdbGroupId(tmdb);
+            }
+
+            if (!tvshowFile.exists()) {
+                String s = """
+                        <?xml version="1.0" encoding="utf-8" standalone="yes"?>
+                        <tvshow>
+                            <tmdbid>{}</tmdbid>
+                            <tmdbegid>{}</tmdbegid>
+                        </tvshow>
+                        """;
+                FileUtil.writeUtf8String(StrFormatter.format(s, tmdbId, tmdbegid), tvshowFile);
+                log.info("已创建 {}", tvshowFile);
+                return;
+            }
+
+            if (StrUtil.isBlank(tmdbegid)) {
+                return;
+            }
+
+            Document document = XmlUtil.readXML(tvshowFile);
+            Element documentElement = document.getDocumentElement();
+            NodeList tmdbegidNodeList = documentElement.getElementsByTagName("tmdbegid");
+            for (int i = 0; i < tmdbegidNodeList.getLength(); i++) {
+                Node item = tmdbegidNodeList.item(i);
+                String textContent = item.getTextContent();
+                if (StrUtil.isNotBlank(textContent)) {
+                    // 已包含有剧集组id
+                    return;
+                }
+                documentElement.removeChild(item);
+            }
+            Element tmdbegidElement = document.createElement("tmdbegid");
+            tmdbegidElement.setTextContent(tmdbegid);
+            documentElement.appendChild(tmdbegidElement);
+
+            FileUtil.writeUtf8String(XmlUtil.toStr(document), tvshowFile);
+        });
     }
 
     /**

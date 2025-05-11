@@ -3,8 +3,6 @@ package ani.rss.util;
 import ani.rss.entity.Ani;
 import ani.rss.entity.Config;
 import ani.rss.enums.StringEnum;
-import cn.hutool.cache.CacheUtil;
-import cn.hutool.cache.impl.FIFOCache;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.lang.Assert;
@@ -14,14 +12,19 @@ import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.core.util.ReUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.core.util.URLUtil;
+import cn.hutool.http.HttpResponse;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import lombok.Cleanup;
 import lombok.Data;
 import lombok.experimental.Accessors;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.Serializable;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
+import java.util.function.Consumer;
 
 @Slf4j
 public class TmdbUtil {
@@ -190,8 +193,6 @@ public class TmdbUtil {
                 });
     }
 
-    static FIFOCache<String, Map<Integer, String>> cache = CacheUtil.newFIFOCache(8);
-
     /**
      * 获取每集的标题
      *
@@ -203,29 +204,36 @@ public class TmdbUtil {
         Integer season = ani.getSeason();
         Boolean ova = ani.getOva();
 
-        HashMap<Integer, String> map = new HashMap<>();
+        Map<Integer, String> episodeTitleMap = new HashMap<>();
 
         if (ova) {
-            return map;
+            return episodeTitleMap;
         }
 
         if (Objects.isNull(tmdb)) {
-            return map;
+            return episodeTitleMap;
         }
 
         if (StrUtil.isBlank(tmdb.getId())) {
-            return map;
+            return episodeTitleMap;
         }
 
-        String key = tmdb.getId() + ":" + season;
+        Config config = ConfigUtil.CONFIG;
+        Boolean tmdbGroup = config.getTmdbGroup();
 
-        Map<Integer, String> cacheMap = TmdbUtil.cache.get(key);
+        String key = "TMDB_getEpisodeTitleMap:" + tmdb.getId() + ":" + season + ":" + tmdbGroup;
+
+        Map<Integer, String> cacheMap = MyCacheUtil.get(key);
         if (Objects.nonNull(cacheMap)) {
             return cacheMap;
         }
 
-        Map<Integer, String> episodeTitleMap = getEpisodeTitleMap(tmdb, season);
-        cache.put(key, episodeTitleMap);
+        episodeTitleMap = getEpisodeTitleMap(tmdb, season);
+        if (episodeTitleMap.isEmpty()) {
+            MyCacheUtil.put(key, episodeTitleMap, 1000 * 10);
+        } else {
+            MyCacheUtil.put(key, episodeTitleMap, TimeUnit.MINUTES.toMillis(5));
+        }
         return episodeTitleMap;
     }
 
@@ -237,47 +245,148 @@ public class TmdbUtil {
      * @return
      */
     public static Map<Integer, String> getEpisodeTitleMap(Tmdb tmdb, Integer season) {
-
         String tmdbApi = getTmdbApi();
         String tmdbApiKey = getTmdbApiKey();
 
         Map<Integer, String> map = new HashMap<>();
+
+        Consumer<List<JsonObject>> episodesToMap = episodes -> {
+            for (JsonObject episode : episodes) {
+                int episodeNumber = episode.get("order").getAsInt() + 1;
+                String name = episode.get("name").getAsString();
+                name = RenameUtil.getName(name);
+                if (map.containsKey(episodeNumber)) {
+                    continue;
+                }
+                map.put(episodeNumber, name);
+            }
+        };
+
         try {
             String id = tmdb.getId();
             String url = StrFormatter.format("{}/3/tv/{}/season/{}", tmdbApi, id, season);
 
             Config config = ConfigUtil.CONFIG;
+            Boolean tmdbGroup = config.getTmdbGroup();
             String tmdbLanguage = config.getTmdbLanguage();
 
-            HttpReq.get(url, true)
+            @Cleanup
+            HttpResponse res = HttpReq.get(url, true)
                     .timeout(5000)
                     .form("api_key", tmdbApiKey)
                     .form("include_adult", "true")
                     .form("language", tmdbLanguage)
-                    .then(res -> {
-                        Assert.isTrue(res.isOk(), "status: {}", res.getStatus());
-                        JsonObject body = GsonStatic.fromJson(res.body(), JsonObject.class);
-                        List<JsonObject> episodes = GsonStatic.fromJsonList(
-                                body.getAsJsonArray("episodes"), JsonObject.class
-                        );
-                        for (JsonObject episode : episodes) {
-                            int seasonNumber = episode.get("season_number").getAsInt();
-                            int episodeNumber = episode.get("episode_number").getAsInt();
-                            String name = episode.get("name").getAsString();
+                    .execute();
+            if (res.getStatus() != 404) {
+                Assert.isTrue(res.isOk(), "status: {}", res.getStatus());
+                JsonObject body = GsonStatic.fromJson(res.body(), JsonObject.class);
+                List<JsonObject> episodes = GsonStatic.fromJsonList(
+                        body.getAsJsonArray("episodes"), JsonObject.class
+                );
+                episodesToMap.accept(episodes);
+                return map;
+            }
 
-                            if (seasonNumber != season) {
-                                continue;
-                            }
+            if (!tmdbGroup) {
+                // 未启用剧集组
+                return map;
+            }
 
-                            name = RenameUtil.getName(name);
-
-                            map.put(episodeNumber, name);
-                        }
+            // 获取剧集组信息
+            String tmdbGroupId = getTmdbGroupId(tmdb);
+            if (StrUtil.isBlank(tmdbGroupId)) {
+                return map;
+            }
+            // 得到了剧集组的id
+            HttpReq.get(tmdbApi + "/3/tv/episode_group/" + tmdbGroupId, true)
+                    .timeout(5000)
+                    .form("api_key", tmdbApiKey)
+                    .form("include_adult", "true")
+                    .form("language", tmdbLanguage)
+                    .then(response -> {
+                        Assert.isTrue(response.isOk(), "status: {}", response.getStatus());
+                        JsonObject body = GsonStatic.fromJson(response.body(), JsonObject.class);
+                        body.getAsJsonArray("groups")
+                                .asList()
+                                .stream()
+                                .map(JsonElement::getAsJsonObject)
+                                .filter(o -> o.get("order").getAsInt() == season)
+                                .map(o -> o.getAsJsonArray("episodes"))
+                                .map(JsonArray::asList)
+                                .map(o -> o.stream().map(JsonElement::getAsJsonObject).toList())
+                                .findFirst()
+                                .ifPresent(episodesToMap);
                     });
         } catch (Exception e) {
             log.error(ExceptionUtil.getMessage(e), e);
         }
         return map;
+    }
+
+    /**
+     * 判断是否需要剧集组
+     *
+     * @param tmdb
+     * @param season
+     * @return
+     */
+    public static Boolean isTmdbGroup(Tmdb tmdb, Integer season) {
+        String tmdbApi = getTmdbApi();
+        String tmdbApiKey = getTmdbApiKey();
+
+        Config config = ConfigUtil.CONFIG;
+        String tmdbLanguage = config.getTmdbLanguage();
+
+        String id = tmdb.getId();
+
+        Boolean tmdbGroup = config.getTmdbGroup();
+        if (!tmdbGroup) {
+            // 未启用剧集组
+            return false;
+        }
+
+        String url = StrFormatter.format("{}/3/tv/{}/season/{}", tmdbApi, id, season);
+        return HttpReq.get(url, true)
+                .timeout(5000)
+                .form("api_key", tmdbApiKey)
+                .form("include_adult", "true")
+                .form("language", tmdbLanguage)
+                .thenFunction(res -> res.getStatus() == 404);
+    }
+
+    /**
+     * 获取剧集组
+     *
+     * @param tmdb
+     * @return
+     */
+    public static String getTmdbGroupId(Tmdb tmdb) {
+        String tmdbApi = getTmdbApi();
+        String tmdbApiKey = getTmdbApiKey();
+
+        Config config = ConfigUtil.CONFIG;
+        String tmdbLanguage = config.getTmdbLanguage();
+
+        String id = tmdb.getId();
+
+        String url = StrFormatter.format("{}/3/tv/{}/episode_groups", tmdbApi, id);
+        return HttpReq.get(url, true)
+                .timeout(5000)
+                .form("api_key", tmdbApiKey)
+                .form("include_adult", "true")
+                .form("language", tmdbLanguage)
+                .thenFunction(response -> {
+                    Assert.isTrue(response.isOk(), "status: {}", response.getStatus());
+                    JsonObject body = GsonStatic.fromJson(response.body(), JsonObject.class);
+                    JsonArray results = body.getAsJsonArray("results");
+                    return results.asList()
+                            .stream()
+                            .map(JsonElement::getAsJsonObject)
+                            .filter(o -> o.get("name").getAsString().equals("Seasons"))
+                            .map(o -> o.get("id").getAsString())
+                            .findFirst()
+                            .orElse("");
+                });
     }
 
 
