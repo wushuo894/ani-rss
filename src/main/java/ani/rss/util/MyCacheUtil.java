@@ -11,21 +11,25 @@ public class MyCacheUtil {
 
     @Synchronized("CACHE")
     public static <V> V get(Object key) {
+        log.debug("get key:{}", key);
         return (V) CACHE.get(key);
     }
 
     @Synchronized("CACHE")
     public static void put(Object key, Object object) {
+        log.debug("put key:{}", key);
         CACHE.put(key, object);
     }
 
     @Synchronized("CACHE")
     public static void put(Object key, Object object, long timeout) {
+        log.debug("put key:{} timeout:{}", key, timeout);
         CACHE.put(key, object, timeout);
     }
 
     @Synchronized("CACHE")
     public static boolean containsKey(Object key) {
+        log.debug("contains key:{}", key);
         return CACHE.containsKey(key);
     }
 }
