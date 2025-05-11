@@ -8,8 +8,6 @@ import ani.rss.annotation.Path;
 import ani.rss.auth.util.AuthUtil;
 import ani.rss.entity.Config;
 import ani.rss.entity.Result;
-import cn.hutool.cache.Cache;
-import cn.hutool.cache.CacheUtil;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.lang.PatternPool;
 import cn.hutool.core.net.Ipv4Util;
@@ -143,8 +141,6 @@ public class ServerUtil {
         }
     }
 
-    public static final Cache<String, Boolean> cache = CacheUtil.newFIFOCache(4096);
-
     public static synchronized Boolean isIpWhitelist(String ip) {
         Config config = ConfigUtil.CONFIG;
         String ipWhitelistStr = config.getIpWhitelistStr();
@@ -158,12 +154,12 @@ public class ServerUtil {
         if (StrUtil.isBlank(ip)) {
             return false;
         }
-        String cacheKey = Md5Util.digestHex(ipWhitelistStr) + ":" + ip;
+        String key = "IpWhitelist:" + Md5Util.digestHex(ipWhitelistStr) + ":" + ip;
         try {
             if (!PatternPool.IPV4.matcher(ip).matches()) {
                 return false;
             }
-            Boolean b = cache.get(cacheKey);
+            Boolean b = MyCacheUtil.get(key);
             if (Objects.nonNull(b)) {
                 return b;
             }
@@ -174,18 +170,18 @@ public class ServerUtil {
                 }
                 if (PatternPool.IPV4.matcher(string).matches()) {
                     if (string.equals(ip)) {
-                        cache.put(cacheKey, Boolean.TRUE);
+                        MyCacheUtil.put(key, Boolean.TRUE);
                         return true;
                     }
                 }
                 if (string.contains("*")) {
                     if (Ipv4Util.matches(string, ip)) {
-                        cache.put(cacheKey, Boolean.TRUE);
+                        MyCacheUtil.put(key, Boolean.TRUE);
                         return true;
                     }
                 }
                 if (Ipv4Util.list(string, false).contains(ip)) {
-                    cache.put(cacheKey, Boolean.TRUE);
+                    MyCacheUtil.put(key, Boolean.TRUE);
                     return true;
                 }
             }
@@ -194,7 +190,7 @@ public class ServerUtil {
             log.error("ip白名单存在问题");
             log.error(e.getMessage(), e);
         }
-        cache.put(cacheKey, Boolean.FALSE);
+        MyCacheUtil.put(key, Boolean.FALSE);
         return false;
     }
 }

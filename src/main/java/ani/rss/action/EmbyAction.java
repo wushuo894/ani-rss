@@ -12,7 +12,7 @@ import java.io.IOException;
 import java.util.List;
 
 /**
- * 测试下载工具
+ * Emby
  */
 @Auth
 @Path("/emby")

@@ -178,7 +178,7 @@ public class RenameUtil {
             bgmEpisodeTitleMap = BgmUtil.getEpisodeTitleMap(ani);
         }
 
-        String defaultEpisodeTitle = "第" + episode + "集";
+        String defaultEpisodeTitle = "第" + NumberFormatUtil.format(episode, 1, 0) + "集";
 
         String episodeTitle = is5 ? defaultEpisodeTitle : episodeTitleMap
                 .getOrDefault(episode.intValue(), defaultEpisodeTitle);

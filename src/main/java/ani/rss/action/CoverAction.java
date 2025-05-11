@@ -10,6 +10,9 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
 
+/**
+ * 刷新封面
+ */
 @Slf4j
 @Auth
 @Path("/cover")

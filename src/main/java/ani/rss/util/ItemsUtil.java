@@ -5,8 +5,6 @@ import ani.rss.entity.Config;
 import ani.rss.entity.Item;
 import ani.rss.enums.MessageEnum;
 import ani.rss.enums.StringEnum;
-import cn.hutool.cache.Cache;
-import cn.hutool.cache.CacheUtil;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.date.DateTime;
 import cn.hutool.core.date.DateUnit;
@@ -27,8 +25,6 @@ import java.util.function.Function;
 
 @Slf4j
 public class ItemsUtil {
-
-    static Cache<String, String> messageCache = CacheUtil.newFIFOCache(256);
 
     /**
      * 获取视频列表
@@ -319,13 +315,14 @@ public class ItemsUtil {
 
         for (Integer i : list) {
             String s = StrFormatter.format("缺少集数 {} S{}E{}", title, String.format("%02d", season), String.format("%02d", i));
-            if (messageCache.containsKey(s)) {
+            String key = "omit:" + Md5Util.digestHex(s);
+            if (MyCacheUtil.containsKey(key)) {
                 // 一天内已经提醒过了
                 continue;
             }
             log.info(s);
             // 缓存一天 不重复发送
-            messageCache.put(s, "1", TimeUnit.DAYS.toMillis(1));
+            MyCacheUtil.put(key, s, TimeUnit.DAYS.toMillis(1));
             sList.add(s);
         }
 
@@ -414,12 +411,14 @@ public class ItemsUtil {
                     }
                     String text = StrFormatter.format("检测到{}, 已摸鱼{}天", ani.getTitle(), day);
 
-                    if (messageCache.containsKey(text)) {
+                    String key = "procrastinating:" + Md5Util.digestHex(text);
+
+                    if (MyCacheUtil.containsKey(key)) {
                         // 一天内已经提醒过了
                         return;
                     }
 
-                    messageCache.put(text, "1", TimeUnit.DAYS.toMillis(1));
+                    MyCacheUtil.put(key, text, TimeUnit.DAYS.toMillis(1));
                     MessageUtil.send(config, ani, text, MessageEnum.PROCRASTINATING);
                 });
     }

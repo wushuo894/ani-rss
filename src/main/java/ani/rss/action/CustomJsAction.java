@@ -13,6 +13,9 @@ import lombok.extern.slf4j.Slf4j;
 import java.io.IOException;
 import java.io.OutputStream;
 
+/**
+ * 自定义js
+ */
 @Slf4j
 @Auth(value = false)
 @Path("/custom.js")
