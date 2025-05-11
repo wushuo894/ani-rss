@@ -713,7 +713,7 @@ public class TorrentUtil {
         }
         MessageUtil.send(ConfigUtil.CONFIG, ani, text, MessageEnum.DOWNLOAD_START);
 
-        createTvShowNfo(savePath, ani.getTmdb());
+        createTvShowNfo(savePath, ani);
 
         Config config = ConfigUtil.CONFIG;
 
@@ -739,15 +739,17 @@ public class TorrentUtil {
      * 生成 tvshow.info
      *
      * @param savePath
-     * @param tmdb
+     * @param ani
      */
-    public static synchronized void createTvShowNfo(String savePath, TmdbUtil.Tmdb tmdb) {
+    public static synchronized void createTvShowNfo(String savePath, Ani ani) {
         Config config = ConfigUtil.CONFIG;
 
         Boolean tvShowNfo = config.getTvShowNfo();
         if (!tvShowNfo) {
             return;
         }
+
+        TmdbUtil.Tmdb tmdb = ani.getTmdb();
 
         if (Objects.isNull(tmdb)) {
             return;
