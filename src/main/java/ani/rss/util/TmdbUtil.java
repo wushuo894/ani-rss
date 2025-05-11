@@ -252,7 +252,10 @@ public class TmdbUtil {
 
         Consumer<List<JsonObject>> episodesToMap = episodes -> {
             for (JsonObject episode : episodes) {
-                int episodeNumber = episode.get("order").getAsInt() + 1;
+                int episodeNumber = episode.get("episode_number").getAsInt();
+                if (episode.has("order")) {
+                    episodeNumber = episode.get("order").getAsInt() + 1;
+                }
                 String name = episode.get("name").getAsString();
                 name = RenameUtil.getName(name);
                 if (map.containsKey(episodeNumber)) {
