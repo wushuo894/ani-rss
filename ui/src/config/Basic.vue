@@ -82,12 +82,16 @@
                          :key="language"></el-option>
             </el-select>
           </el-form-item>
+          <el-form-item label="TMDB剧集组">
+            <el-switch v-model:model-value="props.config['tmdbGroup']"/>
+          </el-form-item>
           <el-form-item label="tvshow.nfo">
             <div>
               <el-switch v-model:model-value="props.config['tvShowNfo']"/>
               <br>
               <el-text class="mx-1" size="small">
-                自动生成 <strong>tvshow.nfo</strong> 文件, 内包含 <strong>tmdbid</strong> 更方便 <strong>emby</strong> 识别
+                自动生成 <strong>tvshow.nfo</strong> 文件, 内包含 <strong>tmdbid</strong> 更方便 <strong>emby</strong>
+                识别
               </el-text>
             </div>
           </el-form-item>
