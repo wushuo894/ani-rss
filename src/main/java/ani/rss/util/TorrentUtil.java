@@ -818,7 +818,7 @@ public class TorrentUtil {
             tmdbegidElement.setTextContent(tmdbegid);
             documentElement.appendChild(tmdbegidElement);
 
-            XmlUtil.writeObjectAsXml(tvshowFile, document);
+            FileUtil.writeUtf8String(XmlUtil.toStr(document), tvshowFile);
         });
     }
 
