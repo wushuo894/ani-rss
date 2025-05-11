@@ -15,10 +15,12 @@ import lombok.Cleanup;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
+import java.util.Objects;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
@@ -64,30 +66,14 @@ public class RootAction implements BaseAction {
         try {
             EnumerationIter<URL> resourceIter = ResourceUtil.getResourceIter(fileName);
             for (URL url : resourceIter) {
-                if (url.getProtocol().equals("file")) {
-                    File file = new File(URLUtil.decode(url.getFile(), StandardCharsets.UTF_8));
-                    FileUtil.getMimeType(fileName);
-                    if (file.isDirectory()) {
-                        continue;
-                    }
-                    @Cleanup
-                    InputStream inputStream = FileUtil.getInputStream(file);
-                    response.write(inputStream, FileUtil.getMimeType(fileName));
-                    return true;
-                }
-                JarFile jarFile = URLUtil.getJarFile(url);
-                JarEntry jarEntry = jarFile.getJarEntry(fileName);
-                if (jarEntry.isDirectory()) {
+                @Cleanup
+                InputStream inputStream = toInputStream(url, fileName);
+                if (Objects.isNull(inputStream)) {
                     continue;
                 }
-                @Cleanup
-                InputStream inputStream = jarFile.getInputStream(jarEntry);
                 String mimeType = FileUtil.getMimeType(fileName);
-                if (StrUtil.isBlank(mimeType)) {
-                    response.write(inputStream, ContentType.OCTET_STREAM.getValue());
-                    return true;
-                }
-                response.write(inputStream, FileUtil.getMimeType(fileName));
+                mimeType = StrUtil.blankToDefault(mimeType, ContentType.OCTET_STREAM.getValue());
+                response.write(inputStream, mimeType);
                 return true;
             }
             if (!index) {
@@ -104,6 +90,25 @@ public class RootAction implements BaseAction {
             log.error(message, e);
         }
         return false;
+    }
+
+    public InputStream toInputStream(URL url, String fileName) throws IOException {
+        String protocol = url.getProtocol();
+
+        InputStream inputStream = null;
+        if (protocol.equals("file")) {
+            File file = new File(URLUtil.decode(url.getFile(), StandardCharsets.UTF_8));
+            if (!file.isDirectory()) {
+                inputStream = FileUtil.getInputStream(file);
+            }
+        } else {
+            JarFile jarFile = URLUtil.getJarFile(url);
+            JarEntry jarEntry = jarFile.getJarEntry(fileName);
+            if (!jarEntry.isDirectory()) {
+                inputStream = jarFile.getInputStream(jarEntry);
+            }
+        }
+        return inputStream;
     }
 
 }

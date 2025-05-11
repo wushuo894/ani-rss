@@ -5,12 +5,9 @@ import ani.rss.auth.enums.AuthType;
 import ani.rss.entity.Config;
 import ani.rss.entity.Login;
 import ani.rss.util.*;
-import cn.hutool.cache.CacheUtil;
-import cn.hutool.cache.impl.FIFOCache;
 import cn.hutool.core.util.*;
 import cn.hutool.http.server.HttpServerRequest;
 import com.sun.net.httpserver.HttpExchange;
-import lombok.Synchronized;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.HashMap;
@@ -26,7 +23,6 @@ import java.util.stream.Collectors;
 @Slf4j
 public class AuthUtil {
     private static final Map<String, Function<HttpServerRequest, Boolean>> MAP = new HashMap<>();
-    private static final FIFOCache<String, String> CACHE = CacheUtil.newFIFOCache(1);
 
     static {
         resetKey();
@@ -35,21 +31,19 @@ public class AuthUtil {
     /**
      * 刷新有效时间
      */
-    @Synchronized("CACHE")
     public static void resetTime() {
-        String key = CACHE.get("key");
+        String key = MyCacheUtil.get("auth_key");
         if (StrUtil.isBlank(key)) {
             return;
         }
         Config config = ConfigUtil.CONFIG;
         Integer loginEffectiveHours = config.getLoginEffectiveHours();
-        CACHE.put("key", key, TimeUnit.HOURS.toMillis(loginEffectiveHours));
+        MyCacheUtil.put("auth_key", key, TimeUnit.HOURS.toMillis(loginEffectiveHours));
     }
 
     /**
      * 刷新密钥
      */
-    @Synchronized("CACHE")
     public static String resetKey() {
         Config config = ConfigUtil.CONFIG;
 
@@ -63,13 +57,12 @@ public class AuthUtil {
             // 禁止多端登录
             key = RandomUtil.randomString(128);
         }
-        CACHE.put("key", key, TimeUnit.HOURS.toMillis(loginEffectiveHours));
+        MyCacheUtil.put("auth_key", key, TimeUnit.HOURS.toMillis(loginEffectiveHours));
         return key;
     }
 
-    @Synchronized("CACHE")
     public static String getAuth(Login login) {
-        String key = CACHE.get("key");
+        String key = MyCacheUtil.get("auth_key");
         if (StrUtil.isBlank(key)) {
             key = resetKey();
         }

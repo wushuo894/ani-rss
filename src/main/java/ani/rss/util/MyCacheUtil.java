@@ -1,0 +1,31 @@
+package ani.rss.util;
+
+import cn.hutool.cache.CacheUtil;
+import cn.hutool.cache.impl.FIFOCache;
+import lombok.Synchronized;
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
+public class MyCacheUtil {
+    static final FIFOCache<Object, Object> CACHE = CacheUtil.newFIFOCache(1024);
+
+    @Synchronized("CACHE")
+    public static <V> V get(Object key) {
+        return (V) CACHE.get(key);
+    }
+
+    @Synchronized("CACHE")
+    public static void put(Object key, Object object) {
+        CACHE.put(key, object);
+    }
+
+    @Synchronized("CACHE")
+    public static void put(Object key, Object object, long timeout) {
+        CACHE.put(key, object, timeout);
+    }
+
+    @Synchronized("CACHE")
+    public static boolean containsKey(Object key) {
+        return CACHE.containsKey(key);
+    }
+}

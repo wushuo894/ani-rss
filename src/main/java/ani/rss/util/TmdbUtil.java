@@ -3,8 +3,6 @@ package ani.rss.util;
 import ani.rss.entity.Ani;
 import ani.rss.entity.Config;
 import ani.rss.enums.StringEnum;
-import cn.hutool.cache.CacheUtil;
-import cn.hutool.cache.impl.FIFOCache;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.lang.Assert;
@@ -22,6 +20,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.io.Serializable;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 @Slf4j
 public class TmdbUtil {
@@ -190,8 +189,6 @@ public class TmdbUtil {
                 });
     }
 
-    static FIFOCache<String, Map<Integer, String>> cache = CacheUtil.newFIFOCache(8);
-
     /**
      * 获取每集的标题
      *
@@ -217,15 +214,15 @@ public class TmdbUtil {
             return map;
         }
 
-        String key = tmdb.getId() + ":" + season;
+        String key = "TMDB_getEpisodeTitleMap:" + tmdb.getId() + ":" + season;
 
-        Map<Integer, String> cacheMap = TmdbUtil.cache.get(key);
+        Map<Integer, String> cacheMap = MyCacheUtil.get(key);
         if (Objects.nonNull(cacheMap)) {
             return cacheMap;
         }
 
         Map<Integer, String> episodeTitleMap = getEpisodeTitleMap(tmdb, season);
-        cache.put(key, episodeTitleMap);
+        MyCacheUtil.put(key, episodeTitleMap, TimeUnit.MINUTES.toMillis(5));
         return episodeTitleMap;
     }
 
