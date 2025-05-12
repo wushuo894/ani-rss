@@ -775,6 +775,7 @@ public class TorrentUtil {
             File tvshowFile = new File(new File(savePath).getParent() + "/tvshow.nfo");
 
             String tmdbGroupId = tmdb.getTmdbGroupId();
+            tmdbGroupId = StrUtil.blankToDefault(tmdbGroupId, "");
 
             if (!tvshowFile.exists()) {
                 String s = """
