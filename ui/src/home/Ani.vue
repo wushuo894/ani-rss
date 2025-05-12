@@ -50,7 +50,7 @@
             <el-button icon="Refresh" bg text @click="getThemoviedbName" :loading="getThemoviedbNameLoading"/>
           </div>
         </el-form-item>
-        <el-form-item v-if="!props.ani.ova" label="剧集组">
+        <el-form-item v-if="!props.ani.ova && props.ani.tmdb" label="剧集组">
           <div style="display: flex;width: 100%;justify-content: space-between;">
             <el-input v-model="props.ani.tmdb['tmdbGroupId']" placeholder="自动选择"/>
             <div style="width: 4px;"/>
