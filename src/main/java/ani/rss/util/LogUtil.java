@@ -90,18 +90,37 @@ public class LogUtil {
         }
         String className = throwableProxy.getClassName();
         String message = throwableProxy.getMessage();
-        log.append(StrFormatter.format("\r\n{}: {}", className, message));
+        // Fix: Escape the message before appending to the log
+        log.append(StrFormatter.format("\r\n{}: {}", className, escapeHtml(message)));
         StackTraceElementProxy[] stackTraceElementProxyArray = throwableProxy.getStackTraceElementProxyArray();
         if (Objects.isNull(stackTraceElementProxyArray)) {
             return;
         }
         for (StackTraceElementProxy stackTraceElementProxy : stackTraceElementProxyArray) {
-            log.append("\r\n\t").append(stackTraceElementProxy.toString());
+            // Fix: Escape stack trace elements before appending
+            log.append("\r\n\t").append(escapeHtml(stackTraceElementProxy.toString()));
         }
         IThrowableProxy cause = throwableProxy.getCause();
         if (Objects.isNull(cause)) {
             return;
         }
         addThrowableMsg(log, cause);
+    }
+
+    /**
+     * Helper method to escape HTML special characters
+     * @param input the string to escape
+     * @return the escaped string
+     */
+    private static String escapeHtml(String input) {
+        if (input == null) {
+            return null;
+        }
+        return input
+            .replace("&", "&amp;")
+            .replace("<", "&lt;")
+            .replace(">", "&gt;")
+            .replace("\"", "&quot;")
+            .replace("'", "&#39;");
     }
 }
