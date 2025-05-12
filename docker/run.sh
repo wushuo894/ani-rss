@@ -35,7 +35,7 @@ trap 'sigterm_handler' SIGTERM
 
 while :
 do
-    java -Xmx1g -Xss512k \
+    java -xms80m -Xmx1g -Xss512k -Xminf0.6 -Xmaxf0.9 \
       -XX:+UseG1GC \
       -XX:+UseStringDeduplication \
       -XX:+ShrinkHeapInSteps \
