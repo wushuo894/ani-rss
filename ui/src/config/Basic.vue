@@ -394,7 +394,6 @@ let githubList = new Set([
   'gh.jasonzeng.dev',
   'gh.monlor.com',
   'github.tbedu.top',
-  'github.geekery.cn',
   'gh-proxy.linioi.com',
   'mirrors.chenby.cn',
   'github.ednovas.xyz',
