@@ -17,6 +17,7 @@ import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.io.resource.ResourceUtil;
 import cn.hutool.core.text.StrFormatter;
+import cn.hutool.http.HtmlUtil;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.LoggerFactory;
@@ -43,11 +44,7 @@ public class LogUtil {
         try {
             String s = ResourceUtil.readUtf8Str("logback-template.xml");
             s = s.replace("${config}", ConfigUtil.getConfigDir() + "/");
-            if (debug) {
-                s = s.replace("${level}", "debug");
-            } else {
-                s = s.replace("${level}", "info");
-            }
+            s = s.replace("${level}", debug ? "debug" : "info");
 
             JoranConfigurator configurator = new JoranConfigurator();
             configurator.setContext(context);
@@ -66,11 +63,18 @@ public class LogUtil {
                     String level = event.getLevel().toString();
                     String loggerName = event.getLoggerName();
                     String formattedMessage = event.getFormattedMessage();
-                    StringBuilder log = new StringBuilder(StrFormatter.format("{} {} {} - {}", date, level, loggerName, formattedMessage));
+                    String threadName = event.getThreadName();
+                    StringBuilder log = new StringBuilder(StrFormatter.format("{} {} [{}] {} - {}", date, level, threadName, loggerName, formattedMessage));
                     IThrowableProxy throwableProxy = event.getThrowableProxy();
                     addThrowableMsg(log, throwableProxy);
                     try {
-                        LOGS.add(new Log().setMessage(log.toString()).setLevel(level).setLoggerName(loggerName));
+                        LOGS.add(
+                                new Log()
+                                        .setMessage(log.toString())
+                                        .setLevel(level)
+                                        .setLoggerName(loggerName)
+                                        .setThreadName(threadName)
+                        );
                     } catch (Exception ignored) {
                     }
                     return FilterReply.NEUTRAL;
@@ -91,36 +95,19 @@ public class LogUtil {
         String className = throwableProxy.getClassName();
         String message = throwableProxy.getMessage();
         // Fix: Escape the message before appending to the log
-        log.append(StrFormatter.format("\r\n{}: {}", className, escapeHtml(message)));
+        log.append(StrFormatter.format("\r\n{}: {}", className, HtmlUtil.escape(message)));
         StackTraceElementProxy[] stackTraceElementProxyArray = throwableProxy.getStackTraceElementProxyArray();
         if (Objects.isNull(stackTraceElementProxyArray)) {
             return;
         }
         for (StackTraceElementProxy stackTraceElementProxy : stackTraceElementProxyArray) {
             // Fix: Escape stack trace elements before appending
-            log.append("\r\n\t").append(escapeHtml(stackTraceElementProxy.toString()));
+            log.append("\r\n\t").append(HtmlUtil.escape(stackTraceElementProxy.toString()));
         }
         IThrowableProxy cause = throwableProxy.getCause();
         if (Objects.isNull(cause)) {
             return;
         }
         addThrowableMsg(log, cause);
-    }
-
-    /**
-     * Helper method to escape HTML special characters
-     * @param input the string to escape
-     * @return the escaped string
-     */
-    private static String escapeHtml(String input) {
-        if (input == null) {
-            return null;
-        }
-        return input
-            .replace("&", "&amp;")
-            .replace("<", "&lt;")
-            .replace(">", "&gt;")
-            .replace("\"", "&quot;")
-            .replace("'", "&#39;");
     }
 }
