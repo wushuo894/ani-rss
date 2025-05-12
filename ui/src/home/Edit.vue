@@ -34,7 +34,7 @@
 <script setup>
 
 import {ref} from "vue";
-import {ElMessage} from "element-plus";
+import {ElMessage, ElMessageBox} from "element-plus";
 import api from "../api.js";
 import Ani from "./Ani.vue";
 
@@ -73,13 +73,29 @@ const editChange = async (fun) => {
 }
 
 const editAni = () => {
-  api.put('api/ani?move=' + move.value, ani.value)
+  let action = () => api.put('api/ani?move=' + move.value, ani.value)
       .then(res => {
         ElMessage.success(res.message)
         emit('load')
         dialogVisible.value = false
       })
-      .finally(callback.value);
+      .finally(callback.value)
+
+  if (!move.value) {
+    action()
+    return
+  }
+
+  ElMessageBox.confirm(
+      '将会移动整个文件夹, 是否执意继续?',
+      '警告',
+      {
+        confirmButtonText: '执意继续移动',
+        cancelButtonText: '取消',
+        type: 'warning',
+      }
+  )
+      .then(action)
 }
 
 const show = (item) => {

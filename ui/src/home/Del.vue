@@ -21,7 +21,7 @@
 
 import {ref} from "vue";
 import api from "../api.js";
-import {ElMessage} from "element-plus";
+import {ElMessage, ElMessageBox} from "element-plus";
 
 const dialogVisible = ref(false)
 
@@ -46,7 +46,7 @@ let deleteFiles = ref(false)
 
 const delAni = () => {
   okLoading.value = true
-  api.del('api/ani?deleteFiles=' + deleteFiles.value, aniList.value.map(it => it['id']))
+  let action = () => api.del('api/ani?deleteFiles=' + deleteFiles.value, aniList.value.map(it => it['id']))
       .then(res => {
         ElMessage.success(res.message)
         emit('load')
@@ -55,6 +55,22 @@ const delAni = () => {
       .finally(() => {
         okLoading.value = false
       });
+
+  if (!deleteFiles.value) {
+    action()
+    return
+  }
+
+  ElMessageBox.confirm(
+      '将会删除整个文件夹, 是否执意继续?',
+      '警告',
+      {
+        confirmButtonText: '执意继续删除',
+        cancelButtonText: '取消',
+        type: 'warning',
+      }
+  )
+      .then(action)
 }
 
 const show = (anis) => {
