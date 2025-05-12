@@ -667,9 +667,4 @@ public class Config implements Serializable {
      * tvshow.nfo
      */
     private Boolean tvShowNfo;
-
-    /**
-     * tmdb 剧集组
-     */
-    private Boolean tmdbGroup;
 }
