@@ -52,7 +52,7 @@
         </el-form-item>
         <el-form-item v-if="!props.ani.ova && props.ani.tmdb" label="剧集组">
           <div style="display: flex;width: 100%;justify-content: space-between;">
-            <el-input v-model="props.ani.tmdb['tmdbGroupId']" placeholder="自动选择"/>
+            <el-input v-model="props.ani.tmdb['tmdbGroupId']" placeholder="留空不使用剧集组"/>
             <div style="width: 4px;"/>
             <el-button bg icon="Menu" text @click="tmdbGroupRef?.show"/>
           </div>

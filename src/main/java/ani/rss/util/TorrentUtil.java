@@ -774,13 +774,7 @@ public class TorrentUtil {
         ThreadUtil.execute(() -> {
             File tvshowFile = new File(new File(savePath).getParent() + "/tvshow.nfo");
 
-            Integer season = ani.getSeason();
-
-            String tmdbegid = "";
-
-            if (TmdbUtil.isTmdbGroup(tmdb, season)) {
-                tmdbegid = TmdbUtil.getTmdbGroupId(tmdb);
-            }
+            String tmdbGroupId = tmdb.getTmdbGroupId();
 
             if (!tvshowFile.exists()) {
                 String s = """
@@ -790,12 +784,12 @@ public class TorrentUtil {
                             <tmdbegid>{}</tmdbegid>
                         </tvshow>
                         """;
-                FileUtil.writeUtf8String(StrFormatter.format(s, tmdbId, tmdbegid), tvshowFile);
+                FileUtil.writeUtf8String(StrFormatter.format(s, tmdbId, tmdbGroupId), tvshowFile);
                 log.info("已创建 {}", tvshowFile);
                 return;
             }
 
-            if (StrUtil.isBlank(tmdbegid)) {
+            if (StrUtil.isBlank(tmdbGroupId)) {
                 return;
             }
 
@@ -805,14 +799,14 @@ public class TorrentUtil {
             for (int i = 0; i < tmdbegidNodeList.getLength(); i++) {
                 Node item = tmdbegidNodeList.item(i);
                 String textContent = item.getTextContent();
-                if (tmdbegid.equals(textContent)) {
+                if (tmdbGroupId.equals(textContent)) {
                     // 已包含有剧集组id
                     return;
                 }
                 documentElement.removeChild(item);
             }
             Element tmdbegidElement = document.createElement("tmdbegid");
-            tmdbegidElement.setTextContent(tmdbegid);
+            tmdbegidElement.setTextContent(tmdbGroupId);
             documentElement.appendChild(tmdbegidElement);
 
             FileUtil.writeUtf8String(XmlUtil.toStr(document), tvshowFile);

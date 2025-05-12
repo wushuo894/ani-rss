@@ -215,17 +215,14 @@ public class TmdbUtil {
             return episodeTitleMap;
         }
 
-        if (StrUtil.isBlank(tmdb.getId())) {
-            return episodeTitleMap;
-        }
-
-        Config config = ConfigUtil.CONFIG;
-        Boolean tmdbGroup = config.getTmdbGroup();
-
         String tmdbId = tmdb.getId();
         String tmdbGroupId = tmdb.getTmdbGroupId();
 
-        String key = StrFormatter.format("TMDB_getEpisodeTitleMap:{}:{}:{}:{}", tmdbId, tmdbGroupId, tmdbGroup, season);
+        if (StrUtil.isBlank(tmdbId)) {
+            return episodeTitleMap;
+        }
+
+        String key = StrFormatter.format("TMDB_getEpisodeTitleMap:{}:{}:{}", tmdbId, tmdbGroupId, season);
 
         Map<Integer, String> cacheMap = MyCacheUtil.get(key);
         if (Objects.nonNull(cacheMap)) {
@@ -254,6 +251,10 @@ public class TmdbUtil {
 
         Map<Integer, String> map = new HashMap<>();
 
+        if (Objects.isNull(tmdb)) {
+            return map;
+        }
+
         Consumer<List<JsonObject>> episodesToMap = episodes -> {
             for (JsonObject episode : episodes) {
                 int episodeNumber = episode.get("episode_number").getAsInt();
@@ -271,17 +272,13 @@ public class TmdbUtil {
 
         try {
             String id = tmdb.getId();
+            String tmdbGroupId = tmdb.getTmdbGroupId();
             String url = StrFormatter.format("{}/3/tv/{}/season/{}", tmdbApi, id, season);
 
             Config config = ConfigUtil.CONFIG;
             String tmdbLanguage = config.getTmdbLanguage();
 
-            if (TmdbUtil.isTmdbGroup(tmdb, season)) {
-                // 获取剧集组信息
-                String tmdbGroupId = getTmdbGroupId(tmdb);
-                if (StrUtil.isBlank(tmdbGroupId)) {
-                    return map;
-                }
+            if (StrUtil.isNotBlank(tmdbGroupId)) {
                 // 得到了剧集组的id
                 HttpReq.get(tmdbApi + "/3/tv/episode_group/" + tmdbGroupId, true)
                         .timeout(5000)
@@ -322,42 +319,6 @@ public class TmdbUtil {
             log.error(ExceptionUtil.getMessage(e), e);
         }
         return map;
-    }
-
-    /**
-     * 判断是否需要剧集组
-     *
-     * @param tmdb
-     * @param season
-     * @return
-     */
-    public static Boolean isTmdbGroup(Tmdb tmdb, Integer season) {
-        String tmdbApi = getTmdbApi();
-        String tmdbApiKey = getTmdbApiKey();
-
-        Config config = ConfigUtil.CONFIG;
-        String tmdbLanguage = config.getTmdbLanguage();
-
-        String id = tmdb.getId();
-
-        Boolean tmdbGroup = config.getTmdbGroup();
-        if (!tmdbGroup) {
-            // 未启用剧集组
-            return false;
-        }
-
-        String tmdbGroupId = tmdb.getTmdbGroupId();
-        if (StrUtil.isNotBlank(tmdbGroupId)) {
-            return true;
-        }
-
-        String url = StrFormatter.format("{}/3/tv/{}/season/{}", tmdbApi, id, season);
-        return HttpReq.get(url, true)
-                .timeout(5000)
-                .form("api_key", tmdbApiKey)
-                .form("include_adult", "true")
-                .form("language", tmdbLanguage)
-                .thenFunction(res -> res.getStatus() == 404);
     }
 
     /**
@@ -403,30 +364,5 @@ public class TmdbUtil {
                                 tmdbGroup.setTypeName(typeName);
                             }).toList();
                 });
-    }
-
-    /**
-     * 获取剧集组
-     *
-     * @param tmdb
-     * @return
-     */
-    public static String getTmdbGroupId(Tmdb tmdb) {
-        List<TmdbGroup> tmdbGroup = getTmdbGroup(tmdb);
-
-        String tmdbGroupId = tmdb.getTmdbGroupId();
-        return tmdbGroup
-                .stream()
-                .map(TmdbGroup::getId)
-                .filter(id -> id.equals(tmdbGroupId))
-                .findFirst()
-                .orElseGet(() ->
-                        tmdbGroup
-                                .stream()
-                                .filter(o -> o.getName().equals("Seasons"))
-                                .map(TmdbGroup::getId)
-                                .findFirst()
-                                .orElse("")
-                );
     }
 }

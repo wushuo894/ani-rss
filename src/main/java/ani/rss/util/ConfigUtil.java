@@ -170,8 +170,7 @@ public class ConfigUtil {
                 .setAlistRefreshDelayed(0L)
                 .setUpdateTotalEpisodeNumber(false)
                 .setAlistDownloadTimeout(60)
-                .setTvShowNfo(false)
-                .setTmdbGroup(false);
+                .setTvShowNfo(false);
     }
 
     /**
