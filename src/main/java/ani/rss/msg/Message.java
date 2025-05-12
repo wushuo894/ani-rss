@@ -2,11 +2,11 @@ package ani.rss.msg;
 
 import ani.rss.entity.Ani;
 import ani.rss.entity.Config;
+import ani.rss.entity.Tmdb;
 import ani.rss.enums.MessageEnum;
 import ani.rss.enums.StringEnum;
 import ani.rss.util.FilePathUtil;
 import ani.rss.util.RenameUtil;
-import ani.rss.util.TmdbUtil;
 import ani.rss.util.TorrentUtil;
 import cn.hutool.core.lang.func.Func1;
 import cn.hutool.core.text.StrFormatter;
@@ -57,7 +57,7 @@ public interface Message {
         messageTemplate = RenameUtil.replaceField(messageTemplate, ani, list);
 
         String tmdbId = Optional.ofNullable(ani.getTmdb())
-                .map(TmdbUtil.Tmdb::getId)
+                .map(Tmdb::getId)
                 .orElse("");
         messageTemplate = messageTemplate.replace("${tmdbid}", tmdbId);
 

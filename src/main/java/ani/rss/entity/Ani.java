@@ -1,7 +1,6 @@
 package ani.rss.entity;
 
 import ani.rss.util.ConfigUtil;
-import ani.rss.util.TmdbUtil;
 import cn.hutool.core.lang.UUID;
 import lombok.Data;
 import lombok.experimental.Accessors;
@@ -190,7 +189,7 @@ public class Ani implements Serializable {
     /**
      * tmdb 相关信息
      */
-    private TmdbUtil.Tmdb tmdb;
+    private Tmdb tmdb;
 
     /**
      * 自动上传
@@ -236,7 +235,7 @@ public class Ani implements Serializable {
                 .setDownloadNew(false)
                 .setNotDownload(new ArrayList<>())
                 .setTmdb(
-                        new TmdbUtil.Tmdb()
+                        new Tmdb()
                                 .setId("")
                                 .setName("")
                                 .setDate(new Date())

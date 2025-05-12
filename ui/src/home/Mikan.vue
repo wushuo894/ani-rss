@@ -76,7 +76,7 @@
                               {{ it['score'].toFixed(1) }}
                             </h4>
                           </template>
-                          <el-badge v-if="it['exists']" class="item" type="primary" value="已订阅"/>
+                          <el-badge v-if="it['exists']" class="item" style="margin-left: 4px;" type="primary" value="已订阅"/>
                         </div>
                       </template>
                       <div v-if="selectName === it.url" v-loading="groupLoading"

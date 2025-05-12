@@ -4,7 +4,9 @@ import ani.rss.annotation.Auth;
 import ani.rss.annotation.Path;
 import ani.rss.entity.Ani;
 import ani.rss.entity.Result;
+import ani.rss.entity.Tmdb;
 import ani.rss.util.TmdbUtil;
+import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.HttpStatus;
 import cn.hutool.http.server.HttpServerRequest;
@@ -33,6 +35,15 @@ public class ThemoviedbAction implements BaseAction {
                         .setMessage("获取TMDB失败");
             }
             result(result);
+            return;
+        }
+
+        if ("getTmdbGroup".equals(s)) {
+            Ani ani = getBody(Ani.class);
+            Tmdb tmdb = ani.getTmdb();
+            Assert.notNull(tmdb, "tmdb is null");
+            Assert.notBlank(tmdb.getId(), "tmdb is null");
+            resultSuccess(TmdbUtil.getTmdbGroup(tmdb));
         }
     }
 }

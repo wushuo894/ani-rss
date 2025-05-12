@@ -5,11 +5,11 @@ import ani.rss.annotation.Path;
 import ani.rss.entity.Ani;
 import ani.rss.entity.BgmInfo;
 import ani.rss.entity.Config;
+import ani.rss.entity.Tmdb;
 import ani.rss.enums.MessageEnum;
 import ani.rss.msg.Message;
 import ani.rss.util.AniUtil;
 import ani.rss.util.BgmUtil;
-import ani.rss.util.TmdbUtil;
 import cn.hutool.core.util.ClassUtil;
 import cn.hutool.core.util.ReflectUtil;
 import cn.hutool.core.util.StrUtil;
@@ -50,7 +50,7 @@ public class MessageAction implements BaseAction {
                 .setYear(2024)
                 .setSubgroup("未知字幕组")
                 .setTmdb(
-                        new TmdbUtil.Tmdb()
+                        new Tmdb()
                                 .setId("235758")
                                 .setName("不时用俄语小声说真心话的邻桌艾莉同学")
                                 .setDate(new Date())

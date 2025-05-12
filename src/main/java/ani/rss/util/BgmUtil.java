@@ -3,6 +3,7 @@ package ani.rss.util;
 import ani.rss.entity.Ani;
 import ani.rss.entity.BgmInfo;
 import ani.rss.entity.Config;
+import ani.rss.entity.Tmdb;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.date.DatePattern;
 import cn.hutool.core.date.DateUtil;
@@ -57,7 +58,7 @@ public class BgmUtil {
         return title.trim();
     }
 
-    public static synchronized String getName(BgmInfo bgmInfo, TmdbUtil.Tmdb tmdb) {
+    public static synchronized String getName(BgmInfo bgmInfo, Tmdb tmdb) {
         Config config = ConfigUtil.CONFIG;
         Boolean titleYear = config.getTitleYear();
         Boolean tmdbId = config.getTmdbId();
