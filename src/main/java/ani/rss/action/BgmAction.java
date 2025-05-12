@@ -4,8 +4,8 @@ import ani.rss.annotation.Auth;
 import ani.rss.annotation.Path;
 import ani.rss.entity.Ani;
 import ani.rss.entity.BgmInfo;
+import ani.rss.entity.Tmdb;
 import ani.rss.util.BgmUtil;
-import ani.rss.util.TmdbUtil;
 import cn.hutool.core.lang.Opt;
 import cn.hutool.http.server.HttpServerRequest;
 import cn.hutool.http.server.HttpServerResponse;
@@ -39,7 +39,7 @@ public class BgmAction implements BaseAction {
             }
             case "getTitle" -> {
                 Ani ani = getBody(Ani.class);
-                TmdbUtil.Tmdb tmdb = ani.getTmdb();
+                Tmdb tmdb = ani.getTmdb();
                 BgmInfo bgmInfo = BgmUtil.getBgmInfo(ani);
                 resultSuccess(BgmUtil.getName(bgmInfo, tmdb));
             }

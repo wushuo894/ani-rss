@@ -1,9 +1,6 @@
 package ani.rss.util;
 
-import ani.rss.entity.Ani;
-import ani.rss.entity.BgmInfo;
-import ani.rss.entity.Config;
-import ani.rss.entity.Item;
+import ani.rss.entity.*;
 import ani.rss.enums.StringEnum;
 import cn.hutool.core.lang.Opt;
 import cn.hutool.core.lang.func.Func1;
@@ -107,7 +104,7 @@ public class RenameUtil {
 
         String resolution = getResolution(itemTitle);
         String tmdbId = Optional.ofNullable(ani.getTmdb())
-                .map(TmdbUtil.Tmdb::getId)
+                .map(Tmdb::getId)
                 .orElse("");
 
         renameTemplate = renameTemplate.replace("${seasonFormat}", seasonFormat);

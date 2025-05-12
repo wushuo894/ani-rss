@@ -6,6 +6,7 @@
     ani.match = JSON.parse(args.match).map(s => `{{${args.group}}}:${s}`)
     ani.url = args.url
   }"/>
+  <TmdbGroup ref="tmdbGroupRef" :ani="props.ani"/>
   <div style="height: 500px;">
     <el-scrollbar style="padding: 0 12px;" height="500" ref="scrollbar">
       <el-form label-width="auto"
@@ -16,7 +17,7 @@
         <el-form-item label="标题">
           <div style="width: 100%;">
             <div>
-              <el-input v-model:model-value="props.ani.title"/>
+              <el-input v-model:model-value="props.ani.title" style="width: 100%"/>
             </div>
             <div style="width: 100%;justify-content: end;display: flex;margin-top: 12px;">
               <el-button :loading="getBgmNameLoading"
@@ -47,6 +48,13 @@
             </div>
             <div style="width: 4px;"></div>
             <el-button icon="Refresh" bg text @click="getThemoviedbName" :loading="getThemoviedbNameLoading"/>
+          </div>
+        </el-form-item>
+        <el-form-item v-if="!props.ani.ova" label="剧集组">
+          <div style="display: flex;width: 100%;justify-content: space-between;">
+            <el-input v-model="props.ani.tmdb['tmdbGroupId']" placeholder="自动选择"/>
+            <div style="width: 4px;"/>
+            <el-button bg icon="Menu" text @click="tmdbGroupRef?.show"/>
           </div>
         </el-form-item>
         <el-form-item label="BgmUrl">
@@ -180,8 +188,10 @@ import {ElMessage, ElText} from "element-plus";
 import Popconfirm from "../other/Popconfirm.vue";
 import BackRss from "./BackRss.vue";
 import Mikan from "./Mikan.vue";
+import TmdbGroup from "./TmdbGroup.vue";
 
 const mikanRef = ref()
+const tmdbGroupRef = ref()
 
 let backRss = ref()
 let date = ref()

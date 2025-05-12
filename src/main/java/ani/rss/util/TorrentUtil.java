@@ -2,10 +2,7 @@ package ani.rss.util;
 
 import ani.rss.action.ClearCacheAction;
 import ani.rss.download.BaseDownload;
-import ani.rss.entity.Ani;
-import ani.rss.entity.Config;
-import ani.rss.entity.Item;
-import ani.rss.entity.TorrentsInfo;
+import ani.rss.entity.*;
 import ani.rss.enums.MessageEnum;
 import ani.rss.enums.StringEnum;
 import ani.rss.enums.TorrentsTags;
@@ -757,7 +754,7 @@ public class TorrentUtil {
             return;
         }
 
-        TmdbUtil.Tmdb tmdb = ani.getTmdb();
+        Tmdb tmdb = ani.getTmdb();
 
         if (Objects.isNull(tmdb)) {
             return;
@@ -808,7 +805,7 @@ public class TorrentUtil {
             for (int i = 0; i < tmdbegidNodeList.getLength(); i++) {
                 Node item = tmdbegidNodeList.item(i);
                 String textContent = item.getTextContent();
-                if (StrUtil.isNotBlank(textContent)) {
+                if (tmdbegid.equals(textContent)) {
                     // 已包含有剧集组id
                     return;
                 }
