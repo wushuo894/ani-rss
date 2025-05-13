@@ -76,7 +76,7 @@ public class qBittorrent implements BaseDownload {
      * @param config
      * @return
      */
-    public static synchronized List<FileEntity> files(TorrentsInfo torrentsInfo, Boolean filter, Config config) {
+    public static List<FileEntity> files(TorrentsInfo torrentsInfo, Boolean filter, Config config) {
         String hash = torrentsInfo.getHash();
         String host = config.getHost();
 

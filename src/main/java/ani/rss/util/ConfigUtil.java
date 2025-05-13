@@ -31,7 +31,7 @@ public class ConfigUtil {
                 .setTmdbApi("https://api.themoviedb.org")
                 .setTmdbApiKey("")
                 .setTmdbAnime(true)
-                .setRenameSleep(0.5)
+                .setRenameSleepSeconds(10)
                 .setGcSleep(10)
                 .setRename(true)
                 .setRss(true)

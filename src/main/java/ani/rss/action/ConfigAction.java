@@ -43,7 +43,7 @@ public class ConfigAction implements BaseAction {
         Login login = config.getLogin();
         String username = login.getUsername();
         String password = login.getPassword();
-        Double renameSleep = config.getRenameSleep();
+        Integer renameSleepSeconds = config.getRenameSleepSeconds();
         Integer sleep = config.getSleep();
         Integer gcSleep = config.getGcSleep();
         String download = config.getDownload();
@@ -108,14 +108,14 @@ public class ConfigAction implements BaseAction {
         config.setTelegramApiHost(telegramApiHost);
 
         ConfigUtil.sync();
-        Double newRenameSleep = config.getRenameSleep();
+        Integer newRenameSleepSeconds = config.getRenameSleepSeconds();
         Integer newSleep = config.getSleep();
         Integer newGcSleep = config.getGcSleep();
 
         // 时间间隔发生改变，重启任务
         if (
                 !Objects.equals(newSleep, sleep) ||
-                        !Objects.equals(newRenameSleep, renameSleep) ||
+                        !Objects.equals(newRenameSleepSeconds, renameSleepSeconds) ||
                         !Objects.equals(newGcSleep, gcSleep)
         ) {
             TaskUtil.restart();

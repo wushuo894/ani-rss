@@ -15,6 +15,7 @@ import cn.hutool.core.util.*;
 import cn.hutool.extra.pinyin.PinyinUtil;
 import cn.hutool.json.JSONUtil;
 import lombok.Setter;
+import lombok.Synchronized;
 import lombok.extern.slf4j.Slf4j;
 import org.eclipse.bittorrent.TorrentFile;
 import org.w3c.dom.Document;
@@ -37,7 +38,8 @@ public class TorrentUtil {
      *
      * @param ani
      */
-    public static synchronized void downloadAni(Ani ani) {
+    @Synchronized("baseDownload")
+    public static void downloadAni(Ani ani) {
         Config config = ConfigUtil.CONFIG;
         Boolean delete = config.getDelete();
         Boolean autoDisabled = config.getAutoDisabled();
