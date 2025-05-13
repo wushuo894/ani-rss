@@ -119,7 +119,20 @@
                 data.filename = ''
                 data.torrent = ''
               }">
-                  {{ data.filename }}
+                  <el-tooltip :content="data.filename">
+                    <div
+                        class="single-line"
+                        style="
+                              cursor: pointer;
+                              width: 300px;
+                              font-size: 0.97em;
+                              line-height: 1.6;
+                              font-weight: 500;
+                              hyphens: auto;
+                              letter-spacing: .0125em;">
+                      {{ data.filename }}
+                    </div>
+                  </el-tooltip>
                 </el-tag>
                 <el-upload
                     v-else
