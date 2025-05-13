@@ -608,6 +608,7 @@ public class BgmUtil {
         Boolean tmdb = config.getTmdb();
 
         ani
+                .setBgmUrl("https://bgm.tv/subject/" + bgmInfo.getSubjectId())
                 // 标题
                 .setTitle(title)
                 .setJpTitle(bgmInfo.getName())

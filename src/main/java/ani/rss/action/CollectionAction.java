@@ -276,7 +276,7 @@ public class CollectionAction implements BaseAction {
 
         String host = config.getHost();
 
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < 30; i++) {
             for (qBittorrent.FileEntity file : files) {
                 String oldPath = file.getName();
                 String newPath = reNameMap.get(oldPath);
@@ -301,14 +301,14 @@ public class CollectionAction implements BaseAction {
             files.clear();
             files.addAll(qBittorrent.files(torrentsInfo, false, config));
 
-            if (CollUtil.containsAll(reNameMap.values(), files.stream()
+            if (CollUtil.containsAll(files.stream()
                     .map(qBittorrent.FileEntity::getName)
-                    .toList())) {
+                    .toList(), reNameMap.values())) {
                 // 所有命名已完成
                 break;
             }
             // 命名有遗漏 继续
-            ThreadUtil.sleep(500);
+            ThreadUtil.sleep(1000);
         }
 
         qBittorrent.start(torrentsInfo, config);
