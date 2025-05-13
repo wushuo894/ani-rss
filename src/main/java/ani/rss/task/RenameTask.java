@@ -9,7 +9,6 @@ import cn.hutool.core.thread.ThreadUtil;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
@@ -28,12 +27,12 @@ public class RenameTask extends Thread {
     public void run() {
         super.setName("rename-task-thread");
         Config config = ConfigUtil.CONFIG;
-        double renameSleep = config.getRenameSleep();
+        double renameSleepSeconds = config.getRenameSleepSeconds();
 
-        log.info("{} 当前设置间隔为 {} 分钟", getName(), renameSleep);
+        log.info("{} 当前设置间隔为 {} 秒", getName(), renameSleepSeconds);
         while (loop.get()) {
             if (!TorrentUtil.login()) {
-                ThreadUtil.sleep(renameSleep * TimeUnit.MINUTES.toMillis(1));
+                ThreadUtil.sleep(renameSleepSeconds * 1000);
                 continue;
             }
             try {
@@ -58,7 +57,7 @@ public class RenameTask extends Thread {
                 String message = ExceptionUtil.getMessage(e);
                 log.error(message, e);
             }
-            ThreadUtil.sleep(renameSleep * TimeUnit.MINUTES.toMillis(1));
+            ThreadUtil.sleep(renameSleepSeconds * 1000);
         }
         log.info("{} 任务已停止", getName());
     }

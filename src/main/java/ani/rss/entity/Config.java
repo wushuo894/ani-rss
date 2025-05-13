@@ -109,9 +109,9 @@ public class Config implements Serializable {
     private Integer sleep;
 
     /**
-     * 重命名间隔(分钟)
+     * 重命名间隔(秒)
      */
-    private Double renameSleep;
+    private Integer renameSleepSeconds;
 
     /**
      * GC 间隔/分钟
