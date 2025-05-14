@@ -1,13 +1,18 @@
 package ani.rss.util;
 
 import ani.rss.entity.Config;
+import cn.hutool.core.lang.Assert;
+import cn.hutool.core.util.ReflectUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.Header;
+import cn.hutool.http.HttpConnection;
 import cn.hutool.http.HttpRequest;
+import cn.hutool.http.HttpResponse;
 import lombok.extern.slf4j.Slf4j;
 
 import java.net.Authenticator;
 import java.net.PasswordAuthentication;
+import java.net.URL;
 import java.util.Objects;
 
 @Slf4j
@@ -126,5 +131,12 @@ public class HttpReq {
             log.error(e.getMessage(), e);
         }
         return req;
+    }
+
+    public static void assertStatus(HttpResponse response) {
+        boolean ok = response.isOk();
+        int status = response.getStatus();
+        URL url = ((HttpConnection) ReflectUtil.getFieldValue(response, "httpConnection")).getUrl();
+        Assert.isTrue(ok, "url: {}, status: {}", url, status);
     }
 }

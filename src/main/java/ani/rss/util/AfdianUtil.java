@@ -24,7 +24,7 @@ public class AfdianUtil {
         return HttpReq.post("https://afdian.wushuo.top?out_trade_no=" + no, true)
                 .timeout(1000 * 5)
                 .thenFunction(res -> {
-                    Assert.isTrue(res.isOk(), "status: {}", res.getStatus());
+                    HttpReq.assertStatus(res);
                     Result<Void> result = new Result<>();
                     JsonObject jsonObject = GsonStatic.fromJson(res.body(), JsonObject.class);
                     result.setMessage(jsonObject.get("message").getAsString());
@@ -54,7 +54,7 @@ public class AfdianUtil {
     public static TryOut getTryOut() {
         return HttpReq.get("https://docs.wushuo.top/TryOut.json", true)
                 .thenFunction(res -> {
-                    Assert.isTrue(res.isOk(), "status: {}", res.getStatus());
+                    HttpReq.assertStatus(res);
                     return GsonStatic.fromJson(res.body(), TryOut.class);
                 });
     }

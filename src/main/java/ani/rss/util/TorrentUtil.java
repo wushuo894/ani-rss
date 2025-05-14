@@ -427,17 +427,15 @@ public class TorrentUtil {
 
             return HttpReq.get(torrent, true)
                     .thenFunction(res -> {
-                        if (res.isOk()) {
-                            FileUtil.writeFromStream(res.bodyStream(), saveTorrentFile, true);
-                            return saveTorrentFile;
-                        }
                         int status = res.getStatus();
                         if (status == 404) {
                             // 如果为 404 则写入空文件 已在 getMagnet 处理过
                             FileUtil.writeUtf8String("", saveTorrentFile);
                             return saveTorrentFile;
                         }
-                        throw new IllegalArgumentException(StrFormatter.format("status: {}", res.getStatus()));
+                        HttpReq.assertStatus(res);
+                        FileUtil.writeFromStream(res.bodyStream(), saveTorrentFile, true);
+                        return saveTorrentFile;
                     });
         } catch (Exception e) {
             String message = ExceptionUtil.getMessage(e);

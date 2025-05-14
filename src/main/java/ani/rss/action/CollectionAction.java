@@ -178,7 +178,7 @@ public class CollectionAction implements BaseAction {
                 .form("ratioLimit", ratioLimit)
                 .form("seedingTimeLimit", seedingTimeLimit)
                 .form("inactiveSeedingTimeLimit", inactiveSeedingTimeLimit)
-                .then(res -> Assert.isTrue(res.isOk(), "status: {}", res.getStatus()));
+                .then(HttpReq::assertStatus);
     }
 
     @Override

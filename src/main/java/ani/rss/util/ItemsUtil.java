@@ -40,7 +40,7 @@ public class ItemsUtil {
         String s = HttpReq.get(url, true)
                 .timeout(config.getRssTimeout() * 1000)
                 .thenFunction(res -> {
-                    Assert.isTrue(res.isOk(), "status: {}", res.getStatus());
+                    HttpReq.assertStatus(res);
                     return res.body();
                 });
         String subgroup = StrUtil.blankToDefault(ani.getSubgroup(), "未知字幕组");

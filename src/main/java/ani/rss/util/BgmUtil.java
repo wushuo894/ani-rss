@@ -237,7 +237,7 @@ public class BgmUtil {
         Assert.notBlank(bgmToken, "BgmToken 未填写");
         username = setToken(HttpReq.get(host + "/v0/me", true))
                 .thenFunction(res -> {
-                    Assert.isTrue(res.isOk(), "status: {}", res.getStatus());
+                    HttpReq.assertStatus(res);
                     JsonObject jsonObject = GsonStatic.fromJson(res.body(), JsonObject.class);
                     return Opt.of(jsonObject)
                             .map(o -> o.get("username"))
@@ -263,7 +263,7 @@ public class BgmUtil {
                         if (res.getStatus() == 404) {
                             return 0;
                         }
-                        Assert.isTrue(res.isOk(), "status: {}", res.getStatus());
+                        HttpReq.assertStatus(res);
                         JsonObject jsonObject = GsonStatic.fromJson(res.body(), JsonObject.class);
                         return jsonObject.get("rate").getAsInt();
                     });
@@ -275,7 +275,7 @@ public class BgmUtil {
                         "type", 3,
                         "rate", rate
                 )))
-                .then(res -> Assert.isTrue(res.isOk(), "status: {}", res.getStatus()));
+                .then(HttpReq::assertStatus);
         return rate;
     }
 
@@ -377,7 +377,7 @@ public class BgmUtil {
 
     public static BgmInfo getBgmInfo(String subjectId, Boolean isCache) {
         Function<HttpResponse, BgmInfo> fun = res -> {
-            Assert.isTrue(res.isOk(), "status: {}", res.getStatus());
+            HttpReq.assertStatus(res);
             String body = res.body();
             Assert.isTrue(JSONUtil.isTypeJSON(body), "no json");
             JsonObject jsonObject = GsonStatic.fromJson(body, JsonObject.class);
