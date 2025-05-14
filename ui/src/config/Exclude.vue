@@ -13,7 +13,6 @@
       <el-button bg text @click="addExclude" icon="Plus">添加</el-button>
     </div>
   </el-dialog>
-
   <div style="width: 100%;">
     <div class="gap-2">
       <el-tag v-if="!props.exclude.length"
@@ -29,7 +28,20 @@
           @close="handleClose(tag)"
           style="margin-right: 4px;margin-bottom: 4px;"
       >
-        {{ tag }}
+        <el-tooltip :content="tag">
+          <div
+              class="single-line"
+              style="
+                              cursor: pointer;
+                              max-width: 300px;
+                              font-size: 0.97em;
+                              line-height: 1.6;
+                              font-weight: 500;
+                              hyphens: auto;
+                              letter-spacing: .0125em;">
+            {{ tag }}
+          </div>
+        </el-tooltip>
       </el-tag>
       <el-button class="button-new-tag" size="small" @click="()=>{
         add = true
