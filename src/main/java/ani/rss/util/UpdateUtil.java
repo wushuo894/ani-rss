@@ -49,7 +49,7 @@ public class UpdateUtil {
             HttpReq.get("https://github.com/wushuo894/ani-rss/releases/latest/download/info.json", true)
                     .timeout(3000)
                     .then(response -> {
-                        Assert.isTrue(response.isOk(), "status: {}", response.getStatus());
+                        HttpReq.assertStatus(response);
                         JsonObject jsonObject = GsonStatic.fromJson(response.body(), JsonObject.class);
                         String latest = jsonObject.get("version").getAsString();
                         about

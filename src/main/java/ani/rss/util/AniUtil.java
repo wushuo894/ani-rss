@@ -162,7 +162,7 @@ public class AniUtil {
             String s = HttpReq.get(url, true)
                     .timeout(config.getRssTimeout() * 1000)
                     .thenFunction(res -> {
-                        Assert.isTrue(res.isOk(), "status: {}", res.getStatus());
+                        HttpReq.assertStatus(res);
                         return res.body();
                     });
             List<Item> items = ItemsUtil.getItems(ani, s, new Item());

@@ -36,38 +36,6 @@ import java.util.*;
 public class qBittorrent implements BaseDownload {
     private Config config;
 
-    @Override
-    public Boolean login(Config config) {
-        this.config = config;
-        String host = config.getHost();
-        String username = config.getUsername();
-        String password = config.getPassword();
-
-        if (StrUtil.isBlank(host) || StrUtil.isBlank(username)
-                || StrUtil.isBlank(password)) {
-            log.warn("qBittorrent 未配置完成");
-            return false;
-        }
-
-        try {
-            return HttpReq.post(host + "/api/v2/auth/login", false)
-                    .form("username", username)
-                    .form("password", password)
-                    .setFollowRedirects(true)
-                    .thenFunction(res -> {
-                        Assert.isTrue(res.isOk(), "status: {}", res.getStatus());
-                        String body = res.body();
-                        Assert.isTrue("Ok.".equals(body), "body: {}", body);
-                        return true;
-                    });
-        } catch (Exception e) {
-            String message = ExceptionUtil.getMessage(e);
-            log.error(message, e);
-            log.error("登录 qBittorrent 失败 {}", message);
-        }
-        return false;
-    }
-
     /**
      * 获取对应任务的文件列表
      *
@@ -83,7 +51,7 @@ public class qBittorrent implements BaseDownload {
         return HttpReq.get(host + "/api/v2/torrents/files", false)
                 .form("hash", hash)
                 .thenFunction(res -> {
-                    Assert.isTrue(res.isOk(), "status: {}", res.getStatus());
+                    HttpReq.assertStatus(res);
                     return GsonStatic.fromJsonList(res.body(), FileEntity.class).stream()
                             .filter(fileEntity -> {
                                 if (!filter) {
@@ -103,6 +71,38 @@ public class qBittorrent implements BaseDownload {
                             .sorted(Comparator.comparingLong(fileEntity -> Long.MAX_VALUE - fileEntity.getSize()))
                             .toList();
                 });
+    }
+
+    @Override
+    public Boolean login(Config config) {
+        this.config = config;
+        String host = config.getHost();
+        String username = config.getUsername();
+        String password = config.getPassword();
+
+        if (StrUtil.isBlank(host) || StrUtil.isBlank(username)
+                || StrUtil.isBlank(password)) {
+            log.warn("qBittorrent 未配置完成");
+            return false;
+        }
+
+        try {
+            return HttpReq.post(host + "/api/v2/auth/login", false)
+                    .form("username", username)
+                    .form("password", password)
+                    .setFollowRedirects(true)
+                    .thenFunction(res -> {
+                        HttpReq.assertStatus(res);
+                        String body = res.body();
+                        Assert.isTrue("Ok.".equals(body), "body: {}", body);
+                        return true;
+                    });
+        } catch (Exception e) {
+            String message = ExceptionUtil.getMessage(e);
+            log.error(message, e);
+            log.error("登录 qBittorrent 失败 {}", message);
+        }
+        return false;
     }
 
     @Override

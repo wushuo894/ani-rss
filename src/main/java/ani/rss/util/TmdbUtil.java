@@ -7,7 +7,6 @@ import ani.rss.entity.TmdbGroup;
 import ani.rss.enums.StringEnum;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.date.DateUtil;
-import cn.hutool.core.lang.Assert;
 import cn.hutool.core.lang.Opt;
 import cn.hutool.core.text.StrFormatter;
 import cn.hutool.core.thread.ThreadUtil;
@@ -122,7 +121,7 @@ public class TmdbUtil {
                 .form("include_adult", "true")
                 .form("language", tmdbLanguage)
                 .thenFunction(res -> {
-                    Assert.isTrue(res.isOk(), "status: {}", res.getStatus());
+                    HttpReq.assertStatus(res);
                     JsonObject body = GsonStatic.fromJson(res.body(), JsonObject.class);
 
                     List<JsonObject> results =
@@ -286,7 +285,7 @@ public class TmdbUtil {
                         .form("include_adult", "true")
                         .form("language", tmdbLanguage)
                         .then(response -> {
-                            Assert.isTrue(response.isOk(), "status: {}", response.getStatus());
+                            HttpReq.assertStatus(response);
                             JsonObject body = GsonStatic.fromJson(response.body(), JsonObject.class);
                             body.getAsJsonArray("groups")
                                     .asList()
@@ -308,7 +307,7 @@ public class TmdbUtil {
                     .form("include_adult", "true")
                     .form("language", tmdbLanguage)
                     .then(res -> {
-                        Assert.isTrue(res.isOk(), "status: {}", res.getStatus());
+                        HttpReq.assertStatus(res);
                         JsonObject body = GsonStatic.fromJson(res.body(), JsonObject.class);
                         List<JsonObject> episodes = GsonStatic.fromJsonList(
                                 body.getAsJsonArray("episodes"), JsonObject.class
@@ -353,7 +352,7 @@ public class TmdbUtil {
                 .form("include_adult", "true")
                 .form("language", tmdbLanguage)
                 .thenFunction(response -> {
-                    Assert.isTrue(response.isOk(), "status: {}", response.getStatus());
+                    HttpReq.assertStatus(response);
                     JsonObject body = GsonStatic.fromJson(response.body(), JsonObject.class);
                     JsonArray results = body.getAsJsonArray("results");
                     return GsonStatic.fromJsonList(results, TmdbGroup.class)
