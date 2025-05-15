@@ -62,7 +62,13 @@
         </el-table-column>
         <el-table-column label="标题" prop="title" width="200"/>
         <el-table-column label="季" prop="season" width="50"/>
-        <el-table-column label="URL" prop="url" width="600"/>
+        <el-table-column label="URL" width="600">
+          <template #default="it">
+            <el-text line-clamp="1" size="small" truncated>
+              {{ searchList[it.$index].url }}
+            </el-text>
+          </template>
+        </el-table-column>
       </el-table>
       <div>
         <p style="margin: 6px;text-align: end;">共 {{ searchList.length }} 项</p>

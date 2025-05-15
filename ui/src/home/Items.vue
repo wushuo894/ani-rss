@@ -49,8 +49,20 @@
             </template>
           </el-table-column>
           <el-table-column prop="subgroup" label="字幕组" min-width="120"/>
-          <el-table-column prop="title" label="标题" min-width="400"/>
-          <el-table-column prop="reName" label="重命名" min-width="280"/>
+          <el-table-column label="标题" min-width="400">
+            <template #default="it">
+              <el-text size="small">
+                {{ showItems[it.$index].title }}
+              </el-text>
+            </template>
+          </el-table-column>
+          <el-table-column label="重命名" min-width="280">
+            <template #default="it">
+              <el-text size="small">
+                {{ showItems[it.$index]['reName'] }}
+              </el-text>
+            </template>
+          </el-table-column>
           <el-table-column prop="pubDate" label="发布时间" min-width="140"/>
           <el-table-column prop="infoHash" label="InfoHash" min-width="360"/>
           <el-table-column prop="size" label="大小" width="120"/>
