@@ -24,7 +24,7 @@
     </div>
     <div>
       <el-table v-model:data="backRss" height="400px">
-        <el-table-column label="字幕组" min-width="100px">
+        <el-table-column fixed label="字幕组" min-width="100px">
           <template #default="it">
             <div v-if="editIndex !== it.$index">
               {{ backRss[it.$index].label }}
@@ -37,32 +37,42 @@
         <el-table-column label="RSS" min-width="400px">
           <template #default="it">
             <div v-if="editIndex !== it.$index">
-              {{ backRss[it.$index].url }}
+              <el-text line-clamp="1" size="small" truncated>
+                {{ backRss[it.$index].url }}
+              </el-text>
             </div>
             <div v-else>
               <el-input v-model:model-value="backRss[it.$index].url" placeholder="https://xxx.xxx" type="textarea"
+                        size="small"
                         autosize/>
             </div>
           </template>
         </el-table-column>
-        <el-table-column label="偏移" width="180px">
+        <el-table-column label="偏移" width="150px">
           <template #default="it">
             <div v-if="editIndex !== it.$index">
               {{ backRss[it.$index].offset }}
             </div>
-            <el-input-number v-model:model-value="backRss[it.$index].offset" v-else/>
+            <el-input-number v-else v-model:model-value="backRss[it.$index].offset" size="small"/>
           </template>
         </el-table-column>
-        <el-table-column label="操作" width="115">
+        <el-table-column label="操作" width="300">
           <template #default="it">
             <div class="flex">
               <div>
                 <el-button bg text icon="Edit" @click="editIndex = it.$index" v-if="editIndex !== it.$index"/>
                 <el-button bg text icon="Check" @click="check" type="primary" v-else/>
               </div>
-              <div style="margin: 3px;"></div>
-              <div>
+              <div style="margin-left: 4px;">
                 <el-button bg text @click="del(it.$index)" icon="Delete" type="danger"/>
+              </div>
+              <div style="margin-left: 4px;">
+                <el-button :disabled="it.$index < 1" bg icon="ArrowUpBold" text type="primary"
+                           @click="move(it.$index,-1)"/>
+              </div>
+              <div style="margin-left: 4px;">
+                <el-button :disabled="it.$index >= backRss.length-1" bg icon="ArrowDownBold" text type="primary"
+                           @click="move(it.$index,1)"/>
               </div>
             </div>
           </template>
@@ -140,6 +150,12 @@ let ok = () => {
   check()
   props.ani.backRssList = backRss.value
   dialogVisible.value = false
+}
+
+let move = (index, offset) => {
+  let v = backRss.value[index]
+  backRss.value[index] = backRss.value[index + offset]
+  backRss.value[index + offset] = v
 }
 
 defineExpose({show})
