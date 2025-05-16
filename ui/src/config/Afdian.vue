@@ -45,7 +45,13 @@
     </el-text>
     <div class="flex" style="width: 100%;margin-top: 8px;justify-content: space-between;">
       <div class="flex">
-        <el-input v-model:model-value="props.config.outTradeNo" style="max-width: 200px;"/>
+        <el-input v-model:model-value="props.config.outTradeNo" style="max-width: 200px;">
+          <template #prefix>
+            <el-icon class="el-input__icon">
+              <EditPen/>
+            </el-icon>
+          </template>
+        </el-input>
         <div style="width: 8px"></div>
         <el-button :loading="verifyNoLoading" bg text type="primary" @click="verifyNo">验证</el-button>
       </div>
@@ -70,7 +76,7 @@ import {ref} from "vue";
 import support_aifadian from "../icon/support_aifadian.svg";
 import api from "../api.js";
 import {ElMessage} from "element-plus";
-import {Mug} from "@element-plus/icons-vue";
+import {EditPen, Mug} from "@element-plus/icons-vue";
 import TryOut from "./TryOut.vue";
 
 let tryOutRef = ref()
