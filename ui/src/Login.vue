@@ -14,11 +14,23 @@
             @keyup.enter="login"
             @submit="login">
           <el-form-item>
-            <el-input style="width: 200px;" v-model:model-value="user.username" placeholder="用户名"></el-input>
+            <el-input v-model:model-value="user.username" placeholder="用户名" style="width: 200px;">
+              <template #prefix>
+                <el-icon class="el-input__icon">
+                  <User/>
+                </el-icon>
+              </template>
+            </el-input>
           </el-form-item>
           <el-form-item>
             <el-input style="width: 200px;" v-model:model-value="user.password" show-password
-                      placeholder="密码"></el-input>
+                      placeholder="密码">
+              <template #prefix>
+                <el-icon class="el-input__icon">
+                  <Key/>
+                </el-icon>
+              </template>
+            </el-input>
           </el-form-item>
           <div class="flex-center" style="width: 100%;justify-content: space-between;">
             <el-checkbox v-model:model-value="rememberThePassword.remember">记住密码</el-checkbox>
@@ -42,6 +54,7 @@ import CryptoJS from "crypto-js"
 import App from "./home/App.vue";
 import api from "./api.js";
 import {useDark, useLocalStorage} from '@vueuse/core'
+import {Key} from "@element-plus/icons-vue";
 
 let loading = ref(false)
 

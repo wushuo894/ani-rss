@@ -3,10 +3,22 @@
                       event.preventDefault()
                    }">
     <el-form-item label="用户名">
-      <el-input v-model:model-value="props.config.login.username"/>
+      <el-input v-model:model-value="props.config.login.username">
+        <template #prefix>
+          <el-icon class="el-input__icon">
+            <User/>
+          </el-icon>
+        </template>
+      </el-input>
     </el-form-item>
     <el-form-item label="密码">
-      <el-input v-model:model-value="props.config.login.password"/>
+      <el-input v-model:model-value="props.config.login.password">
+        <template #prefix>
+          <el-icon class="el-input__icon">
+            <Key/>
+          </el-icon>
+        </template>
+      </el-input>
     </el-form-item>
     <el-form-item label="登录有效">
       <el-input-number v-model:model-value="props.config.loginEffectiveHours" :min="1">
@@ -49,6 +61,7 @@
 <script setup>
 
 import {ElText} from "element-plus";
+import {Key, User} from "@element-plus/icons-vue";
 
 let generateRandomString = (length) => {
   const charset = 'abcdefghijklmnopqrstuvwxyz0123456789';
