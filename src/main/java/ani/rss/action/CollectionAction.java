@@ -259,7 +259,7 @@ public class CollectionAction implements BaseAction {
                 .stream()
                 .map(item -> {
                     Optional<qBittorrent.FileEntity> fileEntity = files.stream()
-                            .filter(f -> new File(f.getName()).getName().equals(item.getTitle()))
+                            .filter(f -> new File(f.getName()).getName().equals(new File(item.getTitle()).getName()))
                             .filter(f -> f.getSize().longValue() == item.getLength())
                             .findFirst();
                     if (fileEntity.isEmpty()) {

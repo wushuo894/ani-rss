@@ -13,11 +13,23 @@
     </el-form-item>
     <el-form-item label="用户名">
       <el-input v-model:model-value="props.config.proxyUsername" :disabled="!props.config.proxy"
-                placeholder="可以为空"/>
+                placeholder="可以为空">
+        <template #prefix>
+          <el-icon class="el-input__icon">
+            <User/>
+          </el-icon>
+        </template>
+      </el-input>
     </el-form-item>
     <el-form-item label="密码">
       <el-input v-model:model-value="props.config.proxyPassword" :disabled="!props.config.proxy"
-                placeholder="可以为空"/>
+                placeholder="可以为空">
+        <template #prefix>
+          <el-icon class="el-input__icon">
+            <Key/>
+          </el-icon>
+        </template>
+      </el-input>
     </el-form-item>
     <el-form-item label="启用">
       <el-switch v-model:model-value="props.config.proxy"/>
@@ -45,6 +57,7 @@
 import {onMounted, ref} from "vue";
 import api from "../api.js";
 import {ElMessage} from "element-plus";
+import {Key, User} from "@element-plus/icons-vue";
 
 let urls = ref([
   'https://mikanani.me',

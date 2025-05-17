@@ -16,11 +16,23 @@
       <el-input v-model:model-value="props.config.host" placeholder="http://192.168.1.x:8080"/>
     </el-form-item>
     <el-form-item v-if="props.config.download === 'Aria2'" label="RPC 密钥">
-      <el-input v-model:model-value="props.config.password" placeholder="" show-password></el-input>
+      <el-input v-model:model-value="props.config.password" placeholder="" show-password>
+        <template #prefix>
+          <el-icon class="el-input__icon">
+            <Key/>
+          </el-icon>
+        </template>
+      </el-input>
     </el-form-item>
     <template v-else-if="props.config.download === 'Alist'">
       <el-form-item label="AlistToken">
-        <el-input v-model:model-value="props.config.password" placeholder="alist-xxxxxx" show-password/>
+        <el-input v-model:model-value="props.config.password" placeholder="alist-xxxxxx" show-password>
+          <template #prefix>
+            <el-icon class="el-input__icon">
+              <Key/>
+            </el-icon>
+          </template>
+        </el-input>
         <br/>
         <el-text class="mx-1" size="small">
           请设置好 <strong>保存位置</strong> 才能通过测试<br/>
@@ -38,10 +50,22 @@
     </template>
     <template v-else>
       <el-form-item label="用户名">
-        <el-input v-model:model-value="props.config.username" placeholder="username"/>
+        <el-input v-model:model-value="props.config.username" placeholder="username">
+          <template #prefix>
+            <el-icon class="el-input__icon">
+              <User/>
+            </el-icon>
+          </template>
+        </el-input>
       </el-form-item>
       <el-form-item label="密码">
-        <el-input v-model:model-value="props.config.password" placeholder="password" show-password/>
+        <el-input v-model:model-value="props.config.password" placeholder="password" show-password>
+          <template #prefix>
+            <el-icon class="el-input__icon">
+              <Key/>
+            </el-icon>
+          </template>
+        </el-input>
       </el-form-item>
     </template>
     <el-form-item>
@@ -269,6 +293,7 @@
 import {ref} from "vue";
 import api from "../api.js";
 import {ElMessage} from "element-plus";
+import {Key, User} from "@element-plus/icons-vue";
 
 const downloadSelect = ref([
   'qBittorrent',
