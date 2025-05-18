@@ -25,20 +25,9 @@
                     <div style="flex-grow: 1;position: relative;">
                       <div style="margin-left: 10px;">
                         <el-tooltip :content="item.title" placement="top">
-                          <div
-                              class="single-line"
-                              style="
-                              cursor: pointer;
-                              column-count: 1;
-                              width: 200px;
-                              font-size: 0.97em;
-                              line-height: 1.6;
-                              font-weight: 500;
-                              hyphens: auto;
-                              letter-spacing: .0125em;"
-                              @click="openBgmUrl(item)">
+                          <el-text line-clamp="1" truncated style="max-width: 200px;">
                             {{ item.title }}
-                          </div>
+                          </el-text>
                         </el-tooltip>
                         <div style="margin-bottom: 8px;" v-if="scoreShow">
                           <h4 style="color: #E800A4;cursor: pointer;" @click="bgmRateRef?.show(item)">
@@ -83,12 +72,9 @@
                           </el-tag>
                           <el-tag type="info">
                             <el-tooltip :content="item['subgroup']">
-                              <p
-                                  class="single-line"
-                                  style="text-align: center;display: inline-block;max-width: 60px;column-count: 1;cursor: pointer;"
-                              >
+                              <el-text line-clamp="1" style="max-width: 60px;" size="small">
                                 {{ item['subgroup'] ? item['subgroup'] : '未知字幕组' }}
-                              </p>
+                              </el-text>
                             </el-tooltip>
                           </el-tag>
                           <el-tag type="warning">

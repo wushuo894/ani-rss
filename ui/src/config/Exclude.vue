@@ -29,18 +29,9 @@
           style="margin-right: 4px;margin-bottom: 4px;"
       >
         <el-tooltip :content="tag">
-          <div
-              class="single-line"
-              style="
-                              cursor: pointer;
-                              max-width: 300px;
-                              font-size: 0.97em;
-                              line-height: 1.6;
-                              font-weight: 500;
-                              hyphens: auto;
-                              letter-spacing: .0125em;">
+          <el-text line-clamp="1" style="max-width: 300px;" size="small">
             {{ tag }}
-          </div>
+          </el-text>
         </el-tooltip>
       </el-tag>
       <el-button class="button-new-tag" size="small" @click="()=>{
