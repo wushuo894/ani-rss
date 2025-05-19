@@ -24,36 +24,27 @@
                     </div>
                     <div style="flex-grow: 1;position: relative;">
                       <div style="margin-left: 10px;">
-                        <el-tooltip :content="item.title" placement="top">
-                          <el-text line-clamp="1" truncated style="max-width: 200px;">
-                            {{ item.title }}
-                          </el-text>
-                        </el-tooltip>
+                        <div class="flex">
+                          <el-tooltip :content="item.title" placement="top">
+                            <el-text line-clamp="1" style="max-width: 200px;
+                                       line-height: 1.6;
+                                       letter-spacing: 0.0125em;
+                                       font-weight: 500;
+                                       font-size: 0.97em;
+                                       color: #fff;"
+                                     truncated>
+                              {{ item.title }}
+                            </el-text>
+                          </el-tooltip>
+                        </div>
                         <div style="margin-bottom: 8px;" v-if="scoreShow">
                           <h4 style="color: #E800A4;cursor: pointer;" @click="bgmRateRef?.show(item)">
                             {{ item['score'].toFixed(1) }}
                           </h4>
                         </div>
-                        <div style="
-                                    color: #9e9e9e !important;
-                                    font-size: .75rem !important;
-                                    font-weight: 300;
-                                    line-height: 1.667;
-                                    -webkit-line-clamp: 2;
-                                    display: -webkit-flex;
-                                    display: -ms-flexbox;
-                                    display: -webkit-box;
-                                    -webkit-box-orient: vertical;
-                                    max-width: 220px;
-                                    overflow: hidden;
-                                    text-overflow: ellipsis;
-                                    letter-spacing: .0333333333em !important;
-                                    font-family: Roboto, sans-serif;
-                                    text-transform: none !important;"
-                             v-else
-                        >
+                        <el-text v-else line-clamp="2" size="small">
                           {{ item.url }}
-                        </div>
+                        </el-text>
                         <div style="
                         width: 180px;
                         display: grid;
