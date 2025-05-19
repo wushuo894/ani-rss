@@ -120,18 +120,9 @@
                 data.torrent = ''
               }">
                   <el-tooltip :content="data.filename">
-                    <div
-                        class="single-line"
-                        style="
-                              cursor: pointer;
-                              width: 300px;
-                              font-size: 0.97em;
-                              line-height: 1.6;
-                              font-weight: 500;
-                              hyphens: auto;
-                              letter-spacing: .0125em;">
+                    <el-text line-clamp="1" size="small" style="max-width: 300px;color: var(--el-color-info);">
                       {{ data.filename }}
-                    </div>
+                    </el-text>
                   </el-tooltip>
                 </el-tag>
                 <el-upload
@@ -270,8 +261,8 @@ let bgmAdd = (bgm) => {
         data.value.ani.subgroup = '未知字幕组'
         data.value.ani.customEpisode = true
         data.value.show = true
-        data.value.ani.match.push('\\.(mp4|mkv|ass)$')
-        data.value.ani.exclude = ['^(SPs|CDs|Scans|PV|menu)', 'Fonts|NCED|NCOP|迷你动画']
+        data.value.ani.match = []
+        data.value.ani.exclude = ['^(SPs?|CDs|Scans|PV|menu)/', 'Fonts|NCED|NCOP|迷你动画']
       })
       .finally(() => {
         loading.value = false
