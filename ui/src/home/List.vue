@@ -31,7 +31,7 @@
                                        letter-spacing: 0.0125em;
                                        font-weight: 500;
                                        font-size: 0.97em;
-                                       color: #fff;"
+                                       color: var(--el-text-color-primary);"
                                      truncated>
                               {{ item.title }}
                             </el-text>
@@ -63,7 +63,7 @@
                           </el-tag>
                           <el-tag type="info">
                             <el-tooltip :content="item['subgroup']">
-                              <el-text line-clamp="1" style="max-width: 60px;" size="small">
+                              <el-text line-clamp="1" size="small" style="max-width: 60px;color: var(--el-color-info);">
                                 {{ item['subgroup'] ? item['subgroup'] : '未知字幕组' }}
                               </el-text>
                             </el-tooltip>

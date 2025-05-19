@@ -120,7 +120,7 @@
                 data.torrent = ''
               }">
                   <el-tooltip :content="data.filename">
-                    <el-text line-clamp="1" style="max-width: 300px;" size="small">
+                    <el-text line-clamp="1" size="small" style="max-width: 300px;color: var(--el-color-info);">
                       {{ data.filename }}
                     </el-text>
                   </el-tooltip>

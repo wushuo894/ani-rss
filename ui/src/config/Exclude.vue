@@ -29,7 +29,7 @@
           style="margin-right: 4px;margin-bottom: 4px;"
       >
         <el-tooltip :content="tag">
-          <el-text line-clamp="1" style="max-width: 300px;" size="small">
+          <el-text line-clamp="1" size="small" style="max-width: 300px;color: var(--el-color-primary);">
             {{ tag }}
           </el-text>
         </el-tooltip>
