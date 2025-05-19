@@ -67,9 +67,11 @@
                       <template #title>
                         <div class="flex" style="align-items: center;">
                           <img :src="img(it)" height="40" width="40" @click.stop="open(it.url)">
-                          <el-text size="small" line-clamp="1" :truncated="false" style="margin-left: 4px;">
-                            {{ it.title }}
-                          </el-text>
+                          <div class="flex" style="align-items: center;">
+                            <el-text :truncated="false" line-clamp="1" size="small" style="margin-left: 4px;line-height: 1.6;">
+                              {{ it.title }}
+                            </el-text>
+                          </div>
                           <div v-if="it['score'] > 0" style="margin-left: 4px;">
                             <h4 style="color: #E800A4;">
                               {{ it['score'].toFixed(1) }}
