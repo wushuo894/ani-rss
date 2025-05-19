@@ -261,8 +261,8 @@ let bgmAdd = (bgm) => {
         data.value.ani.subgroup = '未知字幕组'
         data.value.ani.customEpisode = true
         data.value.show = true
-        data.value.ani.match.push('\\.(mp4|mkv|ass)$')
-        data.value.ani.exclude = ['^(SPs|CDs|Scans|PV|menu)', 'Fonts|NCED|NCOP|迷你动画']
+        data.value.ani.match = []
+        data.value.ani.exclude = ['^(SPs?|CDs|Scans|PV|menu)/', 'Fonts|NCED|NCOP|迷你动画']
       })
       .finally(() => {
         loading.value = false
