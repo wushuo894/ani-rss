@@ -23,22 +23,22 @@ check_root() {
 # 安装JDK
 install_jdk() {
     echo -e "${YELLOW}正在检查Java环境...${NC}"
-    if which java ; then
+    if command -v java >/dev/null 2>&1; then
         echo -e "${GREEN}检测到JDK已安装${NC}"
         return
     fi
 
     echo -e "${YELLOW}正在安装OpenJDK 17...${NC}"
-    if grep -Ei 'ubuntu|debian' /etc/*release*; then
+    if command -v apt >/dev/null 2>&1; then
         apt update -qq && apt install -y openjdk-17-jdk
-    elif grep -Ei 'centos|rhel' /etc/*release*; then
+    elif command -v yum >/dev/null 2>&1; then
         yum install -y java-17-openjdk-devel
     else
         echo -e "${RED}不支持的Linux发行版${NC}"
         exit 1
     fi
 
-    ! which java && echo -e "${RED}JDK安装失败${NC}" && exit 1
+    ! command -v java >/dev/null 2>&1 && echo -e "${RED}JDK安装失败${NC}" && exit 1
 }
 
 # 创建专用用户
@@ -149,7 +149,7 @@ show_info() {
     echo -e "URL: http://$IP:$PORT"
     echo -e "用户名: admin"
     echo -e "初始密码: admin${NC}"
-    ani-rss
+    ani-rss help
 }
 
 # 主流程
