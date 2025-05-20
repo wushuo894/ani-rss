@@ -262,9 +262,7 @@ public class AniAction implements BaseAction {
             return;
         }
         for (Ani ani : anis) {
-            synchronized (AniUtil.ANI_LIST) {
-                AniUtil.ANI_LIST.remove(ani);
-            }
+            AniUtil.ANI_LIST.remove(ani);
         }
 
         AniUtil.sync();
