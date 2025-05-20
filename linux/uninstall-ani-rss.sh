@@ -46,7 +46,7 @@ remove_service() {
     if systemctl is-active --quiet "$SERVICE_NAME"; then
         systemctl stop "$SERVICE_NAME" || {
             echo -e "${RED}服务停止失败，尝试强制终止...${NC}"
-            pkill -f "ani-rss.jar" && echo -e "${GREEN}进程已终止${NC}"
+            pkill -f "ani-rss-jar-with-dependencies.jar" && echo -e "${GREEN}进程已终止${NC}"
         }
     fi
 
