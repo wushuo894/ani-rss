@@ -147,7 +147,7 @@ verify_uninstall() {
 
 remove_jdk() {
     # 最终确认
-    read -p "是否卸载JDk?(y/N) " -n 1 -r
+    read -p "是否卸载JDK?(y/N) " -n 1 -r
     echo
     if [[ ! $REPLY =~ ^[Yy]$ ]]; then
         echo -e "${GREEN}已取消JDK卸载${NC}"
@@ -161,7 +161,7 @@ remove_jdk() {
     elif command -v yum &>/dev/null; then
         yum remove -y java-17-openjdk-devel >/dev/null 2>&1
     else
-      echo -e "${YELLOW}没有安装jdk${NC}"
+      echo -e "${YELLOW}不支持的包管理器${NC}"
       return
     fi
 
