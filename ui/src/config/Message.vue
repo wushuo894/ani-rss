@@ -67,6 +67,12 @@
             </div>
           </div>
         </el-form-item>
+        <el-form-item label="话题ID">
+          <div style="margin-top: 4px;margin-right: 4px;">
+            <el-input v-model:model-value="props.config.telegramTopicId" :disabled="config.telegram"
+                      placeholder="仅开启话题模式时候使用"/>
+          </div>
+        </el-form-item>
         <el-form-item label="图片">
           <el-switch v-model:model-value="props.config.telegramImage" :disabled="config.telegram"/>
         </el-form-item>

@@ -76,6 +76,7 @@ public class Telegram implements Message {
         text = replaceMessageTemplate(ani, config.getMessageTemplate(), text, messageEnum);
         String telegramBotToken = config.getTelegramBotToken();
         String telegramChatId = config.getTelegramChatId();
+        String telegramTopicId = config.getTelegramTopicId();
         String telegramApiHost = config.getTelegramApiHost();
         Boolean telegramImage = config.getTelegramImage();
         String telegramFormat = config.getTelegramFormat();
@@ -90,6 +91,7 @@ public class Telegram implements Message {
         if (Objects.isNull(ani) || !telegramImage) {
             Map<String, Object> body = new HashMap<>();
             body.put("chat_id", telegramChatId);
+            body.put("message_thread_id",telegramTopicId);
             body.put("text", text);
             if (StrUtil.isNotBlank(telegramFormat)) {
                 body.put("parse_mode", telegramFormat);
@@ -109,6 +111,7 @@ public class Telegram implements Message {
         return HttpReq.post(url, true)
                 .contentType(ContentType.MULTIPART.getValue())
                 .form("chat_id", telegramChatId)
+                .form("message_thread_id",telegramTopicId)
                 .form("caption", text)
                 .form("photo", photo)
                 .form("parse_mode", telegramFormat)
