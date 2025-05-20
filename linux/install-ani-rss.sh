@@ -109,7 +109,6 @@ ExecStart=/bin/bash $INSTALL_DIR/run.sh
 Restart=on-failure
 RestartSec=30
 LimitNOFILE=65535
-Environment="PORT=$PORT"
 
 [Install]
 WantedBy=multi-user.target
