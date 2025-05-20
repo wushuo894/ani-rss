@@ -31,7 +31,7 @@ show_help() {
     echo "  ani-rss status  查看服务状态"
     echo "  ani-rss log  查看服务日志"
     echo "  ani-rss uninstall  卸载"
-    echo "  ani-rss help    显示帮助信息${NC}"
+    echo -e "  ani-rss help    显示帮助信息${NC}"
 }
 
 # 操作执行函数
