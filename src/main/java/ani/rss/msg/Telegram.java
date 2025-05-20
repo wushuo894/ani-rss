@@ -9,6 +9,7 @@ import ani.rss.util.HttpReq;
 import cn.hutool.core.text.StrFormatter;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.ContentType;
+import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpResponse;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -76,7 +77,7 @@ public class Telegram implements Message {
         text = replaceMessageTemplate(ani, config.getMessageTemplate(), text, messageEnum);
         String telegramBotToken = config.getTelegramBotToken();
         String telegramChatId = config.getTelegramChatId();
-        String telegramTopicId = config.getTelegramTopicId();
+        Integer telegramTopicId = config.getTelegramTopicId();
         String telegramApiHost = config.getTelegramApiHost();
         Boolean telegramImage = config.getTelegramImage();
         String telegramFormat = config.getTelegramFormat();
@@ -91,7 +92,9 @@ public class Telegram implements Message {
         if (Objects.isNull(ani) || !telegramImage) {
             Map<String, Object> body = new HashMap<>();
             body.put("chat_id", telegramChatId);
-            body.put("message_thread_id",telegramTopicId);
+            if (telegramTopicId > -1) {
+                body.put("message_thread_id", telegramTopicId);
+            }
             body.put("text", text);
             if (StrUtil.isNotBlank(telegramFormat)) {
                 body.put("parse_mode", telegramFormat);
@@ -108,13 +111,19 @@ public class Telegram implements Message {
         }
 
         url = StrFormatter.format("{}/bot{}/sendPhoto", telegramApiHost, telegramBotToken);
-        return HttpReq.post(url, true)
+
+        HttpRequest request = HttpReq.post(url, true)
                 .contentType(ContentType.MULTIPART.getValue())
                 .form("chat_id", telegramChatId)
-                .form("message_thread_id",telegramTopicId)
                 .form("caption", text)
                 .form("photo", photo)
-                .form("parse_mode", telegramFormat)
+                .form("parse_mode", telegramFormat);
+
+        if (telegramTopicId > -1) {
+            request.form("message_thread_id", telegramTopicId);
+        }
+
+        return request
                 .thenFunction(HttpResponse::isOk);
     }
 }
