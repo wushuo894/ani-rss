@@ -67,6 +67,10 @@
             </div>
           </div>
         </el-form-item>
+        <el-form-item label="话题ID">
+          <el-input-number v-model="props.config.telegramTopicId" :disabled="config.telegram"
+                           :min="-1" style="width: 160px;"/>
+        </el-form-item>
         <el-form-item label="图片">
           <el-switch v-model:model-value="props.config.telegramImage" :disabled="config.telegram"/>
         </el-form-item>

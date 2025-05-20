@@ -314,6 +314,11 @@ public class Config implements Serializable {
     private String telegramChatId;
 
     /**
+     * telegram topic id
+     */
+    private Integer telegramTopicId;
+
+    /**
      * telegram Api Host
      */
     private String telegramApiHost;

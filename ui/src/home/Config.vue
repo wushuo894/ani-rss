@@ -176,6 +176,7 @@ const config = ref({
   'telegram': false,
   'telegramBotToken': '',
   'telegramChatId': '',
+  'telegramTopicId': -1,
   'telegramApiHost': 'https://api.telegram.org',
   'webHookUrl': '',
   'webHookMethod': '',
