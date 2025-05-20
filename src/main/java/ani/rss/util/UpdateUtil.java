@@ -86,11 +86,11 @@ public class UpdateUtil {
         if (!update) {
             return;
         }
+
+        Assert.isTrue(MavenUtil.isJar(), "不支持更新");
+
         File jar = getJar();
         String extName = StrUtil.blankToDefault(FileUtil.extName(jar), "");
-        if (!List.of("jar", "exe").contains(extName)) {
-            throw new RuntimeException("不支持更新");
-        }
         File file = new File(jar + ".tmp");
 
         FileUtil.del(file);
@@ -106,47 +106,40 @@ public class UpdateUtil {
                     Assert.isTrue(Md5Util.isValidMD5(md5), "获取更新文件MD5失败");
                     return md5;
                 });
+
         HttpReq.get(downloadUrl, true)
                 .then(res -> {
-                    int status = res.getStatus();
-                    Assert.isTrue(res.isOk(), "Error: {}", status);
+                    HttpReq.assertStatus(res);
                     long contentLength = res.contentLength();
                     FileUtil.writeFromStream(res.bodyStream(), file, true);
-                    if (contentLength != file.length()) {
-                        log.error("下载出现问题");
-                        throw new RuntimeException("下载出现问题");
-                    }
-
-                    if (!Md5Util.digestHex(file).equals(downloadMd5)) {
-                        log.error("更新文件的MD5不匹配");
-                        throw new RuntimeException("更新文件的MD5不匹配");
-                    }
-
-                    ThreadUtil.execute(() -> {
-                        if ("jar".equals(extName)) {
-                            FileUtil.rename(file, jar.getName(), true);
-                            ServerUtil.stop();
-                            System.exit(0);
-                            return;
-                        }
-                        String filename = "ani-rss-update.exe";
-                        File updateExe = new File(file.getParent() + "/" + filename);
-                        FileUtil.del(updateExe);
-                        try (InputStream stream = ResourceUtil.getStream(filename)) {
-                            FileUtil.writeFromStream(stream, updateExe, true);
-                            ServerUtil.stop();
-                            List<String> strings = new ArrayList<>();
-                            strings.add(updateExe.toString());
-                            strings.add(FilePathUtil.getAbsolutePath(jar));
-                            strings.addAll(Main.ARGS);
-                            String[] array = ArrayUtil.toArray(strings, String.class);
-                            RuntimeUtil.exec(array);
-                            System.exit(0);
-                        } catch (Exception e) {
-                            log.error(e.getMessage(), e);
-                        }
-                    });
+                    Assert.isTrue(file.length() != contentLength, "下载出现问题");
+                    Assert.isTrue(Md5Util.digestHex(file).equals(downloadMd5), "更新文件的MD5不匹配");
                 });
+
+        ThreadUtil.execute(() -> {
+            if ("jar".equals(extName)) {
+                FileUtil.rename(file, jar.getName(), true);
+                ServerUtil.stop();
+                System.exit(0);
+                return;
+            }
+            String filename = "ani-rss-update.exe";
+            File updateExe = new File(file.getParent() + "/" + filename);
+            FileUtil.del(updateExe);
+            try (InputStream stream = ResourceUtil.getStream(filename)) {
+                FileUtil.writeFromStream(stream, updateExe, true);
+                ServerUtil.stop();
+                List<String> strings = new ArrayList<>();
+                strings.add(updateExe.toString());
+                strings.add(FilePathUtil.getAbsolutePath(jar));
+                strings.addAll(Main.ARGS);
+                String[] array = ArrayUtil.toArray(strings, String.class);
+                RuntimeUtil.exec(array);
+                System.exit(0);
+            } catch (Exception e) {
+                log.error(e.getMessage(), e);
+            }
+        });
     }
 
     public static File getJar() {
