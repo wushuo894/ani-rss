@@ -133,10 +133,15 @@ public class HttpReq {
         return req;
     }
 
+    public static String getUrl(HttpResponse response) {
+        URL url = ((HttpConnection) ReflectUtil.getFieldValue(response, "httpConnection")).getUrl();
+        return url.toString();
+    }
+
     public static void assertStatus(HttpResponse response) {
         boolean ok = response.isOk();
         int status = response.getStatus();
-        URL url = ((HttpConnection) ReflectUtil.getFieldValue(response, "httpConnection")).getUrl();
+        String url = getUrl(response);
         Assert.isTrue(ok, "url: {}, status: {}", url, status);
     }
 }
