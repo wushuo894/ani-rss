@@ -114,7 +114,7 @@ public class UpdateUtil {
                     HttpReq.assertStatus(res);
                     long contentLength = res.contentLength();
                     FileUtil.writeFromStream(res.bodyStream(), file, true);
-                    Assert.isTrue(file.length() != contentLength, "下载出现问题");
+                    Assert.isTrue(file.length() == contentLength, "下载出现问题");
                     Assert.isTrue(Md5Util.digestHex(file).equals(downloadMd5), "更新文件的MD5不匹配");
                 });
 
