@@ -28,8 +28,10 @@ public class UpdateUtil {
     public static synchronized About about() {
         Config config = ConfigUtil.CONFIG;
         String github = config.getGithub();
+        Boolean customGithub = config.getCustomGithub();
+        String customGithubUrl = config.getCustomGithubUrl();
 
-        String key = "github:" + github;
+        String key = StrFormatter.format("github:{} {} {}", github, customGithub, customGithubUrl);
 
         About cacheAbout = MyCacheUtil.get(key);
 

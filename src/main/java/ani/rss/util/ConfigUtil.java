@@ -167,6 +167,8 @@ public class ConfigUtil {
                 .setProcrastinatingDay(14)
                 .setGithub("None")
                 .setGithubToken("")
+                .setCustomGithub(false)
+                .setCustomGithubUrl("")
                 .setAlistRefresh(false)
                 .setAlistRefreshDelayed(0L)
                 .setUpdateTotalEpisodeNumber(false)

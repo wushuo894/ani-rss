@@ -2,7 +2,7 @@ package ani.rss.util;
 
 import ani.rss.entity.Config;
 import cn.hutool.core.net.url.UrlBuilder;
-import cn.hutool.core.text.StrFormatter;
+import cn.hutool.core.util.ReUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpResponse;
@@ -26,12 +26,31 @@ public class HttpRequestPlus extends HttpRequest {
 
         Config config = ConfigUtil.CONFIG;
         String github = config.getGithub();
+        Boolean customGithub = config.getCustomGithub();
+        String customGithubUrl = config.getCustomGithubUrl();
+
+        if (customGithub) {
+            if (StrUtil.isBlank(customGithubUrl)) {
+                log.info("未填写自定义github加速");
+                return new HttpRequestPlus(url);
+            }
+            github = customGithubUrl;
+        }
+
         if (StrUtil.isBlank(github) || github.equals("None")) {
             return new HttpRequestPlus(url);
         }
 
+        if (github.endsWith("/")) {
+            github = StrUtil.sub(github, 0, github.length() - 1);
+        }
+
+        if (!ReUtil.contains("^https?://", github)) {
+            github = "https://" + github;
+        }
+
         // 处理github加速
-        String newUrl = StrFormatter.format("https://{}/{}", github, url.toString());
+        String newUrl = github + "/" + url;
         log.info("github 已加速: {}", newUrl);
         return new HttpRequestPlus(UrlBuilder.ofHttp(newUrl, StandardCharsets.UTF_8));
     }

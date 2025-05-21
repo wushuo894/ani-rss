@@ -644,6 +644,16 @@ public class Config implements Serializable {
     private String github;
 
     /**
+     * 自定义github加速
+     */
+    private Boolean customGithub;
+
+    /**
+     * 自定义github加速网址
+     */
+    private String customGithubUrl;
+
+    /**
      * github Token
      */
     private String githubToken;
