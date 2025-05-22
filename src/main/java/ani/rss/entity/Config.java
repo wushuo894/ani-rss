@@ -682,4 +682,14 @@ public class Config implements Serializable {
      * tvshow.nfo
      */
     private Boolean tvShowNfo;
+
+    /**
+     * 设置备份
+     */
+    private Boolean configBackup;
+
+    /**
+     * 备份天数
+     */
+    private Integer configBackupDay;
 }
