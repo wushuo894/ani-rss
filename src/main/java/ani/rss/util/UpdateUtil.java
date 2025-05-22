@@ -145,7 +145,9 @@ public class UpdateUtil {
     }
 
     public static File getJar() {
-        return new File(System.getProperty("java.class.path").split(";")[0]);
+        String s = System.getProperty("java.class.path").split(";")[0];
+        s = s.split(":")[0];
+        return new File(s);
     }
 
 }

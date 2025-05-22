@@ -6,6 +6,7 @@ import ani.rss.entity.Tmdb;
 import ani.rss.enums.MessageEnum;
 import ani.rss.enums.StringEnum;
 import ani.rss.util.FilePathUtil;
+import ani.rss.util.NumberFormatUtil;
 import ani.rss.util.RenameUtil;
 import ani.rss.util.TorrentUtil;
 import cn.hutool.core.lang.func.Func1;
@@ -24,17 +25,24 @@ public interface Message {
     default String replaceMessageTemplate(Ani ani, String messageTemplate, String text, MessageEnum messageEnum) {
         messageTemplate = messageTemplate.replace("${text}", text);
         // 集数
-        Double episode = 1.0;
+        double episode = 1.0;
         if (ReUtil.contains(StringEnum.SEASON_REG, text)) {
             episode = Double.parseDouble(ReUtil.get(StringEnum.SEASON_REG, text, 2));
         }
 
-        if (episode.intValue() == episode) {
-            messageTemplate = messageTemplate.replace("${episode}", String.valueOf(episode.intValue()));
-        } else {
-            messageTemplate = messageTemplate.replace("${episode}", String.valueOf(episode));
+        String episodeFormat = String.format("%02d", (int) episode);
+
+        // .5
+        boolean is5 = episode != (int) episode;
+
+        if (is5) {
+            episodeFormat = episodeFormat + ".5";
         }
 
+        messageTemplate = messageTemplate.replace("${episode}",
+                NumberFormatUtil.format(episode, 1, 0)
+        );
+        messageTemplate = messageTemplate.replace("${episodeFormat}", episodeFormat);
 
         if (Objects.isNull(ani)) {
             return messageTemplate;
@@ -53,6 +61,10 @@ public interface Message {
                 Ani::getTotalEpisodeNumber,
                 Ani::getSubgroup
         );
+
+        int season = ani.getSeason();
+        String seasonFormat = String.format("%02d", season);
+        messageTemplate = messageTemplate.replace("${seasonFormat}", seasonFormat);
 
         messageTemplate = RenameUtil.replaceField(messageTemplate, ani, list);
 
