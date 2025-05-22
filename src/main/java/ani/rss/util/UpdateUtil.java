@@ -12,6 +12,8 @@ import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.RuntimeUtil;
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.system.OsInfo;
+import cn.hutool.system.SystemUtil;
 import com.google.gson.JsonObject;
 import lombok.extern.slf4j.Slf4j;
 
@@ -146,7 +148,10 @@ public class UpdateUtil {
 
     public static File getJar() {
         String s = System.getProperty("java.class.path").split(";")[0];
-        s = s.split(":")[0];
+        OsInfo osInfo = SystemUtil.getOsInfo();
+        if (!osInfo.isWindows()) {
+            s = s.split(":")[0];
+        }
         return new File(s);
     }
 
