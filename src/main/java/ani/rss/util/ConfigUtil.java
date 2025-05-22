@@ -284,7 +284,8 @@ public class ConfigUtil {
         try {
             ZipUtil.zip(backupFile, StandardCharsets.UTF_8, true, pathname -> {
                 if (pathname.isFile()) {
-                    return true;
+                    return !List.of(".DS_Store", ".DS_Store@SynoResource")
+                            .contains(pathname.getName());
                 }
                 File[] files = pathname.listFiles();
                 return !ArrayUtil.isEmpty(files);
