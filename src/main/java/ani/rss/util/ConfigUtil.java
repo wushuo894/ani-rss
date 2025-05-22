@@ -11,12 +11,16 @@ import cn.hutool.core.date.DatePattern;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.thread.ThreadUtil;
+import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.ZipUtil;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.File;
 import java.nio.charset.StandardCharsets;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Stream;
 
 @Slf4j
@@ -278,7 +282,13 @@ public class ConfigUtil {
                 .toList();
 
         try {
-            ZipUtil.zip(backupFile, StandardCharsets.UTF_8, true, backupFiles.toArray(new File[0]));
+            ZipUtil.zip(backupFile, StandardCharsets.UTF_8, true, pathname -> {
+                if (pathname.isFile()) {
+                    return true;
+                }
+                File[] files = pathname.listFiles();
+                return !ArrayUtil.isEmpty(files);
+            }, backupFiles.toArray(new File[0]));
 
             log.info("备份设置成功 {}", backupFile.getName());
         } catch (Exception e) {
@@ -304,7 +314,7 @@ public class ConfigUtil {
         }
 
         File[] files = backupDir.listFiles();
-        if (Objects.isNull(files)) {
+        if (ArrayUtil.isEmpty(files)) {
             return;
         }
 
