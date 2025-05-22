@@ -18,6 +18,7 @@ public class Main {
         Main.ARGS = List.of(ObjectUtil.defaultIfNull(args, new String[]{}));
         try {
             ConfigUtil.load();
+            ConfigUtil.backup();
             MenuUtil.start();
             ServerUtil.start();
 

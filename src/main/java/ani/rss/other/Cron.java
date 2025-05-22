@@ -86,6 +86,10 @@ public class Cron {
 
     public static void start() {
         Config config = ConfigUtil.CONFIG;
+
+        // 自动备份设置
+        CronUtil.schedule("0 0 * * *", (Runnable) ConfigUtil::backup);
+
         CronUtil.schedule("0 1 * * *", (Runnable) () -> {
             Boolean autoTrackersUpdate = config.getAutoTrackersUpdate();
             if (!autoTrackersUpdate) {

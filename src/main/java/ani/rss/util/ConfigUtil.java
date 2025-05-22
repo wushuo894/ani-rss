@@ -7,14 +7,17 @@ import ani.rss.enums.MessageEnum;
 import ani.rss.enums.ServerChanTypeEnum;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.bean.copier.CopyOptions;
+import cn.hutool.core.date.DatePattern;
+import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.thread.ThreadUtil;
+import cn.hutool.core.util.ZipUtil;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.nio.charset.StandardCharsets;
+import java.util.*;
+import java.util.stream.Stream;
 
 @Slf4j
 public class ConfigUtil {
@@ -173,7 +176,9 @@ public class ConfigUtil {
                 .setAlistRefreshDelayed(0L)
                 .setUpdateTotalEpisodeNumber(false)
                 .setAlistDownloadTimeout(60)
-                .setTvShowNfo(false);
+                .setTvShowNfo(false)
+                .setConfigBackup(false)
+                .setConfigBackupDay(7);
     }
 
     /**
@@ -241,6 +246,89 @@ public class ConfigUtil {
             log.error("保存失败 {}", configFile);
             log.error(e.getMessage(), e);
         }
+    }
+
+    /**
+     * 备份
+     */
+    public static synchronized void backup() {
+        Boolean configBackup = CONFIG.getConfigBackup();
+        if (!configBackup) {
+            return;
+        }
+
+        clearBackup();
+
+        File configDir = getConfigDir();
+        File backupDir = new File(configDir + "/backup");
+
+        String date = DateUtil.format(new Date(), DatePattern.NORM_DATE_PATTERN);
+        File backupFile = new File(backupDir + "/" + date + ".zip");
+
+        if (backupFile.exists()) {
+            return;
+        }
+
+        log.info("正在备份设置 {}", backupFile.getName());
+
+        List<File> backupFiles = Stream.of("files", "torrents", "ani.json", "config.json", "database.db")
+                .map(s -> configDir + "/" + s)
+                .map(File::new)
+                .filter(File::exists)
+                .toList();
+
+        try {
+            ZipUtil.zip(backupFile, StandardCharsets.UTF_8, true, backupFiles.toArray(new File[0]));
+
+            log.info("备份设置成功 {}", backupFile.getName());
+        } catch (Exception e) {
+            log.error("备份失败 {}", backupFile.getName());
+            log.error(e.getMessage(), e);
+        }
+    }
+
+
+    /**
+     * 清理备份
+     */
+    public static synchronized void clearBackup() {
+        Integer configBackupDay = CONFIG.getConfigBackupDay();
+
+        // 过期时间
+        long expirationTime = DateUtil.offsetDay(new Date(), -configBackupDay).getTime();
+
+        File configDir = getConfigDir();
+        File backupDir = new File(configDir + "/backup");
+        if (!backupDir.exists()) {
+            return;
+        }
+
+        File[] files = backupDir.listFiles();
+        if (Objects.isNull(files)) {
+            return;
+        }
+
+        for (File file : files) {
+            if (file.isDirectory()) {
+                continue;
+            }
+            String extName = FileUtil.extName(file);
+            if (!extName.equals("zip")) {
+                continue;
+            }
+            String mainName = FileUtil.mainName(file);
+            try {
+                long time = DateUtil.parse(mainName, DatePattern.NORM_DATE_PATTERN).getTime();
+                if (time > expirationTime) {
+                    continue;
+                }
+                log.info("{} 备份已过期, 自动删除", file.getName());
+                FileUtil.del(file);
+            } catch (Exception e) {
+                log.error(e.getMessage(), e);
+            }
+        }
+
     }
 
 }

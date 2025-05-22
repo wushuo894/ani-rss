@@ -375,6 +375,17 @@
               </template>
             </el-input-number>
           </el-form-item>
+          <el-form-item label="自动备份配置">
+            <div>
+              <el-switch v-model="props.config['configBackup']"/>
+              <br>
+              <el-input-number v-model="props.config['configBackupDay']" :min="1">
+                <template #suffix>
+                  <span>天</span>
+                </template>
+              </el-input-number>
+            </div>
+          </el-form-item>
         </el-form>
       </el-collapse-item>
     </el-collapse>
