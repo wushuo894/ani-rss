@@ -33,12 +33,14 @@ public class TorrentUtil {
     @Setter
     private static BaseDownload baseDownload;
 
+    private static final String lock = "lock";
+
     /**
      * 下载动漫
      *
      * @param ani
      */
-    @Synchronized("baseDownload")
+    @Synchronized("lock")
     public static void downloadAni(Ani ani) {
         Config config = ConfigUtil.CONFIG;
         Boolean delete = config.getDelete();
@@ -422,6 +424,7 @@ public class TorrentUtil {
         try {
             if (ReUtil.contains(StringEnum.MAGNET_REG, torrent)) {
                 FileUtil.writeUtf8String(torrent, saveTorrentFile);
+                log.info("种子下载完成 {}", reName);
                 return saveTorrentFile;
             }
 
@@ -431,10 +434,12 @@ public class TorrentUtil {
                         if (status == 404) {
                             // 如果为 404 则写入空文件 已在 getMagnet 处理过
                             FileUtil.writeUtf8String("", saveTorrentFile);
+                            log.info("种子下载完成 {}", reName);
                             return saveTorrentFile;
                         }
                         HttpReq.assertStatus(res);
                         FileUtil.writeFromStream(res.bodyStream(), saveTorrentFile, true);
+                        log.info("种子下载完成 {}", reName);
                         return saveTorrentFile;
                     });
         } catch (Exception e) {
