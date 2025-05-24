@@ -285,6 +285,10 @@ public class TmdbUtil {
                         .form("include_adult", "true")
                         .form("language", tmdbLanguage)
                         .then(response -> {
+                            int status = response.getStatus();
+                            if (status == 404) {
+                                return;
+                            }
                             HttpReq.assertStatus(response);
                             JsonObject body = GsonStatic.fromJson(response.body(), JsonObject.class);
                             body.getAsJsonArray("groups")
