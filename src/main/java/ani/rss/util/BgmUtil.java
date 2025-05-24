@@ -285,26 +285,26 @@ public class BgmUtil {
      * @param subjectId 番剧id
      */
     public static void collections(String subjectId) {
+        Assert.notBlank(subjectId, "subjectId 不能为空");
+
         String key = "BGM_collections:" + subjectId;
         if (MyCacheUtil.containsKey(key)) {
             return;
         }
         MyCacheUtil.put(key, subjectId, TimeUnit.MINUTES.toMillis(5));
 
+        String username = username();
+
         // 如果已经订阅，则不再订阅
-        HttpResponse response = setToken(HttpReq.get(host + "/v0/users/"+username()+"/collections/" + subjectId, true))
-                .execute();
-        if(response.getStatus() != 404) {
-            if (response.isOk()) {
-                // 已经订阅
-                log.info("已订阅番剧: {}", subjectId);
-                return;
-            }
-            // 其他错误
-            HttpReq.assertStatus(response);
+        Boolean ok = setToken(HttpReq.get(host + "/v0/users/" + username + "/collections/" + subjectId, true))
+                .thenFunction(HttpResponse::isOk);
+
+        if (ok) {
+            // 已经收藏
+            log.info("已收藏番剧: {}", subjectId);
+            return;
         }
 
-        Objects.requireNonNull(subjectId);
         setToken(HttpReq.post(host + "/v0/users/-/collections/" + subjectId, true))
                 .contentType(ContentType.JSON.getValue())
                 .body(GsonStatic.toJson(Map.of("type", 3)))
