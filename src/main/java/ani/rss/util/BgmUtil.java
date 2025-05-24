@@ -290,6 +290,20 @@ public class BgmUtil {
             return;
         }
         MyCacheUtil.put(key, subjectId, TimeUnit.MINUTES.toMillis(5));
+
+        // 如果已经订阅，则不再订阅
+        HttpResponse response = setToken(HttpReq.get(host + "/v0/users/"+username()+"/collections/" + subjectId, true))
+                .execute();
+        if(response.getStatus() != 404) {
+            if (response.isOk()) {
+                // 已经订阅
+                log.info("已订阅番剧: {}", subjectId);
+                return;
+            }
+            // 其他错误
+            HttpReq.assertStatus(response);
+        }
+
         Objects.requireNonNull(subjectId);
         setToken(HttpReq.post(host + "/v0/users/-/collections/" + subjectId, true))
                 .contentType(ContentType.JSON.getValue())
