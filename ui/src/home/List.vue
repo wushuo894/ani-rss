@@ -26,11 +26,14 @@
                       <div style="margin-left: 10px;">
                         <div class="flex">
                           <el-tooltip :content="item.title" placement="top">
-                            <el-text line-clamp="1" style="max-width: 200px;
+                            <el-text line-clamp="1"
+                                     @click="openBgmUrl(item)"
+                                     style="max-width: 200px;
                                        line-height: 1.6;
                                        letter-spacing: 0.0125em;
                                        font-weight: 500;
                                        font-size: 0.97em;
+                                       cursor: pointer;
                                        color: var(--el-text-color-primary);"
                                      truncated>
                               {{ item.title }}
