@@ -77,7 +77,7 @@ public class Aria2 implements BaseDownload {
                     for (JsonElement jsonElement : result) {
                         JsonObject asJsonObject = jsonElement.getAsJsonObject();
                         JsonElement bittorrent = asJsonObject.get("bittorrent");
-                        if (bittorrent == null || bittorrent.isJsonNull()) {
+                        if (Objects.isNull(bittorrent) || bittorrent.isJsonNull()) {
                             continue;
                         }
                         JsonElement info = bittorrent.getAsJsonObject()
