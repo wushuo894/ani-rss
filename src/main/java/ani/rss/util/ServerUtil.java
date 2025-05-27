@@ -26,6 +26,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
 import static ani.rss.auth.util.AuthUtil.getIp;
 
@@ -170,27 +171,30 @@ public class ServerUtil {
                 }
                 if (PatternPool.IPV4.matcher(string).matches()) {
                     if (string.equals(ip)) {
-                        MyCacheUtil.put(key, Boolean.TRUE);
+                        MyCacheUtil.put(key, Boolean.TRUE, TimeUnit.MINUTES.toMillis(10));
                         return true;
                     }
                 }
                 if (string.contains("*")) {
                     if (Ipv4Util.matches(string, ip)) {
-                        MyCacheUtil.put(key, Boolean.TRUE);
+                        MyCacheUtil.put(key, Boolean.TRUE, TimeUnit.MINUTES.toMillis(10));
                         return true;
                     }
                 }
-                if (Ipv4Util.list(string, false).contains(ip)) {
-                    MyCacheUtil.put(key, Boolean.TRUE);
+                List<String> ips = Ipv4Util.list(string, false);
+                if (ips.contains(ip)) {
+                    ips.clear();
+                    MyCacheUtil.put(key, Boolean.TRUE, TimeUnit.MINUTES.toMillis(10));
                     return true;
                 }
+                ips.clear();
             }
 
         } catch (Exception e) {
             log.error("ip白名单存在问题");
             log.error(e.getMessage(), e);
         }
-        MyCacheUtil.put(key, Boolean.FALSE);
+        MyCacheUtil.put(key, Boolean.FALSE, TimeUnit.MINUTES.toMillis(10));
         return false;
     }
 }
