@@ -16,7 +16,7 @@ else
   mkdir -p ../src/main/resources/dist
 fi
 
-if ! command -v java >/dev/null 2>&1; then
+if ! command -v pnpm >/dev/null 2>&1; then
   echo -e "${YELLOW}正在安装 pnpm ...${NC}"
   npm install pnpm -g
 fi
