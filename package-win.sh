@@ -23,29 +23,45 @@ install_zip() {
 # 定义颜色代码
 RED='\033[0;31m'
 GREEN='\033[0;32m'
+YELLOW='\033[0;33m'
 NC='\033[0m'
 
+if [ ! -f target/ani-rss-launcher.exe ]; then
+  bash package.sh
+fi
+
 cd target
+
+if [ -d ani-rss ]; then
+  echo -e "${YELLOW}清理文件夹 ani-rss${NC}"
+  rm -rf ani-rss
+fi
 
 mkdir ani-rss
 cp ani-rss-launcher.exe ani-rss
 
 install_zip
 
-wget https://github.com/ojdkbuild/ojdkbuild/releases/download/java-17-openjdk-17.0.3.0.6-1/java-17-openjdk-17.0.3.0.6-1.jre.win.x86_64.zip
+if [ ! -f java-17-openjdk-17.0.3.0.6-1.jre.win.x86_64.zip ]; then
+  wget https://github.com/ojdkbuild/ojdkbuild/releases/download/java-17-openjdk-17.0.3.0.6-1/java-17-openjdk-17.0.3.0.6-1.jre.win.x86_64.zip
+  if [ $? -eq 1 ]; then
+    echo -e "${RED}JRE下载失败${NC}"
+    exit 1
+  fi
 
-if [ $? -eq 1 ]; then
-  echo -e "${RED}JRE下载失败${NC}"
-  exit 1
+  echo -e "${GREEN}JRE下载成功${NC}"
+else
+  echo -e "${YELLOW}JRE已存在${NC}"
 fi
-
-echo -e "${GREEN}JRE下载成功${NC}"
 
 unzip java-17-openjdk-17.0.3.0.6-1.jre.win.x86_64.zip
 mv java-17-openjdk-17.0.3.0.6-1.jre.win.x86_64 ani-rss/jre
 cp ../windows/* ani-rss
 zip -r ani-rss.win.x86_64.zip ani-rss
 
-echo "${GREEN}打包完成 ani-rss.win.x86_64.zip${NC}"
+echo -e "${GREEN}打包完成 ani-rss.win.x86_64.zip${NC}"
 
 md5sum ani-rss.win.x86_64.zip | awk '{print $1}' > ani-rss.win.x86_64.zip.md5
+
+echo "md5"
+echo "ani-rss.win.x86_64.zip $(cat ani-rss.win.x86_64.zip.md5)"

@@ -53,3 +53,7 @@ echo -e "${GREEN}jar编译完成${NC}"
 
 md5sum target/ani-rss-jar-with-dependencies.jar | awk '{print $1}' > target/ani-rss-jar-with-dependencies.jar.md5
 md5sum target/ani-rss-launcher.exe | awk '{print $1}' > target/ani-rss-launcher.exe.md5
+
+echo "md5"
+echo "ani-rss-jar-with-dependencies.jar $(cat target/ani-rss-jar-with-dependencies.jar.md5)"
+echo "target/ani-rss-launcher.exe $(cat target/ani-rss-launcher.exe.md5)"
