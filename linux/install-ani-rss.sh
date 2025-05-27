@@ -148,6 +148,7 @@ show_info() {
     echo -e "URL: http://$IP:$PORT"
     echo -e "用户名: admin"
     echo -e "初始密码: admin${NC}"
+    echo -e "${RED}请务必及时修改默认用户名与密码${NC}"
     ani-rss help
 }
 
