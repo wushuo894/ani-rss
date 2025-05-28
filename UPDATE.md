@@ -1,6 +1,5 @@
 ### 改动
 
-- 修复aria2空指针
+- 修复windows中alist离线错误
 
-
-合并 #396
+**So, Fuck your Windows**

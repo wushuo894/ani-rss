@@ -92,6 +92,9 @@ public class Alist implements BaseDownload {
 
     @Override
     public synchronized Boolean download(Ani ani, Item item, String savePath, File torrentFile, Boolean ova) {
+        // windows 真该死啊
+        savePath = ReUtil.replaceAll(savePath, "^[A-z]:", "");
+
         String magnet = TorrentUtil.getMagnet(torrentFile);
         String reName = item.getReName();
         String path = savePath + "/" + reName;
@@ -102,6 +105,7 @@ public class Alist implements BaseDownload {
             // 洗版，删除备 用RSS 所下载的视频
             if (backRss && delete && !coexist) {
                 String s = ReUtil.get(StringEnum.SEASON_REG, reName, 0);
+                String finalSavePath = savePath;
                 ls(savePath)
                         .stream()
                         .map(AlistFileInfo::getName)
@@ -109,10 +113,10 @@ public class Alist implements BaseDownload {
                         .forEach(name -> {
                             postApi("fs/remove")
                                     .body(GsonStatic.toJson(Map.of(
-                                            "dir", savePath,
+                                            "dir", finalSavePath,
                                             "names", List.of(name)
                                     ))).then(HttpResponse::isOk);
-                            log.info("已开启备用RSS, 自动删除 {}/{}", savePath, name);
+                            log.info("已开启备用RSS, 自动删除 {}/{}", finalSavePath, name);
                         });
             }
             String tid = postApi("fs/add_offline_download")
