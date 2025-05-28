@@ -31,6 +31,8 @@ jobs:
           echo "{\"time\":$time,\"version\":\"$version\"}" > info.json
           jq --arg content "$(cat UPDATE.md)" '. += {markdown: $content}' info.json > temp.json && mv temp.json info.json
 
+          echo "$(cat info.json)"
+
           echo "version=v$version" >> $GITHUB_ENV
       - name: Release
         uses: softprops/action-gh-release@v2
