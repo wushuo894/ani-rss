@@ -464,6 +464,11 @@ public class Config implements Serializable {
     private String serverChan3ApiUrl;
 
     /**
+     * server酱 标题事件
+     */
+    private Boolean serverChanTitleAction;
+
+    /**
      * server酱 开关
      */
     private Boolean serverChan;

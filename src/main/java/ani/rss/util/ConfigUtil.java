@@ -139,6 +139,7 @@ public class ConfigUtil {
                 .setServerChanType(ServerChanTypeEnum.SERVER_CHAN.getType())
                 .setServerChanSendKey("")
                 .setServerChan3ApiUrl("")
+                .setServerChanTitleAction(true)
                 .setSystemMsg(false)
                 .setAutoTrackersUpdate(false)
                 .setTrackersUpdateUrls("https://cf.trackerslist.com/best.txt")

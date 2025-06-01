@@ -6,6 +6,7 @@ import ani.rss.enums.MessageEnum;
 import ani.rss.enums.ServerChanTypeEnum;
 import ani.rss.util.GsonStatic;
 import ani.rss.util.HttpReq;
+import cn.hutool.core.text.StrFormatter;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.HttpResponse;
 import lombok.extern.slf4j.Slf4j;
@@ -27,6 +28,7 @@ public class ServerChan implements Message {
         String type = config.getServerChanType();
         String sendKey = config.getServerChanSendKey();
         String apiUrl = config.getServerChan3ApiUrl();
+        Boolean serverChanTitleAction = config.getServerChanTitleAction();
 
         Boolean flag = checkParam(type, sendKey, apiUrl);
         if (!flag) {
@@ -41,7 +43,11 @@ public class ServerChan implements Message {
             if (StrUtil.isNotBlank(ani.getImage())) {
                 image = ani.getImage();
             }
-            title = messageEnum.getAction() + "#" + truncateMessage(ani.getTitle(), 10);
+            title = truncateMessage(ani.getTitle(), serverChanTitleAction ? 10 : 15);
+            if (serverChanTitleAction) {
+                String action = messageEnum.getAction();
+                title = StrFormatter.format("{}#{}", action, title);
+            }
         }
 
         String serverChanUrl = "";
