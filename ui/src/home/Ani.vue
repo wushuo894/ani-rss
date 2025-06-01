@@ -146,7 +146,7 @@
             </div>
           </div>
         </el-form-item>
-        <el-form-item label="自定义重命名模版">
+        <el-form-item label="重命名模版">
           <div style="width: 100%">
             <el-switch v-model="props.ani['customRenameTemplateEnable']"/>
             <br>
