@@ -165,12 +165,14 @@ public class Alist implements BaseDownload {
                 // errored 重试
                 if (state > 5) {
                     // 已到达最大重试次数 5 次, -1 不限制
-                    if (alistDownloadRetryNumber > -1 && retry >= alistDownloadRetryNumber) {
-                        log.error("离线下载失败 {}", error);
-                        return false;
+                    if (alistDownloadRetryNumber > -1) {
+                        if (retry >= alistDownloadRetryNumber) {
+                            log.error("离线下载失败 {}", error);
+                            return false;
+                        }
+                        retry++;
+                        log.info("离线任务正在进行重试 {}, 当前重试次数 {}, 最大重试次数 {}", tid, retry, alistDownloadRetryNumber);
                     }
-                    retry++;
-                    log.info("离线任务正在进行重试 {}, 当前重试次数 {}, 最大重试次数 {}", tid, retry, alistDownloadRetryNumber);
                     taskRetry(tid);
                     continue;
                 }
