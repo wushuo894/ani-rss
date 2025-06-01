@@ -146,6 +146,20 @@
             </div>
           </div>
         </el-form-item>
+        <el-form-item label="自定义重命名模版">
+          <div style="width: 100%">
+            <el-switch v-model="props.ani['customRenameTemplateEnable']"/>
+            <br>
+            <el-input v-model:model-value="props.ani['customRenameTemplate']"
+                      :disabled="!props.ani['customRenameTemplateEnable']"
+                      placeholder="${title} S${seasonFormat}E${episodeFormat}"/>
+            <br>
+            <el-text class="mx-1" size="small">
+              <a href="https://docs.wushuo.top/config/basic/rename#rename-template"
+                 target="_blank">详细说明</a>
+            </el-text>
+          </div>
+        </el-form-item>
         <el-form-item label="其它">
           <el-checkbox v-model="props.ani.omit" label="遗漏检测"/>
           <el-checkbox v-model="props.ani.upload" label="自动上传"/>
