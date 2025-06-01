@@ -1,5 +1,3 @@
 ### 改动
 
-- 修复windows中alist离线错误
-
-**So, Fuck your Windows**
+- 支持单独订阅设置自定义重命名模板

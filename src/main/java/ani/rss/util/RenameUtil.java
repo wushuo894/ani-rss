@@ -46,11 +46,7 @@ public class RenameUtil {
         Boolean customEpisode = ani.getCustomEpisode();
         String customEpisodeStr = ani.getCustomEpisodeStr();
         Integer customEpisodeGroupIndex = ani.getCustomEpisodeGroupIndex();
-        String renameTemplate = config.getRenameTemplate();
-
-        if (StrUtil.isBlank(renameTemplate)) {
-            renameTemplate = "${title} S${seasonFormat}E${episodeFormat}";
-        }
+        String renameTemplate = getRenameTemplate(ani);
 
         String subgroup = item.getSubgroup();
         subgroup = StrUtil.blankToDefault(subgroup, "未知字幕组");
@@ -135,6 +131,29 @@ public class RenameUtil {
         item
                 .setReName(reName);
         return true;
+    }
+
+    /**
+     * 获取重命名模板
+     *
+     * @param ani
+     * @return
+     */
+    public static String getRenameTemplate(Ani ani) {
+        Config config = ConfigUtil.CONFIG;
+        String renameTemplate = config.getRenameTemplate();
+
+        Boolean customRenameTemplateEnable = ani.getCustomRenameTemplateEnable();
+        String customRenameTemplate = ani.getCustomRenameTemplate();
+
+        if (customRenameTemplateEnable) {
+            renameTemplate = customRenameTemplate;
+        }
+
+        if (StrUtil.isBlank(renameTemplate)) {
+            renameTemplate = "${title} S${seasonFormat}E${episodeFormat}";
+        }
+        return renameTemplate;
     }
 
     public static <T> String replaceField(String template, T object, List<Func1<T, Object>> list) {

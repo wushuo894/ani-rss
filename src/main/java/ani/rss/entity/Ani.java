@@ -203,6 +203,16 @@ public class Ani implements Serializable {
      */
     private Boolean procrastinating;
 
+    /**
+     * 自定义重命名模版
+     */
+    private Boolean customRenameTemplateEnable;
+
+    /**
+     * 自定义重命名模版
+     */
+    private String customRenameTemplate;
+
     public static Ani bulidAni() {
         Ani newAni = new Ani();
         Config config = ConfigUtil.CONFIG;
@@ -241,7 +251,9 @@ public class Ani implements Serializable {
                                 .setDate(new Date())
                 )
                 .setUpload(config.getUpload())
-                .setProcrastinating(true);
+                .setProcrastinating(true)
+                .setCustomRenameTemplate(config.getRenameTemplate())
+                .setCustomRenameTemplateEnable(false);
     }
 
     @Data
