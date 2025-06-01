@@ -159,6 +159,10 @@
                     :disabled="config.serverChan"
                     placeholder="https://<uid>.push.ft07.com/send/<sendKey>.send"></el-input>
         </el-form-item>
+        <el-form-item label="事件标题">
+          <el-switch v-model="props.config['serverChanTitleAction']"
+                     :disabled="!config.serverChan"/>
+        </el-form-item>
         <el-form-item label="开关">
           <div style="display: flex;width: 100%;justify-content: space-between;">
             <el-switch v-model:model-value="props.config.serverChan"/>

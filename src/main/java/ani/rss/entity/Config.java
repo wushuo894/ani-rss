@@ -464,6 +464,11 @@ public class Config implements Serializable {
     private String serverChan3ApiUrl;
 
     /**
+     * server酱 标题事件
+     */
+    private Boolean serverChanTitleAction;
+
+    /**
      * server酱 开关
      */
     private Boolean serverChan;
@@ -677,6 +682,11 @@ public class Config implements Serializable {
      * alist离线超时 分钟
      */
     private Integer alistDownloadTimeout;
+
+    /**
+     * alist下载重试次数
+     */
+    private Long alistDownloadRetryNumber;
 
     /**
      * tvshow.nfo

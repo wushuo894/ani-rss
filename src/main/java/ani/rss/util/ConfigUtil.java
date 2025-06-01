@@ -139,6 +139,7 @@ public class ConfigUtil {
                 .setServerChanType(ServerChanTypeEnum.SERVER_CHAN.getType())
                 .setServerChanSendKey("")
                 .setServerChan3ApiUrl("")
+                .setServerChanTitleAction(true)
                 .setSystemMsg(false)
                 .setAutoTrackersUpdate(false)
                 .setTrackersUpdateUrls("https://cf.trackerslist.com/best.txt")
@@ -180,6 +181,7 @@ public class ConfigUtil {
                 .setAlistRefreshDelayed(0L)
                 .setUpdateTotalEpisodeNumber(false)
                 .setAlistDownloadTimeout(60)
+                .setAlistDownloadRetryNumber(5L)
                 .setTvShowNfo(false)
                 .setConfigBackup(false)
                 .setConfigBackupDay(7);
