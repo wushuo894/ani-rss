@@ -138,9 +138,10 @@ public class Alist implements BaseDownload {
 
             TimeInterval timer = DateUtil.timer();
             // 重试次数
-            int retry = 0;
+            long retry = 0;
             while (true) {
                 Integer alistDownloadTimeout = config.getAlistDownloadTimeout();
+                Long alistDownloadRetryNumber = config.getAlistDownloadRetryNumber();
                 if (timer.intervalMinute() > alistDownloadTimeout) {
                     // 超过下载超时限制
                     timer.clear();
@@ -163,12 +164,13 @@ public class Alist implements BaseDownload {
                         .get("state").getAsInt();
                 // errored 重试
                 if (state > 5) {
-                    // 已到达最大重试次数 5 次
-                    if (retry == 5) {
+                    // 已到达最大重试次数 5 次, -1 不限制
+                    if (alistDownloadRetryNumber > -1 && retry >= alistDownloadRetryNumber) {
                         log.error("离线下载失败 {}", error);
                         return false;
                     }
                     retry++;
+                    log.info("离线任务正在进行重试 {}, 当前重试次数 {}, 最大重试次数 {}", tid, retry, alistDownloadRetryNumber);
                     taskRetry(tid);
                     continue;
                 }

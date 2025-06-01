@@ -40,6 +40,9 @@
           支持离线下载到 115、PikPak、迅雷云盘
         </el-text>
       </el-form-item>
+      <el-form-item label="重试次数">
+        <el-input-number v-model="props.config['alistDownloadRetryNumber']" :min="-1"/>
+      </el-form-item>
       <el-form-item label="离线超时">
         <el-input-number v-model:model-value="props.config['alistDownloadTimeout']" :min="1">
           <template #suffix>

@@ -679,6 +679,11 @@ public class Config implements Serializable {
     private Integer alistDownloadTimeout;
 
     /**
+     * alist下载重试次数
+     */
+    private Long alistDownloadRetryNumber;
+
+    /**
      * tvshow.nfo
      */
     private Boolean tvShowNfo;

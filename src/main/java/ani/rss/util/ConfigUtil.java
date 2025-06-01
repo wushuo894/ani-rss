@@ -180,6 +180,7 @@ public class ConfigUtil {
                 .setAlistRefreshDelayed(0L)
                 .setUpdateTotalEpisodeNumber(false)
                 .setAlistDownloadTimeout(60)
+                .setAlistDownloadRetryNumber(5L)
                 .setTvShowNfo(false)
                 .setConfigBackup(false)
                 .setConfigBackupDay(7);
