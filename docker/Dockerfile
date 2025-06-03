@@ -1,4 +1,4 @@
-FROM wushuo894/openj9:open-17-jre
+FROM wushuo894/openj9:open-21-jre
 
 COPY docker/run.sh /run.sh
 COPY docker/exec.sh /exec.sh
