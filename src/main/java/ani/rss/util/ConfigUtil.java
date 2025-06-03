@@ -159,7 +159,7 @@ public class ConfigUtil {
                 .setCustomEpisode(false)
                 .setCustomEpisodeStr(RenameUtil.REG_STR)
                 .setCustomEpisodeGroupIndex(2)
-                .setProvider("")
+                .setProvider("115 Cloud")
                 .setUpload(true)
                 .setUpLimit(0L)
                 .setDlLimit(0L)
