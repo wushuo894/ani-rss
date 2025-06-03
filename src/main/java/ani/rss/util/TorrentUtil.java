@@ -1036,12 +1036,19 @@ public class TorrentUtil {
         if (StrUtil.isBlank(tags)) {
             return false;
         }
+        log.info("添加标签 {}", tags);
+        boolean b = false;
         try {
-            return baseDownload.addTags(torrentsInfo, tags);
+            b = baseDownload.addTags(torrentsInfo, tags);
         } catch (Exception e) {
             log.error(e.getMessage(), e);
         }
-        return false;
+        if (b) {
+            log.info("添加标签成功 {}", tags);
+        } else {
+            log.error("添加标签失败 {}", tags);
+        }
+        return b;
     }
 
 
