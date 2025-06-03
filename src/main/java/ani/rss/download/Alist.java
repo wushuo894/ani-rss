@@ -20,6 +20,7 @@ import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.Header;
 import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpResponse;
+import cn.hutool.http.Method;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import lombok.Data;
@@ -46,14 +47,11 @@ public class Alist implements BaseDownload {
         }
         String downloadPath = config.getDownloadPath();
         Assert.notBlank(downloadPath, "未设置下载位置");
+        String provider = config.getProvider();
+        Assert.notBlank(provider, "请选择 Driver");
         try {
-            return postApi("fs/list")
-                    .body(GsonStatic.toJson(Map.of(
-                            "path", downloadPath,
-                            "page", 1,
-                            "per_page", 0,
-                            "refresh", false
-                    )))
+            return postApi("me")
+                    .setMethod(Method.GET)
                     .thenFunction(res -> {
                         if (!res.isOk()) {
                             log.error("登录 Alist 失败");
@@ -64,16 +62,6 @@ public class Alist implements BaseDownload {
                             log.error("登录 Alist 失败");
                             return false;
                         }
-                        JsonObject data = jsonObject.getAsJsonObject("data");
-
-                        boolean write = data.get("write").getAsBoolean();
-                        Assert.isTrue(write, "没有写入权限");
-
-                        String provider = data.get("provider").getAsString();
-                        if (!List.of("115 Cloud", "Thunder", "PikPak").contains(provider)) {
-                            throw new IllegalArgumentException(StrFormatter.format("不支持的网盘类型 {}", provider));
-                        }
-                        config.setProvider(provider);
                         return true;
                     });
         } catch (Exception e) {
@@ -415,7 +403,7 @@ public class Alist implements BaseDownload {
     }
 
     /**
-     * fs api
+     * post api
      *
      * @param action
      * @return

@@ -18,7 +18,7 @@
     "element-plus": "^2.9.11",
     "markdown-it": "^14.1.0",
     "markdown-it-github-alerts": "^1.0.0",
-    "vue": "^3.5.15"
+    "vue": "^3.5.16"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^5.2.4",

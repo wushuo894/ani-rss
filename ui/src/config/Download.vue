@@ -40,6 +40,11 @@
           支持离线下载到 115、PikPak、迅雷云盘
         </el-text>
       </el-form-item>
+      <el-form-item label="Driver">
+        <el-select v-model="props.config['provider']" style="width: 150px;">
+          <el-option v-for="it in ['115 Cloud', 'Thunder', 'PikPak']" :key="it" :label="it" :value="it"/>
+        </el-select>
+      </el-form-item>
       <el-form-item label="重试次数">
         <div>
           <el-input-number v-model="props.config['alistDownloadRetryNumber']" :min="-1"/>
