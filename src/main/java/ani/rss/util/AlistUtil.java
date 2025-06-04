@@ -123,7 +123,6 @@ public class AlistUtil {
                                     log.info(text);
                                     MessageUtil.send(config, ani, text, MessageEnum.ALIST_UPLOAD);
                                 });
-                        TorrentUtil.login();
                         TorrentUtil.addTags(torrentsInfo, TorrentsTags.UPLOAD_COMPLETED.getValue());
                         return;
                     } catch (Exception e) {

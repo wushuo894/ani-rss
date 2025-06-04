@@ -8,21 +8,30 @@ import cn.hutool.http.Header;
 import cn.hutool.http.HttpConnection;
 import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpResponse;
+import cn.hutool.http.cookie.GlobalCookieManager;
 import lombok.extern.slf4j.Slf4j;
 
-import java.net.Authenticator;
-import java.net.PasswordAuthentication;
-import java.net.URL;
+import java.net.*;
 import java.util.Objects;
 
 @Slf4j
 public class HttpReq {
+
+
+    public static final CookieManager COOKIE_MANAGER;
+
+    static {
+        COOKIE_MANAGER = new CookieManager();
+        COOKIE_MANAGER.setCookiePolicy(CookiePolicy.ACCEPT_ALL);
+    }
 
     public static HttpRequest post(String url) {
         return post(url, false);
     }
 
     private static void config(HttpRequest req) {
+        GlobalCookieManager.setCookieManager(COOKIE_MANAGER);
+
         req.timeout(1000 * 20)
                 .setFollowRedirects(true);
 
