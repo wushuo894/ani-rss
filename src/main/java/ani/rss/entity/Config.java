@@ -614,9 +614,19 @@ public class Config implements Serializable {
     private Boolean embyRefresh;
 
     /**
+     * jellyfin扫描媒体库
+     */
+    private Boolean jellyfinRefresh;
+
+    /**
      * emby地址
      */
     private String embyHost;
+
+    /**
+     * jellyfin地址
+     */
+    private String jellyfinHost;
 
     /**
      * emby api密钥
@@ -624,14 +634,29 @@ public class Config implements Serializable {
     private String embyApiKey;
 
     /**
+     * jellyfin api密钥
+     */
+    private String jellyfinApiKey;
+
+    /**
      * emby扫描媒体库
      */
     private List<String> embyRefreshViewIds;
 
     /**
+     * jellyfin扫描媒体库
+     */
+    private List<String> jellyfinRefreshViewIds;
+
+    /**
      * emby延迟扫描
      */
     private Long embyDelayed;
+
+    /**
+     * jellyfin延迟扫描
+     */
+    private Long jellyfinDelayed;
 
     /**
      * 摸鱼
