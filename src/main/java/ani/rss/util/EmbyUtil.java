@@ -21,12 +21,14 @@ public class EmbyUtil {
         List<String> viewIds = config.getEmbyRefreshViewIds();
         List<EmbyViews> views = getViews(config);
 
-        for (EmbyViews view : views) {
-            String id = view.getId();
-            if (viewIds.contains(id)) {
-                refresh(view, config);
-            }
-        }
+        List<String> newViewIds = views
+                .stream()
+                .filter(view -> viewIds.contains(view.getId()))
+                .peek(view -> refresh(view, config))
+                .map(EmbyViews::getId)
+                .toList();
+
+        config.setEmbyRefreshViewIds(newViewIds);
     }
 
     /**
