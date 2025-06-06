@@ -92,6 +92,11 @@ public class LogUtil {
         if (Objects.isNull(throwableProxy)) {
             return;
         }
+        Config config = ConfigUtil.CONFIG;
+        Boolean debug = config.getDebug();
+        if (!debug) {
+            return;
+        }
         String className = throwableProxy.getClassName();
         String message = throwableProxy.getMessage();
         // Fix: Escape the message before appending to the log

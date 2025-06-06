@@ -236,14 +236,18 @@
           <el-input v-model="props.config['embyApiKey']"/>
         </el-form-item>
         <el-form-item label="媒体库">
-          <el-checkbox-group v-model="props.config['embyRefreshViewIds']">
-            <el-checkbox
-                v-for="view in views"
-                :key="view.id"
-                :label="view.name"
-                :value="view.id"/>
-          </el-checkbox-group>
-          <el-button :loading="getEmbyViewsLoading" bg icon="Refresh" text @click="getEmbyViews"/>
+          <div>
+            <el-checkbox-group v-model="props.config['embyRefreshViewIds']">
+              <el-checkbox
+                  v-for="view in views"
+                  :key="view.id"
+                  :label="view.name"
+                  :value="view.id"/>
+            </el-checkbox-group>
+            <div>
+              <el-button :loading="getEmbyViewsLoading" bg icon="Refresh" text @click="getEmbyViews"/>
+            </div>
+          </div>
         </el-form-item>
         <el-form-item label="延迟">
           <el-input-number v-model="props.config['embyDelayed']" :min="0">
