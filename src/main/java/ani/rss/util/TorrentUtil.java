@@ -1037,7 +1037,7 @@ public class TorrentUtil {
             return false;
         }
         String name = torrentsInfo.getName();
-        log.info("添加标签 {} {}", name, tags);
+        log.debug("添加标签 {} {}", name, tags);
         boolean b = false;
         try {
             b = baseDownload.addTags(torrentsInfo, tags);
@@ -1045,7 +1045,7 @@ public class TorrentUtil {
             log.error(e.getMessage(), e);
         }
         if (b) {
-            log.info("添加标签成功 {} {}", name, tags);
+            log.debug("添加标签成功 {} {}", name, tags);
         } else {
             log.error("添加标签失败 {} {}", name, tags);
         }
