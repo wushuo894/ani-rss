@@ -72,7 +72,7 @@ public class EmbyUtil {
 
         List<EmbyViews> viewsList = new ArrayList<>();
 
-        JsonArray items = HttpReq.get(embyHost + "/Items", false)
+        JsonArray items = HttpReq.get(embyHost + "/Library/MediaFolders", false)
                 .header("X-Emby-Token", embyApiKey)
                 .thenFunction(res -> {
                     HttpReq.assertStatus(res);
