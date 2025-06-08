@@ -230,8 +230,7 @@ public class TorrentUtil {
                 return;
             }
             download(ani, item, savePath, saveTorrent);
-            // 更新下载时间
-            ani.setLastDownloadTime(System.currentTimeMillis());
+
             if (master && !is5) {
                 currentDownloadCount++;
             }
@@ -239,8 +238,10 @@ public class TorrentUtil {
         }
 
         int size = ItemsUtil.currentEpisodeNumber(ani, items);
-        if (size > 0 && ani.getCurrentEpisodeNumber() != size) {
-            // 当前集数发生变动
+        if (count > 0) {
+            // 更新下载时间
+            ani.setLastDownloadTime(System.currentTimeMillis());
+            // 更新当前集数
             ani.setCurrentEpisodeNumber(size);
             AniUtil.sync();
         }
