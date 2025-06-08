@@ -9,12 +9,15 @@ let formatTime = timestamp => {
     const target = new Date(timestamp);
     const nowDate = new Date();
 
+    // 是否为当前年
+    const isCurrentYear = target.getFullYear() === nowDate.getFullYear();
+
     return target.toLocaleString('zh-CN', {
         hour: '2-digit',
         minute: '2-digit',
-        month: target.getFullYear() === nowDate.getFullYear() ? 'numeric' : undefined,
-        day: target.getFullYear() === nowDate.getFullYear() ? 'numeric' : undefined,
-        year: target.getFullYear() === nowDate.getFullYear() ? undefined : 'numeric',
+        month: isCurrentYear ? '2-digit' : undefined,
+        day: isCurrentYear ? '2-digit' : undefined,
+        year: isCurrentYear ? undefined : 'numeric',
         formatMatcher: 'best fit'
     }).replace(',', ' ');
 }

@@ -230,6 +230,8 @@ public class TorrentUtil {
                 return;
             }
             download(ani, item, savePath, saveTorrent);
+            // 更新下载时间
+            ani.setLastDownloadTime(System.currentTimeMillis());
             if (master && !is5) {
                 currentDownloadCount++;
             }
@@ -731,7 +733,6 @@ public class TorrentUtil {
         for (int i = 1; i <= downloadRetry; i++) {
             try {
                 if (baseDownload.download(ani, item, savePath, torrentFile, ova)) {
-                    ani.setLastDownloadTime(System.currentTimeMillis());
                     return;
                 }
             } catch (Exception e) {

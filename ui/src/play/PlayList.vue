@@ -10,7 +10,9 @@
                 <div>
                   {{ it.title }}
                   <br/>
-                  {{ it.lastModifyFormat }}
+                  <el-text size="small">
+                    {{ it.lastModifyFormat }}
+                  </el-text>
                 </div>
                 <el-button bg text icon="VideoPlay" @click="playStart?.show(ani,it)"/>
               </div>
