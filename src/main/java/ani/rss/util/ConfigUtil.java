@@ -184,7 +184,8 @@ public class ConfigUtil {
                 .setAlistDownloadRetryNumber(5L)
                 .setTvShowNfo(false)
                 .setConfigBackup(false)
-                .setConfigBackupDay(7);
+                .setConfigBackupDay(7)
+                .setShowLastDownloadTime(false);
     }
 
     /**

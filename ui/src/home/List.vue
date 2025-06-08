@@ -23,7 +23,7 @@
                            @click="refCover?.show(item)"/>
                     </div>
                     <div style="flex-grow: 1;position: relative;">
-                      <div style="margin-left: 10px;">
+                      <div style="margin-left: 8px;">
                         <div class="flex">
                           <el-tooltip :content="item.title" placement="top">
                             <el-text line-clamp="1"
@@ -85,6 +85,10 @@
                             备用RSS
                           </el-tag>
                         </div>
+                        <el-text v-if="item['lastDownloadTime'] && item.lastDownloadFormat" size="small" style="margin-left: 4px;"
+                                 type="info">
+                          {{ item.lastDownloadFormat }}
+                        </el-text>
                       </div>
                       <div
                           style="display: flex;align-items: flex-end;justify-content:flex-end; flex-direction: column;position: absolute;right: 0;bottom: 0;">
@@ -153,6 +157,7 @@ import Cover from "./Cover.vue";
 import Del from "./Del.vue";
 import {useWindowSize} from "@vueuse/core";
 import BgmRate from "./BgmRate.vue";
+import formatTime from "../date-format.js";
 
 const defaultWeekList = [
   {
@@ -245,9 +250,16 @@ const getList = () => {
         } else {
           weekList.value = [{i: 1, label: ''}];
         }
+        let showLastDownloadTime = res.data['showLastDownloadTime']
         api.get('api/ani')
             .then(res => {
-              list.value = res.data
+              if (showLastDownloadTime) {
+                list.value = res.data.map(it => {
+                  return {...it, lastDownloadFormat: formatTime(it['lastDownloadTime'])}
+                })
+              } else {
+                list.value = res.data
+              }
               updateGridLayout()
             })
             .finally(() => {

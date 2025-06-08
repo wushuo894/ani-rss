@@ -213,6 +213,11 @@ public class Ani implements Serializable {
      */
     private String customRenameTemplate;
 
+    /**
+     * 上次下载完成时间
+     */
+    private Long lastDownloadTime;
+
     public static Ani bulidAni() {
         Ani newAni = new Ani();
         Config config = ConfigUtil.CONFIG;
@@ -227,6 +232,7 @@ public class Ani implements Serializable {
                 .setEnable(true)
                 .setOva(false)
                 .setScore(0.0)
+                .setLastDownloadTime(0L)
                 .setImage("")
                 .setThemoviedbName("")
                 .setCustomDownloadPath(false)

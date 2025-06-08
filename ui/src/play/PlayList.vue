@@ -9,6 +9,10 @@
               <div style="width: 100%;display: flex;justify-content: space-between;align-items: center;">
                 <div>
                   {{ it.title }}
+                  <br/>
+                  <el-text size="small" type="info">
+                    {{ it.lastModifyFormat }}
+                  </el-text>
                 </div>
                 <el-button bg text icon="VideoPlay" @click="playStart?.show(ani,it)"/>
               </div>
@@ -29,6 +33,7 @@
 import {ref} from "vue";
 import api from "../api.js";
 import PlayStart from "./PlayStart.vue";
+import formatTime from "../date-format.js";
 
 const dialogVisible = ref(false)
 const listLoading = ref(false)
@@ -44,7 +49,9 @@ const show = (it) => {
   dialogVisible.value = true
   api.post('api/playlist', it)
       .then(res => {
-        list.value = res.data
+        list.value = res.data.map(it => {
+          return {...it, lastModifyFormat: formatTime(it['lastModify'])}
+        })
       })
       .finally(() => {
         listLoading.value = false
