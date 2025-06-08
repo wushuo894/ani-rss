@@ -731,6 +731,7 @@ public class TorrentUtil {
         for (int i = 1; i <= downloadRetry; i++) {
             try {
                 if (baseDownload.download(ani, item, savePath, torrentFile, ova)) {
+                    ani.setLastDownloadTime(System.currentTimeMillis());
                     return;
                 }
             } catch (Exception e) {
