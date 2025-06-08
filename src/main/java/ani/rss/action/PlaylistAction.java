@@ -86,6 +86,7 @@ public class PlaylistAction implements BaseAction {
         playItem.setSubtitles(subtitles);
         playItem.setFilename(Base64.encode(FilePathUtil.getAbsolutePath(file)))
                 .setName(file.getName())
+                .setLastModify(file.lastModified())
                 .setTitle(ReUtil.get(StringEnum.SEASON_REG, file.getName(), 0));
         playItems.add(playItem);
         return playItems;

@@ -702,4 +702,6 @@ public class Config implements Serializable {
      * 备份天数
      */
     private Integer configBackupDay;
+
+    public boolean lastDownload = true;
 }
