@@ -703,5 +703,8 @@ public class Config implements Serializable {
      */
     private Integer configBackupDay;
 
-    public boolean lastDownload = true;
+    /**
+     * 展示最后更新时间
+     */
+    private Boolean showLastDownloadTime;
 }

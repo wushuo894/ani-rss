@@ -25,6 +25,9 @@
           <el-form-item label="显示视频列表">
             <el-switch v-model:model-value="props.config.showPlaylist"/>
           </el-form-item>
+          <el-form-item label="显示更新时间">
+            <el-switch v-model:model-value="props.config['showLastDownloadTime']"/>
+          </el-form-item>
           <el-form-item label="自定义CSS">
             <div style="width: 100%;">
               <el-input v-model:model-value="props.config['customCss']" type="textarea"

@@ -10,7 +10,7 @@
                 <div>
                   {{ it.title }}
                   <br/>
-                  <el-text size="small">
+                  <el-text size="small" type="info">
                     {{ it.lastModifyFormat }}
                   </el-text>
                 </div>
