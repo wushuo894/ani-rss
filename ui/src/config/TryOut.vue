@@ -21,7 +21,7 @@
 <script setup>
 import {ref} from "vue";
 import {Github} from "@vicons/fa";
-import api from "../api.js";
+import api from "../js/api.js";
 import {ElMessage} from "element-plus";
 
 let dialogVisible = ref(false)

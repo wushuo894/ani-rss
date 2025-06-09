@@ -35,7 +35,7 @@
 
 import {ref} from "vue";
 import {ElMessage, ElMessageBox} from "element-plus";
-import api from "../api.js";
+import api from "../js/api.js";
 import Ani from "./Ani.vue";
 
 

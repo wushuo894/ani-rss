@@ -20,7 +20,7 @@
 <script setup>
 
 import {ref} from "vue";
-import api from "../api.js";
+import api from "../js/api.js";
 import {ElMessage, ElMessageBox} from "element-plus";
 
 const dialogVisible = ref(false)

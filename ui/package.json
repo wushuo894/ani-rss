@@ -15,7 +15,7 @@
     "artplayer": "^5.2.3",
     "artplayer-plugin-multiple-subtitles": "^1.1.0",
     "crypto-js": "^4.2.0",
-    "element-plus": "^2.9.11",
+    "element-plus": "^2.10.1",
     "markdown-it": "^14.1.0",
     "markdown-it-github-alerts": "^1.0.0",
     "vue": "^3.5.16"

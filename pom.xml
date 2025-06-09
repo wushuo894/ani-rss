@@ -6,7 +6,12 @@
 
     <groupId>ani.rss</groupId>
     <artifactId>ani-rss</artifactId>
-    <version>1.2.81</version>
+    <version>1.2.82</version>
+    <organization>
+        <name>wushuo894</name>
+    </organization>
+    <inceptionYear>2025</inceptionYear>
+    <description>自动追番、订阅、下载 蜜柑RSS动漫</description>
 
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
@@ -126,8 +131,8 @@
                             <versionInfo>
                                 <fileDescription>https://docs.wushuo.top/</fileDescription>
                                 <copyright>Copyright (C) 2024-2025</copyright>
-                                <productName>${artifactId}</productName>
-                                <internalName>${artifactId}</internalName>
+                                <productName>${project.artifactId}</productName>
+                                <internalName>${project.artifactId}</internalName>
                                 <originalFilename>ani-rss-launcher.exe</originalFilename>
                                 <language>SIMPLIFIED_CHINESE</language>
                             </versionInfo>
