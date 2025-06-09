@@ -132,7 +132,7 @@
           </el-form-item>
           <el-form-item label="重命名间隔">
             <el-input-number v-model:model-value="props.config['renameSleepSeconds']"
-                             :min="1"
+                             :min="5"
                              :disabled="!config.rename">
               <template #suffix>
                 <span>秒</span>
