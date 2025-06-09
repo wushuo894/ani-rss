@@ -88,6 +88,9 @@ public class TorrentUtil {
 
         ItemsUtil.procrastinating(ani, items);
 
+        // 实时保存文件
+        boolean sync = false;
+
         for (Item item : items) {
             log.debug(JSONUtil.formatJsonStr(GsonStatic.toJson(item)));
             String reName = item.getReName();
@@ -229,6 +232,9 @@ public class TorrentUtil {
             if (!AniUtil.ANI_LIST.contains(ani)) {
                 return;
             }
+
+            sync = true;
+
             download(ani, item, savePath, saveTorrent);
 
             if (master && !is5) {
@@ -237,12 +243,12 @@ public class TorrentUtil {
             count++;
         }
 
-        int size = ItemsUtil.currentEpisodeNumber(ani, items);
-        if (count > 0) {
-            // 更新下载时间
-            ani.setLastDownloadTime(System.currentTimeMillis());
+        if (sync) {
+            int size = ItemsUtil.currentEpisodeNumber(ani, items);
             // 更新当前集数
             ani.setCurrentEpisodeNumber(size);
+            // 更新下载时间
+            ani.setLastDownloadTime(System.currentTimeMillis());
             AniUtil.sync();
         }
 
