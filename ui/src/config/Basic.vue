@@ -398,7 +398,7 @@
 <script setup>
 import {ElMessage, ElText} from "element-plus";
 import {ref} from "vue";
-import api from "../api.js";
+import api from "../js/api.js";
 import {useColorMode, useLocalStorage} from "@vueuse/core";
 import AfdianPrompt from "../other/AfdianPrompt.vue";
 

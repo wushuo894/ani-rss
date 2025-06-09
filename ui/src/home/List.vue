@@ -85,7 +85,7 @@
                             备用RSS
                           </el-tag>
                         </div>
-                        <el-text v-if="item['lastDownloadTime'] && item.lastDownloadFormat" size="small" style="margin-left: 4px;"
+                        <el-text v-if="item['lastDownloadTime'] && item.lastDownloadFormat" size="small"
                                  type="info">
                           {{ item.lastDownloadFormat }}
                         </el-text>
@@ -150,14 +150,14 @@
 import {onMounted, ref} from "vue";
 import {Back, Delete, Edit as EditIcon, Files} from "@element-plus/icons-vue"
 import Edit from "./Edit.vue";
-import api from "../api.js";
+import api from "../js/api.js";
 import Popconfirm from "../other/Popconfirm.vue";
 import PlayList from "../play/PlayList.vue";
 import Cover from "./Cover.vue";
 import Del from "./Del.vue";
 import {useWindowSize} from "@vueuse/core";
 import BgmRate from "./BgmRate.vue";
-import formatTime from "../date-format.js";
+import formatTime from "../js/format-time.js";
 
 const defaultWeekList = [
   {

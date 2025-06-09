@@ -274,7 +274,7 @@
 <script setup>
 import {onMounted, ref} from "vue";
 import {ElMessage} from "element-plus";
-import api from "../api.js";
+import api from "../js/api.js";
 import AfdianPrompt from "../other/AfdianPrompt.vue";
 
 const chatIdMap = ref({})

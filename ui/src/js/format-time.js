@@ -1,10 +1,21 @@
 let formatTime = timestamp => {
     const now = Date.now();
     const elapsedMs = now - timestamp;
-    const elapsedMin = Math.floor(elapsedMs / 60000);
+    const elapsedMin = Math.floor(elapsedMs / (1000 * 60));
 
-    if (elapsedMin < 1) return "刚刚";
-    if (elapsedMin < 60) return `${elapsedMin}分钟前`;
+    if (elapsedMin < 1) {
+        return "刚刚";
+    }
+
+    if (elapsedMin < 60) {
+        return `${elapsedMin}分钟前`;
+    }
+
+    const hour = Math.floor(elapsedMs / (1000 * 60 * 60));
+
+    if (hour < 24) {
+        return `${hour}小时前`;
+    }
 
     const target = new Date(timestamp);
     const nowDate = new Date();

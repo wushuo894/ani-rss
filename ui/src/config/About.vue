@@ -80,7 +80,7 @@
 
 <script setup>
 import {onMounted, ref} from "vue";
-import api from "../api.js";
+import api from "../js/api.js";
 import {ElMessage, ElText} from "element-plus";
 import Popconfirm from "../other/Popconfirm.vue";
 import {Book, Github, Telegram} from "@vicons/fa";

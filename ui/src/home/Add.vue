@@ -100,7 +100,7 @@
 <script setup>
 import {ref} from "vue";
 import {ElMessage} from "element-plus";
-import api from "../api.js";
+import api from "../js/api.js";
 import Mikan from "./Mikan.vue";
 import Ani from "./Ani.vue";
 import Bgm from "./Bgm.vue";
