@@ -43,9 +43,9 @@ public class Transmission implements BaseDownload {
     @Override
     public Boolean login(Config config) {
         this.config = config;
-        String username = config.getUsername();
-        String password = config.getPassword();
-        host = config.getHost();
+        String username = config.getDownloadToolUsername();
+        String password = config.getDownloadToolPassword();
+        host = config.getDownloadToolHost();
 
         if (StrUtil.isBlank(host) || StrUtil.isBlank(username)
                 || StrUtil.isBlank(password)) {

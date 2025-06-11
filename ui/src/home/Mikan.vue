@@ -344,7 +344,7 @@ let batchAddition = async () => {
 
       ani = (await api.post('api/rss', ani)).data
       if (item.length > 1) {
-        ani.backRssList = item.slice(1)
+        ani.standbyRssList = item.slice(1)
             .map(o => {
               return {
                 label: o.label,

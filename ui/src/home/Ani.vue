@@ -1,6 +1,6 @@
 <template>
   <Items ref="items" :ani="props.ani"/>
-  <BackRss ref="backRss" :ani="props.ani"/>
+  <StandbyRss ref="standbyRsses" :ani="props.ani"/>
   <Mikan ref="mikanRef" @add="args => {
     ani.subgroup = args.group
     ani.match = JSON.parse(args.match).map(s => `{{${args.group}}}:${s}`)
@@ -71,7 +71,7 @@
         </el-form-item>
         <el-form-item label="备用 RSS">
           <div style="display: flex;justify-content: end;width: 100%;">
-            <el-button text bg @click="backRss?.show" icon="EditPen">管理</el-button>
+            <el-button text bg @click="standbyRsses?.show" icon="EditPen">管理</el-button>
           </div>
         </el-form-item>
         <el-form-item label="日期">
@@ -200,14 +200,14 @@ import {onMounted, ref} from "vue";
 import api from "../js/api.js";
 import {ElMessage, ElText} from "element-plus";
 import Popconfirm from "../other/Popconfirm.vue";
-import BackRss from "./BackRss.vue";
+import StandbyRss from "./StandbyRss.vue";
 import Mikan from "./Mikan.vue";
 import TmdbGroup from "./TmdbGroup.vue";
 
 const mikanRef = ref()
 const tmdbGroupRef = ref()
 
-let backRss = ref()
+let standbyRsses = ref()
 let date = ref()
 
 let items = ref()

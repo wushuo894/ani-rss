@@ -216,8 +216,8 @@ public class AlistUtil {
     private static String getPath(TorrentsInfo torrentsInfo, Ani ani) {
         Config config = ConfigUtil.CONFIG;
         String downloadDir = FilePathUtil.getAbsolutePath(torrentsInfo.getDownloadDir());
-        String downloadPath = FilePathUtil.getAbsolutePath(config.getDownloadPath());
-        String ovaDownloadPath = FilePathUtil.getAbsolutePath(config.getOvaDownloadPath());
+        String downloadPath = FilePathUtil.getAbsolutePath(config.getDownloadPathTemplate());
+        String ovaDownloadPath = FilePathUtil.getAbsolutePath(config.getOvaDownloadPathTemplate());
         String filePath = getRootPath(ani);
 
         if (StrUtil.isNotBlank(downloadPath) && downloadDir.startsWith(downloadPath)) {

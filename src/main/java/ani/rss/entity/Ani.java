@@ -30,15 +30,8 @@ public class Ani implements Serializable {
 
     /**
      * 备用rss
-     *
-     * @deprecated
      */
-    private List<String> backRss;
-
-    /**
-     * 备用rss
-     */
-    private List<BackRss> backRssList;
+    private List<StandbyRss> standbyRssList;
 
     /**
      * 标题
@@ -223,8 +216,7 @@ public class Ani implements Serializable {
         Config config = ConfigUtil.CONFIG;
         return newAni
                 .setId(UUID.fastUUID().toString())
-                .setBackRss(new ArrayList<>())
-                .setBackRssList(new ArrayList<>())
+                .setStandbyRssList(new ArrayList<>())
                 .setOffset(0)
                 .setYear(1970)
                 .setMonth(1)
@@ -264,7 +256,7 @@ public class Ani implements Serializable {
 
     @Data
     @Accessors(chain = true)
-    public static class BackRss implements Serializable {
+    public static class StandbyRss implements Serializable {
         /**
          * 字幕组
          */

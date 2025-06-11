@@ -1,12 +1,12 @@
 <template>
   <Mikan ref="mikan" @add="args => {
     plus()
-    backRss[editIndex].url = args.url
-    backRss[editIndex].label = args.group
+    standbyRsses[editIndex].url = args.url
+    standbyRsses[editIndex].label = args.group
     editIndex = -1
   }" match="false"/>
   <el-dialog v-model="dialogVisible" center title="备用订阅">
-    <el-alert v-if="!config.backRss" :closable="false"
+    <el-alert v-if="!config.standbyRsses" :closable="false"
               show-icon
               style="margin-bottom: 8px;" type="warning">
       <template #title>
@@ -23,14 +23,14 @@
       </div>
     </div>
     <div>
-      <el-table v-model:data="backRss" height="400px">
+      <el-table v-model:data="standbyRsses" height="400px">
         <el-table-column fixed label="字幕组" min-width="100px">
           <template #default="it">
             <div v-if="editIndex !== it.$index">
-              {{ backRss[it.$index].label }}
+              {{ standbyRsses[it.$index].label }}
             </div>
             <div v-else>
-              <el-input v-model:model-value="backRss[it.$index].label" placeholder="未知字幕组"/>
+              <el-input v-model:model-value="standbyRsses[it.$index].label" placeholder="未知字幕组"/>
             </div>
           </template>
         </el-table-column>
@@ -38,11 +38,11 @@
           <template #default="it">
             <div v-if="editIndex !== it.$index">
               <el-text line-clamp="1" size="small" truncated>
-                {{ backRss[it.$index].url }}
+                {{ standbyRsses[it.$index].url }}
               </el-text>
             </div>
             <div v-else>
-              <el-input v-model:model-value="backRss[it.$index].url" placeholder="https://xxx.xxx" type="textarea"
+              <el-input v-model:model-value="standbyRsses[it.$index].url" placeholder="https://xxx.xxx" type="textarea"
                         size="small"
                         autosize/>
             </div>
@@ -51,9 +51,9 @@
         <el-table-column label="偏移" width="150px">
           <template #default="it">
             <div v-if="editIndex !== it.$index">
-              {{ backRss[it.$index].offset }}
+              {{ standbyRsses[it.$index].offset }}
             </div>
-            <el-input-number v-else v-model:model-value="backRss[it.$index].offset" size="small"/>
+            <el-input-number v-else v-model:model-value="standbyRsses[it.$index].offset" size="small"/>
           </template>
         </el-table-column>
         <el-table-column label="操作" width="300">
@@ -71,7 +71,7 @@
                            @click="move(it.$index,-1)"/>
               </div>
               <div style="margin-left: 4px;">
-                <el-button :disabled="it.$index >= backRss.length-1" bg icon="ArrowDownBold" text type="primary"
+                <el-button :disabled="it.$index >= standbyRsses.length-1" bg icon="ArrowDownBold" text type="primary"
                            @click="move(it.$index,1)"/>
               </div>
             </div>
@@ -94,16 +94,16 @@ import api from "../js/api.js";
 const editIndex = ref(-1)
 
 const dialogVisible = ref(false)
-const backRss = ref()
+const standbyRsses = ref()
 const mikan = ref()
 const config = ref({
-  backRss: true
+  standbyRsses: true
 })
 
 let show = () => {
   editIndex.value = -1
   dialogVisible.value = true
-  backRss.value = JSON.parse(JSON.stringify(props.ani.backRssList))
+  standbyRsses.value = JSON.parse(JSON.stringify(props.ani.standbyRssList))
 
   api.get('api/config')
       .then(res => {
@@ -112,33 +112,33 @@ let show = () => {
 }
 
 let plus = () => {
-  if (!backRss.value.length) {
-    backRss.value.push({
+  if (!standbyRsses.value.length) {
+    standbyRsses.value.push({
       label: '未知字幕组',
       url: '',
       offset: props.ani.offset
     })
-    editIndex.value = backRss.value.length - 1
+    editIndex.value = standbyRsses.value.length - 1
     return
   }
-  if (backRss.value[backRss.value.length - 1].url.trim()) {
-    backRss.value.push({
+  if (standbyRsses.value[standbyRsses.value.length - 1].url.trim()) {
+    standbyRsses.value.push({
       label: '备用RSS',
       url: '',
       offset: props.ani.offset
     })
-    editIndex.value = backRss.value.length - 1
+    editIndex.value = standbyRsses.value.length - 1
   }
 }
 
 let del = (index) => {
   editIndex.value = -1
-  backRss.value = backRss.value.filter((s, i) => i !== index)
+  standbyRsses.value = standbyRsses.value.filter((s, i) => i !== index)
 }
 
 let check = () => {
   editIndex.value = -1
-  backRss.value = backRss.value
+  standbyRsses.value = standbyRsses.value
       .map(it => {
         it.url = it.url.trim()
         return it;
@@ -148,14 +148,14 @@ let check = () => {
 
 let ok = () => {
   check()
-  props.ani.backRssList = backRss.value
+  props.ani.standbyRssList = standbyRsses.value
   dialogVisible.value = false
 }
 
 let move = (index, offset) => {
-  let v = backRss.value[index]
-  backRss.value[index] = backRss.value[index + offset]
-  backRss.value[index + offset] = v
+  let v = standbyRsses.value[index]
+  standbyRsses.value[index] = standbyRsses.value[index + offset]
+  standbyRsses.value[index + offset] = v
 }
 
 defineExpose({show})

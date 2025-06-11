@@ -67,7 +67,7 @@ public class Cron {
 
         Assert.isTrue(!trackers.isEmpty(), "获取到0个trackers, 不进行更新");
 
-        String download = config.getDownload();
+        String download = config.getDownloadToolType();
         Class<Object> loadClass = ClassUtil.loadClass("ani.rss.download." + download);
         BaseDownload baseDownload = (BaseDownload) ReflectUtil.newInstance(loadClass);
         Boolean login = baseDownload.login(config);

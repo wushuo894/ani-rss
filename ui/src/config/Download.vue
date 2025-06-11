@@ -5,7 +5,7 @@
                     event.preventDefault()
                    }">
     <el-form-item label="下载工具">
-      <el-select v-model:model-value="props.config.download">
+      <el-select v-model:model-value="props.config.downloadToolType">
         <el-option v-for="item in downloadSelect"
                    :key="item"
                    :label="item"
@@ -13,10 +13,10 @@
       </el-select>
     </el-form-item>
     <el-form-item label="地址">
-      <el-input v-model:model-value="props.config.host" placeholder="http://192.168.1.x:8080"/>
+      <el-input v-model:model-value="props.config.downloadToolHost" placeholder="http://192.168.1.x:8080"/>
     </el-form-item>
-    <el-form-item v-if="props.config.download === 'Aria2'" label="RPC 密钥">
-      <el-input v-model:model-value="props.config.password" placeholder="" show-password>
+    <el-form-item v-if="props.config.downloadToolType === 'Aria2'" label="RPC 密钥">
+      <el-input v-model:model-value="props.config.downloadToolPassword" placeholder="" show-password>
         <template #prefix>
           <el-icon class="el-input__icon">
             <Key/>
@@ -24,9 +24,9 @@
         </template>
       </el-input>
     </el-form-item>
-    <template v-else-if="props.config.download === 'Alist'">
+    <template v-else-if="props.config.downloadToolType === 'Alist'">
       <el-form-item label="AlistToken">
-        <el-input v-model:model-value="props.config.password" placeholder="alist-xxxxxx" show-password>
+        <el-input v-model:model-value="props.config.downloadToolPassword" placeholder="alist-xxxxxx" show-password>
           <template #prefix>
             <el-icon class="el-input__icon">
               <Key/>
@@ -64,7 +64,7 @@
     </template>
     <template v-else>
       <el-form-item label="用户名">
-        <el-input v-model:model-value="props.config.username" placeholder="username">
+        <el-input v-model:model-value="props.config.downloadToolUsername" placeholder="username">
           <template #prefix>
             <el-icon class="el-input__icon">
               <User/>
@@ -73,7 +73,7 @@
         </el-input>
       </el-form-item>
       <el-form-item label="密码">
-        <el-input v-model:model-value="props.config.password" placeholder="password" show-password>
+        <el-input v-model:model-value="props.config.downloadToolPassword" placeholder="password" show-password>
           <template #prefix>
             <el-icon class="el-input__icon">
               <Key/>
@@ -108,7 +108,7 @@
                      :disabled="!props.config.delete"
                      label="等待做种完毕"/>
         <br>
-        <el-checkbox v-model:model-value="props.config.deleteBackRSSOnly"
+        <el-checkbox v-model:model-value="props.config.deleteStandbyRSSOnly"
                      :disabled="!props.config.delete"
                      label="仅在主RSS更新后删除备用RSS"/>
         <br>
@@ -237,7 +237,7 @@
         <el-form-item label="qb保存路径">
           <div>
             <el-switch v-model:model-value="props.config.qbUseDownloadPath"
-                       :disabled="config.download !== 'qBittorrent'"/>
+                       :disabled="config.downloadToolType !== 'qBittorrent'"/>
             <br>
             <el-text class="mx-1" size="small">
               开启后将使用qBittorrent的临时下载位置 (最终下载位置不受影响)
@@ -318,8 +318,8 @@ const downloadSelect = ref([
 
 const downloadLoginTestLoading = ref(false)
 const downloadLoginTest = () => {
-  if (props.config.host.endsWith("/")) {
-    props.config.host = props.config.host.substring(0, props.config.host.length - 1);
+  if (props.config.downloadToolHost.endsWith("/")) {
+    props.config.downloadToolHost = props.config.downloadToolHost.substring(0, props.config.downloadToolHost.length - 1);
   }
   downloadLoginTestLoading.value = true
   api.post("api/downloadLoginTestLoading", props.config)

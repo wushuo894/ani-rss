@@ -39,13 +39,13 @@ public class Alist implements BaseDownload {
     @Override
     public Boolean login(Config config) {
         this.config = config;
-        String host = config.getHost();
-        String password = config.getPassword();
+        String host = config.getDownloadToolHost();
+        String password = config.getDownloadToolPassword();
         if (StrUtil.isBlank(host) || StrUtil.isBlank(password)) {
             log.warn("Alist 未配置完成");
             return false;
         }
-        String downloadPath = config.getDownloadPath();
+        String downloadPath = config.getDownloadPathTemplate();
         Assert.notBlank(downloadPath, "未设置下载位置");
         String provider = config.getProvider();
         Assert.notBlank(provider, "请选择 Driver");
@@ -86,12 +86,12 @@ public class Alist implements BaseDownload {
         String magnet = TorrentUtil.getMagnet(torrentFile);
         String reName = item.getReName();
         String path = savePath + "/" + reName;
-        Boolean backRss = config.getBackRss();
+        Boolean standbyRss = config.getStandbyRss();
         Boolean delete = config.getDelete();
         Boolean coexist = config.getCoexist();
         try {
             // 洗版，删除备 用RSS 所下载的视频
-            if (backRss && delete && !coexist) {
+            if (standbyRss && delete && !coexist) {
                 String s = ReUtil.get(StringEnum.SEASON_REG, reName, 0);
                 String finalSavePath = savePath;
                 ls(savePath)
@@ -410,8 +410,8 @@ public class Alist implements BaseDownload {
      */
     public synchronized HttpRequest postApi(String action) {
         ThreadUtil.sleep(2000);
-        String host = config.getHost();
-        String password = config.getPassword();
+        String host = config.getDownloadToolHost();
+        String password = config.getDownloadToolPassword();
         return HttpReq.post(host + "/api/" + action, false)
                 .header(Header.AUTHORIZATION, password);
     }

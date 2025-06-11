@@ -46,7 +46,7 @@ public class qBittorrent implements BaseDownload {
      */
     public static List<FileEntity> files(TorrentsInfo torrentsInfo, Boolean filter, Config config) {
         String hash = torrentsInfo.getHash();
-        String host = config.getHost();
+        String host = config.getDownloadToolHost();
 
         return HttpReq.get(host + "/api/v2/torrents/files", false)
                 .form("hash", hash)
@@ -76,9 +76,9 @@ public class qBittorrent implements BaseDownload {
     @Override
     public Boolean login(Config config) {
         this.config = config;
-        String host = config.getHost();
-        String username = config.getUsername();
-        String password = config.getPassword();
+        String host = config.getDownloadToolHost();
+        String username = config.getDownloadToolUsername();
+        String password = config.getDownloadToolPassword();
 
         if (StrUtil.isBlank(host) || StrUtil.isBlank(username)
                 || StrUtil.isBlank(password)) {
@@ -111,7 +111,7 @@ public class qBittorrent implements BaseDownload {
         Boolean master = item.getMaster();
         String subgroup = item.getSubgroup();
         subgroup = StrUtil.blankToDefault(subgroup, "未知字幕组");
-        String host = config.getHost();
+        String host = config.getDownloadToolHost();
         Boolean qbUseDownloadPath = config.getQbUseDownloadPath();
 
         List<String> tags = new ArrayList<>();
@@ -201,7 +201,7 @@ public class qBittorrent implements BaseDownload {
      * @return
      */
     public static Boolean start(TorrentsInfo torrentsInfo, Config config) {
-        String host = config.getHost();
+        String host = config.getDownloadToolHost();
         boolean b = HttpReq.post(host + "/api/v2/torrents/start", false)
                 .form("hashes", torrentsInfo.getHash())
                 .thenFunction(HttpResponse::isOk);
@@ -216,7 +216,7 @@ public class qBittorrent implements BaseDownload {
 
     @Override
     public List<TorrentsInfo> getTorrentsInfos() {
-        String host = config.getHost();
+        String host = config.getDownloadToolHost();
         try {
             return HttpReq.get(host + "/api/v2/torrents/info", false)
                     .thenFunction(res -> {
@@ -281,7 +281,7 @@ public class qBittorrent implements BaseDownload {
 
     @Override
     public Boolean delete(TorrentsInfo torrentsInfo, Boolean deleteFiles) {
-        String host = config.getHost();
+        String host = config.getDownloadToolHost();
         String name = torrentsInfo.getName();
         String hash = torrentsInfo.getHash();
         try {
@@ -346,7 +346,7 @@ public class qBittorrent implements BaseDownload {
 
         String hash = torrentsInfo.getHash();
 
-        String host = config.getHost();
+        String host = config.getDownloadToolHost();
 
         List<FileEntity> files = files(torrentsInfo, true, config);
 
@@ -412,7 +412,7 @@ public class qBittorrent implements BaseDownload {
 
     @Override
     public Boolean addTags(TorrentsInfo torrentsInfo, String tags) {
-        String host = config.getHost();
+        String host = config.getDownloadToolHost();
         String hash = torrentsInfo.getHash();
         return HttpReq.post(host + "/api/v2/torrents/addTags", false)
                 .form("hashes", hash)
@@ -428,7 +428,7 @@ public class qBittorrent implements BaseDownload {
 
     @Override
     public void updateTrackers(Set<String> trackers) {
-        String host = config.getHost();
+        String host = config.getDownloadToolHost();
         JsonObject preferences = HttpReq.get(host + "/api/v2/app/preferences", false)
                 .thenFunction(res -> {
                     int status = res.getStatus();
@@ -455,7 +455,7 @@ public class qBittorrent implements BaseDownload {
 
     @Override
     public void setSavePath(TorrentsInfo torrentsInfo, String path) {
-        String host = config.getHost();
+        String host = config.getDownloadToolHost();
         HttpReq.post(host + "/api/v2/torrents/setAutoManagement", false)
                 .form("hashes", torrentsInfo.getHash())
                 .form("enable", false)
