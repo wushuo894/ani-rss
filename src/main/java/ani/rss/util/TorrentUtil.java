@@ -619,6 +619,11 @@ public class TorrentUtil {
 
         downloadPathTemplate = RenameUtil.replaceField(downloadPathTemplate, ani, list);
 
+        if (downloadPathTemplate.contains("${jpTitle}")) {
+            String jpTitle = RenameUtil.getJpTitle(ani);
+            downloadPathTemplate = downloadPathTemplate.replace("${jpTitle}", jpTitle);
+        }
+
         return new File(downloadPathTemplate);
     }
 
