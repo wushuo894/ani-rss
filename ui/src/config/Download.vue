@@ -89,10 +89,10 @@
       </div>
     </el-form-item>
     <el-form-item label="保存位置">
-      <el-input v-model:model-value="props.config.downloadPath" placeholder="/Media/番剧"></el-input>
+      <el-input v-model:model-value="props.config['downloadPathTemplate']"></el-input>
     </el-form-item>
     <el-form-item label="剧场版保存位置">
-      <el-input v-model:model-value="props.config.ovaDownloadPath" placeholder="/Media/剧场版"></el-input>
+      <el-input v-model:model-value="props.config['ovaDownloadPathTemplate']"></el-input>
     </el-form-item>
     <el-form-item label="自动删除">
       <div>
