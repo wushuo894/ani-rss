@@ -67,8 +67,8 @@ public class AniAction implements BaseAction {
             DOWNLOAD.set(true);
         }
         Ani downloadAni = first.get();
-        List<File> downloadPath = TorrentUtil.getDownloadPath(downloadAni);
-        TorrentUtil.createTvShowNfo(downloadPath.get(0).toString(), downloadAni);
+        File downloadPath = TorrentUtil.getDownloadPath(downloadAni);
+        TorrentUtil.createTvShowNfo(downloadPath.toString(), downloadAni);
         ThreadUtil.execute(() -> {
             try {
                 if (TorrentUtil.login()) {
@@ -164,43 +164,41 @@ public class AniAction implements BaseAction {
         if (Boolean.parseBoolean(move)) {
             Ani get = first.get();
             ThreadUtil.execute(() -> {
-                List<File> downloadPaths = TorrentUtil.getDownloadPath(get);
-                File newDownloadPath = TorrentUtil.getDownloadPath(ani).get(0);
+                File downloadPath = TorrentUtil.getDownloadPath(get);
+                File newDownloadPath = TorrentUtil.getDownloadPath(ani);
                 Boolean login = TorrentUtil.login();
                 List<TorrentsInfo> torrentsInfos = new ArrayList<>();
                 if (login) {
                     torrentsInfos = TorrentUtil.getTorrentsInfos();
                 }
-                for (File file : downloadPaths) {
-                    if (file.toString().equals(newDownloadPath.toString())) {
-                        // 位置未发生改变
-                        continue;
-                    }
-
-                    for (TorrentsInfo torrentsInfo : torrentsInfos) {
-                        if (!torrentsInfo.getDownloadDir().equals(file.toString())) {
-                            // 旧位置不相同
-                            continue;
-                        }
-                        // 修改保存位置
-                        TorrentUtil.setSavePath(torrentsInfo, newDownloadPath.toString());
-                    }
-                    if (!file.exists()) {
-                        continue;
-                    }
-                    if (file.isFile()) {
-                        continue;
-                    }
-                    ThreadUtil.sleep(3000);
-                    FileUtil.mkdir(newDownloadPath);
-                    File[] files = ObjectUtil.defaultIfNull(file.listFiles(), new File[]{});
-                    for (File oldFile : files) {
-                        log.info("移动文件 {} ==> {}", oldFile, newDownloadPath);
-                        FileUtil.move(oldFile, newDownloadPath, false);
-                    }
-                    FileUtil.del(file);
-                    ClearCacheAction.clearParentFile(file);
+                if (downloadPath.toString().equals(newDownloadPath.toString())) {
+                    // 位置未发生改变
+                    return;
                 }
+
+                for (TorrentsInfo torrentsInfo : torrentsInfos) {
+                    if (!torrentsInfo.getDownloadDir().equals(downloadPath.toString())) {
+                        // 旧位置不相同
+                        continue;
+                    }
+                    // 修改保存位置
+                    TorrentUtil.setSavePath(torrentsInfo, newDownloadPath.toString());
+                }
+                if (!downloadPath.exists()) {
+                    return;
+                }
+                if (downloadPath.isFile()) {
+                    return;
+                }
+                ThreadUtil.sleep(3000);
+                FileUtil.mkdir(newDownloadPath);
+                File[] files = ObjectUtil.defaultIfNull(downloadPath.listFiles(), new File[]{});
+                for (File oldFile : files) {
+                    log.info("移动文件 {} ==> {}", oldFile, newDownloadPath);
+                    FileUtil.move(oldFile, newDownloadPath, false);
+                }
+                FileUtil.del(downloadPath);
+                ClearCacheAction.clearParentFile(downloadPath);
 
             });
         }
@@ -284,7 +282,6 @@ public class AniAction implements BaseAction {
             List<File> files = anis
                     .stream()
                     .map(TorrentUtil::getDownloadPath)
-                    .flatMap(List::stream)
                     .toList();
 
             Boolean login = TorrentUtil.login();

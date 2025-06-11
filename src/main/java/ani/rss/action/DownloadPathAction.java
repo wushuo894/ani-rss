@@ -25,7 +25,7 @@ public class DownloadPathAction implements BaseAction {
     @Override
     public void doAction(HttpServerRequest request, HttpServerResponse response) throws IOException {
         Ani ani = getBody(Ani.class);
-        List<File> downloadPath = TorrentUtil.getDownloadPath(ani);
+        File downloadPath = TorrentUtil.getDownloadPath(ani);
 
         boolean change = false;
         Optional<Ani> first = AniUtil.ANI_LIST.stream()
@@ -35,11 +35,11 @@ public class DownloadPathAction implements BaseAction {
             Ani oldAni = ObjectUtil.clone(first.get());
             // 只在名称改变时移动
             oldAni.setSeason(ani.getSeason());
-            List<File> oldDownloadPath = TorrentUtil.getDownloadPath(oldAni);
-            change = !downloadPath.get(0).toString().equals(oldDownloadPath.get(0).toString());
+            File oldDownloadPath = TorrentUtil.getDownloadPath(oldAni);
+            change = !downloadPath.toString().equals(oldDownloadPath.toString());
         }
 
-        String downloadPathStr = FilePathUtil.getAbsolutePath(downloadPath.get(0));
+        String downloadPathStr = FilePathUtil.getAbsolutePath(downloadPath);
         resultSuccess(Map.of(
                 "change", change,
                 "downloadPath", downloadPathStr

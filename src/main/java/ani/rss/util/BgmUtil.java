@@ -660,7 +660,6 @@ public class BgmUtil {
         // 下载位置
         String downloadPath = FilePathUtil.getAbsolutePath(
                 TorrentUtil.getDownloadPath(ani)
-                        .get(0)
         );
 
         Boolean ova = ani.getOva();

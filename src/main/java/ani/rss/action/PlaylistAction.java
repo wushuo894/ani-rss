@@ -42,10 +42,8 @@ public class PlaylistAction implements BaseAction {
         }
         ani = first.get();
 
-        List<File> downloadPath = TorrentUtil.getDownloadPath(ani);
-        List<PlayItem> collect = downloadPath.stream()
-                .flatMap(file -> getPlayItem(file).stream())
-                .toList();
+        File downloadPath = TorrentUtil.getDownloadPath(ani);
+        List<PlayItem> collect = getPlayItem(downloadPath);
         collect = CollUtil.distinct(collect, PlayItem::getTitle, false);
         collect = CollUtil.sort(collect, Comparator.comparingDouble(it -> Double.parseDouble(ReUtil.get(StringEnum.SEASON_REG, it.getTitle(), 2))));
         resultSuccess(collect);
