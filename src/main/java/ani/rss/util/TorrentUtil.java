@@ -9,6 +9,7 @@ import ani.rss.enums.TorrentsTags;
 import cn.hutool.core.date.DateField;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.lang.func.Func1;
 import cn.hutool.core.text.StrFormatter;
 import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.core.util.*;
@@ -610,6 +611,14 @@ public class TorrentUtil {
         downloadPathTemplate = downloadPathTemplate.replace("${season}", String.valueOf(season));
         downloadPathTemplate = downloadPathTemplate.replace("${seasonFormat}", seasonFormat);
 
+        List<Func1<Ani, Object>> list = List.of(
+                Ani::getTitle,
+                Ani::getThemoviedbName,
+                Ani::getSubgroup
+        );
+
+        downloadPathTemplate = RenameUtil.replaceField(downloadPathTemplate, ani, list);
+
         return new File(downloadPathTemplate);
     }
 
@@ -715,11 +724,6 @@ public class TorrentUtil {
         String tmdbId = tmdb.getId();
 
         if (StrUtil.isBlank(tmdbId)) {
-            return;
-        }
-        String seasonName = config.getSeasonName();
-
-        if (seasonName.equals("None")) {
             return;
         }
 

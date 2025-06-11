@@ -121,7 +121,6 @@ public class ConfigUtil {
                 .setWebHookBody("")
                 .setWebHookUrl("")
                 .setWebHookMethod("POST")
-                .setSeasonName("Season 1")
                 .setShowPlaylist(true)
                 .setOmit(true)
                 .setBgmToken("")
