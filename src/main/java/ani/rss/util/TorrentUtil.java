@@ -551,6 +551,16 @@ public class TorrentUtil {
      * @return
      */
     public static File getDownloadPath(Ani ani) {
+        return getDownloadPath(ani, ConfigUtil.CONFIG);
+    }
+
+    /**
+     * 获取下载位置
+     *
+     * @param ani
+     * @return
+     */
+    public static File getDownloadPath(Ani ani, Config config) {
         Boolean customDownloadPath = ani.getCustomDownloadPath();
         String aniDownloadPath = ani.getDownloadPath();
 
@@ -567,7 +577,6 @@ public class TorrentUtil {
         String title = ani.getTitle().trim();
         Boolean ova = ani.getOva();
 
-        Config config = ConfigUtil.CONFIG;
         String downloadPathTemplate = config.getDownloadPathTemplate();
         String ovaDownloadPathTemplate = config.getOvaDownloadPathTemplate();
         if (ova && StrUtil.isNotBlank(ovaDownloadPathTemplate)) {
