@@ -125,43 +125,6 @@
         </el-text>
       </div>
     </el-form-item>
-    <el-form-item label="拼音首字母">
-      <div>
-        <el-switch v-model:model-value="props.config.acronym"
-                   :disabled="props.config.quarter || props.config['yearStorage']"/>
-        <br>
-        <el-text class="mx-1" size="small">
-          存放到 #,0,A-Z 文件夹下
-        </el-text>
-      </div>
-    </el-form-item>
-    <el-form-item label="年份">
-      <div>
-        <el-switch v-model:model-value="props.config['yearStorage']"
-                   :disabled="props.config.acronym || props.config.quarter"/>
-        <br>
-        <el-text class="mx-1" size="small">
-          按年份存放, 如 2023、2024、2025
-        </el-text>
-      </div>
-    </el-form-item>
-    <el-form-item label="季度">
-      <div>
-        <el-switch v-model:model-value="props.config.quarter"
-                   :disabled="props.config.acronym || props.config['yearStorage']"/>
-        <br>
-        <el-text class="mx-1" size="small">
-          按季度月份存放, 如 2024-07
-        </el-text>
-        <br/>
-        <div>
-          <el-checkbox v-model="props.config['quarterMerge']" :disabled="!props.config.quarter" label="季度合并"/>
-        </div>
-        <el-text class="mx-1" size="small">
-          将 2024-1、2024-2、2024-3 合并为 2024-1
-        </el-text>
-      </div>
-    </el-form-item>
     <el-form-item label="失败重试次数">
       <el-input-number v-model:model-value="props.config['downloadRetry']" :max="100" :min="3"/>
     </el-form-item>

@@ -96,13 +96,8 @@ public class WebHookAction implements BaseAction {
                         if (StrUtil.isBlank(bgmUrl)) {
                             return false;
                         }
-                        List<File> downloadPath = TorrentUtil.getDownloadPath(ani);
-                        for (File file : downloadPath) {
-                            if (file.toString().equals(parent)) {
-                                return true;
-                            }
-                        }
-                        return false;
+                        File downloadPath = TorrentUtil.getDownloadPath(ani);
+                        return downloadPath.toString().equals(parent);
                     })
                     .map(BgmUtil::getSubjectId)
                     .findFirst();

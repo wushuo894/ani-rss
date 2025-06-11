@@ -86,7 +86,7 @@ public interface Message {
         messageTemplate = messageTemplate.replace("${emoji}", emoji);
         messageTemplate = messageTemplate.replace("${action}", action);
 
-        String downloadPath = FilePathUtil.getAbsolutePath(TorrentUtil.getDownloadPath(ani).get(0));
+        String downloadPath = FilePathUtil.getAbsolutePath(TorrentUtil.getDownloadPath(ani));
         messageTemplate = messageTemplate.replace("${downloadPath}", downloadPath);
 
         if (messageTemplate.contains("${jpTitle}")) {

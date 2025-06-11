@@ -10,6 +10,7 @@ import cn.hutool.core.bean.copier.CopyOptions;
 import cn.hutool.core.date.DatePattern;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.text.StrFormatter;
 import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.ZipUtil;
@@ -36,8 +37,8 @@ public class ConfigUtil {
         String downloadPath = FilePathUtil.getAbsolutePath(new File("/Media/番剧"));
         String ovaDownloadPath = FilePathUtil.getAbsolutePath(new File("/Media/剧场版"));
 
-        String downloadPathTemplate = "";
-        String ovaDownloadPathTemplate = "";
+        String downloadPathTemplate = StrFormatter.format("{}/${letter}/${title}/Season ${season}", downloadPath);
+        String ovaDownloadPathTemplate = StrFormatter.format("{}/${letter}/${title}", ovaDownloadPath);
 
         String password = Md5Util.digestHex("admin");
         CONFIG.setSleep(15)
