@@ -139,11 +139,6 @@
               </template>
             </el-input-number>
           </el-form-item>
-          <el-form-item label="季命名方式">
-            <el-select v-model:model-value="props.config.seasonName" style="width: 150px">
-              <el-option v-for="it in ['Season 1','Season 01','S1','S01','None']" :key="it" :label="it" :value="it"/>
-            </el-select>
-          </el-form-item>
           <el-form-item label="重命名模版">
             <div style="width: 100%">
               <el-input v-model:model-value="props.config.renameTemplate"

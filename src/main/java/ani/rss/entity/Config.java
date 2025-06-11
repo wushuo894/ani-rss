@@ -364,11 +364,6 @@ public class Config implements Serializable {
     private String ipWhitelistStr;
 
     /**
-     * 季命名方式
-     */
-    private String seasonName;
-
-    /**
      * 显示已下载视频列表
      */
     private Boolean showPlaylist;
