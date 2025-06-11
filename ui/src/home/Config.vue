@@ -243,8 +243,8 @@ const show = (update) => {
 const editConfig = () => {
   configButtonLoading.value = true
   let my_config = JSON.parse(JSON.stringify(config.value))
-  if (my_config.login.downloadToolPassword) {
-    my_config.login.password = CryptoJS.MD5(my_config.login.downloadToolPassword).toString();
+  if (my_config.login.password) {
+    my_config.login.password = CryptoJS.MD5(my_config.login.password).toString();
   }
   api.post('api/config', my_config)
       .then(res => {
