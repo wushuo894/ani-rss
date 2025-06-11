@@ -49,13 +49,13 @@ public class ItemsUtil {
                 .peek(item -> item.setMaster(true))
                 .toList());
 
-        if (!config.getBackRss()) {
+        if (!config.getStandbyRss()) {
             items.sort(Comparator.comparingDouble(Item::getEpisode));
             return items;
         }
 
-        List<Ani.BackRss> backRss = ani.getBackRssList();
-        for (Ani.BackRss rss : backRss) {
+        List<Ani.StandbyRss> standbyRssList = ani.getStandbyRssList();
+        for (Ani.StandbyRss rss : standbyRssList) {
             ThreadUtil.sleep(1000);
             s = HttpReq.get(rss.getUrl(), true)
                     .timeout(config.getRssTimeout() * 1000)
@@ -335,9 +335,9 @@ public class ItemsUtil {
 
     public static int currentEpisodeNumber(Ani ani, List<Item> items) {
         Config config = ConfigUtil.CONFIG;
-        Boolean backRss = config.getBackRss();
+        Boolean standbyRss = config.getStandbyRss();
         Boolean coexist = config.getCoexist();
-        if (backRss && coexist) {
+        if (standbyRss && coexist) {
             // 开启多字幕组共存模式则只计算主rss集数
             items = items.stream()
                     .filter(Item::getMaster)

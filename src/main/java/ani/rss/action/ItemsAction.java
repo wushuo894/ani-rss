@@ -26,7 +26,7 @@ public class ItemsAction implements BaseAction {
         Ani ani = getBody(Ani.class);
         List<Item> items = ItemsUtil.getItems(ani);
 
-        String downloadPath = FilePathUtil.getAbsolutePath(TorrentUtil.getDownloadPath(ani).get(0));
+        String downloadPath = FilePathUtil.getAbsolutePath(TorrentUtil.getDownloadPath(ani));
 
         for (Item item : items) {
             item.setLocal(false);

@@ -81,7 +81,7 @@
                           <el-tag type="danger" v-else>
                             tv
                           </el-tag>
-                          <el-tag v-if="item.backRssList.length > 0">
+                          <el-tag v-if="item.standbyRssList.length > 0">
                             备用RSS
                           </el-tag>
                         </div>
@@ -120,29 +120,6 @@
         <div style="height: 80px;"></div>
       </div>
     </el-scrollbar>
-    <el-affix position="bottom" :style="`width: ${width}px`">
-      <div style="width: 100%;
-                                                      background: linear-gradient(to bottom,rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.01) );
-                                                      backdrop-filter: blur(2px);padding-top: 10px;z-index: 99999"
-           id="page">
-        <div style="display: flex;justify-content: end;width: 100%;">
-          <div style="margin-right: 10px;margin-bottom: 10px;">
-            <popconfirm title="你确定要退出吗?" @confirm="logout">
-              <template #reference>
-                <el-button type="danger" bg text>
-                  <el-icon :class="elIconClass()">
-                    <Back/>
-                  </el-icon>
-                  <template v-if="isNotMobile()">
-                    退出登录
-                  </template>
-                </el-button>
-              </template>
-            </popconfirm>
-          </div>
-        </div>
-      </div>
-    </el-affix>
   </div>
 </template>
 
@@ -293,11 +270,6 @@ onMounted(() => {
   window.addEventListener('resize', updateGridLayout);
   getList()
 })
-
-let logout = () => {
-  localStorage.removeItem('authorization')
-  location.reload()
-}
 
 let elIconClass = () => {
   return isNotMobile() ? 'el-icon--left' : '';

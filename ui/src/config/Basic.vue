@@ -139,11 +139,6 @@
               </template>
             </el-input-number>
           </el-form-item>
-          <el-form-item label="季命名方式">
-            <el-select v-model:model-value="props.config.seasonName" style="width: 150px">
-              <el-option v-for="it in ['Season 1','Season 01','S1','S01','None']" :key="it" :label="it" :value="it"/>
-            </el-select>
-          </el-form-item>
           <el-form-item label="重命名模版">
             <div style="width: 100%">
               <el-input v-model:model-value="props.config.renameTemplate"
@@ -255,10 +250,10 @@
           <el-form-item label="备用RSS">
             <div style="width: 100%">
               <div>
-                <el-switch v-model:model-value="props.config.backRss"/>
+                <el-switch v-model:model-value="props.config.standbyRss"/>
               </div>
               <div>
-                <el-checkbox v-model="props.config['coexist']" :disabled="!props.config.backRss"
+                <el-checkbox v-model="props.config['coexist']" :disabled="!props.config.standbyRss"
                              label="多字幕组共存模式"/>
               </div>
               <div class="flex" style="width: 100%;justify-content: end;">

@@ -25,6 +25,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 public class AniUtil {
 
     public static final List<Ani> ANI_LIST = new CopyOnWriteArrayList<>();
+    public static final String FILE_NAME = "ani.v2.json";
 
     /**
      * 获取订阅配置文件
@@ -33,7 +34,7 @@ public class AniUtil {
      */
     public static File getAniFile() {
         File configDir = ConfigUtil.getConfigDir();
-        return new File(configDir + File.separator + "ani.json");
+        return new File(configDir + File.separator + FILE_NAME);
     }
 
     /**
@@ -55,28 +56,6 @@ public class AniUtil {
             ANI_LIST.add(newAni);
         }
         log.debug("加载订阅 共{}项", ANI_LIST.size());
-
-
-        // 处理旧数据
-        for (Ani ani : ANI_LIST) {
-            // 备用rss数据结构改变
-            List<Ani.BackRss> backRssList = ani.getBackRssList();
-            List<String> backRss = ani.getBackRss();
-            if (backRssList.isEmpty() && !backRss.isEmpty()) {
-                for (String rss : backRss) {
-                    backRssList.add(
-                            new Ani.BackRss()
-                                    .setLabel("未知字幕组")
-                                    .setUrl(rss)
-                    );
-                }
-            }
-            for (Ani.BackRss rss : backRssList) {
-                Integer offset = rss.getOffset();
-                offset = ObjectUtil.defaultIfNull(offset, ani.getOffset());
-                rss.setOffset(offset);
-            }
-        }
     }
 
     /**

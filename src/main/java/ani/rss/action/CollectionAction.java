@@ -142,8 +142,8 @@ public class CollectionAction implements BaseAction {
 
     public static synchronized void download(String name, File torrentFile, String savePath, List<String> tags) {
         Config config = ConfigUtil.CONFIG;
-        String host = config.getHost();
-        String download = config.getDownload();
+        String host = config.getDownloadToolHost();
+        String download = config.getDownloadToolType();
         Assert.isTrue("qBittorrent".equals(download), "合集下载暂时只支持 qBittorrent");
 
         Assert.isTrue(TorrentUtil.login(), "下载器登录失败");
@@ -274,7 +274,7 @@ public class CollectionAction implements BaseAction {
                         Item::getReName
                 ));
 
-        String host = config.getHost();
+        String host = config.getDownloadToolHost();
 
         for (int i = 0; i < 30; i++) {
             for (qBittorrent.FileEntity file : files) {

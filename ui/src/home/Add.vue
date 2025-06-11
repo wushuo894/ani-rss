@@ -128,7 +128,7 @@ const ani = ref({
   'day': 1,
   'week': 1,
   'subgroup': '',
-  'backRssList': [],
+  'standbyRssList': [],
   'bgmUrl': '',
   'customEpisode': false,
   'customEpisodeStr': '',

@@ -10,6 +10,7 @@ import cn.hutool.core.bean.copier.CopyOptions;
 import cn.hutool.core.date.DatePattern;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.text.StrFormatter;
 import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.ZipUtil;
@@ -27,11 +28,18 @@ import java.util.stream.Stream;
 public class ConfigUtil {
 
     public static final Config CONFIG = new Config();
+    public static final String FILE_NAME = "config.v2.json";
 
     /*
       默认配置
      */
     static {
+        String downloadPath = FilePathUtil.getAbsolutePath(new File("/Media/番剧"));
+        String ovaDownloadPath = FilePathUtil.getAbsolutePath(new File("/Media/剧场版"));
+
+        String downloadPathTemplate = StrFormatter.format("{}/${letter}/${title}/Season ${season}", downloadPath);
+        String ovaDownloadPathTemplate = StrFormatter.format("{}/${letter}/${title}", ovaDownloadPath);
+
         String password = Md5Util.digestHex("admin");
         CONFIG.setSleep(15)
                 .setMikanHost("https://mikanime.tv")
@@ -48,28 +56,24 @@ public class ConfigUtil {
                 .setFileExist(false)
                 .setAwaitStalledUP(true)
                 .setDelete(false)
-                .setDeleteBackRSSOnly(false)
+                .setDeleteStandbyRSSOnly(false)
                 .setDeleteFiles(false)
                 .setOffset(false)
                 .setTitleYear(false)
-                .setAcronym(false)
-                .setQuarter(false)
-                .setQuarterMerge(false)
-                .setYearStorage(false)
                 .setAutoDisabled(false)
-                .setDownloadPath(FilePathUtil.getAbsolutePath(new File("/Media/番剧")))
-                .setOvaDownloadPath(FilePathUtil.getAbsolutePath(new File("/Media/剧场版")))
-                .setHost("")
-                .setDownload("qBittorrent")
+                .setDownloadPathTemplate(downloadPathTemplate)
+                .setOvaDownloadPathTemplate(ovaDownloadPathTemplate)
+                .setDownloadToolHost("")
+                .setDownloadToolType("qBittorrent")
                 .setDownloadRetry(3)
-                .setUsername("")
-                .setPassword("")
+                .setDownloadToolUsername("")
+                .setDownloadToolPassword("")
                 .setQbUseDownloadPath(false)
                 .setRatioLimit(-2)
                 .setSeedingTimeLimit(-2)
                 .setInactiveSeedingTimeLimit(-2)
                 .setSkip5(true)
-                .setBackRss(false)
+                .setStandbyRss(false)
                 .setCoexist(false)
                 .setLogsMax(2048)
                 .setDebug(false)
@@ -117,7 +121,6 @@ public class ConfigUtil {
                 .setWebHookBody("")
                 .setWebHookUrl("")
                 .setWebHookMethod("POST")
-                .setSeasonName("Season 1")
                 .setShowPlaylist(true)
                 .setOmit(true)
                 .setBgmToken("")
@@ -206,7 +209,7 @@ public class ConfigUtil {
      */
     public static File getConfigFile() {
         File configDir = getConfigDir();
-        return new File(configDir + File.separator + "config.json");
+        return new File(configDir + File.separator + FILE_NAME);
     }
 
     /**
@@ -278,7 +281,10 @@ public class ConfigUtil {
 
         log.info("正在备份设置 {}", backupFile.getName());
 
-        List<File> backupFiles = Stream.of("files", "torrents", "ani.json", "config.json", "database.db")
+        List<File> backupFiles = Stream.of(
+                        "files", "torrents", "database.db",
+                        AniUtil.FILE_NAME, ConfigUtil.FILE_NAME
+                )
                 .map(s -> configDir + "/" + s)
                 .map(File::new)
                 .filter(File::exists)
