@@ -127,14 +127,14 @@ const loading = ref(true)
 
 const config = ref({
   'mikanHost': '',
-  'download': 'qBittorrent',
+  'downloadToolType': 'qBittorrent',
   'exclude': [],
   'rename': true,
   'rss': false,
   'tmdb': false,
-  'host': '',
-  'username': '',
-  'password': '',
+  'downloadToolHost': '',
+  'downloadToolUsername': '',
+  'downloadToolPassword': '',
   'sleep': 5,
   'watchErrorTorrent': true,
   'delayedDownload': 0,
@@ -143,7 +143,7 @@ const config = ref({
   'fileExist': true,
   'awaitStalledUP': true,
   'delete': false,
-  'deleteBackRSSOnly': false,
+  'deleteStandbyRSSOnly': false,
   'deleteFiles': false,
   'offset': false,
   'acronym': false,
@@ -162,7 +162,7 @@ const config = ref({
   'mail': false,
   'mailAddressee': '',
   'mailAccount': {
-    'host': '',
+    'downloadToolHost': '',
     'port': 25,
     'from': '',
     'pass': '',
@@ -170,8 +170,8 @@ const config = ref({
   },
   'mailImage': true,
   'login': {
-    'username': '',
-    'password': ''
+    'downloadToolUsername': '',
+    'downloadToolPassword': ''
   },
   'telegram': false,
   'telegramBotToken': '',
@@ -192,7 +192,7 @@ const config = ref({
   'apiKey': '',
   'weekShow': false,
   'scoreShow': false,
-  'backRss': false,
+  'standbyRss': false,
   'downloadNew': false,
   'telegramImage': true,
   'telegramFormat': '',
@@ -243,8 +243,8 @@ const show = (update) => {
 const editConfig = () => {
   configButtonLoading.value = true
   let my_config = JSON.parse(JSON.stringify(config.value))
-  if (my_config.login.password) {
-    my_config.login.password = CryptoJS.MD5(my_config.login.password).toString();
+  if (my_config.login.downloadToolPassword) {
+    my_config.login.password = CryptoJS.MD5(my_config.login.downloadToolPassword).toString();
   }
   api.post('api/config', my_config)
       .then(res => {

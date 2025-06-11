@@ -36,7 +36,7 @@ public class Config implements Serializable {
     /**
      * 下载工具
      */
-    private String download;
+    private String downloadToolType;
 
     /**
      * 下载重试次数
@@ -44,19 +44,19 @@ public class Config implements Serializable {
     private Integer downloadRetry;
 
     /**
-     * 地址
+     * 下载工具 地址
      */
-    private String host;
+    private String downloadToolHost;
 
     /**
-     * 用户名
+     * 下载工具 用户名
      */
-    private String username;
+    private String downloadToolUsername;
 
     /**
-     * 密码
+     * 下载工具 密码
      */
-    private String password;
+    private String downloadToolPassword;
 
     /**
      * qb下载时，使用qb自身的保存路径配置(未下载完成的使用临时目录，复制种子文件)
@@ -81,12 +81,12 @@ public class Config implements Serializable {
     /**
      * 下载路径
      */
-    private String downloadPath;
+    private String downloadPathTemplate;
 
     /**
      * 剧场版下载路径
      */
-    private String ovaDownloadPath;
+    private String ovaDownloadPathTemplate;
 
     /**
      * 检测是否死种
@@ -151,7 +151,7 @@ public class Config implements Serializable {
     /**
      * 仅在主RSS更新后删除备用RSS
      */
-    private Boolean deleteBackRSSOnly;
+    private Boolean deleteStandbyRSSOnly;
 
     /**
      * 删除本地文件
@@ -201,7 +201,7 @@ public class Config implements Serializable {
     /**
      * 备用RSS
      */
-    private Boolean backRss;
+    private Boolean standbyRss;
 
     /**
      * 多字幕组共存模式

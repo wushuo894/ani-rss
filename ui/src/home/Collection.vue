@@ -290,8 +290,8 @@ let data = ref({
   torrent: '',
   ani: {
     "id": "6881c84d-31e1-4361-8cc6-fe4a3a00573b",
-    "backRss": [],
-    "backRssList": [],
+    "standbyRss": [],
+    "standbyRssList": [],
     "title": "",
     "offset": 0,
     "year": 2025,

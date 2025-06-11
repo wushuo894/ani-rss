@@ -46,7 +46,7 @@ public class ConfigAction implements BaseAction {
         Integer renameSleepSeconds = config.getRenameSleepSeconds();
         Integer sleep = config.getSleep();
         Integer gcSleep = config.getGcSleep();
-        String download = config.getDownload();
+        String download = config.getDownloadToolType();
         BeanUtil.copyProperties(
                 getBody(Config.class)
                         .setExpirationTime(null)
@@ -57,7 +57,7 @@ public class ConfigAction implements BaseAction {
                         .create()
                         .setIgnoreNullValue(true)
         );
-        String host = config.getHost();
+        String host = config.getDownloadToolHost();
         if (StrUtil.isNotBlank(host)) {
             if (host.endsWith("/")) {
                 host = host.substring(0, host.length() - 1);
@@ -68,7 +68,7 @@ public class ConfigAction implements BaseAction {
                 host = "http://" + host;
             }
         }
-        config.setHost(host);
+        config.setDownloadToolHost(host);
 
         Boolean proxy = ObjectUtil.defaultIfNull(config.getProxy(), false);
         if (proxy) {
@@ -90,16 +90,16 @@ public class ConfigAction implements BaseAction {
         }
 
         // 下载地址后面不要带 斜杠
-        String downloadPath = FilePathUtil.getAbsolutePath(config.getDownloadPath());
-        String ovaDownloadPath = FilePathUtil.getAbsolutePath(config.getOvaDownloadPath());
+        String downloadPath = FilePathUtil.getAbsolutePath(config.getDownloadPathTemplate());
+        String ovaDownloadPath = FilePathUtil.getAbsolutePath(config.getOvaDownloadPathTemplate());
         if (downloadPath.endsWith("/")) {
             downloadPath = downloadPath.substring(0, downloadPath.length() - 1);
         }
         if (ovaDownloadPath.endsWith("/")) {
             ovaDownloadPath = ovaDownloadPath.substring(0, ovaDownloadPath.length() - 1);
         }
-        config.setDownloadPath(downloadPath)
-                .setOvaDownloadPath(ovaDownloadPath);
+        config.setDownloadPathTemplate(downloadPath)
+                .setOvaDownloadPathTemplate(ovaDownloadPath);
 
         String telegramApiHost = config.getTelegramApiHost();
         if (telegramApiHost.endsWith("/")) {
@@ -121,7 +121,7 @@ public class ConfigAction implements BaseAction {
             TaskUtil.restart();
         }
         // 下载工具发生改变
-        if (!download.equals(config.getDownload())) {
+        if (!download.equals(config.getDownloadToolType())) {
             TorrentUtil.load();
         }
 

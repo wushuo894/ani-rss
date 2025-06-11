@@ -47,7 +47,7 @@ public class TorrentUtil {
         Boolean autoDisabled = config.getAutoDisabled();
         Integer downloadCount = config.getDownloadCount();
         Integer delayedDownload = config.getDelayedDownload();
-        Boolean deleteBackRSSOnly = config.getDeleteBackRSSOnly();
+        Boolean deleteStandbyRSSOnly = config.getDeleteStandbyRSSOnly();
 
         String title = ani.getTitle();
         Integer season = ani.getSeason();
@@ -155,8 +155,8 @@ public class TorrentUtil {
             }
 
             // 仅在主RSS更新后删除备用RSS
-            if (delete && master && deleteBackRSSOnly) {
-                TorrentsInfo backRSS = torrentsInfos
+            if (delete && master && deleteStandbyRSSOnly) {
+                TorrentsInfo standbyRSS = torrentsInfos
                         .stream()
                         .filter(torrentsInfo -> {
                             if (!torrentsInfo.getDownloadDir().equals(savePath)) {
@@ -175,18 +175,18 @@ public class TorrentUtil {
                         .findFirst()
                         .orElse(null);
 
-                if (Objects.nonNull(backRSS)) {
-                    List<String> tags = backRSS.getTags();
+                if (Objects.nonNull(standbyRSS)) {
+                    List<String> tags = standbyRSS.getTags();
                     if (!tags.contains(TorrentsTags.RENAME.getValue())) {
                         // 未完成重命名
                         continue;
                     }
-                    if (!delete(backRSS)) {
-                        log.debug("备用RSS可能还未做种完成 {}", backRSS.getName());
+                    if (!delete(standbyRSS)) {
+                        log.debug("备用RSS可能还未做种完成 {}", standbyRSS.getName());
                         // 删除失败或者不允许删除
                         continue;
                     }
-                    torrentsInfos.remove(backRSS);
+                    torrentsInfos.remove(standbyRSS);
                 }
             }
 
@@ -227,7 +227,7 @@ public class TorrentUtil {
                 continue;
             }
 
-            deleteBackRss(ani, item);
+            deleteStandbyRss(ani, item);
 
             if (!AniUtil.ANI_LIST.contains(ani)) {
                 return;
@@ -273,9 +273,9 @@ public class TorrentUtil {
      * @param ani
      * @param item
      */
-    public static void deleteBackRss(Ani ani, Item item) {
+    public static void deleteStandbyRss(Ani ani, Item item) {
         Config config = ConfigUtil.CONFIG;
-        Boolean backRss = config.getBackRss();
+        Boolean standbyRss = config.getStandbyRss();
         Boolean coexist = config.getCoexist();
         Boolean delete = config.getDelete();
         String reName = item.getReName();
@@ -284,7 +284,7 @@ public class TorrentUtil {
             return;
         }
 
-        if (!backRss) {
+        if (!standbyRss) {
             return;
         }
 
@@ -304,7 +304,7 @@ public class TorrentUtil {
 
         for (File file : downloadPathList) {
             String finalReName = reName;
-            TorrentsInfo backRSS = torrentsInfos
+            TorrentsInfo standbyRSS = torrentsInfos
                     .stream()
                     .filter(torrentsInfo -> {
                         if (!torrentsInfo.getDownloadDir().equals(FilePathUtil.getAbsolutePath(file))) {
@@ -318,8 +318,8 @@ public class TorrentUtil {
                     })
                     .findFirst()
                     .orElse(null);
-            if (Objects.nonNull(backRSS)) {
-                TorrentUtil.delete(backRSS, true, true);
+            if (Objects.nonNull(standbyRSS)) {
+                TorrentUtil.delete(standbyRSS, true, true);
             }
         }
 
@@ -476,7 +476,7 @@ public class TorrentUtil {
             return false;
         }
 
-        String downloadPath = FilePathUtil.getAbsolutePath(config.getDownloadPath());
+        String downloadPath = FilePathUtil.getAbsolutePath(config.getDownloadPathTemplate());
 
         if (StrUtil.isBlank(downloadPath)) {
             return false;
@@ -582,8 +582,8 @@ public class TorrentUtil {
         Boolean ova = ani.getOva();
 
         Config config = ConfigUtil.CONFIG;
-        String downloadPath = FilePathUtil.getAbsolutePath(config.getDownloadPath());
-        String ovaDownloadPath = FilePathUtil.getAbsolutePath(config.getOvaDownloadPath());
+        String downloadPath = FilePathUtil.getAbsolutePath(config.getDownloadPathTemplate());
+        String ovaDownloadPath = FilePathUtil.getAbsolutePath(config.getOvaDownloadPathTemplate());
         // 按拼音首字母存放
         Boolean acronym = config.getAcronym();
         // 根据季度存放
@@ -683,7 +683,7 @@ public class TorrentUtil {
     public static synchronized Boolean login() {
         ThreadUtil.sleep(1000);
         Config config = ConfigUtil.CONFIG;
-        String downloadPath = config.getDownloadPath();
+        String downloadPath = config.getDownloadPathTemplate();
         if (StrUtil.isBlank(downloadPath)) {
             log.warn("下载位置未设置");
             return false;
@@ -1082,7 +1082,7 @@ public class TorrentUtil {
 
     public static synchronized void load() {
         Config config = ConfigUtil.CONFIG;
-        String download = config.getDownload();
+        String download = config.getDownloadToolType();
         ClassUtil.scanPackage("ani.rss.download")
                 .stream()
                 .filter(aClass -> !aClass.isInterface())

@@ -34,8 +34,8 @@ public class Aria2 implements BaseDownload {
     @Override
     public Boolean login(Config config) {
         this.config = config;
-        String host = config.getHost();
-        String password = config.getPassword();
+        String host = config.getDownloadToolHost();
+        String password = config.getDownloadToolPassword();
 
         if (StrUtil.isBlank(host) || StrUtil.isBlank(password)) {
             log.warn("Aria2 未配置完成");
@@ -63,8 +63,8 @@ public class Aria2 implements BaseDownload {
     }
 
     public List<TorrentsInfo> getTorrentsInfos(String type) {
-        String host = config.getHost();
-        String password = config.getPassword();
+        String host = config.getDownloadToolHost();
+        String password = config.getDownloadToolPassword();
         String body = ResourceUtil.readUtf8Str(type);
         body = StrFormatter.format(body, password);
         return HttpReq.post(host + "/jsonrpc", false)
@@ -124,8 +124,8 @@ public class Aria2 implements BaseDownload {
     @Override
     public Boolean download(Ani ani, Item item, String savePath, File torrentFile, Boolean ova) {
         String name = item.getReName();
-        String host = config.getHost();
-        String password = config.getPassword();
+        String host = config.getDownloadToolHost();
+        String password = config.getDownloadToolPassword();
         String body;
 
         String extName = FileUtil.extName(torrentFile);
@@ -173,8 +173,8 @@ public class Aria2 implements BaseDownload {
 
     @Override
     public Boolean delete(TorrentsInfo torrentsInfo, Boolean deleteFiles) {
-        String host = config.getHost();
-        String password = config.getPassword();
+        String host = config.getDownloadToolHost();
+        String password = config.getDownloadToolPassword();
         String id = torrentsInfo.getId();
         String body = ResourceUtil.readUtf8Str("aria2/removeDownloadResult.json");
         body = StrFormatter.format(body, password, id);
@@ -250,8 +250,8 @@ public class Aria2 implements BaseDownload {
     @Override
     public void updateTrackers(Set<String> trackers) {
         String trackersStr = CollUtil.join(trackers, "\\n");
-        String host = config.getHost();
-        String password = config.getPassword();
+        String host = config.getDownloadToolHost();
+        String password = config.getDownloadToolPassword();
         String body = ResourceUtil.readUtf8Str("aria2/changeGlobalOption.json");
         body = StrFormatter.format(body, password, trackersStr);
 

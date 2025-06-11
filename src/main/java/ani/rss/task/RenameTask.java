@@ -41,11 +41,11 @@ public class RenameTask extends Thread {
                     if (!loop.get()) {
                         return;
                     }
-                    Boolean deleteBackRSSOnly = config.getDeleteBackRSSOnly();
+                    Boolean deleteStandbyRSSOnly = config.getDeleteStandbyRSSOnly();
                     try {
                         TorrentUtil.rename(torrentsInfo);
                         TorrentUtil.notification(torrentsInfo);
-                        if (deleteBackRSSOnly) {
+                        if (deleteStandbyRSSOnly) {
                             continue;
                         }
                         TorrentUtil.delete(torrentsInfo);
