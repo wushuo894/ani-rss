@@ -62,15 +62,18 @@ const delAni = async () => {
     return
   }
 
-  let  downloadPath = ''
+  let downloadPath = ''
 
   if (aniList.value.length === 1) {
-    let res = await api.post('api/downloadPath',aniList.value[0])
+    let res = await api.post('api/downloadPath', aniList.value[0])
     downloadPath = res.data['downloadPath']
   }
 
   ElMessageBox.confirm(
-      `<strong style="color: var(--el-color-danger);">将会删除整个文件夹, 是否执意继续?</strong>\n\n<el-text size="small" type="info">${downloadPath}</el-text>`,
+      `<strong style="color: var(--el-color-danger);">
+        将会删除整个文件夹, 是否执意继续?
+       </strong>
+       <span class="el-text el-text--small mx-1">${downloadPath}</span>`,
       '警告',
       {
         dangerouslyUseHTMLString: true,

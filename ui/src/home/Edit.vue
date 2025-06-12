@@ -2,11 +2,9 @@
   <el-dialog v-model="downloadPathDialogVisible" align-center center width="300"
              @close="callback">
     <div>
-      <el-text class="mx-1" size="default">
+      <strong>
         检测到修改后的下载位置发生了改动，是否将已下载文件移动到新的位置？
-      </el-text>
-      <br>
-      <br>
+      </strong>
       <el-text class="mx-1" size="small">
         {{ downloadPath }}
       </el-text>
