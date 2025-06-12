@@ -125,6 +125,7 @@ public class AlistUtil {
                                     MessageUtil.send(config, ani, text, MessageEnum.ALIST_UPLOAD);
                                 });
                         TorrentUtil.addTags(torrentsInfo, TorrentsTags.UPLOAD_COMPLETED.getValue());
+                        refresh(ani);
                         return;
                     } catch (Exception e) {
                         log.error(e.getMessage(), e);
