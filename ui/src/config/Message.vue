@@ -99,7 +99,7 @@
                       event.preventDefault()
                    }">
         <el-form-item label="SMTP地址">
-          <el-input v-model:model-value="props.config.mailAccount.downloadToolHost" :disabled="config.mail"
+          <el-input v-model:model-value="props.config.mailAccount.host" :disabled="config.mail"
                     placeholder="smtp.xx.com"/>
         </el-form-item>
         <el-form-item label="SMTP端口">
