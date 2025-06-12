@@ -125,7 +125,6 @@ public class AlistUtil {
                                     MessageUtil.send(config, ani, text, MessageEnum.ALIST_UPLOAD);
                                 });
                         TorrentUtil.addTags(torrentsInfo, TorrentsTags.UPLOAD_COMPLETED.getValue());
-                        refresh(ani);
                         return;
                     } catch (Exception e) {
                         log.error(e.getMessage(), e);
@@ -161,6 +160,12 @@ public class AlistUtil {
             log.info("刷新 Alist 路径: {}", finalPath);
 
             try {
+                HttpReq
+                        .post(alistHost + "/api/fs/mkdir", false)
+                        .header(Header.AUTHORIZATION, alistToken)
+                        .body(GsonStatic.toJson(Map.of("path", finalPath)))
+                        .then(HttpReq::assertStatus);
+
                 String url = alistHost;
                 if (url.endsWith("/")) {
                     url = url.substring(0, url.length() - 1);
