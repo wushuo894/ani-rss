@@ -91,7 +91,9 @@ const editAni = () => {
       '警告',
       {
         confirmButtonText: '执意继续移动',
+        confirmButtonClass: 'is-text is-has-bg el-button--danger',
         cancelButtonText: '取消',
+        cancelButtonClass: 'is-text is-has-bg',
         type: 'warning',
       }
   )

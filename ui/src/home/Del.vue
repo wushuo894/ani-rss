@@ -19,9 +19,10 @@
 
 <script setup>
 
-import {ref} from "vue";
+import {markRaw, ref} from "vue";
 import api from "../js/api.js";
 import {ElMessage, ElMessageBox} from "element-plus";
+import {Delete} from "@element-plus/icons-vue";
 
 const dialogVisible = ref(false)
 
@@ -44,7 +45,7 @@ const aniList = ref([
 let okLoading = ref(false)
 let deleteFiles = ref(false)
 
-const delAni = () => {
+const delAni = async () => {
   okLoading.value = true
   let action = () => api.del('api/ani?deleteFiles=' + deleteFiles.value, aniList.value.map(it => it['id']))
       .then(res => {
@@ -61,16 +62,30 @@ const delAni = () => {
     return
   }
 
+  let  downloadPath = ''
+
+  if (aniList.value.length === 1) {
+    let res = await api.post('api/downloadPath',aniList.value[0])
+    downloadPath = res.data['downloadPath']
+  }
+
   ElMessageBox.confirm(
-      '将会删除整个文件夹, 是否执意继续?',
+      `<strong style="color: var(--el-color-danger);">将会删除整个文件夹, 是否执意继续?</strong>\n\n<el-text size="small" type="info">${downloadPath}</el-text>`,
       '警告',
       {
+        dangerouslyUseHTMLString: true,
         confirmButtonText: '执意继续删除',
+        confirmButtonClass: 'is-text is-has-bg el-button--danger',
         cancelButtonText: '取消',
+        cancelButtonClass: 'is-text is-has-bg',
         type: 'warning',
+        icon: markRaw(Delete),
       }
   )
       .then(action)
+      .finally(() => {
+        okLoading.value = false
+      })
 }
 
 const show = (anis) => {
@@ -85,4 +100,11 @@ defineExpose({
 
 const emit = defineEmits(['load'])
 </script>
+
+<style scoped>
+.el-checkbox {
+  --el-checkbox-checked-text-color: var(--el-color-danger);
+  color: var(--el-color-danger);
+}
+</style>
 
