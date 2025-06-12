@@ -12,7 +12,6 @@ import cn.hutool.core.thread.ExecutorBuilder;
 import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.ReUtil;
-import cn.hutool.core.util.StrUtil;
 import cn.hutool.core.util.URLUtil;
 import cn.hutool.http.Header;
 import cn.hutool.http.HttpConfig;
@@ -141,7 +140,7 @@ public class AlistUtil {
     /**
      * 刷新 Alist 路径
      */
-    public static void refresh(TorrentsInfo torrentsInfo, Ani ani) {
+    public static void refresh(Ani ani) {
         Config config = ConfigUtil.CONFIG;
         Boolean refresh = config.getAlistRefresh();
         if (!refresh) {
@@ -153,7 +152,6 @@ public class AlistUtil {
         verify();
 
         String finalPath = getPath(ani);
-        String rootPath = getRootPath(ani) + "/";
         EXECUTOR.execute(() -> {
             Long getAlistRefreshDelay = config.getAlistRefreshDelayed();
             if (getAlistRefreshDelay > 0) {
@@ -162,6 +160,12 @@ public class AlistUtil {
             log.info("刷新 Alist 路径: {}", finalPath);
 
             try {
+                HttpReq
+                        .post(alistHost + "/api/fs/mkdir", false)
+                        .header(Header.AUTHORIZATION, alistToken)
+                        .body(GsonStatic.toJson(Map.of("path", finalPath)))
+                        .then(HttpReq::assertStatus);
+
                 String url = alistHost;
                 if (url.endsWith("/")) {
                     url = url.substring(0, url.length() - 1);
@@ -172,20 +176,6 @@ public class AlistUtil {
                         "path", finalPath,
                         "refresh", true
                 );
-                Map<String, Object> root = Map.of(
-                        "path", rootPath,
-                        "refresh", true
-                );
-                HttpReq.post(url)
-                        .timeout(1000 * 20)
-                        .header(Header.AUTHORIZATION, alistToken)
-                        .body(GsonStatic.toJson(root))
-                        .then(res -> {
-                            Assert.isTrue(res.isOk(), "刷新失败 路径: {} 状态码: {}", rootPath, res.getStatus());
-                            JsonObject jsonObject = GsonStatic.fromJson(res.body(), JsonObject.class);
-                            int code = jsonObject.get("code").getAsInt();
-                            Assert.isTrue(code == 200, "刷新失败 路径: {} 状态码: {}", rootPath, code);
-                        });
                 HttpReq.post(url)
                         .timeout(1000 * 20)
                         .header(Header.AUTHORIZATION, alistToken)
@@ -226,23 +216,5 @@ public class AlistUtil {
         path = ReUtil.replaceAll(path, "^[A-z]:", "");
 
         return path;
-    }
-
-    private static String getRootPath(Ani ani) {
-        Config config = ConfigUtil.CONFIG;
-        String alistOvaPath = FilePathUtil.getAbsolutePath(config.getAlistOvaPath());
-        String filePath = FilePathUtil.getAbsolutePath(config.getAlistPath());
-
-        Boolean ova = Opt.ofNullable(ani)
-                .map(Ani::getOva)
-                .orElse(false);
-
-        if (ova) {
-            filePath = StrUtil.blankToDefault(alistOvaPath, filePath);
-        }
-        if (filePath.endsWith("/")) {
-            filePath = filePath.substring(0, filePath.length() - 1);
-        }
-        return filePath;
     }
 }
