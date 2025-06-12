@@ -10,6 +10,8 @@ import cn.hutool.core.lang.Opt;
 import cn.hutool.core.text.StrFormatter;
 import cn.hutool.core.thread.ExecutorBuilder;
 import cn.hutool.core.thread.ThreadUtil;
+import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.core.util.ReUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.core.util.URLUtil;
 import cn.hutool.http.Header;
@@ -73,7 +75,7 @@ public class AlistUtil {
         String downloadDir = FilePathUtil.getAbsolutePath(torrentsInfo.getDownloadDir());
 
         List<String> files = torrentsInfo.getFiles().get();
-        String filePath = getPath(torrentsInfo, ani);
+        String filePath = getPath(ani);
         for (String fileName : files) {
             String finalFilePath = filePath + "/" + fileName;
             File file = new File(downloadDir + "/" + fileName);
@@ -150,7 +152,7 @@ public class AlistUtil {
 
         verify();
 
-        String finalPath = getPath(torrentsInfo, ani);
+        String finalPath = getPath(ani);
         String rootPath = getRootPath(ani) + "/";
         EXECUTOR.execute(() -> {
             Long getAlistRefreshDelay = config.getAlistRefreshDelayed();
@@ -213,21 +215,17 @@ public class AlistUtil {
         Assert.notBlank(alistToken, "alistToken 未配置");
     }
 
-    private static String getPath(TorrentsInfo torrentsInfo, Ani ani) {
-        Config config = ConfigUtil.CONFIG;
-        String downloadDir = FilePathUtil.getAbsolutePath(torrentsInfo.getDownloadDir());
-        String downloadPath = FilePathUtil.getAbsolutePath(config.getDownloadPathTemplate());
-        String ovaDownloadPath = FilePathUtil.getAbsolutePath(config.getOvaDownloadPathTemplate());
-        String filePath = getRootPath(ani);
+    private static String getPath(Ani ani) {
+        Config config = ObjectUtil.clone(ConfigUtil.CONFIG);
 
-        if (StrUtil.isNotBlank(downloadPath) && downloadDir.startsWith(downloadPath)) {
-            filePath += downloadDir.substring(downloadPath.length());
-        } else if (StrUtil.isNotBlank(ovaDownloadPath) && downloadDir.startsWith(ovaDownloadPath)) {
-            filePath += downloadDir.substring(ovaDownloadPath.length());
-        } else {
-            filePath += downloadDir;
-        }
-        return filePath;
+        config.setDownloadPathTemplate(config.getAlistPath())
+                .setOvaDownloadPathTemplate(config.getAlistOvaPath());
+
+        String path = FilePathUtil.getAbsolutePath(TorrentUtil.getDownloadPath(ani, config));
+
+        path = ReUtil.replaceAll(path, "^[A-z]:", "");
+
+        return path;
     }
 
     private static String getRootPath(Ani ani) {
@@ -244,7 +242,6 @@ public class AlistUtil {
         }
         if (filePath.endsWith("/")) {
             filePath = filePath.substring(0, filePath.length() - 1);
-
         }
         return filePath;
     }
