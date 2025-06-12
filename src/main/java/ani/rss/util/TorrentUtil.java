@@ -597,14 +597,19 @@ public class TorrentUtil {
         int month = ani.getMonth();
         String monthFormat = String.format("%02d", month);
         int quarter;
+        String quarterName;
         if (List.of(1, 2, 3).contains(month)) {
             quarter = 1;
+            quarterName = "冬";
         } else if (List.of(4, 5, 6).contains(month)) {
             quarter = 4;
+            quarterName = "春";
         } else if (List.of(7, 8, 9).contains(month)) {
             quarter = 7;
+            quarterName = "夏";
         } else {
             quarter = 10;
+            quarterName = "秋";
         }
         String quarterFormat = String.format("%02d", quarter);
 
@@ -613,6 +618,7 @@ public class TorrentUtil {
         downloadPathTemplate = downloadPathTemplate.replace("${monthFormat}", monthFormat);
         downloadPathTemplate = downloadPathTemplate.replace("${quarter}", String.valueOf(quarter));
         downloadPathTemplate = downloadPathTemplate.replace("${quarterFormat}", quarterFormat);
+        downloadPathTemplate = downloadPathTemplate.replace("${quarterName}", quarterName);
 
         int season = ani.getSeason();
         String seasonFormat = String.format("%02d", season);
