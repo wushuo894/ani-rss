@@ -195,6 +195,7 @@ let start = () => {
             'success',
             {
               confirmButtonText: 'OK',
+              confirmButtonClass: 'is-text is-has-bg el-button--primary',
               type: 'success',
               center: true,
               showCancelButton: false
