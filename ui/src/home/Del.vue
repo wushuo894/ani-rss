@@ -73,6 +73,7 @@ const delAni = async () => {
       `<strong style="color: var(--el-color-danger);">
         将会删除整个文件夹, 是否执意继续?
        </strong>
+       <br>
        <span class="el-text el-text--small mx-1">${downloadPath}</span>`,
       '警告',
       {
