@@ -563,25 +563,25 @@ public class TorrentUtil {
     public static File getDownloadPath(Ani ani, Config config) {
         Boolean customDownloadPath = ani.getCustomDownloadPath();
         String aniDownloadPath = ani.getDownloadPath();
-
-        if (customDownloadPath && StrUtil.isNotBlank(aniDownloadPath)) {
-            List<File> files = StrUtil.split(aniDownloadPath, "\n", true, true)
-                    .stream()
-                    .map(File::new)
-                    .toList();
-            if (!files.isEmpty()) {
-                return files.get(0);
-            }
-        }
-
-        String title = ani.getTitle().trim();
         Boolean ova = ani.getOva();
 
         String downloadPathTemplate = config.getDownloadPathTemplate();
         String ovaDownloadPathTemplate = config.getOvaDownloadPathTemplate();
         if (ova && StrUtil.isNotBlank(ovaDownloadPathTemplate)) {
+            // 剧场版位置
             downloadPathTemplate = ovaDownloadPathTemplate;
         }
+
+        if (customDownloadPath && StrUtil.isNotBlank(aniDownloadPath)) {
+            // 自定义下载位置
+            downloadPathTemplate = StrUtil.split(aniDownloadPath, "\n", true, true)
+                    .stream()
+                    .map(FilePathUtil::getAbsolutePath)
+                    .findFirst()
+                    .orElse(downloadPathTemplate);
+        }
+
+        String title = ani.getTitle().trim();
 
         String pinyin = PinyinUtil.getPinyin(title);
         String letter = pinyin.substring(0, 1).toUpperCase();
