@@ -354,6 +354,11 @@ public class Config implements Serializable {
     private String tmdbLanguage;
 
     /**
+     * 获取罗马音
+     */
+    private Boolean tmdbRomaji;
+
+    /**
      * 开启ip白名单
      */
     private Boolean ipWhitelist;
