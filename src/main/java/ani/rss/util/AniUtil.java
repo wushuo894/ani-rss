@@ -249,6 +249,12 @@ public class AniUtil {
 
         int currentEpisodeNumber = ani.getCurrentEpisodeNumber();
         int totalEpisodeNumber = ani.getTotalEpisodeNumber();
+
+        if (totalEpisodeNumber < 1) {
+            // 总集数为空
+            return;
+        }
+
         if (currentEpisodeNumber < totalEpisodeNumber) {
             // 未完结
             return;
