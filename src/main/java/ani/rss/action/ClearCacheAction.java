@@ -29,6 +29,7 @@ import java.util.stream.Collectors;
 @Auth
 @Path("/clearCache")
 public class ClearCacheAction implements BaseAction {
+
     /**
      * 清理父级空文件夹
      *
@@ -51,7 +52,8 @@ public class ClearCacheAction implements BaseAction {
                 .filter(f -> !ReUtil.contains("^season\\d+-poster.jpg$", f))
                 .filter(f -> !ReUtil.contains("^fanart\\d*.jpg$", f))
                 .toList();
-        if (ArrayUtil.isNotEmpty(list)) {
+        if (!list.isEmpty()) {
+            // 不为空则不进行清理
             return;
         }
         log.info("清理空文件夹 {}", parentFile);
