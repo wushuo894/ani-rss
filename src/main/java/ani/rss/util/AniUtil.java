@@ -265,6 +265,12 @@ public class AniUtil {
 
         Config config = ObjectUtil.clone(ConfigUtil.CONFIG);
 
+        Boolean autoDisabled = config.getAutoDisabled();
+        if (!autoDisabled) {
+            // 未开启自动禁用订阅
+            return;
+        }
+
         Boolean completed = config.getCompleted();
         if (!completed) {
             // 未开启
