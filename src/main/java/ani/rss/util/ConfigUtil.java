@@ -118,6 +118,7 @@ public class ConfigUtil {
                 .setBgmJpName(false)
                 .setTmdbId(false)
                 .setTmdbLanguage("zh-CN")
+                .setTmdbRomaji(false)
                 .setIpWhitelist(false)
                 .setIpWhitelistStr("")
                 .setWebHookBody("")
