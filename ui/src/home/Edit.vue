@@ -5,6 +5,7 @@
       <strong>
         检测到修改后的下载位置发生了改动，是否将已下载文件移动到新的位置？
       </strong>
+      <br>
       <el-text class="mx-1" size="small">
         {{ downloadPath }}
       </el-text>
