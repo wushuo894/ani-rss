@@ -211,6 +211,11 @@ public class Ani implements Serializable {
      */
     private Long lastDownloadTime;
 
+    /**
+     * 消息通知
+     */
+    private Boolean message;
+
     public static Ani bulidAni() {
         Ani newAni = new Ani();
         Config config = ConfigUtil.CONFIG;
@@ -251,7 +256,8 @@ public class Ani implements Serializable {
                 .setUpload(config.getUpload())
                 .setProcrastinating(true)
                 .setCustomRenameTemplate(config.getRenameTemplate())
-                .setCustomRenameTemplateEnable(false);
+                .setCustomRenameTemplateEnable(false)
+                .setMessage(true);
     }
 
     @Data

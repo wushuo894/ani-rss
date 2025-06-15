@@ -21,6 +21,13 @@ public class MessageUtil {
 
     @Synchronized("SERVICE_MAP")
     public static synchronized void send(Config config, Ani ani, String text, MessageEnum messageEnum) {
+        if (Objects.nonNull(ani)) {
+            if (!ani.getMessage()) {
+                // 未开启此订阅通知
+                return;
+            }
+        }
+
         List<MessageEnum> messageList = config.getMessageList();
         if (Objects.nonNull(messageEnum)) {
             if (messageList.stream().noneMatch(it -> it.name().equalsIgnoreCase(messageEnum.name()))) {
