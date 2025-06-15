@@ -80,10 +80,17 @@
             </div>
           </el-form-item>
           <el-form-item label="TMDB语言">
-            <el-select v-model:model-value="props.config['tmdbLanguage']" style="width: 150px;">
-              <el-option v-for="language in ['zh-CN','zh-TW','ja-JP','en-US']" :value="language"
-                         :key="language"></el-option>
-            </el-select>
+            <div>
+              <div>
+                <el-select v-model:model-value="props.config['tmdbLanguage']" style="width: 150px;">
+                  <el-option v-for="language in ['zh-CN','zh-TW','ja-JP','en-US']" :value="language"
+                             :key="language"></el-option>
+                </el-select>
+              </div>
+              <div>
+                <el-checkbox v-model="props.config['tmdbRomaji']" label="优先获取罗马音"/>
+              </div>
+            </div>
           </el-form-item>
           <el-form-item label="tvshow.nfo">
             <div>
@@ -212,10 +219,12 @@
                 <el-checkbox v-model="props.config['updateTotalEpisodeNumber']" label="自动更新总集数"/>
               </div>
               <div>
-                <el-checkbox v-model="props.config['completed']" label="订阅完结迁移" :disabled="!props.config['verifyExpirationTime'] || !props.config.autoDisabled" />
+                <el-checkbox v-model="props.config['completed']" label="订阅完结迁移"
+                             :disabled="!props.config['verifyExpirationTime'] || !props.config.autoDisabled"/>
               </div>
               <div>
-                <el-input v-model="props.config['completedPathTemplate']" :disabled="!props.config.autoDisabled || !props.config['completed']"/>
+                <el-input v-model="props.config['completedPathTemplate']"
+                          :disabled="!props.config.autoDisabled || !props.config['completed']"/>
               </div>
               <AfdianPrompt :config="props.config" name="订阅完结迁移"/>
             </div>
