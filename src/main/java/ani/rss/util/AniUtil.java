@@ -1,5 +1,6 @@
 package ani.rss.util;
 
+import ani.rss.action.ClearCacheAction;
 import ani.rss.entity.Ani;
 import ani.rss.entity.BgmInfo;
 import ani.rss.entity.Config;
@@ -236,5 +237,79 @@ public class AniUtil {
         Map<String, String> decodeParamMap = HttpUtil.decodeParamMap(url, StandardCharsets.UTF_8);
         return decodeParamMap.get("bangumiId");
     }
+
+
+    /**
+     * 订阅完结迁移
+     *
+     * @param ani
+     */
+    public static void completed(Ani ani) {
+        if (Objects.isNull(ani)) {
+            return;
+        }
+
+        int currentEpisodeNumber = ani.getCurrentEpisodeNumber();
+        int totalEpisodeNumber = ani.getTotalEpisodeNumber();
+        if (currentEpisodeNumber < totalEpisodeNumber) {
+            // 未完结
+            return;
+        }
+
+        String title = ani.getTitle();
+        Boolean ova = ani.getOva();
+        if (ova) {
+            // 剧场版不进行迁移
+            return;
+        }
+
+        Config config = ObjectUtil.clone(ConfigUtil.CONFIG);
+
+        Boolean completed = config.getCompleted();
+        if (!completed) {
+            // 未开启
+            return;
+        }
+
+        Assert.isTrue(AfdianUtil.verifyExpirationTime(), "未解锁捐赠, 无法使用订阅完结迁移");
+
+        String completedPathTemplate = config.getCompletedPathTemplate();
+
+        if (StrUtil.isBlank(completedPathTemplate)) {
+            // 路径为空
+            return;
+        }
+
+        // 旧文件路径
+        File oldPath = TorrentUtil.getDownloadPath(ani, config);
+
+        config.setDownloadPathTemplate(completedPathTemplate);
+
+        // 新文件路径
+        File newPath = TorrentUtil.getDownloadPath(ani, config);
+
+        if (!oldPath.exists()) {
+            // 旧文件不存在
+            return;
+        }
+
+        FileUtil.mkdir(newPath);
+
+        File[] files = ObjectUtil.defaultIfNull(oldPath.listFiles(), new File[0]);
+
+        log.info("订阅已完结 {}, 移动已完结文件共 {} 个", title, files.length);
+
+        for (File file : files) {
+            if (!file.exists()) {
+                continue;
+            }
+            // 移动文件
+            log.info("移动 {} ==> {}", file, newPath);
+            FileUtil.move(file, newPath, true);
+            // 清理残留文件夹
+            ClearCacheAction.clearParentFile(file);
+        }
+    }
+
 
 }

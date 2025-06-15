@@ -865,6 +865,19 @@ public class TorrentUtil {
             text = StrFormatter.format("(备用RSS) {}", text);
         }
         MessageUtil.send(ConfigUtil.CONFIG, ani, text, MessageEnum.DOWNLOAD_END);
+
+        if (Objects.isNull(ani)) {
+            return;
+        }
+
+        String title = ani.getTitle();
+
+        try {
+            AniUtil.completed(ani);
+        } catch (Exception e) {
+            log.error("番剧完结迁移失败 {}", title);
+            log.error(e.getMessage(), e);
+        }
     }
 
     /**
