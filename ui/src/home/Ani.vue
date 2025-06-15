@@ -165,6 +165,7 @@
           <el-checkbox v-model="props.ani.upload" label="自动上传"/>
           <el-checkbox v-model="props.ani.downloadNew" label="只下载最新集"/>
           <el-checkbox v-model="props.ani['procrastinating']" label="摸鱼检测"/>
+          <el-checkbox v-model="props.ani['message']" label="通知"/>
         </el-form-item>
         <el-form-item label="启用">
           <el-switch v-model:model-value="props.ani.enable"/>
