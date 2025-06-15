@@ -1,15 +1,13 @@
 package ani.rss.util;
 
 import ani.rss.action.ClearCacheAction;
-import ani.rss.entity.Ani;
-import ani.rss.entity.BgmInfo;
-import ani.rss.entity.Config;
-import ani.rss.entity.Item;
+import ani.rss.entity.*;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.bean.copier.CopyOptions;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.resource.ResourceUtil;
 import cn.hutool.core.lang.Assert;
+import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.core.util.URLUtil;
@@ -300,6 +298,22 @@ public class AniUtil {
         }
 
         FileUtil.mkdir(newPath);
+
+        List<TorrentsInfo> torrentsInfos = TorrentUtil.getTorrentsInfos();
+
+        for (TorrentsInfo torrentsInfo : torrentsInfos) {
+            String downloadDir = torrentsInfo.getDownloadDir();
+            if (!downloadDir.equals(FilePathUtil.getAbsolutePath(oldPath))) {
+                // 旧位置不相同
+                continue;
+            }
+            // 修改保存位置
+            TorrentUtil.setSavePath(torrentsInfo, FilePathUtil.getAbsolutePath(newPath));
+        }
+
+        if (!torrentsInfos.isEmpty()) {
+            ThreadUtil.sleep(3000);
+        }
 
         File[] files = ObjectUtil.defaultIfNull(oldPath.listFiles(), new File[0]);
 
