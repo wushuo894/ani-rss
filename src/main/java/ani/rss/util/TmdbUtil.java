@@ -71,6 +71,7 @@ public class TmdbUtil {
         Tmdb tmdb;
         try {
             tmdb = getTmdb(name, type);
+            getRomaji(tmdb, type);
         } catch (Exception e) {
             String message = ExceptionUtil.getMessage(e);
             log.error(message, e);
@@ -97,6 +98,52 @@ public class TmdbUtil {
         }
 
         return themoviedbName;
+    }
+
+    /**
+     * 获取罗马音
+     *
+     * @param tmdb
+     * @param tmdbType
+     */
+    public static void getRomaji(Tmdb tmdb, String tmdbType) {
+        if (Objects.isNull(tmdb)) {
+            return;
+        }
+
+        Config config = ConfigUtil.CONFIG;
+        Boolean tmdbRomaji = config.getTmdbRomaji();
+        if (!tmdbRomaji) {
+            // 未开启罗马音
+            return;
+        }
+
+        String tmdbApi = getTmdbApi();
+        String tmdbApiKey = getTmdbApiKey();
+        String id = tmdb.getId();
+        String url = StrFormatter.format("{}/3/{}/{}/alternative_titles", tmdbApi, tmdbType, id);
+        HttpReq.get(url, true)
+                .timeout(5000)
+                .form("api_key", tmdbApiKey)
+                .form("include_adult", "true")
+                .then(res -> {
+                    HttpReq.assertStatus(res);
+                    JsonObject jsonObject = GsonStatic.fromJson(res.body(), JsonObject.class);
+                    List<JsonObject> results = GsonStatic.fromJsonList(jsonObject.getAsJsonArray("results"), JsonObject.class);
+                    for (JsonObject result : results) {
+                        String iso31661 = result.get("iso_3166_1").getAsString();
+                        String type = result.get("type").getAsString();
+                        String title = result.get("title").getAsString();
+                        if (!iso31661.equals("JP")) {
+                            continue;
+                        }
+                        if (List.of("romaji", "romanization").contains(type.toLowerCase())) {
+                            // 判断为罗马音
+                            tmdb.setName(title);
+                            return;
+                        }
+                    }
+                });
     }
 
     public static Tmdb getTmdb(String titleName, String type) {
