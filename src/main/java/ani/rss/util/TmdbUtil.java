@@ -143,6 +143,16 @@ public class TmdbUtil {
                             return;
                         }
                     }
+                    String romaji = "";
+                    try {
+                        romaji = AniListUtil.getRomaji(tmdb.getName());
+                    } catch (Exception e) {
+                        log.error("通过AniList获取罗马音失败");
+                        log.error(e.getMessage(), e);
+                    }
+                    if (StrUtil.isNotBlank(romaji)) {
+                        tmdb.setName(romaji);
+                    }
                 });
     }
 
