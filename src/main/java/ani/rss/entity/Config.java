@@ -682,4 +682,14 @@ public class Config implements Serializable {
      * 展示最后更新时间
      */
     private Boolean showLastDownloadTime;
+
+    /**
+     * 番剧完结迁移
+     */
+    private Boolean completed;
+
+    /**
+     * 番剧完结迁移位置
+     */
+    private String completedPathTemplate;
 }

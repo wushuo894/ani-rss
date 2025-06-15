@@ -177,12 +177,13 @@ public class AniAction implements BaseAction {
                 }
 
                 for (TorrentsInfo torrentsInfo : torrentsInfos) {
-                    if (!torrentsInfo.getDownloadDir().equals(downloadPath.toString())) {
+                    String downloadDir = torrentsInfo.getDownloadDir();
+                    if (!downloadDir.equals(FilePathUtil.getAbsolutePath(downloadPath))) {
                         // 旧位置不相同
                         continue;
                     }
                     // 修改保存位置
-                    TorrentUtil.setSavePath(torrentsInfo, newDownloadPath.toString());
+                    TorrentUtil.setSavePath(torrentsInfo, FilePathUtil.getAbsolutePath(newDownloadPath));
                 }
                 if (!downloadPath.exists()) {
                     return;
@@ -190,7 +191,9 @@ public class AniAction implements BaseAction {
                 if (downloadPath.isFile()) {
                     return;
                 }
-                ThreadUtil.sleep(3000);
+                if (!torrentsInfos.isEmpty()) {
+                    ThreadUtil.sleep(3000);
+                }
                 FileUtil.mkdir(newDownloadPath);
                 File[] files = ObjectUtil.defaultIfNull(downloadPath.listFiles(), new File[]{});
                 for (File oldFile : files) {

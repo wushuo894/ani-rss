@@ -202,7 +202,7 @@
             </div>
           </el-form-item>
           <el-form-item label="自动禁用订阅">
-            <div>
+            <div style="width: 100%;">
               <el-switch v-model:model-value="props.config.autoDisabled"/>
               <br>
               <el-text class="mx-1" size="small">
@@ -211,6 +211,13 @@
               <div>
                 <el-checkbox v-model="props.config['updateTotalEpisodeNumber']" label="自动更新总集数"/>
               </div>
+              <div>
+                <el-checkbox v-model="props.config['completed']" label="订阅完结迁移" :disabled="!props.config['verifyExpirationTime'] || !props.config.autoDisabled" />
+              </div>
+              <div>
+                <el-input v-model="props.config['completedPathTemplate']" :disabled="!props.config.autoDisabled || !props.config['completed']"/>
+              </div>
+              <AfdianPrompt :config="props.config" name="订阅完结迁移"/>
             </div>
           </el-form-item>
           <el-form-item label="自动跳过X.5集">
@@ -240,7 +247,7 @@
                   </template>
                 </el-input-number>
               </div>
-              <AfdianPrompt :config="props.config" name="订阅完结"/>
+              <AfdianPrompt :config="props.config" name="摸鱼检测"/>
               <el-text class="mx-1" size="small">
                 检测到主RSS更新摸鱼会发送通知<br>
                 建议配合 <strong>自动禁用订阅</strong> 食用

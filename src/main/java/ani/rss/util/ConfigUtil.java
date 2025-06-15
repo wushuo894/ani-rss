@@ -36,9 +36,11 @@ public class ConfigUtil {
     static {
         String downloadPath = FilePathUtil.getAbsolutePath(new File("/Media/番剧"));
         String ovaDownloadPath = FilePathUtil.getAbsolutePath(new File("/Media/剧场版"));
+        String completedPath = FilePathUtil.getAbsolutePath(new File("/Media/已完结番剧"));
 
         String downloadPathTemplate = StrFormatter.format("{}/${letter}/${title}/Season ${season}", downloadPath);
         String ovaDownloadPathTemplate = StrFormatter.format("{}/${letter}/${title}", ovaDownloadPath);
+        String completedPathTemplate = StrFormatter.format("{}/${letter}/${title}/Season ${season}", completedPath);
 
         String password = Md5Util.digestHex("admin");
         CONFIG.setSleep(15)
@@ -188,7 +190,9 @@ public class ConfigUtil {
                 .setTvShowNfo(false)
                 .setConfigBackup(false)
                 .setConfigBackupDay(7)
-                .setShowLastDownloadTime(false);
+                .setShowLastDownloadTime(false)
+                .setCompleted(false)
+                .setCompletedPathTemplate(completedPathTemplate);
     }
 
     /**
