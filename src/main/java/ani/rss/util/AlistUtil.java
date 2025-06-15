@@ -206,6 +206,9 @@ public class AlistUtil {
     }
 
     private static String getPath(Ani ani) {
+        ani = ObjectUtil.clone(ani)
+                // 因为临时修改下载位置模版以获取对应下载位置, 要关闭自定义下载位置
+                .setCustomDownloadPath(false);
         Config config = ObjectUtil.clone(ConfigUtil.CONFIG);
 
         config.setDownloadPathTemplate(config.getAlistPath())
