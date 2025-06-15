@@ -112,12 +112,7 @@ public class TmdbUtil {
         }
 
         Config config = ConfigUtil.CONFIG;
-        String tmdbLanguage = config.getTmdbLanguage();
         Boolean tmdbRomaji = config.getTmdbRomaji();
-        if (!"ja-JP".equals(tmdbLanguage)) {
-            // 未设置为日文
-            return;
-        }
         if (!tmdbRomaji) {
             // 未开启罗马音
             return;

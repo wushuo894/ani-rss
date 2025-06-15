@@ -87,7 +87,7 @@
                              :key="language"></el-option>
                 </el-select>
               </div>
-              <div v-if="props.config['tmdbLanguage'] === 'ja-JP'">
+              <div>
                 <el-checkbox v-model="props.config['tmdbRomaji']" label="优先获取罗马音"/>
               </div>
             </div>
