@@ -8,7 +8,6 @@ import ani.rss.util.*;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.bean.copier.CopyOptions;
 import cn.hutool.core.util.ObjectUtil;
-import cn.hutool.core.util.ReUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.server.HttpServerRequest;
 import cn.hutool.http.server.HttpServerResponse;
@@ -57,20 +56,8 @@ public class ConfigAction implements BaseAction {
                         .create()
                         .setIgnoreNullValue(true)
         );
-        String host = config.getDownloadToolHost();
-        if (StrUtil.isNotBlank(host)) {
-            if (host.endsWith("/")) {
-                host = host.substring(0, host.length() - 1);
-            }
-        }
-        if (StrUtil.isNotBlank(host)) {
-            if (!ReUtil.contains("http(s*)://", host)) {
-                host = "http://" + host;
-            }
-        }
-        config.setDownloadToolHost(host);
 
-        Boolean proxy = ObjectUtil.defaultIfNull(config.getProxy(), false);
+        Boolean proxy = config.getProxy();
         if (proxy) {
             String proxyHost = config.getProxyHost();
             Integer proxyPort = config.getProxyPort();
@@ -88,24 +75,6 @@ public class ConfigAction implements BaseAction {
         if (StrUtil.isBlank(loginUsername)) {
             config.getLogin().setUsername(username);
         }
-
-        // 下载地址后面不要带 斜杠
-        String downloadPath = FilePathUtil.getAbsolutePath(config.getDownloadPathTemplate());
-        String ovaDownloadPath = FilePathUtil.getAbsolutePath(config.getOvaDownloadPathTemplate());
-        if (downloadPath.endsWith("/")) {
-            downloadPath = downloadPath.substring(0, downloadPath.length() - 1);
-        }
-        if (ovaDownloadPath.endsWith("/")) {
-            ovaDownloadPath = ovaDownloadPath.substring(0, ovaDownloadPath.length() - 1);
-        }
-        config.setDownloadPathTemplate(downloadPath)
-                .setOvaDownloadPathTemplate(ovaDownloadPath);
-
-        String telegramApiHost = config.getTelegramApiHost();
-        if (telegramApiHost.endsWith("/")) {
-            telegramApiHost = telegramApiHost.substring(0, telegramApiHost.length() - 1);
-        }
-        config.setTelegramApiHost(telegramApiHost);
 
         ConfigUtil.sync();
         Integer newRenameSleepSeconds = config.getRenameSleepSeconds();
@@ -127,4 +96,5 @@ public class ConfigAction implements BaseAction {
 
         resultSuccessMsg("修改成功");
     }
+
 }

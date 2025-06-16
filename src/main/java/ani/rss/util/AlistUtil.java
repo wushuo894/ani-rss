@@ -91,9 +91,6 @@ public class AlistUtil {
                 for (int i = 0; i < alistRetry; i++) {
                     try {
                         String url = alistHost;
-                        if (url.endsWith("/")) {
-                            url = url.substring(0, url.length() - 1);
-                        }
                         // 使用流式上传
                         url += "/api/fs/form";
 
@@ -167,9 +164,6 @@ public class AlistUtil {
                         .then(HttpReq::assertStatus);
 
                 String url = alistHost;
-                if (url.endsWith("/")) {
-                    url = url.substring(0, url.length() - 1);
-                }
                 url += "/api/fs/list";
 
                 Map<String, Object> resolved = Map.of(

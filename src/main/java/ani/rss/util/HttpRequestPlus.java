@@ -41,14 +41,6 @@ public class HttpRequestPlus extends HttpRequest {
             return new HttpRequestPlus(url);
         }
 
-        if (github.endsWith("/")) {
-            github = StrUtil.sub(github, 0, github.length() - 1);
-        }
-
-        if (!ReUtil.contains("^https?://", github)) {
-            github = "https://" + github;
-        }
-
         // 处理github加速
         String newUrl = github + "/" + url;
         log.info("github 已加速: {}", newUrl);

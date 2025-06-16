@@ -1,6 +1,5 @@
 #!/bin/bash
 # ANI-RSS 一体化安装脚本 with Systemd 服务
-# 版本: 2.0
 # 适用系统: Ubuntu/Debian/CentOS/RHEL
 
 # 定义颜色代码

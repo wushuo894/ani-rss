@@ -31,9 +31,6 @@ public class TmdbUtil {
         Config config = ConfigUtil.CONFIG;
         String tmdbApi = config.getTmdbApi();
         tmdbApi = StrUtil.blankToDefault(tmdbApi, "https://api.themoviedb.org");
-        if (tmdbApi.endsWith("/")) {
-            tmdbApi = tmdbApi.substring(0, tmdbApi.length() - 1);
-        }
         return tmdbApi;
     }
 

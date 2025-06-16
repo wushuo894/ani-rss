@@ -96,6 +96,6 @@ public interface Message {
 
         messageTemplate = RenameUtil.replaceEpisodeTitle(messageTemplate, episode, ani);
 
-        return messageTemplate;
+        return messageTemplate.trim();
     }
 }
