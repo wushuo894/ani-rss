@@ -21,16 +21,10 @@ public class MessageUtil {
 
     @Synchronized("SERVICE_MAP")
     public static synchronized void send(Config config, Ani ani, String text, MessageEnum messageEnum) {
-        if (Objects.nonNull(ani)) {
-            if (!ani.getMessage()) {
-                // 未开启此订阅通知
-                return;
-            }
-        }
-
         List<MessageEnum> messageList = config.getMessageList();
+
         if (Objects.nonNull(messageEnum)) {
-            if (messageList.stream().noneMatch(it -> it.name().equalsIgnoreCase(messageEnum.name()))) {
+            if (!messageList.contains(messageEnum)) {
                 return;
             }
         }
@@ -42,6 +36,20 @@ public class MessageUtil {
             }
             if (MessageEnum.ALIST_UPLOAD == messageEnum) {
                 log.warn("未解锁捐赠, 无法使用Alist上传通知");
+                return;
+            }
+        }
+
+        if (Objects.nonNull(ani)) {
+            Boolean message = ani.getMessage();
+            Boolean enable = ani.getEnable();
+            if (!message) {
+                // 未开启此订阅通知
+                return;
+            }
+
+            if (!enable && messageList.contains(MessageEnum.COMPLETED)) {
+                // 开启订阅完结通知后 订阅未启用 不进行通知
                 return;
             }
         }
