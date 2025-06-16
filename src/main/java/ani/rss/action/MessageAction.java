@@ -10,6 +10,7 @@ import ani.rss.enums.MessageEnum;
 import ani.rss.msg.Message;
 import ani.rss.util.AniUtil;
 import ani.rss.util.BgmUtil;
+import ani.rss.util.ConfigUtil;
 import cn.hutool.core.util.ClassUtil;
 import cn.hutool.core.util.ReflectUtil;
 import cn.hutool.core.util.StrUtil;
@@ -33,6 +34,7 @@ public class MessageAction implements BaseAction {
             return;
         }
         Config config = getBody(Config.class);
+        ConfigUtil.format(config);
         Class<Object> loadClass = ClassUtil.loadClass("ani.rss.msg." + s);
         Message message = (Message) ReflectUtil.newInstance(loadClass);
         Ani ani = Ani.bulidAni();
