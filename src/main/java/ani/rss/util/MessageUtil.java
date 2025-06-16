@@ -5,28 +5,31 @@ import ani.rss.entity.Config;
 import ani.rss.enums.MessageEnum;
 import ani.rss.msg.Message;
 import cn.hutool.core.bean.DynaBean;
+import cn.hutool.core.lang.Opt;
 import cn.hutool.core.thread.ExecutorBuilder;
 import cn.hutool.core.util.ClassUtil;
 import cn.hutool.core.util.ReflectUtil;
-import lombok.Synchronized;
 import lombok.extern.slf4j.Slf4j;
 
-import java.util.*;
+import java.util.List;
+import java.util.Objects;
+import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.LinkedBlockingQueue;
 
 @Slf4j
 public class MessageUtil {
-    private static final Map<String, ExecutorService> SERVICE_MAP = new HashMap<>();
+    private static final ExecutorService EXECUTOR_SERVICE = ExecutorBuilder.create()
+            .setCorePoolSize(1)
+            .setMaxPoolSize(1)
+            .setWorkQueue(new LinkedBlockingQueue<>(64))
+            .build();
 
-    @Synchronized("SERVICE_MAP")
     public static synchronized void send(Config config, Ani ani, String text, MessageEnum messageEnum) {
         List<MessageEnum> messageList = config.getMessageList();
 
-        if (Objects.nonNull(messageEnum)) {
-            if (!messageList.contains(messageEnum)) {
-                return;
-            }
+        if (!messageList.contains(messageEnum)) {
+            return;
         }
 
         if (!AfdianUtil.verifyExpirationTime()) {
@@ -40,18 +43,13 @@ public class MessageUtil {
             }
         }
 
-        if (Objects.nonNull(ani)) {
-            Boolean message = ani.getMessage();
-            Boolean enable = ani.getEnable();
-            if (!message) {
-                // 未开启此订阅通知
-                return;
-            }
+        Boolean isMessage = Opt.ofNullable(ani)
+                .map(Ani::getMessage)
+                .orElse(true);
 
-            if (!enable && messageList.contains(MessageEnum.COMPLETED)) {
-                // 开启订阅完结通知后 订阅未启用 不进行通知
-                return;
-            }
+        if (!isMessage) {
+            // 未开启此订阅通知
+            return;
         }
 
         Set<Class<?>> classes = ClassUtil.scanPackage("ani.rss.msg");
@@ -73,18 +71,8 @@ public class MessageUtil {
                 continue;
             }
 
-            ExecutorService executor = SERVICE_MAP.get(name);
-            if (Objects.isNull(executor)) {
-                executor = ExecutorBuilder.create()
-                        .setCorePoolSize(1)
-                        .setMaxPoolSize(1)
-                        .setWorkQueue(new LinkedBlockingQueue<>(64))
-                        .build();
-                SERVICE_MAP.put(name, executor);
-            }
-
             Message message = (Message) ReflectUtil.newInstance(aClass);
-            executor.execute(() -> {
+            EXECUTOR_SERVICE.execute(() -> {
                 try {
                     message.send(config, ani, text, messageEnum);
                 } catch (Exception e) {

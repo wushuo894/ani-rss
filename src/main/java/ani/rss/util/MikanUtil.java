@@ -31,9 +31,6 @@ public class MikanUtil {
         Config config = ConfigUtil.CONFIG;
         String mikanHost = config.getMikanHost();
         mikanHost = StrUtil.blankToDefault(mikanHost, "https://mikanime.tv");
-        if (mikanHost.endsWith("/")) {
-            mikanHost = mikanHost.substring(0, mikanHost.length() - 1);
-        }
         return mikanHost;
     }
 

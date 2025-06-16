@@ -17,16 +17,16 @@ public class FilePathUtil {
         String absolutePath = file.getPath();
         if (absolutePath.startsWith("/")) {
             // 已是绝对路径
-            return FileUtil.normalize(absolutePath);
+            return normalize(absolutePath);
         }
 
         if (ReUtil.contains("^[A-z]:", absolutePath)) {
             // 已是绝对路径
-            return FileUtil.normalize(absolutePath);
+            return normalize(absolutePath);
         }
 
         absolutePath = file.getAbsolutePath();
-        return FileUtil.normalize(absolutePath);
+        return normalize(absolutePath);
     }
 
     /**
@@ -38,15 +38,24 @@ public class FilePathUtil {
     public static String getAbsolutePath(String absolutePath) {
         if (absolutePath.startsWith("/")) {
             // 已是绝对路径
-            return FileUtil.normalize(absolutePath);
+            return normalize(absolutePath);
         }
 
         if (ReUtil.contains("^[A-z]:", absolutePath)) {
             // 已是绝对路径
-            return FileUtil.normalize(absolutePath);
+            return normalize(absolutePath);
         }
 
         absolutePath = new File(absolutePath).getAbsolutePath();
-        return FileUtil.normalize(absolutePath);
+        return normalize(absolutePath);
     }
+
+    public static String normalize(String path) {
+        String s = FileUtil.normalize(path);
+        while (s.endsWith("/")) {
+            s = s.substring(0, s.length() - 1);
+        }
+        return s;
+    }
+
 }
