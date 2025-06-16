@@ -1,7 +1,6 @@
 #!/bin/bash
 # ANI-RSS 服务控制脚本
-# 版本: 1.2
-# 用法: ani-rss [start|stop|restart|status|help]
+# 用法: ani-rss [start|stop|restart|status|log|uninstall|help]
 
 # 定义颜色代码
 RED='\033[0;31m'
