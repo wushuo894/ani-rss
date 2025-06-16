@@ -55,6 +55,26 @@ public class ConfigUtil {
         String completedPathTemplate = StrFormatter.format("{}/${letter}/${title}/Season ${season}", completedPath);
 
         String password = Md5Util.digestHex("admin");
+
+        String messageTemplate = """
+                ${emoji}${emoji}${emoji}
+                事件类型: ${action}
+                标题: ${title}
+                评分: ${score}
+                TMDB: ${tmdburl}
+                TMDB标题: ${themoviedbName}
+                BGM: ${bgmUrl}
+                季: ${season}
+                集: ${episode}
+                字幕组: ${subgroup}
+                进度: ${currentEpisodeNumber}/${totalEpisodeNumber}
+                首播:  ${year}年${month}月${date}日
+                事件: ${text}
+                下载位置: ${downloadPath}
+                TMDB集标题: ${episodeTitle}
+                ${emoji}${emoji}${emoji}
+                """;
+
         CONFIG.setSleep(15)
                 .setMikanHost("https://mikanime.tv")
                 .setTmdbApi("https://api.themoviedb.org")
@@ -161,7 +181,6 @@ public class ConfigUtil {
                 .setSystemMsg(false)
                 .setAutoTrackersUpdate(false)
                 .setTrackersUpdateUrls("https://cf.trackerslist.com/best.txt")
-                .setMessageTemplate("${text}")
                 .setAutoUpdate(false)
                 .setAlist(false)
                 .setAlistRetry(5)
@@ -205,7 +224,8 @@ public class ConfigUtil {
                 .setConfigBackupDay(7)
                 .setShowLastDownloadTime(false)
                 .setCompleted(false)
-                .setCompletedPathTemplate(completedPathTemplate);
+                .setCompletedPathTemplate(completedPathTemplate)
+                .setMessageTemplate(messageTemplate);
     }
 
     /**
@@ -264,7 +284,6 @@ public class ConfigUtil {
         try {
             ConfigUtil.format(CONFIG);
             String json = GsonStatic.toJson(CONFIG);
-            // 校验json没有问题
             File temp = new File(configFile + ".temp");
             FileUtil.del(temp);
             FileUtil.writeUtf8String(json, temp);
@@ -380,6 +399,11 @@ public class ConfigUtil {
         formatUrl(config);
     }
 
+    /**
+     * 处理url
+     *
+     * @param config
+     */
     public static void formatUrl(Config config) {
         List<Func1<Config, String>> func1List = List.of(
                 Config::getDownloadToolHost,
@@ -401,6 +425,11 @@ public class ConfigUtil {
         }
     }
 
+    /**
+     * 处理文件路径
+     *
+     * @param config
+     */
     public static void formatPath(Config config) {
         List<Func1<Config, String>> func1List = List.of(
                 Config::getDownloadPathTemplate,
