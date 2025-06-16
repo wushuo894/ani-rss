@@ -6,14 +6,19 @@ import ani.rss.entity.MyMailAccount;
 import ani.rss.enums.MessageEnum;
 import ani.rss.enums.ServerChanTypeEnum;
 import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.bean.DynaBean;
 import cn.hutool.core.bean.copier.CopyOptions;
 import cn.hutool.core.date.DatePattern;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.lang.func.Func1;
+import cn.hutool.core.lang.func.LambdaUtil;
 import cn.hutool.core.text.StrFormatter;
 import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.ZipUtil;
+import cn.hutool.system.OsInfo;
+import cn.hutool.system.SystemUtil;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.File;
@@ -34,9 +39,16 @@ public class ConfigUtil {
       默认配置
      */
     static {
-        String downloadPath = FilePathUtil.getAbsolutePath(new File("/Media/番剧"));
-        String ovaDownloadPath = FilePathUtil.getAbsolutePath(new File("/Media/剧场版"));
-        String completedPath = FilePathUtil.getAbsolutePath(new File("/Media/已完结番剧"));
+        String rootPath = "/Media";
+
+        OsInfo osInfo = SystemUtil.getOsInfo();
+        if (osInfo.isMac()) {
+            rootPath = FileUtil.getUserHomePath() + "/Movies";
+        }
+
+        String downloadPath = FilePathUtil.getAbsolutePath(new File(rootPath + "/番剧"));
+        String ovaDownloadPath = FilePathUtil.getAbsolutePath(new File(rootPath + "/剧场版"));
+        String completedPath = FilePathUtil.getAbsolutePath(new File(rootPath + "/已完结番剧"));
 
         String downloadPathTemplate = StrFormatter.format("{}/${letter}/${title}/Season ${season}", downloadPath);
         String ovaDownloadPathTemplate = StrFormatter.format("{}/${letter}/${title}", ovaDownloadPath);
@@ -230,6 +242,7 @@ public class ConfigUtil {
         BeanUtil.copyProperties(GsonStatic.fromJson(s, Config.class), CONFIG, CopyOptions
                 .create()
                 .setIgnoreNullValue(true));
+        format(CONFIG);
         LogUtil.loadLogback();
         log.debug("加载配置文件 {}", configFile);
         TorrentUtil.load();
@@ -249,6 +262,7 @@ public class ConfigUtil {
         File configFile = getConfigFile();
         log.debug("保存配置 {}", configFile);
         try {
+            ConfigUtil.format(CONFIG);
             String json = GsonStatic.toJson(CONFIG);
             // 校验json没有问题
             File temp = new File(configFile + ".temp");
@@ -353,7 +367,57 @@ public class ConfigUtil {
                 log.error(e.getMessage(), e);
             }
         }
+    }
 
+
+    /**
+     * 处理设置内的url与文件路径标准
+     *
+     * @param config
+     */
+    public static void format(Config config) {
+        formatPath(config);
+        formatUrl(config);
+    }
+
+    public static void formatUrl(Config config) {
+        List<Func1<Config, String>> func1List = List.of(
+                Config::getDownloadToolHost,
+                Config::getAlistHost,
+                Config::getTelegramApiHost,
+                Config::getMikanHost,
+                Config::getTmdbApi,
+                Config::getCustomGithubUrl,
+                Config::getEmbyHost
+        );
+
+        DynaBean dynaBean = DynaBean.create(config);
+
+        for (Func1<Config, String> func1 : func1List) {
+            String fieldName = LambdaUtil.getFieldName(func1);
+            String v = func1.callWithRuntimeException(config);
+            v = MyURLUtil.getUrlStr(v);
+            dynaBean.set(fieldName, v);
+        }
+    }
+
+    public static void formatPath(Config config) {
+        List<Func1<Config, String>> func1List = List.of(
+                Config::getDownloadPathTemplate,
+                Config::getOvaDownloadPathTemplate,
+                Config::getCompletedPathTemplate,
+                Config::getAlistPath,
+                Config::getAlistOvaPath
+        );
+
+        DynaBean dynaBean = DynaBean.create(config);
+
+        for (Func1<Config, String> func1 : func1List) {
+            String fieldName = LambdaUtil.getFieldName(func1);
+            String v = func1.callWithRuntimeException(config);
+            v = FilePathUtil.getAbsolutePath(v);
+            dynaBean.set(fieldName, v);
+        }
     }
 
 }
