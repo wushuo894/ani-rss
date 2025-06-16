@@ -69,17 +69,19 @@ const delAni = async () => {
     downloadPath = res.data['downloadPath']
   }
 
-  let s = downloadPath ? downloadPath : `我确定删除共${aniList.value.length}个订阅与本地文件`
+  let s = downloadPath ? `我确定删除文件夹 ${downloadPath}` : `我确定删除共${aniList.value.length}个订阅与本地文件`
 
   ElMessageBox.prompt(
       `<strong style="color: var(--el-color-danger);">
         将会删除整个文件夹, 请在输入框输入对应文本继续！
        </strong>
        <br>
-       <span class="el-text el-text--small mx-1">${s}</span>`,
+       <span class="el-text el-text--small mx-1">
+        <strong>将此文本填入文本框</strong> [${s}]
+       </span>`,
       '警告',
       {
-        inputPlaceholder: s,
+        inputPlaceholder: '在此输入确认文本',
         inputValidator: (it) => it === s,
         inputErrorMessage: `请输入 [${s}]`,
         dangerouslyUseHTMLString: true,
