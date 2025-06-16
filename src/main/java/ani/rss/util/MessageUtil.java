@@ -22,7 +22,7 @@ public class MessageUtil {
     private static final ExecutorService EXECUTOR_SERVICE = ExecutorBuilder.create()
             .setCorePoolSize(1)
             .setMaxPoolSize(1)
-            .setWorkQueue(new LinkedBlockingQueue<>(64))
+            .setWorkQueue(new LinkedBlockingQueue<>(256))
             .build();
 
     public static synchronized void send(Config config, Ani ani, String text, MessageEnum messageEnum) {
