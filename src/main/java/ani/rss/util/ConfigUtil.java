@@ -220,9 +220,11 @@ public class ConfigUtil {
             FileUtil.writeUtf8String(GsonStatic.toJson(CONFIG), configFile);
         }
         String s = FileUtil.readUtf8String(configFile);
-        BeanUtil.copyProperties(GsonStatic.fromJson(s, Config.class), CONFIG, CopyOptions
+
+        CopyOptions copyOptions = CopyOptions
                 .create()
-                .setIgnoreNullValue(true));
+                .setIgnoreNullValue(true);
+        BeanUtil.copyProperties(GsonStatic.fromJson(s, Config.class), CONFIG, copyOptions);
         format(CONFIG);
         LogUtil.loadLogback();
         log.debug("加载配置文件 {}", configFile);
@@ -368,7 +370,9 @@ public class ConfigUtil {
 
         CopyOptions copyOptions = CopyOptions
                 .create()
-                .setIgnoreNullValue(true);
+                .setIgnoreNullValue(true)
+                // 禁止覆盖模式 仅补全null值
+                .setOverride(false);
 
         for (NotificationConfig notificationConfig : notificationConfigList) {
             BeanUtil.copyProperties(newNotificationConfig, notificationConfig, copyOptions);

@@ -47,12 +47,16 @@ public class AniUtil {
         }
         String s = FileUtil.readUtf8String(configFile);
         List<Ani> anis = GsonStatic.fromJsonList(s, Ani.class);
+
+        CopyOptions copyOptions = CopyOptions
+                .create()
+                .setIgnoreNullValue(true)
+                .setOverride(false);
+
         for (Ani ani : anis) {
             Ani newAni = Ani.createAni();
-            BeanUtil.copyProperties(ani, newAni, CopyOptions
-                    .create()
-                    .setIgnoreNullValue(true));
-            ANI_LIST.add(newAni);
+            BeanUtil.copyProperties(newAni, ani, copyOptions);
+            ANI_LIST.add(ani);
         }
         log.debug("加载订阅 共{}项", ANI_LIST.size());
     }
