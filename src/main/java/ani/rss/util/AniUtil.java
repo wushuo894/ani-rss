@@ -48,7 +48,7 @@ public class AniUtil {
         String s = FileUtil.readUtf8String(configFile);
         List<Ani> anis = GsonStatic.fromJsonList(s, Ani.class);
         for (Ani ani : anis) {
-            Ani newAni = Ani.bulidAni();
+            Ani newAni = Ani.createAni();
             BeanUtil.copyProperties(ani, newAni, CopyOptions
                     .create()
                     .setIgnoreNullValue(true));
@@ -87,7 +87,7 @@ public class AniUtil {
         type = StrUtil.blankToDefault(type, "mikan");
         String subgroupId = MikanUtil.getSubgroupId(url);
 
-        Ani ani = Ani.bulidAni();
+        Ani ani = Ani.createAni();
         ani.setUrl(url.trim());
 
         if ("mikan".equals(type)) {

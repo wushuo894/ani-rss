@@ -2,9 +2,6 @@ package ani.rss.util;
 
 import ani.rss.entity.Config;
 import ani.rss.entity.Login;
-import ani.rss.entity.MyMailAccount;
-import ani.rss.enums.MessageEnum;
-import ani.rss.enums.ServerChanTypeEnum;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.bean.DynaBean;
 import cn.hutool.core.bean.copier.CopyOptions;
@@ -56,7 +53,7 @@ public class ConfigUtil {
 
         String password = Md5Util.digestHex("admin");
 
-        String messageTemplate = """
+        String notificationTemplate = """
                 ${emoji}${emoji}${emoji}
                 事件类型: ${action}
                 标题: ${title}
@@ -117,18 +114,6 @@ public class ConfigUtil {
                 .setProxyUsername("")
                 .setProxyPassword("")
                 .setDownloadCount(0)
-                .setMail(false)
-                .setMailAddressee("")
-                .setMailImage(true)
-                .setMailAccount(
-                        new MyMailAccount()
-                                .setHost("")
-                                .setPort(25)
-                                .setFrom("")
-                                .setPass("")
-                                .setSslEnable(false)
-                                .setStarttlsEnable(false)
-                )
                 .setLogin(new Login()
                         .setUsername("admin")
                         .setPassword(password)
@@ -138,14 +123,6 @@ public class ConfigUtil {
                 .setExclude(List.of("720[Pp]", "\\d-\\d", "合集", "特别篇"))
                 .setImportExclude(false)
                 .setEnabledExclude(false)
-                .setTelegram(false)
-                .setTelegramChatId("")
-                .setTelegramBotToken("")
-                .setTelegramApiHost("https://api.telegram.org")
-                .setTelegramImage(true)
-                .setTelegramTopicId(-1)
-                .setTelegramFormat("")
-                .setWebHook(false)
                 .setTmdb(false)
                 .setBgmJpName(false)
                 .setTmdbId(false)
@@ -153,9 +130,6 @@ public class ConfigUtil {
                 .setTmdbRomaji(false)
                 .setIpWhitelist(false)
                 .setIpWhitelistStr("")
-                .setWebHookBody("")
-                .setWebHookUrl("")
-                .setWebHookMethod("POST")
                 .setShowPlaylist(true)
                 .setOmit(true)
                 .setBgmToken("")
@@ -167,18 +141,7 @@ public class ConfigUtil {
                 .setRenameTemplate("[${subgroup}] ${title} S${seasonFormat}E${episodeFormat}")
                 .setRenameDelYear(false)
                 .setRenameDelTmdbId(false)
-                .setMessageList(List.of(
-                        MessageEnum.DOWNLOAD_START,
-                        MessageEnum.OMIT,
-                        MessageEnum.ERROR
-                ))
                 .setVerifyLoginIp(false)
-                .setServerChan(false)
-                .setServerChanType(ServerChanTypeEnum.SERVER_CHAN.getType())
-                .setServerChanSendKey("")
-                .setServerChan3ApiUrl("")
-                .setServerChanTitleAction(true)
-                .setSystemMsg(false)
                 .setAutoTrackersUpdate(false)
                 .setTrackersUpdateUrls("https://cf.trackerslist.com/best.txt")
                 .setAutoUpdate(false)
@@ -204,10 +167,6 @@ public class ConfigUtil {
                 .setOutTradeNo("")
                 .setTryOut(false)
                 .setVerifyExpirationTime(false)
-                .setEmbyRefresh(false)
-                .setEmbyApiKey("")
-                .setEmbyRefreshViewIds(new ArrayList<>())
-                .setEmbyDelayed(0L)
                 .setProcrastinating(false)
                 .setProcrastinatingDay(14)
                 .setGithub("None")
@@ -225,7 +184,8 @@ public class ConfigUtil {
                 .setShowLastDownloadTime(false)
                 .setCompleted(false)
                 .setCompletedPathTemplate(completedPathTemplate)
-                .setMessageTemplate(messageTemplate);
+                .setNotificationTemplate(notificationTemplate)
+                .setNotificationConfigList(new ArrayList<>());
     }
 
     /**
@@ -397,6 +357,9 @@ public class ConfigUtil {
     public static void format(Config config) {
         formatPath(config);
         formatUrl(config);
+
+        String messageTemplate = config.getNotificationTemplate();
+        config.setNotificationTemplate(messageTemplate.trim());
     }
 
     /**
@@ -408,11 +371,9 @@ public class ConfigUtil {
         List<Func1<Config, String>> func1List = List.of(
                 Config::getDownloadToolHost,
                 Config::getAlistHost,
-                Config::getTelegramApiHost,
                 Config::getMikanHost,
                 Config::getTmdbApi,
-                Config::getCustomGithubUrl,
-                Config::getEmbyHost
+                Config::getCustomGithubUrl
         );
 
         DynaBean dynaBean = DynaBean.create(config);

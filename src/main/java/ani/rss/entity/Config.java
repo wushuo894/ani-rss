@@ -1,6 +1,5 @@
 package ani.rss.entity;
 
-import ani.rss.enums.MessageEnum;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
@@ -229,26 +228,6 @@ public class Config implements Serializable {
     private Integer downloadCount;
 
     /**
-     * 邮箱是否开启
-     */
-    private Boolean mail;
-
-    /**
-     * 发件人
-     */
-    private MyMailAccount mailAccount;
-
-    /**
-     * 收件人
-     */
-    private String mailAddressee;
-
-    /**
-     * mail 发送图片
-     */
-    private Boolean mailImage;
-
-    /**
      * 登录信息
      */
     private Login login;
@@ -277,61 +256,6 @@ public class Config implements Serializable {
      * 默认启用全局排除
      */
     private Boolean enabledExclude;
-
-    /**
-     * telegram
-     */
-    private Boolean telegram;
-
-    /**
-     * telegram bot token
-     */
-    private String telegramBotToken;
-
-    /**
-     * telegram chat_id
-     */
-    private String telegramChatId;
-
-    /**
-     * telegram topic id
-     */
-    private Integer telegramTopicId;
-
-    /**
-     * telegram Api Host
-     */
-    private String telegramApiHost;
-
-    /**
-     * telegram 发送图片
-     */
-    private Boolean telegramImage;
-
-    /**
-     * telegram 格式
-     */
-    private String telegramFormat;
-
-    /**
-     * webHookMethod
-     */
-    private String webHookMethod;
-
-    /**
-     * webHookUrl
-     */
-    private String webHookUrl;
-
-    /**
-     * webHookBody
-     */
-    private String webHookBody;
-
-    /**
-     * webHook
-     */
-    private Boolean webHook;
 
     /**
      * BGM日文标题
@@ -419,44 +343,9 @@ public class Config implements Serializable {
     private Boolean renameDelTmdbId;
 
     /**
-     * 通知类型
-     */
-    private List<MessageEnum> messageList;
-
-    /**
      * 校验登录IP
      */
     private Boolean verifyLoginIp;
-
-    /**
-     * server酱类型：server酱和server酱3
-     */
-    private String serverChanType;
-
-    /**
-     * server酱 sendKey
-     */
-    private String serverChanSendKey;
-
-    /**
-     * server酱3 apiUrl
-     */
-    private String serverChan3ApiUrl;
-
-    /**
-     * server酱 标题事件
-     */
-    private Boolean serverChanTitleAction;
-
-    /**
-     * server酱 开关
-     */
-    private Boolean serverChan;
-
-    /**
-     * 系统通知
-     */
-    private Boolean systemMsg;
 
     /**
      * 自动更新 trackers
@@ -471,7 +360,7 @@ public class Config implements Serializable {
     /**
      * 消息模版
      */
-    private String messageTemplate;
+    private String notificationTemplate;
 
     /**
      * 自动更新
@@ -589,31 +478,6 @@ public class Config implements Serializable {
     private Boolean tryOut;
 
     /**
-     * emby扫描媒体库
-     */
-    private Boolean embyRefresh;
-
-    /**
-     * emby地址
-     */
-    private String embyHost;
-
-    /**
-     * emby api密钥
-     */
-    private String embyApiKey;
-
-    /**
-     * emby扫描媒体库
-     */
-    private List<String> embyRefreshViewIds;
-
-    /**
-     * emby延迟扫描
-     */
-    private Long embyDelayed;
-
-    /**
      * 摸鱼
      */
     private Boolean procrastinating;
@@ -697,4 +561,9 @@ public class Config implements Serializable {
      * 番剧完结迁移位置
      */
     private String completedPathTemplate;
+
+    /**
+     * 通知
+     */
+    private List<NotificationConfig> notificationConfigList;
 }

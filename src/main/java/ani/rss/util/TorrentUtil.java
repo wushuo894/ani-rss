@@ -3,7 +3,7 @@ package ani.rss.util;
 import ani.rss.action.ClearCacheAction;
 import ani.rss.download.BaseDownload;
 import ani.rss.entity.*;
-import ani.rss.enums.MessageEnum;
+import ani.rss.enums.NotificationStatusEnum;
 import ani.rss.enums.StringEnum;
 import ani.rss.enums.TorrentsTags;
 import cn.hutool.core.date.DateField;
@@ -260,7 +260,7 @@ public class TorrentUtil {
         }
         if (currentDownloadCount >= totalEpisodeNumber) {
             log.info("{} 第 {} 季 共 {} 集 已全部下载完成, 自动停止订阅", title, season, totalEpisodeNumber);
-            MessageUtil.send(config, ani, StrFormatter.format("{} 订阅已完结", title), MessageEnum.COMPLETED);
+            NotificationUtil.send(config, ani, StrFormatter.format("{} 订阅已完结", title), NotificationStatusEnum.COMPLETED);
             ani.setEnable(false);
             AniUtil.sync();
         }
@@ -693,7 +693,7 @@ public class TorrentUtil {
         if (!master) {
             text = StrFormatter.format("(备用RSS) {}", text);
         }
-        MessageUtil.send(ConfigUtil.CONFIG, ani, text, MessageEnum.DOWNLOAD_START);
+        NotificationUtil.send(ConfigUtil.CONFIG, ani, text, NotificationStatusEnum.DOWNLOAD_START);
 
         try {
             createTvShowNfo(savePath, ani);
@@ -716,9 +716,9 @@ public class TorrentUtil {
             log.error("{} 下载失败将进行重试, 当前重试次数为{}次", name, i);
         }
         log.error("{} 添加失败，疑似为坏种", name);
-        MessageUtil.send(ConfigUtil.CONFIG, ani,
+        NotificationUtil.send(ConfigUtil.CONFIG, ani,
                 StrFormatter.format("{} 添加失败，疑似为坏种", name),
-                MessageEnum.ERROR);
+                NotificationStatusEnum.ERROR);
     }
 
     /**
@@ -864,7 +864,7 @@ public class TorrentUtil {
         if (tags.contains(TorrentsTags.BACK_RSS.getValue())) {
             text = StrFormatter.format("(备用RSS) {}", text);
         }
-        MessageUtil.send(ConfigUtil.CONFIG, ani, text, MessageEnum.DOWNLOAD_END);
+        NotificationUtil.send(ConfigUtil.CONFIG, ani, text, NotificationStatusEnum.DOWNLOAD_END);
 
         if (Objects.isNull(ani)) {
             return;

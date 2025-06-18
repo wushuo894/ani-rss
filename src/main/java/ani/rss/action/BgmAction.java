@@ -32,7 +32,7 @@ public class BgmAction implements BaseAction {
             case "getAniBySubjectId" -> {
                 String id = request.getParam("id");
                 BgmInfo bgmInfo = BgmUtil.getBgmInfo(id, true);
-                Ani ani = BgmUtil.toAni(bgmInfo, Ani.bulidAni());
+                Ani ani = BgmUtil.toAni(bgmInfo, Ani.createAni());
                 ani
                         .setCustomDownloadPath(true);
                 resultSuccess(ani);

@@ -4,7 +4,7 @@ import ani.rss.entity.Ani;
 import ani.rss.entity.Config;
 import ani.rss.entity.Item;
 import ani.rss.entity.TorrentsInfo;
-import ani.rss.enums.MessageEnum;
+import ani.rss.enums.NotificationStatusEnum;
 import ani.rss.enums.StringEnum;
 import ani.rss.util.*;
 import cn.hutool.core.collection.ListUtil;
@@ -252,9 +252,9 @@ public class Alist implements BaseDownload {
                             "names", List.of(reName)
                     ))).then(HttpResponse::isOk);
 
-            MessageUtil.send(config, ani,
+            NotificationUtil.send(config, ani,
                     StrFormatter.format("{} 下载完成", item.getReName()),
-                    MessageEnum.DOWNLOAD_END
+                    NotificationStatusEnum.DOWNLOAD_END
             );
             return true;
         } catch (Exception e) {

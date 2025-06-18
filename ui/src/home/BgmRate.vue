@@ -26,8 +26,8 @@ import {Ban, Save} from "@vicons/fa";
 import {ElMessage} from "element-plus";
 
 let texts = ref([
-    '不忍直视 1 (请谨慎评价)', '很差 2', '差 3', '较差 4', '不过不失 5',
-    '还行 6','推荐 7','力荐 8','神作 9','超神作 10 (请谨慎评价)'
+  '不忍直视 1 (请谨慎评价)', '很差 2', '差 3', '较差 4', '不过不失 5',
+  '还行 6', '推荐 7', '力荐 8', '神作 9', '超神作 10 (请谨慎评价)'
 ])
 
 let dialogVisible = ref(false)

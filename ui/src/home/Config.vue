@@ -35,7 +35,7 @@
             </el-icon>
             <span>全局排除</span>
           </template>
-          <Exclude ref="exclude" v-model:exclude="config.exclude" :show-text="true"/>
+          <Exclude v-model:exclude="config.exclude" :show-text="true"/>
         </el-tab-pane>
         <el-tab-pane label="代理设置" :lazy="true">
           <template #label>
@@ -64,7 +64,7 @@
           </template>
           <div style="height: 500px;">
             <el-scrollbar style="padding: 0 12px">
-              <Message ref="messageRef" v-model:config="config" v-model:message-active-name="messageActiveName"/>
+              <Notification ref="notificationRef" v-model:config="config"/>
             </el-scrollbar>
           </div>
           <div style="height: 4px;"></div>
@@ -103,7 +103,7 @@ import {ElMessage} from "element-plus";
 import CryptoJS from "crypto-js";
 import api from "../js/api.js";
 import Exclude from "../config/Exclude.vue";
-import Message from "../config/Message.vue";
+import Notification from "../config/Notification.vue";
 import Proxy from "../config/Proxy.vue";
 import Download from "../config/Download.vue";
 import Basic from "../config/Basic.vue";
@@ -159,32 +159,11 @@ const config = ref({
   'proxyPort': 8080,
   'renameSleep': 1,
   'downloadCount': 0,
-  'mail': false,
-  'mailAddressee': '',
-  'mailAccount': {
-    'downloadToolHost': '',
-    'port': 25,
-    'from': '',
-    'pass': '',
-    'sslEnable': false
-  },
-  'mailImage': true,
   'login': {
     'downloadToolUsername': '',
     'downloadToolPassword': ''
   },
-  'telegram': false,
-  'telegramBotToken': '',
-  'telegramChatId': '',
-  'telegramTopicId': -1,
-  'telegramApiHost': 'https://api.telegram.org',
-  'webHookUrl': '',
-  'webHookMethod': '',
-  'webHookBody': '',
-  'webHook': false,
-  'qbRenameTitle': true,
   'qbUseDownloadPath': false,
-  'seasonName': 'Season 1',
   'showPlaylist': false,
   'enabledExclude': false,
   'importExclude': false,
@@ -194,17 +173,9 @@ const config = ref({
   'scoreShow': false,
   'standbyRss': false,
   'downloadNew': false,
-  'telegramImage': true,
-  'telegramFormat': '',
   'innerIP': false,
   'renameTemplate': '',
-  'messageList': [],
   'verifyLoginIp': true,
-  'serverChanSendKey': '',
-  'serverChan3ApiUrl': '',
-  'serverChan': false,
-  'serverChanType': '',
-  'systemMsg': false,
   'loginEffectiveHours': 3,
   'trackersUpdateUrls': '',
   'autoTrackersUpdate': false,
@@ -212,7 +183,6 @@ const config = ref({
   'tmdbId': false,
   'renameDelYear': false,
   'renameDelTmdbId': false,
-  'messageTemplate': '',
   'ratioLimit': -2,
   'seedingTimeLimit': -2,
   'inactiveSeedingTimeLimit': -2,
@@ -222,10 +192,7 @@ const config = ref({
 
 const activeName = ref('download')
 
-const exclude = ref()
-
-const messageActiveName = ref('')
-const messageRef = ref()
+const notificationRef = ref()
 
 const show = (update) => {
   activeName.value = update ? 'about' : 'download'
@@ -261,7 +228,6 @@ defineExpose({
   show
 })
 const emit = defineEmits(['load'])
-
 </script>
 
 <style scoped>

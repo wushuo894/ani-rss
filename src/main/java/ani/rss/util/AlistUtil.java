@@ -3,7 +3,7 @@ package ani.rss.util;
 import ani.rss.entity.Ani;
 import ani.rss.entity.Config;
 import ani.rss.entity.TorrentsInfo;
-import ani.rss.enums.MessageEnum;
+import ani.rss.enums.NotificationStatusEnum;
 import ani.rss.enums.TorrentsTags;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.lang.Opt;
@@ -119,7 +119,7 @@ public class AlistUtil {
                                         text = StrFormatter.format("已向alist添加上传任务 {}", fileName);
                                     }
                                     log.info(text);
-                                    MessageUtil.send(config, ani, text, MessageEnum.ALIST_UPLOAD);
+                                    NotificationUtil.send(config, ani, text, NotificationStatusEnum.ALIST_UPLOAD);
                                 });
                         TorrentUtil.addTags(torrentsInfo, TorrentsTags.UPLOAD_COMPLETED.getValue());
                         return;
@@ -128,7 +128,7 @@ public class AlistUtil {
                     }
                 }
                 if (AfdianUtil.verifyExpirationTime()) {
-                    MessageUtil.send(config, ani, "alist上传失败 " + fileName, MessageEnum.ERROR);
+                    NotificationUtil.send(config, ani, "alist上传失败 " + fileName, NotificationStatusEnum.ERROR);
                 }
             });
         }

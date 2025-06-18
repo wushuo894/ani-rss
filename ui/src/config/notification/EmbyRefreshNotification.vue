@@ -1,0 +1,66 @@
+<template>
+  <template v-if="props.notificationConfig['notificationType'] === 'EMBY_REFRESH'">
+    <el-form-item label="EmbyHost">
+      <el-input v-model="props.notificationConfig['embyHost']" placeholder="http://x.x.x.x:8096"/>
+    </el-form-item>
+    <el-form-item label="Emby密钥">
+      <el-input v-model="props.notificationConfig['embyApiKey']"/>
+    </el-form-item>
+    <el-form-item label="媒体库">
+      <div>
+        <el-checkbox-group v-model="props.notificationConfig['embyRefreshViewIds']">
+          <el-checkbox
+              v-for="view in views"
+              :key="view.id"
+              :label="view.name"
+              :value="view.id"/>
+        </el-checkbox-group>
+        <div>
+          <el-button :loading="getEmbyViewsLoading" bg icon="Refresh" text @click="getEmbyViews"/>
+        </div>
+      </div>
+    </el-form-item>
+    <el-form-item label="延迟">
+      <el-input-number v-model="props.notificationConfig['embyDelayed']" :min="0">
+        <template #suffix>
+          <span>秒</span>
+        </template>
+      </el-input-number>
+    </el-form-item>
+    <el-form-item label="开启">
+      <el-switch v-model="props.notificationConfig['enable']" :disabled="!props.config['verifyExpirationTime']"/>
+    </el-form-item>
+    <div class="flex" style="justify-content: space-between;width: 100%;">
+      <AfdianPrompt :config="props.config" name="Emby媒体库刷新"/>
+    </div>
+  </template>
+</template>
+
+<script setup>
+import AfdianPrompt from "../../other/AfdianPrompt.vue";
+import {onMounted, ref} from "vue";
+import api from "../../js/api.js";
+
+const views = ref([])
+
+const getEmbyViewsLoading = ref(false)
+
+const getEmbyViews = () => {
+  getEmbyViewsLoading.value = true
+  api.post('api/emby?type=getViews', props.config)
+      .then(res => {
+        views.value = res.data
+      })
+      .finally(() => {
+        getEmbyViewsLoading.value = false
+      })
+}
+
+onMounted(() => {
+  if (props.notificationConfig['embyHost'] && props.notificationConfig['embyApiKey']) {
+    getEmbyViews()
+  }
+})
+
+let props = defineProps(['notificationConfig', 'config'])
+</script>
