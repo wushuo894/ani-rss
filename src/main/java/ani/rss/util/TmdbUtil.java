@@ -365,6 +365,10 @@ public class TmdbUtil {
                     .form("include_adult", "true")
                     .form("language", tmdbLanguage)
                     .then(res -> {
+                        int status = res.getStatus();
+                        if (status == 404) {
+                            return;
+                        }
                         HttpReq.assertStatus(res);
                         JsonObject body = GsonStatic.fromJson(res.body(), JsonObject.class);
                         List<JsonObject> episodes = GsonStatic.fromJsonList(
