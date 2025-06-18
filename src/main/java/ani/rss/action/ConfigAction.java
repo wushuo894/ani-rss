@@ -46,15 +46,20 @@ public class ConfigAction implements BaseAction {
         Integer sleep = config.getSleep();
         Integer gcSleep = config.getGcSleep();
         String download = config.getDownloadToolType();
+
+        Config newConfig = getBody(Config.class);
+        newConfig.setExpirationTime(null)
+                .setOutTradeNo(null)
+                .setTryOut(null);
+
+        CopyOptions copyOptions = CopyOptions
+                .create()
+                .setIgnoreNullValue(true);
+
         BeanUtil.copyProperties(
-                getBody(Config.class)
-                        .setExpirationTime(null)
-                        .setOutTradeNo(null)
-                        .setTryOut(null),
+                newConfig,
                 config,
-                CopyOptions
-                        .create()
-                        .setIgnoreNullValue(true)
+                copyOptions
         );
 
         Boolean proxy = config.getProxy();

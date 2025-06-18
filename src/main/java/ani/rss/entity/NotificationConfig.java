@@ -163,6 +163,7 @@ public class NotificationConfig implements Serializable {
         NotificationConfig notificationConfig = new NotificationConfig();
 
         notificationConfig
+                .setEnable(true)
                 .setNotificationType(NotificationTypeEnum.TELEGRAM)
                 .setNotificationTemplate("${notification}")
                 .setComment("")
