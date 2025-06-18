@@ -27,17 +27,10 @@
         </template>
       </el-input-number>
     </el-form-item>
-    <el-form-item label="开启">
-      <el-switch v-model="props.notificationConfig['enable']" :disabled="!props.config['verifyExpirationTime']"/>
-    </el-form-item>
-    <div class="flex" style="justify-content: space-between;width: 100%;">
-      <AfdianPrompt :config="props.config" name="Emby媒体库刷新"/>
-    </div>
   </template>
 </template>
 
 <script setup>
-import AfdianPrompt from "../../other/AfdianPrompt.vue";
 import {onMounted, ref} from "vue";
 import api from "../../js/api.js";
 

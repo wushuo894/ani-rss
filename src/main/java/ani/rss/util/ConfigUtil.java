@@ -2,6 +2,7 @@ package ani.rss.util;
 
 import ani.rss.entity.Config;
 import ani.rss.entity.Login;
+import ani.rss.entity.NotificationConfig;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.bean.DynaBean;
 import cn.hutool.core.bean.copier.CopyOptions;
@@ -360,6 +361,18 @@ public class ConfigUtil {
 
         String messageTemplate = config.getNotificationTemplate();
         config.setNotificationTemplate(messageTemplate.trim());
+
+        NotificationConfig newNotificationConfig = NotificationConfig.createNotificationConfig();
+
+        List<NotificationConfig> notificationConfigList = config.getNotificationConfigList();
+
+        CopyOptions copyOptions = CopyOptions
+                .create()
+                .setIgnoreNullValue(true);
+
+        for (NotificationConfig notificationConfig : notificationConfigList) {
+            BeanUtil.copyProperties(newNotificationConfig, notificationConfig, copyOptions);
+        }
     }
 
     /**
