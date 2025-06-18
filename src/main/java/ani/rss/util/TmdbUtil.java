@@ -254,11 +254,15 @@ public class TmdbUtil {
      * @return
      */
     public static synchronized Map<Integer, String> getEpisodeTitleMap(Ani ani) {
+        Map<Integer, String> episodeTitleMap = new HashMap<>();
+
+        if (Objects.isNull(ani)) {
+            return episodeTitleMap;
+        }
+
         Tmdb tmdb = ani.getTmdb();
         Integer season = ani.getSeason();
         Boolean ova = ani.getOva();
-
-        Map<Integer, String> episodeTitleMap = new HashMap<>();
 
         if (ova) {
             return episodeTitleMap;

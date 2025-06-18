@@ -1,29 +1,33 @@
 package ani.rss.notification;
 
 import ani.rss.entity.Ani;
+import ani.rss.entity.Config;
 import ani.rss.entity.NotificationConfig;
 import ani.rss.entity.Tmdb;
 import ani.rss.enums.NotificationStatusEnum;
 import ani.rss.enums.StringEnum;
-import ani.rss.util.FilePathUtil;
-import ani.rss.util.NumberFormatUtil;
-import ani.rss.util.RenameUtil;
-import ani.rss.util.TorrentUtil;
+import ani.rss.util.*;
+import cn.hutool.core.lang.Opt;
 import cn.hutool.core.lang.func.Func1;
 import cn.hutool.core.text.StrFormatter;
 import cn.hutool.core.util.ReUtil;
 import cn.hutool.core.util.StrUtil;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 
 public interface BaseNotification {
 
     Boolean send(NotificationConfig notificationConfig, Ani ani, String text, NotificationStatusEnum notificationStatusEnum);
 
+    default String replaceNotificationTemplate(Ani ani, NotificationConfig notificationConfig, String text, NotificationStatusEnum notificationStatusEnum) {
+        String notificationTemplate = notificationConfig.getNotificationTemplate();
+        return replaceNotificationTemplate(ani, notificationTemplate, text, notificationStatusEnum);
+    }
+
     default String replaceNotificationTemplate(Ani ani, String notificationTemplate, String text, NotificationStatusEnum notificationStatusEnum) {
         notificationTemplate = notificationTemplate.replace("${text}", text);
+
         // 集数
         double episode = 1.0;
         if (ReUtil.contains(StringEnum.SEASON_REG, text)) {
@@ -44,10 +48,6 @@ public interface BaseNotification {
         );
         notificationTemplate = notificationTemplate.replace("${episodeFormat}", episodeFormat);
 
-        if (Objects.isNull(ani)) {
-            return notificationTemplate;
-        }
-
         List<Func1<Ani, Object>> list = List.of(
                 Ani::getTitle,
                 Ani::getScore,
@@ -62,20 +62,26 @@ public interface BaseNotification {
                 Ani::getSubgroup
         );
 
-        int season = ani.getSeason();
+        int season = Opt.ofNullable(ani)
+                .map(Ani::getSeason)
+                .orElse(1);
         String seasonFormat = String.format("%02d", season);
         notificationTemplate = notificationTemplate.replace("${seasonFormat}", seasonFormat);
 
         notificationTemplate = RenameUtil.replaceField(notificationTemplate, ani, list);
 
-        String tmdbId = Optional.ofNullable(ani.getTmdb())
+        String tmdbId = Optional.ofNullable(ani)
+                .map(Ani::getTmdb)
                 .map(Tmdb::getId)
                 .orElse("");
         notificationTemplate = notificationTemplate.replace("${tmdbid}", tmdbId);
 
         String tmdbUrl = "";
         if (StrUtil.isNotBlank(tmdbId)) {
-            String type = ani.getOva() ? "movie" : "tv";
+            Boolean ova = Opt.ofNullable(ani)
+                    .map(Ani::getOva)
+                    .orElse(false);
+            String type = ova ? "movie" : "tv";
             tmdbUrl = StrFormatter.format("https://www.themoviedb.org/{}/{}", type, tmdbId);
         }
         notificationTemplate = notificationTemplate.replace("${tmdburl}", tmdbUrl);
@@ -95,6 +101,17 @@ public interface BaseNotification {
         }
 
         notificationTemplate = RenameUtil.replaceEpisodeTitle(notificationTemplate, episode, ani);
+
+        if (!notificationTemplate.contains("${notification}")) {
+            return notificationTemplate.trim();
+        }
+
+        Config config = ConfigUtil.CONFIG;
+        String template = config.getNotificationTemplate();
+
+        template = replaceNotificationTemplate(ani, template, text, notificationStatusEnum);
+
+        notificationTemplate = notificationTemplate.replace("${notification}", template);
 
         return notificationTemplate.trim();
     }

@@ -33,26 +33,32 @@ public class NotificationUtil {
             return;
         }
 
+        if (!AfdianUtil.verifyExpirationTime()) {
+            if (NotificationStatusEnum.COMPLETED == notificationStatusEnum) {
+                log.warn("未解锁捐赠, 无法使用订阅完结通知");
+                return;
+            }
+            if (NotificationStatusEnum.ALIST_UPLOAD == notificationStatusEnum) {
+                log.warn("未解锁捐赠, 无法使用Alist上传通知");
+                return;
+            }
+        }
+
         List<NotificationConfig> notificationConfigList = config.getNotificationConfigList();
 
         for (NotificationConfig notificationConfig : notificationConfigList) {
             Boolean enable = notificationConfig.getEnable();
             NotificationTypeEnum notificationType = notificationConfig.getNotificationType();
+            List<NotificationStatusEnum> statusList = notificationConfig.getStatusList();
 
             if (!enable) {
                 // 未开启
                 continue;
             }
 
-            if (!AfdianUtil.verifyExpirationTime()) {
-                if (NotificationStatusEnum.COMPLETED == notificationStatusEnum) {
-                    log.warn("未解锁捐赠, 无法使用订阅完结通知");
-                    continue;
-                }
-                if (NotificationStatusEnum.ALIST_UPLOAD == notificationStatusEnum) {
-                    log.warn("未解锁捐赠, 无法使用Alist上传通知");
-                    continue;
-                }
+            if (!statusList.contains(notificationStatusEnum)) {
+                // 未启用 通知状态
+                continue;
             }
 
             BaseNotification baseNotification = ReflectUtil.newInstance(notificationType.getAClass());

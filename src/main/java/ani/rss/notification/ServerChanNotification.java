@@ -1,13 +1,12 @@
 package ani.rss.notification;
 
 import ani.rss.entity.Ani;
-import ani.rss.entity.Config;
 import ani.rss.entity.NotificationConfig;
 import ani.rss.enums.NotificationStatusEnum;
 import ani.rss.enums.ServerChanTypeEnum;
-import ani.rss.util.ConfigUtil;
 import ani.rss.util.GsonStatic;
 import ani.rss.util.HttpReq;
+import cn.hutool.core.lang.Opt;
 import cn.hutool.core.text.StrFormatter;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.HttpResponse;
@@ -25,15 +24,6 @@ public class ServerChanNotification implements BaseNotification {
 
     @Override
     public Boolean send(NotificationConfig notificationConfig, Ani ani, String text, NotificationStatusEnum notificationStatusEnum) {
-        Config config = ConfigUtil.CONFIG;
-        String template = config.getNotificationTemplate();
-        template = replaceNotificationTemplate(ani, template, text, notificationStatusEnum);
-
-        String notificationTemplate = notificationConfig.getNotificationTemplate();
-        notificationTemplate = notificationTemplate.replace("${notification}", template);
-        notificationTemplate = replaceNotificationTemplate(ani, notificationTemplate, text, notificationStatusEnum);
-        notificationTemplate = notificationTemplate.replace("\n", "\n\n");
-
         ServerChanTypeEnum type = notificationConfig.getServerChanType();
         String sendKey = notificationConfig.getServerChanSendKey();
         String apiUrl = notificationConfig.getServerChan3ApiUrl();
@@ -45,12 +35,12 @@ public class ServerChanNotification implements BaseNotification {
         }
 
         String title = "";
-        String image = "https://docs.wushuo.top/null.png";
+        String image = Opt.ofNullable(ani)
+                .map(Ani::getImage)
+                .orElse("https://docs.wushuo.top/null.png");
+
 
         if (Objects.nonNull(ani)) {
-            if (StrUtil.isNotBlank(ani.getImage())) {
-                image = ani.getImage();
-            }
             title = truncateMessage(ani.getTitle(), serverChanTitleAction ? 10 : 15);
             if (serverChanTitleAction) {
                 String action = notificationStatusEnum.getAction();
@@ -58,11 +48,15 @@ public class ServerChanNotification implements BaseNotification {
             }
         }
 
+        String notificationTemplate = replaceNotificationTemplate(ani, notificationConfig, text, notificationStatusEnum);
+        notificationTemplate = notificationTemplate.replace("\n", "\n\n");
+
         String serverChanUrl = "";
         String body = "";
         String desp = MARKDOWN_STRING
                 .replace("<message>", notificationTemplate)
                 .replace("<image>", image);
+
         if (type.equals(ServerChanTypeEnum.SERVER_CHAN)) {
             serverChanUrl = ServerChanTypeEnum.SERVER_CHAN.getUrl().replace("<sendKey>", sendKey);
             body = GsonStatic.toJson(Map.of(

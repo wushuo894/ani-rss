@@ -1,6 +1,6 @@
 <template>
   <el-dialog v-model="dialogVisible" center title="修改通知">
-    <el-scrollbar style="height: 400px;padding: 15px;">
+    <el-scrollbar :always="true" style="height: 530px;padding: 15px;">
       <el-form label-width="auto">
         <el-form-item label="通知类型">
           <el-select v-model="notificationConfig['notificationType']">

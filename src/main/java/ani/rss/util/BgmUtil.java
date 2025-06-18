@@ -543,6 +543,10 @@ public class BgmUtil {
     public static synchronized Map<Integer, Function<Boolean, String>> getEpisodeTitleMap(Ani ani) {
         Map<Integer, Function<Boolean, String>> episodeTitleMap = new HashMap<>();
 
+        if (Objects.isNull(ani)) {
+            return episodeTitleMap;
+        }
+
         String subjectId = getSubjectId(ani);
 
         if (StrUtil.isBlank(subjectId)) {

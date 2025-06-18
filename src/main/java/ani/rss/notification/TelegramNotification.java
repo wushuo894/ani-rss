@@ -1,13 +1,13 @@
 package ani.rss.notification;
 
 import ani.rss.entity.Ani;
-import ani.rss.entity.Config;
 import ani.rss.entity.NotificationConfig;
 import ani.rss.enums.NotificationStatusEnum;
 import ani.rss.util.ConfigUtil;
 import ani.rss.util.GsonStatic;
 import ani.rss.util.HttpReq;
 import cn.hutool.core.text.StrFormatter;
+import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.ContentType;
 import cn.hutool.http.HttpRequest;
@@ -75,13 +75,7 @@ public class TelegramNotification implements BaseNotification {
     }
 
     public Boolean send(NotificationConfig notificationConfig, Ani ani, String text, NotificationStatusEnum notificationStatusEnum) {
-        Config config = ConfigUtil.CONFIG;
-        String template = config.getNotificationTemplate();
-        template = replaceNotificationTemplate(ani, template, text, notificationStatusEnum);
-
-        String notificationTemplate = notificationConfig.getNotificationTemplate();
-        notificationTemplate = notificationTemplate.replace("${notification}", template);
-        notificationTemplate = replaceNotificationTemplate(ani, notificationTemplate, text, notificationStatusEnum);
+        notificationConfig = ObjectUtil.clone(notificationConfig);
 
         String telegramBotToken = notificationConfig.getTelegramBotToken();
         String telegramChatId = notificationConfig.getTelegramChatId();
@@ -89,15 +83,19 @@ public class TelegramNotification implements BaseNotification {
         String telegramApiHost = notificationConfig.getTelegramApiHost();
         Boolean telegramImage = notificationConfig.getTelegramImage();
         String telegramFormat = notificationConfig.getTelegramFormat();
+
         if (StrUtil.isBlank(telegramChatId) || StrUtil.isBlank(telegramBotToken)) {
             log.warn("telegram 通知的参数不完整");
             return false;
         }
         telegramApiHost = StrUtil.blankToDefault(telegramApiHost, "https://api.telegram.org");
 
-        String url = StrFormatter.format("{}/bot{}/sendMessage", telegramApiHost, telegramBotToken);
+        String notificationTemplate = replaceNotificationTemplate(ani, notificationConfig, text, notificationStatusEnum);
 
-        if (Objects.isNull(ani) || !telegramImage) {
+        if (!telegramImage) {
+            String url = StrFormatter.format("{}/bot{}/sendMessage", telegramApiHost, telegramBotToken);
+
+            // 未启用图片
             Map<String, Object> body = new HashMap<>();
             body.put("chat_id", telegramChatId);
             if (telegramTopicId > -1) {
@@ -111,14 +109,22 @@ public class TelegramNotification implements BaseNotification {
                     .body(GsonStatic.toJson(body))
                     .thenFunction(HttpResponse::isOk);
         }
+
         String cover = ani.getCover();
-        File configDir = ConfigUtil.getConfigDir();
-        File photo = new File(configDir + "/files/" + cover);
-        if (StrUtil.isBlank(cover) || !photo.exists()) {
-            return send(notificationConfig, null, notificationTemplate, notificationStatusEnum);
+        if (StrUtil.isBlank(cover)) {
+            notificationConfig.setTelegramImage(false);
+            return send(notificationConfig, ani, text, notificationStatusEnum);
         }
 
-        url = StrFormatter.format("{}/bot{}/sendPhoto", telegramApiHost, telegramBotToken);
+        File configDir = ConfigUtil.getConfigDir();
+        File photo = new File(configDir + "/files/" + cover);
+
+        if (!photo.exists()) {
+            notificationConfig.setTelegramImage(false);
+            return send(notificationConfig, ani, text, notificationStatusEnum);
+        }
+
+        String url = StrFormatter.format("{}/bot{}/sendPhoto", telegramApiHost, telegramBotToken);
 
         HttpRequest request = HttpReq.post(url, true)
                 .contentType(ContentType.MULTIPART.getValue())
