@@ -4,7 +4,12 @@
       <el-form label-width="auto">
         <el-form-item label="通知类型">
           <el-select v-model="notificationConfig['notificationType']">
-            <el-option :label="it.label" :value="it.name" :key="it.name" v-for="it in notificationTypeList"/>
+            <el-option v-for="it in notificationTypeList"
+                       :key="it.name"
+                       :disabled="it.name === 'EMBY_REFRESH' && !props.config['verifyExpirationTime']"
+                       :label="it.label"
+                       :value="it.name"
+            />
           </el-select>
         </el-form-item>
         <el-form-item label="备注">
@@ -31,6 +36,9 @@
         <ServerChanNotification v-model:notification-config="notificationConfig" v-model:config="props.config"/>
         <TelegramNotification v-model:notification-config="notificationConfig" v-model:config="props.config"/>
         <WebhookNotification v-model:notification-config="notificationConfig" v-model:config="props.config"/>
+        <el-form-item label="开启">
+          <el-switch v-model="notificationConfig['enable']"/>
+        </el-form-item>
       </el-form>
     </el-scrollbar>
     <div class="flex" style="justify-content: space-between;width: 100%;margin-top: 8px;">

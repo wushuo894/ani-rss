@@ -33,8 +33,9 @@
         type="primary"
         @click="add"
         style="margin-top: 12px;"
+        :loading="addLoading"
     >
-      添加通知类型
+      添加通知
     </el-button>
   </div>
   <NotificationConfig ref="notificationConfigRef" v-model:config="props.config"/>
@@ -47,11 +48,17 @@ import {ref} from "vue";
 import {getLabel} from "../js/notification-type.js";
 import api from "../js/api.js";
 
+let addLoading = ref(false)
+
 let add = () => {
+  addLoading.value = true
   api.post('api/notification?type=add')
       .then((res) => {
         props.config['notificationConfigList'].push(res.data)
         notificationConfigRef.value?.show(res.data)
+      })
+      .finally(() => {
+        addLoading.value = false
       })
 }
 
@@ -60,7 +67,6 @@ let del = (it) => {
 }
 
 let notificationConfigRef = ref()
-
 
 let props = defineProps(['config'])
 </script>

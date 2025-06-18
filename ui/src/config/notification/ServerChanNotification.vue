@@ -3,10 +3,16 @@
     <el-form-item label="Type">
       <el-select v-model="props.notificationConfig.serverChanType">
         <el-option
-            v-for="it in ['serverChan', 'serverChan3']"
-            :key="it"
-            :label="it"
-            :value="it"
+            v-for="it in [{
+              label: 'serverChan',
+              name: 'SERVER_CHAN'
+            }, {
+              label: 'serverChan3',
+              name: 'SERVER_CHAN_3'
+            }]"
+            :key="it.name"
+            :label="it.label"
+            :value="it.name"
         />
       </el-select>
     </el-form-item>

@@ -19,7 +19,7 @@
 ![GitHub License](https://img.shields.io/github/license/wushuo894/ani-rss)
 [![GitHub release (latest SemVer)](https://img.shields.io/github/v/release/wushuo894/ani-rss?color=blue&label=download&sort=semver)](https://github.com/wushuo894/ani-rss/releases/latest)
 [![GitHub all releases](https://img.shields.io/github/downloads/wushuo894/ani-rss/total?color=blue&label=github%20downloads)](https://docs.wushuo.top/history)
-[![telegram](https://img.shields.io/static/v1?label=telegram&amp;baseNotification=ani-rss&amp;color=blue)](https://t.me/ani_rss)
+[![telegram](https://img.shields.io/static/v1?label=telegram&amp;message=ani-rss&amp;color=blue)](https://t.me/ani_rss)
 
 </div>
 
