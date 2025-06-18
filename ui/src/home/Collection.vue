@@ -185,6 +185,7 @@ import api from "../js/api.js";
 import Exclude from "../config/Exclude.vue";
 import CollectionPreview from "./CollectionPreview.vue";
 import AfdianPrompt from "../other/AfdianPrompt.vue";
+import {aniData} from "../js/ani.js";
 
 let start = () => {
   startLoading.value = true
@@ -289,47 +290,7 @@ let authorization = () => {
 let data = ref({
   filename: '',
   torrent: '',
-  ani: {
-    "id": "6881c84d-31e1-4361-8cc6-fe4a3a00573b",
-    "standbyRss": [],
-    "standbyRssList": [],
-    "title": "",
-    "offset": 0,
-    "year": 2025,
-    "month": 1,
-    "date": 5,
-    "season": 1,
-    "cover": "d/d4cb4751611021999e78c45cb0e8d17d.jpg",
-    "image": "https://lain.bgm.tv/pic/cover/l/40/cc/486039_8O5kv.jpg",
-    "subgroup": "",
-    "match": [],
-    "exclude": [
-      "720[Pp]",
-      "\\d-\\d",
-      "合集",
-      "特别篇"
-    ],
-    "globalExclude": false,
-    "enable": true,
-    "currentEpisodeNumber": 0,
-    "totalEpisodeNumber": 12,
-    "themoviedbName": "",
-    "bgmUrl": "",
-    "customDownloadPath": false,
-    "downloadPath": "",
-    "score": 6.7,
-    "customEpisode": false,
-    "customEpisodeStr": "\\[\\d+(\\.5)? ?([Vv]2)]?|第\\d+(\\.5)?集|【\\d+(\\.5)? ?([Vv]2)?】| \\d+(\\.5)?",
-    "customEpisodeGroupIndex": 0,
-    "omit": true,
-    "downloadNew": false,
-    "notDownload": [],
-    "tmdb": {
-      "id": "",
-      "name": "",
-      "date": "2025-04-08 16:55:49"
-    },
-  },
+  ani: aniData,
   show: false,
 })
 

@@ -120,75 +120,13 @@ import {
   Promotion,
   User
 } from "@element-plus/icons-vue";
+import {configData} from "../js/config.js";
 
 const dialogVisible = ref(false)
 const configButtonLoading = ref(false)
 const loading = ref(true)
 
-const config = ref({
-  'mikanHost': '',
-  'downloadToolType': 'qBittorrent',
-  'exclude': [],
-  'rename': true,
-  'rss': false,
-  'tmdb': false,
-  'downloadToolHost': '',
-  'downloadToolUsername': '',
-  'downloadToolPassword': '',
-  'sleep': 5,
-  'watchErrorTorrent': true,
-  'delayedDownload': 0,
-  'downloadPath': '',
-  'ovaDownloadPath': '',
-  'fileExist': true,
-  'awaitStalledUP': true,
-  'delete': false,
-  'deleteStandbyRSSOnly': false,
-  'deleteFiles': false,
-  'offset': false,
-  'acronym': false,
-  'titleYear': false,
-  'autoDisabled': false,
-  'skip5': true,
-  'logsMax': 2048,
-  'debug': false,
-  'proxy': false,
-  'proxyHost': '',
-  'proxyUsername': '',
-  'proxyPassword': '',
-  'proxyPort': 8080,
-  'renameSleep': 1,
-  'downloadCount': 0,
-  'login': {
-    'downloadToolUsername': '',
-    'downloadToolPassword': ''
-  },
-  'qbUseDownloadPath': false,
-  'showPlaylist': false,
-  'enabledExclude': false,
-  'importExclude': false,
-  'bgmToken': '',
-  'apiKey': '',
-  'weekShow': false,
-  'scoreShow': false,
-  'standbyRss': false,
-  'downloadNew': false,
-  'innerIP': false,
-  'renameTemplate': '',
-  'verifyLoginIp': true,
-  'loginEffectiveHours': 3,
-  'trackersUpdateUrls': '',
-  'autoTrackersUpdate': false,
-  'renameMinSize': 100,
-  'tmdbId': false,
-  'renameDelYear': false,
-  'renameDelTmdbId': false,
-  'ratioLimit': -2,
-  'seedingTimeLimit': -2,
-  'inactiveSeedingTimeLimit': -2,
-  'autoUpdate': false,
-  'outTradeNo': ''
-})
+const config = ref(configData)
 
 const activeName = ref('download')
 

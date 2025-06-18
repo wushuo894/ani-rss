@@ -104,6 +104,7 @@ import api from "../js/api.js";
 import Mikan from "./Mikan.vue";
 import Ani from "./Ani.vue";
 import Bgm from "./Bgm.vue";
+import {aniData} from "../js/ani.js";
 
 const showRss = ref(true)
 const mikan = ref()
@@ -111,29 +112,7 @@ const bgmRef = ref()
 
 const dialogVisible = ref(false)
 
-const ani = ref({
-  'url': '',
-  'season': 1,
-  'offset': 0,
-  'title': '',
-  'themoviedbName': '',
-  'exclude': [],
-  'enable': true,
-  'ova': false,
-  'totalEpisodeNumber': '',
-  'customDownloadPath': false,
-  'downloadPath': '',
-  'year': 1970,
-  'month': 1,
-  'day': 1,
-  'week': 1,
-  'subgroup': '',
-  'standbyRssList': [],
-  'bgmUrl': '',
-  'customEpisode': false,
-  'customEpisodeStr': '',
-  'customEpisodeGroupIndex': 0
-})
+const ani = ref(aniData)
 
 const rssButtonLoading = ref(false)
 
@@ -171,15 +150,7 @@ const addAni = (fun) => {
 const activeName = ref('mikan')
 
 const show = () => {
-  ani.value = {
-    'url': '',
-    'season': 1,
-    'offset': 0,
-    'title': '',
-    'exclude': [],
-    'totalEpisodeNumber': 0,
-    'match': []
-  }
+  ani.value = aniData
   activeName.value = 'mikan'
   showRss.value = true
   dialogVisible.value = true
