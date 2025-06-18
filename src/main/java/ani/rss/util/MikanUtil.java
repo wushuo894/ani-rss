@@ -276,7 +276,10 @@ public class MikanUtil {
         try {
             jsonObject = HttpReq.get("https://bgm-cache.wushuo.top/bgm/score.json", true)
                     .timeout(1000 * 5)
-                    .thenFunction(res -> GsonStatic.fromJson(res.body(), JsonObject.class));
+                    .thenFunction(res -> {
+                        HttpReq.assertStatus(res);
+                        return GsonStatic.fromJson(res.body(), JsonObject.class);
+                    });
         } catch (Exception e) {
             log.error(e.getMessage(), e);
         }

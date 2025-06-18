@@ -36,24 +36,13 @@ import {ref} from "vue";
 import {ElMessage, ElMessageBox} from "element-plus";
 import api from "../js/api.js";
 import Ani from "./Ani.vue";
+import {aniData} from "../js/ani.js";
 
 
 const dialogVisible = ref(false)
 const downloadPathDialogVisible = ref(false)
 
-const ani = ref({
-  'url': '',
-  'season': 1,
-  'offset': 0,
-  'title': '',
-  'themoviedbName': '',
-  'exclude': [],
-  'enable': true,
-  'ova': false,
-  'totalEpisodeNumber': '',
-  'customDownloadPath': false,
-  'downloadPath': ''
-})
+const ani = ref(aniData)
 
 let move = ref(false)
 let downloadPath = ref('')
