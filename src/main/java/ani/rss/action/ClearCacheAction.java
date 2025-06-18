@@ -7,7 +7,6 @@ import ani.rss.util.AniUtil;
 import ani.rss.util.ConfigUtil;
 import ani.rss.util.FilePathUtil;
 import cn.hutool.core.io.FileUtil;
-import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.NumberUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.ReUtil;

@@ -3,7 +3,7 @@ package ani.rss.enums;
 import lombok.Getter;
 
 @Getter
-public enum MessageEnum {
+public enum NotificationStatusEnum {
     /**
      * 开始下载
      */
@@ -36,7 +36,7 @@ public enum MessageEnum {
     private final String emoji;
     private final String action;
 
-    MessageEnum(String emoji, String action) {
+    NotificationStatusEnum(String emoji, String action) {
         this.emoji = emoji;
         this.action = action;
     }

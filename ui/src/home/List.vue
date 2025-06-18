@@ -125,10 +125,9 @@
 
 <script setup>
 import {onMounted, ref} from "vue";
-import {Back, Delete, Edit as EditIcon, Files} from "@element-plus/icons-vue"
+import {Delete, Edit as EditIcon, Files} from "@element-plus/icons-vue"
 import Edit from "./Edit.vue";
 import api from "../js/api.js";
-import Popconfirm from "../other/Popconfirm.vue";
 import PlayList from "../play/PlayList.vue";
 import Cover from "./Cover.vue";
 import Del from "./Del.vue";

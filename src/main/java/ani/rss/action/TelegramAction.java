@@ -2,9 +2,8 @@ package ani.rss.action;
 
 import ani.rss.annotation.Auth;
 import ani.rss.annotation.Path;
-import ani.rss.entity.Config;
-import ani.rss.msg.Telegram;
-import ani.rss.util.ConfigUtil;
+import ani.rss.entity.NotificationConfig;
+import ani.rss.notification.TelegramNotification;
 import cn.hutool.http.server.HttpServerRequest;
 import cn.hutool.http.server.HttpServerResponse;
 
@@ -20,14 +19,12 @@ public class TelegramAction implements BaseAction {
 
     @Override
     public void doAction(HttpServerRequest request, HttpServerResponse response) throws IOException {
-        Config config = getBody(Config.class);
-        ConfigUtil.format(config);
+        NotificationConfig notificationConfig = getBody(NotificationConfig.class);
         String method = request.getParam("method");
 
         if ("getUpdates".equals(method)) {
-            Map<String, String> map = Telegram.getUpdates(config);
+            Map<String, String> map = TelegramNotification.getUpdates(notificationConfig);
             resultSuccess(map);
         }
-
     }
 }

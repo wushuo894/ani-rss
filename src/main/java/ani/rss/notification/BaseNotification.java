@@ -1,9 +1,9 @@
-package ani.rss.msg;
+package ani.rss.notification;
 
 import ani.rss.entity.Ani;
-import ani.rss.entity.Config;
+import ani.rss.entity.NotificationConfig;
 import ani.rss.entity.Tmdb;
-import ani.rss.enums.MessageEnum;
+import ani.rss.enums.NotificationStatusEnum;
 import ani.rss.enums.StringEnum;
 import ani.rss.util.FilePathUtil;
 import ani.rss.util.NumberFormatUtil;
@@ -18,12 +18,12 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
-public interface Message {
+public interface BaseNotification {
 
-    Boolean send(Config config, Ani ani, String text, MessageEnum messageEnum);
+    Boolean send(NotificationConfig notificationConfig, Ani ani, String text, NotificationStatusEnum notificationStatusEnum);
 
-    default String replaceMessageTemplate(Ani ani, String messageTemplate, String text, MessageEnum messageEnum) {
-        messageTemplate = messageTemplate.replace("${text}", text);
+    default String replaceNotificationTemplate(Ani ani, String notificationTemplate, String text, NotificationStatusEnum notificationStatusEnum) {
+        notificationTemplate = notificationTemplate.replace("${text}", text);
         // 集数
         double episode = 1.0;
         if (ReUtil.contains(StringEnum.SEASON_REG, text)) {
@@ -39,13 +39,13 @@ public interface Message {
             episodeFormat = episodeFormat + ".5";
         }
 
-        messageTemplate = messageTemplate.replace("${episode}",
+        notificationTemplate = notificationTemplate.replace("${episode}",
                 NumberFormatUtil.format(episode, 1, 0)
         );
-        messageTemplate = messageTemplate.replace("${episodeFormat}", episodeFormat);
+        notificationTemplate = notificationTemplate.replace("${episodeFormat}", episodeFormat);
 
         if (Objects.isNull(ani)) {
-            return messageTemplate;
+            return notificationTemplate;
         }
 
         List<Func1<Ani, Object>> list = List.of(
@@ -64,38 +64,38 @@ public interface Message {
 
         int season = ani.getSeason();
         String seasonFormat = String.format("%02d", season);
-        messageTemplate = messageTemplate.replace("${seasonFormat}", seasonFormat);
+        notificationTemplate = notificationTemplate.replace("${seasonFormat}", seasonFormat);
 
-        messageTemplate = RenameUtil.replaceField(messageTemplate, ani, list);
+        notificationTemplate = RenameUtil.replaceField(notificationTemplate, ani, list);
 
         String tmdbId = Optional.ofNullable(ani.getTmdb())
                 .map(Tmdb::getId)
                 .orElse("");
-        messageTemplate = messageTemplate.replace("${tmdbid}", tmdbId);
+        notificationTemplate = notificationTemplate.replace("${tmdbid}", tmdbId);
 
         String tmdbUrl = "";
         if (StrUtil.isNotBlank(tmdbId)) {
             String type = ani.getOva() ? "movie" : "tv";
             tmdbUrl = StrFormatter.format("https://www.themoviedb.org/{}/{}", type, tmdbId);
         }
-        messageTemplate = messageTemplate.replace("${tmdburl}", tmdbUrl);
+        notificationTemplate = notificationTemplate.replace("${tmdburl}", tmdbUrl);
 
-        String emoji = messageEnum.getEmoji();
-        String action = messageEnum.getAction();
+        String emoji = notificationStatusEnum.getEmoji();
+        String action = notificationStatusEnum.getAction();
 
-        messageTemplate = messageTemplate.replace("${emoji}", emoji);
-        messageTemplate = messageTemplate.replace("${action}", action);
+        notificationTemplate = notificationTemplate.replace("${emoji}", emoji);
+        notificationTemplate = notificationTemplate.replace("${action}", action);
 
         String downloadPath = FilePathUtil.getAbsolutePath(TorrentUtil.getDownloadPath(ani));
-        messageTemplate = messageTemplate.replace("${downloadPath}", downloadPath);
+        notificationTemplate = notificationTemplate.replace("${downloadPath}", downloadPath);
 
-        if (messageTemplate.contains("${jpTitle}")) {
+        if (notificationTemplate.contains("${jpTitle}")) {
             String jpTitle = RenameUtil.getJpTitle(ani);
-            messageTemplate = messageTemplate.replace("${jpTitle}", jpTitle);
+            notificationTemplate = notificationTemplate.replace("${jpTitle}", jpTitle);
         }
 
-        messageTemplate = RenameUtil.replaceEpisodeTitle(messageTemplate, episode, ani);
+        notificationTemplate = RenameUtil.replaceEpisodeTitle(notificationTemplate, episode, ani);
 
-        return messageTemplate.trim();
+        return notificationTemplate.trim();
     }
 }

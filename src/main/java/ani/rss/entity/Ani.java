@@ -216,7 +216,7 @@ public class Ani implements Serializable {
      */
     private Boolean message;
 
-    public static Ani bulidAni() {
+    public static Ani createAni() {
         Ani newAni = new Ani();
         Config config = ConfigUtil.CONFIG;
         return newAni

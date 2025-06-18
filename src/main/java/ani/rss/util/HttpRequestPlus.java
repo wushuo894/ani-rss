@@ -2,7 +2,6 @@ package ani.rss.util;
 
 import ani.rss.entity.Config;
 import cn.hutool.core.net.url.UrlBuilder;
-import cn.hutool.core.util.ReUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpResponse;

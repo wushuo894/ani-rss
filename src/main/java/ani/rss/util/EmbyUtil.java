@@ -1,7 +1,7 @@
 package ani.rss.util;
 
-import ani.rss.entity.Config;
 import ani.rss.entity.EmbyViews;
+import ani.rss.entity.NotificationConfig;
 import cn.hutool.core.lang.Assert;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -17,18 +17,18 @@ public class EmbyUtil {
     /**
      * 扫描媒体库
      */
-    public static synchronized void refresh(Config config) {
-        List<String> viewIds = config.getEmbyRefreshViewIds();
-        List<EmbyViews> views = getViews(config);
+    public static synchronized void refresh(NotificationConfig notificationConfig) {
+        List<String> viewIds = notificationConfig.getEmbyRefreshViewIds();
+        List<EmbyViews> views = getViews(notificationConfig);
 
         List<String> newViewIds = views
                 .stream()
                 .filter(view -> viewIds.contains(view.getId()))
-                .peek(view -> refresh(view, config))
+                .peek(view -> refresh(view, notificationConfig))
                 .map(EmbyViews::getId)
                 .toList();
 
-        config.setEmbyRefreshViewIds(newViewIds);
+        notificationConfig.setEmbyRefreshViewIds(newViewIds);
     }
 
     /**
@@ -36,9 +36,9 @@ public class EmbyUtil {
      *
      * @param embyViews 媒体库
      */
-    public static synchronized void refresh(EmbyViews embyViews, Config config) {
-        String embyHost = config.getEmbyHost();
-        String embyApiKey = config.getEmbyApiKey();
+    public static synchronized void refresh(EmbyViews embyViews, NotificationConfig notificationConfig) {
+        String embyHost = notificationConfig.getEmbyHost();
+        String embyApiKey = notificationConfig.getEmbyApiKey();
 
         Assert.notBlank(embyHost, "embyHost 为空");
         Assert.notBlank(embyApiKey, "embyApiKey 为空");
@@ -63,9 +63,9 @@ public class EmbyUtil {
      *
      * @return 媒体库列表
      */
-    public static synchronized List<EmbyViews> getViews(Config config) {
-        String embyHost = config.getEmbyHost();
-        String embyApiKey = config.getEmbyApiKey();
+    public static synchronized List<EmbyViews> getViews(NotificationConfig notificationConfig) {
+        String embyHost = notificationConfig.getEmbyHost();
+        String embyApiKey = notificationConfig.getEmbyApiKey();
 
         Assert.notBlank(embyHost, "embyHost 为空");
         Assert.notBlank(embyApiKey, "embyApiKey 为空");

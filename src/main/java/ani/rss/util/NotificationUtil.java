@@ -1,0 +1,68 @@
+package ani.rss.util;
+
+import ani.rss.entity.Ani;
+import ani.rss.entity.Config;
+import ani.rss.entity.NotificationConfig;
+import ani.rss.enums.NotificationStatusEnum;
+import ani.rss.enums.NotificationTypeEnum;
+import ani.rss.notification.BaseNotification;
+import cn.hutool.core.lang.Opt;
+import cn.hutool.core.thread.ExecutorBuilder;
+import cn.hutool.core.util.ReflectUtil;
+import lombok.extern.slf4j.Slf4j;
+
+import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.LinkedBlockingQueue;
+
+@Slf4j
+public class NotificationUtil {
+    private static final ExecutorService EXECUTOR_SERVICE = ExecutorBuilder.create()
+            .setCorePoolSize(1)
+            .setMaxPoolSize(1)
+            .setWorkQueue(new LinkedBlockingQueue<>(256))
+            .build();
+
+    public static synchronized void send(Config config, Ani ani, String text, NotificationStatusEnum notificationStatusEnum) {
+        Boolean isMessage = Opt.ofNullable(ani)
+                .map(Ani::getMessage)
+                .orElse(true);
+
+        if (!isMessage) {
+            // 未开启此订阅通知
+            return;
+        }
+
+        List<NotificationConfig> notificationConfigList = config.getNotificationConfigList();
+
+        for (NotificationConfig notificationConfig : notificationConfigList) {
+            Boolean enable = notificationConfig.getEnable();
+            NotificationTypeEnum notificationType = notificationConfig.getNotificationType();
+
+            if (!enable) {
+                // 未开启
+                continue;
+            }
+
+            if (!AfdianUtil.verifyExpirationTime()) {
+                if (NotificationStatusEnum.COMPLETED == notificationStatusEnum) {
+                    log.warn("未解锁捐赠, 无法使用订阅完结通知");
+                    continue;
+                }
+                if (NotificationStatusEnum.ALIST_UPLOAD == notificationStatusEnum) {
+                    log.warn("未解锁捐赠, 无法使用Alist上传通知");
+                    continue;
+                }
+            }
+
+            BaseNotification baseNotification = ReflectUtil.newInstance(notificationType.getAClass());
+            EXECUTOR_SERVICE.execute(() -> {
+                try {
+                    baseNotification.send(notificationConfig, ani, text, notificationStatusEnum);
+                } catch (Exception e) {
+                    log.error(e.getMessage(), e);
+                }
+            });
+        }
+    }
+}
