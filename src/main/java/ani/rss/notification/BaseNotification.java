@@ -22,6 +22,14 @@ public interface BaseNotification {
 
     default String replaceNotificationTemplate(Ani ani, NotificationConfig notificationConfig, String text, NotificationStatusEnum notificationStatusEnum) {
         String notificationTemplate = notificationConfig.getNotificationTemplate();
+
+        String comment = Opt.ofNullable(notificationConfig)
+                .map(NotificationConfig::getComment)
+                .filter(StrUtil::isNotBlank)
+                .orElse("无备注");
+
+        notificationTemplate = notificationTemplate.replace("${comment}", comment);
+
         return replaceNotificationTemplate(ani, notificationTemplate, text, notificationStatusEnum);
     }
 
