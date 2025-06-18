@@ -1,12 +1,14 @@
 <template>
-  <div style="margin-bottom: 12px;margin-top: 4px;">
-    <el-input v-model:model-value="props.config['notificationTemplate']" type="textarea"
-              placeholder="${text}" :autosize="{ minRows: 2}"/>
-    <div class="flex" style="width: 100%;justify-content: end;">
-      <a target="_blank" href="https://docs.wushuo.top/config/message">通知模版示例</a>
-    </div>
-  </div>
-  <div>
+  <el-collapse>
+    <el-collapse-item title="通知模板">
+      <el-input v-model:model-value="props.config['notificationTemplate']" :autosize="{ minRows: 2}"
+                placeholder="${text}" type="textarea"/>
+      <div class="flex" style="width: 100%;justify-content: end;">
+        <a href="https://docs.wushuo.top/config/message" target="_blank">通知模版示例</a>
+      </div>
+    </el-collapse-item>
+  </el-collapse>
+  <div style="margin-top: 8px;">
     <div>
       <el-space wrap class="flex flex-wrap gap-4" size="small">
         <el-card v-for="it in props.config['notificationConfigList']" shadow="never" style="min-width: 180px">
