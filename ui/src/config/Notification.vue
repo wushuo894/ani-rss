@@ -9,7 +9,7 @@
   <div>
     <div>
       <el-space wrap class="flex flex-wrap gap-4" size="small">
-        <el-card v-for="it in props.config['notificationConfigList']" shadow="never" style="min-width: 240px">
+        <el-card v-for="it in props.config['notificationConfigList']" shadow="never" style="min-width: 180px">
           <div style="align-items: center;justify-content: space-between;" class="flex">
             <div>
               <p>
@@ -20,8 +20,19 @@
               </el-text>
             </div>
             <div>
-              <el-button icon="Edit" bg text type="primary" @click="notificationConfigRef?.show(it)"/>
-              <el-button icon="Delete" bg text type="danger" @click="del(it)"/>
+              <el-dropdown trigger="click">
+                <el-button bg icon="MoreFilled" text type="primary"/>
+                <template #dropdown>
+                  <el-dropdown-menu>
+                    <el-dropdown-item icon="Edit" @click="notificationConfigRef?.show(it)">
+                      编辑
+                    </el-dropdown-item>
+                    <el-dropdown-item icon="Delete" @click="del(it)">
+                      删除
+                    </el-dropdown-item>
+                  </el-dropdown-menu>
+                </template>
+              </el-dropdown>
             </div>
           </div>
         </el-card>
