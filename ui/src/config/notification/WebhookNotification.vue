@@ -11,12 +11,12 @@
     <el-form-item label="URL">
       <el-input v-model:model-value="props.notificationConfig['webHookUrl']" type="textarea"
                 autosize
-                placeholder="http://www.xxx.com?text=test_${message}"></el-input>
+                placeholder="https://www.xxx.com?text=test_${notification}"/>
     </el-form-item>
     <el-form-item label="Body">
       <el-input v-model:model-value="props.notificationConfig['webHookBody']" type="textarea"
                 :autosize="{ minRows: 2}"
-                placeholder='{"text":"test_${message}"}'></el-input>
+                placeholder='{"text":"test_${notification}"}'/>
     </el-form-item>
     <div style="display: flex;justify-content: end;">
       <a target="_blank" href="https://docs.wushuo.top/config/message">通知模版示例</a>
