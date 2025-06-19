@@ -14,7 +14,7 @@
                     {{ it.lastModifyFormat }}
                   </el-text>
                 </div>
-                <el-button bg text icon="VideoPlay" @click="playStart?.show(ani,it)"/>
+                <el-button circle icon="VideoPlay" size="large" text type="primary" @click="playStart?.show(ani,it)"/>
               </div>
             </el-card>
             <div style="height: 4px;"/>
