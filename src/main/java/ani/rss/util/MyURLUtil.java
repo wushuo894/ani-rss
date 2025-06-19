@@ -3,14 +3,10 @@ package ani.rss.util;
 import cn.hutool.core.text.StrFormatter;
 import cn.hutool.core.util.ReUtil;
 import cn.hutool.core.util.StrUtil;
-import cn.hutool.core.util.URLUtil;
-
-import java.net.URL;
 
 public class MyURLUtil {
     /**
      * 自动添加http协议
-     * 去除url的path
      *
      * @param urlStr
      * @return
@@ -24,16 +20,10 @@ public class MyURLUtil {
             urlStr = StrFormatter.format("http://{}", urlStr);
         }
 
-        URL url = URLUtil.url(urlStr);
-        String protocol = url.getProtocol();
-        String host = url.getHost();
-        int port = url.getPort();
-
-        urlStr = StrFormatter.format("{}://{}", protocol, host);
-
-        if (port > 0) {
-            urlStr += ":" + port;
+        if (urlStr.endsWith("/")) {
+            urlStr = urlStr.substring(0, urlStr.length() - 1);
         }
+
         return urlStr;
     }
 }
