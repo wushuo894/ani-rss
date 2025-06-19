@@ -1,7 +1,7 @@
 <template>
   <el-collapse>
     <el-collapse-item title="通知模板">
-      <el-input v-model:model-value="props.config['notificationTemplate']" :autosize="{ minRows: 2}"
+      <el-input v-model="props.config['notificationTemplate']" :autosize="{ minRows: 2}"
                 placeholder="${text}" type="textarea"/>
       <div class="flex" style="width: 100%;justify-content: end;">
         <a href="https://docs.wushuo.top/config/message" target="_blank">通知模版示例</a>
