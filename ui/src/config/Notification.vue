@@ -17,7 +17,7 @@
               <p>
                 {{ getLabel(it['notificationType']) }}
               </p>
-              <el-text size="small">
+              <el-text line-clamp="1" size="small" style="max-width: 120px;" truncated>
                 {{ it['comment'] ? it['comment'] : '无备注' }}
               </el-text>
             </div>
