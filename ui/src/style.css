@@ -96,3 +96,7 @@ html, body, #app {
     color: #59636e;
     border-left: .25em solid #d1d9e0;
 }
+
+.el-collapse-item__header {
+    width: auto;
+}

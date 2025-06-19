@@ -1,14 +1,8 @@
 <template>
   <el-dialog v-model="dialogVisible" center title="设置">
-    <div v-loading="loading">
+    <div v-loading="loading" class="loading">
       <el-tabs v-model:model-value="activeName" style="margin: 0 15px;">
         <el-tab-pane label="下载设置" name="download" :lazy="true">
-          <template #label>
-            <el-icon>
-              <DownloadIcon/>
-            </el-icon>
-            <span>下载设置</span>
-          </template>
           <div style="height: 500px;">
             <el-scrollbar style="padding: 0 12px">
               <Download v-model:config="config"/>
@@ -16,80 +10,37 @@
           </div>
         </el-tab-pane>
         <el-tab-pane :lazy="true" label="基本设置" name="basic">
-          <template #label>
-            <el-icon>
-              <Operation/>
-            </el-icon>
-            <span>基本设置</span>
-          </template>
           <div style="height: 500px;">
-            <el-scrollbar style="padding: 0 12px">
+            <el-scrollbar style="padding: 0 12px;">
               <Basic v-model:config="config"/>
             </el-scrollbar>
           </div>
         </el-tab-pane>
         <el-tab-pane label="全局排除" :lazy="true">
-          <template #label>
-            <el-icon>
-              <Filter/>
-            </el-icon>
-            <span>全局排除</span>
-          </template>
           <Exclude v-model:exclude="config.exclude" :show-text="true"/>
         </el-tab-pane>
         <el-tab-pane label="代理设置" :lazy="true">
-          <template #label>
-            <el-icon>
-              <Promotion/>
-            </el-icon>
-            <span>代理设置</span>
-          </template>
           <Proxy v-model:config="config"/>
         </el-tab-pane>
         <el-tab-pane label="登录设置" :lazy="true">
-          <template #label>
-            <el-icon>
-              <User/>
-            </el-icon>
-            <span>登录设置</span>
-          </template>
           <LoginConfig :config="config"/>
         </el-tab-pane>
         <el-tab-pane label="通知" :lazy="true">
-          <template #label>
-            <el-icon>
-              <ChatRound/>
-            </el-icon>
-            <span>通知</span>
-          </template>
           <div style="height: 500px;">
-            <el-scrollbar style="padding: 0 12px">
-              <Notification ref="notificationRef" v-model:config="config"/>
+            <el-scrollbar>
+              <Notification v-model:config="config"/>
             </el-scrollbar>
           </div>
-          <div style="height: 4px;"></div>
         </el-tab-pane>
         <el-tab-pane :lazy="true" label="捐赠" name="afdian">
-          <template #label>
-            <el-icon>
-              <Mug/>
-            </el-icon>
-            <span>捐赠</span>
-          </template>
           <Afdian :config="config"/>
         </el-tab-pane>
         <el-tab-pane label="关于" name="about" :lazy="true">
-          <template #label>
-            <el-icon>
-              <InfoFilled/>
-            </el-icon>
-            <span>关于</span>
-          </template>
           <About :config="config"/>
         </el-tab-pane>
       </el-tabs>
       <div style="display: flex;justify-content: end;width: 100%;margin-top: 8px;">
-        <el-button :loading="configButtonLoading" @click="editConfig" text bg icon="Check" type="primary">确定
+        <el-button :loading="configButtonLoading" bg icon="Check" text type="primary" @click="saveConfig">确定
         </el-button>
         <el-button icon="Close" bg text @click="dialogVisible = false">取消</el-button>
       </div>
@@ -110,16 +61,6 @@ import Basic from "../config/Basic.vue";
 import About from "../config/About.vue";
 import LoginConfig from "../config/LoginConfig.vue";
 import Afdian from "../config/Afdian.vue";
-import {
-  ChatRound,
-  Download as DownloadIcon,
-  Filter,
-  InfoFilled,
-  Mug,
-  Operation,
-  Promotion,
-  User
-} from "@element-plus/icons-vue";
 import {configData} from "../js/config.js";
 
 const dialogVisible = ref(false)
@@ -129,8 +70,6 @@ const loading = ref(true)
 const config = ref(configData)
 
 const activeName = ref('download')
-
-const notificationRef = ref()
 
 const show = (update) => {
   activeName.value = update ? 'about' : 'download'
@@ -145,7 +84,7 @@ const show = (update) => {
       })
 }
 
-const editConfig = () => {
+const saveConfig = () => {
   configButtonLoading.value = true
   let my_config = JSON.parse(JSON.stringify(config.value))
   if (my_config.login.password) {
@@ -167,9 +106,3 @@ defineExpose({
 })
 const emit = defineEmits(['load'])
 </script>
-
-<style scoped>
-.el-tabs__item > .el-icon {
-  display: none;
-}
-</style>
