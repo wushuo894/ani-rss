@@ -23,13 +23,13 @@
             </div>
             <div>
               <el-dropdown trigger="click">
-                <el-button bg icon="MoreFilled" text type="primary"/>
+                <el-button circle icon="MoreFilled" size="large" text type="primary"/>
                 <template #dropdown>
                   <el-dropdown-menu>
-                    <el-dropdown-item icon="Edit" @click="notificationConfigRef?.show(it)">
+                    <el-dropdown-item @click="notificationConfigRef?.show(it)">
                       编辑
                     </el-dropdown-item>
-                    <el-dropdown-item icon="Delete" @click="del(it)">
+                    <el-dropdown-item @click="del(it)">
                       删除
                     </el-dropdown-item>
                   </el-dropdown-menu>
