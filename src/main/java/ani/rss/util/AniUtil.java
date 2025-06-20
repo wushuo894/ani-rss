@@ -252,6 +252,9 @@ public class AniUtil {
         }
         ani = ObjectUtil.clone(ani);
 
+        String title = ani.getTitle();
+        boolean ova = ani.getOva();
+        boolean enable = ani.getEnable();
         int currentEpisodeNumber = ani.getCurrentEpisodeNumber();
         int totalEpisodeNumber = ani.getTotalEpisodeNumber();
 
@@ -265,8 +268,11 @@ public class AniUtil {
             return;
         }
 
-        String title = ani.getTitle();
-        Boolean ova = ani.getOva();
+        if (enable) {
+            // 仍是启用的话 主RSS仍未完结
+            return;
+        }
+
         if (ova) {
             // 剧场版不进行迁移
             return;
@@ -274,13 +280,13 @@ public class AniUtil {
 
         Config config = ObjectUtil.clone(ConfigUtil.CONFIG);
 
-        Boolean autoDisabled = config.getAutoDisabled();
+        boolean autoDisabled = config.getAutoDisabled();
         if (!autoDisabled) {
             // 未开启自动禁用订阅
             return;
         }
 
-        Boolean completed = config.getCompleted();
+        boolean completed = config.getCompleted();
         if (!completed) {
             // 未开启
             return;
