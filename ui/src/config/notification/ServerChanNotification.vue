@@ -4,10 +4,10 @@
       <el-select v-model="props.notificationConfig.serverChanType">
         <el-option
             v-for="it in [{
-              label: 'serverChan',
+              label: 'ServerChan',
               name: 'SERVER_CHAN'
             }, {
-              label: 'serverChan3',
+              label: 'ServerChan3',
               name: 'SERVER_CHAN_3'
             }]"
             :key="it.name"
@@ -16,10 +16,10 @@
         />
       </el-select>
     </el-form-item>
-    <el-form-item label="sendKey" v-if="props.notificationConfig.serverChanType === 'serverChan'">
+    <el-form-item label="sendKey" v-if="props.notificationConfig.serverChanType === 'SERVER_CHAN'">
       <el-input v-model="props.notificationConfig.serverChanSendKey" placeholder="1234567890"/>
     </el-form-item>
-    <el-form-item label="apiUrl" v-if="props.notificationConfig.serverChanType === 'serverChan3'">
+    <el-form-item label="apiUrl" v-if="props.notificationConfig.serverChanType === 'SERVER_CHAN_3'">
       <el-input v-model="props.notificationConfig.serverChan3ApiUrl"
                 placeholder="https://<uid>.push.ft07.com/send/<sendKey>.send"/>
     </el-form-item>
