@@ -38,6 +38,12 @@ import java.util.stream.Collectors;
 public class BgmUtil {
     private static final String host = "https://api.bgm.tv";
 
+    /**
+     * 获取bgm名称
+     *
+     * @param bgmInfo
+     * @return
+     */
     public static synchronized String getName(BgmInfo bgmInfo) {
         Config config = ConfigUtil.CONFIG;
 
@@ -58,6 +64,13 @@ public class BgmUtil {
         return title.trim();
     }
 
+    /**
+     * 获取bgm名称
+     *
+     * @param bgmInfo
+     * @param tmdb
+     * @return
+     */
     public static synchronized String getName(BgmInfo bgmInfo, Tmdb tmdb) {
         Config config = ConfigUtil.CONFIG;
         Boolean titleYear = config.getTitleYear();
@@ -77,6 +90,12 @@ public class BgmUtil {
         return title;
     }
 
+    /**
+     * 搜索番剧
+     *
+     * @param name
+     * @return
+     */
     public static List<JsonObject> search(String name) {
         name = name.replace("1/2", "½");
         HttpRequest httpRequest = HttpReq.get(host + "/search/subject/" + name, true);
@@ -161,6 +180,12 @@ public class BgmUtil {
         return id;
     }
 
+    /**
+     * 获取番剧id
+     *
+     * @param ani
+     * @return
+     */
     public static String getSubjectId(Ani ani) {
         String bgmUrl = ani.getBgmUrl();
         if (StrUtil.isBlank(bgmUrl) && "mikan".equals(ani.getType())) {
@@ -374,21 +399,47 @@ public class BgmUtil {
                 .thenFunction(HttpResponse::isOk);
     }
 
+    /**
+     * 获取对应的bgm信息
+     *
+     * @param ani
+     * @param isCache
+     * @return
+     */
     public static BgmInfo getBgmInfo(Ani ani, Boolean isCache) {
         String subjectId = getSubjectId(ani);
         Assert.notBlank(subjectId);
         return getBgmInfo(subjectId, isCache);
     }
 
+    /**
+     * 获取对应的bgm信息
+     *
+     * @param ani
+     * @return
+     */
     public static BgmInfo getBgmInfo(Ani ani) {
         String subjectId = getSubjectId(ani);
         return getBgmInfo(subjectId);
     }
 
+    /**
+     * 获取对应的bgm信息
+     *
+     * @param subjectId
+     * @return
+     */
     public static BgmInfo getBgmInfo(String subjectId) {
         return getBgmInfo(subjectId, false);
     }
 
+    /**
+     * 获取对应的bgm信息
+     *
+     * @param subjectId
+     * @param isCache
+     * @return
+     */
     public static BgmInfo getBgmInfo(String subjectId, Boolean isCache) {
         Function<HttpResponse, BgmInfo> fun = res -> {
             HttpReq.assertStatus(res);
@@ -525,6 +576,12 @@ public class BgmUtil {
         return bgmInfo;
     }
 
+    /**
+     * 设置token
+     *
+     * @param httpRequest
+     * @return
+     */
     public static synchronized HttpRequest setToken(HttpRequest httpRequest) {
         String bgmToken = ConfigUtil.CONFIG.getBgmToken();
         if (StrUtil.isNotBlank(bgmToken)) {
@@ -612,6 +669,13 @@ public class BgmUtil {
         return eps;
     }
 
+    /**
+     * bgm转ani
+     *
+     * @param bgmInfo
+     * @param ani
+     * @return
+     */
     public static Ani toAni(BgmInfo bgmInfo, Ani ani) {
         String title = BgmUtil.getName(bgmInfo);
 

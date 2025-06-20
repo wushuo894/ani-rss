@@ -188,6 +188,9 @@ public class AlistUtil {
         });
     }
 
+    /**
+     * 校验配置
+     */
     public static void verify() {
         Config config = ConfigUtil.CONFIG;
         String alistHost = config.getAlistHost();
@@ -199,6 +202,12 @@ public class AlistUtil {
         Assert.notBlank(alistToken, "alistToken 未配置");
     }
 
+    /**
+     * 获取上传位置
+     *
+     * @param ani
+     * @return
+     */
     private static String getPath(Ani ani) {
         ani = ObjectUtil.clone(ani)
                 // 因为临时修改下载位置模版以获取对应下载位置, 要关闭自定义下载位置

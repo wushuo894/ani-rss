@@ -23,6 +23,14 @@ public class NotificationUtil {
             .setWorkQueue(new LinkedBlockingQueue<>(256))
             .build();
 
+    /**
+     * 发送通知
+     *
+     * @param config
+     * @param ani
+     * @param text
+     * @param notificationStatusEnum
+     */
     public static synchronized void send(Config config, Ani ani, String text, NotificationStatusEnum notificationStatusEnum) {
         Boolean isMessage = Opt.ofNullable(ani)
                 .map(Ani::getMessage)
