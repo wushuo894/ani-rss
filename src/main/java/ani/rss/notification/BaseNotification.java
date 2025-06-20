@@ -18,6 +18,15 @@ import java.util.Optional;
 
 public interface BaseNotification {
 
+    /**
+     * 发送通知
+     *
+     * @param notificationConfig
+     * @param ani
+     * @param text
+     * @param notificationStatusEnum
+     * @return
+     */
     Boolean send(NotificationConfig notificationConfig, Ani ani, String text, NotificationStatusEnum notificationStatusEnum);
 
     default String replaceNotificationTemplate(Ani ani, NotificationConfig notificationConfig, String text, NotificationStatusEnum notificationStatusEnum) {
