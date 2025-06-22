@@ -73,8 +73,8 @@
 
 <script setup>
 import {ref} from "vue";
-import support_aifadian from "../icon/support_aifadian.svg";
-import api from "../js/api.js";
+import support_aifadian from "@/icon/support_aifadian.svg";
+import api from "@/js/api.js";
 import {ElMessage} from "element-plus";
 import {EditPen, Mug} from "@element-plus/icons-vue";
 import TryOut from "./TryOut.vue";

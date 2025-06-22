@@ -152,7 +152,7 @@
 
 <script setup>
 import {ref} from "vue";
-import api from "../js/api.js";
+import api from "@/js/api.js";
 import {ElMessage, ElText} from "element-plus";
 import {DocumentCopy, Download as DownloadIcon} from "@element-plus/icons-vue";
 

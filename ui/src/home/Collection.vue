@@ -181,11 +181,11 @@ import {ref} from "vue";
 import {UploadFilled} from "@element-plus/icons-vue";
 import {ElMessage, ElMessageBox} from "element-plus";
 import Bgm from "./Bgm.vue";
-import api from "../js/api.js";
-import Exclude from "../config/Exclude.vue";
+import api from "@/js/api.js";
+import Exclude from "@/config/Exclude.vue";
 import CollectionPreview from "./CollectionPreview.vue";
-import AfdianPrompt from "../other/AfdianPrompt.vue";
-import {aniData} from "../js/ani.js";
+import AfdianPrompt from "@/other/AfdianPrompt.vue";
+import {aniData} from "@/js/ani.js";
 
 let start = () => {
   startLoading.value = true

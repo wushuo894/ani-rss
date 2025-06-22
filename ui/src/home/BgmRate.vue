@@ -21,7 +21,7 @@
 <script setup>
 
 import {ref} from "vue";
-import api from "../js/api.js";
+import api from "@/js/api.js";
 import {Ban, Save} from "@vicons/fa";
 import {ElMessage} from "element-plus";
 

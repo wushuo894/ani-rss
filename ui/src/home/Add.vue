@@ -100,11 +100,11 @@
 <script setup>
 import {ref} from "vue";
 import {ElMessage} from "element-plus";
-import api from "../js/api.js";
+import api from "@/js/api.js";
 import Mikan from "./Mikan.vue";
 import Ani from "./Ani.vue";
 import Bgm from "./Bgm.vue";
-import {aniData} from "../js/ani.js";
+import {aniData} from "@/js/ani.js";
 
 const showRss = ref(true)
 const mikan = ref()
