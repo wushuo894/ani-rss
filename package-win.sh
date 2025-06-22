@@ -58,6 +58,7 @@ unzip java-17-openjdk-17.0.3.0.6-1.jre.win.x86_64.zip
 mv java-17-openjdk-17.0.3.0.6-1.jre.win.x86_64 ani-rss/jre
 cp ../windows/* ani-rss
 zip -r ani-rss.win.x86_64.zip ani-rss
+rm -rf ani-rss
 
 echo -e "${GREEN}打包完成 ani-rss.win.x86_64.zip${NC}"
 
