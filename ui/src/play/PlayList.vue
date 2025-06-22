@@ -31,9 +31,9 @@
 <script setup>
 
 import {ref} from "vue";
-import api from "../js/api.js";
+import api from "@/js/api.js";
 import PlayStart from "./PlayStart.vue";
-import formatTime from "../js/format-time.js";
+import formatTime from "@/js/format-time.js";
 
 const dialogVisible = ref(false)
 const listLoading = ref(false)

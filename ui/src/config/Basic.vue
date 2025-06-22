@@ -409,9 +409,9 @@
 <script setup>
 import {ElMessage, ElText} from "element-plus";
 import {ref} from "vue";
-import api from "../js/api.js";
+import api from "@/js/api.js";
 import {useColorMode, useLocalStorage} from "@vueuse/core";
-import AfdianPrompt from "../other/AfdianPrompt.vue";
+import AfdianPrompt from "@/other/AfdianPrompt.vue";
 
 let githubList = new Set([
   'None',
@@ -452,8 +452,6 @@ let githubList = new Set([
   'gh.xx9527.cn',
   'ghfast.top'
 ])
-
-console.log(githubList);
 
 const {store} = useColorMode()
 

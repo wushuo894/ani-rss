@@ -33,7 +33,7 @@
 
 <script setup>
 import {ref} from "vue";
-import api from "../js/api.js";
+import api from "@/js/api.js";
 
 let dialogVisible = ref(false)
 

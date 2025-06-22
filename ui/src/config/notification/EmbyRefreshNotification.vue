@@ -32,7 +32,7 @@
 
 <script setup>
 import {onMounted, ref} from "vue";
-import api from "../../js/api.js";
+import api from "@/js/api.js";
 
 const views = ref([])
 
@@ -40,7 +40,7 @@ const getEmbyViewsLoading = ref(false)
 
 const getEmbyViews = () => {
   getEmbyViewsLoading.value = true
-  api.post('api/emby?type=getViews', props.config)
+  api.post('api/emby?type=getViews', props.notificationConfig)
       .then(res => {
         views.value = res.data
       })

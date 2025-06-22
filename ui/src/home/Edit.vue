@@ -34,9 +34,9 @@
 
 import {ref} from "vue";
 import {ElMessage, ElMessageBox} from "element-plus";
-import api from "../js/api.js";
+import api from "@/js/api.js";
 import Ani from "./Ani.vue";
-import {aniData} from "../js/ani.js";
+import {aniData} from "@/js/ani.js";
 
 
 const dialogVisible = ref(false)

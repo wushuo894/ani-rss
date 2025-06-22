@@ -1,5 +1,5 @@
 <template>
-  <template label-width="auto" v-if="notificationConfig['notificationType'] === 'WEB_HOOK'">
+  <template v-if="notificationConfig['notificationType'] === 'WEB_HOOK'">
     <el-form-item label="Method">
       <el-select v-model:model-value="props.notificationConfig['webHookMethod']">
         <el-option v-for="item in ['POST','GET','PUT','DELETE']"
@@ -25,7 +25,5 @@
 </template>
 
 <script setup>
-
-
 let props = defineProps(['notificationConfig', 'config'])
 </script>

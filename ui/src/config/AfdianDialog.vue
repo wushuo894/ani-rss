@@ -6,9 +6,8 @@
 
 
 <script setup>
-
 import {ref} from "vue";
-import Afdian from "../config/Afdian.vue";
+import Afdian from "@/config/Afdian.vue";
 
 let dialogVisible = ref(false)
 

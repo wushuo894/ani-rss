@@ -43,7 +43,7 @@
 <script setup>
 import {ref} from "vue";
 import {codeToHtml} from 'shiki'
-import api from "../js/api.js";
+import api from "@/js/api.js";
 
 const dialogVisible = ref(false)
 const loading = ref(true)

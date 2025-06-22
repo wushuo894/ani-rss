@@ -268,7 +268,7 @@
 
 
 import {ref} from "vue";
-import api from "../js/api.js";
+import api from "@/js/api.js";
 import {ElMessage} from "element-plus";
 import {Key, User} from "@element-plus/icons-vue";
 

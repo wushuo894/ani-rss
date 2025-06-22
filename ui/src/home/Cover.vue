@@ -56,9 +56,8 @@
   </el-dialog>
 </template>
 <script setup>
-
 import {ref} from "vue";
-import api from "../js/api.js";
+import api from "@/js/api.js";
 import {ElMessage} from "element-plus";
 import {UploadFilled} from "@element-plus/icons-vue";
 

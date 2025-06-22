@@ -52,16 +52,16 @@
 
 <script setup>
 import {ref} from "vue";
-import AfdianPrompt from "../other/AfdianPrompt.vue";
+import AfdianPrompt from "@/other/AfdianPrompt.vue";
 import EmbyRefreshNotification from "./notification/EmbyRefreshNotification.vue";
 import MailNotification from "./notification/MailNotification.vue";
 import ServerChanNotification from "./notification/ServerChanNotification.vue";
 import TelegramNotification from "./notification/TelegramNotification.vue";
 import WebhookNotification from "./notification/WebhookNotification.vue";
 
-import {notificationTypeList} from "../js/notification-type.js";
+import {notificationTypeList} from "@/js/notification-type.js";
 import {ElMessage} from "element-plus";
-import api from "../js/api.js";
+import api from "@/js/api.js";
 
 let notificationConfig = ref({
   "comment": "无备注",

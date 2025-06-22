@@ -20,7 +20,7 @@
 <script setup>
 
 import {markRaw, ref} from "vue";
-import api from "../js/api.js";
+import api from "@/js/api.js";
 import {ElMessage, ElMessageBox} from "element-plus";
 import {Delete} from "@element-plus/icons-vue";
 

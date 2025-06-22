@@ -58,8 +58,8 @@
 import NotificationConfig from "./NotificationConfig.vue";
 import {ref} from "vue";
 
-import {getLabel} from "../js/notification-type.js";
-import api from "../js/api.js";
+import {getLabel} from "@/js/notification-type.js";
+import api from "@/js/api.js";
 
 let addLoading = ref(false)
 

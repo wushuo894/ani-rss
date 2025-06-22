@@ -51,9 +51,8 @@
 </template>
 
 <script setup>
-
 import {ElMessage} from "element-plus";
-import api from "../../js/api.js";
+import api from "@/js/api.js";
 import {ref} from "vue";
 
 let chatIdMap = ref({})
