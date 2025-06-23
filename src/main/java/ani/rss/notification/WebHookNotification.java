@@ -33,7 +33,10 @@ public class WebHookNotification implements BaseNotification {
         String notificationTemplate = replaceNotificationTemplate(ani, notificationConfig, text, notificationStatusEnum);
         notificationTemplate = notificationTemplate.replace("\n", "\\n");
 
+        webHookUrl = webHookUrl.replace("${message}", notificationTemplate);
         webHookUrl = webHookUrl.replace("${notification}", notificationTemplate);
+
+        webHookBody = webHookBody.replace("${message}", notificationTemplate);
         webHookBody = webHookBody.replace("${notification}", notificationTemplate);
 
         String image = "https://docs.wushuo.top/null.png";
