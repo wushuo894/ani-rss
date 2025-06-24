@@ -14,7 +14,7 @@
                     {{ it.lastModifyFormat }}
                   </el-text>
                 </div>
-                <el-button bg text icon="VideoPlay" @click="playStart?.show(ani,it)"/>
+                <el-button circle icon="VideoPlay" size="large" text type="primary" @click="playStart?.show(ani,it)"/>
               </div>
             </el-card>
             <div style="height: 4px;"/>
@@ -31,9 +31,9 @@
 <script setup>
 
 import {ref} from "vue";
-import api from "../js/api.js";
+import api from "@/js/api.js";
 import PlayStart from "./PlayStart.vue";
-import formatTime from "../js/format-time.js";
+import formatTime from "@/js/format-time.js";
 
 const dialogVisible = ref(false)
 const listLoading = ref(false)

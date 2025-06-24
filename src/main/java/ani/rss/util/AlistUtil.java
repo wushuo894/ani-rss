@@ -3,7 +3,7 @@ package ani.rss.util;
 import ani.rss.entity.Ani;
 import ani.rss.entity.Config;
 import ani.rss.entity.TorrentsInfo;
-import ani.rss.enums.MessageEnum;
+import ani.rss.enums.NotificationStatusEnum;
 import ani.rss.enums.TorrentsTags;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.lang.Opt;
@@ -119,7 +119,7 @@ public class AlistUtil {
                                         text = StrFormatter.format("已向alist添加上传任务 {}", fileName);
                                     }
                                     log.info(text);
-                                    MessageUtil.send(config, ani, text, MessageEnum.ALIST_UPLOAD);
+                                    NotificationUtil.send(config, ani, text, NotificationStatusEnum.ALIST_UPLOAD);
                                 });
                         TorrentUtil.addTags(torrentsInfo, TorrentsTags.UPLOAD_COMPLETED.getValue());
                         return;
@@ -128,7 +128,7 @@ public class AlistUtil {
                     }
                 }
                 if (AfdianUtil.verifyExpirationTime()) {
-                    MessageUtil.send(config, ani, "alist上传失败 " + fileName, MessageEnum.ERROR);
+                    NotificationUtil.send(config, ani, "alist上传失败 " + fileName, NotificationStatusEnum.ERROR);
                 }
             });
         }
@@ -188,6 +188,9 @@ public class AlistUtil {
         });
     }
 
+    /**
+     * 校验配置
+     */
     public static void verify() {
         Config config = ConfigUtil.CONFIG;
         String alistHost = config.getAlistHost();
@@ -199,6 +202,12 @@ public class AlistUtil {
         Assert.notBlank(alistToken, "alistToken 未配置");
     }
 
+    /**
+     * 获取上传位置
+     *
+     * @param ani
+     * @return
+     */
     private static String getPath(Ani ani) {
         ani = ObjectUtil.clone(ani)
                 // 因为临时修改下载位置模版以获取对应下载位置, 要关闭自定义下载位置

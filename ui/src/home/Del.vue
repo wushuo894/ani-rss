@@ -20,27 +20,13 @@
 <script setup>
 
 import {markRaw, ref} from "vue";
-import api from "../js/api.js";
+import api from "@/js/api.js";
 import {ElMessage, ElMessageBox} from "element-plus";
 import {Delete} from "@element-plus/icons-vue";
 
 const dialogVisible = ref(false)
 
-const aniList = ref([
-  {
-    'url': '',
-    'season': 1,
-    'offset': 0,
-    'title': '',
-    'themoviedbName': '',
-    'exclude': [],
-    'enable': true,
-    'ova': false,
-    'totalEpisodeNumber': '',
-    'customDownloadPath': false,
-    'downloadPath': ''
-  }
-])
+const aniList = ref([])
 
 let okLoading = ref(false)
 let deleteFiles = ref(false)

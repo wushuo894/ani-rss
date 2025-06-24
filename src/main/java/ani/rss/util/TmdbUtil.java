@@ -254,11 +254,15 @@ public class TmdbUtil {
      * @return
      */
     public static synchronized Map<Integer, String> getEpisodeTitleMap(Ani ani) {
+        Map<Integer, String> episodeTitleMap = new HashMap<>();
+
+        if (Objects.isNull(ani)) {
+            return episodeTitleMap;
+        }
+
         Tmdb tmdb = ani.getTmdb();
         Integer season = ani.getSeason();
         Boolean ova = ani.getOva();
-
-        Map<Integer, String> episodeTitleMap = new HashMap<>();
 
         if (ova) {
             return episodeTitleMap;
@@ -365,6 +369,10 @@ public class TmdbUtil {
                     .form("include_adult", "true")
                     .form("language", tmdbLanguage)
                     .then(res -> {
+                        int status = res.getStatus();
+                        if (status == 404) {
+                            return;
+                        }
                         HttpReq.assertStatus(res);
                         JsonObject body = GsonStatic.fromJson(res.body(), JsonObject.class);
                         List<JsonObject> episodes = GsonStatic.fromJsonList(

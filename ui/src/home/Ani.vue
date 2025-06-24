@@ -195,12 +195,12 @@
 
 <script setup>
 
-import Exclude from "../config/Exclude.vue";
+import Exclude from "@/config/Exclude.vue";
 import Items from "./Items.vue";
 import {onMounted, ref} from "vue";
-import api from "../js/api.js";
+import api from "@/js/api.js";
 import {ElMessage, ElText} from "element-plus";
-import Popconfirm from "../other/Popconfirm.vue";
+import Popconfirm from "@/other/Popconfirm.vue";
 import StandbyRss from "./StandbyRss.vue";
 import Mikan from "./Mikan.vue";
 import TmdbGroup from "./TmdbGroup.vue";

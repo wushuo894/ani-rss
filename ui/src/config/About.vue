@@ -69,16 +69,20 @@
           </el-scrollbar>
         </el-form-item>
       </el-form>
-      <div class="flex" style="width: 100%;justify-content: end;">
-        <el-button :disabled="!about.update" bg icon="Check" text type="primary" @click="update">确定
-        </el-button>
-        <el-button bg icon="Close" text @click="dialogVisible = false">取消</el-button>
-      </div>
     </div>
     <div v-else>
       <el-empty description="无更新"></el-empty>
-      <div class="flex" style="width: 100%;justify-content: end;">
-        <el-button bg icon="Tickets" text @click="openUrl('https://docs.wushuo.top/history')" type="primary">更新历史
+    </div>
+    <div style="width: 100%;justify-content: space-between;" class="flex">
+      <el-button bg text icon="Tickets"
+                 @click="openUrl('https://docs.wushuo.top/history')"
+                 type="primary">
+        更新历史
+      </el-button>
+      <div>
+        <el-button :disabled="!about.update" bg text icon="Check"
+                   type="success" @click="update">
+          开始更新
         </el-button>
         <el-button bg icon="Close" text @click="dialogVisible = false">取消</el-button>
       </div>
@@ -88,9 +92,9 @@
 
 <script setup>
 import {onMounted, ref} from "vue";
-import api from "../js/api.js";
+import api from "@/js/api.js";
 import {ElMessage, ElText} from "element-plus";
-import Popconfirm from "../other/Popconfirm.vue";
+import Popconfirm from "@/other/Popconfirm.vue";
 import {Book, Github, Telegram} from "@vicons/fa";
 
 import markdownit from 'markdown-it'
@@ -98,7 +102,6 @@ import MarkdownItGitHubAlerts from 'markdown-it-github-alerts'
 import 'markdown-it-github-alerts/styles/github-colors-light.css'
 import 'markdown-it-github-alerts/styles/github-colors-dark-media.css'
 import 'markdown-it-github-alerts/styles/github-base.css'
-import {Back} from "@element-plus/icons-vue";
 
 let md = markdownit({
   html: true,

@@ -68,7 +68,8 @@
                         <div class="flex" style="align-items: center;">
                           <img :src="img(it)" height="40" width="40" @click.stop="open(it.url)">
                           <div class="flex" style="align-items: center;">
-                            <el-text :truncated="false" line-clamp="1" size="small" style="margin-left: 4px;line-height: 1.6;">
+                            <el-text :truncated="false" line-clamp="1" size="small"
+                                     style="margin-left: 4px;line-height: 1.6;">
                               {{ it.title }}
                             </el-text>
                           </div>
@@ -151,7 +152,7 @@
 
 <script setup>
 import {ref} from "vue";
-import api from "../js/api.js";
+import api from "@/js/api.js";
 import {ElMessage, ElText} from "element-plus";
 import {DocumentCopy, Download as DownloadIcon} from "@element-plus/icons-vue";
 

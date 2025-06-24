@@ -9,7 +9,8 @@
                        target="_blank">
                 {{ group.name }}
               </el-link>
-              <el-badge v-if="props.ani.tmdb['tmdbGroupId'] === group.id" class="item" style="margin-left: 4px;" type="primary" value="已选择"/>
+              <el-badge v-if="props.ani.tmdb['tmdbGroupId'] === group.id" class="item" style="margin-left: 4px;"
+                        type="primary" value="已选择"/>
             </div>
             <el-button icon="Select" text @click="select(group)"/>
           </div>
@@ -36,7 +37,7 @@
 
 <script setup>
 import {ref} from "vue";
-import api from "../js/api.js";
+import api from "@/js/api.js";
 
 let dialogVisible = ref(false)
 

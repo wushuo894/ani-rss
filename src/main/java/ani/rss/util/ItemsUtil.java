@@ -3,7 +3,7 @@ package ani.rss.util;
 import ani.rss.entity.Ani;
 import ani.rss.entity.Config;
 import ani.rss.entity.Item;
-import ani.rss.enums.MessageEnum;
+import ani.rss.enums.NotificationStatusEnum;
 import ani.rss.enums.StringEnum;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.date.DateTime;
@@ -330,7 +330,7 @@ public class ItemsUtil {
             return;
         }
 
-        MessageUtil.send(config, ani, CollUtil.join(sList, "\n"), MessageEnum.OMIT);
+        NotificationUtil.send(config, ani, CollUtil.join(sList, "\n"), NotificationStatusEnum.OMIT);
     }
 
     public static int currentEpisodeNumber(Ani ani, List<Item> items) {
@@ -419,7 +419,7 @@ public class ItemsUtil {
                     }
 
                     MyCacheUtil.put(key, text, TimeUnit.DAYS.toMillis(1));
-                    MessageUtil.send(config, ani, text, MessageEnum.PROCRASTINATING);
+                    NotificationUtil.send(config, ani, text, NotificationStatusEnum.PROCRASTINATING);
                 });
     }
 

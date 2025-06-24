@@ -10,9 +10,9 @@
 </template>
 
 <script setup>
-import AfdianDialog from "../config/AfdianDialog.vue";
+import AfdianDialog from "@/config/AfdianDialog.vue";
 import {onMounted, ref} from "vue";
-import api from "../js/api.js";
+import api from "@/js/api.js";
 
 let afdian = ref()
 

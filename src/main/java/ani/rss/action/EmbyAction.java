@@ -2,9 +2,8 @@ package ani.rss.action;
 
 import ani.rss.annotation.Auth;
 import ani.rss.annotation.Path;
-import ani.rss.entity.Config;
 import ani.rss.entity.EmbyViews;
-import ani.rss.util.ConfigUtil;
+import ani.rss.entity.NotificationConfig;
 import ani.rss.util.EmbyUtil;
 import cn.hutool.http.server.HttpServerRequest;
 import cn.hutool.http.server.HttpServerResponse;
@@ -21,18 +20,17 @@ public class EmbyAction implements BaseAction {
 
     @Override
     public void doAction(HttpServerRequest request, HttpServerResponse response) throws IOException {
-        Config config = getBody(Config.class);
-        ConfigUtil.format(config);
+        NotificationConfig notificationConfig = getBody(NotificationConfig.class);
         String type = request.getParam("type");
 
         if (type.equals("getViews")) {
-            List<EmbyViews> views = EmbyUtil.getViews(config);
+            List<EmbyViews> views = EmbyUtil.getViews(notificationConfig);
             resultSuccess(views);
             return;
         }
 
         if (type.equals("refresh")) {
-            EmbyUtil.refresh(config);
+            EmbyUtil.refresh(notificationConfig);
             resultSuccess();
         }
 

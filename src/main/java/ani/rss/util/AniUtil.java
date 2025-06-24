@@ -47,12 +47,16 @@ public class AniUtil {
         }
         String s = FileUtil.readUtf8String(configFile);
         List<Ani> anis = GsonStatic.fromJsonList(s, Ani.class);
+
+        CopyOptions copyOptions = CopyOptions
+                .create()
+                .setIgnoreNullValue(true)
+                .setOverride(false);
+
         for (Ani ani : anis) {
-            Ani newAni = Ani.bulidAni();
-            BeanUtil.copyProperties(ani, newAni, CopyOptions
-                    .create()
-                    .setIgnoreNullValue(true));
-            ANI_LIST.add(newAni);
+            Ani newAni = Ani.createAni();
+            BeanUtil.copyProperties(newAni, ani, copyOptions);
+            ANI_LIST.add(ani);
         }
         log.debug("加载订阅 共{}项", ANI_LIST.size());
     }
@@ -87,7 +91,7 @@ public class AniUtil {
         type = StrUtil.blankToDefault(type, "mikan");
         String subgroupId = MikanUtil.getSubgroupId(url);
 
-        Ani ani = Ani.bulidAni();
+        Ani ani = Ani.createAni();
         ani.setUrl(url.trim());
 
         if ("mikan".equals(type)) {
@@ -248,6 +252,9 @@ public class AniUtil {
         }
         ani = ObjectUtil.clone(ani);
 
+        String title = ani.getTitle();
+        boolean ova = ani.getOva();
+        boolean enable = ani.getEnable();
         int currentEpisodeNumber = ani.getCurrentEpisodeNumber();
         int totalEpisodeNumber = ani.getTotalEpisodeNumber();
 
@@ -261,8 +268,11 @@ public class AniUtil {
             return;
         }
 
-        String title = ani.getTitle();
-        Boolean ova = ani.getOva();
+        if (enable) {
+            // 仍是启用的话 主RSS仍未完结
+            return;
+        }
+
         if (ova) {
             // 剧场版不进行迁移
             return;
@@ -270,13 +280,13 @@ public class AniUtil {
 
         Config config = ObjectUtil.clone(ConfigUtil.CONFIG);
 
-        Boolean autoDisabled = config.getAutoDisabled();
+        boolean autoDisabled = config.getAutoDisabled();
         if (!autoDisabled) {
             // 未开启自动禁用订阅
             return;
         }
 
-        Boolean completed = config.getCompleted();
+        boolean completed = config.getCompleted();
         if (!completed) {
             // 未开启
             return;
