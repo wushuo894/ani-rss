@@ -1,5 +1,9 @@
 <template>
   <template v-if="props.notificationConfig['notificationType'] === 'SERVER_CHAN'">
+    <el-form-item label="通知模版">
+      <el-input v-model:model-value="props.notificationConfig['notificationTemplate']" :autosize="{ minRows: 2}"
+                placeholder="${notification}" type="textarea"/>
+    </el-form-item>
     <el-form-item label="Type">
       <el-select v-model="props.notificationConfig.serverChanType">
         <el-option

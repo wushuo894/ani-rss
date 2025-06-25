@@ -27,10 +27,6 @@
           </el-checkbox-group>
           <AfdianPrompt :config="props.config" name="Alist上传通知、订阅完结、摸鱼检测"/>
         </el-form-item>
-        <el-form-item label="通知模版">
-          <el-input v-model:model-value="notificationConfig['notificationTemplate']" type="textarea"
-                    placeholder="${text}" :autosize="{ minRows: 2}"/>
-        </el-form-item>
         <EmbyRefreshNotification v-model:notification-config="notificationConfig" v-model:config="props.config"/>
         <MailNotification v-model:notification-config="notificationConfig" v-model:config="props.config"/>
         <ServerChanNotification v-model:notification-config="notificationConfig" v-model:config="props.config"/>

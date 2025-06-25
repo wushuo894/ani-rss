@@ -1,5 +1,9 @@
 <template>
   <template v-if="notificationConfig['notificationType'] === 'WEB_HOOK'">
+    <el-form-item label="通知模版">
+      <el-input v-model:model-value="props.notificationConfig['notificationTemplate']" :autosize="{ minRows: 2}"
+                placeholder="${notification}" type="textarea"/>
+    </el-form-item>
     <el-form-item label="Method">
       <el-select v-model:model-value="props.notificationConfig['webHookMethod']">
         <el-option v-for="item in ['POST','GET','PUT','DELETE']"
