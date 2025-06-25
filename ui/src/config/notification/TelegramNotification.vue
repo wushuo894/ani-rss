@@ -1,5 +1,9 @@
 <template>
   <template v-if="notificationConfig['notificationType'] === 'TELEGRAM'">
+    <el-form-item label="通知模版">
+      <el-input v-model:model-value="props.notificationConfig['notificationTemplate']" :autosize="{ minRows: 2}"
+                placeholder="${notification}" type="textarea"/>
+    </el-form-item>
     <el-form-item label="Api Host">
       <el-input v-model:model-value="props.notificationConfig['telegramApiHost']"
                 placeholder="https://api.telegram.org"/>
