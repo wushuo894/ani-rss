@@ -27,7 +27,7 @@
         </el-tab-pane>
         <el-tab-pane label="通知" :lazy="true">
           <div style="height: 500px;">
-            <el-scrollbar>
+            <el-scrollbar style="padding: 0 12px;">
               <Notification v-model:config="config"/>
             </el-scrollbar>
           </div>
