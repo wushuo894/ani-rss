@@ -1,11 +1,14 @@
 package ani.rss.auth.util;
 
-import ani.rss.annotation.Auth;
 import ani.rss.auth.enums.AuthType;
 import ani.rss.entity.Config;
 import ani.rss.entity.Login;
 import ani.rss.util.*;
-import cn.hutool.core.util.*;
+import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.core.util.RandomUtil;
+import cn.hutool.core.util.ReflectUtil;
+import cn.hutool.core.util.StrUtil;
+import cn.hutool.crypto.SecureUtil;
 import cn.hutool.http.server.HttpServerRequest;
 import com.sun.net.httpserver.HttpExchange;
 import lombok.extern.slf4j.Slf4j;
@@ -15,7 +18,6 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 
 /**
  * 鉴权工具
@@ -67,7 +69,7 @@ public class AuthUtil {
             key = resetKey();
         }
         login.setKey(key);
-        return Md5Util.digestHex(GsonStatic.toJson(login)) + ":" + key;
+        return SecureUtil.sha256(GsonStatic.toJson(login));
     }
 
     public static Login getLogin() {
@@ -106,18 +108,12 @@ public class AuthUtil {
      * @return
      */
     public static Boolean test(HttpServerRequest request, AuthType authType) {
-        synchronized (MAP) {
-            if (MAP.isEmpty()) {
-                Map<String, Function<HttpServerRequest, Boolean>> map = ClassUtil.scanPackage("ani.rss.auth.fun")
-                        .stream()
-                        .collect(Collectors.toMap(c -> c.getAnnotation(Auth.class).type().name(), i -> (Function<HttpServerRequest, Boolean>) ReflectUtil.newInstance(i)));
-                MAP.putAll(map);
-            }
-        }
-        String name = authType.name();
+        Class<? extends Function<HttpServerRequest, Boolean>> clazz = authType.getClazz();
+        String name = clazz.getName();
         Function<HttpServerRequest, Boolean> function = MAP.get(name);
         if (Objects.isNull(function)) {
-            return false;
+            function = ReflectUtil.newInstance(clazz);
+            MAP.put(name, function);
         }
         return function.apply(request);
     }

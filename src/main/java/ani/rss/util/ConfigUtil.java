@@ -15,6 +15,7 @@ import cn.hutool.core.text.StrFormatter;
 import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.ZipUtil;
+import cn.hutool.crypto.SecureUtil;
 import cn.hutool.system.OsInfo;
 import cn.hutool.system.SystemUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -52,7 +53,7 @@ public class ConfigUtil {
         String ovaDownloadPathTemplate = StrFormatter.format("{}/${letter}/${title}", ovaDownloadPath);
         String completedPathTemplate = StrFormatter.format("{}/${letter}/${title}/Season ${season}", completedPath);
 
-        String password = Md5Util.digestHex("admin");
+        String password = SecureUtil.md5("admin");
 
         String notificationTemplate = """
                 ${emoji}${emoji}${emoji}

@@ -15,6 +15,7 @@ import cn.hutool.core.net.NetUtil;
 import cn.hutool.core.util.ClassUtil;
 import cn.hutool.core.util.ReflectUtil;
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.crypto.SecureUtil;
 import cn.hutool.http.server.HttpServerRequest;
 import cn.hutool.http.server.HttpServerResponse;
 import cn.hutool.http.server.SimpleServer;
@@ -155,7 +156,7 @@ public class ServerUtil {
         if (StrUtil.isBlank(ip)) {
             return false;
         }
-        String key = "IpWhitelist:" + Md5Util.digestHex(ipWhitelistStr) + ":" + ip;
+        String key = "IpWhitelist:" + SecureUtil.md5(ipWhitelistStr) + ":" + ip;
         try {
             if (!PatternPool.IPV4.matcher(ip).matches()) {
                 return false;

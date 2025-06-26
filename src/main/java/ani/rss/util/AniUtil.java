@@ -11,6 +11,7 @@ import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.core.util.URLUtil;
+import cn.hutool.crypto.SecureUtil;
 import cn.hutool.http.HttpUtil;
 import cn.hutool.json.JSONUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -186,7 +187,7 @@ public class AniUtil {
         if (StrUtil.isBlank(coverUrl)) {
             return cover;
         }
-        String filename = Md5Util.digestHex(coverUrl);
+        String filename = SecureUtil.md5(coverUrl);
         filename = filename.charAt(0) + "/" + filename + "." + FileUtil.extName(URLUtil.getPath(coverUrl));
         FileUtil.mkdir(configDir + "/files/" + filename.charAt(0));
         File file = new File(configDir + "/files/" + filename);

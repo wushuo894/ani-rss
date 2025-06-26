@@ -12,6 +12,7 @@ import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.RuntimeUtil;
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.crypto.SecureUtil;
 import cn.hutool.system.OsInfo;
 import cn.hutool.system.SystemUtil;
 import com.google.gson.JsonObject;
@@ -117,7 +118,7 @@ public class UpdateUtil {
                     long contentLength = res.contentLength();
                     FileUtil.writeFromStream(res.bodyStream(), file, true);
                     Assert.isTrue(file.length() == contentLength, "下载出现问题");
-                    Assert.isTrue(Md5Util.digestHex(file).equals(downloadMd5), "更新文件的MD5不匹配");
+                    Assert.isTrue(SecureUtil.md5(file).equals(downloadMd5), "更新文件的MD5不匹配");
                 });
 
         ThreadUtil.execute(() -> {
