@@ -14,6 +14,7 @@ import cn.hutool.core.lang.Assert;
 import cn.hutool.core.text.StrFormatter;
 import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.core.util.*;
+import cn.hutool.crypto.SecureUtil;
 import cn.hutool.http.HttpResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.w3c.dom.*;
@@ -315,7 +316,7 @@ public class ItemsUtil {
 
         for (Integer i : list) {
             String s = StrFormatter.format("缺少集数 {} S{}E{}", title, String.format("%02d", season), String.format("%02d", i));
-            String key = "omit:" + Md5Util.digestHex(s);
+            String key = "omit:" + SecureUtil.md5(s);
             if (MyCacheUtil.containsKey(key)) {
                 // 一天内已经提醒过了
                 continue;
@@ -411,7 +412,7 @@ public class ItemsUtil {
                     }
                     String text = StrFormatter.format("检测到{}, 已摸鱼{}天", ani.getTitle(), day);
 
-                    String key = "procrastinating:" + Md5Util.digestHex(text);
+                    String key = "procrastinating:" + SecureUtil.md5(text);
 
                     if (MyCacheUtil.containsKey(key)) {
                         // 一天内已经提醒过了
