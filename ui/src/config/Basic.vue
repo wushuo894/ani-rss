@@ -1,5 +1,9 @@
 <template>
-  <div>
+  <el-form label-width="auto"
+           style="width: 100%"
+           @submit="(event)=>{
+                    event.preventDefault()
+                   }">
     <el-collapse v-model:model-value="activeName" accordion>
       <el-collapse-item title="页面设置" name="1">
         <page :config="props.config"/>
@@ -20,7 +24,7 @@
         <other :config="props.config"/>
       </el-collapse-item>
     </el-collapse>
-  </div>
+  </el-form>
 </template>
 
 <script setup>

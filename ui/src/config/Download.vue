@@ -146,15 +146,15 @@
     <el-form-item label="检测是否死种">
       <el-switch v-model:model-value="props.config.watchErrorTorrent"/>
     </el-form-item>
+    <el-collapse v-model="activeName">
+      <el-collapse-item name="qb" title="qBittorrent 设置">
+        <q-bittorrent v-if="activeName.indexOf('qb') > -1" :config="props.config"/>
+      </el-collapse-item>
+      <el-collapse-item name="alist" title="Alist 设置">
+        <alist v-if="activeName.indexOf('alist') > -1" :config="props.config"/>
+      </el-collapse-item>
+    </el-collapse>
   </el-form>
-  <el-collapse v-model="activeName">
-    <el-collapse-item name="qb" title="qBittorrent 设置">
-      <q-bittorrent v-if="activeName.indexOf('qb') > -1" :config="props.config"/>
-    </el-collapse-item>
-    <el-collapse-item name="alist" title="Alist 设置">
-      <alist v-if="activeName.indexOf('alist') > -1" :config="props.config"/>
-    </el-collapse-item>
-  </el-collapse>
 </template>
 
 <script setup>

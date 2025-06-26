@@ -1,46 +1,44 @@
 <template>
-  <el-form label-width="auto">
-    <el-form-item label="外观">
-      <el-radio-group v-model="store">
-        <el-radio-button label="自动" value="auto"/>
-        <el-radio-button label="浅色" value="light"/>
-        <el-radio-button label="深色" value="dark"/>
-      </el-radio-group>
-    </el-form-item>
-    <el-form-item label="主题色">
-      <el-color-picker v-model="color" :predefine="predefineColors"
-                       @blur="colorChange(color)"
-                       @change="colorChange(color)"
-                       @active-change="colorChange"/>
-    </el-form-item>
-    <el-form-item label="按星期展示">
-      <el-switch v-model:model-value="props.config.weekShow"/>
-    </el-form-item>
-    <el-form-item label="显示评分">
-      <el-switch v-model:model-value="props.config.scoreShow"/>
-    </el-form-item>
-    <el-form-item label="显示视频列表">
-      <el-switch v-model:model-value="props.config.showPlaylist"/>
-    </el-form-item>
-    <el-form-item label="显示更新时间">
-      <el-switch v-model:model-value="props.config['showLastDownloadTime']"/>
-    </el-form-item>
-    <el-form-item label="自定义CSS">
-      <div style="width: 100%;">
-        <el-input v-model:model-value="props.config['customCss']" :autosize="{ minRows: 2, maxRows: 4 }"
-                  placeholder="" type="textarea"/>
-        <br>
-        <div class="flex" style="justify-content:end; width: 100%;">
-          <a href="https://github.com/wushuo894/ani-rss-css"
-             target="_blank">更多CSS</a>
-        </div>
-      </div>
-    </el-form-item>
-    <el-form-item label="自定义JS">
-      <el-input v-model:model-value="props.config['customJs']" :autosize="{ minRows: 2, maxRows: 4 }"
+  <el-form-item label="外观">
+    <el-radio-group v-model="store">
+      <el-radio-button label="自动" value="auto"/>
+      <el-radio-button label="浅色" value="light"/>
+      <el-radio-button label="深色" value="dark"/>
+    </el-radio-group>
+  </el-form-item>
+  <el-form-item label="主题色">
+    <el-color-picker v-model="color" :predefine="predefineColors"
+                     @blur="colorChange(color)"
+                     @change="colorChange(color)"
+                     @active-change="colorChange"/>
+  </el-form-item>
+  <el-form-item label="按星期展示">
+    <el-switch v-model:model-value="props.config.weekShow"/>
+  </el-form-item>
+  <el-form-item label="显示评分">
+    <el-switch v-model:model-value="props.config.scoreShow"/>
+  </el-form-item>
+  <el-form-item label="显示视频列表">
+    <el-switch v-model:model-value="props.config.showPlaylist"/>
+  </el-form-item>
+  <el-form-item label="显示更新时间">
+    <el-switch v-model:model-value="props.config['showLastDownloadTime']"/>
+  </el-form-item>
+  <el-form-item label="自定义CSS">
+    <div style="width: 100%;">
+      <el-input v-model:model-value="props.config['customCss']" :autosize="{ minRows: 2, maxRows: 4 }"
                 placeholder="" type="textarea"/>
-    </el-form-item>
-  </el-form>
+      <br>
+      <div class="flex" style="justify-content:end; width: 100%;">
+        <a href="https://github.com/wushuo894/ani-rss-css"
+           target="_blank">更多CSS</a>
+      </div>
+    </div>
+  </el-form-item>
+  <el-form-item label="自定义JS">
+    <el-input v-model:model-value="props.config['customJs']" :autosize="{ minRows: 2, maxRows: 4 }"
+              placeholder="" type="textarea"/>
+  </el-form-item>
 </template>
 
 <script setup>
