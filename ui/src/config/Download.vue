@@ -89,10 +89,36 @@
       </div>
     </el-form-item>
     <el-form-item label="保存位置">
-      <el-input v-model:model-value="props.config['downloadPathTemplate']"></el-input>
+      <div style="width: 100%;">
+        <el-input v-model:model-value="props.config['downloadPathTemplate']"/>
+        <el-alert
+            v-if="!testPathTemplate(props.config['downloadPathTemplate'])"
+            style="margin-top: 8px;"
+            type="warning"
+            show-icon
+            :closable="false"
+        >
+          <template #title>
+            你的 保存位置 并未按照模版填写, 可能会遇到下载位置错误
+          </template>
+        </el-alert>
+      </div>
     </el-form-item>
     <el-form-item label="剧场版保存位置">
-      <el-input v-model:model-value="props.config['ovaDownloadPathTemplate']"></el-input>
+      <div style="width: 100%;">
+        <el-input v-model:model-value="props.config['ovaDownloadPathTemplate']"/>
+        <el-alert
+            v-if="!testPathTemplate(props.config['ovaDownloadPathTemplate'])"
+            style="margin-top: 8px;"
+            type="warning"
+            show-icon
+            :closable="false"
+        >
+          <template #title>
+            你的 剧场版保存位置 并未按照模版填写, 可能会遇到下载位置错误
+          </template>
+        </el-alert>
+      </div>
     </el-form-item>
     <el-form-item label="自动删除">
       <div>
@@ -182,6 +208,10 @@ const downloadLoginTest = () => {
       .finally(() => {
         downloadLoginTestLoading.value = false
       })
+}
+
+let testPathTemplate = (path) => {
+  return new RegExp('\\$\{[A-z]+\}').test(path);
 }
 
 let activeName = ref([])
