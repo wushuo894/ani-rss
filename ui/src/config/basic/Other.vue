@@ -22,9 +22,6 @@
       </div>
     </div>
   </el-form-item>
-  <el-form-item label="禁止公网访问">
-    <el-switch v-model:model-value="props.config.innerIP"/>
-  </el-form-item>
   <el-form-item label="最大日志条数">
     <div style="width: 150px">
       <el-select v-model:model-value="props.config.logsMax">
