@@ -17,53 +17,59 @@
       <el-button bg icon="Close" text @click="cssDialogVisible = false">关闭</el-button>
     </div>
   </el-dialog>
-  <el-form-item label="外观">
-    <el-radio-group v-model="store">
-      <el-radio-button label="自动" value="auto">
-        <template #default>
+  <el-form label-width="auto"
+           style="width: 100%"
+           @submit="(event)=>{
+                    event.preventDefault()
+                   }">
+    <el-form-item label="外观">
+      <el-radio-group v-model="store">
+        <el-radio-button label="自动" value="auto">
+          <template #default>
+            <el-icon>
+              <Adjust/>
+            </el-icon>
+          </template>
+        </el-radio-button>
+        <el-radio-button label="浅色" value="light">
           <el-icon>
-            <Adjust/>
+            <Sun/>
           </el-icon>
+        </el-radio-button>
+        <el-radio-button label="深色" value="dark">
+          <el-icon>
+            <Moon/>
+          </el-icon>
+        </el-radio-button>
+      </el-radio-group>
+    </el-form-item>
+    <el-form-item label="主题色">
+      <el-color-picker v-model="color" :predefine="predefineColors"
+                       @blur="colorChange(color)"
+                       @change="colorChange(color)"
+                       @active-change="colorChange"/>
+    </el-form-item>
+    <el-form-item label="其他">
+      <el-checkbox v-model="props.config.scoreShow" label="显示评分"/>
+      <el-checkbox v-model="props.config.weekShow" label="按星期展示"/>
+      <el-checkbox v-model="props.config.showPlaylist" label="显示视频列表"/>
+      <el-checkbox v-model="props.config.showLastDownloadTime" label="显示更新时间"/>
+    </el-form-item>
+    <el-form-item label="自定义">
+      <el-button bg text @click="jsDialogVisible = true">
+        <template #icon>
+          <Js/>
         </template>
-      </el-radio-button>
-      <el-radio-button label="浅色" value="light">
-        <el-icon>
-          <Sun/>
-        </el-icon>
-      </el-radio-button>
-      <el-radio-button label="深色" value="dark">
-        <el-icon>
-          <Moon/>
-        </el-icon>
-      </el-radio-button>
-    </el-radio-group>
-  </el-form-item>
-  <el-form-item label="主题色">
-    <el-color-picker v-model="color" :predefine="predefineColors"
-                     @blur="colorChange(color)"
-                     @change="colorChange(color)"
-                     @active-change="colorChange"/>
-  </el-form-item>
-  <el-form-item label="其他">
-    <el-checkbox v-model="props.config.scoreShow" label="显示评分"/>
-    <el-checkbox v-model="props.config.weekShow" label="按星期展示"/>
-    <el-checkbox v-model="props.config.showPlaylist" label="显示视频列表"/>
-    <el-checkbox v-model="props.config.showLastDownloadTime" label="显示更新时间"/>
-  </el-form-item>
-  <el-form-item label="自定义">
-    <el-button bg text @click="jsDialogVisible = true">
-      <template #icon>
-        <Js/>
-      </template>
-      JavaScript
-    </el-button>
-    <el-button bg text @click="cssDialogVisible = true">
-      <template #icon>
-        <Css3Alt/>
-      </template>
-      CSS
-    </el-button>
-  </el-form-item>
+        JavaScript
+      </el-button>
+      <el-button bg text @click="cssDialogVisible = true">
+        <template #icon>
+          <Css3Alt/>
+        </template>
+        CSS
+      </el-button>
+    </el-form-item>
+  </el-form>
 </template>
 
 <script setup>
