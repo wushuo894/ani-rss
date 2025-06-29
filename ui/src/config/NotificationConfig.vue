@@ -32,6 +32,7 @@
         <ServerChanNotification v-model:notification-config="notificationConfig" v-model:config="props.config"/>
         <TelegramNotification v-model:notification-config="notificationConfig" v-model:config="props.config"/>
         <WebhookNotification v-model:notification-config="notificationConfig" v-model:config="props.config"/>
+        <SystemNotification v-model:notification-config="notificationConfig" v-model:config="props.config"/>
         <el-form-item label="开启">
           <el-switch v-model="notificationConfig['enable']"/>
         </el-form-item>
@@ -58,6 +59,7 @@ import WebhookNotification from "./notification/WebhookNotification.vue";
 import {notificationTypeList} from "@/js/notification-type.js";
 import {ElMessage} from "element-plus";
 import api from "@/js/api.js";
+import SystemNotification from "@/config/notification/SystemNotification.vue";
 
 let notificationConfig = ref({
   "comment": "无备注",
