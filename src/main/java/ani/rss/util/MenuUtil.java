@@ -83,7 +83,7 @@ public class MenuUtil {
         webui.addActionListener(e -> {
             if (Desktop.isDesktopSupported()) {
                 try {
-                    Desktop.getDesktop().browse(new URL("http://127.0.0.1:" + ServerUtil.PORT).toURI());
+                    Desktop.getDesktop().browse(new URL("http://127.0.0.1:" + ServerUtil.HTTP_PORT).toURI());
                 } catch (Exception ex) {
                     log.error("打开webui失败", ex);
                 }
@@ -106,7 +106,7 @@ public class MenuUtil {
                 if (e.getButton() == 1 && clicked.get()) {
                     // 直接打开webui
                     try {
-                        Desktop.getDesktop().browse(new URL("http://127.0.0.1:" + ServerUtil.PORT).toURI());
+                        Desktop.getDesktop().browse(new URL("http://127.0.0.1:" + ServerUtil.HTTP_PORT).toURI());
                     } catch (Exception ex) {
                         log.error("打开webui失败", ex);
                     }
