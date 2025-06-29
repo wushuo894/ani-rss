@@ -677,7 +677,7 @@ public class BgmUtil {
      * @return
      */
     public static Ani toAni(BgmInfo bgmInfo, Ani ani) {
-        String title = BgmUtil.getName(bgmInfo);
+        String title = BgmUtil.getName(bgmInfo, null);
 
         int eps = getEps(bgmInfo);
 
