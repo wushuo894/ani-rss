@@ -36,33 +36,65 @@ public class ServerUtil {
     public static final ThreadLocal<HttpServerRequest> REQUEST = new ThreadLocal<>();
     public static final ThreadLocal<HttpServerResponse> RESPONSE = new ThreadLocal<>();
     public static String HOST = "";
-    public static String PORT = "7789";
-    public static SimpleServer server;
+    public static String HTTP_PORT = "7789";
+    public static SimpleServer HTTP_SERVER;
 
     public static void start() {
+        // 创建http/https服务
+        createServer();
+
+        // 添加过滤器
+        addFilter(HTTP_SERVER);
+
+        // 添加 action
+        addAction(HTTP_SERVER);
+
+        HTTP_SERVER.getRawServer().start();
+
+        InetSocketAddress address = HTTP_SERVER.getAddress();
+        String hostName = address.getHostName();
+        int port = address.getPort();
+        HTTP_PORT = String.valueOf(port);
+
+        log.info("Http Server listen on [{}:{}]", hostName, port);
+
+        for (String ip : NetUtil.localIpv4s()) {
+            log.info("http://{}:{}", ip, port);
+        }
+    }
+
+    /**
+     * 创建http/https服务
+     */
+    public static void createServer() {
         Map<String, String> env = System.getenv();
         int i = Main.ARGS.indexOf("--port");
         if (i > -1) {
-            PORT = Main.ARGS.get(i + 1);
+            HTTP_PORT = Main.ARGS.get(i + 1);
         }
         i = Main.ARGS.indexOf("--host");
         if (i > -1) {
             HOST = Main.ARGS.get(i + 1);
         }
-        PORT = env.getOrDefault("PORT", PORT);
+        HTTP_PORT = env.getOrDefault("PORT", HTTP_PORT);
         HOST = env.getOrDefault("HOST", HOST);
 
         if (StrUtil.isBlank(HOST)) {
-            server = new SimpleServer(Integer.parseInt(PORT));
-        } else {
-            try {
-                server = new SimpleServer(HOST, Integer.parseInt(PORT));
-            } catch (Exception e) {
-                log.error(e.getMessage(), e);
-                server = new SimpleServer(Integer.parseInt(PORT));
-            }
+            HTTP_SERVER = new SimpleServer(Integer.parseInt(HTTP_PORT));
+            return;
         }
 
+        try {
+            HTTP_SERVER = new SimpleServer(HOST, Integer.parseInt(HTTP_PORT));
+            return;
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+        }
+
+        HTTP_SERVER = new SimpleServer(Integer.parseInt(HTTP_PORT));
+    }
+
+    public static void addFilter(SimpleServer server) {
         server.addFilter((req, res, chain) -> {
             REQUEST.set(req);
             RESPONSE.set(res);
@@ -70,7 +102,6 @@ public class ServerUtil {
             Boolean isInnerIP = config.getInnerIP();
             try {
                 String ip = getIp();
-
                 // 仅允许内网ip访问
                 if (isInnerIP) {
                     if (!PatternPool.IPV4.matcher(ip).matches()) {
@@ -88,7 +119,11 @@ public class ServerUtil {
                 RESPONSE.remove();
             }
         });
+    }
+
+    public static void addAction(SimpleServer server) {
         server.addAction("/", new RootAction());
+
         Set<Class<?>> classes = ClassUtil.scanPackage("ani.rss.action");
         for (Class<?> aClass : classes) {
             Path path = aClass.getAnnotation(Path.class);
@@ -124,20 +159,14 @@ public class ServerUtil {
                 }
             });
         }
-        server.getRawServer().start();
-        InetSocketAddress address = server.getAddress();
-        log.info("Http Server listen on [{}:{}]", address.getHostName(), address.getPort());
-        for (String ip : NetUtil.localIpv4s()) {
-            log.info("http://{}:{}", ip, address.getPort());
-        }
     }
 
     public static void stop() {
-        if (Objects.isNull(server)) {
+        if (Objects.isNull(HTTP_SERVER)) {
             return;
         }
         try {
-            server.getRawServer().stop(0);
+            HTTP_SERVER.getRawServer().stop(0);
         } catch (Exception e) {
             log.error(e.getMessage(), e);
         }
@@ -170,18 +199,24 @@ public class ServerUtil {
                 if (StrUtil.isBlank(string)) {
                     continue;
                 }
+
+                // 判断是否为 ipv4
                 if (PatternPool.IPV4.matcher(string).matches()) {
                     if (string.equals(ip)) {
                         MyCacheUtil.put(key, Boolean.TRUE, TimeUnit.MINUTES.toMillis(10));
                         return true;
                     }
                 }
+
+                // 通配符，如 192.168.*.1
                 if (string.contains("*")) {
                     if (Ipv4Util.matches(string, ip)) {
                         MyCacheUtil.put(key, Boolean.TRUE, TimeUnit.MINUTES.toMillis(10));
                         return true;
                     }
                 }
+
+                // IP段，支持X.X.X.X-X.X.X.X或X.X.X.X/X
                 List<String> ips = Ipv4Util.list(string, false);
                 if (ips.contains(ip)) {
                     ips.clear();
