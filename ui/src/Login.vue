@@ -55,6 +55,7 @@ import App from "./home/App.vue";
 import api from "./js/api.js";
 import {useDark, useLocalStorage} from '@vueuse/core'
 import {Key} from "@element-plus/icons-vue";
+import {ElMessage} from "element-plus";
 
 let loading = ref(false)
 
@@ -76,11 +77,19 @@ let rememberThePassword = useLocalStorage('rememberThePassword', {
 })
 
 let login = () => {
-  loading.value = true
   user.value.password = user.value.password.trim()
   user.value.username = user.value.username.trim()
+
+  if (!user.value.password || !user.value.username) {
+    ElMessage.error('请输入账号与密码')
+    return
+  }
+
   let my_user = JSON.parse(JSON.stringify(user.value))
-  my_user.password = my_user.password ? CryptoJS.MD5(my_user.password).toString() : '';
+  my_user.password = CryptoJS['MD5'](my_user.password).toString()
+
+  loading.value = true
+
   api.post('api/login', my_user)
       .then(res => {
         localStorage.setItem("authorization", res.data)

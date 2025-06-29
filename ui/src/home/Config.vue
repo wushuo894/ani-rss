@@ -87,9 +87,15 @@ const show = (update) => {
 const saveConfig = () => {
   configButtonLoading.value = true
   let my_config = JSON.parse(JSON.stringify(config.value))
-  if (my_config.login.password) {
-    my_config.login.password = CryptoJS.MD5(my_config.login.password).toString();
+
+  let username = my_config.login.username.trim()
+  let password = my_config.login.password.trim()
+
+  my_config.login.username = username
+  if (password) {
+    my_config.login.password = CryptoJS['MD5'](password).toString();
   }
+
   api.post('api/config', my_config)
       .then(res => {
         ElMessage.success(res.message)
