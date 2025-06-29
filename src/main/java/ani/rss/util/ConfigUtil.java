@@ -14,6 +14,7 @@ import cn.hutool.core.lang.func.LambdaUtil;
 import cn.hutool.core.text.StrFormatter;
 import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.core.util.ArrayUtil;
+import cn.hutool.core.util.RandomUtil;
 import cn.hutool.core.util.ZipUtil;
 import cn.hutool.crypto.SecureUtil;
 import cn.hutool.system.OsInfo;
@@ -73,6 +74,8 @@ public class ConfigUtil {
                 TMDB集标题: ${episodeTitle}
                 ${emoji}${emoji}${emoji}
                 """;
+
+        String apiKey = RandomUtil.randomString(32).toLowerCase();
 
         CONFIG.setSleep(15)
                 .setMikanHost("https://mikanime.tv")
@@ -187,7 +190,8 @@ public class ConfigUtil {
                 .setCompleted(false)
                 .setCompletedPathTemplate(completedPathTemplate)
                 .setNotificationTemplate(notificationTemplate)
-                .setNotificationConfigList(new ArrayList<>());
+                .setNotificationConfigList(new ArrayList<>())
+                .setApiKey(apiKey);
     }
 
     /**
