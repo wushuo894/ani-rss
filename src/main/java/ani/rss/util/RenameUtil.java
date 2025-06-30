@@ -26,21 +26,9 @@ public class RenameUtil {
         Boolean ova = ani.getOva();
 
         if (ova) {
+            title = renameDel(title);
             item.setReName(title);
             return true;
-        }
-
-        Boolean renameDelYear = config.getRenameDelYear();
-        Boolean renameDelTmdbId = config.getRenameDelTmdbId();
-
-        if (renameDelTmdbId) {
-            title = ReUtil.replaceAll(title, StringEnum.TMDB_ID_REG, "")
-                    .trim();
-        }
-
-        if (renameDelYear) {
-            title = ReUtil.replaceAll(title, StringEnum.YEAR_REG, "")
-                    .trim();
         }
 
         Boolean customEpisode = ani.getCustomEpisode();
@@ -125,6 +113,8 @@ public class RenameUtil {
         );
 
         renameTemplate = replaceField(renameTemplate, ani, list);
+
+        renameTemplate = renameDel(renameTemplate);
 
         String reName = getName(renameTemplate);
 
@@ -281,6 +271,29 @@ public class RenameUtil {
             s = s.replace("  ", " ");
         }
         return s.trim();
+    }
+
+    /**
+     * 重命名剔除tmdbid与年份
+     *
+     * @param title
+     * @return
+     */
+    public static String renameDel(String title) {
+        Config config = ConfigUtil.CONFIG;
+        Boolean renameDelYear = config.getRenameDelYear();
+        Boolean renameDelTmdbId = config.getRenameDelTmdbId();
+
+        if (renameDelTmdbId) {
+            title = ReUtil.replaceAll(title, StringEnum.TMDB_ID_REG, "")
+                    .trim();
+        }
+
+        if (renameDelYear) {
+            title = ReUtil.replaceAll(title, StringEnum.YEAR_REG, "")
+                    .trim();
+        }
+        return title;
     }
 
 }
