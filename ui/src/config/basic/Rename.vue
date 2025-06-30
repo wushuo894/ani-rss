@@ -32,7 +32,7 @@
         <el-switch v-model:model-value="props.config.renameDelYear"/>
         <br>
         <el-text class="mx-1" size="small">
-          重命名时 ${title} 剔除 年份, 如 (2024)
+          重命名时剔除 年份, 如 (2024)
         </el-text>
       </div>
     </el-form-item>
@@ -41,7 +41,7 @@
         <el-switch v-model:model-value="props.config.renameDelTmdbId"/>
         <br>
         <el-text class="mx-1" size="small">
-          重命名时 ${title} 剔除 tmdbid, 如 [tmdbid=242143]
+          重命名时剔除 tmdbid, 如 [tmdbid=242143]
         </el-text>
       </div>
     </el-form-item>
