@@ -9,7 +9,7 @@
                      :value="item.label"/>
         </el-select>
         <div style="width: 4px;"/>
-        <el-input v-model:model-value="data.downloadPath" disabled></el-input>
+        <el-input v-model:model-value="data.downloadPath" readonly/>
       </div>
       <div style="width: 100%;display: flex;justify-content: end;margin-top: 8px;">
         <el-button bg text :disabled="!selectViews.length" @click="allowDownload" icon="Check" type="primary">允许下载
