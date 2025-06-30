@@ -333,12 +333,12 @@ public class Config implements Serializable {
     private String renameTemplate;
 
     /**
-     * 重命名时 ${title} 去除 年份 如 (2024)
+     * 重命名时剔除 年份 如 (2024)
      */
     private Boolean renameDelYear;
 
     /**
-     * 重命名时 ${title} 去除 tmdbId [tmdbid=242143]
+     * 重命名时剔除 tmdbId [tmdbid=242143]
      */
     private Boolean renameDelTmdbId;
 
