@@ -280,11 +280,16 @@ public class ItemsUtil {
             return list;
         }
 
-        for (int i = min; i <= max; i++) {
-            if (ArrayUtil.contains(array, i)) {
+        for (int ep = min; ep <= max; ep++) {
+            if (ArrayUtil.contains(array, ep)) {
+                // 包含该集
                 continue;
             }
-            list.add(i);
+            if (50 < list.size()) {
+                // 防止list过多
+                return list;
+            }
+            list.add(ep);
         }
         return list;
     }
