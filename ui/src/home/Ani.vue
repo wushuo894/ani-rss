@@ -1,11 +1,7 @@
 <template>
   <Items ref="items" :ani="props.ani"/>
   <StandbyRss ref="standbyRss" :ani="props.ani"/>
-  <Mikan ref="mikanRef" @add="args => {
-    ani.subgroup = args.group
-    ani.match = JSON.parse(args.match).map(s => `{{${args.group}}}:${s}`)
-    ani.url = args.url
-  }"/>
+  <Mikan ref="mikanRef" @callback="mikanCallback"/>
   <TmdbGroup ref="tmdbGroupRef" :ani="props.ani"/>
   <div style="height: 500px;">
     <el-scrollbar style="padding: 0 12px;" height="500" ref="scrollbar">
@@ -300,6 +296,19 @@ let getBgmName = () => {
       .finally(() => {
         getBgmNameLoading.value = false
       })
+}
+
+let mikanCallback = v => {
+  let {group, match, url} = v
+  props.ani.url = url
+  props.ani.subgroup = group
+
+  let newMatch = JSON.parse(match).map(s => `{{${group}}}:${s}`)
+
+  // 剔除旧的同字幕组规则
+  props.ani.match = props.ani.match.filter(it => it.indexOf(`{{${group}}}:`) !== 0)
+
+  props.ani.match.push(...newMatch)
 }
 
 let props = defineProps(['ani'])
