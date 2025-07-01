@@ -40,8 +40,14 @@
       <div>
         <div>
           <el-select v-model:model-value="props.config['tmdbLanguage']" style="width: 150px;">
-            <el-option v-for="language in ['zh-CN','zh-TW','ja-JP','en-US']" :key="language"
-                       :value="language"></el-option>
+            <el-option v-for="item in tmdb_i18n" :value="item.i18n_tag"
+                       :label="`${item.native_name} (${item.i18n_tag})`"
+                       :key="item.i18n_tag">
+              <span style="float: left">{{ item.native_name }}</span>
+              <el-text type="info" style="float: right;" size="small">
+                {{ item.i18n_tag }}
+              </el-text>
+            </el-option>
           </el-select>
         </div>
         <div>
@@ -92,6 +98,7 @@
 
 <script setup>
 import {ElText} from "element-plus";
+import {tmdb_i18n} from "@/js/tmdb-i18n.js";
 
 let props = defineProps(['config'])
 </script>
