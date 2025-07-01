@@ -27,7 +27,7 @@ export let aniData = {
     "totalEpisodeNumber": 12,
     "themoviedbName": "",
     "type": "mikan",
-    "bgmUrl": "https://bgm.tv/subject/509986",
+    "bgmUrl": "",
     "customDownloadPath": false,
     "downloadPath": "",
     "score": 8,
