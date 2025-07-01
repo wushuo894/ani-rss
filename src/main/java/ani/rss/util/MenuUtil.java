@@ -104,13 +104,13 @@ public class MenuUtil {
             public synchronized void mouseReleased(MouseEvent e) {
                 // 左键点击
                 if (e.getButton() == 1 && clicked.get()) {
+                    clicked.set(false);
                     // 直接打开webui
                     try {
                         Desktop.getDesktop().browse(new URL("http://127.0.0.1:" + ServerUtil.HTTP_PORT).toURI());
                     } catch (Exception ex) {
                         log.error("打开webui失败", ex);
                     }
-                    clicked.set(false);
                     ThreadUtil.execute(() -> {
                         ThreadUtil.sleep(1000);
                         clicked.set(true);
