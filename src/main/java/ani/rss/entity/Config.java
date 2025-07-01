@@ -258,7 +258,7 @@ public class Config implements Serializable {
     private Boolean enabledExclude;
 
     /**
-     * BGM日文标题
+     * BGM日语标题
      */
     private Boolean bgmJpName;
 
