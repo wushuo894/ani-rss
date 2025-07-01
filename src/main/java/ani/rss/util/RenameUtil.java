@@ -206,10 +206,10 @@ public class RenameUtil {
 
 
     /**
-     * 获取bgm日文标题
+     * 获取bgm日语标题
      *
      * @param ani 订阅
-     * @return 日文标题
+     * @return 日语标题
      */
     public static String getJpTitle(Ani ani) {
         return Opt.ofNullable(ani)

@@ -39,7 +39,7 @@ public class Ani implements Serializable {
     private String title;
 
     /**
-     * 日文标题 来源于BGM
+     * 日语标题 来源于BGM
      */
     private String jpTitle;
 
