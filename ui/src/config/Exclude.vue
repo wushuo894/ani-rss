@@ -34,12 +34,21 @@
           </el-text>
         </el-tooltip>
       </el-tag>
-      <el-button class="button-new-tag" size="small" @click="()=>{
-        add = true
-      }" bg text
-                 style="margin-right: 4px;margin-bottom: 4px;">
-        +
-      </el-button>
+      <el-button bg
+                 icon="Plus"
+                 size="small" style="margin-right: 4px;margin-bottom: 4px;"
+                 text
+                 @click="()=> add = true"
+      />
+      <el-button
+          v-if="props.exclude.length"
+          bg
+          icon="Delete"
+          size="small"
+          style="margin-left: 0;margin-bottom: 4px;" text
+          type="danger"
+          @click="() => props.exclude.length = 0"
+      />
     </div>
     <div class="flex" style="margin-top: 4px;width: 100%;justify-content: space-between;">
       <el-button bg text size="small" @click="importExclude" v-if="props.importExclude"

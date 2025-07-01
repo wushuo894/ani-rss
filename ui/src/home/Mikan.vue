@@ -24,7 +24,7 @@
     </div>
     <div style="display: flex;width: 100%;justify-content: end;">
       <el-button icon="Check" @click="async ()=>{
-          emit('add', addAni)
+          emit('callback', addAni)
           dialogVisible = false
           matchDialogVisible = false
       }" text bg>确定
@@ -102,7 +102,7 @@
                                   </el-tag>
                                 </div>
                                 <div style="display: flex;align-items: center;margin-right: 14px;margin-left: 4px;">
-                                  <el-button bg text @click.stop="add({
+                                  <el-button bg text @click.stop="callback({
                                   'title':it.title,
                                   'group':group.label,
                                   'url':group['rss'],
@@ -268,25 +268,21 @@ let matchDialogVisible = ref(false)
 
 let addAni = ref({
   'url': '',
-  'match': ''
+  'match': '',
+  'group': ''
 })
 
 let matchList = ref([])
 
-let add = (v) => {
+let callback = v => {
+  let {url, group} = v
   matchList.value = JSON.parse(JSON.stringify(v.matchList))
-  let all = []
-  addAni.value.url = v.url
-  addAni.value.group = v.group
-  addAni.value.match = JSON.stringify(all)
 
-  if (matchList.value.length === 1 || props.match) {
-    dialogVisible.value = false
-    emit('add', addAni.value)
-    return
-  }
+  addAni.value.url = url
+  addAni.value.group = group
+  addAni.value.match = '[]'
 
-  matchList.value.push(all)
+  matchList.value.push([])
   matchDialogVisible.value = true
 }
 
@@ -299,14 +295,14 @@ let showTag = () => {
   return window.innerWidth > 900;
 }
 
-let open = (url) => {
+let open = url => {
   window.open(url);
 }
 
 defineExpose({show})
 
 let props = defineProps(['match'])
-let emit = defineEmits(['add'])
+let emit = defineEmits(['callback'])
 
 
 let batchAdditionNum = ref(0)

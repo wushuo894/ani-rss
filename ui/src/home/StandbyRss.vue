@@ -1,10 +1,5 @@
 <template>
-  <Mikan ref="mikan" @add="args => {
-    plus()
-    standbyRss[editIndex].url = args.url
-    standbyRss[editIndex].label = args.group
-    editIndex = -1
-  }" match="false"/>
+  <Mikan ref="mikan" @callback="mikanCallback"/>
   <el-dialog v-model="dialogVisible" center title="备用订阅">
     <el-alert v-if="!config.standbyRss" :closable="false"
               show-icon
@@ -111,23 +106,14 @@ let show = () => {
 }
 
 let plus = () => {
-  if (!standbyRss.value.length) {
-    standbyRss.value.push({
-      label: '未知字幕组',
-      url: '',
-      offset: props.ani.offset
-    })
-    editIndex.value = standbyRss.value.length - 1
-    return
+  let object = {
+    label: '未知字幕组',
+    url: '',
+    offset: props.ani.offset
   }
-  if (standbyRss.value[standbyRss.value.length - 1].url.trim()) {
-    standbyRss.value.push({
-      label: '备用RSS',
-      url: '',
-      offset: props.ani.offset
-    })
-    editIndex.value = standbyRss.value.length - 1
-  }
+  standbyRss.value.push(object)
+  editIndex.value = standbyRss.value.length - 1
+  return object
 }
 
 let del = (index) => {
@@ -155,6 +141,23 @@ let move = (index, offset) => {
   let v = standbyRss.value[index]
   standbyRss.value[index] = standbyRss.value[index + offset]
   standbyRss.value[index + offset] = v
+}
+
+let mikanCallback = v => {
+  let {group, match, url} = v
+
+  let later = plus()
+  later.url = url
+  later.label = group
+
+  let newMatch = JSON.parse(match).map(s => `{{${group}}}:${s}`)
+
+  // 剔除旧的同字幕组规则
+  props.ani.match = props.ani.match.filter(it => it.indexOf(`{{${group}}}:`) !== 0)
+
+  props.ani.match.push(...newMatch)
+
+  editIndex.value = -1
 }
 
 defineExpose({show})

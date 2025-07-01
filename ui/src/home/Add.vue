@@ -1,9 +1,5 @@
 <template>
-  <Mikan ref="mikan" @add="args => {
-    ani.url = args.url
-    ani.match = JSON.parse(args.match).map(s => `{{${args.group}}}:${s}`)
-    getRss()
-  }"/>
+  <Mikan ref="mikan" @callback="mikanCallback"/>
   <Bgm ref="bgmRef" @add="it => {
     ani.title = it['name_cn'] ? it['name_cn'] : it['name']
     ani.bgmUrl = it.url
@@ -157,8 +153,15 @@ const show = () => {
   rssButtonLoading.value = false
 }
 
+let mikanCallback = v => {
+  let {group, match, url} = v
+  ani.value.url = url
+  ani.value.match = JSON.parse(match)
+      .map(s => `{{${group}}}:${s}`)
+  getRss()
+}
+
 defineExpose({show})
 const emit = defineEmits(['load'])
-
 </script>
 
