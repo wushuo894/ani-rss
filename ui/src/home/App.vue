@@ -141,7 +141,7 @@ import api from "@/js/api.js";
 import {ElMessage} from "element-plus";
 import Popconfirm from "@/other/Popconfirm.vue";
 import Manage from "./Manage.vue";
-import {useWindowSize} from "@vueuse/core";
+import {useLocalStorage, useWindowSize} from "@vueuse/core";
 import Collection from "./Collection.vue";
 import TorrentsInfos from "./TorrentsInfos.vue";
 
@@ -150,7 +150,7 @@ const manage = ref()
 const torrentsInfosRef = ref()
 
 const title = ref('')
-const enable = ref('已启用')
+const enable = useLocalStorage('select-enable', '已启用')
 const enableSelect = ref([
   {
     label: '全部',
