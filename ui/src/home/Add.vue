@@ -146,7 +146,7 @@ const addAni = (fun) => {
 const activeName = ref('mikan')
 
 const show = () => {
-  ani.value = aniData
+  ani.value = JSON.parse(JSON.stringify(aniData))
   activeName.value = 'mikan'
   showRss.value = true
   dialogVisible.value = true
