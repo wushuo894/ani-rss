@@ -90,7 +90,7 @@ public class qBittorrent implements BaseDownload {
             return HttpReq.post(host + "/api/v2/auth/login", false)
                     .form("username", username)
                     .form("password", password)
-                    .setFollowRedirects(true)
+                    .disableCookie()
                     .thenFunction(res -> {
                         HttpReq.assertStatus(res);
                         String body = res.body();
