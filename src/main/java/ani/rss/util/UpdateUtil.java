@@ -50,10 +50,13 @@ public class UpdateUtil {
                 .setLatest("")
                 .setMarkdownBody("");
         try {
-            // 直接爬取html, 因为千人骑 ip 访问 github api 会被流控
             HttpReq.get("https://github.com/wushuo894/ani-rss/releases/latest/download/info.json", true)
                     .timeout(3000)
                     .then(response -> {
+                        int status = response.getStatus();
+                        if (status == 404) {
+                            return;
+                        }
                         HttpReq.assertStatus(response);
                         JsonObject jsonObject = GsonStatic.fromJson(response.body(), JsonObject.class);
                         String latest = jsonObject.get("version").getAsString();
@@ -75,14 +78,13 @@ public class UpdateUtil {
                         } catch (Exception ignored) {
                         }
                     });
-
-            // 缓存一分钟 防止加速网站风控
-            MyCacheUtil.put(key, about, 1000 * 60);
         } catch (Exception e) {
             String message = ExceptionUtil.getMessage(e);
             log.error("检测更新失败 {}", message);
             log.error(message, e);
         }
+        // 缓存一分钟 防止加速网站风控
+        MyCacheUtil.put(key, about, 1000 * 60);
         return about;
     }
 
@@ -148,11 +150,10 @@ public class UpdateUtil {
     }
 
     public static File getJar() {
-        String s = System.getProperty("java.class.path").split(";")[0];
         OsInfo osInfo = SystemUtil.getOsInfo();
-        if (!osInfo.isWindows()) {
-            s = s.split(":")[0];
-        }
+        String splitStr = osInfo.isWindows() ? ";" : ":";
+        String s = System.getProperty("java.class.path")
+                .split(splitStr)[0];
         return new File(s);
     }
 
