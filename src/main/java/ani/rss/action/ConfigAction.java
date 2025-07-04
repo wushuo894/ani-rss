@@ -62,15 +62,6 @@ public class ConfigAction implements BaseAction {
                 copyOptions
         );
 
-        Boolean proxy = config.getProxy();
-        if (proxy) {
-            String proxyHost = config.getProxyHost();
-            Integer proxyPort = config.getProxyPort();
-            if (StrUtil.isBlank(proxyHost) || Objects.isNull(proxyPort)) {
-                resultErrorMsg("代理参数不完整");
-                return;
-            }
-        }
         String loginPassword = config.getLogin().getPassword();
         // 密码未发生修改
         if (StrUtil.isBlank(loginPassword)) {
@@ -79,6 +70,16 @@ public class ConfigAction implements BaseAction {
         String loginUsername = config.getLogin().getUsername();
         if (StrUtil.isBlank(loginUsername)) {
             config.getLogin().setUsername(username);
+        }
+
+        Boolean proxy = config.getProxy();
+        if (proxy) {
+            String proxyHost = config.getProxyHost();
+            Integer proxyPort = config.getProxyPort();
+            if (StrUtil.isBlank(proxyHost) || Objects.isNull(proxyPort)) {
+                resultErrorMsg("代理参数不完整");
+                return;
+            }
         }
 
         ConfigUtil.sync();
