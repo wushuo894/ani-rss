@@ -193,6 +193,7 @@ public class ItemsUtil {
 
             if (StrUtil.isNotBlank(infoHash)) {
                 infoHash = infoHash.toLowerCase();
+                infoHash = URLUtil.decode(infoHash);
             }
 
             Item addNewItem = ObjectUtil.clone(newItem);

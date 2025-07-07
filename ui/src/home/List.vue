@@ -45,8 +45,11 @@
                             {{ item['score'].toFixed(1) }}
                           </h4>
                         </div>
-                        <el-text v-else line-clamp="2" size="small">
-                          {{ item.url }}
+                        <el-text v-else
+                                 line-clamp="2"
+                                 size="small"
+                                 style="max-width: 300px;">
+                          {{ decodeURLComponentSafe(item.url) }}
                         </el-text>
                         <div style="
                         width: 180px;
@@ -295,6 +298,10 @@ let openBgmUrl = (it) => {
 
 let isNotMobile = () => {
   return width.value > 800;
+}
+
+let decodeURLComponentSafe = (str) => {
+  return decodeURIComponent(str.replace('+', ' '));
 }
 
 const {width} = useWindowSize()
