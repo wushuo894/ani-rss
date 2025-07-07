@@ -18,9 +18,23 @@
     </el-form-item>
     <el-form-item label="重命名模版">
       <div style="width: 100%">
-        <el-input v-model:model-value="props.config.renameTemplate"
-                  placeholder="${title} S${seasonFormat}E${episodeFormat}"/>
-        <br>
+        <div>
+          <el-input v-model:model-value="props.config.renameTemplate"
+                    placeholder="${title} S${seasonFormat}E${episodeFormat}"/>
+        </div>
+        <div>
+          <el-alert
+              v-if="!testRenameTemplate(props.config.renameTemplate)"
+              style="margin-top: 8px;"
+              type="warning"
+              show-icon
+              :closable="false"
+          >
+            <template #title>
+              模板内至少需要保留 S${seasonFormat}E${episodeFormat} or S${season}E${episode} 否则会导致无法正常重命名
+            </template>
+          </el-alert>
+        </div>
         <el-text class="mx-1" size="small">
           <a href="https://docs.wushuo.top/config/basic/rename#rename-template"
              target="_blank">详细说明</a>
@@ -50,6 +64,19 @@
 
 <script setup>
 import {ElText} from "element-plus";
+
+let testRenameTemplate = renameTemplate => {
+  let test = [
+    'S${season}E${episode}',
+    'S${seasonFormat}E${episodeFormat}'
+  ]
+  for (let s of test) {
+    if (renameTemplate.indexOf(s) > -1) {
+      return true;
+    }
+  }
+  return false;
+}
 
 let props = defineProps(['config'])
 </script>
