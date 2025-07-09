@@ -97,6 +97,8 @@
         <div>
           <el-checkbox v-model="props.config['coexist']" :disabled="!props.config.standbyRss"
                        label="多字幕组共存模式"/>
+          <el-checkbox v-model="props.config['copyMasterToStandby']" :disabled="!props.config.standbyRss"
+                       label="添加订阅时自动复制主rss至备用rss"/>
         </div>
         <div class="flex" style="width: 100%;justify-content: end;">
           <el-text class="mx-1" size="small">
