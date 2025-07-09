@@ -566,4 +566,9 @@ public class Config implements Serializable {
      * 通知
      */
     private List<NotificationConfig> notificationConfigList;
+
+    /**
+     * 添加订阅时自动复制主rss至备用rss
+     */
+    private Boolean copyMasterToStandby;
 }

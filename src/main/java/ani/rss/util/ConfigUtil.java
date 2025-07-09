@@ -191,7 +191,8 @@ public class ConfigUtil {
                 .setCompletedPathTemplate(completedPathTemplate)
                 .setNotificationTemplate(notificationTemplate)
                 .setNotificationConfigList(new ArrayList<>())
-                .setApiKey(apiKey);
+                .setApiKey(apiKey)
+                .setCopyMasterToStandby(false);
     }
 
     /**
