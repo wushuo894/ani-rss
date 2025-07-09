@@ -130,6 +130,7 @@ public class ItemsUtil {
                     length = Optional.of(attributes)
                             .map(it -> it.getNamedItem("length"))
                             .map(Node::getNodeValue)
+                            .filter(NumberUtil::isLong)
                             .orElse("1");
 
                     if (ReUtil.contains(StringEnum.MAGNET_REG, url)) {
