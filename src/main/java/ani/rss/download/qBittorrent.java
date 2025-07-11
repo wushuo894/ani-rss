@@ -11,6 +11,7 @@ import ani.rss.util.FilePathUtil;
 import ani.rss.util.GsonStatic;
 import ani.rss.util.HttpReq;
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.thread.ThreadUtil;
@@ -118,6 +119,11 @@ public class qBittorrent implements BaseDownload {
         tags.add(subgroup);
         if (!master) {
             tags.add(TorrentsTags.BACK_RSS.getValue());
+        }
+
+        List<String> customTags = config.getCustomTags();
+        if (CollectionUtil.isNotEmpty(customTags)) {
+            tags.addAll(customTags);
         }
 
         Integer ratioLimit = config.getRatioLimit();
