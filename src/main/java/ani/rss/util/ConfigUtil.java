@@ -88,6 +88,7 @@ public class ConfigUtil {
                 .setRss(true)
                 .setRssTimeout(20)
                 .setWatchErrorTorrent(true)
+                .setCustomTags(new ArrayList<>())
                 .setDelayedDownload(0)
                 .setFileExist(false)
                 .setAwaitStalledUP(true)
