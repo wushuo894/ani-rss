@@ -599,13 +599,13 @@ public class TorrentUtil {
         String monthFormat = String.format("%02d", month);
         int quarter;
         String quarterName;
-        if (List.of(1, 2, 3).contains(month)) {
+        if (List.of(12, 1, 2).contains(month)) {
             quarter = 1;
             quarterName = "冬";
-        } else if (List.of(4, 5, 6).contains(month)) {
+        } else if (List.of(3, 4, 5).contains(month)) {
             quarter = 4;
             quarterName = "春";
-        } else if (List.of(7, 8, 9).contains(month)) {
+        } else if (List.of(6, 7, 8).contains(month)) {
             quarter = 7;
             quarterName = "夏";
         } else {
