@@ -62,11 +62,42 @@
             </el-tag>
           </template>
         </el-table-column>
-        <el-table-column label="标题" prop="title" width="200"/>
+        <el-table-column label="标题" width="200">
+          <template #default="it">
+            <el-text :line-clamp="2" size="small">
+              {{ searchList[it.$index].title }}
+            </el-text>
+          </template>
+        </el-table-column>
         <el-table-column label="季" prop="season" width="50"/>
+        <el-table-column label="字幕组" width="100">
+          <template #default="it">
+            <el-text size="small" truncated>
+              {{ searchList[it.$index].subgroup }}
+            </el-text>
+          </template>
+        </el-table-column>
+        <el-table-column label="进度" width="100">
+          <template #default="it">
+            <el-tag type="warning">
+              {{ searchList[it.$index]['currentEpisodeNumber'] }} /
+              {{ searchList[it.$index]['totalEpisodeNumber'] ? searchList[it.$index]['totalEpisodeNumber'] : '*' }}
+            </el-tag>
+          </template>
+        </el-table-column>
+        <el-table-column label="类型" width="100">
+          <template #default="it">
+            <el-tag type="danger" v-if="searchList[it.$index].ova">
+              ova
+            </el-tag>
+            <el-tag type="danger" v-else>
+              tv
+            </el-tag>
+          </template>
+        </el-table-column>
         <el-table-column label="URL" width="600">
           <template #default="it">
-            <el-text line-clamp="1" size="small" truncated>
+            <el-text :line-clamp="1" size="small" truncated>
               {{ searchList[it.$index].url }}
             </el-text>
           </template>
