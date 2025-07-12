@@ -89,6 +89,7 @@ public class RenameUtil {
         String resolution = getResolution(itemTitle);
         String tmdbId = Optional.ofNullable(ani.getTmdb())
                 .map(Tmdb::getId)
+                .filter(StrUtil::isNotBlank)
                 .orElse("");
 
         renameTemplate = renameTemplate.replace("${seasonFormat}", seasonFormat);

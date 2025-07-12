@@ -9,6 +9,7 @@ import ani.rss.enums.TorrentsTags;
 import cn.hutool.core.date.DateField;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.lang.Opt;
 import cn.hutool.core.lang.func.Func1;
 import cn.hutool.core.text.StrFormatter;
 import cn.hutool.core.thread.ThreadUtil;
@@ -633,6 +634,13 @@ public class TorrentUtil {
         );
 
         downloadPathTemplate = RenameUtil.replaceField(downloadPathTemplate, ani, list);
+
+        String tmdbId = Opt.ofNullable(ani.getTmdb())
+                .map(Tmdb::getId)
+                .filter(StrUtil::isNotBlank)
+                .orElse("");
+
+        downloadPathTemplate = downloadPathTemplate.replace("${tmdbid}", tmdbId);
 
         if (downloadPathTemplate.contains("${jpTitle}")) {
             String jpTitle = RenameUtil.getJpTitle(ani);
