@@ -90,6 +90,7 @@ public interface BaseNotification {
         String tmdbId = Optional.ofNullable(ani)
                 .map(Ani::getTmdb)
                 .map(Tmdb::getId)
+                .filter(StrUtil::isNotBlank)
                 .orElse("");
         notificationTemplate = notificationTemplate.replace("${tmdbid}", tmdbId);
 

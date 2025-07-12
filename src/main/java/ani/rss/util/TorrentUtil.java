@@ -9,6 +9,7 @@ import ani.rss.enums.TorrentsTags;
 import cn.hutool.core.date.DateField;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.lang.Opt;
 import cn.hutool.core.lang.func.Func1;
 import cn.hutool.core.text.StrFormatter;
 import cn.hutool.core.thread.ThreadUtil;
@@ -598,13 +599,18 @@ public class TorrentUtil {
         String monthFormat = String.format("%02d", month);
         int quarter;
         String quarterName;
-        if (List.of(1, 2, 3).contains(month)) {
+
+        /*
+        https://github.com/wushuo894/ani-rss/pull/451
+        优化季度判断规则，避免将月底先行播放的番归类到上个季度
+         */
+        if (List.of(12, 1, 2).contains(month)) {
             quarter = 1;
             quarterName = "冬";
-        } else if (List.of(4, 5, 6).contains(month)) {
+        } else if (List.of(3, 4, 5).contains(month)) {
             quarter = 4;
             quarterName = "春";
-        } else if (List.of(7, 8, 9).contains(month)) {
+        } else if (List.of(6, 7, 8).contains(month)) {
             quarter = 7;
             quarterName = "夏";
         } else {
@@ -633,6 +639,13 @@ public class TorrentUtil {
         );
 
         downloadPathTemplate = RenameUtil.replaceField(downloadPathTemplate, ani, list);
+
+        String tmdbId = Opt.ofNullable(ani.getTmdb())
+                .map(Tmdb::getId)
+                .filter(StrUtil::isNotBlank)
+                .orElse("");
+
+        downloadPathTemplate = downloadPathTemplate.replace("${tmdbid}", tmdbId);
 
         if (downloadPathTemplate.contains("${jpTitle}")) {
             String jpTitle = RenameUtil.getJpTitle(ani);
