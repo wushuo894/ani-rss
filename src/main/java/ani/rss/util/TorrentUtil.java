@@ -1071,13 +1071,7 @@ public class TorrentUtil {
     public static synchronized void load() {
         Config config = ConfigUtil.CONFIG;
         String download = config.getDownloadToolType();
-        ClassUtil.scanPackage("ani.rss.download")
-                .stream()
-                .filter(aClass -> !aClass.isInterface())
-                .filter(aClass -> aClass.getSimpleName().equals(download))
-                .map(aClass -> (BaseDownload) ReflectUtil.newInstance(aClass))
-                .findFirst()
-                .ifPresent(TorrentUtil::setBaseDownload);
+        setBaseDownload(ReflectUtil.newInstance("ani.rss.download." + download));
         log.info("下载工具 {}", download);
     }
 

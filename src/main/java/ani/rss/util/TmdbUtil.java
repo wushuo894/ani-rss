@@ -18,10 +18,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import lombok.extern.slf4j.Slf4j;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 
@@ -233,7 +230,9 @@ public class TmdbUtil {
                                         .setOriginalName(originalName)
                                         .setDate(DateUtil.parse(date))
                                         .setTmdbGroupId("");
-                            }).toList();
+                            })
+                            .sorted(Comparator.comparingLong(tmdb -> Long.MAX_VALUE - tmdb.getDate().getTime()))
+                            .toList();
 
                     // 优先使用名称完全匹配
                     return tmdbList.stream()
