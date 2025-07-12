@@ -599,6 +599,11 @@ public class TorrentUtil {
         String monthFormat = String.format("%02d", month);
         int quarter;
         String quarterName;
+
+        /*
+        https://github.com/wushuo894/ani-rss/pull/451
+        优化季度判断规则，避免将月底先行播放的番归类到上个季度
+         */
         if (List.of(12, 1, 2).contains(month)) {
             quarter = 1;
             quarterName = "冬";
