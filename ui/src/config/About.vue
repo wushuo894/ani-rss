@@ -57,7 +57,7 @@
           {{ about.date }}
         </el-form-item>
         <el-form-item label="更新内容">
-          <el-scrollbar style="margin-bottom: 16px;" :always="true">
+          <el-scrollbar style="margin-bottom: 16px;max-height: 400px;" :always="true">
             <div class="markdown-body" style="width: 800px;" v-html="md.render(about.markdownBody)"></div>
             <el-alert
                 show-icon

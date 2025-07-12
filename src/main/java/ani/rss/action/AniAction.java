@@ -162,7 +162,7 @@ public class AniAction implements BaseAction {
         HttpServerRequest request = ServerUtil.REQUEST.get();
         String move = request.getParam("move");
         if (Boolean.parseBoolean(move)) {
-            Ani get = first.get();
+            Ani get = ObjectUtil.clone(first.get());
             ThreadUtil.execute(() -> {
                 File downloadPath = TorrentUtil.getDownloadPath(get);
                 File newDownloadPath = TorrentUtil.getDownloadPath(ani);
