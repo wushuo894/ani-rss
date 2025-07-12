@@ -1,3 +1,3 @@
-- 优化管理与预览的表格
-- 下载位置支持 `${tmdbid}`
-- 优化季度判断规则，避免将月底先行播放的番归类到上个季度 @TLFTLFTLF
+- 获取tmdb时优先匹配最近的年份
+
+[从1.0升级至2.0的配置继承](https://github.com/wushuo894/ani-rss/discussions/427)
