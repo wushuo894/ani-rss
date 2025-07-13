@@ -29,7 +29,18 @@ public interface BaseDownload {
      * @param config 设置
      * @return 登录状态
      */
-    Boolean login(Config config);
+    default Boolean login(Config config) {
+        return login(false, config);
+    }
+
+    /**
+     * 登录
+     *
+     * @param test   测试登录
+     * @param config 设置
+     * @return 登录状态
+     */
+    Boolean login(Boolean test, Config config);
 
     /**
      * 获取任务列表
