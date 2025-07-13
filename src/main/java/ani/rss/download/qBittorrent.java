@@ -74,7 +74,7 @@ public class qBittorrent implements BaseDownload {
     }
 
     @Override
-    public Boolean login(Config config) {
+    public Boolean login(Boolean test, Config config) {
         this.config = config;
         String host = config.getDownloadToolHost();
         String username = config.getDownloadToolUsername();
@@ -87,6 +87,15 @@ public class qBittorrent implements BaseDownload {
         }
 
         try {
+            if (!test) {
+                // 校验当前登录状态
+                Boolean isOk = HttpReq.post(host + "/api/v2/app/version", false)
+                        .thenFunction(HttpResponse::isOk);
+                if (isOk) {
+                    return true;
+                }
+            }
+
             return HttpReq.post(host + "/api/v2/auth/login", false)
                     .form("username", username)
                     .form("password", password)
