@@ -222,6 +222,10 @@ public class TmdbUtil {
                                         .orElse(jsonObject.get("release_date"))
                                         .getAsString();
 
+                                if (StrUtil.isBlank(date)) {
+                                    return null;
+                                }
+
                                 title = RenameUtil.getName(title);
 
                                 return new Tmdb()
@@ -231,6 +235,7 @@ public class TmdbUtil {
                                         .setDate(DateUtil.parse(date))
                                         .setTmdbGroupId("");
                             })
+                            .filter(Objects::nonNull)
                             .sorted(Comparator.comparingLong(tmdb -> Long.MAX_VALUE - tmdb.getDate().getTime()))
                             .toList();
 
