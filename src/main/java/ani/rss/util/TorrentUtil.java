@@ -347,7 +347,7 @@ public class TorrentUtil {
                 if (BaseDownload.videoFormat.contains(extName)) {
                     isDel = true;
                 }
-                if (extName.equals("nfo")) {
+                if (List.of("nfo", "bif").contains(extName)) {
                     isDel = true;
                 }
                 if (file.getName().endsWith("-thumb.jpg")) {
