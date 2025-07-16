@@ -133,7 +133,12 @@ let test = () => {
       })
 }
 
-useDark()
+useDark({
+  onChanged: dark => {
+    const meta = document.getElementById('themeColorMeta');
+    meta.content = dark ? '#000000' : '#ffffff';
+  }
+})
 
 onMounted(() => {
   test()
