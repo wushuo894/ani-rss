@@ -106,7 +106,7 @@ public class AniAction implements BaseAction {
                 .findFirst();
 
         if (first.isPresent()) {
-            resultErrorMsg("名称重复");
+            resultErrorMsg("订阅标题重复");
             return;
         }
 
@@ -148,7 +148,7 @@ public class AniAction implements BaseAction {
                 .filter(it -> it.getTitle().equals(ani.getTitle()) && it.getSeason().equals(ani.getSeason()))
                 .findFirst();
         if (first.isPresent()) {
-            resultErrorMsg("名称重复");
+            resultErrorMsg("订阅标题重复");
             return;
         }
 

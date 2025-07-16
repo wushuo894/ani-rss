@@ -53,7 +53,7 @@ import {onMounted, ref} from "vue";
 import CryptoJS from "crypto-js"
 import App from "./home/App.vue";
 import api from "./js/api.js";
-import {useDark, useLocalStorage} from '@vueuse/core'
+import {useColorMode, useDark, useLocalStorage} from '@vueuse/core'
 import {Key} from "@element-plus/icons-vue";
 import {ElMessage} from "element-plus";
 
@@ -133,7 +133,14 @@ let test = () => {
       })
 }
 
-useDark()
+useDark({
+  onChanged: dark => {
+    const meta = document.getElementById('themeColorMeta');
+    meta.content = dark ? '#000000' : '#ffffff';
+  }
+})
+
+useColorMode()
 
 onMounted(() => {
   test()
