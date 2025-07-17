@@ -93,6 +93,8 @@ public class ItemsUtil {
         List<Item> items = new ArrayList<>();
 
         Assert.notBlank(xml, "xml is blank");
+        boolean isXml = StrUtil.startWith(xml, '<');
+        Assert.isTrue(isXml, "xml error");
 
         Document document = XmlUtil.readXML(xml);
         Node channel = document.getElementsByTagName("channel").item(0);

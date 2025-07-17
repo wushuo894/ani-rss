@@ -800,6 +800,10 @@ public class TorrentUtil {
             documentElement.appendChild(tmdbegidElement);
 
             FileUtil.writeUtf8String(XmlUtil.toStr(document), tvshowFile);
+
+            String title = ani.getTitle();
+
+            log.info("已更新tvshow.info剧集组id {} {}", title, tmdbGroupId);
         });
     }
 
