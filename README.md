@@ -79,7 +79,7 @@ qBittorrent、Transmission、Aria2 等)推送任务指令。工具本身不具�
 
 ## Sponsors
 
-<img src="https://docs.wushuo.top/assets/sharon-networks.5DoCcrXN.webp" width="300"/>
+<img src="https://docs.wushuo.top/assets/sharon-networks.5DoCcrXN.webp" width="300" alt="Sharon Networks"/>
 
 [Sharon Networks](https://sharon.io/) 赞助了本项目
 
