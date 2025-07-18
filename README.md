@@ -79,7 +79,11 @@ qBittorrent、Transmission、Aria2 等)推送任务指令。工具本身不具�
 
 ## Sponsors
 
-[![image](https://github.com/wushuo894/ani-rss-docs/raw/master/docs/image/support.nodeget.com_page_promotion_id%3D88.webp)](https://yxvm.com/)
+<img src="https://docs.wushuo.top/assets/sharon-networks.5DoCcrXN.webp" width="300"/>
+
+[Sharon Networks](https://sharon.io/) 赞助了本项目
+
+[<img alt="image" src="https://github.com/wushuo894/ani-rss-docs/raw/master/docs/image/support.nodeget.com_page_promotion_id%3D88.webp" width="300"/>](https://yxvm.com/)
 
 [NodeSupport](https://github.com/NodeSeekDev/NodeSupport) 赞助了本项目
 
