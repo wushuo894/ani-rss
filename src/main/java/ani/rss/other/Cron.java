@@ -78,6 +78,11 @@ public class Cron {
     public static void autoUpdate(Config config) {
         About about = UpdateUtil.about();
         Boolean update = about.getUpdate();
+        Boolean autoUpdate = about.getAutoUpdate();
+        if (!autoUpdate) {
+            // 禁止非跨小版本的自动更新
+            return;
+        }
         if (update) {
             log.info("检测到可更新版本 v{}", about.getLatest());
         }
