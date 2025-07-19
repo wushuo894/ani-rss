@@ -10,6 +10,7 @@ import cn.hutool.core.lang.Assert;
 import cn.hutool.core.text.StrFormatter;
 import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.core.util.ArrayUtil;
+import cn.hutool.core.util.ReUtil;
 import cn.hutool.core.util.RuntimeUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.crypto.SecureUtil;
@@ -60,7 +61,17 @@ public class UpdateUtil {
                         HttpReq.assertStatus(response);
                         JsonObject jsonObject = GsonStatic.fromJson(response.body(), JsonObject.class);
                         String latest = jsonObject.get("version").getAsString();
+
+                        /*
+                        禁止非跨小版本的更新
+                        取前两位版本号判断是允许自动更新
+                         */
+                        String reg = "^[Vv]?(\\d+\\.\\d+)";
+                        boolean autoUpdate = ReUtil.get(reg, latest, 1)
+                                .equals(ReUtil.get(reg, version, 1));
+
                         about
+                                .setAutoUpdate(autoUpdate)
                                 .setUpdate(VersionComparator.INSTANCE.compare(latest, version) > 0)
                                 .setLatest(latest)
                                 .setMarkdownBody(jsonObject.get("markdown").getAsString());
