@@ -99,11 +99,11 @@ public class ConfigUtil {
                 .setAutoDisabled(false)
                 .setDownloadPathTemplate(downloadPathTemplate)
                 .setOvaDownloadPathTemplate(ovaDownloadPathTemplate)
-                .setDownloadToolHost("")
+                .setDownloadToolHost(getDownloadToolHost())
                 .setDownloadToolType("qBittorrent")
                 .setDownloadRetry(3)
-                .setDownloadToolUsername("")
-                .setDownloadToolPassword("")
+                .setDownloadToolUsername(getDownloadToolUsername())
+                .setDownloadToolPassword(getDownloadToolPassword())
                 .setQbUseDownloadPath(false)
                 .setRatioLimit(-2)
                 .setSeedingTimeLimit(-2)
@@ -357,6 +357,35 @@ public class ConfigUtil {
         }
     }
 
+    /**
+     * 获取下载工具的主机地址
+     *
+     * @return
+     */
+    public static String getDownloadToolHost() {
+        Map<String, String> env = System.getenv();
+        return env.getOrDefault("DOWNLOAD_TOOL_HOST", "");
+    }
+
+    /**
+     * 获取下载工具的用户名
+     *
+     * @return
+     */
+    public static String getDownloadToolUsername() {
+        Map<String, String> env = System.getenv();
+        return env.getOrDefault("DOWNLOAD_TOOL_USERNAME", "");
+    }
+
+    /**
+     * 获取下载工具的密码
+     *
+     * @return
+     */
+    public static String getDownloadToolPassword() {
+        Map<String, String> env = System.getenv();
+        return env.getOrDefault("DOWNLOAD_TOOL_PASSWORD", "");
+    }
 
     /**
      * 处理设置内的url与文件路径标准
