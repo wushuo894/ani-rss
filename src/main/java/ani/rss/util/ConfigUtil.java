@@ -77,6 +77,13 @@ public class ConfigUtil {
 
         String apiKey = RandomUtil.randomString(32).toLowerCase();
 
+        Map<String, String> env = System.getenv();
+
+        String downloadToolType = env.getOrDefault("DOWNLOAD_TOOL_TYPE", "qBittorrent");
+        String downloadToolHost = env.getOrDefault("DOWNLOAD_TOOL_HOST", "");
+        String downloadToolUsername = env.getOrDefault("DOWNLOAD_TOOL_USERNAME", "");
+        String downloadToolPassword = env.getOrDefault("DOWNLOAD_TOOL_PASSWORD", "");
+
         CONFIG.setSleep(15)
                 .setMikanHost("https://mikanime.tv")
                 .setTmdbApi("https://api.themoviedb.org")
@@ -99,11 +106,11 @@ public class ConfigUtil {
                 .setAutoDisabled(false)
                 .setDownloadPathTemplate(downloadPathTemplate)
                 .setOvaDownloadPathTemplate(ovaDownloadPathTemplate)
-                .setDownloadToolHost(getDownloadToolHost())
-                .setDownloadToolType("qBittorrent")
+                .setDownloadToolHost(downloadToolHost)
+                .setDownloadToolType(downloadToolType)
                 .setDownloadRetry(3)
-                .setDownloadToolUsername(getDownloadToolUsername())
-                .setDownloadToolPassword(getDownloadToolPassword())
+                .setDownloadToolUsername(downloadToolUsername)
+                .setDownloadToolPassword(downloadToolPassword)
                 .setQbUseDownloadPath(false)
                 .setRatioLimit(-2)
                 .setSeedingTimeLimit(-2)
@@ -355,26 +362,6 @@ public class ConfigUtil {
                 log.error(e.getMessage(), e);
             }
         }
-    }
-
-    /**
-     * 获取下载工具的主机地址
-     *
-     * @return
-     */
-    public static String getDownloadToolHost() {
-        Map<String, String> env = System.getenv();
-        return env.getOrDefault("DOWNLOAD_TOOL_HOST", "");
-    }
-
-    /**
-     * 获取下载工具的用户名
-     *
-     * @return
-     */
-    public static String getDownloadToolUsername() {
-        Map<String, String> env = System.getenv();
-        return env.getOrDefault("DOWNLOAD_TOOL_USERNAME", "");
     }
 
     /**
