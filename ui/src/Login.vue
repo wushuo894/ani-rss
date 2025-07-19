@@ -133,15 +133,6 @@ let test = () => {
       })
 }
 
-useDark({
-  onChanged: dark => {
-    const meta = document.getElementById('themeColorMeta');
-    meta.content = dark ? '#000000' : '#ffffff';
-  }
-})
-
-useColorMode()
-
 onMounted(() => {
   test()
   let {remember, username, password} = rememberThePassword.value;
@@ -151,16 +142,26 @@ onMounted(() => {
   }
 })
 
+let color = useLocalStorage('--el-color-primary', '#409eff')
 
-// document.documentElement 是全局变量时
 const el = document.documentElement
-// const el = document.getElementById('xxx')
 
-// 获取 css 变量
-getComputedStyle(el).getPropertyValue(`--el-color-primary`)
+el.style.setProperty('--el-color-primary', color.value)
 
-// 设置 css 变量
-el.style.setProperty('--el-color-primary', useLocalStorage('--el-color-primary', '#409eff').value)
+let barColor = useLocalStorage('barColor', false)
+
+useDark({
+  onChanged: dark => {
+    const meta = document.getElementById('themeColorMeta');
+    if (barColor.value) {
+      meta.content = color.value
+      return
+    }
+    meta.content = dark ? '#000000' : '#ffffff';
+  }
+})
+
+useColorMode()
 
 </script>
 

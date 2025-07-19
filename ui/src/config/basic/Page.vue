@@ -54,6 +54,7 @@
       <el-checkbox v-model="props.config.weekShow" label="按星期展示"/>
       <el-checkbox v-model="props.config.showPlaylist" label="显示视频列表"/>
       <el-checkbox v-model="props.config.showLastDownloadTime" label="显示更新时间"/>
+      <el-checkbox v-model="barColor" label="状态栏跟随主题色"/>
     </el-form-item>
     <el-form-item label="自定义">
       <el-button bg text @click="jsDialogVisible = true">
@@ -92,16 +93,17 @@ let predefineColors = ref([
 let color = useLocalStorage('--el-color-primary', '#409eff')
 
 let colorChange = (v) => {
-  // document.documentElement 是全局变量时
   const el = document.documentElement
-  // const el = document.getElementById('xxx')
 
-  // 获取 css 变量
-  getComputedStyle(el).getPropertyValue(`--el-color-primary`)
-
-  // 设置 css 变量
   el.style.setProperty('--el-color-primary', v)
+
+  const meta = document.getElementById('themeColorMeta');
+  if (barColor.value) {
+    meta.content = v
+  }
 }
+
+let barColor = useLocalStorage('barColor', false)
 
 let jsDialogVisible = ref(false)
 let cssDialogVisible = ref(false)
