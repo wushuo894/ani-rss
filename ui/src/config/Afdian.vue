@@ -39,13 +39,14 @@
       </el-tag>
     </div>
   </div>
-  <div style="margin-top: 18px">
+  <div style="margin-top: 18px" v-if="!props.config['verifyExpirationTime'] || props.config['tryOut']">
     <el-text class="mx-1" size="small">
       已经捐赠？在这里输入您的订单号以激活您的捐赠
     </el-text>
     <div class="flex" style="width: 100%;margin-top: 8px;justify-content: space-between;">
       <div class="flex">
-        <el-input v-model:model-value="props.config.outTradeNo" style="max-width: 200px;">
+        <el-input v-model="props.config.outTradeNo"
+                  style="max-width: 200px;">
           <template #prefix>
             <el-icon class="el-input__icon">
               <EditPen/>
@@ -53,7 +54,12 @@
           </template>
         </el-input>
         <div style="width: 8px"></div>
-        <el-button :loading="verifyNoLoading" bg text type="primary" @click="verifyNo">验证</el-button>
+        <el-button :loading="verifyNoLoading"
+                   bg text
+                   type="primary"
+                   @click="verifyNo">
+          验证
+        </el-button>
       </div>
       <div style="margin-left: 8px;">
         <el-button :disabled="props.config['verifyExpirationTime']"
@@ -65,8 +71,16 @@
       </div>
     </div>
     <div style="margin-top: 8px">
-      <el-alert :closable="false" show-icon title="可以无限试用"/>
+      <a target="_blank" href="https://github.com/wushuo894/ani-rss/discussions/260">
+        关于增加的捐赠功能，我想说的话
+      </a>
     </div>
+  </div>
+  <div style="margin-top: 18px" v-else>
+    <el-alert
+        :closable="false"
+        title="感谢您的捐赠支持🎁"
+    />
   </div>
 </template>
 
