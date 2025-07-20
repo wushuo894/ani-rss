@@ -232,18 +232,19 @@ public class AniAction implements BaseAction {
             list = CollUtil.sort(list, (a, b) -> pinyinComparator.compare(a.getTitle(), b.getTitle()));
         }
 
-        for (Ani ani : list) {
-            String title = ani.getTitle();
-            String pinyin = PinyinUtil.getPinyin(title);
-            ani.setPinyin(pinyin);
+        list.parallelStream()
+                .forEach(ani -> {
+                    String title = ani.getTitle();
+                    String pinyin = PinyinUtil.getPinyin(title);
+                    ani.setPinyin(pinyin);
 
-            Integer year = ani.getYear();
-            Integer month = ani.getMonth();
-            Integer day = ani.getDate();
-            DateTime dateTime = DateUtil.parseDate(StrFormatter.format("{}-{}-{}", year, month, day));
-            // 0表示周日，1表示周一
-            ani.setWeek(DateUtil.dayOfWeek(dateTime) - 1);
-        }
+                    Integer year = ani.getYear();
+                    Integer month = ani.getMonth();
+                    Integer day = ani.getDate();
+                    DateTime dateTime = DateUtil.parseDate(StrFormatter.format("{}-{}-{}", year, month, day));
+                    // 0表示周日，1表示周一
+                    ani.setWeek(DateUtil.dayOfWeek(dateTime) - 1);
+                });
         resultSuccess(list);
     }
 
