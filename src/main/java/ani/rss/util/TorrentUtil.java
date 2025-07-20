@@ -170,7 +170,9 @@ public class TorrentUtil {
                                 return false;
                             }
                             List<String> tags = torrentsInfo.getTags();
-                            return tags.contains(TorrentsTags.BACK_RSS.getValue());
+                            // 包含 备用RSS 标签或者 无主RSS字幕组信息
+                            return tags.contains(TorrentsTags.BACK_RSS.getValue()) ||
+                                    !tags.contains(ani.getSubgroup());
                         })
                         .findFirst()
                         .orElse(null);
