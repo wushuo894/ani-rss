@@ -87,6 +87,8 @@ qBittorrent、Transmission、Aria2 等)推送任务指令。工具本身不具�
 
 [NodeSupport](https://github.com/NodeSeekDev/NodeSupport) 赞助了本项目
 
+[![Powered by DartNode](https://dartnode.com/branding/DN-Open-Source-sm.png)](https://dartnode.com "Powered by DartNode - Free VPS for Open Source")
+
 ## 依赖项目列表
 
 - [alist](https://github.com/AlistGo/alist)
