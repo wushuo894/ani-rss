@@ -8,6 +8,7 @@ import ani.rss.enums.NotificationTypeEnum;
 import ani.rss.notification.BaseNotification;
 import cn.hutool.core.lang.Opt;
 import cn.hutool.core.thread.ExecutorBuilder;
+import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.core.util.ReflectUtil;
 import lombok.extern.slf4j.Slf4j;
 
@@ -44,7 +45,8 @@ public class NotificationUtil {
         List<NotificationConfig> notificationConfigList = config.getNotificationConfigList();
 
         for (NotificationConfig notificationConfig : notificationConfigList) {
-            Boolean enable = notificationConfig.getEnable();
+            boolean enable = notificationConfig.getEnable();
+            int retry = notificationConfig.getRetry();
             NotificationTypeEnum notificationType = notificationConfig.getNotificationType();
             List<NotificationStatusEnum> statusList = notificationConfig.getStatusList();
 
@@ -58,13 +60,24 @@ public class NotificationUtil {
                 continue;
             }
 
-            BaseNotification baseNotification = ReflectUtil.newInstance(notificationType.getAClass());
+            Class<? extends BaseNotification> aClass = notificationType.getAClass();
+
+            BaseNotification baseNotification = ReflectUtil.newInstance(aClass);
             EXECUTOR_SERVICE.execute(() -> {
-                try {
-                    baseNotification.send(notificationConfig, ani, text, notificationStatusEnum);
-                } catch (Exception e) {
-                    log.error(e.getMessage(), e);
-                }
+                int currentRetry = 0;
+                do {
+                    if (currentRetry > 0) {
+                        log.warn("通知失败 正在重试 第{}次 {}", currentRetry, aClass.getName());
+                    }
+                    try {
+                        baseNotification.send(notificationConfig, ani, text, notificationStatusEnum);
+                        return;
+                    } catch (Exception e) {
+                        log.error(e.getMessage(), e);
+                    }
+                    currentRetry += 1;
+                    ThreadUtil.sleep(1000);
+                } while (currentRetry < retry);
             });
         }
     }

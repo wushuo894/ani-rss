@@ -32,6 +32,18 @@
         <TelegramNotification v-model:notification-config="notificationConfig" v-model:config="props.config"/>
         <WebhookNotification v-model:notification-config="notificationConfig" v-model:config="props.config"/>
         <SystemNotification v-model:notification-config="notificationConfig" v-model:config="props.config"/>
+        <el-form-item label="重试">
+          <el-input-number
+              :min="0"
+              :max="100"
+              v-model="notificationConfig['retry']"
+              style="width: 160px;"
+          >
+            <template #suffix>
+              <span>次</span>
+            </template>
+          </el-input-number>
+        </el-form-item>
         <el-form-item label="开启">
           <el-switch v-model="notificationConfig['enable']"/>
         </el-form-item>
