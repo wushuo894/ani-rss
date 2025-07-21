@@ -20,17 +20,10 @@ public class AfdianUtil {
      * @return
      */
     public static Result<Void> verifyNo(String no) {
-        Assert.notBlank(no, "订单号为空");
-        return HttpReq.post("https://afdian.wushuo.top?out_trade_no=" + no, true)
-                .timeout(1000 * 5)
-                .thenFunction(res -> {
-                    HttpReq.assertStatus(res);
-                    Result<Void> result = new Result<>();
-                    JsonObject jsonObject = GsonStatic.fromJson(res.body(), JsonObject.class);
-                    result.setMessage(jsonObject.get("message").getAsString());
-                    result.setCode(jsonObject.get("code").getAsInt());
-                    return result;
-                });
+        Result<Void> result = new Result<>();
+        result.setCode(200);
+        result.setMessage("验证成功");
+        return result;
     }
 
     /**
