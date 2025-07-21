@@ -6,9 +6,11 @@ import ani.rss.entity.Mikan;
 import ani.rss.entity.TorrentsInfo;
 import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.lang.Opt;
+import cn.hutool.core.text.StrFormatter;
 import cn.hutool.core.util.ReUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.core.util.URLUtil;
+import cn.hutool.crypto.SecureUtil;
 import cn.hutool.http.HttpUtil;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -272,11 +274,29 @@ public class MikanUtil {
     }
 
     public static JsonObject getScore() {
+        if (!AfdianUtil.verifyExpirationTime()) {
+            return new JsonObject();
+        }
+        Config config = ConfigUtil.CONFIG;
+        String outTradeNo = config.getOutTradeNo();
+        boolean tryOut = config.getTryOut();
+        if (StrUtil.isBlank(outTradeNo) || tryOut) {
+            return new JsonObject();
+        }
+
         JsonObject jsonObject = new JsonObject();
         try {
-            jsonObject = HttpReq.get("https://bgm-cache.wushuo.top/bgm/score.json", true)
+            String url = StrFormatter.format(
+                    "https://bgm-cache.wushuo.top/score/{}/score.json",
+                    SecureUtil.sha256(outTradeNo)
+            );
+            jsonObject = HttpReq.get(url, true)
                     .timeout(1000 * 5)
                     .thenFunction(res -> {
+                        int status = res.getStatus();
+                        if (status == 404) {
+                            return new JsonObject();
+                        }
                         HttpReq.assertStatus(res);
                         return GsonStatic.fromJson(res.body(), JsonObject.class);
                     });
