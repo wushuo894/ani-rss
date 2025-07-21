@@ -33,7 +33,7 @@
     </a>
     <div style="flex: 1;padding-left: 8px;">
       <h3>捐赠后解锁</h3>
-      <el-tag v-for="it in ['订阅完结通知','Emby媒体库刷新','添加合集','摸鱼检测','Alist上传通知','订阅完结迁移']"
+      <el-tag v-for="it in ['Emby媒体库刷新','添加合集','摸鱼检测','订阅完结迁移','Mikan番剧列表显示评分']"
               style="margin: 4px 4px 0 0;">
         {{ it }}
       </el-tag>

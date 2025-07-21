@@ -19,6 +19,11 @@ public class NotificationConfig implements Serializable {
     private Boolean enable;
 
     /**
+     * 重试次数
+     */
+    private Integer retry;
+
+    /**
      * 备注
      */
     private String comment;
@@ -164,6 +169,7 @@ public class NotificationConfig implements Serializable {
 
         notificationConfig
                 .setEnable(true)
+                .setRetry(3)
                 .setNotificationType(NotificationTypeEnum.TELEGRAM)
                 .setNotificationTemplate("${notification}")
                 .setComment("")

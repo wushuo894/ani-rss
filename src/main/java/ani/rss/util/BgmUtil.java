@@ -557,7 +557,7 @@ public class BgmUtil {
                 }),
                 CompletableFuture.runAsync(() -> {
                     HttpRequest httpRequest = HttpReq
-                            .get("https://bgm-cache.wushuo.top/bgm/" + subjectId.charAt(0) + "/" + subjectId + ".json", true);
+                            .get("https://bgm-cache.wushuo.top/" + subjectId.charAt(0) + "/" + subjectId + ".json", true);
                     try {
                         BgmInfo bgmInfo = httpRequest
                                 .thenFunction(fun);
