@@ -41,17 +41,6 @@ public class NotificationUtil {
             return;
         }
 
-        if (!AfdianUtil.verifyExpirationTime()) {
-            if (NotificationStatusEnum.COMPLETED == notificationStatusEnum) {
-                log.warn("未解锁捐赠, 无法使用订阅完结通知");
-                return;
-            }
-            if (NotificationStatusEnum.ALIST_UPLOAD == notificationStatusEnum) {
-                log.warn("未解锁捐赠, 无法使用Alist上传通知");
-                return;
-            }
-        }
-
         List<NotificationConfig> notificationConfigList = config.getNotificationConfigList();
 
         for (NotificationConfig notificationConfig : notificationConfigList) {

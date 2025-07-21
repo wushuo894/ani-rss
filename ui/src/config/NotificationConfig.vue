@@ -21,11 +21,10 @@
             <el-checkbox label="下载完成" value="DOWNLOAD_END"/>
             <el-checkbox label="缺集" value="OMIT"/>
             <el-checkbox label="错误" value="ERROR"/>
-            <el-checkbox :disabled="!props.config['verifyExpirationTime']" label="Alist上传通知" value="ALIST_UPLOAD"/>
-            <el-checkbox :disabled="!props.config['verifyExpirationTime']" label="订阅完结" value="COMPLETED"/>
-            <el-checkbox :disabled="!props.config['verifyExpirationTime']" label="摸鱼检测" value="PROCRASTINATING"/>
+            <el-checkbox label="Alist上传通知" value="ALIST_UPLOAD"/>
+            <el-checkbox label="订阅完结" value="COMPLETED"/>
+            <el-checkbox label="摸鱼检测" value="PROCRASTINATING"/>
           </el-checkbox-group>
-          <AfdianPrompt :config="props.config" name="Alist上传通知、订阅完结、摸鱼检测"/>
         </el-form-item>
         <EmbyRefreshNotification v-model:notification-config="notificationConfig" v-model:config="props.config"/>
         <MailNotification v-model:notification-config="notificationConfig" v-model:config="props.config"/>
@@ -49,7 +48,6 @@
 
 <script setup>
 import {ref} from "vue";
-import AfdianPrompt from "@/other/AfdianPrompt.vue";
 import EmbyRefreshNotification from "./notification/EmbyRefreshNotification.vue";
 import MailNotification from "./notification/MailNotification.vue";
 import ServerChanNotification from "./notification/ServerChanNotification.vue";
