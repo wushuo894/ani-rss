@@ -10,6 +10,7 @@ import ani.rss.util.GsonStatic;
 import ani.rss.util.HttpReq;
 import ani.rss.util.RenameCacheUtil;
 import cn.hutool.core.codec.Base64;
+import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.resource.ResourceUtil;
 import cn.hutool.core.lang.Assert;
@@ -152,6 +153,11 @@ public class Transmission implements BaseDownload {
         tags.add(subgroup);
         if (!master) {
             tags.add(TorrentsTags.BACK_RSS.getValue());
+        }
+
+        List<String> customTags = config.getCustomTags();
+        if (CollectionUtil.isNotEmpty(customTags)) {
+            tags.addAll(customTags);
         }
 
         String torrent;
