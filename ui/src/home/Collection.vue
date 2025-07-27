@@ -93,6 +93,9 @@
               <el-form-item label="全局排除">
                 <el-switch v-model:model-value="data.ani['globalExclude']"/>
               </el-form-item>
+              <el-form-item label="剧场版">
+                <el-switch v-model:model-value="data.ani.ova"/>
+              </el-form-item>
               <el-form-item label="自定义集数规则">
                 <div style="display: flex;width: 100%;">
                   <el-input v-model:model-value="data.ani.customEpisodeStr"

@@ -11,7 +11,8 @@ public enum NotificationTypeEnum {
     SERVER_CHAN(ServerChanNotification.class),
     SYSTEM(SystemNotification.class),
     TELEGRAM(TelegramNotification.class),
-    WEB_HOOK(WebHookNotification.class);
+    WEB_HOOK(WebHookNotification.class),
+    SHELL(ShellNotification.class);
 
     @Getter
     private final Class<? extends BaseNotification> aClass;
