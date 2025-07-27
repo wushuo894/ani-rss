@@ -32,6 +32,7 @@
         <TelegramNotification v-model:notification-config="notificationConfig" v-model:config="props.config"/>
         <WebhookNotification v-model:notification-config="notificationConfig" v-model:config="props.config"/>
         <SystemNotification v-model:notification-config="notificationConfig" v-model:config="props.config"/>
+        <ShellNotification v-model:notification-config="notificationConfig" v-model:config="props.config"/>
         <el-form-item label="重试">
           <el-input-number
               :min="0"
@@ -65,11 +66,12 @@ import MailNotification from "./notification/MailNotification.vue";
 import ServerChanNotification from "./notification/ServerChanNotification.vue";
 import TelegramNotification from "./notification/TelegramNotification.vue";
 import WebhookNotification from "./notification/WebhookNotification.vue";
-
+import ShellNotification from "@/config/notification/ShellNotification.vue";
+import SystemNotification from "@/config/notification/SystemNotification.vue";
 import {notificationTypeList} from "@/js/notification-type.js";
 import {ElMessage} from "element-plus";
 import api from "@/js/api.js";
-import SystemNotification from "@/config/notification/SystemNotification.vue";
+
 
 let notificationConfig = ref({
   "comment": "无备注",

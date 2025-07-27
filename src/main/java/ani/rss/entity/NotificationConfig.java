@@ -157,6 +157,12 @@ public class NotificationConfig implements Serializable {
      */
     private Long embyDelayed;
 
+    private String shell;
+
+    /**
+     * 存活限制 秒
+     */
+    private Integer aliveLimit;
 
     /**
      * 通知 状态
@@ -218,6 +224,9 @@ public class NotificationConfig implements Serializable {
                 .setEmbyApiKey("")
                 .setEmbyRefreshViewIds(new ArrayList<>())
                 .setEmbyDelayed(0L);
+
+        notificationConfig.setShell("")
+                .setAliveLimit(10);
 
         return notificationConfig;
     }
