@@ -18,11 +18,11 @@
     "element-plus": "^2.10.4",
     "markdown-it": "^14.1.0",
     "markdown-it-github-alerts": "^1.0.0",
-    "vue": "^3.5.17"
+    "vue": "^3.5.18"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^6.0.0",
     "shiki": "^3.8.1",
-    "vite": "^7.0.5"
+    "vite": "^7.0.6"
   }
 }
