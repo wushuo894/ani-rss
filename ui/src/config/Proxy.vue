@@ -63,9 +63,12 @@ let urls = ref([
   'https://mikanani.me',
   'https://mikanime.tv',
   'https://nyaa.si',
+  'https://acg.rip',
   'https://github.com',
   'https://www.google.com',
-  'https://bgm.tv'
+  'https://bgm.tv',
+  'https://www.tmdb.org',
+  'https://www.themoviedb.org'
 ])
 
 let url = ref('')
