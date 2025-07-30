@@ -1,6 +1,10 @@
-- 增加通知 执行外部程序
-- 添加合集时可手动调整是否为剧场版
+## 改动
 
-close #470
+- 增加了一些代理测试网址
+- WebHook通知支持 `${imageBase64}` 合并于 #474
+
+## 贡献者
+
+@sosorin
 
 [从1.0升级至2.0的配置继承](https://github.com/wushuo894/ani-rss/discussions/427)
