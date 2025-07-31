@@ -207,6 +207,16 @@ public class Ani implements Serializable {
     private String customRenameTemplate;
 
     /**
+     * 自定义优先保留开关
+     */
+    private Boolean customPriorityKeywordsEnable;
+
+    /**
+     * 自定义优先保留关键词列表
+     */
+    private List<String> customPriorityKeywords;
+
+    /**
      * 上次下载完成时间
      */
     private Long lastDownloadTime;
@@ -257,6 +267,8 @@ public class Ani implements Serializable {
                 .setProcrastinating(true)
                 .setCustomRenameTemplate(config.getRenameTemplate())
                 .setCustomRenameTemplateEnable(false)
+                .setCustomPriorityKeywordsEnable(false)
+                .setCustomPriorityKeywords(new ArrayList<>())
                 .setMessage(true);
     }
 

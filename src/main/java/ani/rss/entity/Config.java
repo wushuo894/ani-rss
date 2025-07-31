@@ -93,6 +93,16 @@ public class Config implements Serializable {
     private Boolean watchErrorTorrent;
 
     /**
+     * 优先保留开关
+     */
+    private Boolean priorityKeywordsEnable;
+
+    /**
+     * 优先保留关键词列表
+     */
+    private List<String> priorityKeywords;
+
+    /**
      * 延迟下载
      */
     private Integer delayedDownload;
