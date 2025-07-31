@@ -1051,11 +1051,6 @@ public class TorrentUtil {
         } catch (Exception e) {
             log.error(e.getMessage(), e);
         }
-        if (b) {
-            log.debug("添加标签成功 {} {}", name, tags);
-        } else {
-            log.error("添加标签失败 {} {}", name, tags);
-        }
         return b;
     }
 
