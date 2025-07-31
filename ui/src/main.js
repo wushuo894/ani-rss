@@ -1,14 +1,11 @@
 import {createApp} from 'vue'
-import 'element-plus/dist/index.css'
 import Login from './Login.vue'
-import ElementPlus from 'element-plus'
 import * as ElementPlusIconsVue from '@element-plus/icons-vue'
-import 'element-plus/theme-chalk/dark/css-vars.css'
 import {zhCn} from "element-plus/es/locale/index";
 import './style.css'
 
 const app = createApp(Login)
-app.use(ElementPlus, {
+app.provide('$ELEMENT', {
     locale: zhCn,
 })
 // 引入图标
