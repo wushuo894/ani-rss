@@ -26,7 +26,10 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import java.io.File;
-import java.util.*;
+import java.util.Date;
+import java.util.List;
+import java.util.Objects;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -853,19 +856,20 @@ public class TorrentUtil {
         try {
             ani = findAniByDownloadPath(torrentsInfo);
 
-            Set<String> allTags = Arrays.stream(TorrentsTags.values())
-                    .map(TorrentsTags::getValue)
+            String subgroup = ani.getSubgroup();
+
+            Set<String> collect = ani.getStandbyRssList()
+                    .stream()
+                    .map(Ani.StandbyRss::getLabel)
                     .collect(Collectors.toSet());
 
-            String subgroup = tags
+            subgroup = tags
                     .stream()
-                    .filter(s -> !allTags.contains(s))
+                    .filter(collect::contains)
                     .findFirst()
-                    .orElse("");
+                    .orElse(subgroup);
             subgroup = StrUtil.blankToDefault(subgroup, "未知字幕组");
-            if (Objects.nonNull(ani)) {
-                ani.setSubgroup(subgroup);
-            }
+            ani.setSubgroup(subgroup);
         } catch (Exception e) {
             log.error(e.getMessage(), e);
         }
