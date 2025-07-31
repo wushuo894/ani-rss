@@ -156,6 +156,19 @@
             </el-text>
           </div>
         </el-form-item>
+        <el-form-item label="优先保留">
+          <div style="width: 100%">
+            <el-switch v-model="props.ani['customPriorityKeywordsEnable']"/>
+            <br>
+            <div :style="{ opacity: props.ani['customPriorityKeywordsEnable'] ? 1 : 0.4, 'pointer-events': props.ani['customPriorityKeywordsEnable'] ? 'auto' : 'none' }">
+              <PrioKeys 
+                v-model:keywords="props.ani['customPriorityKeywords']" 
+                :import-global="true" 
+                :show-text="true"
+              />
+            </div>
+          </div>
+        </el-form-item>
         <el-form-item label="其它">
           <el-checkbox v-model="props.ani.omit" label="遗漏检测"/>
           <el-checkbox v-model="props.ani.upload" label="自动上传"/>
@@ -192,6 +205,7 @@
 <script setup>
 
 import Exclude from "@/config/Exclude.vue";
+import PrioKeys from "@/config/PrioKeys.vue";
 import Items from "./Items.vue";
 import {onMounted, ref} from "vue";
 import api from "@/js/api.js";

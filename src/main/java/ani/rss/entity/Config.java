@@ -93,9 +93,14 @@ public class Config implements Serializable {
     private Boolean watchErrorTorrent;
 
     /**
-     * 自定义标签
+     * 优先保留开关
      */
-    private List<String> customTags;
+    private Boolean priorityKeywordsEnable;
+
+    /**
+     * 优先保留关键词列表
+     */
+    private List<String> priorityKeywords;
 
     /**
      * 延迟下载

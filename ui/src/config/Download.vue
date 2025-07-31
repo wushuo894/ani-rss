@@ -201,6 +201,24 @@
     <el-form-item label="检测是否死种">
       <el-switch v-model:model-value="props.config.watchErrorTorrent"/>
     </el-form-item>
+    <el-form-item label="优先保留">
+      <div style="width: 100%">
+        <el-switch v-model:model-value="props.config.priorityKeywordsEnable"/>
+        <br>
+        <el-text class="mx-1" size="small">
+          启用多文件种子的文件优先保留过滤
+        </el-text>
+      </div>
+    </el-form-item>
+    <el-form-item 
+        label="关键词设置" 
+        v-if="props.config.priorityKeywordsEnable">
+      <PrioKeys 
+        v-model:keywords="props.config.priorityKeywords" 
+        :import-global="false" 
+        :show-text="true"
+      />
+    </el-form-item>
     <el-collapse v-model="activeName">
       <el-collapse-item name="qb" title="qBittorrent 设置">
         <q-bittorrent v-if="activeName.indexOf('qb') > -1" :config="props.config"/>
@@ -215,10 +233,11 @@
 <script setup>
 import { ref, nextTick } from "vue";
 import api from "@/js/api.js";
-import {ElMessage} from "element-plus";
+import {ElMessage, ElText} from "element-plus";
 import {Key, User} from "@element-plus/icons-vue";
 import QBittorrent from "@/config/download/qBittorrent.vue";
 import Alist from "@/config/download/Alist.vue";
+import PrioKeys from "@/config/PrioKeys.vue";
 
 const downloadSelect = ref([
   'qBittorrent',
