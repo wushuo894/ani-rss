@@ -860,7 +860,7 @@ public class TorrentUtil {
 
             Set<String> collect = ani.getStandbyRssList()
                     .stream()
-                    .map(Ani.StandbyRss::getLabel)
+                    .map(StandbyRss::getLabel)
                     .collect(Collectors.toSet());
 
             subgroup = tags

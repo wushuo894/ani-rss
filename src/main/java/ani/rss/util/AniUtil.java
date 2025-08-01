@@ -136,12 +136,12 @@ public class AniUtil {
                 .setType(type);
 
 
-        List<Ani.StandbyRss> standbyRssList = ani.getStandbyRssList();
+        List<StandbyRss> standbyRssList = ani.getStandbyRssList();
 
         boolean copyMasterToStandby = config.getCopyMasterToStandby();
         boolean standbyRss = config.getStandbyRss();
         if (copyMasterToStandby && standbyRss) {
-            Ani.StandbyRss copyStandbyRss = new Ani.StandbyRss()
+            StandbyRss copyStandbyRss = new StandbyRss()
                     .setUrl(url.trim())
                     .setOffset(0)
                     .setLabel(ani.getSubgroup());
@@ -172,7 +172,7 @@ public class AniUtil {
             log.debug("自动获取到剧集偏移为 {}", offset);
             ani.setOffset(offset.intValue());
 
-            for (Ani.StandbyRss rss : standbyRssList) {
+            for (StandbyRss rss : standbyRssList) {
                 rss.setOffset(offset.intValue());
             }
         }
