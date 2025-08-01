@@ -361,23 +361,28 @@ public class qBittorrent implements BaseDownload {
             log.debug("未能获取番剧对象: {}", e.getMessage());
         }
 
-        List<FileEntity> files = files(torrentsInfo, true, config);
-
         List<String> priorityKeywords = getPriorityKeywords(config, ani);
 
-        List<String> names = files.stream()
-                .sorted(Comparator.comparingInt(file -> {
-                    String fileName = file.getName();
-                    int minIndex = Integer.MAX_VALUE;
-                    for (int i = 0; i < priorityKeywords.size(); i++) {
-                        String priorityKeyword = priorityKeywords.get(i);
-                        if (!fileName.contains(priorityKeyword)) {
-                            continue;
+        List<FileEntity> files = files(torrentsInfo, true, config);
+
+        if (!priorityKeywords.isEmpty()) {
+            files = files.stream()
+                    .sorted(Comparator.comparingInt(file -> {
+                        String fileName = file.getName();
+                        int minIndex = Integer.MAX_VALUE;
+                        for (int i = 0; i < priorityKeywords.size(); i++) {
+                            String priorityKeyword = priorityKeywords.get(i);
+                            if (!fileName.contains(priorityKeyword)) {
+                                continue;
+                            }
+                            minIndex = Math.min(minIndex, i);
                         }
-                        minIndex = Math.min(minIndex, i);
-                    }
-                    return minIndex;
-                }))
+                        return minIndex;
+                    }))
+                    .toList();
+        }
+
+        List<String> names = files.stream()
                 .map(FileEntity::getName)
                 .toList();
 
