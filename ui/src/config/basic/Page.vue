@@ -53,7 +53,7 @@
       <el-select v-model="props.config['sortType']" style="width: 150px;">
         <el-option value="SCORE" label="评分"/>
         <el-option value="PINYIN" label="拼音"/>
-        <el-option value="DOWNLOAD_TIME" label="上次下载时间"/>
+        <el-option value="DOWNLOAD_TIME" label="更新时间"/>
       </el-select>
     </el-form-item>
     <el-form-item label="其他">
