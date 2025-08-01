@@ -2,6 +2,7 @@ import {createApp} from 'vue'
 import Login from './Login.vue'
 import * as ElementPlusIconsVue from '@element-plus/icons-vue'
 import {zhCn} from "element-plus/es/locale/index";
+import 'element-plus/dist/index.css'
 import './style.css'
 
 const app = createApp(Login)
