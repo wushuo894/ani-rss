@@ -189,17 +189,10 @@ const searchList = (week) => {
       .filter(props.filter)
       .filter(it => !weekShow.value || week === it.week)
       .filter(it => {
-        if (it['title'].toString().indexOf(text) > -1) {
-          return true
-        }
-        let pinyin = it['pinyin']
-        if (pinyin.indexOf(text) > -1) {
-          return true
-        }
-        if (pinyin.replaceAll(' ', '').indexOf(text.replaceAll(' ', '')) > -1) {
-          return true
-        }
-        return pinyin.split(' ').map(s => s.substring(0, 1)).join('').indexOf(text) > -1;
+        let {title, pinyin, pinyinInitials} = it
+        return title.indexOf(text) > -1 ||
+            pinyin.indexOf(text) > -1 ||
+            pinyinInitials.indexOf(text) > -1;
       });
 }
 

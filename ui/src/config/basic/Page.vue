@@ -49,6 +49,13 @@
                        @change="colorChange(color)"
                        @active-change="colorChange"/>
     </el-form-item>
+    <el-form-item label="排序">
+      <el-select v-model="props.config['sortType']" style="width: 150px;">
+        <el-option value="SCORE" label="评分"/>
+        <el-option value="PINYIN" label="拼音"/>
+        <el-option value="DOWNLOAD_TIME" label="上次下载时间"/>
+      </el-select>
+    </el-form-item>
     <el-form-item label="其他">
       <el-checkbox v-model="props.config.scoreShow" label="显示评分"/>
       <el-checkbox v-model="props.config.weekShow" label="按星期展示"/>

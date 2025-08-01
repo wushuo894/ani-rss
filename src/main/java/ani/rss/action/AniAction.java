@@ -6,19 +6,16 @@ import ani.rss.entity.Ani;
 import ani.rss.entity.Config;
 import ani.rss.entity.Item;
 import ani.rss.entity.TorrentsInfo;
+import ani.rss.enums.SortTypeEnum;
 import ani.rss.task.RssTask;
 import ani.rss.util.*;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.comparator.PinyinComparator;
-import cn.hutool.core.date.DateTime;
-import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.io.FileUtil;
-import cn.hutool.core.text.StrFormatter;
 import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
-import cn.hutool.extra.pinyin.PinyinUtil;
 import cn.hutool.http.server.HttpServerRequest;
 import cn.hutool.http.server.HttpServerResponse;
 import com.google.gson.JsonArray;
@@ -28,6 +25,7 @@ import lombok.extern.slf4j.Slf4j;
 import java.io.File;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.function.ToLongFunction;
 
 /**
  * 订阅 增删改查
@@ -88,8 +86,6 @@ public class AniAction implements BaseAction {
      */
     private void post() {
         Ani ani = getBody(Ani.class);
-        ani.setTitle(ani.getTitle().trim())
-                .setUrl(ani.getUrl().trim());
         AniUtil.verify(ani);
 
         Optional<Ani> first = AniUtil.ANI_LIST.stream()
@@ -140,8 +136,6 @@ public class AniAction implements BaseAction {
      */
     private void put() {
         Ani ani = getBody(Ani.class);
-        ani.setTitle(ani.getTitle().trim())
-                .setUrl(ani.getUrl().trim());
         AniUtil.verify(ani);
         Optional<Ani> first = AniUtil.ANI_LIST.stream()
                 .filter(it -> !it.getId().equals(ani.getId()))
@@ -221,30 +215,30 @@ public class AniAction implements BaseAction {
      */
     private void get() {
         Config config = ConfigUtil.CONFIG;
-        Boolean scoreShow = config.getScoreShow();
-        // 按拼音排序
 
+        SortTypeEnum sortType = config.getSortType();
+
+        // 按拼音排序
         List<Ani> list = AniUtil.ANI_LIST;
-        if (scoreShow) {
+        if (sortType == SortTypeEnum.SCORE) {
             list = CollUtil.sort(list, Comparator.comparingDouble(Ani::getScore).reversed());
-        } else {
+        }
+
+        if (sortType == SortTypeEnum.PINYIN) {
             PinyinComparator pinyinComparator = new PinyinComparator();
             list = CollUtil.sort(list, (a, b) -> pinyinComparator.compare(a.getTitle(), b.getTitle()));
         }
 
-        list.parallelStream()
-                .forEach(ani -> {
-                    String title = ani.getTitle();
-                    String pinyin = PinyinUtil.getPinyin(title);
-                    ani.setPinyin(pinyin);
+        if (sortType == SortTypeEnum.DOWNLOAD_TIME) {
+            list = CollUtil.sort(list, Comparator.comparingLong((ToLongFunction<Ani>) ani -> {
+                Long lastDownloadTime = ani.getLastDownloadTime();
+                if (lastDownloadTime == 0) {
+                    return Long.MAX_VALUE;
+                }
+                return lastDownloadTime;
+            }).reversed());
+        }
 
-                    Integer year = ani.getYear();
-                    Integer month = ani.getMonth();
-                    Integer day = ani.getDate();
-                    DateTime dateTime = DateUtil.parseDate(StrFormatter.format("{}-{}-{}", year, month, day));
-                    // 0表示周日，1表示周一
-                    ani.setWeek(DateUtil.dayOfWeek(dateTime) - 1);
-                });
         resultSuccess(list);
     }
 
