@@ -153,6 +153,8 @@ public class ConfigUtil {
                 .setRenameTemplate("[${subgroup}] ${title} S${seasonFormat}E${episodeFormat}")
                 .setRenameDelYear(false)
                 .setRenameDelTmdbId(false)
+                .setPriorityKeywordsEnable(false)
+                .setPriorityKeywords(new ArrayList<>())
                 .setVerifyLoginIp(false)
                 .setAutoTrackersUpdate(false)
                 .setTrackersUpdateUrls("https://cf.trackerslist.com/best.txt")

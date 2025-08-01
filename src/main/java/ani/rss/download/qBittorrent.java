@@ -10,6 +10,7 @@ import ani.rss.util.ExceptionUtil;
 import ani.rss.util.FilePathUtil;
 import ani.rss.util.GsonStatic;
 import ani.rss.util.HttpReq;
+import ani.rss.util.TorrentUtil;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.lang.Assert;
@@ -68,7 +69,7 @@ public class qBittorrent implements BaseDownload {
                                 }
                                 return videoFormat.contains(extName) || subtitleFormat.contains(extName);
                             })
-                            .sorted(Comparator.comparingLong(fileEntity -> Long.MAX_VALUE - fileEntity.getSize()))
+                            .sorted((fileEntity1, fileEntity2) -> Long.compare(fileEntity2.getSize(), fileEntity1.getSize()))
                             .toList();
                 });
     }
@@ -357,7 +358,33 @@ public class qBittorrent implements BaseDownload {
 
         String host = config.getDownloadToolHost();
 
+        Ani ani = null;
+        try {
+            ani = TorrentUtil.findAniByDownloadPath(torrentsInfo);
+        } catch (Exception e) {
+            log.debug("未能获取番剧对象: {}", e.getMessage());
+        }
+
         List<FileEntity> files = files(torrentsInfo, true, config);
+
+        List<String> priorityKeywords = getPriorityKeywords(config, ani);
+        if (priorityKeywords != null && !priorityKeywords.isEmpty()) {
+            files = files.stream()
+                    .sorted((fileEntity1, fileEntity2) -> {
+                        String name1 = fileEntity1.getName();
+                        String name2 = fileEntity2.getName();
+                        
+                        int priority1 = getPriorityByKeywords(name1, priorityKeywords);
+                        int priority2 = getPriorityByKeywords(name2, priorityKeywords);
+                        
+                        if (priority1 != priority2) {
+                            return Integer.compare(priority1, priority2);
+                        }
+                        
+                        return Long.compare(fileEntity2.getSize(), fileEntity1.getSize());
+                    })
+                    .toList();
+        }
 
         List<String> names = files.stream()
                 .map(FileEntity::getName)
@@ -490,6 +517,36 @@ public class qBittorrent implements BaseDownload {
          * 1 允许下载。2 禁止下载
          */
         private Integer priority;
+    }
+
+    private static int getPriorityByKeywords(String fileName, List<String> priorityKeywords) {
+        if (priorityKeywords == null || priorityKeywords.isEmpty()) {
+            return Integer.MAX_VALUE;
+        }
+        
+        for (int i = 0; i < priorityKeywords.size(); i++) {
+            String keyword = priorityKeywords.get(i);
+            if (StrUtil.isNotBlank(keyword) && fileName.contains(keyword)) {
+                return i;
+            }
+        }
+        
+        return Integer.MAX_VALUE;
+    }
+
+    private static List<String> getPriorityKeywords(Config config, Ani ani) {
+        if (ani != null && Boolean.TRUE.equals(ani.getCustomPriorityKeywordsEnable())) {
+            List<String> customKeywords = ani.getCustomPriorityKeywords();
+            if (customKeywords != null && !customKeywords.isEmpty()) {
+                return customKeywords;
+            }
+        }
+
+        if (Boolean.TRUE.equals(config.getPriorityKeywordsEnable())) {
+            return config.getPriorityKeywords();
+        }
+        
+        return null;
     }
 
 
