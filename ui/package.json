@@ -12,7 +12,7 @@
     "@element-plus/icons-vue": "^2.3.1",
     "@vicons/fa": "^0.13.0",
     "@vueuse/core": "^13.6.0",
-    "artplayer": "^5.2.3",
+    "artplayer": "^5.2.4",
     "artplayer-plugin-multiple-subtitles": "^1.1.0",
     "crypto-js": "^4.2.0",
     "element-plus": "^2.10.4",
@@ -22,7 +22,7 @@
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^6.0.1",
-    "shiki": "^3.8.1",
+    "shiki": "^3.9.1",
     "terser": "^5.43.1",
     "unplugin-auto-import": "^19.3.0",
     "unplugin-vue-components": "^28.8.0",
