@@ -12,10 +12,14 @@ import ani.rss.util.*;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.comparator.PinyinComparator;
+import cn.hutool.core.date.DateTime;
+import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.text.StrFormatter;
 import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.extra.pinyin.PinyinUtil;
 import cn.hutool.http.server.HttpServerRequest;
 import cn.hutool.http.server.HttpServerResponse;
 import com.google.gson.JsonArray;
@@ -86,6 +90,8 @@ public class AniAction implements BaseAction {
      */
     private void post() {
         Ani ani = getBody(Ani.class);
+        ani.setTitle(ani.getTitle().trim())
+                .setUrl(ani.getUrl().trim());
         AniUtil.verify(ani);
 
         Optional<Ani> first = AniUtil.ANI_LIST.stream()
@@ -136,6 +142,8 @@ public class AniAction implements BaseAction {
      */
     private void put() {
         Ani ani = getBody(Ani.class);
+        ani.setTitle(ani.getTitle().trim())
+                .setUrl(ani.getUrl().trim());
         AniUtil.verify(ani);
         Optional<Ani> first = AniUtil.ANI_LIST.stream()
                 .filter(it -> !it.getId().equals(ani.getId()))
@@ -220,6 +228,28 @@ public class AniAction implements BaseAction {
 
         // 按拼音排序
         List<Ani> list = AniUtil.ANI_LIST;
+
+        list
+                .parallelStream()
+                .forEach(ani -> {
+                    String title = ani.getTitle();
+                    String pinyin = PinyinUtil.getPinyin(title, "");
+                    String pinyinInitials = PinyinUtil.getFirstLetter(title, "");
+
+                    Integer year = ani.getYear();
+                    Integer month = ani.getMonth();
+                    Integer date = ani.getDate();
+
+                    DateTime dateTime = DateUtil.parseDate(
+                            StrFormatter.format("{}-{}-{}", year, month, date)
+                    );
+                    int week = DateUtil.dayOfWeek(dateTime) - 1;
+
+                    ani.setPinyin(pinyin)
+                            .setPinyinInitials(pinyinInitials)
+                            .setWeek(week);
+                });
+
         if (sortType == SortTypeEnum.SCORE) {
             list = CollUtil.sort(list, Comparator.comparingDouble(Ani::getScore).reversed());
         }

@@ -3,6 +3,7 @@ package ani.rss.util;
 import ani.rss.entity.Ani;
 import ani.rss.entity.Config;
 import ani.rss.entity.Item;
+import ani.rss.entity.StandbyRss;
 import ani.rss.enums.NotificationStatusEnum;
 import ani.rss.enums.StringEnum;
 import cn.hutool.core.collection.CollUtil;
@@ -54,8 +55,8 @@ public class ItemsUtil {
             return items;
         }
 
-        List<Ani.StandbyRss> standbyRssList = ani.getStandbyRssList();
-        for (Ani.StandbyRss rss : standbyRssList) {
+        List<StandbyRss> standbyRssList = ani.getStandbyRssList();
+        for (StandbyRss rss : standbyRssList) {
             ThreadUtil.sleep(1000);
             s = HttpReq.get(rss.getUrl(), true)
                     .timeout(config.getRssTimeout() * 1000)
