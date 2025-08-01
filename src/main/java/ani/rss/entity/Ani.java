@@ -1,7 +1,11 @@
 package ani.rss.entity;
 
 import ani.rss.util.ConfigUtil;
+import cn.hutool.core.date.DateTime;
+import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.lang.UUID;
+import cn.hutool.core.text.StrFormatter;
+import cn.hutool.extra.pinyin.PinyinUtil;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
@@ -9,6 +13,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * 订阅
@@ -20,6 +25,7 @@ public class Ani implements Serializable {
      * id
      */
     private String id;
+
 
     /**
      * RSS URL
@@ -114,6 +120,11 @@ public class Ani implements Serializable {
     private String pinyin;
 
     /**
+     * 拼音
+     */
+    private String pinyinInitials;
+
+    /**
      * 启用
      */
     private Boolean enable;
@@ -186,8 +197,6 @@ public class Ani implements Serializable {
 
     /**
      * 自动上传
-     *
-     * @return
      */
     private Boolean upload;
 
@@ -225,6 +234,53 @@ public class Ani implements Serializable {
      * 消息通知
      */
     private Boolean message;
+
+    public String getUrl() {
+        if (Objects.isNull(url)) {
+            return null;
+        }
+        return url.trim();
+    }
+
+    public String getTitle() {
+        if (Objects.isNull(title)) {
+            return null;
+        }
+        return title.trim();
+    }
+
+    public Integer getWeek() {
+        if (Objects.isNull(year)) {
+            return null;
+        }
+        if (Objects.isNull(month)) {
+            return null;
+        }
+        if (Objects.isNull(date)) {
+            return null;
+        }
+        DateTime dateTime = DateUtil.parseDate(
+                StrFormatter.format("{}-{}-{}", year, month, date)
+        );
+        week = DateUtil.dayOfWeek(dateTime) - 1;
+        return week;
+    }
+
+    public String getPinyin() {
+        if (Objects.isNull(title)) {
+            return null;
+        }
+        pinyin = PinyinUtil.getPinyin(title, "");
+        return pinyin;
+    }
+
+    public String getPinyinInitials() {
+        if (Objects.isNull(title)) {
+            return null;
+        }
+        pinyinInitials = PinyinUtil.getFirstLetter(title, "");
+        return pinyinInitials;
+    }
 
     public static Ani createAni() {
         Ani newAni = new Ani();

@@ -1,5 +1,6 @@
 package ani.rss.entity;
 
+import ani.rss.enums.SortTypeEnum;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
@@ -581,4 +582,9 @@ public class Config implements Serializable {
      * 添加订阅时自动复制主rss至备用rss
      */
     private Boolean copyMasterToStandby;
+
+    /**
+     * 排序方式
+     */
+    private SortTypeEnum sortType;
 }
