@@ -229,9 +229,9 @@ public class AniAction implements BaseAction {
         // 按拼音排序
         List<Ani> list = AniUtil.ANI_LIST;
 
-        list = list
+        list
                 .parallelStream()
-                .peek(ani -> {
+                .forEach(ani -> {
                     String title = ani.getTitle();
                     String pinyin = PinyinUtil.getPinyin(title, "");
                     String pinyinInitials = PinyinUtil.getFirstLetter(title, "");
@@ -248,7 +248,7 @@ public class AniAction implements BaseAction {
                     ani.setPinyin(pinyin)
                             .setPinyinInitials(pinyinInitials)
                             .setWeek(week);
-                }).toList();
+                });
 
         if (sortType == SortTypeEnum.SCORE) {
             list = CollUtil.sort(list, Comparator.comparingDouble(Ani::getScore).reversed());
