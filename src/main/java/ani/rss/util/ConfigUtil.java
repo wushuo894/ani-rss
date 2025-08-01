@@ -3,6 +3,7 @@ package ani.rss.util;
 import ani.rss.entity.Config;
 import ani.rss.entity.Login;
 import ani.rss.entity.NotificationConfig;
+import ani.rss.enums.SortTypeEnum;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.bean.DynaBean;
 import cn.hutool.core.bean.copier.CopyOptions;
@@ -201,7 +202,8 @@ public class ConfigUtil {
                 .setNotificationTemplate(notificationTemplate)
                 .setNotificationConfigList(new ArrayList<>())
                 .setApiKey(apiKey)
-                .setCopyMasterToStandby(false);
+                .setCopyMasterToStandby(false)
+                .setSortType(SortTypeEnum.SCORE);
     }
 
     /**
