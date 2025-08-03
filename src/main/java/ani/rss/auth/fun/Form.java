@@ -1,7 +1,5 @@
 package ani.rss.auth.fun;
 
-import ani.rss.annotation.Auth;
-import ani.rss.auth.enums.AuthType;
 import ani.rss.auth.util.AuthUtil;
 import ani.rss.entity.Login;
 import cn.hutool.core.util.StrUtil;
@@ -12,7 +10,6 @@ import java.util.function.Function;
 /**
  * 表单鉴权
  */
-@Auth(type = AuthType.FORM)
 public class Form implements Function<HttpServerRequest, Boolean> {
     @Override
     public Boolean apply(HttpServerRequest request) {

@@ -15,7 +15,6 @@ import cn.hutool.core.net.NetUtil;
 import cn.hutool.core.util.ClassUtil;
 import cn.hutool.core.util.ReflectUtil;
 import cn.hutool.core.util.StrUtil;
-import cn.hutool.crypto.SecureUtil;
 import cn.hutool.http.server.HttpServerRequest;
 import cn.hutool.http.server.HttpServerResponse;
 import cn.hutool.http.server.SimpleServer;
@@ -23,11 +22,9 @@ import cn.hutool.log.Log;
 import lombok.extern.slf4j.Slf4j;
 
 import java.net.InetSocketAddress;
-import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
-import java.util.concurrent.TimeUnit;
 
 import static ani.rss.auth.util.AuthUtil.getIp;
 
@@ -139,12 +136,18 @@ public class ServerUtil {
                 public void doAction(HttpServerRequest req, HttpServerResponse res) {
                     try {
                         Auth auth = aClass.getAnnotation(Auth.class);
-                        if (auth.value() && !isIpWhitelist(getIp())) {
-                            Boolean test = AuthUtil.test(req, auth.type());
-                            if (!test) {
-                                return;
-                            }
+                        if (Objects.isNull(auth)) {
+                            return;
                         }
+                        if (!auth.value()) {
+                            return;
+                        }
+                        Boolean test = AuthUtil.test(req, auth.type());
+                        if (!test) {
+                            BaseAction.staticResult(new Result<>().setCode(403).setMessage("登录状态失效"));
+                            return;
+                        }
+
                         BaseAction baseAction = (BaseAction) action;
                         baseAction.doAction(req, res);
                     } catch (Exception e) {
@@ -172,65 +175,4 @@ public class ServerUtil {
         }
     }
 
-    public static synchronized Boolean isIpWhitelist(String ip) {
-        Config config = ConfigUtil.CONFIG;
-        String ipWhitelistStr = config.getIpWhitelistStr();
-        Boolean ipWhitelist = config.getIpWhitelist();
-        if (!ipWhitelist) {
-            return false;
-        }
-        if (StrUtil.isBlank(ipWhitelistStr)) {
-            return false;
-        }
-        if (StrUtil.isBlank(ip)) {
-            return false;
-        }
-        String key = "IpWhitelist:" + SecureUtil.md5(ipWhitelistStr) + ":" + ip;
-        try {
-            if (!PatternPool.IPV4.matcher(ip).matches()) {
-                return false;
-            }
-            Boolean b = MyCacheUtil.get(key);
-            if (Objects.nonNull(b)) {
-                return b;
-            }
-            List<String> list = StrUtil.split(ipWhitelistStr, "\n", true, true);
-            for (String string : list) {
-                if (StrUtil.isBlank(string)) {
-                    continue;
-                }
-
-                // 判断是否为 ipv4
-                if (PatternPool.IPV4.matcher(string).matches()) {
-                    if (string.equals(ip)) {
-                        MyCacheUtil.put(key, Boolean.TRUE, TimeUnit.MINUTES.toMillis(10));
-                        return true;
-                    }
-                }
-
-                // 通配符，如 192.168.*.1
-                if (string.contains("*")) {
-                    if (Ipv4Util.matches(string, ip)) {
-                        MyCacheUtil.put(key, Boolean.TRUE, TimeUnit.MINUTES.toMillis(10));
-                        return true;
-                    }
-                }
-
-                // IP段，支持X.X.X.X-X.X.X.X或X.X.X.X/X
-                List<String> ips = Ipv4Util.list(string, false);
-                if (ips.contains(ip)) {
-                    ips.clear();
-                    MyCacheUtil.put(key, Boolean.TRUE, TimeUnit.MINUTES.toMillis(10));
-                    return true;
-                }
-                ips.clear();
-            }
-
-        } catch (Exception e) {
-            log.error("ip白名单存在问题");
-            log.error(e.getMessage(), e);
-        }
-        MyCacheUtil.put(key, Boolean.FALSE, TimeUnit.MINUTES.toMillis(10));
-        return false;
-    }
 }

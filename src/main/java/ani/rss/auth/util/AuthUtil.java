@@ -107,6 +107,23 @@ public class AuthUtil {
      * @param authType
      * @return
      */
+    public static Boolean test(HttpServerRequest request, AuthType... authType) {
+        for (AuthType type : authType) {
+            Boolean test = test(request, type);
+            if (test) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * 鉴权检测
+     *
+     * @param request
+     * @param authType
+     * @return
+     */
     public static Boolean test(HttpServerRequest request, AuthType authType) {
         Class<? extends Function<HttpServerRequest, Boolean>> clazz = authType.getClazz();
         String name = clazz.getName();
