@@ -2,7 +2,6 @@ package ani.rss.action;
 
 import ani.rss.annotation.Auth;
 import ani.rss.annotation.Path;
-import ani.rss.auth.enums.AuthType;
 import ani.rss.entity.Ani;
 import ani.rss.entity.Config;
 import ani.rss.enums.StringEnum;
@@ -30,7 +29,7 @@ import java.util.concurrent.LinkedBlockingQueue;
  * WebHook
  */
 @Slf4j
-@Auth(type = AuthType.API_KEY)
+@Auth
 @Path("/web_hook")
 public class WebHookAction implements BaseAction {
 
