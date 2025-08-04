@@ -2,7 +2,6 @@ package ani.rss.action;
 
 import ani.rss.annotation.Auth;
 import ani.rss.annotation.Path;
-import ani.rss.auth.enums.AuthType;
 import ani.rss.util.ConfigUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.ZipUtil;
@@ -16,7 +15,7 @@ import java.nio.charset.StandardCharsets;
 /**
  * 下载日志
  */
-@Auth(type = AuthType.FORM)
+@Auth
 @Path("/downloadLogs")
 public class DownloadLogsAction implements BaseAction {
     @Override
