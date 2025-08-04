@@ -1,8 +1,14 @@
 <template>
   <el-dialog v-model="dialogVisible" align-center center style="max-width: 600px;" title="试用">
-    <el-text class="mx-1" size="small">
-      给本项目点一个 <strong>Star</strong> 并获取 <strong>GithubToken</strong>, 检测通过后可进行试用
-    </el-text>
+    <el-alert :closable="false" type="warning">
+      <template #title>
+        <el-text class="mx-1" size="small">
+          给本项目点一个 <strong>Star</strong> 并获取 <strong>GithubToken</strong>, 检测通过后可进行试用
+          <br/>
+          除 <strong>Mikan番剧列表显示评分</strong> 功能外皆可试用
+        </el-text>
+      </template>
+    </el-alert>
     <div style="margin: 8px 0 8px 0">
       <el-input v-model="props.config['githubToken']" clearable placeholder="在此处输入GithubToken"/>
     </div>
