@@ -139,10 +139,7 @@ public class ServerUtil {
                         if (Objects.isNull(auth)) {
                             return;
                         }
-                        if (!auth.value()) {
-                            return;
-                        }
-                        Boolean test = AuthUtil.test(req, auth.type());
+                        Boolean test = AuthUtil.test(req, auth);
                         if (!test) {
                             BaseAction.staticResult(new Result<>().setCode(403).setMessage("登录状态失效"));
                             return;
