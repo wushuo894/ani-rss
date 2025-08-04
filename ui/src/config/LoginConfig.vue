@@ -74,7 +74,7 @@ let generateRandomString = (length) => {
 }
 
 let createApiKey = () => {
-  props.config.apiKey = generateRandomString(32);
+  props.config.apiKey = generateRandomString(256);
 }
 
 let props = defineProps(['config'])
