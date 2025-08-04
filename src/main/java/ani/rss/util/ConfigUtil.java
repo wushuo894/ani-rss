@@ -76,7 +76,7 @@ public class ConfigUtil {
                 ${emoji}${emoji}${emoji}
                 """;
 
-        String apiKey = RandomUtil.randomString(256).toLowerCase();
+        String apiKey = RandomUtil.randomString(64).toLowerCase();
 
         Map<String, String> env = System.getenv();
 
