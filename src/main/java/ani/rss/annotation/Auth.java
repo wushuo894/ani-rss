@@ -17,7 +17,6 @@ public @interface Auth {
 
     AuthType[] type() default {
             AuthType.IP_WHITE_LIST,
-            AuthType.API_KEY,
             AuthType.HEADER,
             AuthType.FORM
     };

@@ -52,15 +52,17 @@
     <el-form-item label="Api Key">
       <div class="flex" style="width: 100%;">
         <el-input v-model:model-value="props.config.apiKey" readonly/>
-        <div style="width: 4px;"></div>
-        <el-button bg text @click="createApiKey">生成</el-button>
+        <div style="margin-left: 12px;" class="flex">
+          <el-button bg text @click="createApiKey">生成</el-button>
+          <el-button bg text @click="copy(props.config.apiKey)">复制</el-button>
+        </div>
       </div>
     </el-form-item>
   </el-form>
 </template>
 
 <script setup>
-import {ElText} from "element-plus";
+import {ElMessage, ElText} from "element-plus";
 import {Key, User} from "@element-plus/icons-vue";
 
 let generateRandomString = (length) => {
@@ -74,7 +76,17 @@ let generateRandomString = (length) => {
 }
 
 let createApiKey = () => {
-  props.config.apiKey = generateRandomString(32);
+  props.config.apiKey = generateRandomString(64);
+}
+
+let copy = (v) => {
+  const input = document.createElement('input');
+  input.value = v
+  document.body.appendChild(input);
+  input.select();
+  document.execCommand('copy');
+  document.body.removeChild(input);
+  ElMessage.success('已复制')
 }
 
 let props = defineProps(['config'])

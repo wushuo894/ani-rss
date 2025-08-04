@@ -17,6 +17,7 @@ public class GsonStatic {
             .disableHtmlEscaping()
             .disableJdkUnsafe()
             .disableInnerClassSerialization()
+            .setPrettyPrinting()
             .setDateFormat(DatePattern.NORM_DATETIME_PATTERN)
             .registerTypeAdapter(TimeZone.class, new TimeZoneSerializer())
             .create();

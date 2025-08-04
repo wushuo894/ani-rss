@@ -1,5 +1,6 @@
 package ani.rss.auth.util;
 
+import ani.rss.annotation.Auth;
 import ani.rss.auth.enums.AuthType;
 import ani.rss.entity.Config;
 import ani.rss.entity.Login;
@@ -107,8 +108,12 @@ public class AuthUtil {
      * @param authType
      * @return
      */
-    public static Boolean test(HttpServerRequest request, AuthType... authType) {
-        for (AuthType type : authType) {
+    public static Boolean test(HttpServerRequest request, Auth auth) {
+        if (!auth.value()) {
+            // 不进行校验
+            return true;
+        }
+        for (AuthType type : auth.type()) {
             Boolean test = test(request, type);
             if (test) {
                 return true;
