@@ -21,6 +21,7 @@ public class Result<T> implements Serializable {
     private Integer code;
     private String message;
     private T data;
+    private Long t;
 
     public static <Void> Result<Void> success() {
         return new Result<Void>()

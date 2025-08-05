@@ -151,6 +151,9 @@
         </el-text>
       </div>
     </el-form-item>
+    <el-form-item label="自定义标签">
+      <custom-tags :config="props.config"/>
+    </el-form-item>
     <el-form-item label="失败重试次数">
       <el-input-number v-model:model-value="props.config['downloadRetry']" :max="100" :min="3"/>
     </el-form-item>
@@ -181,13 +184,13 @@
         </el-text>
       </div>
     </el-form-item>
-    <el-form-item 
-        label="关键词设置" 
+    <el-form-item
+        label="关键词设置"
         v-if="props.config.priorityKeywordsEnable">
-      <PrioKeys 
-        v-model:keywords="props.config.priorityKeywords" 
-        :import-global="false" 
-        :show-text="true"
+      <PrioKeys
+          v-model:keywords="props.config.priorityKeywords"
+          :import-global="false"
+          :show-text="true"
       />
     </el-form-item>
     <el-collapse v-model="activeName">
@@ -209,6 +212,7 @@ import {Key, User} from "@element-plus/icons-vue";
 import QBittorrent from "@/config/download/qBittorrent.vue";
 import Alist from "@/config/download/Alist.vue";
 import PrioKeys from "@/config/PrioKeys.vue";
+import CustomTags from "@/config/CustomTags.vue";
 
 const downloadSelect = ref([
   'qBittorrent',
