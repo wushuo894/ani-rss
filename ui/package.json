@@ -22,7 +22,7 @@
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^6.0.1",
-    "shiki": "^3.9.1",
+    "shiki": "^3.9.2",
     "terser": "^5.43.1",
     "unplugin-auto-import": "^19.3.0",
     "unplugin-vue-components": "^28.8.0",

@@ -5,6 +5,7 @@ import ani.rss.util.GsonStatic;
 import ani.rss.util.ServerUtil;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.text.StrFormatter;
+import cn.hutool.http.Header;
 import cn.hutool.http.server.HttpServerResponse;
 import cn.hutool.http.server.action.Action;
 import org.slf4j.Logger;
@@ -18,14 +19,18 @@ public interface BaseAction extends Action {
     Logger logger = LoggerFactory.getLogger(BaseAction.class);
 
     static <T> void staticResult(Result<T> result) {
-        HttpServerResponse httpServerResponse = ServerUtil.RESPONSE.get();
-        if (Objects.isNull(httpServerResponse)) {
-            logger.error("httpServerResponse is null");
+        HttpServerResponse response = ServerUtil.RESPONSE.get();
+        if (Objects.isNull(response)) {
+            logger.error("response is null");
             return;
         }
-        httpServerResponse.setContentType("application/json; charset=utf-8");
+        result.setT(System.currentTimeMillis());
+        response.setHeader(Header.CACHE_CONTROL, "no-store, no-cache, must-revalidate, max-age=0");
+        response.setHeader(Header.PRAGMA, "no-cache");
+        response.setHeader("Expires", "0");
+        response.setContentType("application/json; charset=utf-8");
         String json = GsonStatic.toJson(result);
-        IoUtil.writeUtf8(httpServerResponse.getOut(), true, json);
+        IoUtil.writeUtf8(response.getOut(), true, json);
     }
 
     default <T> T getBody(Class<T> tClass) {
