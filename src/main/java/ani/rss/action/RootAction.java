@@ -10,6 +10,7 @@ import cn.hutool.core.io.resource.ResourceUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.core.util.URLUtil;
 import cn.hutool.http.ContentType;
+import cn.hutool.http.Header;
 import cn.hutool.http.server.HttpServerRequest;
 import cn.hutool.http.server.HttpServerResponse;
 import lombok.Cleanup;
@@ -72,6 +73,7 @@ public class RootAction implements BaseAction {
                 if (Objects.isNull(inputStream)) {
                     continue;
                 }
+                response.setHeader(Header.CACHE_CONTROL, "private, max-age=300");
                 String mimeType = FileUtil.getMimeType(fileName);
                 mimeType = StrUtil.blankToDefault(mimeType, ContentType.OCTET_STREAM.getValue());
                 response.write(inputStream, mimeType);
