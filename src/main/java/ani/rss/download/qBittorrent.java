@@ -8,6 +8,7 @@ import ani.rss.enums.StringEnum;
 import ani.rss.enums.TorrentsTags;
 import ani.rss.util.*;
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.thread.ThreadUtil;
@@ -124,6 +125,11 @@ public class qBittorrent implements BaseDownload {
         tags.add(subgroup);
         if (!master) {
             tags.add(TorrentsTags.BACK_RSS.getValue());
+        }
+
+        List<String> customTags = config.getCustomTags();
+        if (CollectionUtil.isNotEmpty(customTags)) {
+            tags.addAll(customTags);
         }
 
         Integer ratioLimit = config.getRatioLimit();
