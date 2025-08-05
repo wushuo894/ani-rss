@@ -58,6 +58,7 @@ public class FileAction implements BaseAction {
     public void doAction(HttpServerRequest request, HttpServerResponse response) throws IOException {
         String img = request.getParam("img");
         if (StrUtil.isNotBlank(img)) {
+            response.setHeader(Header.CACHE_CONTROL, "private, max-age=86400");
             img = Base64.decodeStr(img);
             response.setContentType(FileUtil.getMimeType(URLUtil.getPath(img)));
 
