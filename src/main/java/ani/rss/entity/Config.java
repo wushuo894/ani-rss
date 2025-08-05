@@ -98,6 +98,7 @@ public class Config implements Serializable {
      */
     private List<String> customTags;
 
+    /*
      * 优先保留开关
      */
     private Boolean priorityKeywordsEnable;
