@@ -40,9 +40,11 @@ public class RenameUtil {
         subgroup = StrUtil.blankToDefault(subgroup, "未知字幕组");
 
         String itemTitle = item.getTitle();
-        itemTitle = itemTitle.replace("+NCOPED", "");
-        itemTitle = itemTitle.replace("\n", " ");
-        itemTitle = itemTitle.replace("\t", " ");
+        itemTitle = itemTitle.replace("+NCOPED", "").trim();
+        itemTitle = itemTitle.replace("\n", " ").trim();
+        itemTitle = itemTitle.replace("\t", " ").trim();
+        // 去除结尾的 8 位 Hash
+        itemTitle = itemTitle.replaceAll("\\[([A-Z]|\\d){8}]$", "").trim();
 
         String e;
         // 是否使用自定义剧规则
@@ -89,6 +91,7 @@ public class RenameUtil {
         String resolution = getResolution(itemTitle);
         String tmdbId = Optional.ofNullable(ani.getTmdb())
                 .map(Tmdb::getId)
+                .filter(StrUtil::isNotBlank)
                 .orElse("");
 
         renameTemplate = renameTemplate.replace("${seasonFormat}", seasonFormat);

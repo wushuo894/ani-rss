@@ -37,7 +37,7 @@ public class Alist implements BaseDownload {
     private Config config;
 
     @Override
-    public Boolean login(Config config) {
+    public Boolean login(Boolean test, Config config) {
         this.config = config;
         String host = config.getDownloadToolHost();
         String password = config.getDownloadToolPassword();

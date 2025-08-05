@@ -9,6 +9,7 @@ import ani.rss.enums.TorrentsTags;
 import cn.hutool.core.date.DateField;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.lang.Opt;
 import cn.hutool.core.lang.func.Func1;
 import cn.hutool.core.text.StrFormatter;
 import cn.hutool.core.thread.ThreadUtil;
@@ -25,7 +26,10 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import java.io.File;
-import java.util.*;
+import java.util.Date;
+import java.util.List;
+import java.util.Objects;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -169,7 +173,9 @@ public class TorrentUtil {
                                 return false;
                             }
                             List<String> tags = torrentsInfo.getTags();
-                            return tags.contains(TorrentsTags.BACK_RSS.getValue());
+                            // 包含 备用RSS 标签或者 无主RSS字幕组信息
+                            return tags.contains(TorrentsTags.BACK_RSS.getValue()) ||
+                                    !tags.contains(ani.getSubgroup());
                         })
                         .findFirst()
                         .orElse(null);
@@ -346,7 +352,7 @@ public class TorrentUtil {
                 if (BaseDownload.videoFormat.contains(extName)) {
                     isDel = true;
                 }
-                if (extName.equals("nfo")) {
+                if (List.of("nfo", "bif").contains(extName)) {
                     isDel = true;
                 }
                 if (file.getName().endsWith("-thumb.jpg")) {
@@ -598,13 +604,18 @@ public class TorrentUtil {
         String monthFormat = String.format("%02d", month);
         int quarter;
         String quarterName;
-        if (List.of(1, 2, 3).contains(month)) {
+
+        /*
+        https://github.com/wushuo894/ani-rss/pull/451
+        优化季度判断规则，避免将月底先行播放的番归类到上个季度
+         */
+        if (List.of(12, 1, 2).contains(month)) {
             quarter = 1;
             quarterName = "冬";
-        } else if (List.of(4, 5, 6).contains(month)) {
+        } else if (List.of(3, 4, 5).contains(month)) {
             quarter = 4;
             quarterName = "春";
-        } else if (List.of(7, 8, 9).contains(month)) {
+        } else if (List.of(6, 7, 8).contains(month)) {
             quarter = 7;
             quarterName = "夏";
         } else {
@@ -633,6 +644,13 @@ public class TorrentUtil {
         );
 
         downloadPathTemplate = RenameUtil.replaceField(downloadPathTemplate, ani, list);
+
+        String tmdbId = Opt.ofNullable(ani.getTmdb())
+                .map(Tmdb::getId)
+                .filter(StrUtil::isNotBlank)
+                .orElse("");
+
+        downloadPathTemplate = downloadPathTemplate.replace("${tmdbid}", tmdbId);
 
         if (downloadPathTemplate.contains("${jpTitle}")) {
             String jpTitle = RenameUtil.getJpTitle(ani);
@@ -787,6 +805,10 @@ public class TorrentUtil {
             documentElement.appendChild(tmdbegidElement);
 
             FileUtil.writeUtf8String(XmlUtil.toStr(document), tvshowFile);
+
+            String title = ani.getTitle();
+
+            log.info("已更新tvshow.info剧集组id {} {}", title, tmdbGroupId);
         });
     }
 
@@ -834,19 +856,20 @@ public class TorrentUtil {
         try {
             ani = findAniByDownloadPath(torrentsInfo);
 
-            Set<String> allTags = Arrays.stream(TorrentsTags.values())
-                    .map(TorrentsTags::getValue)
+            String subgroup = ani.getSubgroup();
+
+            Set<String> collect = ani.getStandbyRssList()
+                    .stream()
+                    .map(StandbyRss::getLabel)
                     .collect(Collectors.toSet());
 
-            String subgroup = tags
+            subgroup = tags
                     .stream()
-                    .filter(s -> !allTags.contains(s))
+                    .filter(collect::contains)
                     .findFirst()
-                    .orElse("");
+                    .orElse(subgroup);
             subgroup = StrUtil.blankToDefault(subgroup, "未知字幕组");
-            if (Objects.nonNull(ani)) {
-                ani.setSubgroup(subgroup);
-            }
+            ani.setSubgroup(subgroup);
         } catch (Exception e) {
             log.error(e.getMessage(), e);
         }
@@ -1028,11 +1051,6 @@ public class TorrentUtil {
         } catch (Exception e) {
             log.error(e.getMessage(), e);
         }
-        if (b) {
-            log.debug("添加标签成功 {} {}", name, tags);
-        } else {
-            log.error("添加标签失败 {} {}", name, tags);
-        }
         return b;
     }
 
@@ -1058,13 +1076,7 @@ public class TorrentUtil {
     public static synchronized void load() {
         Config config = ConfigUtil.CONFIG;
         String download = config.getDownloadToolType();
-        ClassUtil.scanPackage("ani.rss.download")
-                .stream()
-                .filter(aClass -> !aClass.isInterface())
-                .filter(aClass -> aClass.getSimpleName().equals(download))
-                .map(aClass -> (BaseDownload) ReflectUtil.newInstance(aClass))
-                .findFirst()
-                .ifPresent(TorrentUtil::setBaseDownload);
+        setBaseDownload(ReflectUtil.newInstance("ani.rss.download." + download));
         log.info("下载工具 {}", download);
     }
 

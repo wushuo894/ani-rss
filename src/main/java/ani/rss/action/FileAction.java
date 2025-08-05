@@ -2,7 +2,6 @@ package ani.rss.action;
 
 import ani.rss.annotation.Auth;
 import ani.rss.annotation.Path;
-import ani.rss.auth.enums.AuthType;
 import ani.rss.util.ConfigUtil;
 import ani.rss.util.ExceptionUtil;
 import ani.rss.util.HttpReq;
@@ -14,6 +13,7 @@ import cn.hutool.core.util.ReflectUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.core.util.URLUtil;
 import cn.hutool.http.ContentType;
+import cn.hutool.http.Header;
 import cn.hutool.http.HttpConnection;
 import cn.hutool.http.server.HttpServerRequest;
 import cn.hutool.http.server.HttpServerResponse;
@@ -30,7 +30,7 @@ import java.util.function.Consumer;
  * 文件
  */
 @Slf4j
-@Auth(type = AuthType.FORM)
+@Auth
 @Path("/file")
 public class FileAction implements BaseAction {
 
@@ -58,6 +58,7 @@ public class FileAction implements BaseAction {
     public void doAction(HttpServerRequest request, HttpServerResponse response) throws IOException {
         String img = request.getParam("img");
         if (StrUtil.isNotBlank(img)) {
+            response.setHeader(Header.CACHE_CONTROL, "private, max-age=86400");
             img = Base64.decodeStr(img);
             response.setContentType(FileUtil.getMimeType(URLUtil.getPath(img)));
 
@@ -127,6 +128,7 @@ public class FileAction implements BaseAction {
                 response.setHeader("Content-Length", String.valueOf(fileLength));
             }
         } else {
+            response.setHeader(Header.CACHE_CONTROL, "private, max-age=86400");
             response.setContentType(mimeType);
         }
 

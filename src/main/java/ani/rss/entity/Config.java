@@ -1,5 +1,6 @@
 package ani.rss.entity;
 
+import ani.rss.enums.SortTypeEnum;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
@@ -96,6 +97,15 @@ public class Config implements Serializable {
      * 自定义标签
      */
     private List<String> customTags;
+
+     * 优先保留开关
+     */
+    private Boolean priorityKeywordsEnable;
+
+    /**
+     * 优先保留关键词列表
+     */
+    private List<String> priorityKeywords;
 
     /**
      * 延迟下载
@@ -576,4 +586,9 @@ public class Config implements Serializable {
      * 添加订阅时自动复制主rss至备用rss
      */
     private Boolean copyMasterToStandby;
+
+    /**
+     * 排序方式
+     */
+    private SortTypeEnum sortType;
 }

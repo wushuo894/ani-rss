@@ -6,6 +6,7 @@ import ani.rss.entity.Ani;
 import ani.rss.entity.Config;
 import ani.rss.entity.Item;
 import ani.rss.entity.TorrentsInfo;
+import ani.rss.enums.SortTypeEnum;
 import ani.rss.task.RssTask;
 import ani.rss.util.*;
 import cn.hutool.core.bean.BeanUtil;
@@ -28,6 +29,7 @@ import lombok.extern.slf4j.Slf4j;
 import java.io.File;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.function.ToLongFunction;
 
 /**
  * 订阅 增删改查
@@ -106,7 +108,7 @@ public class AniAction implements BaseAction {
                 .findFirst();
 
         if (first.isPresent()) {
-            resultErrorMsg("名称重复");
+            resultErrorMsg("订阅标题重复");
             return;
         }
 
@@ -148,7 +150,7 @@ public class AniAction implements BaseAction {
                 .filter(it -> it.getTitle().equals(ani.getTitle()) && it.getSeason().equals(ani.getSeason()))
                 .findFirst();
         if (first.isPresent()) {
-            resultErrorMsg("名称重复");
+            resultErrorMsg("订阅标题重复");
             return;
         }
 
@@ -162,7 +164,7 @@ public class AniAction implements BaseAction {
         HttpServerRequest request = ServerUtil.REQUEST.get();
         String move = request.getParam("move");
         if (Boolean.parseBoolean(move)) {
-            Ani get = first.get();
+            Ani get = ObjectUtil.clone(first.get());
             ThreadUtil.execute(() -> {
                 File downloadPath = TorrentUtil.getDownloadPath(get);
                 File newDownloadPath = TorrentUtil.getDownloadPath(ani);
@@ -221,29 +223,52 @@ public class AniAction implements BaseAction {
      */
     private void get() {
         Config config = ConfigUtil.CONFIG;
-        Boolean scoreShow = config.getScoreShow();
-        // 按拼音排序
 
+        SortTypeEnum sortType = config.getSortType();
+
+        // 按拼音排序
         List<Ani> list = AniUtil.ANI_LIST;
-        if (scoreShow) {
+
+        list
+                .parallelStream()
+                .forEach(ani -> {
+                    String title = ani.getTitle();
+                    String pinyin = PinyinUtil.getPinyin(title, "");
+                    String pinyinInitials = PinyinUtil.getFirstLetter(title, "");
+
+                    Integer year = ani.getYear();
+                    Integer month = ani.getMonth();
+                    Integer date = ani.getDate();
+
+                    DateTime dateTime = DateUtil.parseDate(
+                            StrFormatter.format("{}-{}-{}", year, month, date)
+                    );
+                    int week = DateUtil.dayOfWeek(dateTime) - 1;
+
+                    ani.setPinyin(pinyin)
+                            .setPinyinInitials(pinyinInitials)
+                            .setWeek(week);
+                });
+
+        if (sortType == SortTypeEnum.SCORE) {
             list = CollUtil.sort(list, Comparator.comparingDouble(Ani::getScore).reversed());
-        } else {
+        }
+
+        if (sortType == SortTypeEnum.PINYIN) {
             PinyinComparator pinyinComparator = new PinyinComparator();
             list = CollUtil.sort(list, (a, b) -> pinyinComparator.compare(a.getTitle(), b.getTitle()));
         }
 
-        for (Ani ani : list) {
-            String title = ani.getTitle();
-            String pinyin = PinyinUtil.getPinyin(title);
-            ani.setPinyin(pinyin);
-
-            Integer year = ani.getYear();
-            Integer month = ani.getMonth();
-            Integer day = ani.getDate();
-            DateTime dateTime = DateUtil.parseDate(StrFormatter.format("{}-{}-{}", year, month, day));
-            // 0表示周日，1表示周一
-            ani.setWeek(DateUtil.dayOfWeek(dateTime) - 1);
+        if (sortType == SortTypeEnum.DOWNLOAD_TIME) {
+            list = CollUtil.sort(list, Comparator.comparingLong((ToLongFunction<Ani>) ani -> {
+                Long lastDownloadTime = ani.getLastDownloadTime();
+                if (lastDownloadTime == 0) {
+                    return Long.MAX_VALUE;
+                }
+                return lastDownloadTime;
+            }).reversed());
         }
+
         resultSuccess(list);
     }
 

@@ -33,19 +33,20 @@
     </a>
     <div style="flex: 1;padding-left: 8px;">
       <h3>捐赠后解锁</h3>
-      <el-tag v-for="it in ['订阅完结通知','Emby媒体库刷新','添加合集','摸鱼检测','Alist上传通知','订阅完结迁移']"
+      <el-tag v-for="it in ['Emby媒体库刷新','添加合集','摸鱼检测','订阅完结迁移','Mikan番剧列表显示评分']"
               style="margin: 4px 4px 0 0;">
         {{ it }}
       </el-tag>
     </div>
   </div>
-  <div style="margin-top: 18px">
+  <div style="margin-top: 18px" v-if="!props.config['verifyExpirationTime'] || props.config['tryOut']">
     <el-text class="mx-1" size="small">
       已经捐赠？在这里输入您的订单号以激活您的捐赠
     </el-text>
     <div class="flex" style="width: 100%;margin-top: 8px;justify-content: space-between;">
       <div class="flex">
-        <el-input v-model:model-value="props.config.outTradeNo" style="max-width: 200px;">
+        <el-input v-model="props.config.outTradeNo"
+                  style="max-width: 200px;">
           <template #prefix>
             <el-icon class="el-input__icon">
               <EditPen/>
@@ -53,7 +54,12 @@
           </template>
         </el-input>
         <div style="width: 8px"></div>
-        <el-button :loading="verifyNoLoading" bg text type="primary" @click="verifyNo">验证</el-button>
+        <el-button :loading="verifyNoLoading"
+                   bg text
+                   type="primary"
+                   @click="verifyNo">
+          验证
+        </el-button>
       </div>
       <div style="margin-left: 8px;">
         <el-button :disabled="props.config['verifyExpirationTime']"
@@ -65,8 +71,16 @@
       </div>
     </div>
     <div style="margin-top: 8px">
-      <el-alert :closable="false" show-icon title="可以无限试用"/>
+      <a target="_blank" href="https://github.com/wushuo894/ani-rss/discussions/260">
+        关于增加的捐赠功能，我想说的话
+      </a>
     </div>
+  </div>
+  <div style="margin-top: 18px" v-else>
+    <el-alert
+        :closable="false"
+        title="感谢您的捐赠支持🎁"
+    />
   </div>
 </template>
 

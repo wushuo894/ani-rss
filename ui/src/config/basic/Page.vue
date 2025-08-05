@@ -49,6 +49,13 @@
                        @change="colorChange(color)"
                        @active-change="colorChange"/>
     </el-form-item>
+    <el-form-item label="排序">
+      <el-select v-model="props.config['sortType']" style="width: 150px;">
+        <el-option value="SCORE" label="评分"/>
+        <el-option value="PINYIN" label="拼音"/>
+        <el-option value="DOWNLOAD_TIME" label="更新时间"/>
+      </el-select>
+    </el-form-item>
     <el-form-item label="其他">
       <el-checkbox v-model="props.config.scoreShow" label="显示评分"/>
       <el-checkbox v-model="props.config.weekShow" label="按星期展示"/>
@@ -92,14 +99,8 @@ let predefineColors = ref([
 let color = useLocalStorage('--el-color-primary', '#409eff')
 
 let colorChange = (v) => {
-  // document.documentElement 是全局变量时
   const el = document.documentElement
-  // const el = document.getElementById('xxx')
 
-  // 获取 css 变量
-  getComputedStyle(el).getPropertyValue(`--el-color-primary`)
-
-  // 设置 css 变量
   el.style.setProperty('--el-color-primary', v)
 }
 

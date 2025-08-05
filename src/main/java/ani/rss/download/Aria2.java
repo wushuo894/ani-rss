@@ -32,7 +32,7 @@ public class Aria2 implements BaseDownload {
     private Config config;
 
     @Override
-    public Boolean login(Config config) {
+    public Boolean login(Boolean test, Config config) {
         this.config = config;
         String host = config.getDownloadToolHost();
         String password = config.getDownloadToolPassword();
@@ -55,6 +55,7 @@ public class Aria2 implements BaseDownload {
         ThreadUtil.sleep(1000);
         try {
             torrentsInfos.addAll(getTorrentsInfos("aria2/tellActive.json"));
+            torrentsInfos.addAll(getTorrentsInfos("aria2/tellWaiting.json"));
             torrentsInfos.addAll(getTorrentsInfos("aria2/tellStopped.json"));
         } catch (Exception e) {
             log.error(e.getMessage(), e);
@@ -227,7 +228,7 @@ public class Aria2 implements BaseDownload {
                 .sorted(Comparator.comparingLong(file -> Long.MAX_VALUE - file.length()))
                 .toList();
 
-        Assert.notEmpty(files);
+        Assert.notEmpty(files, "映射路径存在错误, 无法重命名");
 
         for (File src : files) {
             String name = src.getName();

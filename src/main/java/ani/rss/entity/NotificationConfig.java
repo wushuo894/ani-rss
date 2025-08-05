@@ -19,6 +19,11 @@ public class NotificationConfig implements Serializable {
     private Boolean enable;
 
     /**
+     * 重试次数
+     */
+    private Integer retry;
+
+    /**
      * 备注
      */
     private String comment;
@@ -152,6 +157,12 @@ public class NotificationConfig implements Serializable {
      */
     private Long embyDelayed;
 
+    private String shell;
+
+    /**
+     * 存活限制 秒
+     */
+    private Integer aliveLimit;
 
     /**
      * 通知 状态
@@ -164,6 +175,7 @@ public class NotificationConfig implements Serializable {
 
         notificationConfig
                 .setEnable(true)
+                .setRetry(3)
                 .setNotificationType(NotificationTypeEnum.TELEGRAM)
                 .setNotificationTemplate("${notification}")
                 .setComment("")
@@ -212,6 +224,9 @@ public class NotificationConfig implements Serializable {
                 .setEmbyApiKey("")
                 .setEmbyRefreshViewIds(new ArrayList<>())
                 .setEmbyDelayed(0L);
+
+        notificationConfig.setShell("")
+                .setAliveLimit(10);
 
         return notificationConfig;
     }

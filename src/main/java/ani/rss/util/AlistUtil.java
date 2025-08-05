@@ -127,9 +127,7 @@ public class AlistUtil {
                         log.error(e.getMessage(), e);
                     }
                 }
-                if (AfdianUtil.verifyExpirationTime()) {
-                    NotificationUtil.send(config, ani, "alist上传失败 " + fileName, NotificationStatusEnum.ERROR);
-                }
+                NotificationUtil.send(config, ani, "alist上传失败 " + fileName, NotificationStatusEnum.ERROR);
             });
         }
     }

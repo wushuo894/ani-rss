@@ -22,6 +22,10 @@ export let notificationTypeList = [
     {
         name: 'EMBY_REFRESH',
         label: 'Emby媒体库刷新'
+    },
+    {
+        name: 'SHELL',
+        label: '执行外部程序'
     }
 ]
 

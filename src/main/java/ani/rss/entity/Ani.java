@@ -21,6 +21,7 @@ public class Ani implements Serializable {
      */
     private String id;
 
+
     /**
      * RSS URL
      */
@@ -114,6 +115,11 @@ public class Ani implements Serializable {
     private String pinyin;
 
     /**
+     * 拼音
+     */
+    private String pinyinInitials;
+
+    /**
      * 启用
      */
     private Boolean enable;
@@ -186,8 +192,6 @@ public class Ani implements Serializable {
 
     /**
      * 自动上传
-     *
-     * @return
      */
     private Boolean upload;
 
@@ -205,6 +209,16 @@ public class Ani implements Serializable {
      * 自定义重命名模版
      */
     private String customRenameTemplate;
+
+    /**
+     * 自定义优先保留开关
+     */
+    private Boolean customPriorityKeywordsEnable;
+
+    /**
+     * 自定义优先保留关键词列表
+     */
+    private List<String> customPriorityKeywords;
 
     /**
      * 上次下载完成时间
@@ -257,23 +271,9 @@ public class Ani implements Serializable {
                 .setProcrastinating(true)
                 .setCustomRenameTemplate(config.getRenameTemplate())
                 .setCustomRenameTemplateEnable(false)
+                .setCustomPriorityKeywordsEnable(false)
+                .setCustomPriorityKeywords(new ArrayList<>())
                 .setMessage(true);
     }
 
-    @Data
-    @Accessors(chain = true)
-    public static class StandbyRss implements Serializable {
-        /**
-         * 字幕组
-         */
-        private String label;
-        /**
-         * url
-         */
-        private String url;
-        /**
-         * 剧集偏移
-         */
-        private Integer offset;
-    }
 }

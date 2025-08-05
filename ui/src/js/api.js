@@ -29,21 +29,38 @@ let fetch_ = async (url, method, body) => {
     })
         .then(res => res.json())
         .then(res => {
-            if (res.code >= 200 && res.code < 300) {
+            let {code, message, t} = res
+
+            if (!checkTimestampRange(t, true)) {
+                console.warn('与服务端时差超过30分钟')
+            }
+
+            if (code >= 200 && code < 300) {
                 return res
             }
 
-            ElMessage.error(res.message)
-            if (res.code === 403) {
+            ElMessage.error(message)
+            if (code === 403) {
                 localStorage.removeItem("authorization")
                 setTimeout(() => {
                     location.reload()
                 }, 1000)
             }
             return new Promise((resolve, reject) => {
-                reject(new Error(res.message));
+                reject(new Error(message));
             });
         })
 }
 
 export default {post, get, del, put}
+
+let checkTimestampRange = (timestamp, isMilli = true) => {
+    const ts = Math.floor(Number(timestamp));
+    if (Number.isNaN(ts)) return false;
+    const targetTime = isMilli ? ts : ts * 1000;
+    const now = Date.now();
+    // 30 分钟
+    const range = 30 * 60 * 1000;
+    const diff = Math.abs(now - targetTime);
+    return diff <= range;
+}

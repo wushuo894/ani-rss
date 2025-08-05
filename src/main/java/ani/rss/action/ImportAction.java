@@ -41,7 +41,7 @@ public class ImportAction implements BaseAction {
                     .filter(it -> it.getTitle().equals(ani.getTitle()) && it.getSeason().equals(ani.getSeason()))
                     .findFirst();
             if (first.isPresent()) {
-                resultErrorMsg("名称重复 {}", title);
+                resultErrorMsg("订阅标题重复 {}", title);
                 return;
             }
             AniUtil.verify(ani);

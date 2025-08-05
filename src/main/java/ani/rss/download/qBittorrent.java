@@ -6,10 +6,7 @@ import ani.rss.entity.Item;
 import ani.rss.entity.TorrentsInfo;
 import ani.rss.enums.StringEnum;
 import ani.rss.enums.TorrentsTags;
-import ani.rss.util.ExceptionUtil;
-import ani.rss.util.FilePathUtil;
-import ani.rss.util.GsonStatic;
-import ani.rss.util.HttpReq;
+import ani.rss.util.*;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.io.FileUtil;
@@ -69,13 +66,13 @@ public class qBittorrent implements BaseDownload {
                                 }
                                 return videoFormat.contains(extName) || subtitleFormat.contains(extName);
                             })
-                            .sorted(Comparator.comparingLong(fileEntity -> Long.MAX_VALUE - fileEntity.getSize()))
+                            .sorted((fileEntity1, fileEntity2) -> Long.compare(fileEntity2.getSize(), fileEntity1.getSize()))
                             .toList();
                 });
     }
 
     @Override
-    public Boolean login(Config config) {
+    public Boolean login(Boolean test, Config config) {
         this.config = config;
         String host = config.getDownloadToolHost();
         String username = config.getDownloadToolUsername();
@@ -88,6 +85,15 @@ public class qBittorrent implements BaseDownload {
         }
 
         try {
+            if (!test) {
+                // 校验当前登录状态
+                Boolean isOk = HttpReq.post(host + "/api/v2/app/version", false)
+                        .thenFunction(HttpResponse::isOk);
+                if (isOk) {
+                    return true;
+                }
+            }
+
             return HttpReq.post(host + "/api/v2/auth/login", false)
                     .form("username", username)
                     .form("password", password)
@@ -354,7 +360,33 @@ public class qBittorrent implements BaseDownload {
 
         String host = config.getDownloadToolHost();
 
+        Ani ani = null;
+        try {
+            ani = TorrentUtil.findAniByDownloadPath(torrentsInfo);
+        } catch (Exception e) {
+            log.debug("未能获取番剧对象: {}", e.getMessage());
+        }
+
+        List<String> priorityKeywords = getPriorityKeywords(config, ani);
+
         List<FileEntity> files = files(torrentsInfo, true, config);
+
+        if (!priorityKeywords.isEmpty()) {
+            files = files.stream()
+                    .sorted(Comparator.comparingInt(file -> {
+                        String fileName = file.getName();
+                        int minIndex = Integer.MAX_VALUE;
+                        for (int i = 0; i < priorityKeywords.size(); i++) {
+                            String priorityKeyword = priorityKeywords.get(i);
+                            if (!fileName.contains(priorityKeyword)) {
+                                continue;
+                            }
+                            minIndex = Math.min(minIndex, i);
+                        }
+                        return minIndex;
+                    }))
+                    .toList();
+        }
 
         List<String> names = files.stream()
                 .map(FileEntity::getName)
@@ -487,6 +519,23 @@ public class qBittorrent implements BaseDownload {
          * 1 允许下载。2 禁止下载
          */
         private Integer priority;
+    }
+
+    private static List<String> getPriorityKeywords(Config config, Ani ani) {
+        Boolean customPriorityKeywordsEnable = ani.getCustomPriorityKeywordsEnable();
+        Boolean priorityKeywordsEnable = config.getPriorityKeywordsEnable();
+
+        if (Objects.nonNull(ani)) {
+            if (customPriorityKeywordsEnable) {
+                return ani.getCustomPriorityKeywords();
+            }
+        }
+
+        if (priorityKeywordsEnable) {
+            return config.getPriorityKeywords();
+        }
+
+        return new ArrayList<>();
     }
 
 

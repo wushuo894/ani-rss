@@ -48,7 +48,13 @@
               <el-tag v-else>是</el-tag>
             </template>
           </el-table-column>
-          <el-table-column prop="subgroup" label="字幕组" min-width="120"/>
+          <el-table-column label="字幕组" min-width="100">
+            <template #default="it">
+              <el-text size="small" truncated>
+                {{ showItems[it.$index].subgroup }}
+              </el-text>
+            </template>
+          </el-table-column>
           <el-table-column label="标题" min-width="400">
             <template #default="it">
               <el-text size="small">
@@ -63,8 +69,20 @@
               </el-text>
             </template>
           </el-table-column>
-          <el-table-column prop="pubDate" label="发布时间" min-width="140"/>
-          <el-table-column prop="infoHash" label="InfoHash" min-width="360"/>
+          <el-table-column label="发布时间" min-width="120">
+            <template #default="it">
+              <el-text size="small">
+                {{ showItems[it.$index]['pubDate'] }}
+              </el-text>
+            </template>
+          </el-table-column>
+          <el-table-column label="InfoHash" min-width="200">
+            <template #default="it">
+              <el-text size="small">
+                {{ showItems[it.$index]['infoHash'] }}
+              </el-text>
+            </template>
+          </el-table-column>
           <el-table-column prop="size" label="大小" width="120"/>
           <el-table-column label="种子" width="90">
             <template #default="it">

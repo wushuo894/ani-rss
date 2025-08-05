@@ -1,8 +1,10 @@
 import {defineConfig} from 'vite'
 import vue from '@vitejs/plugin-vue'
 import path from 'path'
+import AutoImport from 'unplugin-auto-import/vite'
+import Components from 'unplugin-vue-components/vite'
+import {ElementPlusResolver} from 'unplugin-vue-components/resolvers'
 
-// https://vitejs.dev/config/
 export default defineConfig({
     base: './',
     server: {
@@ -14,10 +16,44 @@ export default defineConfig({
             }
         }
     },
-    plugins: [vue()],
+    plugins: [
+        vue(),
+        AutoImport({
+            imports: ['vue'],
+            resolvers: [ElementPlusResolver()]
+        }),
+        Components({
+            resolvers: [ElementPlusResolver({
+                importStyle: 'css',
+            })]
+        })
+    ],
     resolve: {
         alias: {
             '@': path.resolve(__dirname, './src/')
+        }
+    },
+    build: {
+        rollupOptions: {
+            output: {
+                manualChunks: {
+                    vue: ['vue', '@vueuse/core', '@vicons/fa'],
+                    utils: ['crypto-js', 'markdown-it', 'markdown-it-github-alerts'],
+                    'element-icon': ['@element-plus/icons-vue'],
+                    'artplayer': ['artplayer', 'artplayer-plugin-multiple-subtitles'],
+                    'shiki': ['shiki']
+                },
+                chunkFileNames: () => {
+                    return `assets/[name]-[hash].js`;
+                }
+            }
+        },
+        minify: 'terser',
+        terserOptions: {
+            compress: {
+                drop_console: true,
+                drop_debugger: true,
+            }
         }
     }
 })

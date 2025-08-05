@@ -3,6 +3,7 @@ package ani.rss.util;
 import ani.rss.entity.Config;
 import ani.rss.entity.Login;
 import ani.rss.entity.NotificationConfig;
+import ani.rss.enums.SortTypeEnum;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.bean.DynaBean;
 import cn.hutool.core.bean.copier.CopyOptions;
@@ -75,7 +76,14 @@ public class ConfigUtil {
                 ${emoji}${emoji}${emoji}
                 """;
 
-        String apiKey = RandomUtil.randomString(32).toLowerCase();
+        String apiKey = RandomUtil.randomString(64).toLowerCase();
+
+        Map<String, String> env = System.getenv();
+
+        String downloadToolType = env.getOrDefault("DOWNLOAD_TOOL_TYPE", "qBittorrent");
+        String downloadToolHost = env.getOrDefault("DOWNLOAD_TOOL_HOST", "");
+        String downloadToolUsername = env.getOrDefault("DOWNLOAD_TOOL_USERNAME", "");
+        String downloadToolPassword = env.getOrDefault("DOWNLOAD_TOOL_PASSWORD", "");
 
         CONFIG.setSleep(15)
                 .setMikanHost("https://mikanime.tv")
@@ -100,11 +108,11 @@ public class ConfigUtil {
                 .setAutoDisabled(false)
                 .setDownloadPathTemplate(downloadPathTemplate)
                 .setOvaDownloadPathTemplate(ovaDownloadPathTemplate)
-                .setDownloadToolHost("")
-                .setDownloadToolType("qBittorrent")
+                .setDownloadToolHost(downloadToolHost)
+                .setDownloadToolType(downloadToolType)
                 .setDownloadRetry(3)
-                .setDownloadToolUsername("")
-                .setDownloadToolPassword("")
+                .setDownloadToolUsername(downloadToolUsername)
+                .setDownloadToolPassword(downloadToolPassword)
                 .setQbUseDownloadPath(false)
                 .setRatioLimit(-2)
                 .setSeedingTimeLimit(-2)
@@ -147,6 +155,8 @@ public class ConfigUtil {
                 .setRenameTemplate("[${subgroup}] ${title} S${seasonFormat}E${episodeFormat}")
                 .setRenameDelYear(false)
                 .setRenameDelTmdbId(false)
+                .setPriorityKeywordsEnable(false)
+                .setPriorityKeywords(new ArrayList<>())
                 .setVerifyLoginIp(false)
                 .setAutoTrackersUpdate(false)
                 .setTrackersUpdateUrls("https://cf.trackerslist.com/best.txt")
@@ -193,7 +203,8 @@ public class ConfigUtil {
                 .setNotificationTemplate(notificationTemplate)
                 .setNotificationConfigList(new ArrayList<>())
                 .setApiKey(apiKey)
-                .setCopyMasterToStandby(false);
+                .setCopyMasterToStandby(false)
+                .setSortType(SortTypeEnum.SCORE);
     }
 
     /**
@@ -358,6 +369,15 @@ public class ConfigUtil {
         }
     }
 
+    /**
+     * 获取下载工具的密码
+     *
+     * @return
+     */
+    public static String getDownloadToolPassword() {
+        Map<String, String> env = System.getenv();
+        return env.getOrDefault("DOWNLOAD_TOOL_PASSWORD", "");
+    }
 
     /**
      * 处理设置内的url与文件路径标准

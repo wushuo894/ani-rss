@@ -28,6 +28,11 @@ public class About implements Serializable {
     private Boolean update;
 
     /**
+     * 是否允许自动更新
+     */
+    private Boolean autoUpdate;
+
+    /**
      * 下载地址
      */
     private String downloadUrl;

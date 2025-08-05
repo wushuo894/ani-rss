@@ -3,7 +3,6 @@ package ani.rss.action;
 
 import ani.rss.annotation.Auth;
 import ani.rss.annotation.Path;
-import ani.rss.auth.enums.AuthType;
 import ani.rss.entity.Result;
 import ani.rss.util.ConfigUtil;
 import cn.hutool.core.codec.Base64;
@@ -23,7 +22,7 @@ import java.io.IOException;
  * 上传文件
  */
 @Slf4j
-@Auth(type = AuthType.FORM)
+@Auth
 @Path("/upload")
 public class UploadAction implements BaseAction {
     @Override
