@@ -73,9 +73,12 @@ public class RootAction implements BaseAction {
                 if (Objects.isNull(inputStream)) {
                     continue;
                 }
-                response.setHeader(Header.CACHE_CONTROL, "private, max-age=300");
                 String mimeType = FileUtil.getMimeType(fileName);
                 mimeType = StrUtil.blankToDefault(mimeType, ContentType.OCTET_STREAM.getValue());
+
+                if (List.of("text/css", "application/x-javascript").contains(mimeType)) {
+                    response.setHeader(Header.CACHE_CONTROL, "private, max-age=86400");
+                }
                 response.write(inputStream, mimeType);
                 return true;
             }
