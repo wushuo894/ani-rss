@@ -152,33 +152,7 @@
       </div>
     </el-form-item>
     <el-form-item label="自定义标签">
-      <div style="width: 100%;">
-        <el-tag
-          v-for="(tag, index) in props.config.customTags"
-          :key="tag"
-          closable
-          @close="removeCustomTag(index)"
-          style="margin-right: 4px;margin-bottom: 4px;"
-        >
-          {{ tag }}
-        </el-tag>
-        <el-input
-          v-if="inputVisible"
-          v-model="inputValue"
-          ref="InputRef"
-          size="small"
-          style="width: 120px;margin-right: 4px;"
-          @keyup.enter="handleInputConfirm"
-          @blur="handleInputConfirm"
-        />
-        <el-button
-          v-else
-          icon="Plus"
-          size="small"
-          style="margin-right: 4px;"
-          @click="showInput"
-        />
-      </div>
+      <custom-tags :config="props.config"/>
     </el-form-item>
     <el-form-item label="失败重试次数">
       <el-input-number v-model:model-value="props.config['downloadRetry']" :max="100" :min="3"/>
@@ -210,13 +184,13 @@
         </el-text>
       </div>
     </el-form-item>
-    <el-form-item 
-        label="关键词设置" 
+    <el-form-item
+        label="关键词设置"
         v-if="props.config.priorityKeywordsEnable">
-      <PrioKeys 
-        v-model:keywords="props.config.priorityKeywords" 
-        :import-global="false" 
-        :show-text="true"
+      <PrioKeys
+          v-model:keywords="props.config.priorityKeywords"
+          :import-global="false"
+          :show-text="true"
       />
     </el-form-item>
     <el-collapse v-model="activeName">
@@ -231,13 +205,14 @@
 </template>
 
 <script setup>
-import { ref, nextTick } from "vue";
+import {ref} from "vue";
 import api from "@/js/api.js";
 import {ElMessage, ElText} from "element-plus";
 import {Key, User} from "@element-plus/icons-vue";
 import QBittorrent from "@/config/download/qBittorrent.vue";
 import Alist from "@/config/download/Alist.vue";
 import PrioKeys from "@/config/PrioKeys.vue";
+import CustomTags from "@/config/CustomTags.vue";
 
 const downloadSelect = ref([
   'qBittorrent',
@@ -265,31 +240,4 @@ let testPathTemplate = (path) => {
 let activeName = ref([])
 
 let props = defineProps(['config'])
-
-const inputVisible = ref(false)
-const inputValue = ref('')
-const InputRef = ref()
-
-const showInput = () => {
-  inputVisible.value = true
-  nextTick(() => {
-    InputRef.value && InputRef.value.focus()
-  })
-}
-
-const handleInputConfirm = () => {
-  if (!Array.isArray(props.config.customTags)) {
-    props.config.customTags = []
-  }
-  const value = inputValue.value && inputValue.value.trim()
-  if (value && !props.config.customTags.includes(value)) {
-    props.config.customTags.push(value)
-  }
-  inputVisible.value = false
-  inputValue.value = ''
-}
-
-const removeCustomTag = (index) => {
-  props.config.customTags.splice(index, 1)
-}
 </script>
