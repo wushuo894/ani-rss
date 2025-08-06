@@ -59,9 +59,18 @@ public class IpWhitelist implements Function<HttpServerRequest, Boolean> {
                         return true;
                     }
                 }
-                // IP段，支持X.X.X.X-X.X.X.X或X.X.X.X/X
+                // X.X.X.X/X
                 if (CidrRangeChecker.CIDR_PATTERN.matcher(string).matches()) {
                     if (CidrRangeChecker.isIpInRange(ip, string)) {
+                        MyCacheUtil.put(key, Boolean.TRUE, TimeUnit.MINUTES.toMillis(10));
+                        return true;
+                    }
+                }
+
+                // X.X.X.X-X.X.X.X
+                if (string.contains("-")) {
+                    List<String> ips = Ipv4Util.list(string, false);
+                    if (ips.contains(ip)) {
                         MyCacheUtil.put(key, Boolean.TRUE, TimeUnit.MINUTES.toMillis(10));
                         return true;
                     }
