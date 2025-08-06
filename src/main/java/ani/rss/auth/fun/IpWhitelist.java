@@ -66,14 +66,10 @@ public class IpWhitelist implements Function<HttpServerRequest, Boolean> {
                         return true;
                     }
                 }
-
                 // X.X.X.X-X.X.X.X
-                if (string.contains("-")) {
-                    List<String> ips = Ipv4Util.list(string, false);
-                    if (ips.contains(ip)) {
-                        MyCacheUtil.put(key, Boolean.TRUE, TimeUnit.MINUTES.toMillis(10));
-                        return true;
-                    }
+                if (isIpInRange(ip, string)) {
+                    MyCacheUtil.put(key, Boolean.TRUE, TimeUnit.MINUTES.toMillis(10));
+                    return true;
                 }
             }
         } catch (Exception e) {
@@ -83,4 +79,40 @@ public class IpWhitelist implements Function<HttpServerRequest, Boolean> {
         MyCacheUtil.put(key, Boolean.FALSE, TimeUnit.MINUTES.toMillis(10));
         return false;
     }
+
+    /**
+     * 判断ip是否在指定范围内
+     *
+     * @param ip ip地址
+     * @param s  x.x.x.x-x.x.x.x
+     * @return 判断结果
+     */
+    public static boolean isIpInRange(String ip, String s) {
+        if (!s.contains("-")) {
+            return false;
+        }
+
+        List<String> split = StrUtil.split(s, "-", true, true);
+        if (split.size() != 2) {
+            return false;
+        }
+
+        String startIp = split.get(0);
+        String endIp = split.get(1);
+
+        if (!PatternPool.IPV4.matcher(startIp).matches()) {
+            return false;
+        }
+
+        if (!PatternPool.IPV4.matcher(endIp).matches()) {
+            return false;
+        }
+
+        long ipLong = Ipv4Util.ipv4ToLong(ip);
+        long startIpLong = Ipv4Util.ipv4ToLong(startIp);
+        long endIpLong = Ipv4Util.ipv4ToLong(endIp);
+
+        return ipLong >= startIpLong && ipLong <= endIpLong;
+    }
+
 }
