@@ -2,6 +2,7 @@ package ani.rss.auth.fun;
 
 import ani.rss.auth.util.AuthUtil;
 import ani.rss.entity.Config;
+import ani.rss.util.CidrRangeChecker;
 import ani.rss.util.ConfigUtil;
 import ani.rss.util.MyCacheUtil;
 import cn.hutool.core.lang.PatternPool;
@@ -44,10 +45,6 @@ public class IpWhitelist implements Function<HttpServerRequest, Boolean> {
             }
             List<String> list = StrUtil.split(ipWhitelistStr, "\n", true, true);
             for (String string : list) {
-                if (StrUtil.isBlank(string)) {
-                    continue;
-                }
-
                 // 判断是否为 ipv4
                 if (PatternPool.IPV4.matcher(string).matches()) {
                     if (string.equals(ip)) {
@@ -55,7 +52,6 @@ public class IpWhitelist implements Function<HttpServerRequest, Boolean> {
                         return true;
                     }
                 }
-
                 // 通配符，如 192.168.*.1
                 if (string.contains("*")) {
                     if (Ipv4Util.matches(string, ip)) {
@@ -63,17 +59,23 @@ public class IpWhitelist implements Function<HttpServerRequest, Boolean> {
                         return true;
                     }
                 }
-
-                // IP段，支持X.X.X.X-X.X.X.X或X.X.X.X/X
-                List<String> ips = Ipv4Util.list(string, false);
-                if (ips.contains(ip)) {
-                    ips.clear();
-                    MyCacheUtil.put(key, Boolean.TRUE, TimeUnit.MINUTES.toMillis(10));
-                    return true;
+                // X.X.X.X/X
+                if (CidrRangeChecker.CIDR_PATTERN.matcher(string).matches()) {
+                    if (CidrRangeChecker.isIpInRange(ip, string)) {
+                        MyCacheUtil.put(key, Boolean.TRUE, TimeUnit.MINUTES.toMillis(10));
+                        return true;
+                    }
                 }
-                ips.clear();
-            }
 
+                // X.X.X.X-X.X.X.X
+                if (string.contains("-")) {
+                    List<String> ips = Ipv4Util.list(string, false);
+                    if (ips.contains(ip)) {
+                        MyCacheUtil.put(key, Boolean.TRUE, TimeUnit.MINUTES.toMillis(10));
+                        return true;
+                    }
+                }
+            }
         } catch (Exception e) {
             log.error("ip白名单存在问题");
             log.error(e.getMessage(), e);
