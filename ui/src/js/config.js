@@ -118,5 +118,7 @@ export let configData = {
     "showLastDownloadTime": false,
     "completed": false,
     "completedPathTemplate": "/Users/wushuo/Movies/已完结番剧/${letter}/${title}/Season ${season}",
-    "notificationConfigList": []
+    "notificationConfigList": [],
+    "priorityKeywordsEnable": false,
+    "priorityKeywords": []
 }

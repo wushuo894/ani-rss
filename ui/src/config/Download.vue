@@ -151,9 +151,6 @@
         </el-text>
       </div>
     </el-form-item>
-    <el-form-item label="自定义标签">
-      <custom-tags :config="props.config"/>
-    </el-form-item>
     <el-form-item label="失败重试次数">
       <el-input-number v-model:model-value="props.config['downloadRetry']" :max="100" :min="3"/>
     </el-form-item>
@@ -178,20 +175,22 @@
     <el-form-item label="优先保留">
       <div style="width: 100%">
         <el-switch v-model:model-value="props.config.priorityKeywordsEnable"/>
-        <br>
-        <el-text class="mx-1" size="small">
-          启用多文件种子的文件优先保留过滤
-        </el-text>
+        <div>
+          <el-text class="mx-1" size="small">
+            启用多文件种子的文件优先保留过滤
+          </el-text>
+        </div>
+        <div v-if="props.config.priorityKeywordsEnable">
+          <PrioKeys
+              v-model:keywords="props.config.priorityKeywords"
+              :import-global="false"
+              :show-text="true"
+          />
+        </div>
       </div>
     </el-form-item>
-    <el-form-item
-        label="关键词设置"
-        v-if="props.config.priorityKeywordsEnable">
-      <PrioKeys
-          v-model:keywords="props.config.priorityKeywords"
-          :import-global="false"
-          :show-text="true"
-      />
+    <el-form-item label="自定义标签">
+      <custom-tags :config="props.config"/>
     </el-form-item>
     <el-collapse v-model="activeName">
       <el-collapse-item name="qb" title="qBittorrent 设置">
