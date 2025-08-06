@@ -1,20 +1,27 @@
 <template>
   <div style="width: 100%;">
     <el-tag
+        v-if="!props.config.customTags.length"
+        type="info"
+        class="margin-4px">
+      无
+    </el-tag>
+    <el-tag
         v-for="(tag, index) in props.config.customTags"
         :key="tag"
         closable
         @close="removeCustomTag(index)"
-        style="margin-right: 4px;margin-bottom: 4px;"
+        class="margin-4px"
     >
       {{ tag }}
     </el-tag>
     <el-input
         v-if="inputVisible"
         v-model="inputValue"
-        ref="InputRef"
+        ref="inputRef"
         size="small"
-        style="width: 120px;margin-right: 4px;"
+        class="margin-4px"
+        style="width: 120px;"
         @keyup.enter="handleInputConfirm"
         @blur="handleInputConfirm"
     />
@@ -23,7 +30,7 @@
         icon="Plus"
         size="small"
         bg text
-        style="margin-right: 4px;margin-bottom: 4px;"
+        class="margin-4px"
         @click="showInput"
     />
   </div>
@@ -36,12 +43,12 @@ let props = defineProps(['config'])
 
 const inputVisible = ref(false)
 const inputValue = ref('')
-const InputRef = ref()
+const inputRef = ref()
 
 const showInput = () => {
   inputVisible.value = true
   nextTick(() => {
-    InputRef.value && InputRef.value.focus()
+    inputRef.value && inputRef.value.focus()
   })
 }
 
@@ -61,3 +68,9 @@ const removeCustomTag = (index) => {
   props.config.customTags.splice(index, 1)
 }
 </script>
+
+<style scoped>
+.margin-4px {
+  margin: 0 0 4px 4px;
+}
+</style>
