@@ -13,20 +13,6 @@
     <el-form-item label="TmdbApiKey">
       <el-input v-model:model-value="props.config['tmdbApiKey']" placeholder="请自备 API 密钥, 留空使用系统默认"/>
     </el-form-item>
-    <el-form-item label="BgmToken">
-      <div style="width: 100%;">
-        <el-input v-model:model-value="props.config.bgmToken" show-password type="password"/>
-        <div>
-          <el-text class="mx-1" size="small">
-            你可以在 <a href="https://next.bgm.tv/demo/access-token"
-                        target="_blank">https://next.bgm.tv/demo/access-token</a>
-            生成一个 Access Token
-            <br>
-            <a href="http://docs.wushuo.top/config/basic/other#emby-webhook" target="_blank">支持自动点格子</a>
-          </el-text>
-        </div>
-      </div>
-    </el-form-item>
     <el-form-item label="最大日志条数">
       <div style="width: 150px">
         <el-select v-model:model-value="props.config.logsMax">
