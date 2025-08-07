@@ -75,7 +75,7 @@ import api from "@/js/api.js";
 let props = defineProps(['config'])
 
 let setRedirectUri = () => {
-  props.config['bgmRedirectUri'] = `${location.href}api/bgm/callback`
+  props.config['bgmRedirectUri'] = `${location.href}callback.html`
 }
 
 onMounted(() => {
@@ -91,7 +91,7 @@ let start = () => {
   loading.value = true;
   api.post('api/config', props.config)
       .then(async res => {
-        let redirect = window.encodeURI(`${props.config['bgmRedirectUri']}?s=${window.authorization}`)
+        let redirect = window.encodeURI(props.config['bgmRedirectUri'])
         let url = `https://bgm.tv/oauth/authorize?client_id=${props.config['bgmAppID']}&response_type=code&redirect_uri=${redirect}`
         window.open(url)
         location.reload()
