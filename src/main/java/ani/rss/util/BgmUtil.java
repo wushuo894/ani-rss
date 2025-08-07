@@ -616,14 +616,20 @@ public class BgmUtil {
                 .thenFunction(res -> {
                     HttpReq.assertStatus(res);
                     JsonObject jsonObject = GsonStatic.fromJson(res.body(), JsonObject.class);
-                    return jsonObject.get("expires").getAsLong();
+                    return jsonObject.get("expires").getAsLong() * 1000L;
                 });
 
-        long days = TimeUnit.MILLISECONDS.toDays(expires);
+        long currentTimeMillis = System.currentTimeMillis();
+
+        long days = 0;
+
+        if (expires > currentTimeMillis) {
+            days = TimeUnit.MILLISECONDS.toDays(expires - currentTimeMillis);
+        }
 
         log.info("BgmToken剩余过期时间: {}天", days);
 
-        if (days > 5) {
+        if (days >= 3) {
             return;
         }
 
