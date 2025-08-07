@@ -1,0 +1,48 @@
+package ani.rss.action;
+
+import ani.rss.annotation.Auth;
+import ani.rss.annotation.Path;
+import ani.rss.entity.Config;
+import ani.rss.util.ConfigUtil;
+import ani.rss.util.GsonStatic;
+import ani.rss.util.HttpReq;
+import cn.hutool.http.server.HttpServerRequest;
+import cn.hutool.http.server.HttpServerResponse;
+import com.google.gson.JsonObject;
+
+import java.io.IOException;
+import java.util.Map;
+
+@Auth
+@Path("/bgm/callback")
+public class BgmCallbackAction implements BaseAction {
+    @Override
+    public void doAction(HttpServerRequest request, HttpServerResponse response) throws IOException {
+        String code = request.getParam("code");
+        Config config = ConfigUtil.CONFIG;
+        String bgmAppID = config.getBgmAppID();
+        String bgmAppSecret = config.getBgmAppSecret();
+        String bgmRedirectUri = config.getBgmRedirectUri();
+
+        Map<String, String> map = Map.of(
+                "grant_type", "authorization_code",
+                "client_id", bgmAppID,
+                "client_secret", bgmAppSecret,
+                "code", code,
+                "redirect_uri", bgmRedirectUri
+        );
+
+        HttpReq.post("https://bgm.tv/oauth/access_token", true)
+                .body(GsonStatic.toJson(map))
+                .then(res -> {
+                    HttpReq.assertStatus(res);
+                    JsonObject jsonObject = GsonStatic.fromJson(res.body(), JsonObject.class);
+                    String accessToken = jsonObject.get("access_token").getAsString();
+                    String refreshToken = jsonObject.get("refresh_token").getAsString();
+                    config.setBgmToken(accessToken)
+                            .setBgmRefreshToken(refreshToken);
+                });
+        ConfigUtil.sync();
+        resultSuccess("授权成功");
+    }
+}
