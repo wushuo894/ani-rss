@@ -1,0 +1,11 @@
+<html lang="zh">
+<script>
+    let url = new URL(location.href)
+    let code = url
+        .searchParams.get("code")
+    let authorization = localStorage.getItem('authorization')
+    if (code) {
+        location.href = `api/bgm/callback?code=${code}&s=${authorization}`
+    }
+</script>
+</html>

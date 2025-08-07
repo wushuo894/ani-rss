@@ -30,6 +30,12 @@ public class BgmTask extends Thread {
         super.setName("bgm-task-thread");
         log.info("{} 任务正在运行", getName());
         while (loop.get()) {
+            try {
+                BgmUtil.refreshToken();
+            } catch (Exception e) {
+                log.error(e.getMessage(), e);
+            }
+
             List<Ani> aniList = AniUtil.ANI_LIST;
             for (Ani ani : aniList) {
                 if (!loop.get()) {
@@ -61,6 +67,7 @@ public class BgmTask extends Thread {
                 }
             }
             AniUtil.sync();
+
             ThreadUtil.sleep(12, TimeUnit.HOURS);
         }
         log.info("{} 任务已停止", getName());

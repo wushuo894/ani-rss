@@ -1,5 +1,6 @@
 package ani.rss.entity;
 
+import ani.rss.enums.BgmTokenTypeEnum;
 import ani.rss.enums.SortTypeEnum;
 import lombok.Data;
 import lombok.experimental.Accessors;
@@ -319,9 +320,36 @@ public class Config implements Serializable {
     private Boolean omit;
 
     /**
-     * BgmToken
+     * bgmTokenType
+     * <p>
+     * INPUT or AUTO
+     */
+    private BgmTokenTypeEnum bgmTokenType;
+
+    /**
+     * bgmToken
      */
     private String bgmToken;
+
+    /**
+     * bgmAppID
+     */
+    private String bgmAppID;
+
+    /**
+     * bgmAppID
+     */
+    private String bgmAppSecret;
+
+    /**
+     * bgmRefreshToken
+     */
+    private String bgmRefreshToken;
+
+    /**
+     * bgmRedirectUri
+     */
+    private String bgmRedirectUri;
 
     /**
      * api key

@@ -3,6 +3,7 @@ package ani.rss.util;
 import ani.rss.entity.Config;
 import ani.rss.entity.Login;
 import ani.rss.entity.NotificationConfig;
+import ani.rss.enums.BgmTokenTypeEnum;
 import ani.rss.enums.SortTypeEnum;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.bean.DynaBean;
@@ -147,6 +148,11 @@ public class ConfigUtil {
                 .setShowPlaylist(true)
                 .setOmit(true)
                 .setBgmToken("")
+                .setBgmTokenType(BgmTokenTypeEnum.INPUT)
+                .setBgmAppID("")
+                .setBgmAppSecret("")
+                .setBgmRefreshToken("")
+                .setBgmRedirectUri("")
                 .setApiKey("")
                 .setWeekShow(true)
                 .setScoreShow(true)
