@@ -245,36 +245,41 @@ public class BgmUtil {
                 });
     }
 
+    public static JsonObject me() {
+        Config config = ConfigUtil.CONFIG;
+        String bgmToken = config.getBgmToken();
+        Assert.notBlank(bgmToken, "BgmToken 未填写");
+
+        String key = "BGM_me:" + bgmToken;
+
+        String me = MyCacheUtil.get(key);
+        if (StrUtil.isNotBlank(me)) {
+            return GsonStatic.fromJson(me, JsonObject.class);
+        }
+
+        JsonObject jsonObject = setToken(HttpReq.get(host + "/v0/me", true))
+                .thenFunction(res -> {
+                    HttpReq.assertStatus(res);
+                    return GsonStatic.fromJson(res.body(), JsonObject.class);
+                });
+
+        MyCacheUtil.put(key, GsonStatic.toJson(jsonObject), TimeUnit.MINUTES.toMillis(10));
+        return jsonObject;
+    }
+
     /**
      * 获取用户名
      *
      * @return
      */
     public static String username() {
-        String key = "BGM_username";
-
-        String username = MyCacheUtil.get(key);
-        if (StrUtil.isNotBlank(username)) {
-            return username;
-        }
-
-        Config config = ConfigUtil.CONFIG;
-        String bgmToken = config.getBgmToken();
-        Assert.notBlank(bgmToken, "BgmToken 未填写");
-        username = setToken(HttpReq.get(host + "/v0/me", true))
-                .thenFunction(res -> {
-                    HttpReq.assertStatus(res);
-                    JsonObject jsonObject = GsonStatic.fromJson(res.body(), JsonObject.class);
-                    return Opt.of(jsonObject)
-                            .map(o -> o.get("username"))
-                            .filter(Objects::nonNull)
-                            .map(JsonElement::getAsString)
-                            .filter(StrUtil::isNotBlank)
-                            .orElse(String.valueOf(jsonObject.get("id").getAsInt()));
-                });
-
-        MyCacheUtil.put(key, username, TimeUnit.MINUTES.toMillis(10));
-        return username;
+        JsonObject me = me();
+        return Opt.of(me)
+                .map(o -> o.get("username"))
+                .filter(Objects::nonNull)
+                .map(JsonElement::getAsString)
+                .filter(StrUtil::isNotBlank)
+                .orElse(String.valueOf(me.get("id").getAsInt()));
     }
 
     /**
@@ -597,19 +602,15 @@ public class BgmUtil {
     }
 
     /**
-     * 刷新token
+     * 获取剩余过期时间 单位: 天
+     *
+     * @return
      */
-    public static synchronized void refreshToken() {
+    public static Long getExpiresDays() {
         Config config = ConfigUtil.CONFIG;
-
-        BgmTokenTypeEnum bgmTokenType = config.getBgmTokenType();
-        if (bgmTokenType != BgmTokenTypeEnum.AUTO) {
-            return;
-        }
-
         String bgmToken = config.getBgmToken();
         if (StrUtil.isBlank(bgmToken)) {
-            return;
+            return 0L;
         }
         long expires = HttpReq.post("https://bgm.tv/oauth/token_status", true)
                 .form("access_token", bgmToken)
@@ -626,8 +627,26 @@ public class BgmUtil {
         if (expires > currentTimeMillis) {
             days = TimeUnit.MILLISECONDS.toDays(expires - currentTimeMillis);
         }
+        return days;
+    }
 
-        log.info("BgmToken剩余过期时间: {}天", days);
+    /**
+     * 刷新token
+     */
+    public static synchronized void refreshToken() {
+        Config config = ConfigUtil.CONFIG;
+
+        BgmTokenTypeEnum bgmTokenType = config.getBgmTokenType();
+        if (bgmTokenType != BgmTokenTypeEnum.AUTO) {
+            return;
+        }
+
+        String bgmToken = config.getBgmToken();
+        if (StrUtil.isBlank(bgmToken)) {
+            return;
+        }
+
+        long days = getExpiresDays();
 
         if (days >= 3) {
             return;

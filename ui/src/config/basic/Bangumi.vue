@@ -1,4 +1,5 @@
 <template>
+  <bangumi-me ref="bangumiMe"/>
   <el-form label-width="auto"
            style="width: 100%">
     <el-form-item label="获取方式">
@@ -52,14 +53,23 @@
           <br>
           前往 <a target="_blank" href="https://bgm.tv/dev/app">Bangumi 开发者平台</a> 设置你自己的应用
         </el-text>
-        <el-button bg text
-                   type="primary"
-                   :disabled="!props.config['bgmAppSecret'] || !props.config['bgmAppID']"
-                   @click="start"
-                   :loading="loading"
-        >
-          获取授权
-        </el-button>
+        <div>
+          <el-button bg text
+                     type="primary"
+                     :disabled="!props.config['bgmAppSecret'] || !props.config['bgmAppID']"
+                     @click="start"
+                     :loading="loading"
+          >
+            获取授权
+          </el-button>
+          <el-button
+              bg text
+              type="success"
+              :disabled="!props.config['bgmToken']"
+              @click="bangumiMe?.show">
+            查看授权状态
+          </el-button>
+        </div>
       </div>
     </template>
   </el-form>
@@ -71,11 +81,14 @@
 <script setup>
 import {ElText} from "element-plus";
 import api from "@/js/api.js";
+import BangumiMe from "@/config/basic/BangumiMe.vue";
+
+let bangumiMe = ref()
 
 let props = defineProps(['config'])
 
 let setRedirectUri = () => {
-  props.config['bgmRedirectUri'] = `${location.href}callback.html`
+  props.config['bgmRedirectUri'] = `${location.href}bgm/oauth/callback.html`
 }
 
 onMounted(() => {
