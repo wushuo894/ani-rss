@@ -14,7 +14,7 @@ import java.io.IOException;
 import java.util.Map;
 
 @Auth
-@Path("/bgm/callback")
+@Path("/bgm/oauth/callback")
 public class BgmCallbackAction implements BaseAction {
     @Override
     public void doAction(HttpServerRequest request, HttpServerResponse response) throws IOException {
@@ -43,6 +43,7 @@ public class BgmCallbackAction implements BaseAction {
                             .setBgmRefreshToken(refreshToken);
                 });
         ConfigUtil.sync();
-        resultSuccess("授权成功");
+
+        resultSuccessMsg("授权成功, 现在你可以关闭此窗口");
     }
 }

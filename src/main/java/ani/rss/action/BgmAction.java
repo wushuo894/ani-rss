@@ -9,6 +9,7 @@ import ani.rss.util.BgmUtil;
 import cn.hutool.core.lang.Opt;
 import cn.hutool.http.server.HttpServerRequest;
 import cn.hutool.http.server.HttpServerResponse;
+import com.google.gson.JsonObject;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
@@ -56,6 +57,12 @@ public class BgmAction implements BaseAction {
                         result.setMessage("");
                     }
                 });
+            }
+            case "me" -> {
+                Long expiresDays = BgmUtil.getExpiresDays();
+                JsonObject me = BgmUtil.me();
+                me.addProperty("expires_days", expiresDays);
+                resultSuccess(me);
             }
         }
 
