@@ -23,7 +23,7 @@
                 placeholder='{"text":"test_${notification}"}'/>
     </el-form-item>
     <div style="display: flex;justify-content: end;">
-      <a href="https://docs.wushuo.top/config/notification" target="_blank">通知模版示例</a>
+      <el-link type="primary" href="https://docs.wushuo.top/config/notification" target="_blank">通知模版示例</el-link>
     </div>
   </template>
 </template>

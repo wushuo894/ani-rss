@@ -3,8 +3,9 @@
     <el-input v-model:model-value="props.config['customJs']" :rows="6"
               type="textarea"/>
     <div class="flex" style="justify-content:end; width: 100%;margin-top: 8px;">
-      <a href="https://github.com/wushuo894/ani-rss-css"
-         target="_blank">更多CSS</a>
+      <el-link type="primary" href="https://github.com/wushuo894/ani-rss-css"
+               target="_blank">更多CSS
+      </el-link>
     </div>
     <div class="flex" style="justify-content:end; width: 100%;margin-top: 8px;">
       <el-button bg icon="Close" text @click="jsDialogVisible = false">关闭</el-button>

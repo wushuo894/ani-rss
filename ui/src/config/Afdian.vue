@@ -71,9 +71,12 @@
       </div>
     </div>
     <div style="margin-top: 8px">
-      <a target="_blank" href="https://github.com/wushuo894/ani-rss/discussions/260">
+      <el-link
+          type="primary"
+          target="_blank"
+          href="https://github.com/wushuo894/ani-rss/discussions/260">
         关于增加的捐赠功能，我想说的话
-      </a>
+      </el-link>
     </div>
   </div>
   <div style="margin-top: 18px" v-else>
