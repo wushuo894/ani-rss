@@ -34,8 +34,8 @@
             <div class="el-input is-disabled">
               <div class="el-input__wrapper" tabindex="-1"
                    style="pointer-events: auto;cursor: auto;justify-content: left;padding: 0 11px;">
-                <el-link v-if="props.ani?.tmdb?.id" type="primary"
-                         underline="never"
+                <el-link v-if="props.ani?.tmdb?.id"
+                         type="primary"
                          :href="`https://www.themoviedb.org/${props.ani.ova ? 'movie' : 'tv'}/${props.ani.tmdb.id}`"
                          target="_blank">
                   {{ props.ani.themoviedbName }}
@@ -152,6 +152,7 @@
                       placeholder="${title} S${seasonFormat}E${episodeFormat}"/>
             <br>
             <el-link
+                style="font-size: var(--el-font-size-extra-small)"
                 type="primary"
                 href="https://docs.wushuo.top/config/basic/rename#rename-template"
                 target="_blank">

@@ -30,6 +30,7 @@
           文件已下载自动跳过 此选项必须启用 自动重命名。确保 下载工具 与本程序 docker 映射挂载路径一致
           &nbsp;
           <el-link
+              style="font-size: var(--el-font-size-extra-small)"
               type="primary"
               href="https://docs.wushuo.top/config/basic/rss#auto-skip"
               target="_blank">
