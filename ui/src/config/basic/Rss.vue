@@ -28,8 +28,13 @@
         <br>
         <el-text class="mx-1" size="small">
           文件已下载自动跳过 此选项必须启用 自动重命名。确保 下载工具 与本程序 docker 映射挂载路径一致
-          <a href="https://docs.wushuo.top/config/basic/rss#auto-skip"
-             target="_blank">详细说明</a>
+          &nbsp;
+          <el-link
+              type="primary"
+              href="https://docs.wushuo.top/config/basic/rss#auto-skip"
+              target="_blank">
+            详细说明
+          </el-link>
         </el-text>
       </div>
     </el-form-item>
@@ -101,10 +106,12 @@
                        label="添加订阅时自动复制主rss至备用rss"/>
         </div>
         <div class="flex" style="width: 100%;justify-content: end;">
-          <el-text class="mx-1" size="small">
-            <a href="https://docs.wushuo.top/config/basic/rss#back-rss"
-               target="_blank">详细说明</a>
-          </el-text>
+          <el-link
+              type="primary"
+              href="https://docs.wushuo.top/config/basic/rss#back-rss"
+              target="_blank">
+            详细说明
+          </el-link>
         </div>
       </div>
     </el-form-item>

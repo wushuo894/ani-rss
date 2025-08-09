@@ -4,7 +4,9 @@
       <el-input v-model="props.config['notificationTemplate']" :autosize="{ minRows: 2}"
                 placeholder="${text}" type="textarea"/>
       <div class="flex" style="width: 100%;justify-content: end;">
-        <a href="https://docs.wushuo.top/config/notification" target="_blank">通知模版示例</a>
+        <el-link type="primary" href="https://docs.wushuo.top/config/notification" target="_blank">
+          通知模版示例
+        </el-link>
       </div>
     </el-collapse-item>
   </el-collapse>

@@ -105,7 +105,7 @@ public class AuthUtil {
      * 鉴权检测
      *
      * @param request
-     * @param authType
+     * @param auth
      * @return
      */
     public static Boolean test(HttpServerRequest request, Auth auth) {

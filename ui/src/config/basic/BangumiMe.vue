@@ -11,7 +11,7 @@
           label="头像"
           align="center"
       >
-        <el-avatar :src="me['avatar']['large']"/>
+        <el-avatar :src="me['avatar']['large']" size="large"/>
       </el-descriptions-item>
       <el-descriptions-item label="用户名">
         <el-text v-if="me['username']">

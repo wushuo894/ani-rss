@@ -17,9 +17,14 @@
           />
           <div>
             <el-text class="mx-1" size="small">
-              你可以在 <a href="https://next.bgm.tv/demo/access-token"
-                          target="_blank">https://next.bgm.tv/demo/access-token</a>
-              生成一个 Access Token
+              你可以在&nbsp;
+              <el-link
+                  type="primary"
+                  href="https://next.bgm.tv/demo/access-token"
+                  target="_blank">
+                https://next.bgm.tv/demo/access-token
+              </el-link>
+              &nbsp;生成一个 Access Token
             </el-text>
           </div>
         </div>
@@ -51,7 +56,11 @@
         <el-text class="mx-1" size="small">
           自动获取可以实现token自动续期
           <br>
-          前往 <a target="_blank" href="https://bgm.tv/dev/app">Bangumi 开发者平台</a> 设置你自己的应用
+          前往&nbsp;
+          <el-link type="primary" target="_blank" href="https://bgm.tv/dev/app">
+            Bangumi 开发者平台
+          </el-link>
+          &nbsp;设置你自己的应用
         </el-text>
         <div>
           <el-button bg text
@@ -74,7 +83,9 @@
     </template>
   </el-form>
   <div class="flex" style="justify-content: start;">
-    <a href="https://docs.wushuo.top/config/basic/other#emby-webhook" target="_blank">支持自动点格子</a>
+    <el-link type="primary"
+             href="https://docs.wushuo.top/config/basic/other#emby-webhook" target="_blank">支持自动点格子
+    </el-link>
   </div>
 </template>
 

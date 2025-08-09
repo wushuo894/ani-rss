@@ -50,8 +50,10 @@
     <div v-if="about.update">
       <el-form label-width="auto">
         <el-form-item label="版本号">
-          <a :href="`https://github.com/wushuo894/ani-rss/releases/tag/v${about.latest}`"
-             target="_blank">{{ about.latest }}</a>
+          <el-link type="default" :href="`https://github.com/wushuo894/ani-rss/releases/tag/v${about.latest}`"
+                   target="_blank">
+            {{ about.latest }}
+          </el-link>
         </el-form-item>
         <el-form-item label="发布时间">
           {{ about.date }}
