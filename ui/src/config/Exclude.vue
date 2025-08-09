@@ -61,6 +61,7 @@
       <el-text class="mx-1" size="small" v-if="props.showText">
         支持&nbsp;
         <el-link
+            style="font-size: var(--el-font-size-extra-small)"
             type="primary"
             href="https://www.runoob.com/regexp/regexp-syntax.html"
             target="_blank">

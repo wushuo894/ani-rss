@@ -45,7 +45,7 @@
                target="_blank">
         ani-rss
       </el-link>
-      &nbsp;&nbsp;
+      &nbsp;
       <el-link type="default"
                href="https://github.com/wushuo894/ani-rss"
                target="_blank">

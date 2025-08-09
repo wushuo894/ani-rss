@@ -20,6 +20,7 @@
               你可以在&nbsp;
               <el-link
                   type="primary"
+                  style="font-size: var(--el-font-size-extra-small)"
                   href="https://next.bgm.tv/demo/access-token"
                   target="_blank">
                 https://next.bgm.tv/demo/access-token
@@ -57,7 +58,11 @@
           自动获取可以实现token自动续期
           <br>
           前往&nbsp;
-          <el-link type="primary" target="_blank" href="https://bgm.tv/dev/app">
+          <el-link
+              style="font-size: var(--el-font-size-extra-small)"
+              type="primary"
+              target="_blank"
+              href="https://bgm.tv/dev/app">
             Bangumi 开发者平台
           </el-link>
           &nbsp;设置你自己的应用
@@ -84,7 +89,9 @@
   </el-form>
   <div class="flex" style="justify-content: start;">
     <el-link type="primary"
-             href="https://docs.wushuo.top/config/basic/other#emby-webhook" target="_blank">支持自动点格子
+             style="font-size: var(--el-font-size-extra-small)"
+             href="https://docs.wushuo.top/config/basic/other#emby-webhook"
+             target="_blank">支持自动点格子
     </el-link>
   </div>
 </template>
