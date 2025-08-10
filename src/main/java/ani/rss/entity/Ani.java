@@ -21,6 +21,10 @@ public class Ani implements Serializable {
      */
     private String id;
 
+    /**
+     * 不在页面显示
+     */
+    private String mikanTitle;
 
     /**
      * RSS URL
@@ -235,6 +239,7 @@ public class Ani implements Serializable {
         Config config = ConfigUtil.CONFIG;
         return newAni
                 .setId(UUID.fastUUID().toString())
+                .setMikanTitle("")
                 .setStandbyRssList(new ArrayList<>())
                 .setOffset(0)
                 .setYear(1970)

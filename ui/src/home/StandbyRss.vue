@@ -14,7 +14,10 @@
       </div>
       <div style="margin: 3px;"></div>
       <div>
-        <el-button @click="mikan?.show(ani.title)" text bg icon="VideoCamera"/>
+        <el-button
+            @click="mikan?.show(props.ani.mikanTitle ? props.ani.mikanTitle : props.ani.title)"
+            text bg
+            icon="VideoCamera"/>
       </div>
     </div>
     <div>
