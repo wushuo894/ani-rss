@@ -225,11 +225,15 @@ public class MikanUtil {
                 .then(res -> {
                     org.jsoup.nodes.Document html = Jsoup.parse(res.body());
 
+                    Element bangumiTitle = html.selectFirst(".bangumi-title");
+                    ani.setMikanTitle(bangumiTitle.text().trim());
+
                     Elements bangumiInfos = html.select(".bangumi-info");
                     for (Element bangumiInfo : bangumiInfos) {
                         String string = bangumiInfo.ownText();
                         if (string.equals("Bangumi番组计划链接：")) {
-                            String bgmUrl = bangumiInfo.select("a").get(0).attr("href");
+                            String bgmUrl = bangumiInfo.selectFirst("a")
+                                    .attr("href");
                             ani.setBgmUrl(bgmUrl);
                         }
                     }
@@ -247,7 +251,7 @@ public class MikanUtil {
                         }
                         String ownText = subgroupText.ownText().trim();
                         if (StrUtil.isNotBlank(ownText)) {
-                            ani.setSubgroup(ownText.replace("/", " or "));
+                            ani.setSubgroup(ownText.replace("/", "或"));
                             continue;
                         }
                         ani.setSubgroup(subgroupText.selectFirst("a").text().trim());

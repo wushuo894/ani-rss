@@ -1,5 +1,6 @@
 export let aniData = {
     "id": "",
+    "mikanTitle": "",
     "url": "",
     "standbyRssList": [],
     "title": "",
