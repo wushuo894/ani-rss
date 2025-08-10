@@ -15,6 +15,9 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.io.File;
 import java.util.Base64;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * WebHook
@@ -61,13 +64,44 @@ public class WebHookNotification implements BaseNotification {
             webHookBody = webHookBody.replace("${imageBase64}", imageBase64);
         }
 
+        Map<String, String> headerMap = getHeaderMap(notificationConfig);
+
         HttpRequest httpRequest = HttpReq.get(webHookUrl, true)
+                .addHeaders(headerMap)
                 .method(Method.valueOf(webHookMethod));
 
         if (StrUtil.isNotBlank(webHookBody)) {
             httpRequest.body(webHookBody);
         }
         return httpRequest.thenFunction(HttpResponse::isOk);
+    }
+
+    private static Map<String, String> getHeaderMap(NotificationConfig notificationConfig) {
+        String webHookHeader = notificationConfig.getWebHookHeader();
+
+        Map<String, String> headerMap = new HashMap<>();
+
+        if (StrUtil.isBlank(webHookHeader)) {
+            return headerMap;
+        }
+
+        List<String> split = StrUtil.split(webHookHeader, "\n", true, true);
+
+        if (split.isEmpty()) {
+            return headerMap;
+        }
+
+        for (String s : split) {
+            List<String> header = StrUtil.split(s, ":", true, true);
+            if (header.size() != 2) {
+                continue;
+            }
+            String k = header.get(0);
+            String v = header.get(1);
+            headerMap.put(k, v);
+        }
+
+        return headerMap;
     }
 
     private static String getImageBase64FromFile(Ani ani) {
