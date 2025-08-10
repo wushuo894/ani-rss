@@ -40,8 +40,17 @@
       </div>
     </div>
     <div style="margin-bottom: 16px;" id="link">
-      <a href="https://docs.wushuo.top" target="_blank">ani-rss</a> | <a href="https://github.com/wushuo894/ani-rss"
-                                                                         target="_blank">github</a>
+      <el-link type="default"
+               href="https://docs.wushuo.top"
+               target="_blank">
+        ani-rss
+      </el-link>
+      &nbsp;
+      <el-link type="default"
+               href="https://github.com/wushuo894/ani-rss"
+               target="_blank">
+        github
+      </el-link>
     </div>
   </div>
   <App v-else></App>

@@ -34,7 +34,8 @@
             <div class="el-input is-disabled">
               <div class="el-input__wrapper" tabindex="-1"
                    style="pointer-events: auto;cursor: auto;justify-content: left;padding: 0 11px;">
-                <el-link v-if="props.ani?.tmdb?.id" type="primary"
+                <el-link v-if="props.ani?.tmdb?.id"
+                         type="primary"
                          :href="`https://www.themoviedb.org/${props.ani.ova ? 'movie' : 'tv'}/${props.ani.tmdb.id}`"
                          target="_blank">
                   {{ props.ani.themoviedbName }}
@@ -150,21 +151,25 @@
                       :disabled="!props.ani['customRenameTemplateEnable']"
                       placeholder="${title} S${seasonFormat}E${episodeFormat}"/>
             <br>
-            <el-text class="mx-1" size="small">
-              <a href="https://docs.wushuo.top/config/basic/rename#rename-template"
-                 target="_blank">详细说明</a>
-            </el-text>
+            <el-link
+                style="font-size: var(--el-font-size-extra-small)"
+                type="primary"
+                href="https://docs.wushuo.top/config/basic/rename#rename-template"
+                target="_blank">
+              详细说明
+            </el-link>
           </div>
         </el-form-item>
         <el-form-item label="优先保留">
           <div style="width: 100%">
             <el-switch v-model="props.ani['customPriorityKeywordsEnable']"/>
             <br>
-            <div :style="{ opacity: props.ani['customPriorityKeywordsEnable'] ? 1 : 0.4, 'pointer-events': props.ani['customPriorityKeywordsEnable'] ? 'auto' : 'none' }">
-              <PrioKeys 
-                v-model:keywords="props.ani['customPriorityKeywords']" 
-                :import-global="true" 
-                :show-text="true"
+            <div
+                :style="{ opacity: props.ani['customPriorityKeywordsEnable'] ? 1 : 0.4, 'pointer-events': props.ani['customPriorityKeywordsEnable'] ? 'auto' : 'none' }">
+              <PrioKeys
+                  v-model:keywords="props.ani['customPriorityKeywords']"
+                  :import-global="true"
+                  :show-text="true"
               />
             </div>
           </div>

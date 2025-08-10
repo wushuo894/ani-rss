@@ -131,6 +131,10 @@ public class NotificationConfig implements Serializable {
      */
     private String webHookUrl;
     /**
+     * webHookHeader
+     */
+    private String webHookHeader;
+    /**
      * webHookBody
      */
     private String webHookBody;
@@ -209,6 +213,7 @@ public class NotificationConfig implements Serializable {
         notificationConfig
                 .setWebHookBody("")
                 .setWebHookUrl("")
+                .setWebHookHeader("")
                 .setWebHookMethod("POST");
 
         // server-chan

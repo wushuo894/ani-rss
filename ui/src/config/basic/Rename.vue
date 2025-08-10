@@ -36,8 +36,12 @@
           </el-alert>
         </div>
         <el-text class="mx-1" size="small">
-          <a href="https://docs.wushuo.top/config/basic/rename#rename-template"
-             target="_blank">详细说明</a>
+          <el-link
+              style="font-size: var(--el-font-size-extra-small)"
+              type="primary"
+              href="https://docs.wushuo.top/config/basic/rename#rename-template"
+              target="_blank">详细说明
+          </el-link>
         </el-text>
       </div>
     </el-form-item>

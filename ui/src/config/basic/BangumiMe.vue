@@ -11,7 +11,7 @@
           label="头像"
           align="center"
       >
-        <el-avatar :src="me['avatar']['large']"/>
+        <el-avatar :src="me['avatar']['large']" size="large"/>
       </el-descriptions-item>
       <el-descriptions-item label="用户名">
         <el-text v-if="me['username']">
@@ -22,7 +22,13 @@
         </el-text>
       </el-descriptions-item>
       <el-descriptions-item label="主页">
-        {{ me['url'] }}
+        <el-link
+            type="primary"
+            style="font-size: var(--el-font-size-extra-small)"
+            :href="me['url']"
+            target="_blank">
+          {{ me['url'] }}
+        </el-link>
       </el-descriptions-item>
       <el-descriptions-item label="邮箱">
         {{ me['email'] }}
