@@ -491,19 +491,24 @@ public class TorrentUtil {
         String reName = item.getReName();
         Double episode = item.getEpisode();
 
+        File downloadPath = getDownloadPath(ani);
+
         if (downloadList) {
             List<TorrentsInfo> torrentsInfos = getTorrentsInfos();
             for (TorrentsInfo torrentsInfo : torrentsInfos) {
                 String name = torrentsInfo.getName();
-                if (name.equalsIgnoreCase(reName)) {
-                    log.info("已存在下载任务 {}", reName);
-                    saveTorrent(ani, item);
-                    return true;
+                if (!name.equalsIgnoreCase(reName)) {
+                    continue;
                 }
+                String downloadDir = torrentsInfo.getDownloadDir();
+                if (!downloadDir.equals(FilePathUtil.getAbsolutePath(downloadPath))) {
+                    continue;
+                }
+                log.info("已存在下载任务 {}", reName);
+                saveTorrent(ani, item);
+                return true;
             }
         }
-
-        File downloadPath = getDownloadPath(ani);
 
         List<File> files = List.of(ObjectUtil.defaultIfNull(downloadPath.listFiles(), new File[]{}));
 

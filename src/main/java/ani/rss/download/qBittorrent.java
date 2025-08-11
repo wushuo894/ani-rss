@@ -522,10 +522,10 @@ public class qBittorrent implements BaseDownload {
     }
 
     private static List<String> getPriorityKeywords(Config config, Ani ani) {
-        Boolean customPriorityKeywordsEnable = ani.getCustomPriorityKeywordsEnable();
         Boolean priorityKeywordsEnable = config.getPriorityKeywordsEnable();
 
         if (Objects.nonNull(ani)) {
+            Boolean customPriorityKeywordsEnable = ani.getCustomPriorityKeywordsEnable();
             if (customPriorityKeywordsEnable) {
                 return ani.getCustomPriorityKeywords();
             }
