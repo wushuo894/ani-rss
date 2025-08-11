@@ -120,6 +120,11 @@
         </el-alert>
       </div>
     </el-form-item>
+    <el-form-item label="plex标题命名风格">
+      <div>
+        <el-switch v-model:model-value="props.config['plexTitleMode']"/>
+      </div>
+    </el-form-item>
     <el-form-item label="自动删除">
       <div>
         <el-switch v-model:model-value="props.config.delete"/>

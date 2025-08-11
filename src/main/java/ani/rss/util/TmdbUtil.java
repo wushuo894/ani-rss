@@ -88,7 +88,11 @@ public class TmdbUtil {
         }
 
         if (config.getTmdbId()) {
-            themoviedbName = StrFormatter.format("{} [tmdbid={}]", themoviedbName, tmdb.getId());
+            if (config.getPlexTitleMode()) {
+                themoviedbName = StrFormatter.format("{} {tmdb-{}}", themoviedbName, tmdb.getId());
+            } else {
+                themoviedbName = StrFormatter.format("{} [tmdbid={}]", themoviedbName, tmdb.getId());
+            }
         }
 
         return themoviedbName;
@@ -154,7 +158,13 @@ public class TmdbUtil {
         Config config = ConfigUtil.CONFIG;
         String tmdbLanguage = config.getTmdbLanguage();
 
-        titleName = ReUtil.replaceAll(titleName, StringEnum.TMDB_ID_REG, "");
+        if (config.getPlexTitleMode()) {
+            titleName = ReUtil.replaceAll(titleName, StringEnum.PLEX_TMDB_ID_REG, "")
+                    .trim();
+        } else {
+            titleName = ReUtil.replaceAll(titleName, StringEnum.TMDB_ID_REG, "")
+                    .trim();
+        }
         titleName = ReUtil.replaceAll(titleName, StringEnum.YEAR_REG, "");
         titleName = titleName.trim();
         if (StrUtil.isBlank(titleName)) {

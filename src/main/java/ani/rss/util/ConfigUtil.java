@@ -210,7 +210,9 @@ public class ConfigUtil {
                 .setNotificationConfigList(new ArrayList<>())
                 .setApiKey(apiKey)
                 .setCopyMasterToStandby(false)
-                .setSortType(SortTypeEnum.SCORE);
+                .setSortType(SortTypeEnum.SCORE)
+                .setPlexTitleMode(false)
+        ;
     }
 
     /**
