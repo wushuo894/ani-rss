@@ -35,12 +35,14 @@ trap 'sigterm_handler' SIGTERM
 
 while :
 do
-    java -Xms40m -Xmx1g -Xss256k -Xminf0.90 -Xmaxf0.95 \
-      -XX:+UseG1GC \
+    java -Xms60m -Xmx1g -Xss256k \
+      -Xgcpolicy:gencon \
+      -Xquickstart -Xcompressedrefs \
+      -Xtune:virtualized \
       -XX:+UseStringDeduplication \
-      -XX:+ShrinkHeapInSteps \
+      -XX:-ShrinkHeapInSteps \
       -XX:TieredStopAtLevel=1 \
-      -XX:+UseCompressedOops \
+      -XX:+IgnoreUnrecognizedVMOptions \
       --add-opens=java.base/java.net=ALL-UNNAMED \
       --add-opens=java.base/sun.net.www.protocol.https=ALL-UNNAMED \
       -jar $jar_path --port $port &
