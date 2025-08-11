@@ -620,4 +620,9 @@ public class Config implements Serializable {
      * 排序方式
      */
     private SortTypeEnum sortType;
+
+    /**
+     * 剧集标题是否支持plex命名方式
+     */
+    private Boolean plexTitleMode;
 }
