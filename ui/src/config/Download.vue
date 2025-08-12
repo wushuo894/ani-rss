@@ -42,7 +42,7 @@
       </el-form-item>
       <el-form-item label="Driver">
         <el-select v-model="props.config['provider']" style="width: 150px;">
-          <el-option v-for="it in ['115 Cloud', 'Thunder', 'PikPak']" :key="it" :label="it" :value="it"/>
+          <el-option v-for="it in ['115 Cloud','115 Open', 'Thunder', 'PikPak']" :key="it" :label="it" :value="it"/>
         </el-select>
       </el-form-item>
       <el-form-item label="重试次数">
