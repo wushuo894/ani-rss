@@ -211,7 +211,7 @@ public class ConfigUtil {
                 .setApiKey(apiKey)
                 .setCopyMasterToStandby(false)
                 .setSortType(SortTypeEnum.SCORE)
-                .setPlexTitleMode(false)
+                .setTmdbIdPlexMode(false)
         ;
     }
 

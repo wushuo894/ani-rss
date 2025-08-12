@@ -290,6 +290,11 @@ public class Config implements Serializable {
     private Boolean tmdbId;
 
     /**
+     * 剧集标题是否支持plex命名方式
+     */
+    private Boolean tmdbIdPlexMode;
+
+    /**
      * tmdb 语言
      */
     private String tmdbLanguage;
@@ -620,9 +625,4 @@ public class Config implements Serializable {
      * 排序方式
      */
     private SortTypeEnum sortType;
-
-    /**
-     * 剧集标题是否支持plex命名方式
-     */
-    private Boolean plexTitleMode;
 }

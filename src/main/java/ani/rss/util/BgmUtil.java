@@ -75,7 +75,6 @@ public class BgmUtil {
     public static synchronized String getName(BgmInfo bgmInfo, Tmdb tmdb) {
         Config config = ConfigUtil.CONFIG;
         Boolean titleYear = config.getTitleYear();
-        Boolean tmdbId = config.getTmdbId();
 
         String title = getName(bgmInfo);
 
@@ -85,10 +84,7 @@ public class BgmUtil {
             title = StrFormatter.format("{} ({})", title, DateUtil.year(date));
         }
 
-        if (tmdbId && Objects.nonNull(tmdb)) {
-            title = StrFormatter.format("{} [tmdbid={}]", title, tmdb.getId());
-        }
-        return title;
+        return TmdbUtil.getName(title, tmdb);
     }
 
     /**
@@ -670,7 +666,7 @@ public class BgmUtil {
             return;
         }
 
-        HttpReq.post("https://bgm.tv/oauth/refresh_token", true)
+        HttpReq.post("https://bgm.tv/oauth/access_token", true)
                 .body(GsonStatic.toJson(Map.of(
                         "grant_type", "refresh_token",
                         "client_id", bgmAppID,
