@@ -666,7 +666,7 @@ public class BgmUtil {
             return;
         }
 
-        HttpReq.post("https://bgm.tv/oauth/refresh_token", true)
+        HttpReq.post("https://bgm.tv/oauth/access_token", true)
                 .body(GsonStatic.toJson(Map.of(
                         "grant_type", "refresh_token",
                         "client_id", bgmAppID,

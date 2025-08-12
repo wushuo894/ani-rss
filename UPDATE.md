@@ -2,6 +2,7 @@
 
 - tmdbid 增加 Plex 模式 #500
 - Alist离线下载支持115 Open
+- 修复BGM的token续期
 
 close #501
 
