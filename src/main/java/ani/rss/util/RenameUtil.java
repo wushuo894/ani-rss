@@ -288,14 +288,8 @@ public class RenameUtil {
         Boolean renameDelTmdbId = config.getRenameDelTmdbId();
 
         if (renameDelTmdbId) {
-            if (config.getPlexTitleMode()) {
-                title = ReUtil.replaceAll(title, StringEnum.PLEX_TMDB_ID_REG, "")
-                        .trim();
-            } else {
-                title = ReUtil.replaceAll(title, StringEnum.TMDB_ID_REG, "")
-                        .trim();
-            }
-
+            title = ReUtil.replaceAll(title, StringEnum.TMDB_ID_REG, "")
+                    .trim();
         }
 
         if (renameDelYear) {

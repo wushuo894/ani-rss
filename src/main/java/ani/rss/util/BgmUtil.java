@@ -75,7 +75,6 @@ public class BgmUtil {
     public static synchronized String getName(BgmInfo bgmInfo, Tmdb tmdb) {
         Config config = ConfigUtil.CONFIG;
         Boolean titleYear = config.getTitleYear();
-        Boolean tmdbId = config.getTmdbId();
 
         String title = getName(bgmInfo);
 
@@ -85,10 +84,7 @@ public class BgmUtil {
             title = StrFormatter.format("{} ({})", title, DateUtil.year(date));
         }
 
-        if (tmdbId && Objects.nonNull(tmdb)) {
-            title = StrFormatter.format("{} [tmdbid={}]", title, tmdb.getId());
-        }
-        return title;
+        return TmdbUtil.getName(title, tmdb);
     }
 
     /**

@@ -18,7 +18,13 @@
     </el-form-item>
     <el-form-item label="TMDB ID">
       <div>
-        <el-switch v-model:model-value="props.config.tmdbId"/>
+        <el-switch v-model="props.config.tmdbId"/>
+        <br>
+        <el-checkbox
+            :disabled="!props.config.tmdbId"
+            v-model="props.config.tmdbIdPlexMode"
+            label="Plex Mode"
+        />
         <br>
         <el-text class="mx-1" size="small">
           自动获取tmdbId, 如: 女仆冥土小姐。 [tmdbid=242143]

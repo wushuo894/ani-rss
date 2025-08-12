@@ -52,11 +52,9 @@ public class TmdbUtil {
 
         Config config = ConfigUtil.CONFIG;
 
-        boolean year = config.getTitleYear();
-        if (year) {
-            name = name.replaceAll(StringEnum.YEAR_REG, "")
-                    .trim();
-        }
+        boolean titleYear = config.getTitleYear();
+        name = name.replaceAll(StringEnum.YEAR_REG, "")
+                .trim();
 
         if (StrUtil.isBlank(name)) {
             return "";
@@ -73,7 +71,6 @@ public class TmdbUtil {
         }
         ani.setTmdb(tmdb);
 
-
         if (Objects.isNull(tmdb)) {
             return "";
         }
@@ -83,19 +80,27 @@ public class TmdbUtil {
             return "";
         }
 
-        if (year) {
+        if (titleYear) {
             themoviedbName = StrFormatter.format("{} ({})", themoviedbName, DateUtil.year(tmdb.getDate()));
         }
+        return getName(themoviedbName, tmdb);
+    }
 
-        if (config.getTmdbId()) {
-            if (config.getPlexTitleMode()) {
-                themoviedbName = StrFormatter.format("{} {tmdb-{}}", themoviedbName, tmdb.getId());
+    public static String getName(String title, Tmdb tmdb) {
+        if (Objects.isNull(tmdb)) {
+            return title;
+        }
+        Config config = ConfigUtil.CONFIG;
+        Boolean tmdbId = config.getTmdbId();
+        Boolean tmdbIdPlexMode = config.getTmdbIdPlexMode();
+        if (tmdbId) {
+            if (tmdbIdPlexMode) {
+                title = StrFormatter.format("{} {tmdb-{}}", title, tmdb.getId());
             } else {
-                themoviedbName = StrFormatter.format("{} [tmdbid={}]", themoviedbName, tmdb.getId());
+                title = StrFormatter.format("{} [tmdbid={}]", title, tmdb.getId());
             }
         }
-
-        return themoviedbName;
+        return title;
     }
 
     /**
@@ -158,13 +163,8 @@ public class TmdbUtil {
         Config config = ConfigUtil.CONFIG;
         String tmdbLanguage = config.getTmdbLanguage();
 
-        if (config.getPlexTitleMode()) {
-            titleName = ReUtil.replaceAll(titleName, StringEnum.PLEX_TMDB_ID_REG, "")
-                    .trim();
-        } else {
-            titleName = ReUtil.replaceAll(titleName, StringEnum.TMDB_ID_REG, "")
-                    .trim();
-        }
+        titleName = ReUtil.replaceAll(titleName, StringEnum.TMDB_ID_REG, "")
+                .trim();
         titleName = ReUtil.replaceAll(titleName, StringEnum.YEAR_REG, "");
         titleName = titleName.trim();
         if (StrUtil.isBlank(titleName)) {
