@@ -48,5 +48,7 @@ export let aniData = {
     "customRenameTemplateEnable": false,
     "customRenameTemplate": "[${subgroup}] ${title} S${seasonFormat}E${episodeFormat}",
     "lastDownloadTime": 0,
-    "message": true
+    "message": true,
+    "customAlistPath": false,
+    "alistPath": ""
 }
