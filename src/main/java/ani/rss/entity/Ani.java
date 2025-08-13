@@ -230,6 +230,16 @@ public class Ani implements Serializable {
     private Long lastDownloadTime;
 
     /**
+     * 自定义上传
+     */
+    private Boolean customAlistPath;
+
+    /**
+     * 自定义上传
+     */
+    private String alistPath;
+
+    /**
      * 消息通知
      */
     private Boolean message;
@@ -278,7 +288,9 @@ public class Ani implements Serializable {
                 .setCustomRenameTemplateEnable(false)
                 .setCustomPriorityKeywordsEnable(false)
                 .setCustomPriorityKeywords(new ArrayList<>())
-                .setMessage(true);
+                .setMessage(true)
+                .setAlistPath("")
+                .setCustomAlistPath(false);
     }
 
 }
