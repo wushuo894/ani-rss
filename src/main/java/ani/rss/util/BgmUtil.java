@@ -826,15 +826,19 @@ public class BgmUtil {
                 TorrentUtil.getDownloadPath(ani)
         );
 
+        String alistPath = config.getAlistPath();
+
         Boolean ova = ani.getOva();
         if (ova) {
             // 剧场版默认不开启摸鱼检测
             ani.setProcrastinating(false);
+            alistPath = config.getAlistOvaPath();
         }
 
         return ani
                 // tmdb 标题
                 .setThemoviedbName(themoviedbName)
+                .setAlistPath(alistPath)
                 .setDownloadPath(downloadPath);
     }
 

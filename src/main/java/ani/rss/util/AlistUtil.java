@@ -215,6 +215,13 @@ public class AlistUtil {
         config.setDownloadPathTemplate(config.getAlistPath())
                 .setOvaDownloadPathTemplate(config.getAlistOvaPath());
 
+        Boolean customAlistPath = ani.getCustomAlistPath();
+        String alistPath = ani.getAlistPath();
+        if (customAlistPath) {
+            config.setDownloadPathTemplate(alistPath)
+                    .setOvaDownloadPathTemplate(alistPath);
+        }
+
         String path = FilePathUtil.getAbsolutePath(TorrentUtil.getDownloadPath(ani, config));
 
         path = ReUtil.replaceAll(path, "^[A-z]:", "");
