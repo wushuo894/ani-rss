@@ -1,8 +1,6 @@
 #### 改动
 
-- 支持单独自定义上传位置
-
-close #507
+- alist上传支持流式传输
 
 [请不要将本项目在国内宣传](https://github.com/wushuo894/ani-rss/discussions/504)
 

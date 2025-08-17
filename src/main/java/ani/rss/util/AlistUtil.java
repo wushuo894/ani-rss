@@ -5,6 +5,8 @@ import ani.rss.entity.Config;
 import ani.rss.entity.TorrentsInfo;
 import ani.rss.enums.NotificationStatusEnum;
 import ani.rss.enums.TorrentsTags;
+import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.io.resource.ResourceUtil;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.lang.Opt;
 import cn.hutool.core.text.StrFormatter;
@@ -18,7 +20,6 @@ import cn.hutool.http.HttpConfig;
 import com.google.gson.JsonObject;
 import lombok.extern.slf4j.Slf4j;
 
-import java.io.File;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
@@ -77,8 +78,8 @@ public class AlistUtil {
         String filePath = getPath(ani);
         for (String fileName : files) {
             String finalFilePath = filePath + "/" + fileName;
-            File file = new File(downloadDir + "/" + fileName);
-            if (!file.exists()) {
+            String file = downloadDir + "/" + fileName;
+            if (!FileUtil.exist(file)) {
                 log.error("文件不存在 {}", file);
                 return;
             }
@@ -92,7 +93,7 @@ public class AlistUtil {
                     try {
                         String url = alistHost;
                         // 使用流式上传
-                        url += "/api/fs/form";
+                        url += "/api/fs/put";
 
                         // 50M 上传
                         HttpConfig httpConfig = new HttpConfig()
@@ -105,8 +106,8 @@ public class AlistUtil {
                                 .header(Header.AUTHORIZATION, alistToken)
                                 .header("As-Task", Boolean.toString(alistTask))
                                 .header("File-Path", URLUtil.encode(finalFilePath))
-                                .header(Header.CONTENT_LENGTH, String.valueOf(file.length()))
-                                .form("file", file)
+                                .contentType("application/octet-stream")
+                                .body(ResourceUtil.getResourceObj(file))
                                 .then(res -> {
                                     Assert.isTrue(res.isOk(), "上传失败 {} 状态码:{}", fileName, res.getStatus());
                                     JsonObject jsonObject = GsonStatic.fromJson(res.body(), JsonObject.class);
