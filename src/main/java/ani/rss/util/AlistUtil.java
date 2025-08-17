@@ -93,7 +93,7 @@ public class AlistUtil {
                     try {
                         String url = alistHost;
                         // 使用流式上传
-                        url += "/api/fs/form";
+                        url += "/api/fs/put";
 
                         // 50M 上传
                         HttpConfig httpConfig = new HttpConfig()
