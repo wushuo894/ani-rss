@@ -827,6 +827,7 @@ public class BgmUtil {
         );
 
         String alistPath = config.getAlistPath();
+        String completedPathTemplate = config.getCompletedPathTemplate();
 
         Boolean ova = ani.getOva();
         if (ova) {
@@ -839,7 +840,8 @@ public class BgmUtil {
                 // tmdb 标题
                 .setThemoviedbName(themoviedbName)
                 .setAlistPath(alistPath)
-                .setDownloadPath(downloadPath);
+                .setDownloadPath(downloadPath)
+                .setCustomCompletedPathTemplate(completedPathTemplate);
     }
 
 

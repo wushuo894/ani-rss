@@ -50,5 +50,8 @@ export let aniData = {
     "lastDownloadTime": 0,
     "message": true,
     "customAlistPath": false,
-    "alistPath": ""
+    "alistPath": "",
+    "completed": true,
+    "customCompleted": false,
+    "customCompletedPathTemplate": ""
 }

@@ -271,10 +271,16 @@ public class AniUtil {
         ani = ObjectUtil.clone(ani);
 
         String title = ani.getTitle();
+        Boolean completed = ani.getCompleted();
         boolean ova = ani.getOva();
         boolean enable = ani.getEnable();
         int currentEpisodeNumber = ani.getCurrentEpisodeNumber();
         int totalEpisodeNumber = ani.getTotalEpisodeNumber();
+
+        if (!completed) {
+            // 未开启
+            return;
+        }
 
         if (totalEpisodeNumber < 1) {
             // 总集数为空
@@ -304,7 +310,7 @@ public class AniUtil {
             return;
         }
 
-        boolean completed = config.getCompleted();
+        completed = config.getCompleted();
         if (!completed) {
             // 未开启
             return;
@@ -313,6 +319,12 @@ public class AniUtil {
         Assert.isTrue(AfdianUtil.verifyExpirationTime(), "未解锁捐赠, 无法使用订阅完结迁移");
 
         String completedPathTemplate = config.getCompletedPathTemplate();
+
+        Boolean customCompleted = ani.getCustomCompleted();
+        if (customCompleted) {
+            // 自定义完结迁移
+            completedPathTemplate = ani.getCustomCompletedPathTemplate();
+        }
 
         if (StrUtil.isBlank(completedPathTemplate)) {
             // 路径为空
