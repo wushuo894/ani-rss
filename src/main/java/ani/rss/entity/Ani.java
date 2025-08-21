@@ -244,6 +244,21 @@ public class Ani implements Serializable {
      */
     private Boolean message;
 
+    /**
+     * 完结迁移
+     */
+    private Boolean completed;
+
+    /**
+     * 自定义完结迁移
+     */
+    private Boolean customCompleted;
+
+    /**
+     * 自定义完结迁移
+     */
+    private String customCompletedPathTemplate;
+
     public static Ani createAni() {
         Ani newAni = new Ani();
         Config config = ConfigUtil.CONFIG;
@@ -290,7 +305,10 @@ public class Ani implements Serializable {
                 .setCustomPriorityKeywords(new ArrayList<>())
                 .setMessage(true)
                 .setAlistPath("")
-                .setCustomAlistPath(false);
+                .setCustomAlistPath(false)
+                .setCompleted(true)
+                .setCustomCompleted(false)
+                .setCustomCompletedPathTemplate("");
     }
 
 }

@@ -157,6 +157,18 @@
             </div>
           </div>
         </el-form-item>
+        <el-form-item label="自定义完结迁移">
+          <div style="width: 100%;">
+            <div>
+              <el-switch v-model="props.ani.customCompleted"/>
+            </div>
+            <div>
+              <el-input type="textarea" style="width: 100%" :disabled="!props.ani.customCompleted"
+                        :autosize="{ minRows: 2}"
+                        v-model:model-value="props.ani.customCompletedPathTemplate"/>
+            </div>
+          </div>
+        </el-form-item>
         <el-form-item label="重命名模版">
           <div style="width: 100%">
             <el-switch v-model="props.ani['customRenameTemplateEnable']"/>
@@ -194,6 +206,7 @@
           <el-checkbox v-model="props.ani.downloadNew" label="只下载最新集"/>
           <el-checkbox v-model="props.ani['procrastinating']" label="摸鱼检测"/>
           <el-checkbox v-model="props.ani['message']" label="通知"/>
+          <el-checkbox v-model="props.ani['completed']" label="完结迁移"/>
         </el-form-item>
         <el-form-item label="启用">
           <el-switch v-model:model-value="props.ani.enable"/>
