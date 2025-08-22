@@ -2,7 +2,7 @@
 <img alt="icon-512.png" height="80" src="ui/public/icon-512.png"/>
 <h1 align="center" style="margin-top: 0">ANI-RSS</h1>
 <p align="center">
-<strong>自动追番、订阅、下载 蜜柑RSS动漫</strong>
+<strong>基于RSS自动追番、订阅、下载</strong>
 </p>
 
 [快速开始](https://docs.wushuo.top/start)
