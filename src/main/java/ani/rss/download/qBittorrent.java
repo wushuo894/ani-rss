@@ -127,10 +127,16 @@ public class qBittorrent implements BaseDownload {
             tags.add(TorrentsTags.BACK_RSS.getValue());
         }
 
-        // 修改自定义标签获取逻辑，从订阅中获取自定义标签
-        List<String> customTags = ani.getCustomTags();
-        if (CollectionUtil.isNotEmpty(customTags)) {
-            tags.addAll(customTags);
+        // 获取订阅自定义标签
+        List<String> aniCustomTags = ani.getCustomTags();
+        if (CollectionUtil.isNotEmpty(aniCustomTags)) {
+            tags.addAll(aniCustomTags);
+        }
+
+        // 获取全局自定义标签
+        List<String> globalCustomTags = config.getCustomTags();
+        if (CollectionUtil.isNotEmpty(globalCustomTags)) {
+            tags.addAll(globalCustomTags);
         }
 
         Integer ratioLimit = config.getRatioLimit();
