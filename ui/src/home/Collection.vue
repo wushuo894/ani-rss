@@ -117,6 +117,9 @@
                              @click="downloadPath"/>
                 </div>
               </el-form-item>
+              <el-form-item label="自定义标签">
+                <custom-tags :config="data.ani"/>
+              </el-form-item>
               <el-form-item label="Torrent">
                 <el-tag v-if="data.filename" closable @close="()=>{
                 data.filename = ''
@@ -188,6 +191,7 @@ import api from "@/js/api.js";
 import Exclude from "@/config/Exclude.vue";
 import CollectionPreview from "./CollectionPreview.vue";
 import AfdianPrompt from "@/other/AfdianPrompt.vue";
+import CustomTags from "@/config/CustomTags.vue";
 import {aniData} from "@/js/ani.js";
 
 let start = () => {
