@@ -208,6 +208,9 @@
           <el-checkbox v-model="props.ani['message']" label="通知"/>
           <el-checkbox v-model="props.ani['completed']" label="完结迁移"/>
         </el-form-item>
+        <el-form-item label="自定义标签">
+          <custom-tags :config="props.ani"/>
+        </el-form-item>
         <el-form-item label="启用">
           <el-switch v-model:model-value="props.ani.enable"/>
         </el-form-item>
@@ -246,6 +249,7 @@ import Popconfirm from "@/other/Popconfirm.vue";
 import StandbyRss from "./StandbyRss.vue";
 import Mikan from "./Mikan.vue";
 import TmdbGroup from "./TmdbGroup.vue";
+import CustomTags from "@/config/CustomTags.vue";
 
 const mikanRef = ref()
 const tmdbGroupRef = ref()
