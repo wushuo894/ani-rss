@@ -4,10 +4,14 @@ import ani.rss.entity.Ani;
 import ani.rss.entity.Config;
 import ani.rss.entity.Item;
 import ani.rss.entity.TorrentsInfo;
+import ani.rss.enums.TorrentsTags;
+import ani.rss.util.ConfigUtil;
+import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.StrUtil;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -130,5 +134,47 @@ public interface BaseDownload {
             return name;
         }
         return newPath;
+    }
+
+    /**
+     * 获取新任务的tag
+     *
+     * @param ani
+     * @param item
+     * @return
+     */
+    default List<String> newTags(Ani ani, Item item) {
+        Boolean master = item.getMaster();
+        String subgroup = item.getSubgroup();
+        subgroup = StrUtil.blankToDefault(subgroup, "未知字幕组");
+
+        Config config = ConfigUtil.CONFIG;
+
+        List<String> tags = new ArrayList<>();
+
+        tags.add(TorrentsTags.ANI_RSS.getValue());
+        tags.add(subgroup);
+        if (!master) {
+            tags.add(TorrentsTags.BACK_RSS.getValue());
+        }
+
+        Boolean customTagsEnable = ani.getCustomTagsEnable();
+
+        if (customTagsEnable) {
+            // 获取订阅自定义标签
+            List<String> aniCustomTags = ani.getCustomTags();
+            if (CollectionUtil.isNotEmpty(aniCustomTags)) {
+                tags.addAll(aniCustomTags);
+            }
+            return tags;
+        }
+
+        // 获取全局自定义标签
+        List<String> globalCustomTags = config.getCustomTags();
+        if (CollectionUtil.isNotEmpty(globalCustomTags)) {
+            tags.addAll(globalCustomTags);
+        }
+
+        return tags;
     }
 }
