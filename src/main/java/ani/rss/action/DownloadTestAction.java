@@ -25,7 +25,7 @@ public class DownloadTestAction implements BaseAction {
         String download = config.getDownloadToolType();
         Class<Object> loadClass = ClassUtil.loadClass("ani.rss.download." + download);
         BaseDownload baseDownload = (BaseDownload) ReflectUtil.newInstance(loadClass);
-        Boolean login = baseDownload.login(config);
+        Boolean login = baseDownload.login(true, config);
         if (login) {
             resultSuccessMsg("登录成功");
             return;
