@@ -186,6 +186,15 @@
             </el-link>
           </div>
         </el-form-item>
+        <el-form-item label="自定义标签">
+          <div>
+            <el-switch v-model="props.ani.customTagsEnable"/>
+            <div
+                :style="{ opacity: props.ani.customTagsEnable ? 1 : 0.4, 'pointer-events': props.ani.customTagsEnable ? 'auto' : 'none' }">
+              <custom-tags :config="props.ani"/>
+            </div>
+          </div>
+        </el-form-item>
         <el-form-item label="优先保留">
           <div style="width: 100%">
             <el-switch v-model="props.ani['customPriorityKeywordsEnable']"/>
@@ -207,9 +216,6 @@
           <el-checkbox v-model="props.ani['procrastinating']" label="摸鱼检测"/>
           <el-checkbox v-model="props.ani['message']" label="通知"/>
           <el-checkbox v-model="props.ani['completed']" label="完结迁移"/>
-        </el-form-item>
-        <el-form-item label="自定义标签">
-          <custom-tags :config="props.ani"/>
         </el-form-item>
         <el-form-item label="启用">
           <el-switch v-model:model-value="props.ani.enable"/>

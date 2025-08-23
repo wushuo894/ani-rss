@@ -54,5 +54,6 @@ export let aniData = {
     "completed": true,
     "customCompleted": false,
     "customCompletedPathTemplate": "",
-    "customTags": []
+    "customTags": [],
+    "customTagsEnable": false
 }
