@@ -186,6 +186,15 @@
             </el-link>
           </div>
         </el-form-item>
+        <el-form-item label="自定义标签">
+          <div>
+            <el-switch v-model="props.ani.customTagsEnable"/>
+            <div
+                :style="{ opacity: props.ani.customTagsEnable ? 1 : 0.4, 'pointer-events': props.ani.customTagsEnable ? 'auto' : 'none' }">
+              <custom-tags :config="props.ani"/>
+            </div>
+          </div>
+        </el-form-item>
         <el-form-item label="优先保留">
           <div style="width: 100%">
             <el-switch v-model="props.ani['customPriorityKeywordsEnable']"/>
@@ -246,6 +255,7 @@ import Popconfirm from "@/other/Popconfirm.vue";
 import StandbyRss from "./StandbyRss.vue";
 import Mikan from "./Mikan.vue";
 import TmdbGroup from "./TmdbGroup.vue";
+import CustomTags from "@/config/CustomTags.vue";
 
 const mikanRef = ref()
 const tmdbGroupRef = ref()

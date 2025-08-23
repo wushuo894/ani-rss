@@ -10,7 +10,6 @@ import ani.rss.util.GsonStatic;
 import ani.rss.util.HttpReq;
 import ani.rss.util.RenameCacheUtil;
 import cn.hutool.core.codec.Base64;
-import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.resource.ResourceUtil;
 import cn.hutool.core.lang.Assert;
@@ -139,26 +138,13 @@ public class Transmission implements BaseDownload {
     @Override
     public Boolean download(Ani ani, Item item, String savePath, File torrentFile, Boolean ova) {
         String name = item.getReName();
-        Boolean master = item.getMaster();
-        String subgroup = item.getSubgroup();
-        subgroup = StrUtil.blankToDefault(subgroup, "未知字幕组");
         String body = ResourceUtil.readUtf8Str("transmission/torrent-add.json");
         String extName = FileUtil.extName(torrentFile);
         if (StrUtil.isBlank(extName)) {
             return false;
         }
 
-        List<String> tags = new ArrayList<>();
-        tags.add(TorrentsTags.ANI_RSS.getValue());
-        tags.add(subgroup);
-        if (!master) {
-            tags.add(TorrentsTags.BACK_RSS.getValue());
-        }
-
-        List<String> customTags = config.getCustomTags();
-        if (CollectionUtil.isNotEmpty(customTags)) {
-            tags.addAll(customTags);
-        }
+        List<String> tags = newTags(ani, item);
 
         String torrent;
         if ("txt".equals(extName)) {

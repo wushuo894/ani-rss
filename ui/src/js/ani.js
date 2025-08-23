@@ -53,5 +53,7 @@ export let aniData = {
     "alistPath": "",
     "completed": true,
     "customCompleted": false,
-    "customCompletedPathTemplate": ""
+    "customCompletedPathTemplate": "",
+    "customTags": [],
+    "customTagsEnable": false
 }

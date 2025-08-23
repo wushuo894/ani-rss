@@ -259,6 +259,16 @@ public class Ani implements Serializable {
      */
     private String customCompletedPathTemplate;
 
+    /**
+     * 自定义标签开关
+     */
+    private Boolean customTagsEnable;
+
+    /**
+     * 单个订阅自定义标签
+     */
+    private List<String> customTags;
+
     public static Ani createAni() {
         Ani newAni = new Ani();
         Config config = ConfigUtil.CONFIG;
@@ -308,7 +318,9 @@ public class Ani implements Serializable {
                 .setCustomAlistPath(false)
                 .setCompleted(true)
                 .setCustomCompleted(false)
-                .setCustomCompletedPathTemplate("");
+                .setCustomCompletedPathTemplate("")
+                .setCustomTags(new ArrayList<>())
+                .setCustomTagsEnable(false);
     }
 
 }
