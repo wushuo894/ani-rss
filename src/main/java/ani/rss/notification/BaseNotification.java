@@ -79,15 +79,13 @@ public interface BaseNotification {
                 Ani::getSubgroup
         );
 
-        int season = Opt.ofNullable(ani)
-                .map(Ani::getSeason)
-                .orElse(1);
+        int season = ani.getSeason();
         String seasonFormat = String.format("%02d", season);
         notificationTemplate = notificationTemplate.replace("${seasonFormat}", seasonFormat);
 
         notificationTemplate = RenameUtil.replaceField(notificationTemplate, ani, list);
 
-        String tmdbId = Optional.ofNullable(ani)
+        String tmdbId = Optional.of(ani)
                 .map(Ani::getTmdb)
                 .map(Tmdb::getId)
                 .filter(StrUtil::isNotBlank)

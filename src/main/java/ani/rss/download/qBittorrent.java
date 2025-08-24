@@ -347,12 +347,14 @@ public class qBittorrent implements BaseDownload {
 
         String host = config.getDownloadToolHost();
 
-        Ani ani = null;
-        try {
-            ani = TorrentUtil.findAniByDownloadPath(torrentsInfo);
-        } catch (Exception e) {
-            log.debug("未能获取番剧对象: {}", e.getMessage());
+        Optional<Ani> aniOpt = TorrentUtil.findAniByDownloadPath(torrentsInfo);
+
+        if (aniOpt.isEmpty()) {
+            log.debug("未能获取番剧对象: {}", torrentsInfo.getName());
+            return;
         }
+
+        Ani ani = aniOpt.get();
 
         List<String> priorityKeywords = getPriorityKeywords(config, ani);
 
@@ -510,12 +512,10 @@ public class qBittorrent implements BaseDownload {
 
     private static List<String> getPriorityKeywords(Config config, Ani ani) {
         Boolean priorityKeywordsEnable = config.getPriorityKeywordsEnable();
+        Boolean customPriorityKeywordsEnable = ani.getCustomPriorityKeywordsEnable();
 
-        if (Objects.nonNull(ani)) {
-            Boolean customPriorityKeywordsEnable = ani.getCustomPriorityKeywordsEnable();
-            if (customPriorityKeywordsEnable) {
-                return ani.getCustomPriorityKeywords();
-            }
+        if (customPriorityKeywordsEnable) {
+            return ani.getCustomPriorityKeywords();
         }
 
         if (priorityKeywordsEnable) {

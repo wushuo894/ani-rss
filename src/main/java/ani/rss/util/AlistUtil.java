@@ -8,7 +8,6 @@ import ani.rss.enums.TorrentsTags;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.resource.ResourceUtil;
 import cn.hutool.core.lang.Assert;
-import cn.hutool.core.lang.Opt;
 import cn.hutool.core.text.StrFormatter;
 import cn.hutool.core.thread.ExecutorBuilder;
 import cn.hutool.core.thread.ThreadUtil;
@@ -43,9 +42,7 @@ public class AlistUtil {
      * @param torrentsInfo 任务
      */
     public static void upload(TorrentsInfo torrentsInfo, Ani ani) {
-        Boolean upload = Opt.ofNullable(ani)
-                .map(Ani::getUpload)
-                .orElse(true);
+        Boolean upload = ani.getUpload();
         // 禁止自动上传
         if (!upload) {
             return;

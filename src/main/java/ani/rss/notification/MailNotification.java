@@ -5,7 +5,6 @@ import ani.rss.entity.NotificationConfig;
 import ani.rss.enums.NotificationStatusEnum;
 import ani.rss.util.ExceptionUtil;
 import cn.hutool.core.lang.Assert;
-import cn.hutool.core.lang.Opt;
 import cn.hutool.core.text.StrFormatter;
 import cn.hutool.extra.mail.MailAccount;
 import cn.hutool.extra.mail.MailUtil;
@@ -48,15 +47,11 @@ public class MailNotification implements BaseNotification {
         notificationTemplate = notificationTemplate.replace("\n", "<br/>");
 
         if (mailImage) {
-            String image = Opt.ofNullable(ani)
-                    .map(Ani::getImage)
-                    .orElse("https://docs.wushuo.top/null.png");
+            String image = ani.getImage();
             notificationTemplate += StrFormatter.format("<br/><img src=\"{}\"/>", image);
         }
 
-        String title = Opt.ofNullable(ani)
-                .map(Ani::getTitle)
-                .orElse(text);
+        String title = ani.getTitle();
 
         try {
             MailUtil.send(mailAccount, List.of(mailAddressee), text.length() > 200 ? title : text, notificationTemplate, true);
