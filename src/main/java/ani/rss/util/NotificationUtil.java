@@ -6,7 +6,6 @@ import ani.rss.entity.NotificationConfig;
 import ani.rss.enums.NotificationStatusEnum;
 import ani.rss.enums.NotificationTypeEnum;
 import ani.rss.notification.BaseNotification;
-import cn.hutool.core.lang.Opt;
 import cn.hutool.core.thread.ExecutorBuilder;
 import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.core.util.ReflectUtil;
@@ -33,9 +32,7 @@ public class NotificationUtil {
      * @param notificationStatusEnum
      */
     public static synchronized void send(Config config, Ani ani, String text, NotificationStatusEnum notificationStatusEnum) {
-        Boolean isMessage = Opt.ofNullable(ani)
-                .map(Ani::getMessage)
-                .orElse(true);
+        Boolean isMessage = ani.getMessage();
 
         if (!isMessage) {
             // 未开启此订阅通知

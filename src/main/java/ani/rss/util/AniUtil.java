@@ -265,9 +265,6 @@ public class AniUtil {
      * @param ani
      */
     public static void completed(Ani ani) {
-        if (Objects.isNull(ani)) {
-            return;
-        }
         ani = ObjectUtil.clone(ani);
 
         String title = ani.getTitle();
