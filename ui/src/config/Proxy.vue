@@ -31,6 +31,14 @@
         </template>
       </el-input>
     </el-form-item>
+    <el-form-item label="代理列表">
+      <el-input
+          style="width: 100%"
+          type="textarea"
+          :autosize="{ minRows: 3, maxRows: 3}"
+          v-model="props.config.proxyList"
+          :disabled="!props.config.proxy"/>
+    </el-form-item>
     <el-form-item label="启用">
       <el-switch v-model:model-value="props.config.proxy"/>
     </el-form-item>

@@ -45,7 +45,7 @@ public class qBittorrent implements BaseDownload {
         String hash = torrentsInfo.getHash();
         String host = config.getDownloadToolHost();
 
-        return HttpReq.get(host + "/api/v2/torrents/files", false)
+        return HttpReq.get(host + "/api/v2/torrents/files")
                 .form("hash", hash)
                 .thenFunction(res -> {
                     HttpReq.assertStatus(res);
@@ -86,14 +86,14 @@ public class qBittorrent implements BaseDownload {
         try {
             if (!test) {
                 // 校验当前登录状态
-                Boolean isOk = HttpReq.post(host + "/api/v2/app/version", false)
+                Boolean isOk = HttpReq.post(host + "/api/v2/app/version")
                         .thenFunction(HttpResponse::isOk);
                 if (isOk) {
                     return true;
                 }
             }
 
-            return HttpReq.post(host + "/api/v2/auth/login", false)
+            return HttpReq.post(host + "/api/v2/auth/login")
                     .form("username", username)
                     .form("password", password)
                     .disableCookie()
@@ -127,7 +127,7 @@ public class qBittorrent implements BaseDownload {
         Long upLimit = config.getUpLimit() * 1024;
         Long dlLimit = config.getDlLimit() * 1024;
 
-        HttpRequest httpRequest = HttpReq.post(host + "/api/v2/torrents/add", false)
+        HttpRequest httpRequest = HttpReq.post(host + "/api/v2/torrents/add")
                 .form("addToTopOfQueue", false)
                 .form("autoTMM", false)
                 .form("category", TorrentsTags.ANI_RSS.getValue())
@@ -201,14 +201,14 @@ public class qBittorrent implements BaseDownload {
      */
     public static Boolean start(TorrentsInfo torrentsInfo, Config config) {
         String host = config.getDownloadToolHost();
-        boolean b = HttpReq.post(host + "/api/v2/torrents/start", false)
+        boolean b = HttpReq.post(host + "/api/v2/torrents/start")
                 .form("hashes", torrentsInfo.getHash())
                 .thenFunction(HttpResponse::isOk);
         if (b) {
             return true;
         }
 
-        return HttpReq.post(host + "/api/v2/torrents/resume", false)
+        return HttpReq.post(host + "/api/v2/torrents/resume")
                 .form("hashes", torrentsInfo.getHash())
                 .thenFunction(HttpResponse::isOk);
     }
@@ -217,7 +217,7 @@ public class qBittorrent implements BaseDownload {
     public List<TorrentsInfo> getTorrentsInfos() {
         String host = config.getDownloadToolHost();
         try {
-            return HttpReq.get(host + "/api/v2/torrents/info", false)
+            return HttpReq.get(host + "/api/v2/torrents/info")
                     .thenFunction(res -> {
                         List<TorrentsInfo> torrentsInfoList = new ArrayList<>();
                         JsonArray jsonElements = GsonStatic.fromJson(res.body(), JsonArray.class);
@@ -285,7 +285,7 @@ public class qBittorrent implements BaseDownload {
         String hash = torrentsInfo.getHash();
         try {
             List<FileEntity> files = files(torrentsInfo, false, config);
-            boolean b = HttpReq.post(host + "/api/v2/torrents/delete", false)
+            boolean b = HttpReq.post(host + "/api/v2/torrents/delete")
                     .form("hashes", hash)
                     .form("deleteFiles", deleteFiles)
                     .thenFunction(HttpResponse::isOk);
@@ -347,12 +347,14 @@ public class qBittorrent implements BaseDownload {
 
         String host = config.getDownloadToolHost();
 
-        Ani ani = null;
-        try {
-            ani = TorrentUtil.findAniByDownloadPath(torrentsInfo);
-        } catch (Exception e) {
-            log.debug("未能获取番剧对象: {}", e.getMessage());
+        Optional<Ani> aniOpt = TorrentUtil.findAniByDownloadPath(torrentsInfo);
+
+        if (aniOpt.isEmpty()) {
+            log.debug("未能获取番剧对象: {}", torrentsInfo.getName());
+            return;
         }
+
+        Ani ani = aniOpt.get();
 
         List<String> priorityKeywords = getPriorityKeywords(config, ani);
 
@@ -392,7 +394,7 @@ public class qBittorrent implements BaseDownload {
             }
             if (newNames.contains(newPath)) {
                 // 停止不必要的文件下载
-                HttpReq.post(host + "/api/v2/torrents/filePrio", false)
+                HttpReq.post(host + "/api/v2/torrents/filePrio")
                         .form("hash", hash)
                         .form("id", fileEntity.getIndex())
                         .form("priority", 0)
@@ -408,7 +410,7 @@ public class qBittorrent implements BaseDownload {
 
             log.info("重命名 {} ==> {}", name, newPath);
 
-            Boolean b = HttpReq.post(host + "/api/v2/torrents/renameFile", false)
+            Boolean b = HttpReq.post(host + "/api/v2/torrents/renameFile")
                     .form("hash", hash)
                     .form("oldPath", name)
                     .form("newPath", newPath)
@@ -439,7 +441,7 @@ public class qBittorrent implements BaseDownload {
     public Boolean addTags(TorrentsInfo torrentsInfo, String tags) {
         String host = config.getDownloadToolHost();
         String hash = torrentsInfo.getHash();
-        return HttpReq.post(host + "/api/v2/torrents/addTags", false)
+        return HttpReq.post(host + "/api/v2/torrents/addTags")
                 .form("hashes", hash)
                 .form("tags", tags)
                 .thenFunction(res -> {
@@ -454,7 +456,7 @@ public class qBittorrent implements BaseDownload {
     @Override
     public void updateTrackers(Set<String> trackers) {
         String host = config.getDownloadToolHost();
-        JsonObject preferences = HttpReq.get(host + "/api/v2/app/preferences", false)
+        JsonObject preferences = HttpReq.get(host + "/api/v2/app/preferences")
                 .thenFunction(res -> {
                     int status = res.getStatus();
                     boolean ok = res.isOk();
@@ -466,7 +468,7 @@ public class qBittorrent implements BaseDownload {
         preferences.addProperty("add_trackers", CollUtil.join(trackers, "\n"));
         preferences.addProperty("add_trackers_enabled", true);
 
-        HttpReq.post(host + "/api/v2/app/setPreferences", false)
+        HttpReq.post(host + "/api/v2/app/setPreferences")
                 .form("json", GsonStatic.toJson(preferences))
                 .then(res -> {
                     if (res.isOk()) {
@@ -481,11 +483,11 @@ public class qBittorrent implements BaseDownload {
     @Override
     public void setSavePath(TorrentsInfo torrentsInfo, String path) {
         String host = config.getDownloadToolHost();
-        HttpReq.post(host + "/api/v2/torrents/setAutoManagement", false)
+        HttpReq.post(host + "/api/v2/torrents/setAutoManagement")
                 .form("hashes", torrentsInfo.getHash())
                 .form("enable", false)
                 .thenFunction(HttpResponse::isOk);
-        HttpReq.post(host + "/api/v2/torrents/setSavePath", false)
+        HttpReq.post(host + "/api/v2/torrents/setSavePath")
                 .form("id", torrentsInfo.getHash())
                 .form("path", path)
                 .then(req -> {
@@ -510,12 +512,10 @@ public class qBittorrent implements BaseDownload {
 
     private static List<String> getPriorityKeywords(Config config, Ani ani) {
         Boolean priorityKeywordsEnable = config.getPriorityKeywordsEnable();
+        Boolean customPriorityKeywordsEnable = ani.getCustomPriorityKeywordsEnable();
 
-        if (Objects.nonNull(ani)) {
-            Boolean customPriorityKeywordsEnable = ani.getCustomPriorityKeywordsEnable();
-            if (customPriorityKeywordsEnable) {
-                return ani.getCustomPriorityKeywords();
-            }
+        if (customPriorityKeywordsEnable) {
+            return ani.getCustomPriorityKeywords();
         }
 
         if (priorityKeywordsEnable) {

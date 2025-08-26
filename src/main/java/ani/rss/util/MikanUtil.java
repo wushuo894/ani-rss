@@ -70,7 +70,7 @@ public class MikanUtil {
                     scoreAtomicReference.set(score);
                 }),
                 CompletableFuture.runAsync(() -> {
-                    Document document = HttpReq.get(finalUrl, true)
+                    Document document = HttpReq.get(finalUrl)
                             .thenFunction(res -> Jsoup.parse(res.body()));
                     documentAtomicReference.set(document);
                 })
@@ -166,7 +166,7 @@ public class MikanUtil {
      * @return
      */
     public static List<Mikan.Group> getGroups(String url) {
-        return HttpReq.get(url, true)
+        return HttpReq.get(url)
                 .thenFunction(res -> {
                     Document document = Jsoup.parse(res.body());
                     List<Mikan.Group> groups = new ArrayList<>();
@@ -221,7 +221,7 @@ public class MikanUtil {
         if (StrUtil.isBlank(bangumiId)) {
             return;
         }
-        HttpReq.get(URLUtil.getHost(URLUtil.url(getMikanHost())) + "/Home/Bangumi/" + bangumiId, true)
+        HttpReq.get(URLUtil.getHost(URLUtil.url(getMikanHost())) + "/Home/Bangumi/" + bangumiId)
                 .then(res -> {
                     org.jsoup.nodes.Document html = Jsoup.parse(res.body());
 
@@ -294,7 +294,7 @@ public class MikanUtil {
                     "https://bgm-cache.wushuo.top/score/{}/score.json",
                     SecureUtil.sha256(outTradeNo)
             );
-            jsonObject = HttpReq.get(url, true)
+            jsonObject = HttpReq.get(url)
                     .timeout(1000 * 5)
                     .thenFunction(res -> {
                         int status = res.getStatus();

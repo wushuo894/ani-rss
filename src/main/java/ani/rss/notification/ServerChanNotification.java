@@ -6,14 +6,12 @@ import ani.rss.enums.NotificationStatusEnum;
 import ani.rss.enums.ServerChanTypeEnum;
 import ani.rss.util.GsonStatic;
 import ani.rss.util.HttpReq;
-import cn.hutool.core.lang.Opt;
 import cn.hutool.core.text.StrFormatter;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.HttpResponse;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.Map;
-import java.util.Objects;
 
 /**
  * ServerChan
@@ -35,17 +33,13 @@ public class ServerChanNotification implements BaseNotification {
         }
 
         String title = "";
-        String image = Opt.ofNullable(ani)
-                .map(Ani::getImage)
-                .orElse("https://docs.wushuo.top/null.png");
+        String image = ani.getImage();
 
 
-        if (Objects.nonNull(ani)) {
-            title = truncateMessage(ani.getTitle(), serverChanTitleAction ? 10 : 15);
-            if (serverChanTitleAction) {
-                String action = notificationStatusEnum.getAction();
-                title = StrFormatter.format("{}#{}", action, ani.getTitle());
-            }
+        title = truncateMessage(ani.getTitle(), serverChanTitleAction ? 10 : 15);
+        if (serverChanTitleAction) {
+            String action = notificationStatusEnum.getAction();
+            title = StrFormatter.format("{}#{}", action, ani.getTitle());
         }
 
         String notificationTemplate = replaceNotificationTemplate(ani, notificationConfig, text, notificationStatusEnum);
@@ -74,7 +68,7 @@ public class ServerChanNotification implements BaseNotification {
             ));
         }
 
-        return HttpReq.post(serverChanUrl, false)
+        return HttpReq.post(serverChanUrl)
                 .body(body)
                 .thenFunction(HttpResponse::isOk);
     }

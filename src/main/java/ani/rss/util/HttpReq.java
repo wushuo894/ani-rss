@@ -2,8 +2,11 @@ package ani.rss.util;
 
 import ani.rss.entity.Config;
 import cn.hutool.core.lang.Assert;
+import cn.hutool.core.text.StrFormatter;
 import cn.hutool.core.util.ReflectUtil;
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.util.URLUtil;
+import cn.hutool.crypto.SecureUtil;
 import cn.hutool.http.Header;
 import cn.hutool.http.HttpConnection;
 import cn.hutool.http.HttpRequest;
@@ -12,7 +15,9 @@ import cn.hutool.http.cookie.GlobalCookieManager;
 import lombok.extern.slf4j.Slf4j;
 
 import java.net.*;
+import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.TimeUnit;
 
 @Slf4j
 public class HttpReq {
@@ -23,10 +28,6 @@ public class HttpReq {
     static {
         COOKIE_MANAGER = new CookieManager();
         COOKIE_MANAGER.setCookiePolicy(CookiePolicy.ACCEPT_ALL);
-    }
-
-    public static HttpRequest post(String url) {
-        return post(url, false);
     }
 
     private static void config(HttpRequest req) {
@@ -40,51 +41,31 @@ public class HttpReq {
         req.header(Header.USER_AGENT, ua);
     }
 
-    public static HttpRequest post(String url, Boolean proxy) {
+    public static HttpRequest post(String url) {
         HttpRequest req = HttpRequestPlus.post(url);
         config(req);
-        if (proxy) {
-            setProxy(req);
-        }
+        setProxy(req);
         return req;
     }
 
     public static HttpRequest get(String url) {
-        return get(url, false);
-    }
-
-    public static HttpRequest get(String url, Boolean proxy) {
         HttpRequest req = HttpRequestPlus.get(url);
         config(req);
-        if (proxy) {
-            setProxy(req);
-        }
+        setProxy(req);
         return req;
     }
 
     public static HttpRequest put(String url) {
-        return put(url, false);
-    }
-
-    public static HttpRequest put(String url, Boolean proxy) {
         HttpRequest req = HttpRequestPlus.put(url);
         config(req);
-        if (proxy) {
-            setProxy(req);
-        }
+        setProxy(req);
         return req;
     }
 
     public static HttpRequest delete(String url) {
-        return delete(url, false);
-    }
-
-    public static HttpRequest delete(String url, Boolean proxy) {
         HttpRequest req = HttpRequestPlus.delete(url);
         config(req);
-        if (proxy) {
-            setProxy(req);
-        }
+        setProxy(req);
         return req;
     }
 
@@ -94,8 +75,8 @@ public class HttpReq {
      * @param req
      * @return
      */
-    public static HttpRequest setProxy(HttpRequest req) {
-        return setProxy(req, ConfigUtil.CONFIG);
+    public static void setProxy(HttpRequest req) {
+        setProxy(req, ConfigUtil.CONFIG);
     }
 
     /**
@@ -105,18 +86,24 @@ public class HttpReq {
      * @param config
      * @return
      */
-    public static HttpRequest setProxy(HttpRequest req, Config config) {
+    public static void setProxy(HttpRequest req, Config config) {
         String url = req.getUrl();
         Boolean proxy = config.getProxy();
         if (!proxy) {
             log.debug("代理未开启 {}", url);
-            return req;
+            return;
         }
+
+        if (!isProxy(url)) {
+            // 不进行代理
+            return;
+        }
+
         String proxyHost = config.getProxyHost();
         Integer proxyPort = config.getProxyPort();
         if (StrUtil.isBlank(proxyHost) || Objects.isNull(proxyPort)) {
             log.debug("代理参数不全 {}", url);
-            return req;
+            return;
         }
 
         String proxyUsername = config.getProxyUsername();
@@ -139,7 +126,6 @@ public class HttpReq {
             log.error("设置代理出现问题 {}", url);
             log.error(e.getMessage(), e);
         }
-        return req;
     }
 
     public static String getUrl(HttpResponse response) {
@@ -153,4 +139,42 @@ public class HttpReq {
         String url = getUrl(response);
         Assert.isTrue(ok, "url: {}, status: {}", url, status);
     }
+
+    /**
+     * 是否代理
+     *
+     * @param url
+     * @return
+     */
+    public static Boolean isProxy(String url) {
+        String host = URLUtil.url(url).getHost();
+
+        Config config = ConfigUtil.CONFIG;
+        String proxyList = config.getProxyList();
+
+        String key = StrFormatter.format("proxyList:{}", SecureUtil.md5(proxyList));
+
+        List<String> split = MyCacheUtil.get(key);
+
+        if (Objects.isNull(split)) {
+            split = StrUtil.split(proxyList, "\n", true, true);
+            MyCacheUtil.put(key, split, TimeUnit.MINUTES.toMillis(10));
+        }
+
+        if (split.isEmpty()) {
+            return false;
+        }
+
+        if (split.contains(host)) {
+            return true;
+        }
+
+        for (String s : split) {
+            if (s.endsWith("." + host)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
 }

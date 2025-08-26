@@ -26,10 +26,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import java.io.File;
-import java.util.Date;
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -436,7 +433,7 @@ public class TorrentUtil {
                 return saveTorrentFile;
             }
 
-            return HttpReq.get(torrent, true)
+            return HttpReq.get(torrent)
                     .thenFunction(res -> {
                         int status = res.getStatus();
                         if (status == 404) {
@@ -857,27 +854,30 @@ public class TorrentUtil {
         if (!b) {
             return;
         }
-        Ani ani = null;
-        try {
-            ani = findAniByDownloadPath(torrentsInfo);
+        Optional<Ani> aniOpt = findAniByDownloadPath(torrentsInfo);
 
-            String subgroup = ani.getSubgroup();
-
-            Set<String> collect = ani.getStandbyRssList()
-                    .stream()
-                    .map(StandbyRss::getLabel)
-                    .collect(Collectors.toSet());
-
-            subgroup = tags
-                    .stream()
-                    .filter(collect::contains)
-                    .findFirst()
-                    .orElse(subgroup);
-            subgroup = StrUtil.blankToDefault(subgroup, "未知字幕组");
-            ani.setSubgroup(subgroup);
-        } catch (Exception e) {
-            log.error(e.getMessage(), e);
+        if (aniOpt.isEmpty()) {
+            log.debug("未能获取番剧对象: {}", torrentsInfo.getName());
+            return;
         }
+
+        Ani ani = aniOpt.get();
+
+        // 根据标签反向判断出字幕组
+        String subgroup = ani.getSubgroup();
+        Set<String> collect = ani.getStandbyRssList()
+                .stream()
+                .map(StandbyRss::getLabel)
+                .collect(Collectors.toSet());
+
+        subgroup = tags
+                .stream()
+                .filter(collect::contains)
+                .findFirst()
+                .orElse(subgroup);
+        subgroup = StrUtil.blankToDefault(subgroup, "未知字幕组");
+        ani.setSubgroup(subgroup);
+
         try {
             AlistUtil.upload(torrentsInfo, ani);
         } catch (Exception e) {
@@ -893,10 +893,6 @@ public class TorrentUtil {
             text = StrFormatter.format("(备用RSS) {}", text);
         }
         NotificationUtil.send(ConfigUtil.CONFIG, ani, text, NotificationStatusEnum.DOWNLOAD_END);
-
-        if (Objects.isNull(ani)) {
-            return;
-        }
 
         String title = ani.getTitle();
 
@@ -914,7 +910,7 @@ public class TorrentUtil {
      * @param torrentsInfo
      * @return
      */
-    public static synchronized Ani findAniByDownloadPath(TorrentsInfo torrentsInfo) {
+    public static synchronized Optional<Ani> findAniByDownloadPath(TorrentsInfo torrentsInfo) {
         String downloadDir = torrentsInfo.getDownloadDir();
         return AniUtil.ANI_LIST
                 .stream()
@@ -923,8 +919,7 @@ public class TorrentUtil {
                     return path.equals(downloadDir);
                 })
                 .map(ObjectUtil::clone)
-                .findFirst()
-                .orElse(null);
+                .findFirst();
     }
 
     /**
