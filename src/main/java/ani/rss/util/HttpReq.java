@@ -170,7 +170,7 @@ public class HttpReq {
         }
 
         for (String s : split) {
-            if (s.endsWith("." + host)) {
+            if (host.endsWith("." + s)) {
                 return true;
             }
         }
