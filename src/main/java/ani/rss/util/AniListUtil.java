@@ -26,7 +26,7 @@ public class AniListUtil {
                 }
                 """, title);
 
-        return HttpReq.post("https://graphql.anilist.co", true)
+        return HttpReq.post("https://graphql.anilist.co")
                 .timeout(5000)
                 .body(body)
                 .thenFunction(res -> {

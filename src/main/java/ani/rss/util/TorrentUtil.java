@@ -433,7 +433,7 @@ public class TorrentUtil {
                 return saveTorrentFile;
             }
 
-            return HttpReq.get(torrent, true)
+            return HttpReq.get(torrent)
                     .thenFunction(res -> {
                         int status = res.getStatus();
                         if (status == 404) {

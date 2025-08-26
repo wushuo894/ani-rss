@@ -54,7 +54,7 @@ public class Transmission implements BaseDownload {
         }
 
         authorization = StrFormatter.format("Basic {}", Base64.encode(username + ":" + password));
-        Boolean isOk = HttpReq.get(host, false)
+        Boolean isOk = HttpReq.get(host)
                 .header(Header.AUTHORIZATION, authorization)
                 .thenFunction(HttpResponse::isOk);
         if (!isOk) {
@@ -69,7 +69,7 @@ public class Transmission implements BaseDownload {
     public List<TorrentsInfo> getTorrentsInfos() {
         String body = ResourceUtil.readUtf8Str("transmission/torrent-get.json");
         try {
-            return HttpReq.post(host + "/transmission/rpc", false)
+            return HttpReq.post(host + "/transmission/rpc")
                     .header(Header.AUTHORIZATION, authorization)
                     .header("X-Transmission-Session-Id", sessionId)
                     .body(body)
@@ -160,7 +160,7 @@ public class Transmission implements BaseDownload {
             }
         }
 
-        String id = HttpReq.post(host + "/transmission/rpc", false)
+        String id = HttpReq.post(host + "/transmission/rpc")
                 .timeout(1000 * 60)
                 .header(Header.AUTHORIZATION, authorization)
                 .header("X-Transmission-Session-Id", sessionId)
@@ -206,7 +206,7 @@ public class Transmission implements BaseDownload {
         String body = ResourceUtil.readUtf8Str("transmission/torrent-remove.json");
         body = StrFormatter.format(body, torrentsInfo.getId(), deleteFiles);
         try {
-            return HttpReq.post(host + "/transmission/rpc", false)
+            return HttpReq.post(host + "/transmission/rpc")
                     .header(Header.AUTHORIZATION, authorization)
                     .header("X-Transmission-Session-Id", sessionId)
                     .body(body)
@@ -240,7 +240,7 @@ public class Transmission implements BaseDownload {
 
         log.info("重命名 {} ==> {}", name, reName);
 
-        Boolean ok = HttpReq.post(host + "/transmission/rpc", false)
+        Boolean ok = HttpReq.post(host + "/transmission/rpc")
                 .header(Header.AUTHORIZATION, authorization)
                 .header("X-Transmission-Session-Id", sessionId)
                 .body(body)
@@ -272,7 +272,7 @@ public class Transmission implements BaseDownload {
 
         String body = ResourceUtil.readUtf8Str("transmission/torrent-set.json");
         body = StrFormatter.format(body, GsonStatic.toJson(strings), id);
-        return HttpReq.post(host + "/transmission/rpc", false)
+        return HttpReq.post(host + "/transmission/rpc")
                 .header(Header.AUTHORIZATION, authorization)
                 .header("X-Transmission-Session-Id", sessionId)
                 .body(body)
@@ -289,7 +289,7 @@ public class Transmission implements BaseDownload {
         String id = torrentsInfo.getId();
         String body = ResourceUtil.readUtf8Str("transmission/torrent-set-location.json");
         body = StrFormatter.format(body, id, path);
-        HttpReq.post(host + "/transmission/rpc", false)
+        HttpReq.post(host + "/transmission/rpc")
                 .header(Header.AUTHORIZATION, authorization)
                 .header("X-Transmission-Session-Id", sessionId)
                 .body(body)

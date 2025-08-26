@@ -97,7 +97,7 @@ public class AlistUtil {
                                 .setBlockSize(1024 * 1024 * 50);
 
                         HttpReq
-                                .put(url, false)
+                                .put(url)
                                 .timeout(1000 * 60 * 2)
                                 .setConfig(httpConfig)
                                 .header(Header.AUTHORIZATION, alistToken)
@@ -154,7 +154,7 @@ public class AlistUtil {
 
             try {
                 HttpReq
-                        .post(alistHost + "/api/fs/mkdir", false)
+                        .post(alistHost + "/api/fs/mkdir")
                         .header(Header.AUTHORIZATION, alistToken)
                         .body(GsonStatic.toJson(Map.of("path", finalPath)))
                         .then(HttpReq::assertStatus);

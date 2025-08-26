@@ -86,6 +86,21 @@ public class ConfigUtil {
         String downloadToolUsername = env.getOrDefault("DOWNLOAD_TOOL_USERNAME", "");
         String downloadToolPassword = env.getOrDefault("DOWNLOAD_TOOL_PASSWORD", "");
 
+        String proxyList = """
+                mikanani.me
+                mikanime.tv
+                nyaa.si
+                acg.rip
+                google.com
+                tmdb.org
+                themoviedb.org
+                anilist.co
+                wushuo.top
+                bgm.tv
+                raw.githubusercontent.com
+                github.com
+                """;
+
         CONFIG.setSleep(15)
                 .setMikanHost("https://mikanime.tv")
                 .setTmdbApi("https://api.themoviedb.org")
@@ -212,7 +227,7 @@ public class ConfigUtil {
                 .setCopyMasterToStandby(false)
                 .setSortType(SortTypeEnum.SCORE)
                 .setTmdbIdPlexMode(false)
-        ;
+                .setProxyList(proxyList);
     }
 
     /**

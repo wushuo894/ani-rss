@@ -66,7 +66,7 @@ public class WebHookNotification implements BaseNotification {
 
         Map<String, String> headerMap = getHeaderMap(notificationConfig);
 
-        HttpRequest httpRequest = HttpReq.get(webHookUrl, true)
+        HttpRequest httpRequest = HttpReq.get(webHookUrl)
                 .addHeaders(headerMap)
                 .method(Method.valueOf(webHookMethod));
 
