@@ -125,7 +125,7 @@ public class TmdbUtil {
         String tmdbApiKey = getTmdbApiKey();
         String id = tmdb.getId();
         String url = StrFormatter.format("{}/3/{}/{}/alternative_titles", tmdbApi, tmdbType, id);
-        HttpReq.get(url, true)
+        HttpReq.get(url)
                 .timeout(5000)
                 .form("api_key", tmdbApiKey)
                 .form("include_adult", "true")
@@ -175,7 +175,7 @@ public class TmdbUtil {
         String tmdbApiKey = getTmdbApiKey();
 
         String finalTitleName = titleName;
-        return HttpReq.get(tmdbApi + "/3/search/" + type, true)
+        return HttpReq.get(tmdbApi + "/3/search/" + type)
                 .timeout(5000)
                 .form("query", URLUtil.encodeBlank(titleName))
                 .form("api_key", tmdbApiKey)
@@ -351,7 +351,7 @@ public class TmdbUtil {
 
             if (StrUtil.isNotBlank(tmdbGroupId)) {
                 // 得到了剧集组的id
-                HttpReq.get(tmdbApi + "/3/tv/episode_group/" + tmdbGroupId, true)
+                HttpReq.get(tmdbApi + "/3/tv/episode_group/" + tmdbGroupId)
                         .timeout(5000)
                         .form("api_key", tmdbApiKey)
                         .form("include_adult", "true")
@@ -377,7 +377,7 @@ public class TmdbUtil {
                 return map;
             }
 
-            HttpReq.get(url, true)
+            HttpReq.get(url)
                     .timeout(5000)
                     .form("api_key", tmdbApiKey)
                     .form("include_adult", "true")
@@ -426,7 +426,7 @@ public class TmdbUtil {
         );
 
         String url = StrFormatter.format("{}/3/tv/{}/episode_groups", tmdbApi, id);
-        return HttpReq.get(url, true)
+        return HttpReq.get(url)
                 .timeout(5000)
                 .form("api_key", tmdbApiKey)
                 .form("include_adult", "true")

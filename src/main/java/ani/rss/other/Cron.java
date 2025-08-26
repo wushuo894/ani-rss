@@ -38,7 +38,7 @@ public class Cron {
 
         for (String url : urls) {
             log.info("获取 tracker {}", url);
-            HttpReq.get(url, true)
+            HttpReq.get(url)
                     .then(res -> {
                         int status = res.getStatus();
                         boolean ok = res.isOk();

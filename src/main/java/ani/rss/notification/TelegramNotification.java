@@ -36,7 +36,7 @@ public class TelegramNotification implements BaseNotification {
         telegramApiHost = StrUtil.blankToDefault(telegramApiHost, "https://api.telegram.org");
         String url = StrFormatter.format("{}/bot{}/getUpdates", telegramApiHost, telegramBotToken);
         Map<String, String> map = new HashMap<>();
-        return HttpReq.get(url, true)
+        return HttpReq.get(url)
                 .thenFunction(res -> {
                     JsonObject jsonObject = GsonStatic.fromJson(res.body(), JsonObject.class);
                     JsonElement result = jsonObject.get("result");
@@ -105,7 +105,7 @@ public class TelegramNotification implements BaseNotification {
             if (StrUtil.isNotBlank(telegramFormat)) {
                 body.put("parse_mode", telegramFormat);
             }
-            return HttpReq.post(url, true)
+            return HttpReq.post(url)
                     .body(GsonStatic.toJson(body))
                     .thenFunction(HttpResponse::isOk);
         }
@@ -126,7 +126,7 @@ public class TelegramNotification implements BaseNotification {
 
         String url = StrFormatter.format("{}/bot{}/sendPhoto", telegramApiHost, telegramBotToken);
 
-        HttpRequest request = HttpReq.post(url, true)
+        HttpRequest request = HttpReq.post(url)
                 .contentType(ContentType.MULTIPART.getValue())
                 .form("chat_id", telegramChatId)
                 .form("caption", notificationTemplate)

@@ -412,7 +412,7 @@ public class Alist implements BaseDownload {
         ThreadUtil.sleep(2000);
         String host = config.getDownloadToolHost();
         String password = config.getDownloadToolPassword();
-        return HttpReq.post(host + "/api/" + action, false)
+        return HttpReq.post(host + "/api/" + action)
                 .header(Header.AUTHORIZATION, password);
     }
 
