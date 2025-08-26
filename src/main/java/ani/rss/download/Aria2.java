@@ -44,7 +44,7 @@ public class Aria2 implements BaseDownload {
 
         String body = ResourceUtil.readUtf8Str("aria2/getGlobalStat.json");
         body = StrFormatter.format(body, password);
-        return HttpReq.post(host + "/jsonrpc", false)
+        return HttpReq.post(host + "/jsonrpc")
                 .body(body)
                 .thenFunction(HttpResponse::isOk);
     }
@@ -68,7 +68,7 @@ public class Aria2 implements BaseDownload {
         String password = config.getDownloadToolPassword();
         String body = ResourceUtil.readUtf8Str(type);
         body = StrFormatter.format(body, password);
-        return HttpReq.post(host + "/jsonrpc", false)
+        return HttpReq.post(host + "/jsonrpc")
                 .body(body)
                 .thenFunction(res -> {
                     HttpReq.assertStatus(res);
@@ -142,7 +142,7 @@ public class Aria2 implements BaseDownload {
             body = StrFormatter.format(body, password, Base64.encode(torrentFile), savePath);
         }
 
-        String id = HttpReq.post(host + "/jsonrpc", false)
+        String id = HttpReq.post(host + "/jsonrpc")
                 .body(body)
                 .thenFunction(res -> GsonStatic.fromJson(res.body(), JsonObject.class).get("result").getAsString());
 
@@ -181,7 +181,7 @@ public class Aria2 implements BaseDownload {
         body = StrFormatter.format(body, password, id);
 
         try {
-            return HttpReq.post(host + "/jsonrpc", false)
+            return HttpReq.post(host + "/jsonrpc")
                     .body(body)
                     .thenFunction(HttpResponse::isOk);
         } catch (Exception e) {
@@ -256,7 +256,7 @@ public class Aria2 implements BaseDownload {
         String body = ResourceUtil.readUtf8Str("aria2/changeGlobalOption.json");
         body = StrFormatter.format(body, password, trackersStr);
 
-        HttpReq.post(host + "/jsonrpc", false)
+        HttpReq.post(host + "/jsonrpc")
                 .body(body)
                 .then(res -> {
                     if (res.isOk()) {

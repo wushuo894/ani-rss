@@ -38,6 +38,7 @@ export let configData = {
     "logsMax": 2048,
     "debug": false,
     "proxy": false,
+    "proxyList": "",
     "proxyHost": "",
     "proxyPort": 8080,
     "proxyUsername": "",

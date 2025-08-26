@@ -46,7 +46,7 @@ public class EmbyUtil {
         String s = "Recursive=true&ImageRefreshMode=Default&MetadataRefreshMode=Default&ReplaceAllImages=false&ReplaceAllMetadata=false";
 
         String id = embyViews.getId();
-        HttpReq.post(embyHost + "/emby/Items/" + id + "/Refresh?" + s, false)
+        HttpReq.post(embyHost + "/emby/Items/" + id + "/Refresh?" + s)
                 .header("X-Emby-Token", embyApiKey)
                 .then(res -> {
                     if (res.isOk()) {
@@ -72,7 +72,7 @@ public class EmbyUtil {
 
         List<EmbyViews> viewsList = new ArrayList<>();
 
-        JsonArray items = HttpReq.get(embyHost + "/Library/MediaFolders", false)
+        JsonArray items = HttpReq.get(embyHost + "/Library/MediaFolders")
                 .header("X-Emby-Token", embyApiKey)
                 .thenFunction(res -> {
                     HttpReq.assertStatus(res);

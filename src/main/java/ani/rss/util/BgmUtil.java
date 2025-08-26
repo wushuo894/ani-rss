@@ -95,7 +95,7 @@ public class BgmUtil {
      */
     public static List<JsonObject> search(String name) {
         name = name.replace("1/2", "½");
-        HttpRequest httpRequest = HttpReq.get(host + "/search/subject/" + name, true);
+        HttpRequest httpRequest = HttpReq.get(host + "/search/subject/" + name);
 
         return setToken(httpRequest)
                 .form("type", 2)
@@ -207,7 +207,7 @@ public class BgmUtil {
     public static List<JsonObject> getEpisodes(String subjectId, Integer type) {
         ThreadUtil.sleep(500);
         Objects.requireNonNull(subjectId);
-        HttpRequest httpRequest = HttpReq.get(host + "/v0/episodes", true);
+        HttpRequest httpRequest = HttpReq.get(host + "/v0/episodes");
         setToken(httpRequest);
 
         return httpRequest
@@ -253,7 +253,7 @@ public class BgmUtil {
             return GsonStatic.fromJson(me, JsonObject.class);
         }
 
-        JsonObject jsonObject = setToken(HttpReq.get(host + "/v0/me", true))
+        JsonObject jsonObject = setToken(HttpReq.get(host + "/v0/me"))
                 .thenFunction(res -> {
                     HttpReq.assertStatus(res);
                     return GsonStatic.fromJson(res.body(), JsonObject.class);
@@ -285,7 +285,7 @@ public class BgmUtil {
         if (Objects.isNull(rate)) {
             // 获取评分
             String username = username();
-            return setToken(HttpReq.get(host + "/v0/users/" + username + "/collections/" + subjectId, true))
+            return setToken(HttpReq.get(host + "/v0/users/" + username + "/collections/" + subjectId))
                     .thenFunction(res -> {
                         if (res.getStatus() == 404) {
                             return 0;
@@ -296,7 +296,7 @@ public class BgmUtil {
                     });
         }
 
-        setToken(HttpReq.post(host + "/v0/users/-/collections/" + subjectId, true))
+        setToken(HttpReq.post(host + "/v0/users/-/collections/" + subjectId))
                 .contentType(ContentType.JSON.getValue())
                 .body(GsonStatic.toJson(Map.of(
                         "type", 3,
@@ -323,7 +323,7 @@ public class BgmUtil {
         String username = username();
 
         // 如果已经订阅，则不再订阅
-        Boolean ok = setToken(HttpReq.get(host + "/v0/users/" + username + "/collections/" + subjectId, true))
+        Boolean ok = setToken(HttpReq.get(host + "/v0/users/" + username + "/collections/" + subjectId))
                 .thenFunction(HttpResponse::isOk);
 
         if (ok) {
@@ -332,7 +332,7 @@ public class BgmUtil {
             return;
         }
 
-        setToken(HttpReq.post(host + "/v0/users/-/collections/" + subjectId, true))
+        setToken(HttpReq.post(host + "/v0/users/-/collections/" + subjectId))
                 .contentType(ContentType.JSON.getValue())
                 .body(GsonStatic.toJson(Map.of("type", 3)))
                 .thenFunction(HttpResponse::isOk);
@@ -383,7 +383,7 @@ public class BgmUtil {
         Objects.requireNonNull(episodeId);
 
         // bgm点格子前先判断状态，防止刷屏 #142
-        JsonObject jsonObject = setToken(HttpReq.get(host + "/v0/users/-/collections/-/episodes/" + episodeId, true))
+        JsonObject jsonObject = setToken(HttpReq.get(host + "/v0/users/-/collections/-/episodes/" + episodeId))
                 .contentType(ContentType.JSON.getValue())
                 .thenFunction(res -> GsonStatic.fromJson(res.body(), JsonObject.class));
 
@@ -395,7 +395,7 @@ public class BgmUtil {
         // 间隔 500 毫秒, 防止流控
         ThreadUtil.sleep(500);
 
-        setToken(HttpReq.put(host + "/v0/users/-/collections/-/episodes/" + episodeId, true))
+        setToken(HttpReq.put(host + "/v0/users/-/collections/-/episodes/" + episodeId))
                 .contentType(ContentType.JSON.getValue())
                 .body(GsonStatic.toJson(Map.of("type", type)))
                 .thenFunction(HttpResponse::isOk);
@@ -537,7 +537,7 @@ public class BgmUtil {
 
         if (!isCache) {
             // 不使用缓存
-            HttpRequest httpRequest = HttpReq.get(host + "/v0/subjects/" + subjectId, true);
+            HttpRequest httpRequest = HttpReq.get(host + "/v0/subjects/" + subjectId);
             return setToken(httpRequest).thenFunction(fun);
         }
 
@@ -548,7 +548,7 @@ public class BgmUtil {
         CompletableFuture.allOf(
                 CompletableFuture.runAsync(() -> {
                     // 不使用缓存
-                    HttpRequest httpRequest = HttpReq.get(host + "/v0/subjects/" + subjectId, true);
+                    HttpRequest httpRequest = HttpReq.get(host + "/v0/subjects/" + subjectId);
                     try {
                         BgmInfo bgmInfo = setToken(httpRequest)
                                 .thenFunction(fun);
@@ -559,7 +559,7 @@ public class BgmUtil {
                 }),
                 CompletableFuture.runAsync(() -> {
                     HttpRequest httpRequest = HttpReq
-                            .get("https://bgm-cache.wushuo.top/" + subjectId.charAt(0) + "/" + subjectId + ".json", true);
+                            .get("https://bgm-cache.wushuo.top/" + subjectId.charAt(0) + "/" + subjectId + ".json");
                     try {
                         BgmInfo bgmInfo = httpRequest
                                 .thenFunction(fun);
@@ -608,7 +608,7 @@ public class BgmUtil {
         if (StrUtil.isBlank(bgmToken)) {
             return 0L;
         }
-        long expires = HttpReq.post("https://bgm.tv/oauth/token_status", true)
+        long expires = HttpReq.post("https://bgm.tv/oauth/token_status")
                 .form("access_token", bgmToken)
                 .thenFunction(res -> {
                     HttpReq.assertStatus(res);
@@ -666,7 +666,7 @@ public class BgmUtil {
             return;
         }
 
-        HttpReq.post("https://bgm.tv/oauth/access_token", true)
+        HttpReq.post("https://bgm.tv/oauth/access_token")
                 .body(GsonStatic.toJson(Map.of(
                         "grant_type", "refresh_token",
                         "client_id", bgmAppID,

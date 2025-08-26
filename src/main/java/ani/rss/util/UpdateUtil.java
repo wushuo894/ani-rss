@@ -51,7 +51,7 @@ public class UpdateUtil {
                 .setLatest("")
                 .setMarkdownBody("");
         try {
-            HttpReq.get("https://github.com/wushuo894/ani-rss/releases/latest/download/info.json", true)
+            HttpReq.get("https://github.com/wushuo894/ani-rss/releases/latest/download/info.json")
                     .timeout(3000)
                     .then(response -> {
                         int status = response.getStatus();
@@ -113,7 +113,7 @@ public class UpdateUtil {
 
         FileUtil.del(file);
         String downloadUrl = about.getDownloadUrl();
-        String downloadMd5 = HttpReq.get(downloadUrl + ".md5", true)
+        String downloadMd5 = HttpReq.get(downloadUrl + ".md5")
                 .thenFunction(res -> {
                     int status = res.getStatus();
                     Assert.isTrue(res.isOk(), "Error: {}", status);
@@ -125,7 +125,7 @@ public class UpdateUtil {
                     return md5;
                 });
 
-        HttpReq.get(downloadUrl, true)
+        HttpReq.get(downloadUrl)
                 .then(res -> {
                     HttpReq.assertStatus(res);
                     long contentLength = res.contentLength();

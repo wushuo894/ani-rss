@@ -157,7 +157,7 @@ public class CollectionAction implements BaseAction {
 
         Boolean qbUseDownloadPath = config.getQbUseDownloadPath();
 
-        HttpReq.post(host + "/api/v2/torrents/add", false)
+        HttpReq.post(host + "/api/v2/torrents/add")
                 .form("torrents", torrentFile)
                 .form("addToTopOfQueue", false)
                 .form("autoTMM", false)
@@ -283,7 +283,7 @@ public class CollectionAction implements BaseAction {
 
                 if (!reNameMap.containsKey(oldPath)) {
                     if (!reNameMap.containsValue(oldPath) && file.getPriority() > 0) {
-                        HttpReq.post(host + "/api/v2/torrents/filePrio", false)
+                        HttpReq.post(host + "/api/v2/torrents/filePrio")
                                 .form("hash", torrentFile.getHexHash())
                                 .form("id", file.getIndex())
                                 .form("priority", 0)
@@ -292,7 +292,7 @@ public class CollectionAction implements BaseAction {
                     continue;
                 }
                 log.info("重命名 {} ==> {}", oldPath, newPath);
-                HttpReq.post(host + "/api/v2/torrents/renameFile", false)
+                HttpReq.post(host + "/api/v2/torrents/renameFile")
                         .form("hash", torrentFile.getHexHash())
                         .form("oldPath", oldPath)
                         .form("newPath", newPath)

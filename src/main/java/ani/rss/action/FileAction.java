@@ -36,7 +36,7 @@ public class FileAction implements BaseAction {
 
     public static void getImg(String url, Consumer<InputStream> consumer) {
         URI host = URLUtil.getHost(URLUtil.url(url));
-        HttpReq.get(url, true)
+        HttpReq.get(url)
                 .then(res -> {
                     HttpConnection httpConnection = (HttpConnection) ReflectUtil.getFieldValue(res, "httpConnection");
                     URI host1 = URLUtil.getHost(httpConnection.getUrl());

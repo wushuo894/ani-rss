@@ -155,7 +155,7 @@ public class AniUtil {
 
         // 自动推断剧集偏移
         if (config.getOffset()) {
-            String s = HttpReq.get(url, true)
+            String s = HttpReq.get(url)
                     .timeout(config.getRssTimeout() * 1000)
                     .thenFunction(res -> {
                         HttpReq.assertStatus(res);
@@ -213,7 +213,7 @@ public class AniUtil {
         }
         FileUtil.del(file);
         try {
-            HttpReq.get(coverUrl, true)
+            HttpReq.get(coverUrl)
                     .then(res -> FileUtil.writeFromStream(res.bodyStream(), file));
             return filename;
         } catch (Exception e) {

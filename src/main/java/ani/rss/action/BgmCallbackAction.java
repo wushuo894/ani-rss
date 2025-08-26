@@ -32,7 +32,7 @@ public class BgmCallbackAction implements BaseAction {
                 "redirect_uri", bgmRedirectUri
         );
 
-        HttpReq.post("https://bgm.tv/oauth/access_token", true)
+        HttpReq.post("https://bgm.tv/oauth/access_token")
                 .body(GsonStatic.toJson(map))
                 .then(res -> {
                     HttpReq.assertStatus(res);

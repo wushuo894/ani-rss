@@ -1,4 +1,4 @@
-feat: 单个订阅支持设置自定义标签 @huang1996
+feat: 增加代理列表设置
 
 [请不要将本项目在国内宣传](https://github.com/wushuo894/ani-rss/discussions/504)
 

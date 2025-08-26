@@ -28,7 +28,7 @@ public class AfdianUtil {
      */
     public static Result<Void> verifyNo(String no) {
         Assert.notBlank(no, "订单号为空");
-        return HttpReq.post("https://afdian.wushuo.top?out_trade_no=" + no, true)
+        return HttpReq.post("https://afdian.wushuo.top?out_trade_no=" + no)
                 .timeout(1000 * 5)
                 .thenFunction(res -> {
                     HttpReq.assertStatus(res);
@@ -61,7 +61,7 @@ public class AfdianUtil {
      * @return
      */
     public static TryOut getTryOut() {
-        return HttpReq.get("https://docs.wushuo.top/TryOut.json", true)
+        return HttpReq.get("https://docs.wushuo.top/TryOut.json")
                 .thenFunction(res -> {
                     HttpReq.assertStatus(res);
                     return GsonStatic.fromJson(res.body(), TryOut.class);

@@ -38,7 +38,7 @@ public class ItemsUtil {
 
         Config config = ConfigUtil.CONFIG;
 
-        String s = HttpReq.get(url, true)
+        String s = HttpReq.get(url)
                 .timeout(config.getRssTimeout() * 1000)
                 .thenFunction(res -> {
                     HttpReq.assertStatus(res);
@@ -58,7 +58,7 @@ public class ItemsUtil {
         List<StandbyRss> standbyRssList = ani.getStandbyRssList();
         for (StandbyRss rss : standbyRssList) {
             ThreadUtil.sleep(1000);
-            s = HttpReq.get(rss.getUrl(), true)
+            s = HttpReq.get(rss.getUrl())
                     .timeout(config.getRssTimeout() * 1000)
                     .thenFunction(HttpResponse::body);
             subgroup = StrUtil.blankToDefault(rss.getLabel(), "未知字幕组");

@@ -68,7 +68,7 @@ public class ServerChanNotification implements BaseNotification {
             ));
         }
 
-        return HttpReq.post(serverChanUrl, false)
+        return HttpReq.post(serverChanUrl)
                 .body(body)
                 .thenFunction(HttpResponse::isOk);
     }

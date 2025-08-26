@@ -625,4 +625,9 @@ public class Config implements Serializable {
      * 排序方式
      */
     private SortTypeEnum sortType;
+
+    /**
+     * 代理列表
+     */
+    private String proxyList;
 }

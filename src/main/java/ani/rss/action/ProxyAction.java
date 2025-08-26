@@ -34,7 +34,7 @@ public class ProxyAction implements BaseAction {
 
         log.info(url);
 
-        HttpRequest httpRequest = HttpReq.get(url, false);
+        HttpRequest httpRequest = HttpReq.get(url);
         HttpReq.setProxy(httpRequest, config);
 
         ProxyTest proxyTest = new ProxyTest();

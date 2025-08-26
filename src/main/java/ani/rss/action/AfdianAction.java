@@ -59,7 +59,7 @@ public class AfdianAction implements BaseAction {
             String githubToken = config.getGithubToken();
             Assert.notBlank(githubToken, "GithubToken 不能为空");
 
-            Boolean ok = HttpReq.get("https://api.github.com/user/starred/wushuo894/ani-rss", true)
+            Boolean ok = HttpReq.get("https://api.github.com/user/starred/wushuo894/ani-rss")
                     .header("Authorization", "Bearer " + githubToken)
                     .thenFunction(HttpResponse::isOk);
 
