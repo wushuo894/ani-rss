@@ -99,6 +99,7 @@ public class ConfigUtil {
                 bgm.tv
                 raw.githubusercontent.com
                 github.com
+                telegram.org
                 """;
 
         CONFIG.setSleep(15)
