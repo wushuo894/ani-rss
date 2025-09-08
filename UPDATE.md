@@ -1,4 +1,8 @@
-feat: 增加代理列表设置
+refactor: 优化仅允许内网访问的提示
+
+build: 更新docker为jdk24
+
+build: 升级前端依赖库
 
 [请不要将本项目在国内宣传](https://github.com/wushuo894/ani-rss/discussions/504)
 
