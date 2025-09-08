@@ -102,11 +102,11 @@ public class ServerUtil {
                 // 仅允许内网ip访问
                 if (isInnerIP) {
                     if (!PatternPool.IPV4.matcher(ip).matches()) {
-                        res.send404("404 Not Found");
+                        res.sendError(403, "已开启仅允许内网ip访问");
                         return;
                     }
                     if (!Ipv4Util.isInnerIP(ip)) {
-                        res.send404("404 Not Found");
+                        res.sendError(403, "已开启仅允许内网ip访问");
                         return;
                     }
                 }

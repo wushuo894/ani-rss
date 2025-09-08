@@ -103,7 +103,7 @@ public class ConfigUtil {
                 """;
 
         CONFIG.setSleep(15)
-                .setMikanHost("https://mikanime.tv")
+                .setMikanHost("https://mikanani.me")
                 .setTmdbApi("https://api.themoviedb.org")
                 .setTmdbApiKey("")
                 .setTmdbAnime(true)
