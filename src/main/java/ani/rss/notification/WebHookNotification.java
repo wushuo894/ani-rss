@@ -1,6 +1,7 @@
 package ani.rss.notification;
 
 import ani.rss.entity.Ani;
+import ani.rss.entity.Config;
 import ani.rss.entity.NotificationConfig;
 import ani.rss.enums.NotificationStatusEnum;
 import ani.rss.util.ConfigUtil;
@@ -11,6 +12,7 @@ import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpResponse;
 import cn.hutool.http.Method;
+import cn.hutool.json.JSONUtil;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.File;
@@ -38,8 +40,11 @@ public class WebHookNotification implements BaseNotification {
             return false;
         }
 
-        String notificationTemplate = replaceNotificationTemplate(ani, notificationConfig, text, notificationStatusEnum);
-        notificationTemplate = notificationTemplate.replace("\n", "\\n");
+        Config config = ConfigUtil.CONFIG;
+
+        String notificationTemplate = config.getNotificationTemplate();
+        notificationTemplate = replaceNotificationTemplate(ani, notificationTemplate, text, notificationStatusEnum);
+        notificationTemplate = JSONUtil.quote(notificationTemplate, false);
 
         webHookUrl = webHookUrl.replace("${message}", notificationTemplate);
         webHookUrl = webHookUrl.replace("${notification}", notificationTemplate);
@@ -70,8 +75,11 @@ public class WebHookNotification implements BaseNotification {
                 .addHeaders(headerMap)
                 .method(Method.valueOf(webHookMethod));
 
+        log.debug("webhook url: {}", webHookUrl);
+
         if (StrUtil.isNotBlank(webHookBody)) {
             httpRequest.body(webHookBody);
+            log.debug("webhook body: {}", webHookBody);
         }
         return httpRequest.thenFunction(HttpResponse::isOk);
     }
