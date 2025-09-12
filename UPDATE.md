@@ -1,4 +1,4 @@
-refactor: 优化通知 执行外部程序
+refactor: 优化bgm点格子
 
 [请不要将本项目在国内宣传](https://github.com/wushuo894/ani-rss/discussions/504)
 

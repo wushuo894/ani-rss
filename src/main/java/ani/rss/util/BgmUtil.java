@@ -10,6 +10,7 @@ import cn.hutool.core.date.DatePattern;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.lang.Opt;
+import cn.hutool.core.net.url.UrlBuilder;
 import cn.hutool.core.text.StrFormatter;
 import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.core.util.ObjectUtil;
@@ -94,8 +95,18 @@ public class BgmUtil {
      * @return
      */
     public static List<JsonObject> search(String name) {
+        if (StrUtil.isBlank(name)) {
+            return new ArrayList<>();
+        }
+
         name = name.replace("1/2", "½");
-        HttpRequest httpRequest = HttpReq.get(host + "/search/subject/" + name);
+
+        String url = UrlBuilder.of(host + "/search/subject/" + name)
+                .addQuery("type", 2)
+                .addQuery("max_results", 25)
+                .toString();
+
+        HttpRequest httpRequest = HttpReq.get(url);
 
         return setToken(httpRequest)
                 .form("type", 2)
@@ -126,44 +137,41 @@ public class BgmUtil {
     /**
      * 查找番剧id
      *
-     * @param name 名称
-     * @param s    季度
+     * @param bgmName 名称
+     * @param s       季度
      * @return 番剧id
      */
-    public static synchronized String getSubjectId(String name, Integer s) {
-        if (StrUtil.isBlank(name)) {
+    public static synchronized String getSubjectId(String bgmName, Integer s) {
+        if (StrUtil.isBlank(bgmName)) {
             return "";
         }
 
-        String key = "BGM_getSubjectId:" + name;
+        String key = "BGM_getSubjectId:" + bgmName;
 
         if (MyCacheUtil.containsKey(key)) {
             return MyCacheUtil.get(key);
         }
-        List<JsonObject> list = search(name);
+        List<JsonObject> list = search(bgmName);
         if (list.isEmpty()) {
             return "";
         }
 
-        String tempName = StrFormatter.format("{} 第{}季", name, Convert.numberToChinese(s, false));
+        String tempName = StrFormatter.format("{} 第{}季", bgmName, Convert.numberToChinese(s, false));
 
         String id = "";
         // 优先使用名称完全匹配的
         for (JsonObject itemObject : list) {
+            String name = itemObject.get("name").getAsString();
             String nameCn = itemObject.get("name_cn").getAsString();
 
-            if (StrUtil.isBlank(nameCn)) {
-                continue;
-            }
-
             if (s == 1) {
-                if (nameCn.equalsIgnoreCase(name)) {
+                if (List.of(name, nameCn).contains(bgmName)) {
                     id = itemObject.get("id").getAsString();
                     break;
                 }
             }
 
-            if (nameCn.equalsIgnoreCase(tempName)) {
+            if (List.of(name, nameCn).contains(tempName)) {
                 id = itemObject.get("id").getAsString();
                 break;
             }
