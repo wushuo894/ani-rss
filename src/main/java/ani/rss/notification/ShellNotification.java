@@ -3,12 +3,21 @@ package ani.rss.notification;
 import ani.rss.entity.Ani;
 import ani.rss.entity.NotificationConfig;
 import ani.rss.enums.NotificationStatusEnum;
+import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.thread.ThreadUtil;
-import cn.hutool.core.util.RuntimeUtil;
+import cn.hutool.system.SystemUtil;
 import lombok.extern.slf4j.Slf4j;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CompletionException;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 /**
  * Shell
@@ -23,13 +32,32 @@ public class ShellNotification implements BaseNotification {
         notificationConfig.setNotificationTemplate(shell);
         shell = replaceNotificationTemplate(ani, notificationConfig, text, notificationStatusEnum);
         shell = shell.trim();
-        Process process = RuntimeUtil.exec(shell);
+
+        log.debug(shell);
+
+        Process process;
+        try {
+            process = new ProcessBuilder(getShellCommand(shell))
+                    .redirectErrorStream(true)
+                    .start();
+        } catch (IOException e) {
+            throw new IORuntimeException(e);
+        }
 
         long pid = process.pid();
         log.info("pid: {}", pid);
 
+        CompletableFuture<String> outputFuture = readStreamAsync(process.getInputStream());
+
         process.onExit()
                 .thenAccept(result -> {
+                    try {
+                        String output = outputFuture.get(5, TimeUnit.SECONDS);
+                        log.debug(output);
+                    } catch (Exception e) {
+                        log.error("读取输出失败", e);
+                    }
+
                     int exitValue = result.exitValue();
                     log.info("已退出 pid: {}, exit: {}", pid, exitValue);
                 });
@@ -51,4 +79,23 @@ public class ShellNotification implements BaseNotification {
         }
         return process.exitValue() == 0;
     }
+
+    private static String[] getShellCommand(String fullCommand) {
+        boolean isWindows = SystemUtil.getOsInfo().isWindows();
+        return isWindows ?
+                new String[]{"cmd.exe", "/c", fullCommand} :
+                new String[]{"sh", "-c", fullCommand};
+    }
+
+    private static CompletableFuture<String> readStreamAsync(InputStream input) {
+        return CompletableFuture.supplyAsync(() -> {
+            try (BufferedReader reader = new BufferedReader(
+                    new InputStreamReader(input, StandardCharsets.UTF_8))) {
+                return reader.lines().collect(Collectors.joining("\n"));
+            } catch (IOException e) {
+                throw new CompletionException("流读取异常", e);
+            }
+        });
+    }
+
 }
