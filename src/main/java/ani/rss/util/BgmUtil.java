@@ -137,44 +137,41 @@ public class BgmUtil {
     /**
      * 查找番剧id
      *
-     * @param name 名称
-     * @param s    季度
+     * @param bgmName 名称
+     * @param s       季度
      * @return 番剧id
      */
-    public static synchronized String getSubjectId(String name, Integer s) {
-        if (StrUtil.isBlank(name)) {
+    public static synchronized String getSubjectId(String bgmName, Integer s) {
+        if (StrUtil.isBlank(bgmName)) {
             return "";
         }
 
-        String key = "BGM_getSubjectId:" + name;
+        String key = "BGM_getSubjectId:" + bgmName;
 
         if (MyCacheUtil.containsKey(key)) {
             return MyCacheUtil.get(key);
         }
-        List<JsonObject> list = search(name);
+        List<JsonObject> list = search(bgmName);
         if (list.isEmpty()) {
             return "";
         }
 
-        String tempName = StrFormatter.format("{} 第{}季", name, Convert.numberToChinese(s, false));
+        String tempName = StrFormatter.format("{} 第{}季", bgmName, Convert.numberToChinese(s, false));
 
         String id = "";
         // 优先使用名称完全匹配的
         for (JsonObject itemObject : list) {
+            String name = itemObject.get("name").getAsString();
             String nameCn = itemObject.get("name_cn").getAsString();
 
-            if (StrUtil.isBlank(nameCn)) {
-                continue;
-            }
-
             if (s == 1) {
-                if (nameCn.equalsIgnoreCase(name)) {
+                if (List.of(name, nameCn).contains(bgmName)) {
                     id = itemObject.get("id").getAsString();
                     break;
                 }
             }
 
-            if (nameCn.equalsIgnoreCase(tempName)) {
+            if (List.of(name, nameCn).contains(tempName)) {
                 id = itemObject.get("id").getAsString();
                 break;
             }
