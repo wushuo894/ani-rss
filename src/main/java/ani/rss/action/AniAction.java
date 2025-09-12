@@ -196,15 +196,18 @@ public class AniAction implements BaseAction {
                 if (!torrentsInfos.isEmpty()) {
                     ThreadUtil.sleep(3000);
                 }
-                FileUtil.mkdir(newDownloadPath);
-                File[] files = ObjectUtil.defaultIfNull(downloadPath.listFiles(), new File[]{});
-                for (File oldFile : files) {
-                    log.info("移动文件 {} ==> {}", oldFile, newDownloadPath);
-                    FileUtil.move(oldFile, newDownloadPath, false);
+                try {
+                    FileUtil.mkdir(newDownloadPath);
+                    File[] files = ObjectUtil.defaultIfNull(downloadPath.listFiles(), new File[]{});
+                    for (File oldFile : files) {
+                        log.info("移动文件 {} ==> {}", oldFile, newDownloadPath);
+                        FileUtil.move(oldFile, newDownloadPath, true);
+                    }
+                    FileUtil.del(downloadPath);
+                    ClearCacheAction.clearParentFile(downloadPath);
+                } catch (Exception e) {
+                    log.error(ExceptionUtil.getMessage(e), e);
                 }
-                FileUtil.del(downloadPath);
-                ClearCacheAction.clearParentFile(downloadPath);
-
             });
         }
         File torrentDir = TorrentUtil.getTorrentDir(first.get());

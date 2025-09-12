@@ -1,4 +1,4 @@
-fix: 修复webhook无法正常使用`${notification}`的问题
+refactor: 优化路径迁移
 
 [请不要将本项目在国内宣传](https://github.com/wushuo894/ani-rss/discussions/504)
 
