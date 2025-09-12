@@ -10,6 +10,7 @@ import cn.hutool.core.date.DatePattern;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.lang.Opt;
+import cn.hutool.core.net.url.UrlBuilder;
 import cn.hutool.core.text.StrFormatter;
 import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.core.util.ObjectUtil;
@@ -94,8 +95,18 @@ public class BgmUtil {
      * @return
      */
     public static List<JsonObject> search(String name) {
+        if (StrUtil.isBlank(name)) {
+            return new ArrayList<>();
+        }
+
         name = name.replace("1/2", "½");
-        HttpRequest httpRequest = HttpReq.get(host + "/search/subject/" + name);
+
+        String url = UrlBuilder.of(host + "/search/subject/" + name)
+                .addQuery("type", 2)
+                .addQuery("max_results", 25)
+                .toString();
+
+        HttpRequest httpRequest = HttpReq.get(url);
 
         return setToken(httpRequest)
                 .form("type", 2)
