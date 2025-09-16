@@ -5,7 +5,6 @@ import ani.rss.entity.NotificationConfig;
 import ani.rss.enums.NotificationStatusEnum;
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.lang.Assert;
-import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.system.SystemUtil;
 import lombok.extern.slf4j.Slf4j;
 
@@ -61,18 +60,13 @@ public class ShellNotification implements BaseNotification {
                     int exitValue = result.exitValue();
                     log.info("已退出 pid: {}, exit: {}", pid, exitValue);
                 });
-
-        ThreadUtil.execute(() -> {
-            ThreadUtil.sleep(aliveLimit, TimeUnit.SECONDS);
-            if (!process.isAlive()) {
-                return;
-            }
-            log.info("存活超时已强制停止 pid: {}", pid);
-            process.destroyForcibly();
-        });
-
         try {
-            process.waitFor();
+            boolean b = process.waitFor(aliveLimit, TimeUnit.SECONDS);
+            if (!b) {
+                log.info("存活超时已强制停止 pid: {}", pid);
+                process.destroyForcibly();
+                return false;
+            }
         } catch (InterruptedException e) {
             log.error(e.getMessage(), e);
             return false;
