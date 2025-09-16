@@ -53,8 +53,7 @@ public class ShellNotification implements BaseNotification {
                     try {
                         String output = outputFuture.get(5, TimeUnit.SECONDS);
                         log.debug(output);
-                    } catch (Exception e) {
-                        log.error("读取输出失败", e);
+                    } catch (Exception ignored) {
                     }
 
                     int exitValue = result.exitValue();
