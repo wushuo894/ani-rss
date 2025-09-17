@@ -40,7 +40,7 @@
       </el-button>
       <el-button bg text @click="openUrl(`anix://openVideo/${encodeUrl(src)}`)">
         <template #icon>
-          <img alt="AnimacX" class="el-icon--left" height="20" src="../icon/icon-AnimacX.png" width="20"/>
+          <img alt="AnimacX" class="el-icon--left" height="20" src="../icon/icon-AnimacX.webp" width="20"/>
         </template>
         AnimacX
       </el-button>
