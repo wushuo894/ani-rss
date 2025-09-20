@@ -46,7 +46,7 @@ public class IpWhitelist implements Function<HttpServerRequest, Boolean> {
             List<String> list = StrUtil.split(ipWhitelistStr, "\n", true, true);
             for (String string : list) {
                 // 判断是否为 ipv4 或 ipv6
-                if (PatternPool.IPV4.matcher(string).matches() || PatternPool.IPV6.matcher(ip).matches()) {
+                if (PatternPool.IPV4.matcher(string).matches() || PatternPool.IPV6.matcher(string).matches()) {
                     if (string.equals(ip)) {
                         MyCacheUtil.put(key, Boolean.TRUE, TimeUnit.MINUTES.toMillis(10));
                         return true;
