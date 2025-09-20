@@ -8,6 +8,7 @@ import ani.rss.util.HttpReq;
 import cn.hutool.core.codec.Base64;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IoUtil;
+import cn.hutool.core.io.StreamProgress;
 import cn.hutool.core.text.StrFormatter;
 import cn.hutool.core.util.ReflectUtil;
 import cn.hutool.core.util.StrUtil;
@@ -95,9 +96,6 @@ public class FileAction implements BaseAction {
 
         String filename = request.getParam("filename");
 
-        boolean hasRange = false;
-        long start = 0;
-
         if (StrUtil.isBlank(filename)) {
             response.send404("404 Not Found !");
             return;
@@ -105,6 +103,20 @@ public class FileAction implements BaseAction {
         if (Base64.isBase64(filename)) {
             filename = Base64.decodeStr(filename);
         }
+
+        File file = new File(filename);
+        if (!file.exists()) {
+            File configDir = ConfigUtil.getConfigDir();
+            file = new File(configDir + "/files/" + filename);
+            if (!file.exists()) {
+                response.send404("404 Not Found !");
+                return;
+            }
+        }
+
+        boolean hasRange = false;
+        long start = 0;
+        long end = file.length();
 
         String mimeType = FileUtil.getMimeType(filename);
 
@@ -116,12 +128,17 @@ public class FileAction implements BaseAction {
             response.setHeader("Content-Type", "video/" + extName);
             response.setHeader("Accept-Ranges", "bytes");
             String rangeHeader = request.getHeader("Range");
-            long fileLength = new File(filename).length();
+            long fileLength = file.length();
             if (StrUtil.isNotBlank(rangeHeader) && rangeHeader.startsWith("bytes=")) {
                 String[] range = rangeHeader.substring(6).split("-");
-                start = Long.parseLong(range[0]);
-                long contentLength = fileLength - start;
-                response.setHeader("Content-Range", "bytes " + start + "-" + (fileLength - 1) + "/" + fileLength);
+                if (range.length > 0) {
+                    start = Long.parseLong(range[0]);
+                }
+                if (range.length > 1) {
+                    end = Long.parseLong(range[1]);
+                }
+                long contentLength = end - start;
+                response.setHeader("Content-Range", "bytes " + start + "-" + end + "/" + fileLength);
                 response.setHeader("Content-Length", String.valueOf(contentLength));
                 hasRange = true;
             } else {
@@ -133,11 +150,6 @@ public class FileAction implements BaseAction {
         }
 
         try {
-            File file = new File(filename);
-            if (!file.exists()) {
-                File configDir = ConfigUtil.getConfigDir();
-                file = new File(configDir + "/files/" + filename);
-            }
             if (hasRange) {
                 response.send(206);
                 @Cleanup
@@ -148,7 +160,7 @@ public class FileAction implements BaseAction {
                 FileChannel channel = randomAccessFile.getChannel();
                 @Cleanup
                 InputStream inputStream = Channels.newInputStream(channel);
-                IoUtil.copy(inputStream, out, 40960);
+                IoUtil.copy(inputStream, out, 40960, end - start, null);
             } else {
                 @Cleanup
                 OutputStream out = response.getOut();
