@@ -5,10 +5,10 @@ import ani.rss.annotation.Path;
 import ani.rss.util.ConfigUtil;
 import ani.rss.util.ExceptionUtil;
 import ani.rss.util.HttpReq;
+import ani.rss.util.ServerUtil;
 import cn.hutool.core.codec.Base64;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IoUtil;
-import cn.hutool.core.io.StreamProgress;
 import cn.hutool.core.text.StrFormatter;
 import cn.hutool.core.util.ReflectUtil;
 import cn.hutool.core.util.StrUtil;
@@ -35,7 +35,7 @@ import java.util.function.Consumer;
 @Path("/file")
 public class FileAction implements BaseAction {
 
-    public static void getImg(String url, Consumer<InputStream> consumer) {
+    public void getImg(String url, Consumer<InputStream> consumer) {
         URI host = URLUtil.getHost(URLUtil.url(url));
         HttpReq.get(url)
                 .then(res -> {
@@ -55,54 +55,55 @@ public class FileAction implements BaseAction {
                 });
     }
 
-    @Override
-    public void doAction(HttpServerRequest request, HttpServerResponse response) throws IOException {
-        String img = request.getParam("img");
-        if (StrUtil.isNotBlank(img)) {
-            response.setHeader(Header.CACHE_CONTROL, "private, max-age=86400");
-            img = Base64.decodeStr(img);
-            response.setContentType(FileUtil.getMimeType(URLUtil.getPath(img)));
+    /**
+     * 处理图片文件
+     *
+     * @param img 图片名
+     */
+    public void doImg(String img) {
+        HttpServerResponse response = ServerUtil.RESPONSE.get();
 
-            File configDir = ConfigUtil.getConfigDir();
+        response.setHeader(Header.CACHE_CONTROL, "private, max-age=86400");
+        img = Base64.decodeStr(img);
+        response.setContentType(FileUtil.getMimeType(URLUtil.getPath(img)));
 
-            File file = new File(URLUtil.getPath(img));
-            configDir = new File(configDir + "/img/" + file.getParentFile().getName());
-            FileUtil.mkdir(configDir);
+        File configDir = ConfigUtil.getConfigDir();
 
-            File imgFile = new File(configDir, file.getName());
-            if (imgFile.exists()) {
+        File file = new File(URLUtil.getPath(img));
+        configDir = new File(configDir + "/img/" + file.getParentFile().getName());
+        FileUtil.mkdir(configDir);
+
+        File imgFile = new File(configDir, file.getName());
+        if (imgFile.exists()) {
+            @Cleanup
+            BufferedInputStream inputStream = FileUtil.getInputStream(imgFile);
+            @Cleanup
+            OutputStream out = response.getOut();
+            IoUtil.copy(inputStream, out);
+            return;
+        }
+
+        getImg(img, is -> {
+            try {
+                FileUtil.writeFromStream(is, imgFile, true);
                 @Cleanup
                 BufferedInputStream inputStream = FileUtil.getInputStream(imgFile);
                 @Cleanup
                 OutputStream out = response.getOut();
                 IoUtil.copy(inputStream, out);
-                return;
+            } catch (Exception ignored) {
             }
+        });
+    }
 
-            getImg(img, is -> {
-                try {
-                    FileUtil.writeFromStream(is, imgFile, true);
-                    @Cleanup
-                    BufferedInputStream inputStream = FileUtil.getInputStream(imgFile);
-                    @Cleanup
-                    OutputStream out = response.getOut();
-                    IoUtil.copy(inputStream, out);
-                } catch (Exception ignored) {
-                }
-            });
-            return;
-        }
-
-
-        String filename = request.getParam("filename");
-
-        if (StrUtil.isBlank(filename)) {
-            response.send404("404 Not Found !");
-            return;
-        }
-        if (Base64.isBase64(filename)) {
-            filename = Base64.decodeStr(filename);
-        }
+    /**
+     * 处理文件
+     *
+     * @param filename 文件名
+     */
+    private void doFile(String filename) {
+        HttpServerRequest request = ServerUtil.REQUEST.get();
+        HttpServerResponse response = ServerUtil.RESPONSE.get();
 
         File file = new File(filename);
         if (!file.exists()) {
@@ -157,6 +158,7 @@ public class FileAction implements BaseAction {
                 @Cleanup
                 RandomAccessFile randomAccessFile = new RandomAccessFile(file, "r");
                 randomAccessFile.seek(start);
+                @Cleanup
                 FileChannel channel = randomAccessFile.getChannel();
                 @Cleanup
                 InputStream inputStream = Channels.newInputStream(channel);
@@ -172,6 +174,28 @@ public class FileAction implements BaseAction {
             String message = ExceptionUtil.getMessage(e);
             log.debug(message, e);
         }
+    }
+
+    @Override
+    public void doAction(HttpServerRequest request, HttpServerResponse response) throws IOException {
+        String img = request.getParam("img");
+        if (StrUtil.isNotBlank(img)) {
+            doImg(img);
+            return;
+        }
+
+        String filename = request.getParam("filename");
+
+        if (StrUtil.isBlank(filename)) {
+            response.send404("404 Not Found !");
+            return;
+        }
+
+        if (Base64.isBase64(filename)) {
+            filename = Base64.decodeStr(filename);
+        }
+
+        doFile(filename);
     }
 
 }
