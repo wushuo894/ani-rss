@@ -122,14 +122,11 @@ public class FileAction implements BaseAction {
         long start = 0;
         long end = file.length();
 
-        String mimeType = FileUtil.getMimeType(filename);
+        String mimeType = getMimeType(file.getName());
 
-        response.setHeader("Content-Disposition", StrFormatter.format("inline; filename=\"{}\"", URLUtil.encode(new File(filename).getName())));
-        if (StrUtil.isBlank(mimeType)) {
-            response.setContentType(ContentType.OCTET_STREAM.getValue());
-        } else if (mimeType.startsWith("video/")) {
-            String extName = FileUtil.extName(filename);
-            response.setHeader("Content-Type", "video/" + extName);
+        response.setHeader("Content-Disposition", StrFormatter.format("inline; filename=\"{}\"", URLUtil.encode(file.getName())));
+        if (mimeType.startsWith("video/")) {
+            response.setHeader("Content-Type", mimeType);
             response.setHeader("Accept-Ranges", "bytes");
             String rangeHeader = request.getHeader("Range");
             long fileLength = file.length();
@@ -137,11 +134,12 @@ public class FileAction implements BaseAction {
                 String[] range = rangeHeader.substring(6).split("-");
                 if (range.length > 0) {
                     start = Long.parseLong(range[0]);
+                    end = fileLength - 1;
                 }
                 if (range.length > 1) {
                     end = Long.parseLong(range[1]);
                 }
-                long contentLength = end - start;
+                long contentLength = end - start + 1;
                 response.setHeader("Content-Range", "bytes " + start + "-" + end + "/" + fileLength);
                 response.setHeader("Content-Length", String.valueOf(contentLength));
                 hasRange = true;
@@ -199,6 +197,35 @@ public class FileAction implements BaseAction {
         }
 
         doFile(filename);
+    }
+
+    /**
+     * 根据文件扩展名获得MimeType
+     *
+     * @param filename 文件名
+     * @return MimeType
+     */
+    private String getMimeType(String filename) {
+        if (StrUtil.isBlank(filename)) {
+            return ContentType.OCTET_STREAM.getValue();
+        }
+
+        String extName = FileUtil.extName(filename);
+
+        if (StrUtil.isBlank(extName)) {
+            return ContentType.OCTET_STREAM.getValue();
+        }
+
+        if (extName.equalsIgnoreCase("mkv")) {
+            return "video/x-matroska";
+        }
+
+        String mimeType = FileUtil.getMimeType(filename);
+        if (StrUtil.isNotBlank(mimeType)) {
+            return mimeType;
+        }
+
+        return ContentType.OCTET_STREAM.getValue();
     }
 
 }
