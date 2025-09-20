@@ -75,11 +75,14 @@ public class FileAction implements BaseAction {
 
         File imgFile = new File(configDir, file.getName());
         if (imgFile.exists()) {
-            @Cleanup
-            BufferedInputStream inputStream = FileUtil.getInputStream(imgFile);
-            @Cleanup
-            OutputStream out = response.getOut();
-            IoUtil.copy(inputStream, out);
+            try {
+                @Cleanup
+                BufferedInputStream inputStream = FileUtil.getInputStream(imgFile);
+                @Cleanup
+                OutputStream out = response.getOut();
+                IoUtil.copy(inputStream, out);
+            } catch (Exception ignored) {
+            }
             return;
         }
 
