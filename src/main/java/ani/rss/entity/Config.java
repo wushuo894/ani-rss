@@ -215,6 +215,11 @@ public class Config implements Serializable {
     private Boolean debug;
 
     /**
+     * 仅启用主rss摸鱼检测
+     */
+    private Boolean procrastinatingMasterOnly;
+
+    /**
      * 代理是否开启
      */
     private Boolean proxy;
