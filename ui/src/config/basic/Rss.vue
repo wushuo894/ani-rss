@@ -88,6 +88,10 @@
             </template>
           </el-input-number>
         </div>
+        <el-checkbox
+            :disabled="!props.config['procrastinating']"
+            v-model="props.config.procrastinatingMasterOnly"
+            label="仅启用主RSS摸鱼检测"/>
         <AfdianPrompt :config="props.config" name="摸鱼检测"/>
         <el-text class="mx-1" size="small">
           检测到主RSS更新摸鱼会发送通知<br>
