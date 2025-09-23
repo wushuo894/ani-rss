@@ -122,5 +122,6 @@ export let configData = {
     "completedPathTemplate": "/Users/wushuo/Movies/已完结番剧/${letter}/${title}/Season ${season}",
     "notificationConfigList": [],
     "priorityKeywordsEnable": false,
-    "priorityKeywords": []
+    "priorityKeywords": [],
+    "procrastinatingMasterOnly": true
 }
