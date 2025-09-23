@@ -47,9 +47,6 @@
         </div>
       </div>
     </el-form-item>
-    <el-form-item label="仅启用主RSS摸鱼检测">
-      <el-switch v-model:model-value="props.config.procrastinatingMasterOnly"/>
-    </el-form-item>
     <el-form-item label="DEBUG">
       <el-switch v-model:model-value="props.config.debug"/>
     </el-form-item>
