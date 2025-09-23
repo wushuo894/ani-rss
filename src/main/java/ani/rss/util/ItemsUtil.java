@@ -401,8 +401,13 @@ public class ItemsUtil {
             return;
         }
 
+        if (Boolean.TRUE.equals(config.getProcrastinatingMasterOnly())) {
+            items = items.stream()
+                    .filter(Item::getMaster)
+                    .toList();
+        }
+
         items.stream()
-                .filter(Item::getMaster)
                 .map(Item::getPubDate)
                 .filter(Objects::nonNull)
                 .mapToLong(Date::getTime)

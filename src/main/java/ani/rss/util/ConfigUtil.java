@@ -139,6 +139,7 @@ public class ConfigUtil {
                 .setCoexist(false)
                 .setLogsMax(2048)
                 .setDebug(false)
+                .setProcrastinatingMasterOnly(true)
                 .setProxy(false)
                 .setProxyHost("")
                 .setProxyPort(8080)
