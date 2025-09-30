@@ -244,13 +244,13 @@ let authorization = () => {
   return window.authorization;
 }
 
-
 let updateGridLayout = () => {
   const gridContainer = document.querySelectorAll('.grid-container');
   if (!gridContainer.length) {
     return
   }
-  let itemsPerRow = Math.max(1, Math.floor(width.value / 400));
+  const app = document.querySelector('#app');
+  let itemsPerRow = Math.max(1, Math.floor(app.offsetWidth / 400));
 
   for (let gridContainerElement of gridContainer) {
     gridContainerElement.style.gridTemplateColumns = `repeat(${itemsPerRow}, 1fr)`;
@@ -265,10 +265,6 @@ onMounted(() => {
   window.addEventListener('resize', updateGridLayout);
   getList()
 })
-
-let elIconClass = () => {
-  return isNotMobile() ? 'el-icon--left' : '';
-}
 
 let yearMonth = () => {
   return new Set(list.value
