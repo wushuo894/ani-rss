@@ -1,7 +1,7 @@
 <template>
   <play-start ref="playStart"/>
   <el-dialog v-model="dialogVisible" :title="ani.title" center>
-    <div style="max-height: 500px;min-height: 200px;" v-loading="listLoading">
+    <div v-loading="listLoading" style="min-height: 200px;">
       <el-scrollbar>
         <div v-if="list.length" class="i-grid-container" style="max-height: 500px;">
           <div v-for="it in list">
@@ -24,6 +24,9 @@
           <el-alert :closable="false" center show-icon title="未下载集数或docker映射存在问题" type="error"/>
         </div>
       </el-scrollbar>
+      <div v-if="list.length">
+        <p style="margin: 6px;text-align: end;">共 {{ list.length }} 项</p>
+      </div>
     </div>
   </el-dialog>
 </template>
