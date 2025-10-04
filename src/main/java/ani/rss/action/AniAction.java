@@ -211,7 +211,10 @@ public class AniAction implements BaseAction {
             });
         }
         File torrentDir = TorrentUtil.getTorrentDir(first.get());
-        BeanUtil.copyProperties(ani, first.get());
+
+        String[] ignoreProperties = new String[]{"currentEpisodeNumber", "lastDownloadTime"};
+        BeanUtil.copyProperties(ani, first.get(), ignoreProperties);
+
         File newTorrentDir = TorrentUtil.getTorrentDir(first.get());
         if (!torrentDir.toString().equals(newTorrentDir.toString())) {
             FileUtil.move(torrentDir, newTorrentDir.getParentFile(), true);
