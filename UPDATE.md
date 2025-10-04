@@ -1,14 +1,4 @@
-feat: 优化订阅卡片的最大宽度
-feat: 本地视频列表显示数量信息
-
-**一个在高分屏幕上推荐加入的自定义css:**
-
-```css
-#app {
-    margin: 0 auto;
-    max-width: 1200px;
-}
-```
+fix: 编辑订阅有时会导致当前集数不更新
 
 [请不要将本项目在国内宣传](https://github.com/wushuo894/ani-rss/discussions/504)
 
