@@ -21,6 +21,8 @@ public class PlayItem implements Serializable {
 
     private Long lastModify;
 
+    private Integer episodeNumber;
+
     private List<Subtitles> subtitles;
 
     @Data
