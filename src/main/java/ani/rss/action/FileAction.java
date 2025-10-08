@@ -2,6 +2,7 @@ package ani.rss.action;
 
 import ani.rss.annotation.Auth;
 import ani.rss.annotation.Path;
+import ani.rss.auth.enums.AuthType;
 import ani.rss.util.ConfigUtil;
 import ani.rss.util.ExceptionUtil;
 import ani.rss.util.HttpReq;
@@ -31,7 +32,12 @@ import java.util.function.Consumer;
  * 文件
  */
 @Slf4j
-@Auth
+@Auth(type = {
+        AuthType.IP_WHITE_LIST,
+        AuthType.HEADER,
+        AuthType.FORM,
+        AuthType.API_KEY
+})
 @Path("/file")
 public class FileAction implements BaseAction {
 
