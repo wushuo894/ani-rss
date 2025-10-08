@@ -2,6 +2,7 @@ package ani.rss.action;
 
 import ani.rss.annotation.Auth;
 import ani.rss.annotation.Path;
+import ani.rss.auth.enums.AuthType;
 import ani.rss.download.BaseDownload;
 import ani.rss.entity.Ani;
 import ani.rss.entity.PlayItem;
@@ -17,6 +18,7 @@ import cn.hutool.core.util.ReUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.server.HttpServerRequest;
 import cn.hutool.http.server.HttpServerResponse;
+import lombok.extern.slf4j.Slf4j;
 
 import java.io.File;
 import java.io.IOException;
@@ -25,7 +27,13 @@ import java.util.*;
 /**
  * 视频列表
  */
-@Auth
+@Auth(type = {
+        AuthType.IP_WHITE_LIST,
+        AuthType.HEADER,
+        AuthType.FORM,
+        AuthType.API_KEY
+})
+@Slf4j
 @Path("/playlist")
 public class PlaylistAction implements BaseAction {
     @Override
