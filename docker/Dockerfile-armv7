@@ -1,12 +1,29 @@
-FROM wushuo894/eclipse-temurin-arm32v7:17-jre
+FROM arm32v7/eclipse-temurin:17-jre
+
+ARG gosuVer=1.19
 
 COPY docker/run.sh /run.sh
-COPY docker/exec.sh /exec.sh
+COPY docker/docker-entrypoint.sh /docker-entrypoint.sh
 COPY target/ani-rss-jar-with-dependencies.jar /usr/app/ani-rss-jar-with-dependencies.jar
+
+RUN set -ex && \
+    apt-get update && \
+    apt-get install -y --no-install-recommends ca-certificates wget && \
+    rm -rf /var/lib/apt/lists/* && \
+    dpkgArch="$(dpkg --print-architecture)" && \
+    case "${dpkgArch##*-}" in \
+        armhf) gosuArch='armhf' ;; \
+        *) echo >&2 "error: unsupported architecture: ${dpkgArch}" && exit 1 ;; \
+    esac && \
+    wget -O /usr/local/bin/gosu "https://github.com/tianon/gosu/releases/download/${gosuVer}/gosu-${gosuArch}" && \
+    chmod +x /usr/local/bin/gosu && \
+    gosu --version && \
+    chmod +x /docker-entrypoint.sh /run.sh
+
 WORKDIR /usr/app
 VOLUME /config
 ENV PUID=0 PGID=0 UMASK=022
 ENV PORT=7789 CONFIG=/config TZ=Asia/Shanghai
 EXPOSE $PORT
-RUN chmod +x /exec.sh /run.sh
-CMD ["/exec.sh"]
+ENTRYPOINT ["/docker-entrypoint.sh"]
+CMD ["/run.sh"]
