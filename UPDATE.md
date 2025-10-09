@@ -1,4 +1,4 @@
-fix: 编辑订阅有时会导致当前集数不更新
+feat: 更新open-25-jre
 
 [请不要将本项目在国内宣传](https://github.com/wushuo894/ani-rss/discussions/504)
 
