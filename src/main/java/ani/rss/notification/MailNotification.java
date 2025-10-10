@@ -7,7 +7,7 @@ import ani.rss.util.basic.ExceptionUtil;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.text.StrFormatter;
 import cn.hutool.extra.mail.MailAccount;
-import cn.hutool.extra.mail.MailUtil;
+import cn.hutool.extra.mail.JakartaMailUtil;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
@@ -54,7 +54,7 @@ public class MailNotification implements BaseNotification {
         String title = ani.getTitle();
 
         try {
-            MailUtil.send(mailAccount, List.of(mailAddressee), text.length() > 200 ? title : text, notificationTemplate, true);
+            JakartaMailUtil.send(mailAccount, List.of(mailAddressee), text.length() > 200 ? title : text, notificationTemplate, true);
             return true;
         } catch (Exception e) {
             String message = ExceptionUtil.getMessage(e);
