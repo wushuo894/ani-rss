@@ -13,6 +13,7 @@ import ani.rss.util.*;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.comparator.PinyinComparator;
+import cn.hutool.core.date.DatePattern;
 import cn.hutool.core.date.DateTime;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.io.FileUtil;
@@ -252,8 +253,9 @@ public class AniAction implements BaseAction {
                     Integer month = ani.getMonth();
                     Integer date = ani.getDate();
 
-                    DateTime dateTime = DateUtil.parseDate(
-                            StrFormatter.format("{}-{}-{}", year, month, date)
+                    DateTime dateTime = DateUtil.parse(
+                            StrFormatter.format("{}-{}-{}", year, month, date),
+                            DatePattern.NORM_DATE_PATTERN
                     );
                     int week = DateUtil.dayOfWeek(dateTime) - 1;
 

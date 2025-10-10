@@ -6,6 +6,7 @@ import ani.rss.entity.Tmdb;
 import ani.rss.entity.TmdbGroup;
 import ani.rss.enums.StringEnum;
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.date.DatePattern;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.lang.Opt;
 import cn.hutool.core.text.StrFormatter;
@@ -242,7 +243,7 @@ public class TmdbUtil {
                                         .setId(id)
                                         .setName(title)
                                         .setOriginalName(originalName)
-                                        .setDate(DateUtil.parse(date))
+                                        .setDate(DateUtil.parse(date, DatePattern.NORM_DATE_PATTERN))
                                         .setTmdbGroupId("");
                             })
                             .filter(Objects::nonNull)

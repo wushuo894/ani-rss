@@ -7,6 +7,7 @@ import ani.rss.entity.StandbyRss;
 import ani.rss.enums.NotificationStatusEnum;
 import ani.rss.enums.StringEnum;
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.date.DatePattern;
 import cn.hutool.core.date.DateTime;
 import cn.hutool.core.date.DateUnit;
 import cn.hutool.core.date.DateUtil;
@@ -160,14 +161,17 @@ public class ItemsUtil {
 
                 if (itemChildNodeName.equals("pubDate")) {
                     try {
-                        pubDate = DateUtil.parse(itemChild.getTextContent());
+                        pubDate = DateUtil.parse(itemChild.getTextContent(), DatePattern.HTTP_DATETIME_PATTERN);
                     } catch (Exception ignored) {
                     }
                 }
 
                 if (itemChildNodeName.equals("torrent")) {
                     try {
-                        pubDate = DateUtil.parse(XmlUtil.getElement((Element) itemChild, "pubDate").getTextContent());
+                        String textContent = XmlUtil.getElement((Element) itemChild, "pubDate")
+                                .getTextContent();
+                        textContent = textContent.replaceAll("\\.\\d+$", "");
+                        pubDate = DateUtil.parse(textContent, DatePattern.UTC_SIMPLE_PATTERN);
                     } catch (Exception ignored) {
                     }
                 }
