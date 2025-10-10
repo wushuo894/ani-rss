@@ -15,7 +15,7 @@ import java.util.function.Function;
 
 @Slf4j
 public class RenameUtil {
-    public static final String REG_STR = "(.*|\\[.*])(( - |Vol |[Ee][Pp]?)\\d+(\\.5)?|【\\d+(\\.5)?】|\\[\\d+(\\.5)?( ?[vV]\\d)?( ?END)?( ?完)?]|第\\d+(\\.5)?[话話集]( - END)?|^\\[TOC].* \\d+)";
+    public static final String REG_STR = "(.*|\\[.*])(( - |Vol |[Ee][Pp]?)\\d+(\\.5)?|【\\d+(\\.5)?】|\\[\\d+(\\.5)?( ?[vV]\\d)?( ?END)?( ?完)?( ?FIN)?]|第\\d+(\\.5)?[话話集]( - END)?|^\\[TOC].* \\d+)";
 
     public static Boolean rename(Ani ani, Item item) {
         Config config = ConfigUtil.CONFIG;

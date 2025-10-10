@@ -160,14 +160,17 @@ public class ItemsUtil {
 
                 if (itemChildNodeName.equals("pubDate")) {
                     try {
-                        pubDate = DateUtil.parse(itemChild.getTextContent());
+                        pubDate = DateUtil.parseRFC2822(itemChild.getTextContent());
                     } catch (Exception ignored) {
                     }
                 }
 
                 if (itemChildNodeName.equals("torrent")) {
                     try {
-                        pubDate = DateUtil.parse(XmlUtil.getElement((Element) itemChild, "pubDate").getTextContent());
+                        pubDate = DateUtil.parseISO8601(
+                                XmlUtil.getElement((Element) itemChild, "pubDate")
+                                        .getTextContent()
+                        );
                     } catch (Exception ignored) {
                     }
                 }
@@ -445,5 +448,4 @@ public class ItemsUtil {
                     NotificationUtil.send(config, ani, text, NotificationStatusEnum.PROCRASTINATING);
                 });
     }
-
 }
