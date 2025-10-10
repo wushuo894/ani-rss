@@ -11,6 +11,8 @@ import ani.rss.service.ClearService;
 import ani.rss.util.basic.ExceptionUtil;
 import ani.rss.util.basic.HttpReq;
 import ani.rss.util.basic.MyFileUtil;
+import bt.metainfo.MetadataService;
+import bt.metainfo.Torrent;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.text.StrFormatter;
 import cn.hutool.core.thread.ThreadUtil;
@@ -19,9 +21,9 @@ import cn.hutool.core.util.ReflectUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.extra.pinyin.PinyinUtil;
 import lombok.extern.slf4j.Slf4j;
-import org.eclipse.bittorrent.TorrentFile;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.util.List;
 import java.util.Objects;
 
@@ -347,8 +349,9 @@ public class TorrentUtil {
             return FileUtil.readUtf8String(file);
         }
         try {
-            TorrentFile torrentFile = new TorrentFile(file);
-            hexHash = torrentFile.getHexHash();
+            MetadataService metaService = new MetadataService();
+            Torrent torrentFile = metaService.fromInputStream(new FileInputStream(file));
+            hexHash = torrentFile.getTorrentId().toString();
         } catch (Exception e) {
             log.error("转换种子为磁力链接时出现错误 {}", MyFileUtil.getAbsolutePath(file));
             log.error(e.getMessage(), e);

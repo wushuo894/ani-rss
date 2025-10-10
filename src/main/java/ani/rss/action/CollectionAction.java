@@ -11,6 +11,8 @@ import ani.rss.util.other.AfdianUtil;
 import ani.rss.util.other.ConfigUtil;
 import ani.rss.util.other.RenameUtil;
 import ani.rss.util.other.TorrentUtil;
+import bt.metainfo.MetadataService;
+import bt.metainfo.Torrent;
 import cn.hutool.core.codec.Base64;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.io.FileUtil;
@@ -22,9 +24,9 @@ import cn.hutool.http.HttpResponse;
 import cn.hutool.http.server.HttpServerRequest;
 import cn.hutool.http.server.HttpServerResponse;
 import lombok.extern.slf4j.Slf4j;
-import org.eclipse.bittorrent.TorrentFile;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
@@ -41,16 +43,15 @@ public class CollectionAction implements BaseAction {
         String torrent = collectionInfo.getTorrent();
         File tempFile = FileUtil.createTempFile();
         Base64.decodeToFile(torrent, tempFile);
-        TorrentFile torrentFile;
+        Torrent torrentFile;
         try {
-            torrentFile = new TorrentFile(tempFile);
+            MetadataService metaService = new MetadataService();
+            torrentFile = metaService.fromInputStream(new FileInputStream(tempFile));
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
 
         Ani ani = collectionInfo.getAni();
-        long[] lengths = torrentFile.getLengths();
-        AtomicInteger index = new AtomicInteger(0);
 
         List<String> match = ani.getMatch();
         List<String> exclude = ani.getExclude();
@@ -69,14 +70,13 @@ public class CollectionAction implements BaseAction {
             return "";
         };
 
-        return Arrays.stream(torrentFile.getFilenames())
-                .map(name -> {
-                    name = CharsetUtil.convert(name, "ISO-8859-1", CharsetUtil.UTF_8);
-                    name = ReUtil.replaceAll(name, "[\\\\/]$", "");
-                    name = name.replace("\\", "/");
+        return torrentFile.getFiles().stream()
+                .map(file -> {
+                    List<String> path = file.getPathElements();
+                    String name = path.get(path.size() - 1);
                     Item item = new Item();
                     return item.setTitle(name)
-                            .setLength(lengths[index.getAndIncrement()]);
+                            .setLength(file.getSize());
                 })
                 .filter(item -> {
                     String name = item.getTitle();
@@ -141,7 +141,7 @@ public class CollectionAction implements BaseAction {
                             .setLength(length);
                 })
                 .filter(Objects::nonNull)
-                .toList();
+                .collect(Collectors.toList());
     }
 
     public static synchronized void download(String name, File torrentFile, String savePath, List<String> tags) {
@@ -226,9 +226,10 @@ public class CollectionAction implements BaseAction {
 
         File tempFile = FileUtil.createTempFile();
         Base64.decodeToFile(torrent, tempFile);
-        TorrentFile torrentFile;
+        Torrent torrentFile;
         try {
-            torrentFile = new TorrentFile(tempFile);
+            MetadataService metaService = new MetadataService();
+            torrentFile = metaService.fromInputStream(new FileInputStream(tempFile));
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -241,7 +242,7 @@ public class CollectionAction implements BaseAction {
         download(name, tempFile, downloadPath, List.of("ANI-RSS合集下载", subgroup));
 
         TorrentsInfo torrentsInfo = new TorrentsInfo()
-                .setHash(torrentFile.getHexHash());
+                .setHash(torrentFile.getTorrentId().toString());
 
         Config config = ConfigUtil.CONFIG;
 
@@ -288,7 +289,7 @@ public class CollectionAction implements BaseAction {
                 if (!reNameMap.containsKey(oldPath)) {
                     if (!reNameMap.containsValue(oldPath) && file.getPriority() > 0) {
                         HttpReq.post(host + "/api/v2/torrents/filePrio")
-                                .form("hash", torrentFile.getHexHash())
+                                .form("hash", torrentFile.getTorrentId().toString())
                                 .form("id", file.getIndex())
                                 .form("priority", 0)
                                 .thenFunction(HttpResponse::isOk);
@@ -297,7 +298,7 @@ public class CollectionAction implements BaseAction {
                 }
                 log.info("重命名 {} ==> {}", oldPath, newPath);
                 HttpReq.post(host + "/api/v2/torrents/renameFile")
-                        .form("hash", torrentFile.getHexHash())
+                        .form("hash", torrentFile.getTorrentId().toString())
                         .form("oldPath", oldPath)
                         .form("newPath", newPath)
                         .thenFunction(HttpResponse::isOk);

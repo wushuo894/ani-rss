@@ -21,9 +21,9 @@
 
     <dependencies>
         <dependency>
-            <groupId>org.eclipse</groupId>
-            <artifactId>bittorrent</artifactId>
-            <version>0.3.0-v20070627-1030</version>
+            <groupId>com.github.atomashpolskiy</groupId>
+            <artifactId>bt-core</artifactId>
+            <version>1.10</version>
         </dependency>
         <dependency>
             <groupId>org.xerial</groupId>
@@ -34,6 +34,11 @@
             <groupId>jakarta.mail</groupId>
             <artifactId>jakarta.mail-api</artifactId>
             <version>2.1.5</version>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>2.0.17</version>
         </dependency>
         <dependency>
             <groupId>ch.qos.logback</groupId>
