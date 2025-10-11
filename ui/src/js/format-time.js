@@ -17,6 +17,12 @@ let formatTime = timestamp => {
         return `${hour}小时前`;
     }
 
+    const day = Math.floor(elapsedMs / (1000 * 60 * 60 * 24));
+
+    if (day >= 1 && day <= 3) {
+        return `${day}天前`;
+    }
+
     const target = new Date(timestamp);
     const nowDate = new Date();
 
