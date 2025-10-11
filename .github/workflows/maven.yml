@@ -64,14 +64,6 @@ jobs:
         with:
           context: ./
           file: ./docker/Dockerfile
-          platforms: linux/amd64,linux/arm64
+          platforms: linux/amd64,linux/arm64,linux/arm/v7
           push: true
           tags: wushuo894/ani-rss:latest,wushuo894/ani-rss:${{ env.version }}
-      - name: Build and push Docker image Arm32v7
-        uses: docker/build-push-action@v6
-        with:
-          context: ./
-          file: ./docker/Dockerfile-armv7
-          platforms: linux/arm/v7
-          push: true
-          tags: wushuo894/ani-rss-armv7:latest,wushuo894/ani-rss-armv7:${{ env.version }}

@@ -37,6 +37,7 @@ while :
 do
     java -Xms60m -Xmx1g -Xss256k \
       -Xgcpolicy:gencon \
+      -Xshareclasses:none \
       -Xquickstart -Xcompressedrefs \
       -Xtune:virtualized \
       -XX:+UseStringDeduplication \
