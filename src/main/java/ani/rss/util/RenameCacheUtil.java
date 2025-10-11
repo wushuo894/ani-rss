@@ -83,12 +83,14 @@ public class RenameCacheUtil {
 
     public static synchronized void remove(String key) {
         connection();
-        log.debug("remove => key: {}", key);
         try {
-            sqlConnRunner.del(connection,
+            int i = sqlConnRunner.del(connection,
                     new Entity(TABLE_NAME)
                             .set("K", key)
             );
+            if (i > 0) {
+                log.debug("remove => key: {}", key);
+            }
         } catch (SQLException e) {
             log.error(e.getMessage(), e);
             throw new RuntimeException(e);

@@ -6,7 +6,7 @@
 
     <groupId>ani.rss</groupId>
     <artifactId>ani-rss</artifactId>
-    <version>2.2.14</version>
+    <version>2.2.15</version>
     <organization>
         <name>wushuo894</name>
     </organization>
@@ -38,7 +38,7 @@
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
-            <version>1.5.18</version>
+            <version>1.5.19</version>
         </dependency>
         <dependency>
             <groupId>io.github.biezhi</groupId>
@@ -124,6 +124,8 @@
                                 <path>jre/bin;%JAVA_HOME%/bin;%PATH%</path>
                                 <minVersion>17</minVersion>
                                 <opts>
+                                    <opt>-Xms60m -Xmx1g -Xss256k</opt>
+                                    <opt>--enable-native-access=ALL-UNNAMED</opt>
                                     <opt>--add-opens=java.base/java.net=ALL-UNNAMED</opt>
                                     <opt>--add-opens=java.base/sun.net.www.protocol.https=ALL-UNNAMED</opt>
                                 </opts>
