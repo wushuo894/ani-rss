@@ -253,11 +253,15 @@ public class AniAction implements BaseAction {
                     Integer month = ani.getMonth();
                     Integer date = ani.getDate();
 
-                    DateTime dateTime = DateUtil.parse(
-                            StrFormatter.format("{}-{}-{}", year, month, date),
-                            DatePattern.NORM_DATE_PATTERN
-                    );
-                    int week = DateUtil.dayOfWeek(dateTime) - 1;
+                    String format = StrFormatter.format("{}-{}-{}", year, month, date);
+
+                    int week = 0;
+                    try {
+                        DateTime dateTime = DateUtil.parse(format, DatePattern.NORM_DATE_PATTERN);
+                        week = DateUtil.dayOfWeek(dateTime) - 1;
+                    } catch (Exception e) {
+                        log.error("日期存在问题 {} {}", title, format);
+                    }
 
                     ani.setPinyin(pinyin)
                             .setPinyinInitials(pinyinInitials)
