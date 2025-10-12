@@ -1,4 +1,4 @@
-FROM wushuo894/eclipse-temurin:25-jdk-alpine
+FROM wushuo894/openj9:open-25-jre
 
 COPY docker/run.sh /run.sh
 COPY docker/exec.sh /exec.sh

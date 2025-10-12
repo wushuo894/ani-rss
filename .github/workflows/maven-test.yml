@@ -43,4 +43,11 @@ jobs:
           file: ./docker/Dockerfile
           push: true
           tags: wushuo894/ani-rss:test
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v6
+        with:
+          context: ./
+          file: ./docker/Dockerfile-openj9
+          push: true
+          tags: wushuo894/ani-rss:test-openj9
 
