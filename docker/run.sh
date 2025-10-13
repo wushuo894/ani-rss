@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 port="7789"
 path="./"
