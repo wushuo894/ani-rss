@@ -77,7 +77,12 @@ public class AniAction implements BaseAction {
         }
         Ani downloadAni = first.get();
         File downloadPath = TorrentUtil.getDownloadPath(downloadAni);
-        TorrentUtil.createTvShowNfo(downloadPath.toString(), downloadAni);
+        try {
+            TorrentUtil.createTvShowNfo(downloadPath.toString(), downloadAni);
+            TorrentUtil.createSeasonNfo(downloadPath.toString(), downloadAni);
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+        }
         ThreadUtil.execute(() -> {
             try {
                 if (TorrentUtil.login()) {

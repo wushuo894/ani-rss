@@ -768,51 +768,49 @@ public class TorrentUtil {
             return;
         }
 
-        ThreadUtil.execute(() -> {
-            File tvshowFile = new File(new File(savePath).getParent() + "/tvshow.nfo");
+        File tvshowFile = new File(new File(savePath).getParent() + "/tvshow.nfo");
 
-            String tmdbGroupId = tmdb.getTmdbGroupId();
-            tmdbGroupId = StrUtil.blankToDefault(tmdbGroupId, "");
+        String tmdbGroupId = tmdb.getTmdbGroupId();
+        tmdbGroupId = StrUtil.blankToDefault(tmdbGroupId, "");
 
-            if (!tvshowFile.exists()) {
-                String s = """
-                        <?xml version="1.0" encoding="utf-8" standalone="yes"?>
-                        <tvshow>
-                            <tmdbid>{}</tmdbid>
-                            <tmdbegid>{}</tmdbegid>
-                        </tvshow>
-                        """;
-                FileUtil.writeUtf8String(StrFormatter.format(s, tmdbId, tmdbGroupId), tvshowFile);
-                log.info("已创建 {}", tvshowFile);
+        if (!tvshowFile.exists()) {
+            String s = """
+                    <?xml version="1.0" encoding="utf-8" standalone="yes"?>
+                    <tvshow>
+                        <tmdbid>{}</tmdbid>
+                        <tmdbegid>{}</tmdbegid>
+                    </tvshow>
+                    """;
+            FileUtil.writeUtf8String(StrFormatter.format(s, tmdbId, tmdbGroupId), tvshowFile);
+            log.info("已创建 {}", tvshowFile);
+            return;
+        }
+
+        if (StrUtil.isBlank(tmdbGroupId)) {
+            return;
+        }
+
+        Document document = XmlUtil.readXML(tvshowFile);
+        Element documentElement = document.getDocumentElement();
+        NodeList tmdbegidNodeList = documentElement.getElementsByTagName("tmdbegid");
+        for (int i = 0; i < tmdbegidNodeList.getLength(); i++) {
+            Node item = tmdbegidNodeList.item(i);
+            String textContent = item.getTextContent();
+            if (tmdbGroupId.equals(textContent)) {
+                // 已包含有剧集组id
                 return;
             }
+            documentElement.removeChild(item);
+        }
+        Element tmdbegidElement = document.createElement("tmdbegid");
+        tmdbegidElement.setTextContent(tmdbGroupId);
+        documentElement.appendChild(tmdbegidElement);
 
-            if (StrUtil.isBlank(tmdbGroupId)) {
-                return;
-            }
+        FileUtil.writeUtf8String(XmlUtil.toStr(document), tvshowFile);
 
-            Document document = XmlUtil.readXML(tvshowFile);
-            Element documentElement = document.getDocumentElement();
-            NodeList tmdbegidNodeList = documentElement.getElementsByTagName("tmdbegid");
-            for (int i = 0; i < tmdbegidNodeList.getLength(); i++) {
-                Node item = tmdbegidNodeList.item(i);
-                String textContent = item.getTextContent();
-                if (tmdbGroupId.equals(textContent)) {
-                    // 已包含有剧集组id
-                    return;
-                }
-                documentElement.removeChild(item);
-            }
-            Element tmdbegidElement = document.createElement("tmdbegid");
-            tmdbegidElement.setTextContent(tmdbGroupId);
-            documentElement.appendChild(tmdbegidElement);
+        String title = ani.getTitle();
 
-            FileUtil.writeUtf8String(XmlUtil.toStr(document), tvshowFile);
-
-            String title = ani.getTitle();
-
-            log.info("已更新tvshow.info剧集组id {} {}", title, tmdbGroupId);
-        });
+        log.info("已更新tvshow.info剧集组id {} {}", title, tmdbGroupId);
     }
 
     /**
@@ -839,21 +837,19 @@ public class TorrentUtil {
 
         Integer season = ani.getSeason();
 
-        ThreadUtil.execute(() -> {
-            File seasonFile = new File(savePath + "/season.nfo");
-            if (seasonFile.exists()) {
-                return;
-            }
+        File seasonFile = new File(savePath + "/season.nfo");
+        if (seasonFile.exists()) {
+            return;
+        }
 
-            String s = """
-                    <?xml version="1.0" encoding="utf-8" standalone="yes"?>
-                    <season>
-                        <seasonnumber>{}</seasonnumber>
-                    </season>
-                    """;
-            FileUtil.writeUtf8String(StrFormatter.format(s, season), seasonFile);
-            log.info("已创建 {}", seasonFile);
-        });
+        String s = """
+                <?xml version="1.0" encoding="utf-8" standalone="yes"?>
+                <season>
+                    <seasonnumber>{}</seasonnumber>
+                </season>
+                """;
+        FileUtil.writeUtf8String(StrFormatter.format(s, season), seasonFile);
+        log.info("已创建 {}", seasonFile);
     }
 
     /**
