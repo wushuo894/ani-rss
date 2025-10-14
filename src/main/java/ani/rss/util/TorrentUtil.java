@@ -717,6 +717,7 @@ public class TorrentUtil {
 
         try {
             createTvShowNfo(savePath, ani);
+            createSeasonNfo(savePath, ani);
         } catch (Exception e) {
             log.error(e.getMessage(), e);
         }
@@ -767,51 +768,88 @@ public class TorrentUtil {
             return;
         }
 
-        ThreadUtil.execute(() -> {
-            File tvshowFile = new File(new File(savePath).getParent() + "/tvshow.nfo");
+        File tvshowFile = new File(new File(savePath).getParent() + "/tvshow.nfo");
 
-            String tmdbGroupId = tmdb.getTmdbGroupId();
-            tmdbGroupId = StrUtil.blankToDefault(tmdbGroupId, "");
+        String tmdbGroupId = tmdb.getTmdbGroupId();
+        tmdbGroupId = StrUtil.blankToDefault(tmdbGroupId, "");
 
-            if (!tvshowFile.exists()) {
-                String s = """
-                        <?xml version="1.0" encoding="utf-8" standalone="yes"?>
-                        <tvshow>
-                            <tmdbid>{}</tmdbid>
-                            <tmdbegid>{}</tmdbegid>
-                        </tvshow>
-                        """;
-                FileUtil.writeUtf8String(StrFormatter.format(s, tmdbId, tmdbGroupId), tvshowFile);
-                log.info("已创建 {}", tvshowFile);
+        if (!tvshowFile.exists()) {
+            String s = """
+                    <?xml version="1.0" encoding="utf-8" standalone="yes"?>
+                    <tvshow>
+                        <tmdbid>{}</tmdbid>
+                        <tmdbegid>{}</tmdbegid>
+                    </tvshow>
+                    """;
+            FileUtil.writeUtf8String(StrFormatter.format(s, tmdbId, tmdbGroupId), tvshowFile);
+            log.info("已创建 {}", tvshowFile);
+            return;
+        }
+
+        if (StrUtil.isBlank(tmdbGroupId)) {
+            return;
+        }
+
+        Document document = XmlUtil.readXML(tvshowFile);
+        Element documentElement = document.getDocumentElement();
+        NodeList tmdbegidNodeList = documentElement.getElementsByTagName("tmdbegid");
+        for (int i = 0; i < tmdbegidNodeList.getLength(); i++) {
+            Node item = tmdbegidNodeList.item(i);
+            String textContent = item.getTextContent();
+            if (tmdbGroupId.equals(textContent)) {
+                // 已包含有剧集组id
                 return;
             }
+            documentElement.removeChild(item);
+        }
+        Element tmdbegidElement = document.createElement("tmdbegid");
+        tmdbegidElement.setTextContent(tmdbGroupId);
+        documentElement.appendChild(tmdbegidElement);
 
-            if (StrUtil.isBlank(tmdbGroupId)) {
-                return;
-            }
+        FileUtil.writeUtf8String(XmlUtil.toStr(document), tvshowFile);
 
-            Document document = XmlUtil.readXML(tvshowFile);
-            Element documentElement = document.getDocumentElement();
-            NodeList tmdbegidNodeList = documentElement.getElementsByTagName("tmdbegid");
-            for (int i = 0; i < tmdbegidNodeList.getLength(); i++) {
-                Node item = tmdbegidNodeList.item(i);
-                String textContent = item.getTextContent();
-                if (tmdbGroupId.equals(textContent)) {
-                    // 已包含有剧集组id
-                    return;
-                }
-                documentElement.removeChild(item);
-            }
-            Element tmdbegidElement = document.createElement("tmdbegid");
-            tmdbegidElement.setTextContent(tmdbGroupId);
-            documentElement.appendChild(tmdbegidElement);
+        String title = ani.getTitle();
 
-            FileUtil.writeUtf8String(XmlUtil.toStr(document), tvshowFile);
+        log.info("已更新tvshow.info剧集组id {} {}", title, tmdbGroupId);
+    }
 
-            String title = ani.getTitle();
+    /**
+     * 生成 season.nfo
+     *
+     * @param savePath
+     * @param ani
+     */
+    public static synchronized void createSeasonNfo(String savePath, Ani ani) {
+        Config config = ConfigUtil.CONFIG;
 
-            log.info("已更新tvshow.info剧集组id {} {}", title, tmdbGroupId);
-        });
+        Boolean seasonNfo = config.getSeasonNfo();
+        if (!seasonNfo) {
+            return;
+        }
+
+        String tmdbId = Opt.ofNullable(ani.getTmdb())
+                .map(Tmdb::getId)
+                .orElse("");
+
+        if (StrUtil.isBlank(tmdbId)) {
+            return;
+        }
+
+        Integer season = ani.getSeason();
+
+        File seasonFile = new File(savePath + "/season.nfo");
+        if (seasonFile.exists()) {
+            return;
+        }
+
+        String s = """
+                <?xml version="1.0" encoding="utf-8" standalone="yes"?>
+                <season>
+                    <seasonnumber>{}</seasonnumber>
+                </season>
+                """;
+        FileUtil.writeUtf8String(StrFormatter.format(s, season), seasonFile);
+        log.info("已创建 {}", seasonFile);
     }
 
     /**

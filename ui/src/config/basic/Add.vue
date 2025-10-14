@@ -71,6 +71,15 @@
         </el-text>
       </div>
     </el-form-item>
+    <el-form-item label="season.nfo">
+      <div>
+        <el-switch v-model:model-value="props.config['seasonNfo']"/>
+        <br>
+        <el-text class="mx-1" size="small">
+          自动生成 <strong>season.nfo</strong> 文件
+        </el-text>
+      </div>
+    </el-form-item>
     <el-form-item label="开启全局排除">
       <el-switch v-model:model-value="props.config.enabledExclude" :disabled="props.config.importExclude"/>
     </el-form-item>
