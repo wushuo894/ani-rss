@@ -1,4 +1,5 @@
 <template>
+  <ImportAni ref="importAniRef"/>
   <Del ref="refDel" @load="getList"/>
   <el-dialog v-model="dialogVisible" center class="manage-dialog" title="管理">
     <div style="min-height: 300px;" v-loading="loading">
@@ -29,7 +30,7 @@
           <el-button :disabled="!selectList.length" bg icon="Upload" text @click="exportData">
             导出
           </el-button>
-          <el-button :loading="importDataLoading" bg icon="Download" text @click="importData">
+          <el-button bg icon="Download" text @click="importAniRef?.show">
             导入
           </el-button>
           <el-button type="primary" :disabled="!selectList.length" bg icon="CircleCheck" text
@@ -114,6 +115,7 @@ import {ref} from "vue";
 import api from "@/js/api.js";
 import {ElMessage} from "element-plus";
 import Del from "./Del.vue";
+import ImportAni from "@/home/ImportAni.vue";
 
 let yearMonth = (list) => {
   return new Set(
@@ -124,6 +126,7 @@ let yearMonth = (list) => {
 }
 
 let refDel = ref()
+let importAniRef = ref()
 
 let selectFilter = ref('全部')
 
@@ -194,36 +197,6 @@ let exportData = () => {
   a.click();
   URL.revokeObjectURL(url);
   document.body.removeChild(a);
-}
-
-let importDataLoading = ref(false)
-
-let importData = () => {
-  const input = document.createElement('input');
-  input.type = 'file';
-  input.accept = '.json';
-  input.style.display = 'none';
-  document.body.appendChild(input);
-  input.addEventListener('change', async () => {
-    const file = input.files[0];
-    const reader = new FileReader();
-
-    reader.onload = function (e) {
-      const fileContent = e.target.result;
-      importDataLoading.value = true
-      api.post('api/ani/import', JSON.parse(fileContent.toString()))
-          .then(res => {
-            ElMessage.success(res.message)
-            getList()
-          })
-          .finally(() => {
-            importDataLoading.value = false
-          })
-      document.body.removeChild(input);
-    };
-    reader.readAsText(file);
-  });
-  input.click();
 }
 
 let batchEnable = (value) => {

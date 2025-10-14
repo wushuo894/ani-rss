@@ -717,6 +717,7 @@ public class TorrentUtil {
 
         try {
             createTvShowNfo(savePath, ani);
+            createSeasonNfo(savePath, ani);
         } catch (Exception e) {
             log.error(e.getMessage(), e);
         }
@@ -811,6 +812,47 @@ public class TorrentUtil {
             String title = ani.getTitle();
 
             log.info("已更新tvshow.info剧集组id {} {}", title, tmdbGroupId);
+        });
+    }
+
+    /**
+     * 生成 season.nfo
+     *
+     * @param savePath
+     * @param ani
+     */
+    public static synchronized void createSeasonNfo(String savePath, Ani ani) {
+        Config config = ConfigUtil.CONFIG;
+
+        Boolean seasonNfo = config.getSeasonNfo();
+        if (!seasonNfo) {
+            return;
+        }
+
+        String tmdbId = Opt.ofNullable(ani.getTmdb())
+                .map(Tmdb::getId)
+                .orElse("");
+
+        if (StrUtil.isBlank(tmdbId)) {
+            return;
+        }
+
+        Integer season = ani.getSeason();
+
+        ThreadUtil.execute(() -> {
+            File seasonFile = new File(savePath + "/season.nfo");
+            if (seasonFile.exists()) {
+                return;
+            }
+
+            String s = """
+                    <?xml version="1.0" encoding="utf-8" standalone="yes"?>
+                    <season>
+                        <seasonnumber>{}</seasonnumber>
+                    </season>
+                    """;
+            FileUtil.writeUtf8String(StrFormatter.format(s, season), seasonFile);
+            log.info("已创建 {}", seasonFile);
         });
     }
 

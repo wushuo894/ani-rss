@@ -218,6 +218,7 @@ public class ConfigUtil {
                 .setAlistDownloadTimeout(60)
                 .setAlistDownloadRetryNumber(5L)
                 .setTvShowNfo(false)
+                .setSeasonNfo(false)
                 .setConfigBackup(false)
                 .setConfigBackupDay(7)
                 .setShowLastDownloadTime(false)
