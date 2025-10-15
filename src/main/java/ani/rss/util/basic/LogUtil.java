@@ -1,8 +1,9 @@
-package ani.rss.util;
+package ani.rss.util.basic;
 
 import ani.rss.entity.Config;
 import ani.rss.entity.Log;
 import ani.rss.list.FixedSizeLinkedList;
+import ani.rss.util.other.ConfigUtil;
 import ch.qos.logback.classic.Logger;
 import ch.qos.logback.classic.LoggerContext;
 import ch.qos.logback.classic.joran.JoranConfigurator;

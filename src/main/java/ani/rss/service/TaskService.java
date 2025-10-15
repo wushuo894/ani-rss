@@ -1,4 +1,4 @@
-package ani.rss.util;
+package ani.rss.service;
 
 import ani.rss.task.BgmTask;
 import ani.rss.task.GcTask;
@@ -12,7 +12,7 @@ import java.util.Vector;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 @Slf4j
-public class TaskUtil {
+public class TaskService {
     public static final AtomicBoolean LOOP = new AtomicBoolean(false);
     public static final List<Thread> THREADS = new Vector<>();
 

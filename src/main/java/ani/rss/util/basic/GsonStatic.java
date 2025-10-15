@@ -1,4 +1,4 @@
-package ani.rss.util;
+package ani.rss.util.basic;
 
 import ani.rss.other.TimeZoneSerializer;
 import cn.hutool.core.date.DatePattern;

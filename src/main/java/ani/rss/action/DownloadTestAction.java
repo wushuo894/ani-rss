@@ -4,7 +4,7 @@ import ani.rss.annotation.Auth;
 import ani.rss.annotation.Path;
 import ani.rss.download.BaseDownload;
 import ani.rss.entity.Config;
-import ani.rss.util.ConfigUtil;
+import ani.rss.util.other.ConfigUtil;
 import cn.hutool.core.util.ClassUtil;
 import cn.hutool.core.util.ReflectUtil;
 import cn.hutool.http.server.HttpServerRequest;

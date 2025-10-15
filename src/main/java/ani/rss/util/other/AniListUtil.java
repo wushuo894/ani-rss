@@ -1,5 +1,7 @@
-package ani.rss.util;
+package ani.rss.util.other;
 
+import ani.rss.util.basic.GsonStatic;
+import ani.rss.util.basic.HttpReq;
 import cn.hutool.core.text.StrFormatter;
 import cn.hutool.core.util.StrUtil;
 import com.google.gson.JsonArray;

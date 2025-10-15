@@ -4,7 +4,11 @@ import ani.rss.annotation.Auth;
 import ani.rss.annotation.Path;
 import ani.rss.entity.Config;
 import ani.rss.entity.Login;
-import ani.rss.util.*;
+import ani.rss.service.TaskService;
+import ani.rss.util.other.AfdianUtil;
+import ani.rss.util.other.ConfigUtil;
+import ani.rss.util.other.MavenUtil;
+import ani.rss.util.other.TorrentUtil;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.bean.copier.CopyOptions;
 import cn.hutool.core.util.ObjectUtil;
@@ -93,7 +97,7 @@ public class ConfigAction implements BaseAction {
                         !Objects.equals(newRenameSleepSeconds, renameSleepSeconds) ||
                         !Objects.equals(newGcSleep, gcSleep)
         ) {
-            TaskUtil.restart();
+            TaskService.restart();
         }
         // 下载工具发生改变
         if (!download.equals(config.getDownloadToolType())) {

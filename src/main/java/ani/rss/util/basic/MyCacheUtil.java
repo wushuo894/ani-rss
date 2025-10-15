@@ -1,4 +1,4 @@
-package ani.rss.util;
+package ani.rss.util.basic;
 
 import cn.hutool.cache.CacheUtil;
 import cn.hutool.cache.impl.FIFOCache;

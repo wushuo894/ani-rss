@@ -1,4 +1,4 @@
-package ani.rss.util;
+package ani.rss.util.other;
 
 import cn.hutool.core.util.StrUtil;
 

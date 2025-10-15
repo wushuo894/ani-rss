@@ -5,7 +5,7 @@ import ani.rss.annotation.Path;
 import ani.rss.auth.util.AuthUtil;
 import ani.rss.entity.Config;
 import ani.rss.entity.Login;
-import ani.rss.util.ConfigUtil;
+import ani.rss.util.other.ConfigUtil;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.core.util.RandomUtil;

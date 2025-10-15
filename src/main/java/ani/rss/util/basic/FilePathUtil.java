@@ -1,4 +1,4 @@
-package ani.rss.util;
+package ani.rss.util.basic;
 
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.ReUtil;

@@ -1,8 +1,10 @@
-package ani.rss.util;
+package ani.rss.util.other;
 
 import ani.rss.entity.Config;
 import ani.rss.entity.Result;
 import ani.rss.entity.TryOut;
+import ani.rss.util.basic.GsonStatic;
+import ani.rss.util.basic.HttpReq;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.StrUtil;

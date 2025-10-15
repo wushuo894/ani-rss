@@ -1,4 +1,4 @@
-package ani.rss.util;
+package ani.rss.util.other;
 
 import ani.rss.entity.Ani;
 import ani.rss.entity.Config;
@@ -6,6 +6,8 @@ import ani.rss.entity.Item;
 import ani.rss.entity.StandbyRss;
 import ani.rss.enums.NotificationStatusEnum;
 import ani.rss.enums.StringEnum;
+import ani.rss.util.basic.HttpReq;
+import ani.rss.util.basic.MyCacheUtil;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.date.DatePattern;
 import cn.hutool.core.date.DateTime;

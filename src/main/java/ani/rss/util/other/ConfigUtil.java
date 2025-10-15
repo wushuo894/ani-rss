@@ -1,10 +1,14 @@
-package ani.rss.util;
+package ani.rss.util.other;
 
 import ani.rss.entity.Config;
 import ani.rss.entity.Login;
 import ani.rss.entity.NotificationConfig;
 import ani.rss.enums.BgmTokenTypeEnum;
 import ani.rss.enums.SortTypeEnum;
+import ani.rss.util.basic.FilePathUtil;
+import ani.rss.util.basic.GsonStatic;
+import ani.rss.util.basic.LogUtil;
+import ani.rss.util.basic.MyURLUtil;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.bean.DynaBean;
 import cn.hutool.core.bean.copier.CopyOptions;

@@ -2,8 +2,8 @@ package ani.rss.action;
 
 import ani.rss.annotation.Auth;
 import ani.rss.annotation.Path;
-import ani.rss.util.ServerUtil;
-import ani.rss.util.UpdateUtil;
+import ani.rss.util.other.ServerUtil;
+import ani.rss.util.other.UpdateUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.core.util.RuntimeUtil;

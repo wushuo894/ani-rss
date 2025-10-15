@@ -2,7 +2,7 @@ package ani.rss.action;
 
 import ani.rss.annotation.Auth;
 import ani.rss.annotation.Path;
-import ani.rss.util.ConfigUtil;
+import ani.rss.util.other.ConfigUtil;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.http.Header;
 import cn.hutool.http.server.HttpServerRequest;

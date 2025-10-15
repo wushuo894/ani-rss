@@ -1,6 +1,7 @@
-package ani.rss.util;
+package ani.rss.util.basic;
 
 import ani.rss.entity.Config;
+import ani.rss.util.other.ConfigUtil;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.text.StrFormatter;
 import cn.hutool.core.util.ReflectUtil;

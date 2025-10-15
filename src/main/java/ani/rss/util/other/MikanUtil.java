@@ -1,9 +1,11 @@
-package ani.rss.util;
+package ani.rss.util.other;
 
 import ani.rss.entity.Ani;
 import ani.rss.entity.Config;
 import ani.rss.entity.Mikan;
 import ani.rss.entity.TorrentsInfo;
+import ani.rss.util.basic.GsonStatic;
+import ani.rss.util.basic.HttpReq;
 import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.lang.Opt;
 import cn.hutool.core.text.StrFormatter;

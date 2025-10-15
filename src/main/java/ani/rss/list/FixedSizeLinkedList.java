@@ -1,7 +1,7 @@
 package ani.rss.list;
 
 import ani.rss.entity.Config;
-import ani.rss.util.ConfigUtil;
+import ani.rss.util.other.ConfigUtil;
 
 import java.util.LinkedList;
 

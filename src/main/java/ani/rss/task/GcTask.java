@@ -1,7 +1,7 @@
 package ani.rss.task;
 
 import ani.rss.entity.Config;
-import ani.rss.util.ConfigUtil;
+import ani.rss.util.other.ConfigUtil;
 import cn.hutool.core.thread.ThreadUtil;
 import lombok.extern.slf4j.Slf4j;
 

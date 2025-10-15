@@ -1,8 +1,11 @@
-package ani.rss.util;
+package ani.rss.util.other;
 
 import ani.rss.action.ClearCacheAction;
 import ani.rss.entity.*;
 import ani.rss.service.DownloadService;
+import ani.rss.util.basic.FilePathUtil;
+import ani.rss.util.basic.GsonStatic;
+import ani.rss.util.basic.HttpReq;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.bean.copier.CopyOptions;
 import cn.hutool.core.io.FileUtil;

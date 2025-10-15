@@ -5,7 +5,7 @@ import ani.rss.entity.Config;
 import ani.rss.entity.Item;
 import ani.rss.entity.TorrentsInfo;
 import ani.rss.enums.TorrentsTags;
-import ani.rss.util.ConfigUtil;
+import ani.rss.util.other.ConfigUtil;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.StrUtil;

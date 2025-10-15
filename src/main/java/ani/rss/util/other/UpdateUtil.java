@@ -1,8 +1,9 @@
-package ani.rss.util;
+package ani.rss.util.other;
 
 import ani.rss.Main;
 import ani.rss.entity.About;
 import ani.rss.entity.Config;
+import ani.rss.util.basic.*;
 import cn.hutool.core.comparator.VersionComparator;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.resource.ResourceUtil;

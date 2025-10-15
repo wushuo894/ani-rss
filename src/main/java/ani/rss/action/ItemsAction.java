@@ -5,9 +5,9 @@ import ani.rss.annotation.Path;
 import ani.rss.entity.Ani;
 import ani.rss.entity.Item;
 import ani.rss.service.DownloadService;
-import ani.rss.util.FilePathUtil;
-import ani.rss.util.ItemsUtil;
-import ani.rss.util.TorrentUtil;
+import ani.rss.util.basic.FilePathUtil;
+import ani.rss.util.other.ItemsUtil;
+import ani.rss.util.other.TorrentUtil;
 import cn.hutool.http.server.HttpServerRequest;
 import cn.hutool.http.server.HttpServerResponse;
 

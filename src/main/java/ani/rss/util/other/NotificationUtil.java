@@ -1,4 +1,4 @@
-package ani.rss.util;
+package ani.rss.util.other;
 
 import ani.rss.entity.Ani;
 import ani.rss.entity.Config;

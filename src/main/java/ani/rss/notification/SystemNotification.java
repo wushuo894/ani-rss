@@ -3,7 +3,7 @@ package ani.rss.notification;
 import ani.rss.entity.Ani;
 import ani.rss.entity.NotificationConfig;
 import ani.rss.enums.NotificationStatusEnum;
-import ani.rss.util.MenuUtil;
+import ani.rss.util.other.MenuUtil;
 import lombok.extern.slf4j.Slf4j;
 
 import java.awt.*;

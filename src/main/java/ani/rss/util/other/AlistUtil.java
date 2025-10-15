@@ -1,4 +1,4 @@
-package ani.rss.util;
+package ani.rss.util.other;
 
 import ani.rss.entity.Ani;
 import ani.rss.entity.Config;
@@ -6,6 +6,9 @@ import ani.rss.entity.TorrentsInfo;
 import ani.rss.enums.NotificationStatusEnum;
 import ani.rss.enums.TorrentsTags;
 import ani.rss.service.DownloadService;
+import ani.rss.util.basic.FilePathUtil;
+import ani.rss.util.basic.GsonStatic;
+import ani.rss.util.basic.HttpReq;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.resource.ResourceUtil;
 import cn.hutool.core.lang.Assert;

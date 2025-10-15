@@ -3,7 +3,7 @@ package ani.rss.notification;
 import ani.rss.entity.Ani;
 import ani.rss.entity.NotificationConfig;
 import ani.rss.enums.NotificationStatusEnum;
-import ani.rss.util.ExceptionUtil;
+import ani.rss.util.basic.ExceptionUtil;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.text.StrFormatter;
 import cn.hutool.extra.mail.MailAccount;

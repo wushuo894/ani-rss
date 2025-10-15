@@ -1,7 +1,9 @@
-package ani.rss.util;
+package ani.rss.util.other;
 
 import ani.rss.entity.EmbyViews;
 import ani.rss.entity.NotificationConfig;
+import ani.rss.util.basic.GsonStatic;
+import ani.rss.util.basic.HttpReq;
 import cn.hutool.core.lang.Assert;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;

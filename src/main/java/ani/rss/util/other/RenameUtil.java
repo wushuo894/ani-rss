@@ -1,7 +1,8 @@
-package ani.rss.util;
+package ani.rss.util.other;
 
 import ani.rss.entity.*;
 import ani.rss.enums.StringEnum;
+import ani.rss.util.basic.NumberFormatUtil;
 import cn.hutool.core.lang.Opt;
 import cn.hutool.core.lang.func.Func1;
 import cn.hutool.core.lang.func.LambdaUtil;
