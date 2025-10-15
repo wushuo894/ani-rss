@@ -8,6 +8,7 @@ import ani.rss.entity.Config;
 import ani.rss.entity.Item;
 import ani.rss.entity.TorrentsInfo;
 import ani.rss.enums.SortTypeEnum;
+import ani.rss.service.DownloadService;
 import ani.rss.task.RssTask;
 import ani.rss.util.*;
 import cn.hutool.core.bean.BeanUtil;
@@ -76,17 +77,17 @@ public class AniAction implements BaseAction {
             DOWNLOAD.set(true);
         }
         Ani downloadAni = first.get();
-        File downloadPath = TorrentUtil.getDownloadPath(downloadAni);
+        File downloadPath = DownloadService.getDownloadPath(downloadAni);
         try {
-            TorrentUtil.createTvShowNfo(downloadPath.toString(), downloadAni);
-            TorrentUtil.createSeasonNfo(downloadPath.toString(), downloadAni);
+            DownloadService.createTvShowNfo(downloadPath.toString(), downloadAni);
+            DownloadService.createSeasonNfo(downloadPath.toString(), downloadAni);
         } catch (Exception e) {
             log.error(e.getMessage(), e);
         }
         ThreadUtil.execute(() -> {
             try {
                 if (TorrentUtil.login()) {
-                    TorrentUtil.downloadAni(downloadAni);
+                    DownloadService.downloadAni(downloadAni);
                 }
             } catch (Exception e) {
                 String message = ExceptionUtil.getMessage(e);
@@ -130,7 +131,7 @@ public class AniAction implements BaseAction {
         if (enable) {
             ThreadUtil.execute(() -> {
                 if (TorrentUtil.login()) {
-                    TorrentUtil.downloadAni(ani);
+                    DownloadService.downloadAni(ani);
                 }
             });
         } else {
@@ -178,8 +179,8 @@ public class AniAction implements BaseAction {
         if (Boolean.parseBoolean(move)) {
             Ani get = ObjectUtil.clone(first.get());
             ThreadUtil.execute(() -> {
-                File downloadPath = TorrentUtil.getDownloadPath(get);
-                File newDownloadPath = TorrentUtil.getDownloadPath(ani);
+                File downloadPath = DownloadService.getDownloadPath(get);
+                File newDownloadPath = DownloadService.getDownloadPath(ani);
                 Boolean login = TorrentUtil.login();
                 List<TorrentsInfo> torrentsInfos = new ArrayList<>();
                 if (login) {
@@ -332,7 +333,7 @@ public class AniAction implements BaseAction {
 
             List<File> files = anis
                     .stream()
-                    .map(TorrentUtil::getDownloadPath)
+                    .map(DownloadService::getDownloadPath)
                     .toList();
 
             Boolean login = TorrentUtil.login();

@@ -6,10 +6,10 @@ import ani.rss.auth.enums.AuthType;
 import ani.rss.entity.Ani;
 import ani.rss.entity.Config;
 import ani.rss.enums.StringEnum;
+import ani.rss.service.DownloadService;
 import ani.rss.util.AniUtil;
 import ani.rss.util.BgmUtil;
 import ani.rss.util.ConfigUtil;
-import ani.rss.util.TorrentUtil;
 import cn.hutool.core.thread.ExecutorBuilder;
 import cn.hutool.core.util.ReUtil;
 import cn.hutool.core.util.StrUtil;
@@ -96,7 +96,7 @@ public class WebHookAction implements BaseAction {
                         if (StrUtil.isBlank(bgmUrl)) {
                             return false;
                         }
-                        File downloadPath = TorrentUtil.getDownloadPath(ani);
+                        File downloadPath = DownloadService.getDownloadPath(ani);
                         return downloadPath.toString().equals(parent);
                     })
                     .map(BgmUtil::getSubjectId)

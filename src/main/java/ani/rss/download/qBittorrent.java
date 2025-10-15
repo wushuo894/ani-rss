@@ -6,7 +6,11 @@ import ani.rss.entity.Item;
 import ani.rss.entity.TorrentsInfo;
 import ani.rss.enums.StringEnum;
 import ani.rss.enums.TorrentsTags;
-import ani.rss.util.*;
+import ani.rss.service.DownloadService;
+import ani.rss.util.ExceptionUtil;
+import ani.rss.util.FilePathUtil;
+import ani.rss.util.GsonStatic;
+import ani.rss.util.HttpReq;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.lang.Assert;
@@ -347,7 +351,7 @@ public class qBittorrent implements BaseDownload {
 
         String host = config.getDownloadToolHost();
 
-        Optional<Ani> aniOpt = TorrentUtil.findAniByDownloadPath(torrentsInfo);
+        Optional<Ani> aniOpt = DownloadService.findAniByDownloadPath(torrentsInfo);
 
         if (aniOpt.isEmpty()) {
             log.debug("未能获取番剧对象: {}", torrentsInfo.getName());

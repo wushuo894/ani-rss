@@ -7,9 +7,9 @@ import ani.rss.download.BaseDownload;
 import ani.rss.entity.Ani;
 import ani.rss.entity.PlayItem;
 import ani.rss.enums.StringEnum;
+import ani.rss.service.DownloadService;
 import ani.rss.util.AniUtil;
 import ani.rss.util.FilePathUtil;
-import ani.rss.util.TorrentUtil;
 import cn.hutool.core.codec.Base64;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.io.FileUtil;
@@ -50,7 +50,7 @@ public class PlaylistAction implements BaseAction {
         }
         ani = first.get();
 
-        File downloadPath = TorrentUtil.getDownloadPath(ani);
+        File downloadPath = DownloadService.getDownloadPath(ani);
         List<PlayItem> collect = getPlayItem(downloadPath);
         collect = CollUtil.distinct(collect, PlayItem::getTitle, false);
         collect = CollUtil.sort(collect, Comparator.comparingDouble(it -> Double.parseDouble(ReUtil.get(StringEnum.SEASON_REG, it.getTitle(), 2))));

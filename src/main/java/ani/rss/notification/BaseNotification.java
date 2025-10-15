@@ -6,7 +6,11 @@ import ani.rss.entity.NotificationConfig;
 import ani.rss.entity.Tmdb;
 import ani.rss.enums.NotificationStatusEnum;
 import ani.rss.enums.StringEnum;
-import ani.rss.util.*;
+import ani.rss.service.DownloadService;
+import ani.rss.util.ConfigUtil;
+import ani.rss.util.FilePathUtil;
+import ani.rss.util.NumberFormatUtil;
+import ani.rss.util.RenameUtil;
 import cn.hutool.core.lang.Opt;
 import cn.hutool.core.lang.func.Func1;
 import cn.hutool.core.text.StrFormatter;
@@ -108,7 +112,7 @@ public interface BaseNotification {
         notificationTemplate = notificationTemplate.replace("${emoji}", emoji);
         notificationTemplate = notificationTemplate.replace("${action}", action);
 
-        String downloadPath = FilePathUtil.getAbsolutePath(TorrentUtil.getDownloadPath(ani));
+        String downloadPath = FilePathUtil.getAbsolutePath(DownloadService.getDownloadPath(ani));
         notificationTemplate = notificationTemplate.replace("${downloadPath}", downloadPath);
 
         if (notificationTemplate.contains("${jpTitle}")) {

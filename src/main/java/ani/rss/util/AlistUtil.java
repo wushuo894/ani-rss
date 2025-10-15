@@ -5,6 +5,7 @@ import ani.rss.entity.Config;
 import ani.rss.entity.TorrentsInfo;
 import ani.rss.enums.NotificationStatusEnum;
 import ani.rss.enums.TorrentsTags;
+import ani.rss.service.DownloadService;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.resource.ResourceUtil;
 import cn.hutool.core.lang.Assert;
@@ -220,7 +221,7 @@ public class AlistUtil {
                     .setOvaDownloadPathTemplate(alistPath);
         }
 
-        String path = FilePathUtil.getAbsolutePath(TorrentUtil.getDownloadPath(ani, config));
+        String path = FilePathUtil.getAbsolutePath(DownloadService.getDownloadPath(ani, config));
 
         path = ReUtil.replaceAll(path, "^[A-z]:", "");
 

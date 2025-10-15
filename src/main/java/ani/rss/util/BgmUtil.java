@@ -5,6 +5,7 @@ import ani.rss.entity.BgmInfo;
 import ani.rss.entity.Config;
 import ani.rss.entity.Tmdb;
 import ani.rss.enums.BgmTokenTypeEnum;
+import ani.rss.service.DownloadService;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.date.DatePattern;
 import cn.hutool.core.date.DateUtil;
@@ -831,7 +832,7 @@ public class BgmUtil {
 
         // 下载位置
         String downloadPath = FilePathUtil.getAbsolutePath(
-                TorrentUtil.getDownloadPath(ani)
+                DownloadService.getDownloadPath(ani)
         );
 
         String alistPath = config.getAlistPath();

@@ -2,6 +2,7 @@ package ani.rss.task;
 
 import ani.rss.entity.Config;
 import ani.rss.entity.TorrentsInfo;
+import ani.rss.service.DownloadService;
 import ani.rss.util.ConfigUtil;
 import ani.rss.util.ExceptionUtil;
 import ani.rss.util.TorrentUtil;
@@ -44,7 +45,7 @@ public class RenameTask extends Thread {
                     Boolean deleteStandbyRSSOnly = config.getDeleteStandbyRSSOnly();
                     try {
                         TorrentUtil.rename(torrentsInfo);
-                        TorrentUtil.notification(torrentsInfo);
+                        DownloadService.notification(torrentsInfo);
                         if (deleteStandbyRSSOnly) {
                             continue;
                         }

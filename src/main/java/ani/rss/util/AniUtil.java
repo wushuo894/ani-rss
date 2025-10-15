@@ -2,6 +2,7 @@ package ani.rss.util;
 
 import ani.rss.action.ClearCacheAction;
 import ani.rss.entity.*;
+import ani.rss.service.DownloadService;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.bean.copier.CopyOptions;
 import cn.hutool.core.io.FileUtil;
@@ -329,14 +330,14 @@ public class AniUtil {
         }
 
         // 旧文件路径
-        File oldPath = TorrentUtil.getDownloadPath(ani, config);
+        File oldPath = DownloadService.getDownloadPath(ani, config);
 
         config.setDownloadPathTemplate(completedPathTemplate);
         // 因为临时修改下载位置模版以获取对应下载位置, 要关闭自定义下载位置
         ani.setCustomDownloadPath(false);
 
         // 新文件路径
-        File newPath = TorrentUtil.getDownloadPath(ani, config);
+        File newPath = DownloadService.getDownloadPath(ani, config);
 
         if (!oldPath.exists()) {
             // 旧文件不存在
