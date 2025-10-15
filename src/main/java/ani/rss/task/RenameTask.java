@@ -2,9 +2,10 @@ package ani.rss.task;
 
 import ani.rss.entity.Config;
 import ani.rss.entity.TorrentsInfo;
-import ani.rss.util.ConfigUtil;
-import ani.rss.util.ExceptionUtil;
-import ani.rss.util.TorrentUtil;
+import ani.rss.service.DownloadService;
+import ani.rss.util.other.ConfigUtil;
+import ani.rss.util.basic.ExceptionUtil;
+import ani.rss.util.other.TorrentUtil;
 import cn.hutool.core.thread.ThreadUtil;
 import lombok.extern.slf4j.Slf4j;
 
@@ -44,7 +45,7 @@ public class RenameTask extends Thread {
                     Boolean deleteStandbyRSSOnly = config.getDeleteStandbyRSSOnly();
                     try {
                         TorrentUtil.rename(torrentsInfo);
-                        TorrentUtil.notification(torrentsInfo);
+                        DownloadService.notification(torrentsInfo);
                         if (deleteStandbyRSSOnly) {
                             continue;
                         }

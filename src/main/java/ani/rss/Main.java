@@ -1,7 +1,9 @@
 package ani.rss;
 
 import ani.rss.other.Cron;
-import ani.rss.util.*;
+import ani.rss.service.TaskService;
+import ani.rss.util.basic.ExceptionUtil;
+import ani.rss.util.other.*;
 import cn.hutool.core.util.ObjectUtil;
 import lombok.extern.slf4j.Slf4j;
 
@@ -23,7 +25,7 @@ public class Main {
             ServerUtil.start();
 
             AniUtil.load();
-            TaskUtil.start();
+            TaskService.start();
             String version = MavenUtil.getVersion();
             log.info("version {}", version);
 

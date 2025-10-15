@@ -4,9 +4,10 @@ import ani.rss.annotation.Auth;
 import ani.rss.annotation.Path;
 import ani.rss.entity.Ani;
 import ani.rss.entity.Item;
-import ani.rss.util.FilePathUtil;
-import ani.rss.util.ItemsUtil;
-import ani.rss.util.TorrentUtil;
+import ani.rss.service.DownloadService;
+import ani.rss.util.basic.FilePathUtil;
+import ani.rss.util.other.ItemsUtil;
+import ani.rss.util.other.TorrentUtil;
 import cn.hutool.http.server.HttpServerRequest;
 import cn.hutool.http.server.HttpServerResponse;
 
@@ -26,7 +27,7 @@ public class ItemsAction implements BaseAction {
         Ani ani = getBody(Ani.class);
         List<Item> items = ItemsUtil.getItems(ani);
 
-        String downloadPath = FilePathUtil.getAbsolutePath(TorrentUtil.getDownloadPath(ani));
+        String downloadPath = FilePathUtil.getAbsolutePath(DownloadService.getDownloadPath(ani));
 
         for (Item item : items) {
             item.setLocal(false);
@@ -35,7 +36,7 @@ public class ItemsAction implements BaseAction {
                 item.setLocal(true);
                 continue;
             }
-            if (TorrentUtil.itemDownloaded(ani, item, false)) {
+            if (DownloadService.itemDownloaded(ani, item, false)) {
                 item.setLocal(true);
             }
         }

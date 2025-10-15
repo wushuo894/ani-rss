@@ -2,10 +2,11 @@ package ani.rss.task;
 
 import ani.rss.entity.Ani;
 import ani.rss.entity.Config;
-import ani.rss.util.AniUtil;
-import ani.rss.util.ConfigUtil;
-import ani.rss.util.ExceptionUtil;
-import ani.rss.util.TorrentUtil;
+import ani.rss.service.DownloadService;
+import ani.rss.util.other.AniUtil;
+import ani.rss.util.other.ConfigUtil;
+import ani.rss.util.basic.ExceptionUtil;
+import ani.rss.util.other.TorrentUtil;
 import cn.hutool.core.thread.ThreadUtil;
 import lombok.extern.slf4j.Slf4j;
 
@@ -45,7 +46,7 @@ public class RssTask extends Thread {
                     continue;
                 }
                 try {
-                    TorrentUtil.downloadAni(ani);
+                    DownloadService.downloadAni(ani);
                 } catch (Exception e) {
                     String message = ExceptionUtil.getMessage(e);
                     log.error("{} {}", title, message);

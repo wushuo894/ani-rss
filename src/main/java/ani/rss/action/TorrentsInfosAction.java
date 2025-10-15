@@ -3,7 +3,7 @@ package ani.rss.action;
 import ani.rss.annotation.Auth;
 import ani.rss.annotation.Path;
 import ani.rss.entity.TorrentsInfo;
-import ani.rss.util.TorrentUtil;
+import ani.rss.util.other.TorrentUtil;
 import cn.hutool.http.server.HttpServerRequest;
 import cn.hutool.http.server.HttpServerResponse;
 import lombok.extern.slf4j.Slf4j;

@@ -3,7 +3,7 @@ package ani.rss.action;
 import ani.rss.annotation.Auth;
 import ani.rss.annotation.Path;
 import ani.rss.entity.Ani;
-import ani.rss.util.AniUtil;
+import ani.rss.util.other.AniUtil;
 import cn.hutool.http.server.HttpServerRequest;
 import cn.hutool.http.server.HttpServerResponse;
 import lombok.extern.slf4j.Slf4j;

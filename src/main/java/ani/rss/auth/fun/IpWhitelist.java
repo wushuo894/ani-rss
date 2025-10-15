@@ -2,9 +2,9 @@ package ani.rss.auth.fun;
 
 import ani.rss.auth.util.AuthUtil;
 import ani.rss.entity.Config;
-import ani.rss.util.CidrRangeChecker;
-import ani.rss.util.ConfigUtil;
-import ani.rss.util.MyCacheUtil;
+import ani.rss.util.basic.CidrRangeChecker;
+import ani.rss.util.other.ConfigUtil;
+import ani.rss.util.basic.MyCacheUtil;
 import cn.hutool.core.lang.PatternPool;
 import cn.hutool.core.net.Ipv4Util;
 import cn.hutool.core.util.StrUtil;

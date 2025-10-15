@@ -4,7 +4,7 @@ import ani.rss.annotation.Auth;
 import ani.rss.annotation.Path;
 import ani.rss.entity.EmbyViews;
 import ani.rss.entity.NotificationConfig;
-import ani.rss.util.EmbyUtil;
+import ani.rss.util.other.EmbyUtil;
 import cn.hutool.http.server.HttpServerRequest;
 import cn.hutool.http.server.HttpServerResponse;
 

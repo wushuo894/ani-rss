@@ -3,9 +3,9 @@ package ani.rss.task;
 import ani.rss.entity.Ani;
 import ani.rss.entity.BgmInfo;
 import ani.rss.entity.Config;
-import ani.rss.util.AniUtil;
-import ani.rss.util.BgmUtil;
-import ani.rss.util.ConfigUtil;
+import ani.rss.util.other.AniUtil;
+import ani.rss.util.other.BgmUtil;
+import ani.rss.util.other.ConfigUtil;
 import cn.hutool.core.thread.ThreadUtil;
 import lombok.extern.slf4j.Slf4j;
 

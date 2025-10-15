@@ -1,7 +1,7 @@
 package ani.rss.action;
 
 import ani.rss.annotation.Auth;
-import ani.rss.util.MavenUtil;
+import ani.rss.util.other.MavenUtil;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.EnumerationIter;
 import cn.hutool.core.io.FileUtil;

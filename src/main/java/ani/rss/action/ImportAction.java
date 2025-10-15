@@ -4,7 +4,7 @@ import ani.rss.annotation.Auth;
 import ani.rss.annotation.Path;
 import ani.rss.dto.ImportAniDataDTO;
 import ani.rss.entity.Ani;
-import ani.rss.util.AniUtil;
+import ani.rss.util.other.AniUtil;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.lang.UUID;
 import cn.hutool.http.server.HttpServerRequest;

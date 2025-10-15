@@ -5,7 +5,7 @@ import ani.rss.annotation.Path;
 import ani.rss.entity.Config;
 import ani.rss.entity.ProxyTest;
 import ani.rss.entity.Result;
-import ani.rss.util.HttpReq;
+import ani.rss.util.basic.HttpReq;
 import cn.hutool.core.codec.Base64;
 import cn.hutool.core.date.LocalDateTimeUtil;
 import cn.hutool.core.text.StrFormatter;

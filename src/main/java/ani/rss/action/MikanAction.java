@@ -3,7 +3,7 @@ package ani.rss.action;
 import ani.rss.annotation.Auth;
 import ani.rss.annotation.Path;
 import ani.rss.entity.Mikan;
-import ani.rss.util.MikanUtil;
+import ani.rss.util.other.MikanUtil;
 import cn.hutool.http.server.HttpServerRequest;
 import cn.hutool.http.server.HttpServerResponse;
 
