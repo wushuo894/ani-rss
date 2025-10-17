@@ -22,10 +22,10 @@
             </el-tag>
             <div>
               <el-tag style="margin-right: 4px;">
-                {{ group['group_count'] }} 组
+                {{ group['groupCount'] }} 组
               </el-tag>
               <el-tag>
-                {{ group['episode_count'] }} 集
+                {{ group['episodeCount'] }} 集
               </el-tag>
             </div>
           </div>

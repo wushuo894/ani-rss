@@ -1,5 +1,6 @@
-package ani.rss.entity;
+package ani.rss.entity.tmdb;
 
+import com.google.gson.annotations.SerializedName;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
@@ -29,17 +30,20 @@ public class TmdbGroup implements Serializable {
     /**
      * 类型名
      */
+    @SerializedName(value = "typeName", alternate = "type_name")
     private String typeName;
 
     /**
      * 集数量
      */
-    private String episode_count;
+    @SerializedName(value = "episodeCount", alternate = "episode_count")
+    private String episodeCount;
 
     /**
      * 组数量
      */
-    private String group_count;
+    @SerializedName(value = "groupCount", alternate = "group_count")
+    private String groupCount;
 
     /**
      * 描述

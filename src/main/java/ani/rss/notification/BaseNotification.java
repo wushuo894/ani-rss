@@ -3,7 +3,7 @@ package ani.rss.notification;
 import ani.rss.entity.Ani;
 import ani.rss.entity.Config;
 import ani.rss.entity.NotificationConfig;
-import ani.rss.entity.Tmdb;
+import ani.rss.entity.tmdb.Tmdb;
 import ani.rss.enums.NotificationStatusEnum;
 import ani.rss.enums.StringEnum;
 import ani.rss.service.DownloadService;
