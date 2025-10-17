@@ -1,5 +1,6 @@
 package ani.rss.entity;
 
+import ani.rss.entity.tmdb.Tmdb;
 import ani.rss.util.other.ConfigUtil;
 import cn.hutool.core.lang.UUID;
 import lombok.Data;

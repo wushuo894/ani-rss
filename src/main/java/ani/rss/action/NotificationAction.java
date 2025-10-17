@@ -5,7 +5,7 @@ import ani.rss.annotation.Path;
 import ani.rss.entity.Ani;
 import ani.rss.entity.BgmInfo;
 import ani.rss.entity.NotificationConfig;
-import ani.rss.entity.Tmdb;
+import ani.rss.entity.tmdb.Tmdb;
 import ani.rss.enums.NotificationStatusEnum;
 import ani.rss.enums.NotificationTypeEnum;
 import ani.rss.notification.BaseNotification;

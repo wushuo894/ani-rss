@@ -4,7 +4,7 @@ import ani.rss.annotation.Auth;
 import ani.rss.annotation.Path;
 import ani.rss.entity.Ani;
 import ani.rss.entity.BgmInfo;
-import ani.rss.entity.Tmdb;
+import ani.rss.entity.tmdb.Tmdb;
 import ani.rss.util.other.BgmUtil;
 import cn.hutool.core.lang.Opt;
 import cn.hutool.http.server.HttpServerRequest;

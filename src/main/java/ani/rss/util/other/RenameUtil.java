@@ -1,6 +1,10 @@
 package ani.rss.util.other;
 
-import ani.rss.entity.*;
+import ani.rss.entity.Ani;
+import ani.rss.entity.BgmInfo;
+import ani.rss.entity.Config;
+import ani.rss.entity.Item;
+import ani.rss.entity.tmdb.Tmdb;
 import ani.rss.enums.StringEnum;
 import ani.rss.util.basic.NumberFormatUtil;
 import cn.hutool.core.lang.Opt;
@@ -252,6 +256,10 @@ public class RenameUtil {
     }
 
     public static String getName(String s) {
+        if (StrUtil.isBlank(s)) {
+            return s;
+        }
+
         s = s.replace("1/2", "½");
 
         Map<String, String> map = Map.of(

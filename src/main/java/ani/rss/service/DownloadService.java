@@ -2,6 +2,7 @@ package ani.rss.service;
 
 import ani.rss.download.BaseDownload;
 import ani.rss.entity.*;
+import ani.rss.entity.tmdb.Tmdb;
 import ani.rss.enums.NotificationStatusEnum;
 import ani.rss.enums.StringEnum;
 import ani.rss.enums.TorrentsTags;

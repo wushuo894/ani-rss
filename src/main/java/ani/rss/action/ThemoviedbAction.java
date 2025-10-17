@@ -4,7 +4,7 @@ import ani.rss.annotation.Auth;
 import ani.rss.annotation.Path;
 import ani.rss.entity.Ani;
 import ani.rss.entity.Result;
-import ani.rss.entity.Tmdb;
+import ani.rss.entity.tmdb.Tmdb;
 import ani.rss.util.other.TmdbUtil;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.StrUtil;
