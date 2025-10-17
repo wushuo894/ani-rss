@@ -244,8 +244,23 @@ public class ConfigUtil {
      */
     public static File getConfigDir() {
         Map<String, String> env = System.getenv();
-        String config = env.getOrDefault("CONFIG", "config");
-        return new File(config).getAbsoluteFile();
+        if (env.containsKey("CONFIG")) {
+            return new File(env.get("CONFIG"));
+        }
+
+        File file = new File("config").getAbsoluteFile();
+
+        if (file.exists()) {
+            return file;
+        }
+
+        OsInfo osInfo = SystemUtil.getOsInfo();
+
+        if (osInfo.isWindows() || osInfo.isMac()) {
+            file = new File(FileUtil.getUserHomePath() + "/ani-rss");
+        }
+
+        return file;
     }
 
     /**
