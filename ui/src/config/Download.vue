@@ -25,7 +25,7 @@
       </el-input>
     </el-form-item>
     <template v-else-if="props.config.downloadToolType === 'OpenList'">
-      <el-form-item label="OpenListToken">
+      <el-form-item label="Token">
         <el-input v-model:model-value="props.config.downloadToolPassword" placeholder="OpenList-xxxxxx" show-password>
           <template #prefix>
             <el-icon class="el-input__icon">
@@ -147,7 +147,7 @@
         </el-checkbox>
         <br>
         <el-text class="mx-1" size="small">
-          删除本地文件, 仅在同时开启了 <strong>alist上传</strong> 并上传成功后删除
+          删除本地文件, 仅在同时开启了 <strong>OpenList 上传</strong> 并上传成功后删除
         </el-text>
       </div>
     </el-form-item>

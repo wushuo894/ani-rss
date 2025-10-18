@@ -23,7 +23,7 @@ public enum NotificationStatusEnum {
     /**
      * OpenList 上传通知
      */
-    ALIST_UPLOAD("🙌", "OpenList 上传通知"),
+    OPEN_LIST_UPLOAD("🙌", "OpenList 上传通知"),
     /**
      * 订阅完结
      */

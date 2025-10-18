@@ -1,8 +1,8 @@
 <template>
-  <el-form-item label="OpenListHost">
+  <el-form-item label="Host">
     <el-input v-model:model-value="props.config['alistHost']" placeholder="http://127.0.0.1:5244"/>
   </el-form-item>
-  <el-form-item label="OpenListToken">
+  <el-form-item label="Token">
     <el-input v-model:model-value="props.config['alistToken']" placeholder="openlist-xxxxxx"/>
   </el-form-item>
   <el-form-item label="上传位置">
@@ -24,7 +24,7 @@
       </div>
       <div>
         <el-text class="mx-1" size="small">
-          自动将下载完成的文件上传至 alist
+          自动将下载完成的文件上传至 OpenList
         </el-text>
       </div>
     </div>

@@ -442,17 +442,17 @@ public class Config implements Serializable {
     private String alistOvaPath;
 
     /**
-     * 启用alist
+     * 启用 OpenList
      */
     private Boolean alist;
 
     /**
-     * alist上传失败时的重试次数
+     * OpenList 上传失败时的重试次数
      */
     private Integer alistRetry;
 
     /**
-     * alist添加上传任务
+     * OpenList 添加上传任务
      */
     private Boolean alistTask;
 
@@ -492,7 +492,7 @@ public class Config implements Serializable {
     private Integer customEpisodeGroupIndex;
 
     /**
-     * alist driver
+     * OpenList driver
      */
     private String provider;
 
@@ -577,12 +577,12 @@ public class Config implements Serializable {
     private Boolean updateTotalEpisodeNumber;
 
     /**
-     * alist离线超时 分钟
+     * OpenList 离线超时 分钟
      */
     private Integer alistDownloadTimeout;
 
     /**
-     * alist下载重试次数
+     * OpenList 下载重试次数
      */
     private Long alistDownloadRetryNumber;
 

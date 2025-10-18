@@ -21,7 +21,7 @@
             <el-checkbox label="下载完成" value="DOWNLOAD_END"/>
             <el-checkbox label="缺集" value="OMIT"/>
             <el-checkbox label="错误" value="ERROR"/>
-            <el-checkbox label="Alist上传通知" value="ALIST_UPLOAD"/>
+            <el-checkbox label="OpenList 上传通知" value="OPEN_LIST_UPLOAD"/>
             <el-checkbox label="订阅完结" value="COMPLETED"/>
             <el-checkbox label="摸鱼检测" value="PROCRASTINATING"/>
           </el-checkbox-group>

@@ -121,7 +121,7 @@ public class OpenListUtil {
                                         text = StrFormatter.format("已向 OpenList 添加上传任务 {}", fileName);
                                     }
                                     log.info(text);
-                                    NotificationUtil.send(config, ani, text, NotificationStatusEnum.ALIST_UPLOAD);
+                                    NotificationUtil.send(config, ani, text, NotificationStatusEnum.OPEN_LIST_UPLOAD);
                                 });
                         TorrentUtil.addTags(torrentsInfo, TorrentsTags.UPLOAD_COMPLETED.getValue());
                         return;
