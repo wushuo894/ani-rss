@@ -8,6 +8,9 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
+/**
+ * 季
+ */
 @Data
 @Accessors(chain = true)
 public class TmdbSeason implements Serializable {

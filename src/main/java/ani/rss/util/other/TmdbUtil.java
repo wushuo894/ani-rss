@@ -9,6 +9,8 @@ import ani.rss.util.basic.ExceptionUtil;
 import ani.rss.util.basic.GsonStatic;
 import ani.rss.util.basic.HttpReq;
 import ani.rss.util.basic.MyCacheUtil;
+import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.bean.copier.CopyOptions;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.text.StrFormatter;
@@ -24,8 +26,16 @@ import lombok.extern.slf4j.Slf4j;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * tmdb封装
+ */
 @Slf4j
 public class TmdbUtil {
+    /**
+     * api
+     *
+     * @return
+     */
     public static String getTmdbApi() {
         Config config = ConfigUtil.CONFIG;
         String tmdbApi = config.getTmdbApi();
@@ -33,6 +43,11 @@ public class TmdbUtil {
         return tmdbApi;
     }
 
+    /**
+     * apiKey
+     *
+     * @return
+     */
     public static String getTmdbApiKey() {
         Config config = ConfigUtil.CONFIG;
         String tmdbApiKey = config.getTmdbApiKey();
@@ -42,7 +57,7 @@ public class TmdbUtil {
     /**
      * 获取番剧在tmdb的名称
      *
-     * @param ani
+     * @param ani 订阅
      * @return
      */
     public synchronized static String getName(Ani ani) {
@@ -94,6 +109,13 @@ public class TmdbUtil {
         return getName(themoviedbName, tmdb);
     }
 
+    /**
+     * 获取添加tmdbid与年份后的名称
+     *
+     * @param title 标题
+     * @param tmdb  tmdb
+     * @return
+     */
     public static String getName(String title, Tmdb tmdb) {
         if (Objects.isNull(tmdb)) {
             return title;
@@ -111,6 +133,13 @@ public class TmdbUtil {
         return title;
     }
 
+    /**
+     * 获取所有标题
+     *
+     * @param tmdb     tmdb
+     * @param tmdbType 类型
+     * @return
+     */
     public static List<TmdbTitle> getTitles(Tmdb tmdb, TmdbTypeEnum tmdbType) {
         if (Objects.isNull(tmdb)) {
             return List.of();
@@ -136,8 +165,8 @@ public class TmdbUtil {
     /**
      * 获取罗马音
      *
-     * @param tmdb
-     * @param tmdbType
+     * @param tmdb     tmdb
+     * @param tmdbType 类型
      */
     public static void getRomaji(Tmdb tmdb, TmdbTypeEnum tmdbType) {
         if (Objects.isNull(tmdb)) {
@@ -179,18 +208,37 @@ public class TmdbUtil {
         }
     }
 
+    /**
+     * 根据标题获得tmdb
+     *
+     * @param titleName 标题名
+     * @return
+     */
     public static Tmdb getTmdbMovie(String titleName) {
         Tmdb tmdb = getTmdb(titleName, TmdbTypeEnum.MOVIE);
         getRomaji(tmdb, TmdbTypeEnum.MOVIE);
         return tmdb;
     }
 
+    /**
+     * 根据标题获得tmdb
+     *
+     * @param titleName 标题名
+     * @return
+     */
     public static Tmdb getTmdbTv(String titleName) {
         Tmdb tmdb = getTmdb(titleName, TmdbTypeEnum.TV);
         getRomaji(tmdb, TmdbTypeEnum.TV);
         return tmdb;
     }
 
+    /**
+     * 刷新tmdb信息
+     *
+     * @param tmdb     tmdb
+     * @param tmdbType 类型
+     * @return
+     */
     public static Tmdb getTmdb(Tmdb tmdb, TmdbTypeEnum tmdbType) {
         Config config = ConfigUtil.CONFIG;
         String tmdbLanguage = config.getTmdbLanguage();
@@ -201,7 +249,7 @@ public class TmdbUtil {
 
         String url = StrFormatter.format("{}/3/{}/{}", tmdbApi, tmdbType.getValue(), id);
 
-        return HttpReq.get(url)
+        Tmdb newTmdb = HttpReq.get(url)
                 .timeout(5000)
                 .form("api_key", tmdbApiKey)
                 .form("include_adult", "true")
@@ -211,8 +259,25 @@ public class TmdbUtil {
                     return GsonStatic.fromJson(res.body(), Tmdb.class)
                             .setTmdbType(tmdbType);
                 });
+
+        BeanUtil.copyProperties(
+                newTmdb,
+                tmdb,
+                CopyOptions
+                        .create()
+                        .setIgnoreNullValue(true)
+        );
+
+        return newTmdb;
     }
 
+    /**
+     * 根据名称获取tmdb信息
+     *
+     * @param titleName 标题名
+     * @param tmdbType  类型
+     * @return
+     */
     public static Tmdb getTmdb(String titleName, TmdbTypeEnum tmdbType) {
         Config config = ConfigUtil.CONFIG;
         String tmdbLanguage = config.getTmdbLanguage();
