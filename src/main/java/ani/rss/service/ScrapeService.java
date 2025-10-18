@@ -257,11 +257,11 @@ public class ScrapeService {
 
             String thumbPath = tmdbEpisode.getStillPath();
 
-            String thumbExtName = FileUtil.extName(thumbPath);
-
-            File thumbFile = new File(downloadPath + "/" + mainName + "-thumb." + thumbExtName);
-
-            saveImages(thumbPath, thumbFile, force);
+            if (StrUtil.isNotBlank(thumbPath)) {
+                String thumbExtName = FileUtil.extName(thumbPath);
+                File thumbFile = new File(downloadPath + "/" + mainName + "-thumb." + thumbExtName);
+                saveImages(thumbPath, thumbFile, force);
+            }
 
             String episodeFile = downloadPath + "/" + mainName + ".nfo";
             if (force || !FileUtil.exist(episodeFile)) {
@@ -271,6 +271,10 @@ public class ScrapeService {
     }
 
     public static void saveImages(String tmdbPath, File saveFile, Boolean force) throws Exception {
+        if (StrUtil.isBlank(tmdbPath)) {
+            return;
+        }
+
         if (!force) {
             if (saveFile.exists()) {
                 return;
