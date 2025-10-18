@@ -25,6 +25,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.util.*;
 import java.util.concurrent.TimeUnit;
+import java.util.function.ToDoubleFunction;
 
 /**
  * tmdb封装
@@ -614,15 +615,65 @@ public class TmdbUtil {
         String tmdbLanguage = config.getTmdbLanguage();
 
         String url = StrFormatter.format("{}/3/{}/{}/images", tmdbApi, tmdbType.getValue(), id);
-        return HttpReq.get(url)
+        TmdbImages tmdbImages = HttpReq.get(url)
                 .timeout(5000)
                 .form("api_key", tmdbApiKey)
                 .form("include_adult", "true")
-                .form("language", tmdbLanguage)
                 .thenFunction(res -> {
                     HttpReq.assertStatus(res);
                     return GsonStatic.fromJson(res.body(), TmdbImages.class);
                 });
+
+        // 排序方法
+        ToDoubleFunction<TmdbImage> sortedFun = it -> {
+            Double voteAverage = it.getVoteAverage();
+
+            String iso6391 = it.getIso6391();
+            String iso31661 = it.getIso31661();
+
+            if (StrUtil.isBlank(iso6391)) {
+                return 50 + voteAverage;
+            }
+
+            String lang = iso6391 + "-" + iso31661;
+
+            if (tmdbLanguage.equals(lang)) {
+                return voteAverage;
+            }
+
+            if (lang.equals("zh-CN")) {
+                return 10 + voteAverage;
+            }
+
+            if (lang.startsWith("zh-")) {
+                return 20 + voteAverage;
+            }
+
+            if (lang.startsWith("ja-")) {
+                return 30 + voteAverage;
+            }
+
+            return 40 + voteAverage;
+        };
+
+        List<TmdbImage> logos = tmdbImages.getLogos();
+        List<TmdbImage> posters = tmdbImages.getPosters();
+        List<TmdbImage> backdrops = tmdbImages.getBackdrops();
+
+        // 图片排序
+        logos = logos.stream()
+                .sorted(Comparator.comparingDouble(sortedFun))
+                .toList();
+        posters = posters.stream()
+                .sorted(Comparator.comparingDouble(sortedFun))
+                .toList();
+        backdrops = backdrops.stream()
+                .sorted(Comparator.comparingDouble(sortedFun))
+                .toList();
+
+        return tmdbImages.setLogos(logos)
+                .setPosters(posters)
+                .setBackdrops(backdrops);
     }
 
 }
