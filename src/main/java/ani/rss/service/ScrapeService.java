@@ -13,21 +13,31 @@ import ani.rss.util.other.TmdbUtil;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.bean.copier.CopyOptions;
 import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.ReUtil;
 import cn.hutool.core.util.StrUtil;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.File;
 import java.io.InputStream;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
+/**
+ * 刮削
+ */
 @Slf4j
 public class ScrapeService {
+    /**
+     * 刮削
+     *
+     * @param ani
+     * @param force
+     */
     public static void scrape(Ani ani, Boolean force) {
+        String title = ani.getTitle();
+
         Tmdb tmdb = ani.getTmdb();
 
         if (Objects.isNull(tmdb)) {
@@ -36,19 +46,102 @@ public class ScrapeService {
 
         Boolean ova = ani.getOva();
         try {
+            log.info("scrape ... {}", title);
             if (ova) {
                 scrapeMovie(ani, force);
             } else {
                 scrapeTv(ani, force);
             }
+            log.info("scrape finish {}", title);
         } catch (Exception e) {
+            log.error("scrape error {}", title);
             log.error(e.getMessage(), e);
         }
     }
 
+    /**
+     * 电影刮削
+     *
+     * @param ani
+     * @param force
+     * @throws Exception
+     */
     public static void scrapeMovie(Ani ani, Boolean force) throws Exception {
+        Tmdb tmdb = ani.getTmdb();
+
+        BeanUtil.copyProperties(
+                TmdbUtil.getTmdb(tmdb, TmdbTypeEnum.MOVIE),
+                tmdb,
+                CopyOptions
+                        .create()
+                        .setIgnoreNullValue(true)
+        );
+
+        List<TmdbCredit> credits = TmdbUtil.getCredits(tmdb, TmdbTypeEnum.MOVIE);
+
+        tmdb.setCredits(credits);
+
+        File downloadPath = DownloadService.getDownloadPath(ani);
+
+        if (!downloadPath.exists()) {
+            return;
+        }
+
+        File[] files = downloadPath.listFiles();
+
+        if (ArrayUtil.isEmpty(files)) {
+            return;
+        }
+
+        Optional<File> first = Stream.of(files)
+                .filter(file -> {
+                    String extName = FileUtil.extName(file);
+                    return BaseDownload.videoFormat.contains(extName);
+                })
+                .max(Comparator.comparingLong(File::length));
+
+        if (first.isEmpty()) {
+            return;
+        }
+
+        File file = first.get();
+        String mainName = FileUtil.mainName(file);
+
+        String outputPath = downloadPath + "/" + mainName + ".nfo";
+
+        if (force || !FileUtil.exist(outputPath)) {
+            NfoGenerator.generateMovieNfo(tmdb, outputPath);
+        }
+
+        File posterFile = new File(downloadPath + "/poster.jpg");
+        File fanartFile = new File(downloadPath + "/fanart.jpg");
+        String posterPath = tmdb.getPosterPath();
+        String backdropPath = tmdb.getBackdropPath();
+
+        if (force || !FileUtil.exist(posterFile)) {
+            HttpReq.get("https://image.tmdb.org/t/p/w1280" + posterPath)
+                    .then(res -> {
+                        InputStream inputStream = res.bodyStream();
+                        FileUtil.writeFromStream(inputStream, posterFile, true);
+                    });
+        }
+
+        if (force || !FileUtil.exist(fanartFile)) {
+            HttpReq.get("https://image.tmdb.org/t/p/w1280" + backdropPath)
+                    .then(res -> {
+                        InputStream inputStream = res.bodyStream();
+                        FileUtil.writeFromStream(inputStream, fanartFile, true);
+                    });
+        }
     }
 
+    /**
+     * 电视剧刮削
+     *
+     * @param ani
+     * @param force
+     * @throws Exception
+     */
     public static void scrapeTv(Ani ani, Boolean force) throws Exception {
         Tmdb tmdb = ani.getTmdb();
 
@@ -65,6 +158,11 @@ public class ScrapeService {
         tmdb.setCredits(credits);
 
         File downloadPath = DownloadService.getDownloadPath(ani);
+
+        if (!downloadPath.exists()) {
+            return;
+        }
+
         String tvShowNfoFile = downloadPath.getParent() + "/tvshow.nfo";
 
         if (force || !FileUtil.exist(tvShowNfoFile)) {
@@ -165,7 +263,7 @@ public class ScrapeService {
             }
 
             String episodeFile = downloadPath + "/" + mainName + ".nfo";
-            if (force || !FileUtil.exist(thumbFile)) {
+            if (force || !FileUtil.exist(episodeFile)) {
                 NfoGenerator.generateEpisodeNfo(tmdbEpisode, episodeFile);
             }
 
