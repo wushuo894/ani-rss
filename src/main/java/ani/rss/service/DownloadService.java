@@ -2,6 +2,7 @@ package ani.rss.service;
 
 import ani.rss.download.BaseDownload;
 import ani.rss.entity.*;
+import ani.rss.entity.tmdb.Tmdb;
 import ani.rss.enums.NotificationStatusEnum;
 import ani.rss.enums.StringEnum;
 import ani.rss.enums.TorrentsTags;
@@ -19,15 +20,10 @@ import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.ReUtil;
 import cn.hutool.core.util.StrUtil;
-import cn.hutool.core.util.XmlUtil;
 import cn.hutool.extra.pinyin.PinyinUtil;
 import cn.hutool.json.JSONUtil;
 import lombok.Synchronized;
 import lombok.extern.slf4j.Slf4j;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 
 import java.io.File;
 import java.util.*;
@@ -409,13 +405,6 @@ public class DownloadService {
         }
         NotificationUtil.send(ConfigUtil.CONFIG, ani, text, NotificationStatusEnum.DOWNLOAD_START);
 
-        try {
-            createTvShowNfo(savePath, ani);
-            createSeasonNfo(savePath, ani);
-        } catch (Exception e) {
-            log.error(e.getMessage(), e);
-        }
-
         Config config = ConfigUtil.CONFIG;
 
         Integer downloadRetry = config.getDownloadRetry();
@@ -434,116 +423,6 @@ public class DownloadService {
         NotificationUtil.send(ConfigUtil.CONFIG, ani,
                 StrFormatter.format("{} 添加失败，疑似为坏种", name),
                 NotificationStatusEnum.ERROR);
-    }
-
-    /**
-     * 生成 tvshow.info
-     *
-     * @param savePath
-     * @param ani
-     */
-    public static synchronized void createTvShowNfo(String savePath, Ani ani) {
-        Config config = ConfigUtil.CONFIG;
-
-        Boolean tvShowNfo = config.getTvShowNfo();
-        if (!tvShowNfo) {
-            return;
-        }
-
-        Tmdb tmdb = ani.getTmdb();
-
-        if (Objects.isNull(tmdb)) {
-            return;
-        }
-
-        String tmdbId = tmdb.getId();
-
-        if (StrUtil.isBlank(tmdbId)) {
-            return;
-        }
-
-        File tvshowFile = new File(new File(savePath).getParent() + "/tvshow.nfo");
-
-        String tmdbGroupId = tmdb.getTmdbGroupId();
-        tmdbGroupId = StrUtil.blankToDefault(tmdbGroupId, "");
-
-        if (!tvshowFile.exists()) {
-            String s = """
-                    <?xml version="1.0" encoding="utf-8" standalone="yes"?>
-                    <tvshow>
-                        <tmdbid>{}</tmdbid>
-                        <tmdbegid>{}</tmdbegid>
-                    </tvshow>
-                    """;
-            FileUtil.writeUtf8String(StrFormatter.format(s, tmdbId, tmdbGroupId), tvshowFile);
-            log.info("已创建 {}", tvshowFile);
-            return;
-        }
-
-        if (StrUtil.isBlank(tmdbGroupId)) {
-            return;
-        }
-
-        Document document = XmlUtil.readXML(tvshowFile);
-        Element documentElement = document.getDocumentElement();
-        NodeList tmdbegidNodeList = documentElement.getElementsByTagName("tmdbegid");
-        for (int i = 0; i < tmdbegidNodeList.getLength(); i++) {
-            Node item = tmdbegidNodeList.item(i);
-            String textContent = item.getTextContent();
-            if (tmdbGroupId.equals(textContent)) {
-                // 已包含有剧集组id
-                return;
-            }
-            documentElement.removeChild(item);
-        }
-        Element tmdbegidElement = document.createElement("tmdbegid");
-        tmdbegidElement.setTextContent(tmdbGroupId);
-        documentElement.appendChild(tmdbegidElement);
-
-        FileUtil.writeUtf8String(XmlUtil.toStr(document), tvshowFile);
-
-        String title = ani.getTitle();
-
-        log.info("已更新tvshow.info剧集组id {} {}", title, tmdbGroupId);
-    }
-
-    /**
-     * 生成 season.nfo
-     *
-     * @param savePath
-     * @param ani
-     */
-    public static synchronized void createSeasonNfo(String savePath, Ani ani) {
-        Config config = ConfigUtil.CONFIG;
-
-        Boolean seasonNfo = config.getSeasonNfo();
-        if (!seasonNfo) {
-            return;
-        }
-
-        String tmdbId = Opt.ofNullable(ani.getTmdb())
-                .map(Tmdb::getId)
-                .orElse("");
-
-        if (StrUtil.isBlank(tmdbId)) {
-            return;
-        }
-
-        Integer season = ani.getSeason();
-
-        File seasonFile = new File(savePath + "/season.nfo");
-        if (seasonFile.exists()) {
-            return;
-        }
-
-        String s = """
-                <?xml version="1.0" encoding="utf-8" standalone="yes"?>
-                <season>
-                    <seasonnumber>{}</seasonnumber>
-                </season>
-                """;
-        FileUtil.writeUtf8String(StrFormatter.format(s, season), seasonFile);
-        log.info("已创建 {}", seasonFile);
     }
 
     /**
@@ -599,6 +478,13 @@ public class DownloadService {
                 .orElse(subgroup);
         subgroup = StrUtil.blankToDefault(subgroup, "未知字幕组");
         ani.setSubgroup(subgroup);
+
+        Config config = ConfigUtil.CONFIG;
+        Boolean scrape = config.getScrape();
+        if (scrape) {
+            // 刮削
+            ScrapeService.scrape(ani, false);
+        }
 
         try {
             AlistUtil.upload(torrentsInfo, ani);

@@ -221,8 +221,6 @@ public class ConfigUtil {
                 .setUpdateTotalEpisodeNumber(false)
                 .setAlistDownloadTimeout(60)
                 .setAlistDownloadRetryNumber(5L)
-                .setTvShowNfo(false)
-                .setSeasonNfo(false)
                 .setConfigBackup(false)
                 .setConfigBackupDay(7)
                 .setShowLastDownloadTime(false)
@@ -234,7 +232,8 @@ public class ConfigUtil {
                 .setCopyMasterToStandby(false)
                 .setSortType(SortTypeEnum.SCORE)
                 .setTmdbIdPlexMode(false)
-                .setProxyList(proxyList);
+                .setProxyList(proxyList)
+                .setScrape(false);
     }
 
     /**

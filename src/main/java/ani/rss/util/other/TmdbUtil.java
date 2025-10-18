@@ -2,17 +2,15 @@ package ani.rss.util.other;
 
 import ani.rss.entity.Ani;
 import ani.rss.entity.Config;
-import ani.rss.entity.Tmdb;
-import ani.rss.entity.TmdbGroup;
+import ani.rss.entity.tmdb.*;
 import ani.rss.enums.StringEnum;
+import ani.rss.enums.TmdbTypeEnum;
 import ani.rss.util.basic.ExceptionUtil;
 import ani.rss.util.basic.GsonStatic;
 import ani.rss.util.basic.HttpReq;
 import ani.rss.util.basic.MyCacheUtil;
 import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.date.DatePattern;
 import cn.hutool.core.date.DateUtil;
-import cn.hutool.core.lang.Opt;
 import cn.hutool.core.text.StrFormatter;
 import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.core.util.ReUtil;
@@ -25,7 +23,6 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.util.*;
 import java.util.concurrent.TimeUnit;
-import java.util.function.Consumer;
 
 @Slf4j
 public class TmdbUtil {
@@ -49,7 +46,7 @@ public class TmdbUtil {
      * @return
      */
     public synchronized static String getName(Ani ani) {
-        String type = ani.getOva() ? "movie" : "tv";
+        Boolean ova = ani.getOva();
         String name = ani.getTitle().trim();
         if (StrUtil.isBlank(name)) {
             return "";
@@ -67,8 +64,11 @@ public class TmdbUtil {
 
         Tmdb tmdb;
         try {
-            tmdb = getTmdb(name, type);
-            getRomaji(tmdb, type);
+            if (ova) {
+                tmdb = getTmdbMovie(name);
+            } else {
+                tmdb = getTmdbTv(name);
+            }
         } catch (Exception e) {
             String message = ExceptionUtil.getMessage(e);
             log.error(message, e);
@@ -81,6 +81,9 @@ public class TmdbUtil {
         }
 
         String themoviedbName = tmdb.getName();
+
+        themoviedbName = RenameUtil.getName(themoviedbName);
+
         if (StrUtil.isBlank(themoviedbName)) {
             return "";
         }
@@ -108,13 +111,35 @@ public class TmdbUtil {
         return title;
     }
 
+    public static List<TmdbTitle> getTitles(Tmdb tmdb, TmdbTypeEnum tmdbType) {
+        if (Objects.isNull(tmdb)) {
+            return List.of();
+        }
+
+        String tmdbApi = getTmdbApi();
+        String tmdbApiKey = getTmdbApiKey();
+        String id = tmdb.getId();
+        String url = StrFormatter.format("{}/3/{}/{}/alternative_titles", tmdbApi, tmdbType.getValue(), id);
+        return HttpReq.get(url)
+                .timeout(5000)
+                .form("api_key", tmdbApiKey)
+                .form("include_adult", "true")
+                .thenFunction(res -> {
+                    HttpReq.assertStatus(res);
+                    JsonObject jsonObject = GsonStatic.fromJson(res.body(), JsonObject.class);
+                    return GsonStatic.fromJsonList(
+                            jsonObject.getAsJsonArray("results"),
+                            TmdbTitle.class);
+                });
+    }
+
     /**
      * 获取罗马音
      *
      * @param tmdb
      * @param tmdbType
      */
-    public static void getRomaji(Tmdb tmdb, String tmdbType) {
+    public static void getRomaji(Tmdb tmdb, TmdbTypeEnum tmdbType) {
         if (Objects.isNull(tmdb)) {
             return;
         }
@@ -126,45 +151,68 @@ public class TmdbUtil {
             return;
         }
 
+        List<TmdbTitle> titles = getTitles(tmdb, tmdbType);
+
+        for (TmdbTitle tmdbTitle : titles) {
+            String iso31661 = tmdbTitle.getIso31661();
+            String type = tmdbTitle.getType();
+            String title = tmdbTitle.getTitle();
+            if (!iso31661.equals("JP")) {
+                continue;
+            }
+            if (List.of("romaji", "romanization").contains(type.toLowerCase())) {
+                // 判断为罗马音
+                tmdb.setName(title);
+                return;
+            }
+        }
+
+        String romaji = "";
+        try {
+            romaji = AniListUtil.getRomaji(tmdb.getName());
+        } catch (Exception e) {
+            log.error("通过AniList获取罗马音失败");
+            log.error(e.getMessage(), e);
+        }
+        if (StrUtil.isNotBlank(romaji)) {
+            tmdb.setName(romaji);
+        }
+    }
+
+    public static Tmdb getTmdbMovie(String titleName) {
+        Tmdb tmdb = getTmdb(titleName, TmdbTypeEnum.MOVIE);
+        getRomaji(tmdb, TmdbTypeEnum.MOVIE);
+        return tmdb;
+    }
+
+    public static Tmdb getTmdbTv(String titleName) {
+        Tmdb tmdb = getTmdb(titleName, TmdbTypeEnum.TV);
+        getRomaji(tmdb, TmdbTypeEnum.TV);
+        return tmdb;
+    }
+
+    public static Tmdb getTmdb(Tmdb tmdb, TmdbTypeEnum tmdbType) {
+        Config config = ConfigUtil.CONFIG;
+        String tmdbLanguage = config.getTmdbLanguage();
         String tmdbApi = getTmdbApi();
         String tmdbApiKey = getTmdbApiKey();
+
         String id = tmdb.getId();
-        String url = StrFormatter.format("{}/3/{}/{}/alternative_titles", tmdbApi, tmdbType, id);
-        HttpReq.get(url)
+
+        String url = StrFormatter.format("{}/3/{}/{}", tmdbApi, tmdbType.getValue(), id);
+
+        return HttpReq.get(url)
                 .timeout(5000)
                 .form("api_key", tmdbApiKey)
                 .form("include_adult", "true")
-                .then(res -> {
+                .form("language", tmdbLanguage)
+                .thenFunction(res -> {
                     HttpReq.assertStatus(res);
-                    JsonObject jsonObject = GsonStatic.fromJson(res.body(), JsonObject.class);
-                    List<JsonObject> results = GsonStatic.fromJsonList(jsonObject.getAsJsonArray("results"), JsonObject.class);
-                    for (JsonObject result : results) {
-                        String iso31661 = result.get("iso_3166_1").getAsString();
-                        String type = result.get("type").getAsString();
-                        String title = result.get("title").getAsString();
-                        if (!iso31661.equals("JP")) {
-                            continue;
-                        }
-                        if (List.of("romaji", "romanization").contains(type.toLowerCase())) {
-                            // 判断为罗马音
-                            tmdb.setName(title);
-                            return;
-                        }
-                    }
-                    String romaji = "";
-                    try {
-                        romaji = AniListUtil.getRomaji(tmdb.getName());
-                    } catch (Exception e) {
-                        log.error("通过AniList获取罗马音失败");
-                        log.error(e.getMessage(), e);
-                    }
-                    if (StrUtil.isNotBlank(romaji)) {
-                        tmdb.setName(romaji);
-                    }
+                    return GsonStatic.fromJson(res.body(), Tmdb.class);
                 });
     }
 
-    public static Tmdb getTmdb(String titleName, String type) {
+    public static Tmdb getTmdb(String titleName, TmdbTypeEnum tmdbType) {
         Config config = ConfigUtil.CONFIG;
         String tmdbLanguage = config.getTmdbLanguage();
 
@@ -180,7 +228,7 @@ public class TmdbUtil {
         String tmdbApiKey = getTmdbApiKey();
 
         String finalTitleName = titleName;
-        return HttpReq.get(tmdbApi + "/3/search/" + type)
+        return HttpReq.get(tmdbApi + "/3/search/" + tmdbType.getValue())
                 .timeout(5000)
                 .form("query", URLUtil.encodeBlank(titleName))
                 .form("api_key", tmdbApiKey)
@@ -190,24 +238,29 @@ public class TmdbUtil {
                     HttpReq.assertStatus(res);
                     JsonObject body = GsonStatic.fromJson(res.body(), JsonObject.class);
 
-                    List<JsonObject> results =
-                            GsonStatic.fromJsonList(body.getAsJsonArray("results"), JsonObject.class);
+                    List<Tmdb> tmdbs = new ArrayList<>();
+
+
+                    for (JsonElement item : body.getAsJsonArray("results")) {
+                        try {
+                            Tmdb tmdb = GsonStatic.fromJson(item, Tmdb.class);
+                            tmdbs.add(tmdb);
+                        } catch (Exception ignored) {
+                        }
+                    }
 
                     Boolean tmdbAnime = config.getTmdbAnime();
 
                     if (tmdbAnime) {
                         // 过滤出动漫 genreIds 16
-                        results = results.stream()
+                        tmdbs = tmdbs.stream()
                                 .filter(it -> {
-                                    JsonElement genreIds = it.get("genre_ids");
-                                    if (Objects.isNull(genreIds) || genreIds.isJsonNull()) {
-                                        return false;
-                                    }
-                                    return GsonStatic.fromJsonList(genreIds.getAsJsonArray(), Integer.class).contains(16);
+                                    List<Integer> genreIds = it.getGenreIds();
+                                    return genreIds.contains(16);
                                 }).toList();
                     }
 
-                    if (results.isEmpty()) {
+                    if (tmdbs.isEmpty()) {
                         List<String> split = StrUtil.split(finalTitleName, " ", true, true);
                         if (split.size() < 2) {
                             return null;
@@ -215,42 +268,10 @@ public class TmdbUtil {
                         ThreadUtil.sleep(500);
 
                         split.remove(split.size() - 1);
-                        return getTmdb(CollUtil.join(split, " "), type);
+                        return getTmdb(CollUtil.join(split, " "), tmdbType);
                     }
 
-                    List<Tmdb> tmdbList = results.stream()
-                            .map(jsonObject -> {
-                                String id = jsonObject.get("id").getAsString();
-                                String title = Opt.of(jsonObject)
-                                        .map(o -> o.get("name"))
-                                        .orElse(jsonObject.get("title"))
-                                        .getAsString();
-
-                                String originalName = Opt.of(jsonObject)
-                                        .map(o -> o.get("original_name"))
-                                        .filter(Objects::nonNull)
-                                        .map(JsonElement::getAsString)
-                                        .orElse("");
-
-                                String date = Opt.of(jsonObject)
-                                        .map(o -> o.get("first_air_date"))
-                                        .orElse(jsonObject.get("release_date"))
-                                        .getAsString();
-
-                                if (StrUtil.isBlank(date)) {
-                                    return null;
-                                }
-
-                                title = RenameUtil.getName(title);
-
-                                return new Tmdb()
-                                        .setId(id)
-                                        .setName(title)
-                                        .setOriginalName(originalName)
-                                        .setDate(DateUtil.parse(date, DatePattern.NORM_DATE_PATTERN))
-                                        .setTmdbGroupId("");
-                            })
-                            .filter(Objects::nonNull)
+                    List<Tmdb> tmdbList = tmdbs.stream()
                             .sorted(Comparator.comparingLong(tmdb -> Long.MAX_VALUE - tmdb.getDate().getTime()))
                             .toList();
 
@@ -264,6 +285,97 @@ public class TmdbUtil {
                             .findFirst()
                             .orElse(tmdbList.get(0));
                 });
+    }
+
+    /**
+     * 获取季信息
+     *
+     * @param tmdb
+     * @param season
+     * @return
+     */
+    public static Optional<TmdbSeason> getTmdbSeason(Tmdb tmdb, Integer season) {
+        Config config = ConfigUtil.CONFIG;
+        String tmdbLanguage = config.getTmdbLanguage();
+
+        String id = tmdb.getId();
+
+        String tmdbApi = getTmdbApi();
+
+        String tmdbApiKey = getTmdbApiKey();
+
+        String tmdbGroupId = tmdb.getTmdbGroupId();
+
+        if (StrUtil.isBlank(tmdbGroupId)) {
+            String url = StrFormatter.format("{}/3/tv/{}/season/{}", tmdbApi, id, season);
+
+            return HttpReq.get(url)
+                    .timeout(5000)
+                    .form("api_key", tmdbApiKey)
+                    .form("include_adult", "true")
+                    .form("language", tmdbLanguage)
+                    .thenFunction(res -> {
+                        int status = res.getStatus();
+                        if (status == 404) {
+                            return Optional.empty();
+                        }
+                        HttpReq.assertStatus(res);
+                        TmdbSeason tmdbSeason = GsonStatic.fromJson(res.body(), TmdbSeason.class);
+                        return Optional.of(tmdbSeason);
+                    });
+        }
+
+        String url = StrFormatter.format("{}/3/tv/episode_group/{}", tmdbApi, tmdbGroupId);
+
+        Optional<JsonObject> jsonObject = HttpReq.get(url)
+                .timeout(5000)
+                .form("api_key", tmdbApiKey)
+                .form("include_adult", "true")
+                .form("language", tmdbLanguage)
+                .thenFunction(res -> {
+                    int status = res.getStatus();
+                    if (status == 404) {
+                        return Optional.empty();
+                    }
+                    HttpReq.assertStatus(res);
+                    return Optional.of(
+                            GsonStatic.fromJson(res.body(), JsonObject.class)
+                    );
+                });
+
+        if (jsonObject.isEmpty()) {
+            return Optional.empty();
+        }
+
+        JsonArray groups = jsonObject
+                .get()
+                .getAsJsonArray("groups");
+
+        List<TmdbSeason> tmdbSeasons = GsonStatic.fromJsonList(groups, TmdbSeason.class);
+
+        Optional<TmdbSeason> first = tmdbSeasons
+                .stream()
+                .filter(it -> it.getOrder().intValue() == season)
+                .findFirst();
+        first.ifPresent(tmdbSeason -> {
+            List<TmdbEpisode> episodes = tmdbSeason.getEpisodes();
+            for (TmdbEpisode episode : episodes) {
+                Integer order = episode.getOrder();
+                episode.setEpisodeNumber(order + 1);
+            }
+
+            Date airDate = episodes
+                    .get(0)
+                    .getAirDate();
+
+            tmdbSeason
+                    .setSeasonNumber(season)
+                    .setOverview("")
+                    .setVoteAverage(0.0)
+                    .setAirDate(airDate);
+        });
+
+        return first;
     }
 
     /**
@@ -294,10 +406,6 @@ public class TmdbUtil {
         String tmdbId = tmdb.getId();
         String tmdbGroupId = tmdb.getTmdbGroupId();
 
-        if (StrUtil.isBlank(tmdbId)) {
-            return episodeTitleMap;
-        }
-
         String key = StrFormatter.format("TMDB_getEpisodeTitleMap:{}:{}:{}", tmdbId, tmdbGroupId, season);
 
         Map<Integer, String> cacheMap = MyCacheUtil.get(key);
@@ -322,83 +430,23 @@ public class TmdbUtil {
      * @return
      */
     public static Map<Integer, String> getEpisodeTitleMap(Tmdb tmdb, Integer season) {
-        String tmdbApi = getTmdbApi();
-        String tmdbApiKey = getTmdbApiKey();
-
         Map<Integer, String> map = new HashMap<>();
 
         if (Objects.isNull(tmdb)) {
             return map;
         }
-
-        Consumer<List<JsonObject>> episodesToMap = episodes -> {
-            for (JsonObject episode : episodes) {
-                int episodeNumber = episode.get("episode_number").getAsInt();
-                if (episode.has("order")) {
-                    episodeNumber = episode.get("order").getAsInt() + 1;
-                }
-                String name = episode.get("name").getAsString();
-                name = RenameUtil.getName(name);
-                if (map.containsKey(episodeNumber)) {
-                    continue;
-                }
-                map.put(episodeNumber, name);
-            }
-        };
-
         try {
-            String id = tmdb.getId();
-            String tmdbGroupId = tmdb.getTmdbGroupId();
-            String url = StrFormatter.format("{}/3/tv/{}/season/{}", tmdbApi, id, season);
-
-            Config config = ConfigUtil.CONFIG;
-            String tmdbLanguage = config.getTmdbLanguage();
-
-            if (StrUtil.isNotBlank(tmdbGroupId)) {
-                // 得到了剧集组的id
-                HttpReq.get(tmdbApi + "/3/tv/episode_group/" + tmdbGroupId)
-                        .timeout(5000)
-                        .form("api_key", tmdbApiKey)
-                        .form("include_adult", "true")
-                        .form("language", tmdbLanguage)
-                        .then(response -> {
-                            int status = response.getStatus();
-                            if (status == 404) {
-                                return;
-                            }
-                            HttpReq.assertStatus(response);
-                            JsonObject body = GsonStatic.fromJson(response.body(), JsonObject.class);
-                            body.getAsJsonArray("groups")
-                                    .asList()
-                                    .stream()
-                                    .map(JsonElement::getAsJsonObject)
-                                    .filter(o -> o.get("order").getAsInt() == season)
-                                    .map(o -> o.getAsJsonArray("episodes"))
-                                    .map(JsonArray::asList)
-                                    .map(o -> o.stream().map(JsonElement::getAsJsonObject).toList())
-                                    .findFirst()
-                                    .ifPresent(episodesToMap);
-                        });
+            Optional<TmdbSeason> tmdbSeason = getTmdbSeason(tmdb, season);
+            if (tmdbSeason.isEmpty()) {
                 return map;
             }
-
-            HttpReq.get(url)
-                    .timeout(5000)
-                    .form("api_key", tmdbApiKey)
-                    .form("include_adult", "true")
-                    .form("language", tmdbLanguage)
-                    .then(res -> {
-                        int status = res.getStatus();
-                        if (status == 404) {
-                            return;
-                        }
-                        HttpReq.assertStatus(res);
-                        JsonObject body = GsonStatic.fromJson(res.body(), JsonObject.class);
-                        List<JsonObject> episodes = GsonStatic.fromJsonList(
-                                body.getAsJsonArray("episodes"), JsonObject.class
-                        );
-                        episodesToMap.accept(episodes);
-                    });
+            List<TmdbEpisode> episodes = tmdbSeason.get()
+                    .getEpisodes();
+            for (TmdbEpisode episode : episodes) {
+                Integer episodeNumber = episode.getEpisodeNumber();
+                String name = episode.getName();
+                map.put(episodeNumber, name);
+            }
         } catch (Exception e) {
             log.error(ExceptionUtil.getMessage(e), e);
         }
@@ -449,4 +497,30 @@ public class TmdbUtil {
                             }).toList();
                 });
     }
+
+    public static List<TmdbCredit> getCredits(Tmdb tmdb, TmdbTypeEnum tmdbType) {
+        String tmdbApi = getTmdbApi();
+        String tmdbApiKey = getTmdbApiKey();
+
+        Config config = ConfigUtil.CONFIG;
+        String tmdbLanguage = config.getTmdbLanguage();
+
+        String id = tmdb.getId();
+
+        String url = StrFormatter.format("{}/3/{}/{}/credits", tmdbApi, tmdbType.getValue(), id);
+        return HttpReq.get(url)
+                .timeout(5000)
+                .form("api_key", tmdbApiKey)
+                .form("include_adult", "true")
+                .form("language", tmdbLanguage)
+                .thenFunction(res -> {
+                    HttpReq.assertStatus(res);
+
+                    JsonObject jsonObject = GsonStatic.fromJson(res.body(), JsonObject.class);
+                    JsonArray cast = jsonObject.getAsJsonArray("cast");
+
+                    return GsonStatic.fromJsonList(cast, TmdbCredit.class);
+                });
+    }
+
 }
