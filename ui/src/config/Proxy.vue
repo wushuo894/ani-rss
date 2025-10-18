@@ -42,7 +42,7 @@
     <el-form-item label="启用">
       <el-switch v-model:model-value="props.config.proxy"/>
     </el-form-item>
-    <el-form-item label="Test">
+    <el-form-item label="ScrapeTest">
       <div style="justify-content: space-between;width: 100%;" class="auto">
         <div style="display: flex;">
           <el-select v-model:model-value="url" style="width: 240px;">

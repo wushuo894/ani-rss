@@ -17,6 +17,7 @@ import cn.hutool.core.util.ReUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.core.util.URLUtil;
 import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import lombok.extern.slf4j.Slf4j;
 
@@ -237,21 +238,29 @@ public class TmdbUtil {
                     HttpReq.assertStatus(res);
                     JsonObject body = GsonStatic.fromJson(res.body(), JsonObject.class);
 
-                    List<Tmdb> results =
-                            GsonStatic.fromJsonList(body.getAsJsonArray("results"), Tmdb.class);
+                    List<Tmdb> tmdbs = new ArrayList<>();
+
+
+                    for (JsonElement item : body.getAsJsonArray("results")) {
+                        try {
+                            Tmdb tmdb = GsonStatic.fromJson(item, Tmdb.class);
+                            tmdbs.add(tmdb);
+                        } catch (Exception ignored) {
+                        }
+                    }
 
                     Boolean tmdbAnime = config.getTmdbAnime();
 
                     if (tmdbAnime) {
                         // 过滤出动漫 genreIds 16
-                        results = results.stream()
+                        tmdbs = tmdbs.stream()
                                 .filter(it -> {
                                     List<Integer> genreIds = it.getGenreIds();
                                     return genreIds.contains(16);
                                 }).toList();
                     }
 
-                    if (results.isEmpty()) {
+                    if (tmdbs.isEmpty()) {
                         List<String> split = StrUtil.split(finalTitleName, " ", true, true);
                         if (split.size() < 2) {
                             return null;
@@ -262,7 +271,7 @@ public class TmdbUtil {
                         return getTmdb(CollUtil.join(split, " "), tmdbType);
                     }
 
-                    List<Tmdb> tmdbList = results.stream()
+                    List<Tmdb> tmdbList = tmdbs.stream()
                             .sorted(Comparator.comparingLong(tmdb -> Long.MAX_VALUE - tmdb.getDate().getTime()))
                             .toList();
 

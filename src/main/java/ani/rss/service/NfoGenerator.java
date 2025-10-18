@@ -5,6 +5,7 @@ import cn.hutool.core.date.DatePattern;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.StrUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -19,8 +20,19 @@ import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
+/**
+ * nfo生成
+ */
+@Slf4j
 public class NfoGenerator {
 
+    /**
+     * SxxExx.nfo
+     *
+     * @param tmdbEpisode
+     * @param outputPath
+     * @throws Exception
+     */
     public static void generateEpisodeNfo(TmdbEpisode tmdbEpisode, String outputPath) throws Exception {
         DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
         DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
@@ -40,6 +52,13 @@ public class NfoGenerator {
         saveXmlDocument(doc, outputPath);
     }
 
+    /**
+     * season.nfo
+     *
+     * @param tmdbSeason
+     * @param outputPath
+     * @throws Exception
+     */
     public static void generateSeasonNfo(TmdbSeason tmdbSeason, String outputPath) throws Exception {
         DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
         DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
@@ -63,6 +82,13 @@ public class NfoGenerator {
         saveXmlDocument(doc, outputPath);
     }
 
+    /**
+     * tvshown.nfo
+     *
+     * @param tmdb
+     * @param outputPath
+     * @throws Exception
+     */
     public static void generateTvShowNfo(Tmdb tmdb, String outputPath) throws Exception {
         DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
         DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
@@ -104,8 +130,17 @@ public class NfoGenerator {
         }
 
         saveXmlDocument(doc, outputPath);
+
+        log.error("nfo to {}", outputPath);
     }
 
+    /**
+     * 电影nfo
+     *
+     * @param tmdb
+     * @param outputPath
+     * @throws Exception
+     */
     public static void generateMovieNfo(Tmdb tmdb, String outputPath) throws Exception {
         // 创建 XML 文档
         DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
@@ -152,8 +187,18 @@ public class NfoGenerator {
 
         // 保存 NFO 文件
         saveXmlDocument(doc, outputPath);
+
+        log.error("nfo to {}", outputPath);
     }
 
+    /**
+     * 添加元素
+     *
+     * @param doc
+     * @param parent
+     * @param tagName
+     * @param value
+     */
     private static void addElement(Document doc, Element parent, String tagName, String value) {
         if (StrUtil.isBlank(value)) {
             return;
@@ -163,6 +208,13 @@ public class NfoGenerator {
         parent.appendChild(element);
     }
 
+    /**
+     * 保存
+     *
+     * @param doc
+     * @param filePath
+     * @throws Exception
+     */
     private static void saveXmlDocument(Document doc, String filePath) throws Exception {
         FileUtil.mkdir(new File(filePath).getParentFile());
 

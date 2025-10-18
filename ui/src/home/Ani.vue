@@ -225,12 +225,24 @@
   </div>
   <div style="display: flex;justify-content: space-between;width: 100%;margin-top: 10px;">
     <div>
-      <popconfirm title="立即刷新订阅?" @confirm="download" v-if="props.ani.showDownlaod">
-        <template #reference>
-          <el-button bg text :loading="downloadLoading" icon="Refresh">刷新
-          </el-button>
+      <el-dropdown trigger="click">
+        <el-button bg text icon="MoreFilled">
+          其他
+        </el-button>
+        <template #dropdown>
+          <el-dropdown-menu>
+            <el-dropdown-item @click="download">
+              刷新
+            </el-dropdown-item>
+            <el-dropdown-item @click="scrape(false)">
+              刮削
+            </el-dropdown-item>
+            <el-dropdown-item @click="scrape(true)">
+              强制刮削
+            </el-dropdown-item>
+          </el-dropdown-menu>
         </template>
-      </popconfirm>
+      </el-dropdown>
     </div>
     <div>
       <el-button @click="items.show()" bg text icon="Grid">预览</el-button>
@@ -251,7 +263,6 @@ import Items from "./Items.vue";
 import {onMounted, ref} from "vue";
 import api from "@/js/api.js";
 import {ElMessage, ElText} from "element-plus";
-import Popconfirm from "@/other/Popconfirm.vue";
 import StandbyRss from "./StandbyRss.vue";
 import Mikan from "./Mikan.vue";
 import TmdbGroup from "./TmdbGroup.vue";
@@ -365,6 +376,13 @@ let mikanCallback = v => {
   props.ani.match = props.ani.match.filter(it => it.indexOf(`{{${group}}}:`) !== 0)
 
   props.ani.match.push(...newMatch)
+}
+
+let scrape = (force) => {
+  api.post('api/scrape?force=' + force, props.ani)
+      .then(res => {
+        ElMessage.success(res.message)
+      })
 }
 
 let props = defineProps(['ani'])

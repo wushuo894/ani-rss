@@ -587,16 +587,6 @@ public class Config implements Serializable {
     private Long alistDownloadRetryNumber;
 
     /**
-     * tvshow.nfo
-     */
-    private Boolean tvShowNfo;
-
-    /**
-     * season.nfo
-     */
-    private Boolean seasonNfo;
-
-    /**
      * 设置备份
      */
     private Boolean configBackup;
@@ -640,4 +630,9 @@ public class Config implements Serializable {
      * 代理列表
      */
     private String proxyList;
+
+    /**
+     * 刮削开关
+     */
+    private Boolean scrape;
 }
