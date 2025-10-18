@@ -1,5 +1,6 @@
 package ani.rss.entity.tmdb;
 
+import ani.rss.enums.TmdbTypeEnum;
 import com.google.gson.annotations.SerializedName;
 import lombok.Data;
 import lombok.experimental.Accessors;
@@ -109,4 +110,6 @@ public class Tmdb implements Serializable {
      * 演职人员
      */
     private List<TmdbCredit> credits;
+
+    private TmdbTypeEnum tmdbType;
 }
