@@ -6,6 +6,9 @@ import lombok.experimental.Accessors;
 
 import java.io.Serializable;
 
+/**
+ * 标题
+ */
 @Data
 @Accessors(chain = true)
 public class TmdbTitle implements Serializable {
@@ -13,6 +16,6 @@ public class TmdbTitle implements Serializable {
 
     private String type;
 
-    @SerializedName(value = "iso31661",alternate = "iso_3166_1")
+    @SerializedName(value = "iso31661", alternate = "iso_3166_1")
     private String iso31661;
 }

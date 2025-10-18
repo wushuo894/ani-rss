@@ -29,8 +29,8 @@ public class NfoGenerator {
     /**
      * SxxExx.nfo
      *
-     * @param tmdbEpisode
-     * @param outputPath
+     * @param tmdbEpisode tmdb集
+     * @param outputPath  输出位置
      * @throws Exception
      */
     public static void generateEpisodeNfo(TmdbEpisode tmdbEpisode, String outputPath) throws Exception {
@@ -48,6 +48,7 @@ public class NfoGenerator {
         addElement(doc, rootElement, "aired", DateUtil.format(tmdbEpisode.getAirDate(), DatePattern.NORM_DATE_PATTERN));
         addElement(doc, rootElement, "episode", String.valueOf(tmdbEpisode.getEpisodeNumber()));
         addElement(doc, rootElement, "season", String.valueOf(tmdbEpisode.getSeasonNumber()));
+        addElement(doc, rootElement, "runtime", String.valueOf(tmdbEpisode.getRuntime()));
 
         saveXmlDocument(doc, outputPath);
     }
@@ -85,8 +86,8 @@ public class NfoGenerator {
     /**
      * tvshown.nfo
      *
-     * @param tmdb
-     * @param outputPath
+     * @param tmdb       tmdb
+     * @param outputPath 输出位置
      * @throws Exception
      */
     public static void generateTvShowNfo(Tmdb tmdb, String outputPath) throws Exception {
@@ -108,17 +109,18 @@ public class NfoGenerator {
 
         String tmdbGroupId = tmdb.getTmdbGroupId();
         if (StrUtil.isNotBlank(tmdbGroupId)) {
+            // 剧集组编号
             addElement(doc, rootElement, "tmdbegid", tmdbGroupId);
         }
 
+        // 种类
         List<TmdbGenres> genres = tmdb.getGenres();
-
         for (TmdbGenres genre : genres) {
             addElement(doc, rootElement, "genre", genre.getName());
         }
 
+        // 演职人员
         List<TmdbCredit> credits = tmdb.getCredits();
-
         for (TmdbCredit credit : credits) {
             Element actor = doc.createElement("actor");
             rootElement.appendChild(actor);
@@ -130,15 +132,13 @@ public class NfoGenerator {
         }
 
         saveXmlDocument(doc, outputPath);
-
-        log.error("nfo to {}", outputPath);
     }
 
     /**
      * 电影nfo
      *
-     * @param tmdb
-     * @param outputPath
+     * @param tmdb       tmdb
+     * @param outputPath 输出位置
      * @throws Exception
      */
     public static void generateMovieNfo(Tmdb tmdb, String outputPath) throws Exception {
@@ -164,17 +164,18 @@ public class NfoGenerator {
 
         String tmdbGroupId = tmdb.getTmdbGroupId();
         if (StrUtil.isNotBlank(tmdbGroupId)) {
+            // 剧集组编号
             addElement(doc, rootElement, "tmdbegid", tmdbGroupId);
         }
 
+        // 类型
         List<TmdbGenres> genres = tmdb.getGenres();
-
         for (TmdbGenres genre : genres) {
             addElement(doc, rootElement, "genre", genre.getName());
         }
 
+        // 演职人员
         List<TmdbCredit> credits = tmdb.getCredits();
-
         for (TmdbCredit credit : credits) {
             Element actor = doc.createElement("actor");
             rootElement.appendChild(actor);
@@ -187,17 +188,15 @@ public class NfoGenerator {
 
         // 保存 NFO 文件
         saveXmlDocument(doc, outputPath);
-
-        log.error("nfo to {}", outputPath);
     }
 
     /**
      * 添加元素
      *
-     * @param doc
-     * @param parent
-     * @param tagName
-     * @param value
+     * @param doc     Document
+     * @param parent  父级
+     * @param tagName 标签名
+     * @param value   文本值
      */
     private static void addElement(Document doc, Element parent, String tagName, String value) {
         if (StrUtil.isBlank(value)) {
@@ -211,12 +210,12 @@ public class NfoGenerator {
     /**
      * 保存
      *
-     * @param doc
-     * @param filePath
+     * @param doc      Document
+     * @param savePath 保存位置
      * @throws Exception
      */
-    private static void saveXmlDocument(Document doc, String filePath) throws Exception {
-        FileUtil.mkdir(new File(filePath).getParentFile());
+    private static void saveXmlDocument(Document doc, String savePath) throws Exception {
+        FileUtil.mkdir(new File(savePath).getParentFile());
 
         TransformerFactory transformerFactory = TransformerFactory.newInstance();
         Transformer transformer = transformerFactory.newTransformer();
@@ -224,7 +223,9 @@ public class NfoGenerator {
         transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "4");
 
         DOMSource source = new DOMSource(doc);
-        StreamResult result = new StreamResult(new File(filePath));
+        StreamResult result = new StreamResult(new File(savePath));
         transformer.transform(source, result);
+
+        log.info("已保存nfo {}", savePath);
     }
 }
