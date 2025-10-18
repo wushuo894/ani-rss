@@ -2,10 +2,7 @@ package ani.rss.service;
 
 import ani.rss.download.BaseDownload;
 import ani.rss.entity.Ani;
-import ani.rss.entity.tmdb.Tmdb;
-import ani.rss.entity.tmdb.TmdbCredit;
-import ani.rss.entity.tmdb.TmdbEpisode;
-import ani.rss.entity.tmdb.TmdbSeason;
+import ani.rss.entity.tmdb.*;
 import ani.rss.enums.StringEnum;
 import ani.rss.enums.TmdbTypeEnum;
 import ani.rss.util.basic.HttpReq;
@@ -46,15 +43,15 @@ public class ScrapeService {
 
         Boolean ova = ani.getOva();
         try {
-            log.info("scrape ... {}", title);
+            log.info("正在刮削 ... {}", title);
             if (ova) {
                 scrapeMovie(ani, force);
             } else {
                 scrapeTv(ani, force);
             }
-            log.info("scrape finish {}", title);
+            log.info("刮削完成 {}", title);
         } catch (Exception e) {
-            log.error("scrape error {}", title);
+            log.error("刮削错误 {}", title);
             log.error(e.getMessage(), e);
         }
     }
@@ -113,26 +110,29 @@ public class ScrapeService {
             NfoGenerator.generateMovieNfo(tmdb, outputPath);
         }
 
-        File posterFile = new File(downloadPath + "/poster.jpg");
-        File fanartFile = new File(downloadPath + "/fanart.jpg");
         String posterPath = tmdb.getPosterPath();
-        String backdropPath = tmdb.getBackdropPath();
+        String fanartPath = tmdb.getBackdropPath();
 
-        if (force || !FileUtil.exist(posterFile)) {
-            HttpReq.get("https://image.tmdb.org/t/p/w1280" + posterPath)
-                    .then(res -> {
-                        InputStream inputStream = res.bodyStream();
-                        FileUtil.writeFromStream(inputStream, posterFile, true);
-                    });
-        }
+        String posterExtName = FileUtil.extName(posterPath);
+        String fanartExtName = FileUtil.extName(fanartPath);
 
-        if (force || !FileUtil.exist(fanartFile)) {
-            HttpReq.get("https://image.tmdb.org/t/p/w1280" + backdropPath)
-                    .then(res -> {
-                        InputStream inputStream = res.bodyStream();
-                        FileUtil.writeFromStream(inputStream, fanartFile, true);
-                    });
+        File posterFile = new File(downloadPath + "/poster." + posterExtName);
+        File fanartFile = new File(downloadPath + "/fanart." + fanartExtName);
+
+        saveImages(posterPath, posterFile, force);
+        saveImages(fanartPath, fanartFile, force);
+
+        TmdbImages tmdbImages = TmdbUtil.getTmdbImages(tmdb, TmdbTypeEnum.MOVIE);
+        List<TmdbImage> logos = tmdbImages.getLogos();
+        if (logos.isEmpty()) {
+            return;
         }
+        TmdbImage tmdbImage = logos.get(0);
+        String logoPath = tmdbImage.getFilePath();
+        String extName = FileUtil.extName(logoPath);
+        File logoFile = new File(downloadPath + "/clearlogo." + extName);
+
+        saveImages(logoPath, logoFile, force);
     }
 
     /**
@@ -169,25 +169,26 @@ public class ScrapeService {
             NfoGenerator.generateTvShowNfo(tmdb, tvShowNfoFile);
         }
 
-        File posterFile = new File(downloadPath.getParent() + "/poster.jpg");
-        File fanartFile = new File(downloadPath.getParent() + "/fanart.jpg");
         String posterPath = tmdb.getPosterPath();
-        String backdropPath = tmdb.getBackdropPath();
+        String fanartPath = tmdb.getBackdropPath();
 
-        if (force || !FileUtil.exist(posterFile)) {
-            HttpReq.get("https://image.tmdb.org/t/p/w1280" + posterPath)
-                    .then(res -> {
-                        InputStream inputStream = res.bodyStream();
-                        FileUtil.writeFromStream(inputStream, posterFile, true);
-                    });
-        }
+        String posterExtName = FileUtil.extName(posterPath);
+        String fanartExtName = FileUtil.extName(fanartPath);
 
-        if (force || !FileUtil.exist(fanartFile)) {
-            HttpReq.get("https://image.tmdb.org/t/p/w1280" + backdropPath)
-                    .then(res -> {
-                        InputStream inputStream = res.bodyStream();
-                        FileUtil.writeFromStream(inputStream, fanartFile, true);
-                    });
+        File posterFile = new File(downloadPath.getParent() + "/poster." + posterExtName);
+        File fanartFile = new File(downloadPath.getParent() + "/fanart." + fanartExtName);
+
+        saveImages(posterPath, posterFile, force);
+        saveImages(fanartPath, fanartFile, force);
+
+        TmdbImages tmdbImages = TmdbUtil.getTmdbImages(tmdb, TmdbTypeEnum.TV);
+        List<TmdbImage> logos = tmdbImages.getLogos();
+        if (!logos.isEmpty()) {
+            TmdbImage tmdbImage = logos.get(0);
+            String logoPath = tmdbImage.getFilePath();
+            String extName = FileUtil.extName(logoPath);
+            File logoFile = new File(downloadPath.getParent() + "/clearlogo." + extName);
+            saveImages(logoPath, logoFile, force);
         }
 
         Integer season = ani.getSeason();
@@ -203,15 +204,11 @@ public class ScrapeService {
         String seasonPosterPath = tmdbSeason.getPosterPath();
         seasonPosterPath = StrUtil.blankToDefault(seasonPosterPath, posterPath);
 
-        File seasonPosterFile = new File(downloadPath.getParent() + "/season" + seasonFormat + "-poster.jpg");
+        String seasonPosterExtName = FileUtil.extName(seasonPosterPath);
 
-        if (force || !FileUtil.exist(seasonPosterFile)) {
-            HttpReq.get("https://image.tmdb.org/t/p/w1280" + seasonPosterPath)
-                    .then(res -> {
-                        InputStream inputStream = res.bodyStream();
-                        FileUtil.writeFromStream(inputStream, seasonPosterFile, true);
-                    });
-        }
+        File seasonPosterFile = new File(downloadPath.getParent() + "/season" + seasonFormat + "-poster." + seasonPosterExtName);
+
+        saveImages(seasonPosterPath, seasonPosterFile, force);
 
         String seasonNfoFile = downloadPath + "/season.nfo";
         if (force || !FileUtil.exist(seasonNfoFile)) {
@@ -243,6 +240,12 @@ public class ScrapeService {
                 continue;
             }
 
+            int seasonNumber = Integer.parseInt(ReUtil.get(StringEnum.SEASON_REG, mainName, 1));
+
+            if (season != seasonNumber) {
+                continue;
+            }
+
             Integer episodeNumber =
                     Integer.parseInt(ReUtil.get(StringEnum.SEASON_REG, mainName, 2));
 
@@ -252,22 +255,37 @@ public class ScrapeService {
 
             TmdbEpisode tmdbEpisode = episodeMap.get(episodeNumber);
 
-            String stillPath = tmdbEpisode.getStillPath();
-            File thumbFile = new File(downloadPath + "/" + mainName + "-thumb.jpg");
-            if (force || !FileUtil.exist(thumbFile)) {
-                HttpReq.get("https://image.tmdb.org/t/p/w1280" + stillPath)
-                        .then(res -> {
-                            InputStream inputStream = res.bodyStream();
-                            FileUtil.writeFromStream(inputStream, thumbFile, true);
-                        });
-            }
+            String thumbPath = tmdbEpisode.getStillPath();
+
+            String thumbExtName = FileUtil.extName(thumbPath);
+
+            File thumbFile = new File(downloadPath + "/" + mainName + "-thumb." + thumbExtName);
+
+            saveImages(thumbPath, thumbFile, force);
 
             String episodeFile = downloadPath + "/" + mainName + ".nfo";
             if (force || !FileUtil.exist(episodeFile)) {
                 NfoGenerator.generateEpisodeNfo(tmdbEpisode, episodeFile);
             }
-
         }
+    }
+
+    public static void saveImages(String tmdbPath, File saveFile, Boolean force) throws Exception {
+        if (!force) {
+            if (saveFile.exists()) {
+                return;
+            }
+        }
+
+        FileUtil.del(saveFile);
+
+        HttpReq.get("https://image.tmdb.org/t/p/original" + tmdbPath)
+                .then(res -> {
+                    try (InputStream inputStream = res.bodyStream()) {
+                        FileUtil.writeFromStream(inputStream, saveFile, true);
+                    } catch (Exception ignored) {
+                    }
+                });
 
     }
 
