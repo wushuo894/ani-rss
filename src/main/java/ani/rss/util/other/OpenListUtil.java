@@ -30,10 +30,10 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 
 /**
- * Alist
+ * OpenList
  */
 @Slf4j
-public class AlistUtil {
+public class OpenListUtil {
     private static final ExecutorService EXECUTOR = ExecutorBuilder.create()
             .setCorePoolSize(1)
             .setMaxPoolSize(1)
@@ -41,7 +41,7 @@ public class AlistUtil {
             .build();
 
     /**
-     * 将下载完成的任务上传至Alist
+     * 将下载完成的任务上传至 OpenList
      *
      * @param torrentsInfo 任务
      */
@@ -64,14 +64,14 @@ public class AlistUtil {
         verify();
 
         List<String> tags = torrentsInfo.getTags();
-        if (tags.contains(TorrentsTags.A_LIST.getValue())) {
+        if (tags.contains(TorrentsTags.OPEN_LIST.getValue())) {
             return;
         }
         if (tags.contains(TorrentsTags.UPLOAD_COMPLETED.getValue())) {
             return;
         }
 
-        TorrentUtil.addTags(torrentsInfo, TorrentsTags.A_LIST.getValue());
+        TorrentUtil.addTags(torrentsInfo, TorrentsTags.OPEN_LIST.getValue());
 
         String downloadDir = FilePathUtil.getAbsolutePath(torrentsInfo.getDownloadDir());
 
@@ -116,9 +116,9 @@ public class AlistUtil {
                                     log.info(jsonObject.toString());
                                     Assert.isTrue(code == 200, "上传失败 {} 状态码:{}", fileName, code);
 
-                                    String text = StrFormatter.format("alist上传完成 {}", fileName);
+                                    String text = StrFormatter.format("OpenList 上传完成 {}", fileName);
                                     if (alistTask) {
-                                        text = StrFormatter.format("已向alist添加上传任务 {}", fileName);
+                                        text = StrFormatter.format("已向 OpenList 添加上传任务 {}", fileName);
                                     }
                                     log.info(text);
                                     NotificationUtil.send(config, ani, text, NotificationStatusEnum.ALIST_UPLOAD);
@@ -129,13 +129,13 @@ public class AlistUtil {
                         log.error(e.getMessage(), e);
                     }
                 }
-                NotificationUtil.send(config, ani, "alist上传失败 " + fileName, NotificationStatusEnum.ERROR);
+                NotificationUtil.send(config, ani, "OpenList 上传失败 " + fileName, NotificationStatusEnum.ERROR);
             });
         }
     }
 
     /**
-     * 刷新 Alist 路径
+     * 刷新 OpenList 路径
      */
     public static void refresh(Ani ani) {
         Config config = ConfigUtil.CONFIG;
@@ -154,7 +154,7 @@ public class AlistUtil {
             if (getAlistRefreshDelay > 0) {
                 ThreadUtil.sleep(getAlistRefreshDelay, TimeUnit.SECONDS);
             }
-            log.info("刷新 Alist 路径: {}", finalPath);
+            log.info("刷新 OpenList 路径: {}", finalPath);
 
             try {
                 HttpReq
@@ -179,7 +179,7 @@ public class AlistUtil {
                             JsonObject jsonObject = GsonStatic.fromJson(res.body(), JsonObject.class);
                             int code = jsonObject.get("code").getAsInt();
                             Assert.isTrue(code == 200, "刷新失败 路径: {} 状态码: {}", finalPath, code);
-                            log.info("已成功刷新 Alist 路径: {}", finalPath);
+                            log.info("已成功刷新 OpenList 路径: {}", finalPath);
                         });
             } catch (Exception e) {
                 log.error(e.getMessage(), e);

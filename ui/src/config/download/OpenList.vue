@@ -1,9 +1,9 @@
 <template>
-  <el-form-item label="AlistHost">
+  <el-form-item label="OpenListHost">
     <el-input v-model:model-value="props.config['alistHost']" placeholder="http://127.0.0.1:5244"/>
   </el-form-item>
-  <el-form-item label="AlistToken">
-    <el-input v-model:model-value="props.config['alistToken']" placeholder="alist-xxxxxx"/>
+  <el-form-item label="OpenListToken">
+    <el-input v-model:model-value="props.config['alistToken']" placeholder="openlist-xxxxxx"/>
   </el-form-item>
   <el-form-item label="上传位置">
     <el-input v-model:model-value="props.config['alistPath']" placeholder="/"/>
@@ -36,7 +36,7 @@
       </div>
       <div>
         <el-text class="mx-1" size="small">
-          刷新 alist 上传路径的文件列表
+          刷新 OpenList 上传路径的文件列表
         </el-text>
       </div>
     </div>

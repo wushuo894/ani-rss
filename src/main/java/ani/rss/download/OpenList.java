@@ -37,7 +37,7 @@ import java.util.*;
 import java.util.stream.Stream;
 
 @Slf4j
-public class Alist implements BaseDownload {
+public class OpenList implements BaseDownload {
     private Config config;
 
     @Override
@@ -46,7 +46,7 @@ public class Alist implements BaseDownload {
         String host = config.getDownloadToolHost();
         String password = config.getDownloadToolPassword();
         if (StrUtil.isBlank(host) || StrUtil.isBlank(password)) {
-            log.warn("Alist 未配置完成");
+            log.warn("OpenList 未配置完成");
             return false;
         }
         String downloadPath = config.getDownloadPathTemplate();
@@ -58,12 +58,12 @@ public class Alist implements BaseDownload {
                     .setMethod(Method.GET)
                     .thenFunction(res -> {
                         if (!res.isOk()) {
-                            log.error("登录 Alist 失败");
+                            log.error("登录 OpenList 失败");
                             return false;
                         }
                         JsonObject jsonObject = GsonStatic.fromJson(res.body(), JsonObject.class);
                         if (jsonObject.get("code").getAsInt() != 200) {
-                            log.error("登录 Alist 失败");
+                            log.error("登录 OpenList 失败");
                             return false;
                         }
                         return true;
@@ -71,7 +71,7 @@ public class Alist implements BaseDownload {
         } catch (Exception e) {
             String message = ExceptionUtil.getMessage(e);
             log.error(e.getMessage(), e);
-            log.error("登录 Alist 失败 {}", message);
+            log.error("登录 OpenList 失败 {}", message);
         }
         return false;
     }
@@ -100,7 +100,7 @@ public class Alist implements BaseDownload {
                 String finalSavePath = savePath;
                 ls(savePath)
                         .stream()
-                        .map(AlistFileInfo::getName)
+                        .map(OpenListFileInfo::getName)
                         .filter(name -> name.contains(s))
                         .forEach(name -> {
                             postApi("fs/remove")
@@ -185,12 +185,12 @@ public class Alist implements BaseDownload {
                 taskDelete(tid);
             }
 
-            List<AlistFileInfo> alistFileInfos = findFiles(path);
+            List<OpenListFileInfo> openListFileInfos = findFiles(path);
 
             // 取大小最大的一个视频文件
-            AlistFileInfo videoFile = alistFileInfos.stream()
-                    .filter(alistFileInfo ->
-                            videoFormat.contains(FileUtil.extName(alistFileInfo.getName())))
+            OpenListFileInfo videoFile = openListFileInfos.stream()
+                    .filter(openListFileInfo ->
+                            videoFormat.contains(FileUtil.extName(openListFileInfo.getName())))
                     .findFirst()
                     .orElse(null);
 
@@ -198,15 +198,15 @@ public class Alist implements BaseDownload {
                 return false;
             }
 
-            List<AlistFileInfo> subtitleList = alistFileInfos.stream()
-                    .filter(alistFileInfo ->
-                            subtitleFormat.contains(FileUtil.extName(alistFileInfo.getName())))
+            List<OpenListFileInfo> subtitleList = openListFileInfos.stream()
+                    .filter(openListFileInfo ->
+                            subtitleFormat.contains(FileUtil.extName(openListFileInfo.getName())))
                     .toList();
 
             Map<String, String> renameMap = new HashMap<>();
             renameMap.put(videoFile.getName(), reName + "." + FileUtil.extName(videoFile.getName()));
-            for (AlistFileInfo alistFileInfo : subtitleList) {
-                String name = alistFileInfo.getName();
+            for (OpenListFileInfo openListFileInfo : subtitleList) {
+                String name = openListFileInfo.getName();
                 String extName = FileUtil.extName(name);
                 String newName = reName;
                 String lang = FileUtil.extName(FileUtil.mainName(name));
@@ -298,7 +298,7 @@ public class Alist implements BaseDownload {
      * @param path
      * @return
      */
-    public List<AlistFileInfo> ls(String path) {
+    public List<OpenListFileInfo> ls(String path) {
         try {
             return postApi("fs/list")
                     .body(GsonStatic.toJson(Map.of(
@@ -322,8 +322,8 @@ public class Alist implements BaseDownload {
                         if (Objects.isNull(content) || content.isJsonNull()) {
                             return List.of();
                         }
-                        List<AlistFileInfo> infos = GsonStatic.fromJsonList(content.getAsJsonArray(), AlistFileInfo.class);
-                        for (AlistFileInfo info : infos) {
+                        List<OpenListFileInfo> infos = GsonStatic.fromJsonList(content.getAsJsonArray(), OpenListFileInfo.class);
+                        for (OpenListFileInfo info : infos) {
                             info.setPath(path);
                         }
                         return ListUtil.sort(new ArrayList<>(infos), Comparator.comparing(fileInfo -> {
@@ -379,14 +379,14 @@ public class Alist implements BaseDownload {
      * @param path
      * @return
      */
-    public synchronized List<AlistFileInfo> findFiles(String path) {
-        List<AlistFileInfo> alistFileInfos = ls(path);
-        List<AlistFileInfo> list = alistFileInfos.stream()
-                .flatMap(alistFileInfo -> {
-                    if (alistFileInfo.getIs_dir()) {
-                        return findFiles(path + "/" + alistFileInfo.getName()).stream();
+    public synchronized List<OpenListFileInfo> findFiles(String path) {
+        List<OpenListFileInfo> openListFileInfos = ls(path);
+        List<OpenListFileInfo> list = openListFileInfos.stream()
+                .flatMap(openListFileInfo -> {
+                    if (openListFileInfo.getIs_dir()) {
+                        return findFiles(path + "/" + openListFileInfo.getName()).stream();
                     }
-                    return Stream.of(alistFileInfo);
+                    return Stream.of(openListFileInfo);
                 }).toList();
 
         return ListUtil.sort(new ArrayList<>(list), Comparator.comparing(fileInfo -> {
@@ -397,7 +397,7 @@ public class Alist implements BaseDownload {
 
     @Data
     @Accessors(chain = true)
-    public static class AlistFileInfo implements Serializable {
+    public static class OpenListFileInfo implements Serializable {
         private String name;
         private Long size;
         private Boolean is_dir;

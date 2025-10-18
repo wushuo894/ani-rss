@@ -321,6 +321,13 @@ public class TorrentUtil {
     public static synchronized void load() {
         Config config = ConfigUtil.CONFIG;
         String download = config.getDownloadToolType();
+
+        if (download.equals("Alist")) {
+            download = "OpenList";
+            config.setDownloadToolType(download);
+            ConfigUtil.sync();
+        }
+
         DOWNLOAD = ReflectUtil.newInstance("ani.rss.download." + download);
         log.info("下载工具 {}", download);
     }

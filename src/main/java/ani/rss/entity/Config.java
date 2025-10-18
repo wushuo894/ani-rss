@@ -422,12 +422,12 @@ public class Config implements Serializable {
     private Boolean autoUpdate;
 
     /**
-     * Alist
+     * OpenList
      */
     private String alistHost;
 
     /**
-     * Alist 令牌
+     * OpenList 令牌
      */
     private String alistToken;
 
@@ -562,12 +562,12 @@ public class Config implements Serializable {
     private String githubToken;
 
     /**
-     * 开启 Alist 列表刷新
+     * 开启 OpenList 列表刷新
      */
     private Boolean alistRefresh;
 
     /**
-     * Alist 刷新延迟
+     * OpenList 刷新延迟
      */
     private Long alistRefreshDelayed;
 

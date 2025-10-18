@@ -24,9 +24,9 @@
         </template>
       </el-input>
     </el-form-item>
-    <template v-else-if="props.config.downloadToolType === 'Alist'">
-      <el-form-item label="AlistToken">
-        <el-input v-model:model-value="props.config.downloadToolPassword" placeholder="alist-xxxxxx" show-password>
+    <template v-else-if="props.config.downloadToolType === 'OpenList'">
+      <el-form-item label="OpenListToken">
+        <el-input v-model:model-value="props.config.downloadToolPassword" placeholder="OpenList-xxxxxx" show-password>
           <template #prefix>
             <el-icon class="el-input__icon">
               <Key/>
@@ -36,7 +36,7 @@
         <br/>
         <el-text class="mx-1" size="small">
           请设置好 <strong>保存位置</strong> 才能通过测试<br/>
-          请在 alist -> 设置-> 其他 -> 配置临时目录<br/>
+          请在 OpenList -> 设置-> 其他 -> 配置临时目录<br/>
           支持离线下载到 115、PikPak、迅雷云盘
         </el-text>
       </el-form-item>
@@ -193,11 +193,11 @@
       <custom-tags :config="props.config"/>
     </el-form-item>
     <el-collapse v-model="activeName">
-      <el-collapse-item name="qb" title="qBittorrent 设置">
-        <q-bittorrent v-if="activeName.indexOf('qb') > -1" :config="props.config"/>
+      <el-collapse-item name="qBittorrent" title="qBittorrent 设置">
+        <QBittorrent v-if="activeName.indexOf('qBittorrent') > -1" :config="props.config"/>
       </el-collapse-item>
-      <el-collapse-item name="alist" title="Alist 设置">
-        <alist v-if="activeName.indexOf('alist') > -1" :config="props.config"/>
+      <el-collapse-item name="OpenList" title="OpenList 设置">
+        <OpenList v-if="activeName.indexOf('OpenList') > -1" :config="props.config"/>
       </el-collapse-item>
     </el-collapse>
   </el-form>
@@ -209,7 +209,7 @@ import api from "@/js/api.js";
 import {ElMessage, ElText} from "element-plus";
 import {Key, User} from "@element-plus/icons-vue";
 import QBittorrent from "@/config/download/qBittorrent.vue";
-import Alist from "@/config/download/Alist.vue";
+import OpenList from "@/config/download/OpenList.vue";
 import PrioKeys from "@/config/PrioKeys.vue";
 import CustomTags from "@/config/CustomTags.vue";
 
@@ -217,7 +217,7 @@ const downloadSelect = ref([
   'qBittorrent',
   'Transmission',
   'Aria2',
-  'Alist'
+  'OpenList'
 ])
 
 const downloadLoginTestLoading = ref(false)
