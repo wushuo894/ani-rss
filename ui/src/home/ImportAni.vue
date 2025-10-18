@@ -1,28 +1,32 @@
 <template>
   <el-dialog
-    v-model="dialogVisible"
-    title="导入数据"
-    width="500px"
-    :close-on-click-modal="false"
-    :close-on-press-escape="false"
+      v-model="dialogVisible"
+      title="导入数据"
+      width="500px"
+      :close-on-click-modal="false"
+      :close-on-press-escape="false"
   >
     <div class="import-dialog">
       <!-- 文件上传区域 -->
       <div class="upload-section">
         <div class="section-title">
-          <el-icon><document /></el-icon>
+          <el-icon>
+            <document/>
+          </el-icon>
           <span>选择文件</span>
         </div>
 
         <div v-if="data.filename" class="file-selected">
           <el-tag
-            closable
-            @close="data.filename = ''"
-            type="success"
-            size="large"
-            class="file-tag"
+              closable
+              @close="data.filename = ''"
+              type="success"
+              size="large"
+              class="file-tag"
           >
-            <el-icon><document /></el-icon>
+            <el-icon>
+              <document/>
+            </el-icon>
             {{ data.filename }}
           </el-tag>
           <div class="file-info">
@@ -33,16 +37,16 @@
         </div>
 
         <el-upload
-          v-else
-          :before-upload="beforeUpload"
-          :show-file-list="false"
-          class="upload-area"
-          drag
-          accept=".json"
+            v-else
+            :before-upload="beforeUpload"
+            :show-file-list="false"
+            class="upload-area"
+            drag
+            accept=".json"
         >
           <div class="upload-content">
             <el-icon class="upload-icon">
-              <upload-filled />
+              <upload-filled/>
             </el-icon>
             <div class="upload-text">
               <div class="upload-main-text">拖拽文件到此处</div>
@@ -58,7 +62,9 @@
       <!-- 冲突处理设置 -->
       <div class="conflict-section" v-if="data.filename">
         <div class="section-title">
-          <el-icon><setting /></el-icon>
+          <el-icon>
+            <setting/>
+          </el-icon>
           <span>冲突处理</span>
         </div>
         <div class="conflict-content">
@@ -82,19 +88,21 @@
       <!-- 操作按钮 -->
       <div class="action-section">
         <el-button
-          @click="dialogVisible = false"
-          size="large"
+            @click="dialogVisible = false"
+            size="large"
         >
           取消
         </el-button>
         <el-button
-          type="primary"
-          :loading="importDataLoading"
-          :disabled="!data.filename"
-          @click="startImport"
-          size="large"
+            type="primary"
+            :loading="importDataLoading"
+            :disabled="!data.filename"
+            @click="startImport"
+            size="large"
         >
-          <el-icon v-if="!importDataLoading"><upload /></el-icon>
+          <el-icon v-if="!importDataLoading">
+            <upload/>
+          </el-icon>
           {{ importDataLoading ? '导入中...' : '开始导入' }}
         </el-button>
       </div>
@@ -103,7 +111,7 @@
 </template>
 <script setup>
 import {ref} from "vue";
-import {UploadFilled, Document, Setting, Upload} from "@element-plus/icons-vue";
+import {Document, Setting, Upload, UploadFilled} from "@element-plus/icons-vue";
 import api from "@/js/api.js";
 import {ElMessage} from "element-plus";
 

@@ -84,7 +84,8 @@ qBittorrent、Transmission、Aria2 等)推送任务指令。工具本身不具�
 
 ### 🚀 Sponsored by SharonNetworks
 
-本项目的构建与发布环境由 SharonNetworks 提供支持 —— 专注亚太顶级回国优化线路，高带宽、低延迟直连中国大陆，内置强大高防 DDoS 清洗能力。
+本项目的构建与发布环境由 SharonNetworks 提供支持 —— 专注亚太顶级回国优化线路，高带宽、低延迟直连中国大陆，内置强大高防 DDoS
+清洗能力。
 
 SharonNetworks 为您的业务起飞保驾护航！
 
@@ -95,7 +96,8 @@ SharonNetworks 为您的业务起飞保驾护航！
 * 多节点覆盖（香港、新加坡、日本、台湾、韩国）
 * 高防护力、高速网络；港/日/新 CDN 即将上线
 
-想体验同款构建环境？欢迎 [访问 Sharon 官网](https://sharon.io) 或 [加入 Telegram 群组](https://t.me/SharonNetwork) 了解更多并申请赞助。
+想体验同款构建环境？欢迎 [访问 Sharon 官网](https://sharon.io) 或 [加入 Telegram 群组](https://t.me/SharonNetwork)
+了解更多并申请赞助。
 
 [<img alt="image" src="https://github.com/wushuo894/ani-rss-docs/raw/master/docs/image/support.nodeget.com_page_promotion_id%3D88.webp" width="300"/>](https://yxvm.com/)
 
@@ -105,7 +107,7 @@ SharonNetworks 为您的业务起飞保驾护航！
 
 ## 依赖项目列表
 
-- [alist](https://github.com/AlistGo/alist)
+- [OpenList](https://github.com/OpenListTeam/OpenList)
 - [bittorrent](https://www.eclipse.org/)
 - [gson](https://github.com/google/gson)
 - [hutool](https://hutool.cn/)

@@ -487,12 +487,12 @@ public class DownloadService {
         }
 
         try {
-            AlistUtil.upload(torrentsInfo, ani);
+            OpenListUtil.upload(torrentsInfo, ani);
         } catch (Exception e) {
             log.error(e.getMessage(), e);
         }
         try {
-            AlistUtil.refresh(ani);
+            OpenListUtil.refresh(ani);
         } catch (Exception e) {
             log.error(e.getMessage(), e);
         }

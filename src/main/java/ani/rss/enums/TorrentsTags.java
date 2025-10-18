@@ -10,7 +10,7 @@ public enum TorrentsTags {
     RENAME("RENAME"),
     BACK_RSS("备用RSS"),
     DOWNLOAD_COMPLETE("下载完成"),
-    A_LIST("alist"),
+    OPEN_LIST("OpenList"),
     UPLOAD_COMPLETED("上传完成");
 
     private final String value;
