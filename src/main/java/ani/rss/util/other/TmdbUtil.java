@@ -208,7 +208,8 @@ public class TmdbUtil {
                 .form("language", tmdbLanguage)
                 .thenFunction(res -> {
                     HttpReq.assertStatus(res);
-                    return GsonStatic.fromJson(res.body(), Tmdb.class);
+                    return GsonStatic.fromJson(res.body(), Tmdb.class)
+                            .setTmdbType(tmdbType);
                 });
     }
 
@@ -244,6 +245,7 @@ public class TmdbUtil {
                     for (JsonElement item : body.getAsJsonArray("results")) {
                         try {
                             Tmdb tmdb = GsonStatic.fromJson(item, Tmdb.class);
+                            tmdb.setTmdbType(tmdbType);
                             tmdbs.add(tmdb);
                         } catch (Exception ignored) {
                         }
@@ -498,6 +500,13 @@ public class TmdbUtil {
                 });
     }
 
+    /**
+     * 演职人员
+     *
+     * @param tmdb
+     * @param tmdbType
+     * @return
+     */
     public static List<TmdbCredit> getCredits(Tmdb tmdb, TmdbTypeEnum tmdbType) {
         String tmdbApi = getTmdbApi();
         String tmdbApiKey = getTmdbApiKey();
@@ -520,6 +529,34 @@ public class TmdbUtil {
                     JsonArray cast = jsonObject.getAsJsonArray("cast");
 
                     return GsonStatic.fromJsonList(cast, TmdbCredit.class);
+                });
+    }
+
+    /**
+     * 获取图片
+     *
+     * @param tmdb
+     * @param tmdbType
+     * @return
+     */
+    public static TmdbImages getTmdbImages(Tmdb tmdb, TmdbTypeEnum tmdbType) {
+        String tmdbApi = getTmdbApi();
+        String tmdbApiKey = getTmdbApiKey();
+
+        String id = tmdb.getId();
+
+        Config config = ConfigUtil.CONFIG;
+        String tmdbLanguage = config.getTmdbLanguage();
+
+        String url = StrFormatter.format("{}/3/{}/{}/images", tmdbApi, tmdbType.getValue(), id);
+        return HttpReq.get(url)
+                .timeout(5000)
+                .form("api_key", tmdbApiKey)
+                .form("include_adult", "true")
+                .form("language", tmdbLanguage)
+                .thenFunction(res -> {
+                    HttpReq.assertStatus(res);
+                    return GsonStatic.fromJson(res.body(), TmdbImages.class);
                 });
     }
 
