@@ -149,15 +149,15 @@ public class NfoGenerator {
         }
 
         // 演职人员
-        List<TmdbCreditsCast> casts = tmdb.getCredits().getCasts();
-        for (TmdbCreditsCast cast : casts) {
+        List<TmdbCreditsCast> cast = tmdb.getCredits().getCast();
+        for (TmdbCreditsCast item : cast) {
             Element actor = doc.createElement("actor");
             rootElement.appendChild(actor);
 
-            addElement(doc, actor, "name", cast.getName());
-            addElement(doc, actor, "role", cast.getCharacter());
+            addElement(doc, actor, "name", item.getName());
+            addElement(doc, actor, "role", item.getCharacter());
             addElement(doc, actor, "type", "Actor");
-            addElement(doc, actor, "tmdbid", cast.getId());
+            addElement(doc, actor, "tmdbid", item.getId());
         }
 
         //  预告片
@@ -226,6 +226,6 @@ public class NfoGenerator {
         StreamResult result = new StreamResult(new File(savePath));
         transformer.transform(source, result);
 
-        log.info("已保存nfo {}", savePath);
+        log.info("已保存NFO {}", savePath);
     }
 }

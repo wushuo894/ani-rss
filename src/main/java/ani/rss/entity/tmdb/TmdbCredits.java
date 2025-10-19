@@ -12,5 +12,5 @@ import java.util.List;
 @Data
 @Accessors(chain = true)
 public class TmdbCredits implements Serializable {
-    private List<TmdbCreditsCast> casts;
+    private List<TmdbCreditsCast> cast;
 }

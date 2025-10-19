@@ -254,7 +254,7 @@ public class TmdbUtil {
                 .timeout(5000)
                 .form("api_key", tmdbApiKey)
                 .form("include_adult", "true")
-                .form("append_to_response", "translations")
+                .form("append_to_response", "translations,credits")
                 .form("language", tmdbLanguage)
                 .thenFunction(res -> {
                     HttpReq.assertStatus(res);
