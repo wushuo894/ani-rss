@@ -7,8 +7,6 @@ import ani.rss.enums.StringEnum;
 import ani.rss.enums.TmdbTypeEnum;
 import ani.rss.util.basic.HttpReq;
 import ani.rss.util.other.TmdbUtil;
-import cn.hutool.core.bean.BeanUtil;
-import cn.hutool.core.bean.copier.CopyOptions;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.ReUtil;
@@ -67,17 +65,7 @@ public class ScrapeService {
         Tmdb tmdb = ani.getTmdb();
 
         // 更新tmdb信息
-        BeanUtil.copyProperties(
-                TmdbUtil.getTmdb(tmdb, TmdbTypeEnum.MOVIE),
-                tmdb,
-                CopyOptions
-                        .create()
-                        .setIgnoreNullValue(true)
-        );
-
-        // 演职人员
-        List<TmdbCredit> credits = TmdbUtil.getCredits(tmdb, TmdbTypeEnum.MOVIE);
-        tmdb.setCredits(credits);
+        tmdb = TmdbUtil.getTmdb(tmdb, TmdbTypeEnum.MOVIE);
 
         // 下载位置
         File downloadPath = DownloadService.getDownloadPath(ani);
@@ -150,17 +138,7 @@ public class ScrapeService {
         Tmdb tmdb = ani.getTmdb();
 
         // 更新tmdb信息
-        BeanUtil.copyProperties(
-                TmdbUtil.getTmdb(tmdb, TmdbTypeEnum.TV),
-                tmdb,
-                CopyOptions
-                        .create()
-                        .setIgnoreNullValue(true)
-        );
-
-        // 演职人员
-        List<TmdbCredit> credits = TmdbUtil.getCredits(tmdb, TmdbTypeEnum.TV);
-        tmdb.setCredits(credits);
+        tmdb = TmdbUtil.getTmdb(tmdb, TmdbTypeEnum.TV);
 
         // 下载位置
         File downloadPath = DownloadService.getDownloadPath(ani);

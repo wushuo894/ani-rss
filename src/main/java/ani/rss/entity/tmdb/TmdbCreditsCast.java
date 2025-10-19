@@ -11,7 +11,7 @@ import java.io.Serializable;
  */
 @Data
 @Accessors(chain = true)
-public class TmdbCredit implements Serializable {
+public class TmdbCreditsCast implements Serializable {
     private Integer id;
 
     private String name;

@@ -1,5 +1,4 @@
-fix: 修复了一个日志的错误
-feat: 优化了获取logo的方式
+feat: 支持刮削预告片、工作室、宣传语
 
 [请不要将本项目在国内宣传](https://github.com/wushuo894/ani-rss/discussions/504)
 
