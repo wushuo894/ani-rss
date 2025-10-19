@@ -254,6 +254,7 @@ public class TmdbUtil {
                 .timeout(5000)
                 .form("api_key", tmdbApiKey)
                 .form("include_adult", "true")
+                .form("append_to_response", "translations")
                 .form("language", tmdbLanguage)
                 .thenFunction(res -> {
                     HttpReq.assertStatus(res);
@@ -269,7 +270,36 @@ public class TmdbUtil {
                         .setIgnoreNullValue(true)
         );
 
-        return newTmdb;
+        // 宣传语
+        String tagLine = tmdb.getTagline();
+
+        if (StrUtil.isBlank(tagLine)) {
+            TmdbTranslations translations = tmdb.getTranslations();
+            Optional<String> first = translations
+                    .getTranslations()
+                    .stream()
+                    .sorted(Comparator.comparingInt(it -> {
+                        int i = List.of("CN", "TW", "HK", "JP", "US").indexOf(it.getIso31661());
+                        if (i > -1) {
+                            return i;
+                        }
+                        return Integer.MAX_VALUE;
+                    }))
+                    .map(TmdbTranslation::getData)
+                    .map(TmdbTranslationData::getTagline)
+                    .filter(StrUtil::isNotBlank)
+                    .findFirst();
+            if (first.isPresent()) {
+                tagLine = first.get();
+            }
+        }
+
+        // 宣传片
+        List<TmdbVideo> videos = getVideos(tmdb, tmdbType);
+
+        return tmdb
+                .setTagline(tagLine)
+                .setVideos(videos);
     }
 
     /**
@@ -306,7 +336,6 @@ public class TmdbUtil {
                     JsonObject body = GsonStatic.fromJson(res.body(), JsonObject.class);
 
                     List<Tmdb> tmdbs = new ArrayList<>();
-
 
                     for (JsonElement item : body.getAsJsonArray("results")) {
                         try {
@@ -358,8 +387,8 @@ public class TmdbUtil {
     /**
      * 获取季信息
      *
-     * @param tmdb
-     * @param season
+     * @param tmdb   tmdb
+     * @param season 季
      * @return
      */
     public static Optional<TmdbSeason> getTmdbSeason(Tmdb tmdb, Integer season) {
@@ -449,7 +478,7 @@ public class TmdbUtil {
     /**
      * 获取每集的标题
      *
-     * @param ani
+     * @param ani 订阅
      * @return
      */
     public static synchronized Map<Integer, String> getEpisodeTitleMap(Ani ani) {
@@ -493,8 +522,8 @@ public class TmdbUtil {
     /**
      * 获取每集的标题
      *
-     * @param tmdb
-     * @param season
+     * @param tmdb   tmdb
+     * @param season 季
      * @return
      */
     public static Map<Integer, String> getEpisodeTitleMap(Tmdb tmdb, Integer season) {
@@ -524,7 +553,7 @@ public class TmdbUtil {
     /**
      * 获取剧集组
      *
-     * @param tmdb
+     * @param tmdb tmdb
      * @return
      */
     public static List<TmdbGroup> getTmdbGroup(Tmdb tmdb) {
@@ -569,11 +598,11 @@ public class TmdbUtil {
     /**
      * 演职人员
      *
-     * @param tmdb
-     * @param tmdbType
+     * @param tmdb     tmdb
+     * @param tmdbType 类型
      * @return
      */
-    public static List<TmdbCredit> getCredits(Tmdb tmdb, TmdbTypeEnum tmdbType) {
+    public static List<TmdbCredits> getCredits(Tmdb tmdb, TmdbTypeEnum tmdbType) {
         String tmdbApi = getTmdbApi();
         String tmdbApiKey = getTmdbApiKey();
 
@@ -594,15 +623,15 @@ public class TmdbUtil {
                     JsonObject jsonObject = GsonStatic.fromJson(res.body(), JsonObject.class);
                     JsonArray cast = jsonObject.getAsJsonArray("cast");
 
-                    return GsonStatic.fromJsonList(cast, TmdbCredit.class);
+                    return GsonStatic.fromJsonList(cast, TmdbCredits.class);
                 });
     }
 
     /**
      * 获取图片
      *
-     * @param tmdb
-     * @param tmdbType
+     * @param tmdb     tmdb
+     * @param tmdbType 类型
      * @return
      */
     public static TmdbImages getTmdbImages(Tmdb tmdb, TmdbTypeEnum tmdbType) {
@@ -674,6 +703,32 @@ public class TmdbUtil {
         return tmdbImages.setLogos(logos)
                 .setPosters(posters)
                 .setBackdrops(backdrops);
+    }
+
+    /**
+     * 获取预告片
+     *
+     * @param tmdb     tmdb
+     * @param tmdbType 类型
+     * @return
+     */
+    public static List<TmdbVideo> getVideos(Tmdb tmdb, TmdbTypeEnum tmdbType) {
+        String tmdbApi = getTmdbApi();
+        String tmdbApiKey = getTmdbApiKey();
+
+        String id = tmdb.getId();
+
+        String url = StrFormatter.format("{}/3/{}/{}/videos", tmdbApi, tmdbType.getValue(), id);
+        return HttpReq.get(url)
+                .timeout(5000)
+                .form("api_key", tmdbApiKey)
+                .form("include_adult", "true")
+                .thenFunction(res -> {
+                    HttpReq.assertStatus(res);
+                    JsonArray results = GsonStatic.fromJson(res.body(), JsonObject.class)
+                            .getAsJsonArray("results");
+                    return GsonStatic.fromJsonList(results, TmdbVideo.class);
+                });
     }
 
 }
