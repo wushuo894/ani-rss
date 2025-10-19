@@ -109,7 +109,33 @@ public class Tmdb implements Serializable {
     /**
      * 演职人员
      */
-    private List<TmdbCredit> credits;
+    private TmdbCredits credits;
+
+    /**
+     * 工作室
+     */
+    @SerializedName(value = "networks", alternate = "production_companies")
+    private List<TmdbNetwork> networks;
+
+    /**
+     * 预告片
+     */
+    private List<TmdbVideo> videos;
+
+    /**
+     * 时长
+     */
+    private Integer runtime;
+
+    /**
+     * 宣传语
+     */
+    private String tagline;
+
+    /**
+     * 翻译
+     */
+    private TmdbTranslations translations;
 
     private TmdbTypeEnum tmdbType;
 }
