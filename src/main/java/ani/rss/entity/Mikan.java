@@ -75,7 +75,7 @@ public class Mikan implements Serializable {
          */
         private String rss;
         /**
-         * 更新日志
+         * 更新日
          */
         private String updateDay;
         /**
