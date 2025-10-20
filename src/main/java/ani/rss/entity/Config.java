@@ -635,4 +635,9 @@ public class Config implements Serializable {
      * 刮削开关
      */
     private Boolean scrape;
+
+    /**
+     * 重名的订阅将允许被替换
+     */
+    private Boolean replace;
 }

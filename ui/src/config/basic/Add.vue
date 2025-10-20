@@ -71,7 +71,7 @@
       <el-switch v-model:model-value="props.config.importExclude" :disabled="props.config.enabledExclude"/>
     </el-form-item>
     <el-form-item label="封面质量">
-      <el-select v-model:model-value="props.config['bgmImage']" style="width: 150px;">
+      <el-select v-model="props.config['bgmImage']" style="width: 150px;">
         <el-option v-for="item in ['small','grid','large','medium','common']" :key="item"
                    :value="item"></el-option>
       </el-select>
@@ -79,18 +79,28 @@
     <el-form-item label="自定义集数规则">
       <div style="width: 100%;">
         <div>
-          <el-switch v-model:model-value="props.config.customEpisode"/>
+          <el-switch v-model="props.config.customEpisode"/>
         </div>
         <div style="display: flex;width: 100%;">
-          <el-input v-model:model-value="props.config.customEpisodeStr"
+          <el-input v-model="props.config.customEpisodeStr"
                     style="width: 100%"/>
           <div style="width: 4px;"></div>
-          <el-input-number v-model:model-value="props.config.customEpisodeGroupIndex"/>
+          <el-input-number v-model="props.config.customEpisodeGroupIndex"/>
         </div>
       </div>
     </el-form-item>
     <el-form-item label="自动上传">
-      <el-switch v-model:model-value="props.config['upload']"/>
+      <el-switch v-model="props.config['upload']"/>
+    </el-form-item>
+    <el-form-item label="自动替换">
+      <div>
+        <div>
+          <el-switch v-model="props.config['replace']"/>
+        </div>
+        <el-text size="small">
+          重名的订阅将允许被替换
+        </el-text>
+      </div>
     </el-form-item>
   </el-form>
 </template>

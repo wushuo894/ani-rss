@@ -115,9 +115,19 @@ public class AniAction implements BaseAction {
                 .filter(it -> it.getTitle().equals(ani.getTitle()) && it.getSeason().equals(ani.getSeason()))
                 .findFirst();
 
+        String title = ani.getTitle();
+        Integer season = ani.getSeason();
+
         if (first.isPresent()) {
-            resultErrorMsg("订阅标题重复");
-            return;
+            Config config = ConfigUtil.CONFIG;
+            Boolean replace = config.getReplace();
+            if (replace) {
+                AniUtil.ANI_LIST.remove(first.get());
+                log.info("自动替换 {} 第{}季", title, season);
+            } else {
+                resultErrorMsg("订阅标题重复");
+                return;
+            }
         }
 
         AniUtil.ANI_LIST.add(ani);
@@ -142,7 +152,7 @@ public class AniAction implements BaseAction {
             });
         }
         resultSuccessMsg("添加订阅成功");
-        log.info("添加订阅 {} {} {}", ani.getTitle(), ani.getUrl(), ani.getId());
+        log.info("添加订阅 {} {} {}", title, ani.getUrl(), ani.getId());
     }
 
     /**

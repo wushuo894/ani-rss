@@ -233,7 +233,8 @@ public class ConfigUtil {
                 .setSortType(SortTypeEnum.SCORE)
                 .setTmdbIdPlexMode(false)
                 .setProxyList(proxyList)
-                .setScrape(false);
+                .setScrape(false)
+                .setReplace(false);
     }
 
     /**
