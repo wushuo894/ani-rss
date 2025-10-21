@@ -150,7 +150,7 @@ public class TmdbUtil {
         String tmdbApiKey = getTmdbApiKey();
         String id = tmdb.getId();
         String url = StrFormatter.format("{}/3/{}/{}/alternative_titles", tmdbApi, tmdbType.getValue(), id);
-        return HttpReq.get(url)
+        List<TmdbTitle> tmdbTitles = HttpReq.get(url)
                 .timeout(5000)
                 .form("api_key", tmdbApiKey)
                 .form("include_adult", "true")
@@ -161,6 +161,13 @@ public class TmdbUtil {
                             jsonObject.getAsJsonArray("results"),
                             TmdbTitle.class);
                 });
+
+        for (TmdbTitle tmdbTitle : tmdbTitles) {
+            String name = RenameUtil.getName(tmdbTitle.getTitle());
+            tmdbTitle.setTitle(name);
+        }
+
+        return tmdbTitles;
     }
 
     /**
@@ -191,6 +198,7 @@ public class TmdbUtil {
                 continue;
             }
             if (List.of("romaji", "romanization").contains(type.toLowerCase())) {
+                title = RenameUtil.getName(title);
                 // 判断为罗马音
                 tmdb.setName(title);
                 return;
@@ -200,6 +208,7 @@ public class TmdbUtil {
         String romaji = "";
         try {
             romaji = AniListUtil.getRomaji(tmdb.getName());
+            romaji = RenameUtil.getName(romaji);
         } catch (Exception e) {
             log.error("通过AniList获取罗马音失败");
             log.error(e.getMessage(), e);
@@ -373,7 +382,7 @@ public class TmdbUtil {
                             .toList();
 
                     // 优先使用名称完全匹配
-                    return tmdbList.stream()
+                    Tmdb get = tmdbList.stream()
                             .filter(tmdb -> {
                                 String name = tmdb.getName();
                                 String originalName = tmdb.getOriginalName();
@@ -381,6 +390,10 @@ public class TmdbUtil {
                             })
                             .findFirst()
                             .orElse(tmdbList.get(0));
+                    String name = get.getName();
+                    name = RenameUtil.getName(name);
+                    get.setName(name);
+                    return get;
                 });
     }
 
@@ -542,6 +555,7 @@ public class TmdbUtil {
             for (TmdbEpisode episode : episodes) {
                 Integer episodeNumber = episode.getEpisodeNumber();
                 String name = episode.getName();
+                name = RenameUtil.getName(name);
                 map.put(episodeNumber, name);
             }
         } catch (Exception e) {
