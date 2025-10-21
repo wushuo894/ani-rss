@@ -90,7 +90,7 @@ public class Config implements Serializable {
     private String ovaDownloadPathTemplate;
 
     /**
-     * 检测是否死种
+     * 检测添加失败
      */
     private Boolean watchErrorTorrent;
 
