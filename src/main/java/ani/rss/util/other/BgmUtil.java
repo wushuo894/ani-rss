@@ -827,11 +827,8 @@ public class BgmUtil {
 
         // 是否使用tmdb标题
         if (StrUtil.isNotBlank(themoviedbName) && tmdb) {
-            title = themoviedbName;
-            // 去除特殊符号
-            title = RenameUtil.getName(title);
             ani
-                    .setTitle(title);
+                    .setTitle(themoviedbName);
         }
 
         // 下载位置
