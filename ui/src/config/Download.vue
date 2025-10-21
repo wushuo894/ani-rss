@@ -169,7 +169,7 @@
         </template>
       </el-input-number>
     </el-form-item>
-    <el-form-item label="检测是否死种">
+    <el-form-item label="检测添加失败">
       <el-switch v-model:model-value="props.config.watchErrorTorrent"/>
     </el-form-item>
     <el-form-item label="优先保留">
