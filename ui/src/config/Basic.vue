@@ -18,7 +18,10 @@
     <el-collapse-item name="6" title="Bangumi">
       <bangumi :config="props.config"/>
     </el-collapse-item>
-    <el-collapse-item name="7" title="其他">
+    <el-collapse-item name="7" title="合集下载配置">
+      <collection :config="props.config"/>
+    </el-collapse-item>
+    <el-collapse-item name="8" title="其他">
       <other :config="props.config"/>
     </el-collapse-item>
   </el-collapse>
@@ -33,6 +36,7 @@ import Rss from "@/config/basic/Rss.vue";
 import Trackers from "@/config/basic/Trackers.vue";
 import Other from "@/config/basic/Other.vue";
 import Bangumi from "@/config/basic/Bangumi.vue";
+import Collection from "@/config/basic/Collection.vue";
 
 let activeName = ref('1')
 
