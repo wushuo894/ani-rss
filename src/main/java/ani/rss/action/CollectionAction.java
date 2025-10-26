@@ -24,7 +24,9 @@ import cn.hutool.http.server.HttpServerResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.eclipse.bittorrent.TorrentFile;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.InputStreamReader;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
@@ -235,7 +237,17 @@ public class CollectionAction implements BaseAction {
         Ani ani = collectionInfo.getAni();
         String title = ani.getTitle();
         String subgroup = ani.getSubgroup();
-        String downloadPath = ani.getDownloadPath();
+        // String downloadPath = ani.getDownloadPath();
+
+        // 修改获取下载路径的逻辑，启用了软链接管理功能就获取CollectionSoftlinkRealPath否则获取DownloadPath
+        String downloadPath = null;
+        if(ani.getCollectionSoftlinkSwitch()){
+            downloadPath = ani.getCollectionSoftlinkRealPath();
+        }else{
+            downloadPath = ani.getDownloadPath();
+        }
+
+
 
         String name = StrFormatter.format("[{}] {} 第{}季", subgroup, title, ani.getSeason());
         download(name, tempFile, downloadPath, List.of("ANI-RSS合集下载", subgroup));
@@ -279,12 +291,41 @@ public class CollectionAction implements BaseAction {
                 ));
 
         String host = config.getDownloadToolHost();
+        if(ani.getCollectionSoftlinkSwitch()){
+            try {
+                Process process = Runtime.getRuntime().exec(StrFormatter.format("mkdir -p {}", ani.getCollectionSoftlinkTargetPath()));
+                process.waitFor();
+            } catch (Exception e) {
+                // TODO: handle exception
+                e.printStackTrace();
+            }
+            
+        }
 
         for (int i = 0; i < 30; i++) {
             for (qBittorrent.FileEntity file : files) {
                 String oldPath = file.getName();
                 String newPath = reNameMap.get(oldPath);
-
+                if(ani.getCollectionSoftlinkSwitch()){
+                    String sourcePath = StrFormatter.format("{}/{}", ani.getCollectionSoftlinkRealPath(), oldPath);
+                    String targetPath = StrFormatter.format("{}/{}", ani.getCollectionSoftlinkTargetPath(), newPath);
+                    // String cmd = StrFormatter.format("ln -s \"{}\" \"{}\"", sourcePath, targetPath);
+                    try {
+                        ProcessBuilder processBuilder = new ProcessBuilder("ln", "-s", sourcePath, targetPath);
+                        Process process = processBuilder.start();
+                        BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+                        String line;
+                        while ((line = reader.readLine())!=null) {
+                            log.info(line);
+                        }
+                        process.waitFor();
+                    } catch (Exception e) {
+                        // TODO: handle exception
+                        e.printStackTrace();
+                    }
+                    
+                    continue;
+                }
                 if (!reNameMap.containsKey(oldPath)) {
                     if (!reNameMap.containsValue(oldPath) && file.getPriority() > 0) {
                         HttpReq.post(host + "/api/v2/torrents/filePrio")
@@ -301,6 +342,10 @@ public class CollectionAction implements BaseAction {
                         .form("oldPath", oldPath)
                         .form("newPath", newPath)
                         .thenFunction(HttpResponse::isOk);
+            }
+            if(ani.getCollectionSoftlinkSwitch()){
+
+                break;
             }
             files.clear();
             files.addAll(qBittorrent.files(torrentsInfo, false, config));
