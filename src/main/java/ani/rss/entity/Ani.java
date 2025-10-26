@@ -270,6 +270,21 @@ public class Ani implements Serializable {
      */
     private List<String> customTags;
 
+    /**
+     * 合集软链接管理开关
+     */
+    private Boolean collectionSoftlinkSwitch;
+
+    /**
+     * 合集软链接管理启用后的真实下载目录
+     */
+    private String collectionSoftlinkRealPath;
+
+    /**
+     * 合集软链接功能启用后软链接目标目录
+     */
+    private String collectionSoftlinkTargetPath;
+
     public static Ani createAni() {
         Ani newAni = new Ani();
         Config config = ConfigUtil.CONFIG;
@@ -321,7 +336,10 @@ public class Ani implements Serializable {
                 .setCustomCompleted(false)
                 .setCustomCompletedPathTemplate("")
                 .setCustomTags(new ArrayList<>())
-                .setCustomTagsEnable(false);
+                .setCustomTagsEnable(false)
+                .setCollectionSoftlinkSwitch(config.getCollectionSoftlinkSwitch())
+                .setCollectionSoftlinkRealPath(config.getCollectionSoftlinkRealPathTemplate())
+                .setCollectionSoftlinkTargetPath(config.getCollectionSoftlinkTargetPathTemplate());
     }
 
 }

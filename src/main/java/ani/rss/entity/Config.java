@@ -640,4 +640,19 @@ public class Config implements Serializable {
      * 重名的订阅将允许被替换
      */
     private Boolean replace;
+
+    /**
+     * 集合下载开启软链接管理目录
+     */
+    private Boolean collectionSoftlinkSwitch;
+
+    /**
+     * 当collectionSoftlinkSwitch为真时真实下载目录
+     */
+    private String collectionSoftlinkRealPathTemplate;
+
+    /**
+     * 当collectionSoftlinkSwitch为真时软连接的目标目录
+     */
+    private String collectionSoftlinkTargetPathTemplate;
 }

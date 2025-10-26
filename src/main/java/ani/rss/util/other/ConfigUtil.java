@@ -55,10 +55,13 @@ public class ConfigUtil {
         String downloadPath = FilePathUtil.getAbsolutePath(new File(rootPath + "/番剧"));
         String ovaDownloadPath = FilePathUtil.getAbsolutePath(new File(rootPath + "/剧场版"));
         String completedPath = FilePathUtil.getAbsolutePath(new File(rootPath + "/已完结番剧"));
+        String collectionSoftlinkRealPath = FilePathUtil.getAbsolutePath(new File(rootPath + "/.config/番剧"));
 
         String downloadPathTemplate = StrFormatter.format("{}/${letter}/${title}/Season ${season}", downloadPath);
         String ovaDownloadPathTemplate = StrFormatter.format("{}/${letter}/${title}", ovaDownloadPath);
         String completedPathTemplate = StrFormatter.format("{}/${letter}/${title}/Season ${season}", completedPath);
+        String collectionSoftlinkRealPathTemplate = StrFormatter.format("{}/${letter}/${title}/Season ${season}", collectionSoftlinkRealPath);
+
 
         String password = SecureUtil.md5("admin");
 
@@ -234,7 +237,11 @@ public class ConfigUtil {
                 .setTmdbIdPlexMode(false)
                 .setProxyList(proxyList)
                 .setScrape(false)
-                .setReplace(false);
+                .setReplace(false)
+                .setCollectionSoftlinkSwitch(false)
+                .setCollectionSoftlinkRealPathTemplate(collectionSoftlinkRealPathTemplate)
+                .setCollectionSoftlinkTargetPathTemplate(downloadPathTemplate)
+                ;
     }
 
     /**

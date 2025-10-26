@@ -836,6 +836,14 @@ public class BgmUtil {
                 DownloadService.getDownloadPath(ani)
         );
 
+        // 合集软链接下载地址
+        String collectionSoftlinkRealPath = FilePathUtil.getAbsolutePath(
+            DownloadService.processPath(ani, ani.getCollectionSoftlinkRealPath())
+        );
+        String collectionSoftlinkTargetPath = FilePathUtil.getAbsolutePath(
+            DownloadService.processPath(ani, ani.getCollectionSoftlinkTargetPath())
+        );
+
         String alistPath = config.getAlistPath();
         String completedPathTemplate = config.getCompletedPathTemplate();
 
@@ -851,7 +859,9 @@ public class BgmUtil {
                 .setThemoviedbName(themoviedbName)
                 .setAlistPath(alistPath)
                 .setDownloadPath(downloadPath)
-                .setCustomCompletedPathTemplate(completedPathTemplate);
+                .setCustomCompletedPathTemplate(completedPathTemplate)
+                .setCollectionSoftlinkRealPath(collectionSoftlinkRealPath)
+                .setCollectionSoftlinkTargetPath(collectionSoftlinkTargetPath);
     }
 
 
