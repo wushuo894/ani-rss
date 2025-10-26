@@ -523,6 +523,96 @@ public class DownloadService {
     }
 
     /**
+     * 处理路径模板并返回File对象
+     * @param ani 当前的订阅信息
+     * @param path 需要处理的路径模板
+     * @return
+     */
+    public static File processPath(Ani ani, String path){
+        File file = new File(fillAniInfo(ani, path));
+        return file;
+    }
+
+    /**
+     * 将路径中的模板字符串填充为真实信息并返回完整字符串
+     * @param ani 当前的订阅信息
+     * @param path 需要填充的路径模板
+     * @return {String} 
+     */
+    public static String fillAniInfo(Ani ani, String path){
+        String title = ani.getTitle().trim();
+
+        String pinyin = PinyinUtil.getPinyin(title);
+        String letter = pinyin.substring(0, 1).toUpperCase();
+        if (ReUtil.isMatch("^\\d$", letter)) {
+            letter = "0";
+        } else if (!ReUtil.isMatch("^[a-zA-Z]$", letter)) {
+            letter = "#";
+        }
+
+        path = path.replace("${letter}", letter);
+
+        int year = ani.getYear();
+        int month = ani.getMonth();
+        String monthFormat = String.format("%02d", month);
+        int quarter;
+        String quarterName;
+
+        /*
+        https://github.com/wushuo894/ani-rss/pull/451
+        优化季度判断规则，避免将月底先行播放的番归类到上个季度
+         */
+        if (List.of(12, 1, 2).contains(month)) {
+            quarter = 1;
+            quarterName = "冬";
+        } else if (List.of(3, 4, 5).contains(month)) {
+            quarter = 4;
+            quarterName = "春";
+        } else if (List.of(6, 7, 8).contains(month)) {
+            quarter = 7;
+            quarterName = "夏";
+        } else {
+            quarter = 10;
+            quarterName = "秋";
+        }
+        String quarterFormat = String.format("%02d", quarter);
+
+        path = path.replace("${year}", String.valueOf(year));
+        path = path.replace("${month}", String.valueOf(month));
+        path = path.replace("${monthFormat}", monthFormat);
+        path = path.replace("${quarter}", String.valueOf(quarter));
+        path = path.replace("${quarterFormat}", quarterFormat);
+        path = path.replace("${quarterName}", quarterName);
+
+        int season = ani.getSeason();
+        String seasonFormat = String.format("%02d", season);
+
+        path = path.replace("${season}", String.valueOf(season));
+        path = path.replace("${seasonFormat}", seasonFormat);
+
+        List<Func1<Ani, Object>> list = List.of(
+                Ani::getTitle,
+                Ani::getThemoviedbName,
+                Ani::getSubgroup
+        );
+
+        path = RenameUtil.replaceField(path, ani, list);
+
+        String tmdbId = Opt.ofNullable(ani.getTmdb())
+                .map(Tmdb::getId)
+                .filter(StrUtil::isNotBlank)
+                .orElse("");
+
+        path = path.replace("${tmdbid}", tmdbId);
+
+        if (path.contains("${jpTitle}")) {
+            String jpTitle = RenameUtil.getJpTitle(ani);
+            path = path.replace("${jpTitle}", jpTitle);
+        }
+        return path;
+    }
+
+    /**
      * 获取下载位置
      *
      * @param ani
