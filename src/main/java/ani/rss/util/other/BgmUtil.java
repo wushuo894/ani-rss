@@ -109,13 +109,12 @@ public class BgmUtil {
         String url = UrlBuilder.of(host + "/search/subject/" + name)
                 .addQuery("type", 2)
                 .addQuery("max_results", 25)
+                .addQuery("responseGroup", "small")
                 .toString();
 
         HttpRequest httpRequest = HttpReq.get(url);
 
         return setToken(httpRequest)
-                .form("type", 2)
-                .form("responseGroup", "small")
                 .thenFunction(res -> {
                     if (!res.isOk()) {
                         return new ArrayList<>();
