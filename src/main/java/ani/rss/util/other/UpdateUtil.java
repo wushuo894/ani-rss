@@ -49,6 +49,7 @@ public class UpdateUtil {
         About about = new About()
                 .setVersion(version)
                 .setUpdate(false)
+                .setAutoUpdate(false)
                 .setLatest("")
                 .setMarkdownBody("");
         try {

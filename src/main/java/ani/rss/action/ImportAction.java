@@ -52,7 +52,7 @@ public class ImportAction implements BaseAction {
                 String cover = AniUtil.saveJpg(image);
                 ani.setCover(cover)
                         .setId(UUID.fastUUID().toString());
-                ANI_LIST.addAll(aniList);
+                ANI_LIST.add(ani);
                 continue;
             }
 
