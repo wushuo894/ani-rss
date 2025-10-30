@@ -1,5 +1,4 @@
-refactor: 优化文件名特殊符号处理
-refactor: 优化歧义 检测是否死种 -> 检测添加失败
+fix: 修复重复导入的问题
 
 [请不要将本项目在国内宣传](https://github.com/wushuo894/ani-rss/discussions/504)
 
