@@ -234,7 +234,8 @@ public class ConfigUtil {
                 .setTmdbIdPlexMode(false)
                 .setProxyList(proxyList)
                 .setScrape(false)
-                .setReplace(false);
+                .setReplace(false)
+                .setMaxFileNameLength(0);
     }
 
     /**
