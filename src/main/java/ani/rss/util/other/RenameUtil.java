@@ -126,6 +126,12 @@ public class RenameUtil {
 
         String reName = getName(renameTemplate);
 
+        Integer maxFileNameLength = config.getMaxFileNameLength();
+
+        if (maxFileNameLength > 0) {
+            reName = StrUtil.sub(reName, 0, maxFileNameLength);
+        }
+
         item
                 .setReName(reName);
         return true;

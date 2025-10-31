@@ -76,6 +76,7 @@ export let configData = {
     "renameTemplate": "[${subgroup}] ${title} S${seasonFormat}E${episodeFormat}",
     "renameDelYear": false,
     "renameDelTmdbId": false,
+    "maxFileNameLength": 0,
     "verifyLoginIp": false,
     "autoTrackersUpdate": false,
     "trackersUpdateUrls": "https://cf.trackerslist.com/best.txt",
