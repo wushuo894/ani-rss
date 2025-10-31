@@ -640,4 +640,9 @@ public class Config implements Serializable {
      * 重名的订阅将允许被替换
      */
     private Boolean replace;
+
+    /**
+     * 最大文件名长度 不包含后缀 如: .mkv .mp4
+     */
+    private Integer maxFileNameLength;
 }
