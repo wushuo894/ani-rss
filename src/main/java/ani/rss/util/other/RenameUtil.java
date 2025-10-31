@@ -129,7 +129,7 @@ public class RenameUtil {
         Integer maxFileNameLength = config.getMaxFileNameLength();
 
         if (maxFileNameLength > 0) {
-            reName = StrUtil.maxLength(reName, maxFileNameLength);
+            reName = StrUtil.sub(reName, 0, maxFileNameLength);
         }
 
         item
