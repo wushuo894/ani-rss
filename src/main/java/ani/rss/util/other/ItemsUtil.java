@@ -452,4 +452,30 @@ public class ItemsUtil {
                 });
     }
 
+    /**
+     * 判断是否为 x.5 集
+     *
+     * @param item 集数
+     * @return 判断结果
+     */
+    public static Boolean is5(Item item) {
+        if (Objects.isNull(item)) {
+            return false;
+        }
+        return is5(item.getEpisode());
+    }
+
+    /**
+     * 判断是否为 x.5 集
+     *
+     * @param episode 集数
+     * @return 判断结果
+     */
+    public static Boolean is5(Double episode) {
+        if (Objects.isNull(episode)) {
+            return false;
+        }
+        return episode.intValue() != episode;
+    }
+
 }

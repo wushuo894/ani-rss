@@ -10,6 +10,7 @@ import ani.rss.service.DownloadService;
 import ani.rss.util.basic.FilePathUtil;
 import ani.rss.util.basic.NumberFormatUtil;
 import ani.rss.util.other.ConfigUtil;
+import ani.rss.util.other.ItemsUtil;
 import ani.rss.util.other.RenameUtil;
 import cn.hutool.core.lang.Opt;
 import cn.hutool.core.lang.func.Func1;
@@ -57,10 +58,8 @@ public interface BaseNotification {
 
         String episodeFormat = String.format("%02d", (int) episode);
 
-        // .5
-        boolean is5 = episode != (int) episode;
-
-        if (is5) {
+        // x.5
+        if (ItemsUtil.is5(episode)) {
             episodeFormat = episodeFormat + ".5";
         }
 

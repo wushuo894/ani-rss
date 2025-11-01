@@ -5,17 +5,16 @@ import ani.rss.annotation.Path;
 import ani.rss.auth.enums.AuthType;
 import ani.rss.entity.Ani;
 import ani.rss.entity.Config;
+import ani.rss.entity.EmbyWebHook;
 import ani.rss.enums.StringEnum;
 import ani.rss.service.DownloadService;
-import ani.rss.util.other.AniUtil;
-import ani.rss.util.other.BgmUtil;
-import ani.rss.util.other.ConfigUtil;
+import ani.rss.util.basic.GsonStatic;
+import ani.rss.util.other.*;
 import cn.hutool.core.thread.ExecutorBuilder;
 import cn.hutool.core.util.ReUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.server.HttpServerRequest;
 import cn.hutool.http.server.HttpServerResponse;
-import com.google.gson.JsonObject;
 import lombok.Synchronized;
 import lombok.extern.slf4j.Slf4j;
 
@@ -43,9 +42,8 @@ public class WebHookAction implements BaseAction {
     @Override
     @Synchronized("EXECUTOR")
     public void doAction(HttpServerRequest request, HttpServerResponse response) throws IOException {
-        JsonObject body = getBody(JsonObject.class);
-
-        log.debug("webhook: {}", body.toString());
+        String body = getBody();
+        log.debug("webhook: {}", body);
 
         Config config = ConfigUtil.CONFIG;
         String bgmToken = config.getBgmToken();
@@ -55,33 +53,42 @@ public class WebHookAction implements BaseAction {
             return;
         }
 
-        JsonObject item = body.getAsJsonObject("Item");
-        String path = item.get("Path").getAsString();
+        EmbyWebHook embyWebHook = GsonStatic.fromJson(body, EmbyWebHook.class);
+
+        EmbyWebHook.Item item = embyWebHook.getItem();
+
+        String path = item.getPath();
         String parent = new File(path).getParent();
-        String seriesName = item.get("SeriesName").getAsString();
-        String fileName = item.get("FileName").getAsString();
+        String seriesName = item.getSeriesName();
+        String fileName = item.getFileName();
         if (!ReUtil.contains(StringEnum.SEASON_REG, fileName)) {
             response.sendOk();
             return;
         }
-        int s = Integer.parseInt(ReUtil.get(StringEnum.SEASON_REG, fileName, 1));
+        // 季
+        int season = Integer.parseInt(ReUtil.get(StringEnum.SEASON_REG, fileName, 1));
 
         // 番外
-        if (s < 1) {
+        if (season < 1) {
             response.sendOk();
             return;
         }
 
-        // x.5
-        double e = Double.parseDouble(ReUtil.get(StringEnum.SEASON_REG, fileName, 2));
-        if ((int) e == e - 0.5) {
+        // 集 x.5
+        double episode = Double.parseDouble(ReUtil.get(StringEnum.SEASON_REG, fileName, 2));
+        if (ItemsUtil.is5(episode)) {
             response.sendOk();
             return;
         }
 
         response.sendOk();
 
-        int type = "item.markunplayed".equalsIgnoreCase(body.get("Event").getAsString()) ? 0 : 2;
+        int type = getType(embyWebHook);
+
+        if (type < 0) {
+            // 播放状态未正确获取
+            return;
+        }
 
         EXECUTOR.execute(() -> {
             log.info("{} 标记为 [{}]", fileName, List.of("未看过", "想看", "看过").get(type));
@@ -111,17 +118,16 @@ public class WebHookAction implements BaseAction {
                                 return false;
                             }
                             String title = ani.getTitle();
-                            title = title.replaceAll(StringEnum.YEAR_REG, "")
-                                    .trim();
-                            Integer season = ani.getSeason();
-                            return title.equals(seriesName) && s == season;
+                            title = RenameUtil.renameDel(title);
+                            // 名称与季相同
+                            return title.equals(seriesName) && season == ani.getSeason();
                         })
                         .map(BgmUtil::getSubjectId)
                         .findFirst();
             }
 
-            subjectId = first.orElseGet(() -> BgmUtil.getSubjectId(seriesName, s));
-            episodeId = BgmUtil.getEpisodeId(subjectId, e);
+            subjectId = first.orElseGet(() -> BgmUtil.getSubjectId(seriesName, season));
+            episodeId = BgmUtil.getEpisodeId(subjectId, episode);
 
             if (StrUtil.isBlank(episodeId)) {
                 log.info("获取bgm对应剧集失败");
@@ -132,5 +138,35 @@ public class WebHookAction implements BaseAction {
             BgmUtil.collections(subjectId);
             BgmUtil.collectionsEpisodes(episodeId, type);
         });
+    }
+
+    /**
+     * 获取播放状态
+     *
+     * @param embyWebHook
+     * @return
+     */
+    private static Integer getType(EmbyWebHook embyWebHook) {
+        String event = embyWebHook.getEvent();
+
+        if ("item.markunplayed".equalsIgnoreCase(event)) {
+            // 标记未看
+            return 0;
+        }
+
+        if ("item.markplayed".equalsIgnoreCase(event)) {
+            // 已看
+            return 2;
+        }
+
+        if ("playback.stop".equalsIgnoreCase(event)) {
+            boolean playedToCompletion = embyWebHook.getPlaybackInfo()
+                    .getPlayedToCompletion();
+            if (playedToCompletion) {
+                // 已看
+                return 2;
+            }
+        }
+        return -1;
     }
 }

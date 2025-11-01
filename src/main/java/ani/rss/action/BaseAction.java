@@ -33,6 +33,10 @@ public interface BaseAction extends Action {
         IoUtil.writeUtf8(response.getOut(), true, json);
     }
 
+    default String getBody() {
+        return ServerUtil.REQUEST.get().getBody();
+    }
+
     default <T> T getBody(Class<T> tClass) {
         return GsonStatic.fromJson(ServerUtil.REQUEST.get().getBody(), tClass);
     }
