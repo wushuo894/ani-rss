@@ -101,7 +101,7 @@ public class DownloadService {
 
             Double episode = item.getEpisode();
             // .5 集
-            boolean is5 = episode.intValue() != episode;
+            boolean is5 = ItemsUtil.is5(episode);
 
             // 已经下载过
             if (torrent.exists()) {

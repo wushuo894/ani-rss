@@ -190,7 +190,7 @@ public class Config implements Serializable {
     private Boolean autoDisabled;
 
     /**
-     * 自动跳过 xx.5 集数
+     * 自动跳过 x.5 集数
      */
     private Boolean skip5;
 

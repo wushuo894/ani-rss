@@ -3,7 +3,6 @@ package ani.rss.util.other;
 import ani.rss.entity.Ani;
 import ani.rss.entity.Config;
 import ani.rss.entity.tmdb.*;
-import ani.rss.enums.StringEnum;
 import ani.rss.enums.TmdbTypeEnum;
 import ani.rss.util.basic.ExceptionUtil;
 import ani.rss.util.basic.GsonStatic;
@@ -15,7 +14,6 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.text.StrFormatter;
 import cn.hutool.core.thread.ThreadUtil;
-import cn.hutool.core.util.ReUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.core.util.URLUtil;
 import com.google.gson.JsonArray;
@@ -63,17 +61,8 @@ public class TmdbUtil {
      */
     public synchronized static String getName(Ani ani) {
         Boolean ova = ani.getOva();
-        String name = ani.getTitle().trim();
-        if (StrUtil.isBlank(name)) {
-            return "";
-        }
-
-        Config config = ConfigUtil.CONFIG;
-
-        boolean titleYear = config.getTitleYear();
-        name = name.replaceAll(StringEnum.YEAR_REG, "")
-                .trim();
-
+        String name = ani.getTitle();
+        name = RenameUtil.renameDel(name);
         if (StrUtil.isBlank(name)) {
             return "";
         }
@@ -97,16 +86,6 @@ public class TmdbUtil {
         }
 
         String themoviedbName = tmdb.getName();
-
-        themoviedbName = RenameUtil.getName(themoviedbName);
-
-        if (StrUtil.isBlank(themoviedbName)) {
-            return "";
-        }
-
-        if (titleYear) {
-            themoviedbName = StrFormatter.format("{} ({})", themoviedbName, DateUtil.year(tmdb.getDate()));
-        }
         return getName(themoviedbName, tmdb);
     }
 
@@ -122,8 +101,14 @@ public class TmdbUtil {
             return title;
         }
         Config config = ConfigUtil.CONFIG;
-        Boolean tmdbId = config.getTmdbId();
-        Boolean tmdbIdPlexMode = config.getTmdbIdPlexMode();
+
+        boolean titleYear = config.getTitleYear();
+        if (titleYear) {
+            title = StrFormatter.format("{} ({})", title, DateUtil.year(tmdb.getDate()));
+        }
+
+        boolean tmdbId = config.getTmdbId();
+        boolean tmdbIdPlexMode = config.getTmdbIdPlexMode();
         if (tmdbId) {
             if (tmdbIdPlexMode) {
                 title = StrFormatter.format("{} {tmdb-{}}", title, tmdb.getId());
@@ -131,7 +116,7 @@ public class TmdbUtil {
                 title = StrFormatter.format("{} [tmdbid={}]", title, tmdb.getId());
             }
         }
-        return title;
+        return RenameUtil.getName(title);
     }
 
     /**
@@ -322,10 +307,8 @@ public class TmdbUtil {
         Config config = ConfigUtil.CONFIG;
         String tmdbLanguage = config.getTmdbLanguage();
 
-        titleName = ReUtil.replaceAll(titleName, StringEnum.TMDB_ID_REG, "")
-                .trim();
-        titleName = ReUtil.replaceAll(titleName, StringEnum.YEAR_REG, "");
-        titleName = titleName.trim();
+        titleName = RenameUtil.renameDel(titleName);
+
         if (StrUtil.isBlank(titleName)) {
             return null;
         }

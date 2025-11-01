@@ -68,13 +68,6 @@ public class RenameUtil {
             return false;
         }
 
-        Boolean skip5 = config.getSkip5();
-        if (skip5) {
-            if (episodeStr.endsWith(".5")) {
-                return false;
-            }
-        }
-
         double episode = Double.parseDouble(episodeStr) + offset;
         item.setEpisode(episode);
 
@@ -83,8 +76,13 @@ public class RenameUtil {
 
         episodeStr = String.valueOf((int) episode);
 
-        // .5
-        boolean is5 = episode != (int) episode;
+        // x.5
+        boolean is5 = ItemsUtil.is5(episode);
+
+        boolean skip5 = config.getSkip5();
+        if (skip5 && is5) {
+            return false;
+        }
 
         if (is5) {
             episodeFormat = episodeFormat + ".5";
@@ -185,7 +183,7 @@ public class RenameUtil {
      * @return 替换结果
      */
     public static String replaceEpisodeTitle(String template, Double episode, Ani ani) {
-        boolean is5 = episode != (int) episode.doubleValue();
+        boolean is5 = ItemsUtil.is5(episode);
 
         Map<Integer, String> episodeTitleMap = new HashMap<>();
         Map<Integer, Function<Boolean, String>> bgmEpisodeTitleMap = new HashMap<>();
@@ -263,7 +261,7 @@ public class RenameUtil {
 
     public static String getName(String s) {
         if (StrUtil.isBlank(s)) {
-            return s;
+            return "";
         }
 
         s = s.replace("1/2", "½");
@@ -298,6 +296,10 @@ public class RenameUtil {
      * @return
      */
     public static String renameDel(String title) {
+        if (StrUtil.isBlank(title)) {
+            return "";
+        }
+
         Config config = ConfigUtil.CONFIG;
         Boolean renameDelYear = config.getRenameDelYear();
         Boolean renameDelTmdbId = config.getRenameDelTmdbId();
