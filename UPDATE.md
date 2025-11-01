@@ -1,4 +1,6 @@
-feat: 增加重命名最大文件名长度设置 close #572
+feat: 优化自动点格子 #575 @nethcx
+
+`此次更新后需在emby通知中勾选 停止 事件`
 
 [请不要将本项目在国内宣传](https://github.com/wushuo894/ani-rss/discussions/504)
 
