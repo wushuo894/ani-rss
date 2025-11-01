@@ -81,7 +81,26 @@ public class WebHookAction implements BaseAction {
 
         response.sendOk();
 
-        int type = "item.markunplayed".equalsIgnoreCase(body.get("Event").getAsString()) ? 0 : 2;
+        String event = body.get("Event").getAsString();
+        int type;
+
+        if ("item.markunplayed".equalsIgnoreCase(event)) {
+            type = 0; // 标记未看
+
+        } else if ("playback.stop".equalsIgnoreCase(event)) {
+            boolean playedToCompletion = body.has("PlaybackInfo")
+                    && body.getAsJsonObject("PlaybackInfo").has("PlayedToCompletion")
+                    && body.getAsJsonObject("PlaybackInfo").get("PlayedToCompletion").getAsBoolean();
+
+            if (playedToCompletion) {
+                type = 2;
+            } else {
+                return;
+            }
+
+        } else {
+            return;
+        }
 
         EXECUTOR.execute(() -> {
             log.info("{} 标记为 [{}]", fileName, List.of("未看过", "想看", "看过").get(type));
