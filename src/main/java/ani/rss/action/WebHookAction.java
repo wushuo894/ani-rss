@@ -93,14 +93,16 @@ public class WebHookAction implements BaseAction {
                     && body.getAsJsonObject("PlaybackInfo").get("PlayedToCompletion").getAsBoolean();
 
             if (playedToCompletion) {
-                type = 2;
+                type = 2; // 播放完成
             } else {
                 return;
             }
-
+        } else if ("item.markplayed".equalsIgnoreCase(event)) {
+            type = 2; // 手动标记为已播放
         } else {
             return;
         }
+
 
         EXECUTOR.execute(() -> {
             log.info("{} 标记为 [{}]", fileName, List.of("未看过", "想看", "看过").get(type));
