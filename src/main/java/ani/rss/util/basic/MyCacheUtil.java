@@ -32,4 +32,10 @@ public class MyCacheUtil {
         log.debug("contains key [{}]", key);
         return CACHE.containsKey(key);
     }
+
+    @Synchronized("CACHE")
+    public static void remove(Object key) {
+        log.debug("remove key [{}]", key);
+        CACHE.remove(key);
+    }
 }

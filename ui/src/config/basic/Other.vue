@@ -16,7 +16,7 @@
     <el-form-item label="最大日志条数">
       <div style="width: 150px">
         <el-select v-model:model-value="props.config.logsMax">
-          <el-option v-for="it in [1024,2048,4096,8192]" :key="it" :label="it" :value="it"/>
+          <el-option v-for="it in [128,256,512,1024]" :key="it" :label="it" :value="it"/>
         </el-select>
       </div>
     </el-form-item>

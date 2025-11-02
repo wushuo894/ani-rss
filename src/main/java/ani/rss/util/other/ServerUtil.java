@@ -8,9 +8,8 @@ import ani.rss.annotation.Path;
 import ani.rss.auth.util.AuthUtil;
 import ani.rss.entity.Config;
 import ani.rss.entity.Result;
+import ani.rss.exception.ResultException;
 import ani.rss.util.basic.ExceptionUtil;
-import ani.rss.util.basic.GsonStatic;
-import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.lang.PatternPool;
 import cn.hutool.core.net.Ipv4Util;
 import cn.hutool.core.net.NetUtil;
@@ -150,13 +149,18 @@ public class ServerUtil {
                         BaseAction baseAction = (BaseAction) action;
                         baseAction.doAction(req, res);
                     } catch (Exception e) {
-                        String message = ExceptionUtil.getMessage(e);
-                        String json = GsonStatic.toJson(Result.error().setMessage(message));
-                        IoUtil.writeUtf8(res.getOut(), true, json);
-                        if (!(e instanceof IllegalArgumentException)) {
-                            log.error("{} {}", urlPath, e.getMessage());
-                            log.error(e.getMessage(), e);
+                        if (e instanceof ResultException resultException) {
+                            result(resultException.getResult());
+                            return;
                         }
+                        String message = ExceptionUtil.getMessage(e);
+                        resultErrorMsg(message);
+                        if (e instanceof IllegalArgumentException) {
+                            // 断言日志将不进行打印
+                            return;
+                        }
+                        log.error("{} {}", urlPath, e.getMessage());
+                        log.error(e.getMessage(), e);
                     }
                 }
             });

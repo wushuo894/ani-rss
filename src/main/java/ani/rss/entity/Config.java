@@ -645,4 +645,9 @@ public class Config implements Serializable {
      * 最大文件名长度 不包含后缀 如: .mkv .mp4
      */
     private Integer maxFileNameLength;
+
+    /**
+     * 限制尝试次数
+     */
+    private Boolean limitLoginAttempts;
 }
