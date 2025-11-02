@@ -1,6 +1,4 @@
-feat: 优化自动点格子 #575 @nethcx
-
-`此次更新后需在emby通知中勾选 停止 事件`
+feat: 增加登录设置 限制尝试次数
 
 [请不要将本项目在国内宣传](https://github.com/wushuo894/ani-rss/discussions/504)
 

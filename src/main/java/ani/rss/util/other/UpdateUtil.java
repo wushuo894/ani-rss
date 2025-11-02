@@ -36,7 +36,7 @@ public class UpdateUtil {
         Boolean customGithub = config.getCustomGithub();
         String customGithubUrl = config.getCustomGithubUrl();
 
-        String key = StrFormatter.format("github:{} {} {}", github, customGithub, customGithubUrl);
+        String key = StrFormatter.format("github#{} {} {}", github, customGithub, customGithubUrl);
 
         About cacheAbout = MyCacheUtil.get(key);
 

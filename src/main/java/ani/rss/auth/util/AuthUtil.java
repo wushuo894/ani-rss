@@ -1,5 +1,6 @@
 package ani.rss.auth.util;
 
+import ani.rss.action.LoginAction;
 import ani.rss.annotation.Auth;
 import ani.rss.auth.enums.AuthType;
 import ani.rss.entity.Config;
@@ -113,6 +114,7 @@ public class AuthUtil {
      * @return
      */
     public static Boolean test(HttpServerRequest request, Auth auth) {
+        LoginAction.limitLoginAttempts(false);
         if (!auth.value()) {
             // 不进行校验
             return true;
@@ -123,6 +125,7 @@ public class AuthUtil {
                 return true;
             }
         }
+        LoginAction.limitLoginAttempts(true);
         return false;
     }
 
