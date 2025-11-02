@@ -124,5 +124,6 @@ export let configData = {
     "notificationConfigList": [],
     "priorityKeywordsEnable": false,
     "priorityKeywords": [],
-    "procrastinatingMasterOnly": true
+    "procrastinatingMasterOnly": true,
+    "limitLoginAttempts": true
 }
