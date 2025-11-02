@@ -454,7 +454,9 @@ public class TmdbUtil {
             List<TmdbEpisode> episodes = tmdbSeason.getEpisodes();
             for (TmdbEpisode episode : episodes) {
                 Integer order = episode.getOrder();
-                episode.setEpisodeNumber(order + 1);
+                episode
+                        .setSeasonNumber(season)
+                        .setEpisodeNumber(order + 1);
             }
 
             Date airDate = episodes

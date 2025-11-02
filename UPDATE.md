@@ -1,4 +1,4 @@
-feat: 增加登录设置 限制尝试次数
+fix: 修复剧集组刮削时 SxxExx.nfo 中季数错误的问题
 
 [请不要将本项目在国内宣传](https://github.com/wushuo894/ani-rss/discussions/504)
 
