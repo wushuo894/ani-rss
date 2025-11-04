@@ -21,6 +21,13 @@ public class FixedSizeLinkedList<T> extends LinkedList<T> {
         boolean r = super.add(t);
         Config config = ConfigUtil.CONFIG;
         int logsMax = config.getLogsMax();
+
+        // 限制最大日志条数为 1024
+        if (logsMax > 1024) {
+            logsMax = 1024;
+            config.setLogsMax(logsMax);
+        }
+
         if (size() > logsMax) {
             removeRange(0, size() - logsMax);
         }

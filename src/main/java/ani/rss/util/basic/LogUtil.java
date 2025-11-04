@@ -34,7 +34,7 @@ import java.util.Objects;
 @Slf4j
 public class LogUtil {
 
-    public static final List<Log> LOGS = Collections.synchronizedList(new FixedSizeLinkedList<>());
+    public static final List<Log> LOG_LIST = Collections.synchronizedList(new FixedSizeLinkedList<>());
 
     public static void loadLogback() {
         Config config = ConfigUtil.CONFIG;
@@ -68,15 +68,13 @@ public class LogUtil {
                     StringBuilder log = new StringBuilder(StrFormatter.format("{} {} [{}] {} - {}", date, level, threadName, loggerName, formattedMessage));
                     IThrowableProxy throwableProxy = event.getThrowableProxy();
                     addThrowableMsg(log, throwableProxy);
-                    try {
-                        LOGS.add(
-                                new Log()
-                                        .setMessage(log.toString())
-                                        .setLevel(level)
-                                        .setLoggerName(loggerName)
-                                        .setThreadName(threadName)
-                        );
-                    } catch (Exception ignored) {
+                    Log logEntity = new Log()
+                            .setMessage(log.toString())
+                            .setLevel(level)
+                            .setLoggerName(loggerName)
+                            .setThreadName(threadName);
+                    synchronized (LOG_LIST) {
+                        LOG_LIST.add(logEntity);
                     }
                     return FilterReply.NEUTRAL;
                 }
