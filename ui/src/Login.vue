@@ -79,12 +79,19 @@ if (authorization.value) {
   window.authorization = authorization.value
 }
 
+/**
+ * 保存登陆信息
+ * @type {RemovableRef<{remember: boolean, username: string, password: string}>}
+ */
 let rememberThePassword = useLocalStorage('rememberThePassword', {
   remember: false,
   username: '',
   password: ''
 })
 
+/**
+ * 登陆
+ */
 let login = () => {
   user.value.password = user.value.password.trim()
   user.value.username = user.value.username.trim()
@@ -119,21 +126,20 @@ let login = () => {
       })
 }
 
+/**
+ * 测试是否处于白名单
+ */
 let test = () => {
   if (window.authorization) {
     return
   }
-  fetch('api/test', {
-    'headers': {
-      'Authorization': window.authorization
-    }
-  })
+  fetch('api/test')
       .then(res => res.json())
       .then(res => {
         if (res.code === 200) {
-          localStorage.setItem("authorization", '1')
-          window.authorization = '1'
-          authorization.value = '1'
+          window.authorization = new Date().getTime();
+          authorization.value = window.authorization
+          localStorage.setItem("authorization", window.authorization)
           return
         }
         localStorage.removeItem("authorization")

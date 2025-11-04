@@ -7,6 +7,7 @@ import ani.rss.util.basic.LogUtil;
 import cn.hutool.http.Method;
 import cn.hutool.http.server.HttpServerRequest;
 import cn.hutool.http.server.HttpServerResponse;
+import lombok.Synchronized;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
@@ -18,17 +19,18 @@ import java.util.List;
 @Auth
 @Path("/logs")
 public class LogsAction implements BaseAction {
+    List<Log> LOG_LIST = LogUtil.LOG_LIST;
 
     @Override
+    @Synchronized("LOG_LIST")
     public void doAction(HttpServerRequest req, HttpServerResponse res) {
         String method = req.getMethod();
-        List<Log> logs = LogUtil.LOGS;
         if (Method.DELETE.name().equals(method)) {
-            logs.clear();
+            LOG_LIST.clear();
             log.info("清理日志");
             resultSuccess();
             return;
         }
-        resultSuccess(logs);
+        resultSuccess(LOG_LIST);
     }
 }
