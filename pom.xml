@@ -11,7 +11,7 @@
         <name>wushuo894</name>
     </organization>
     <inceptionYear>2025</inceptionYear>
-    <description>自动追番、订阅、下载 蜜柑RSS动漫</description>
+    <description>基于RSS自动追番、订阅、下载、刮削</description>
 
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
@@ -59,7 +59,7 @@
         <dependency>
             <groupId>cn.hutool</groupId>
             <artifactId>hutool-all</artifactId>
-            <version>5.8.40</version>
+            <version>5.8.41</version>
         </dependency>
         <dependency>
             <groupId>org.jsoup</groupId>
