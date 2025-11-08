@@ -57,6 +57,14 @@
         <el-option value="DOWNLOAD_TIME" label="更新时间"/>
       </el-select>
     </el-form-item>
+    <el-form-item label="最大内容宽度">
+      <el-input-number v-model="maxContentWidth"
+                       :min="1200">
+        <template #suffix>
+          <span>px</span>
+        </template>
+      </el-input-number>
+    </el-form-item>
     <el-form-item label="其他">
       <el-checkbox v-model="props.config.scoreShow" label="显示评分"/>
       <el-checkbox v-model="props.config.weekShow" label="按星期展示"/>
@@ -81,12 +89,9 @@
 </template>
 
 <script setup>
-
-import {useColorMode, useLocalStorage} from "@vueuse/core";
 import {ref} from "vue";
 import {Adjust, Css3Alt, Js, Moon, Sun} from "@vicons/fa";
-
-const {store} = useColorMode()
+import {color, colorChange, maxContentWidth, store} from "@/js/global.js";
 
 let predefineColors = ref([
   '#409eff', '#109D58', '#BF3545', '#CB7574',
@@ -96,14 +101,6 @@ let predefineColors = ref([
   '#E6C5D0', '#2377B3', '#49312D', '#7C9AB6',
   '#A5B18D', '#E8662A', '#AB5D50'
 ])
-
-let color = useLocalStorage('--el-color-primary', '#409eff')
-
-let colorChange = (v) => {
-  const el = document.documentElement
-
-  el.style.setProperty('--el-color-primary', v)
-}
 
 let jsDialogVisible = ref(false)
 let cssDialogVisible = ref(false)

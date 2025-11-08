@@ -10,6 +10,7 @@
 
 import {ref} from "vue";
 import Artplayer from "./Artplayer.vue";
+import {authorization} from "@/js/global.js";
 
 let dialogVisible = ref(false)
 let src = ref('')
@@ -18,9 +19,9 @@ let playItem = ref()
 let subtitles = ref([])
 
 let show = (i, pi) => {
-  src.value = `api/files?filename=${pi.filename}&s=${window.authorization}`
+  src.value = `api/files?filename=${pi.filename}&s=${authorization.value}`
   for (let subtitle of pi.subtitles) {
-    subtitle.url = `api/files?filename=${subtitle.url}&s=${window.authorization}`
+    subtitle.url = `api/files?filename=${subtitle.url}&s=${authorization.value}`
   }
   subtitles = pi.subtitles
   ani.value = i

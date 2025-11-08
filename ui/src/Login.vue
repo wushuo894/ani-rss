@@ -1,8 +1,7 @@
 <template>
   <div
       class="flex-center"
-      style="justify-content: space-between;flex-flow: column; height: 100%;width: 100%;"
-      v-if="!authorization">
+      style="justify-content: space-between;flex-flow: column; height: 100%;width: 100%;">
     <div id="login-page" class="flex-center" style="flex: 1">
       <div id="form" style="max-width: 200px;">
         <div style="text-align: center;">
@@ -53,35 +52,27 @@
       </el-link>
     </div>
   </div>
-  <App v-else></App>
 </template>
 
 <script setup>
 
 import {onMounted, ref} from "vue";
 import CryptoJS from "crypto-js"
-import App from "./home/App.vue";
 import api from "./js/api.js";
-import {useColorMode, useDark, useLocalStorage} from '@vueuse/core'
+import {useLocalStorage} from '@vueuse/core'
 import {Key} from "@element-plus/icons-vue";
 import {ElMessage} from "element-plus";
+import {authorization} from "@/js/global.js";
 
 let loading = ref(false)
 
-let authorization = ref("")
 let user = ref({
   'username': '',
   'password': ''
 })
 
-authorization.value = localStorage.getItem("authorization")
-if (authorization.value) {
-  window.authorization = authorization.value
-}
-
 /**
- * 保存登陆信息
- * @type {RemovableRef<{remember: boolean, username: string, password: string}>}
+ * 保存登录信息
  */
 let rememberThePassword = useLocalStorage('rememberThePassword', {
   remember: false,
@@ -90,7 +81,7 @@ let rememberThePassword = useLocalStorage('rememberThePassword', {
 })
 
 /**
- * 登陆
+ * 登录
  */
 let login = () => {
   user.value.password = user.value.password.trim()
@@ -108,8 +99,6 @@ let login = () => {
 
   api.post('api/login', my_user)
       .then(res => {
-        localStorage.setItem("authorization", res.data)
-        window.authorization = res.data
         authorization.value = res.data
 
         // 记住密码
@@ -130,32 +119,19 @@ let login = () => {
  * 测试是否处于白名单
  */
 let test = () => {
-  if (window.authorization) {
+  if (authorization.value) {
     return
   }
   fetch('api/test')
       .then(res => res.json())
       .then(res => {
         if (res.code === 200) {
-          window.authorization = new Date().getTime();
-          authorization.value = window.authorization
-          localStorage.setItem("authorization", window.authorization)
+          authorization.value = new Date().getTime() + '';
           return
         }
-        localStorage.removeItem("authorization")
-        window.authorization = ''
         authorization.value = ''
       })
 }
-
-useDark({
-  onChanged: dark => {
-    const meta = document.getElementById('themeColorMeta');
-    meta.content = dark ? '#000000' : '#ffffff';
-  }
-})
-
-useColorMode()
 
 onMounted(() => {
   test()
@@ -165,10 +141,6 @@ onMounted(() => {
     user.value.password = password
   }
 })
-
-const el = document.documentElement
-
-el.style.setProperty('--el-color-primary', useLocalStorage('--el-color-primary', '#409eff').value)
 
 </script>
 

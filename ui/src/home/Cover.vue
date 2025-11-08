@@ -3,7 +3,7 @@
     <div style="width: 100%;display: flex;justify-content: space-between;">
       <div>
         <el-image :alt="ani.title"
-                  :src="`api/file?filename=${ani['cover']}&s=${authorization()}&t=${time}`"
+                  :src="`api/file?filename=${ani['cover']}&s=${authorization}&t=${time}`"
                   fit="cover"
                   style="border-radius: 4px;cursor: pointer;height: 260px;width: 180px;"
         />
@@ -21,7 +21,7 @@
               </div>
               <div style="margin-top: 8px;">
                 <el-upload
-                    :action="`api/upload?s=${authorization()}`"
+                    :action="`api/upload?s=${authorization}`"
                     :before-upload="beforeAvatarUpload"
                     :on-success="res => {
                       ani['cover'] = res.data.data
@@ -60,6 +60,7 @@ import {ref} from "vue";
 import api from "@/js/api.js";
 import {ElMessage} from "element-plus";
 import {UploadFilled} from "@element-plus/icons-vue";
+import {authorization} from "@/js/global.js";
 
 let reLoadIng = ref(false)
 let reLoad = () => {
@@ -76,10 +77,6 @@ let reLoad = () => {
 
 
 let dialogVisible = ref(false)
-
-let authorization = () => {
-  return window.authorization;
-}
 
 let ani = ref({})
 let time = ref()

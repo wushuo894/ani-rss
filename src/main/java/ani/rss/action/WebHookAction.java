@@ -7,9 +7,11 @@ import ani.rss.entity.Ani;
 import ani.rss.entity.Config;
 import ani.rss.entity.EmbyWebHook;
 import ani.rss.enums.StringEnum;
-import ani.rss.service.DownloadService;
 import ani.rss.util.basic.GsonStatic;
-import ani.rss.util.other.*;
+import ani.rss.util.other.AniUtil;
+import ani.rss.util.other.BgmUtil;
+import ani.rss.util.other.ConfigUtil;
+import ani.rss.util.other.ItemsUtil;
 import cn.hutool.core.thread.ExecutorBuilder;
 import cn.hutool.core.util.ReUtil;
 import cn.hutool.core.util.StrUtil;
@@ -18,10 +20,8 @@ import cn.hutool.http.server.HttpServerResponse;
 import lombok.Synchronized;
 import lombok.extern.slf4j.Slf4j;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.List;
-import java.util.Optional;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.LinkedBlockingQueue;
 
@@ -57,8 +57,6 @@ public class WebHookAction implements BaseAction {
 
         EmbyWebHook.Item item = embyWebHook.getItem();
 
-        String path = item.getPath();
-        String parent = new File(path).getParent();
         String seriesName = item.getSeriesName();
         String fileName = item.getFileName();
         if (!ReUtil.contains(StringEnum.SEASON_REG, fileName)) {
@@ -92,42 +90,16 @@ public class WebHookAction implements BaseAction {
 
         EXECUTOR.execute(() -> {
             log.info("{} 标记为 [{}]", fileName, List.of("未看过", "想看", "看过").get(type));
-            String episodeId;
-            String subjectId;
             List<Ani> anis = AniUtil.ANI_LIST;
 
             // 优先匹配路径相同的
-            Optional<String> first = anis.stream()
-                    .filter(ani -> {
-                        String bgmUrl = ani.getBgmUrl();
-                        if (StrUtil.isBlank(bgmUrl)) {
-                            return false;
-                        }
-                        File downloadPath = DownloadService.getDownloadPath(ani);
-                        return downloadPath.toString().equals(parent);
-                    })
+            String subjectId = anis.stream()
+                    .filter(embyWebHook::equalsAni)
                     .map(BgmUtil::getSubjectId)
-                    .findFirst();
+                    .findFirst()
+                    .orElseGet(() -> BgmUtil.getSubjectId(seriesName, season));
 
-            if (first.isEmpty()) {
-                // 匹配名称相同的
-                first = anis.stream()
-                        .filter(ani -> {
-                            String bgmUrl = ani.getBgmUrl();
-                            if (StrUtil.isBlank(bgmUrl)) {
-                                return false;
-                            }
-                            String title = ani.getTitle();
-                            title = RenameUtil.renameDel(title);
-                            // 名称与季相同
-                            return title.equals(seriesName) && season == ani.getSeason();
-                        })
-                        .map(BgmUtil::getSubjectId)
-                        .findFirst();
-            }
-
-            subjectId = first.orElseGet(() -> BgmUtil.getSubjectId(seriesName, season));
-            episodeId = BgmUtil.getEpisodeId(subjectId, episode);
+            String episodeId = BgmUtil.getEpisodeId(subjectId, episode);
 
             if (StrUtil.isBlank(episodeId)) {
                 log.info("获取bgm对应剧集失败");

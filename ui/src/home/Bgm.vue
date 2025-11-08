@@ -36,9 +36,9 @@
   </el-dialog>
 </template>
 <script setup>
-
 import {ref} from "vue";
 import api from "@/js/api.js";
+import {authorization} from "@/js/global.js";
 
 let dialogVisible = ref(false)
 
@@ -69,7 +69,7 @@ let show = (s) => {
 }
 
 let img = (url) => {
-  return `api/file?img=${btoa(url)}&s=${window.authorization}`;
+  return `api/file?img=${btoa(url)}&s=${authorization.value}`;
 }
 
 let ok = (it) => {

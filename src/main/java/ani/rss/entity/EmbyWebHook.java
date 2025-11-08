@@ -1,10 +1,18 @@
 package ani.rss.entity;
 
+import ani.rss.entity.tmdb.Tmdb;
+import ani.rss.enums.StringEnum;
+import ani.rss.service.DownloadService;
+import ani.rss.util.other.RenameUtil;
+import cn.hutool.core.util.ReUtil;
+import cn.hutool.core.util.StrUtil;
 import com.google.gson.annotations.SerializedName;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
+import java.io.File;
 import java.io.Serializable;
+import java.util.Objects;
 
 /**
  * EmbyWebHook
@@ -41,6 +49,68 @@ public class EmbyWebHook implements Serializable {
          */
         @SerializedName(value = "playedToCompletion", alternate = "PlayedToCompletion")
         private Boolean playedToCompletion;
+    }
+
+    /**
+     * 是否匹配到订阅
+     *
+     * @param ani
+     * @return
+     */
+    public Boolean equalsAni(Ani ani) {
+        String fileName = item.getFileName();
+        if (!ReUtil.contains(StringEnum.SEASON_REG, fileName)) {
+            return false;
+        }
+
+        // 季
+        int season = Integer.parseInt(ReUtil.get(StringEnum.SEASON_REG, fileName, 1));
+
+        if (season != ani.getSeason()) {
+            return false;
+        }
+
+        String bgmUrl = ani.getBgmUrl();
+        if (StrUtil.isBlank(bgmUrl)) {
+            // bgmUrl为空
+            return false;
+        }
+
+        String path = item.getPath();
+        String parent = new File(path).getParent();
+        File downloadPath = DownloadService.getDownloadPath(ani);
+        if (downloadPath.toString().equals(parent)) {
+            // 路径相同
+            return true;
+        }
+
+        String title = ani.getTitle();
+        title = RenameUtil.renameDel(title);
+        String seriesName = item.getSeriesName();
+        if (title.equals(seriesName)) {
+            // 名称与季相同
+            return true;
+        }
+
+        Tmdb tmdb = ani.getTmdb();
+        if (Objects.isNull(tmdb)) {
+            return false;
+        }
+
+        // 对比tmdb名称
+        String name = tmdb.getName();
+        if (StrUtil.isNotBlank(name)) {
+            if (name.equals(seriesName)) {
+                return true;
+            }
+        }
+
+        // 对比tmdb原名
+        String originalName = tmdb.getOriginalName();
+        if (StrUtil.isNotBlank(originalName)) {
+            return originalName.equals(seriesName);
+        }
+        return false;
     }
 
 }
