@@ -1,6 +1,6 @@
 name: "功能请求🚀"
 description: Feature request
-labels: [ enhancement ]
+labels: [ feature ]
 body:
   - type: checkboxes
     attributes:
