@@ -72,7 +72,7 @@ let user = ref({
 })
 
 /**
- * 保存登陆信息
+ * 保存登录信息
  */
 let rememberThePassword = useLocalStorage('rememberThePassword', {
   remember: false,
@@ -81,7 +81,7 @@ let rememberThePassword = useLocalStorage('rememberThePassword', {
 })
 
 /**
- * 登陆
+ * 登录
  */
 let login = () => {
   user.value.password = user.value.password.trim()
