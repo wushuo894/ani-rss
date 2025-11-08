@@ -6,6 +6,7 @@ import ani.rss.auth.enums.AuthType;
 import ani.rss.entity.Ani;
 import ani.rss.entity.Config;
 import ani.rss.entity.EmbyWebHook;
+import ani.rss.entity.tmdb.Tmdb;
 import ani.rss.enums.StringEnum;
 import ani.rss.service.DownloadService;
 import ani.rss.util.basic.GsonStatic;
@@ -21,6 +22,7 @@ import lombok.extern.slf4j.Slf4j;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -99,32 +101,51 @@ public class WebHookAction implements BaseAction {
             // 优先匹配路径相同的
             Optional<String> first = anis.stream()
                     .filter(ani -> {
-                        String bgmUrl = ani.getBgmUrl();
-                        if (StrUtil.isBlank(bgmUrl)) {
+                        if (season != ani.getSeason()) {
                             return false;
                         }
+
+                        String bgmUrl = ani.getBgmUrl();
+                        if (StrUtil.isBlank(bgmUrl)) {
+                            // bgmUrl为空
+                            return false;
+                        }
+
                         File downloadPath = DownloadService.getDownloadPath(ani);
-                        return downloadPath.toString().equals(parent);
+                        if (downloadPath.toString().equals(parent)) {
+                            // 路径相同
+                            return true;
+                        }
+
+                        String title = ani.getTitle();
+                        title = RenameUtil.renameDel(title);
+                        if (title.equals(seriesName)) {
+                            // 名称与季相同
+                            return true;
+                        }
+
+                        Tmdb tmdb = ani.getTmdb();
+                        if (Objects.isNull(tmdb)) {
+                            return false;
+                        }
+
+                        // 对比tmdb名称
+                        String name = tmdb.getName();
+                        if (StrUtil.isNotBlank(name)) {
+                            if (name.equals(seriesName)) {
+                                return true;
+                            }
+                        }
+
+                        // 对比tmdb原名
+                        String originalName = tmdb.getOriginalName();
+                        if (StrUtil.isNotBlank(originalName)) {
+                            return originalName.equals(seriesName);
+                        }
+                        return false;
                     })
                     .map(BgmUtil::getSubjectId)
                     .findFirst();
-
-            if (first.isEmpty()) {
-                // 匹配名称相同的
-                first = anis.stream()
-                        .filter(ani -> {
-                            String bgmUrl = ani.getBgmUrl();
-                            if (StrUtil.isBlank(bgmUrl)) {
-                                return false;
-                            }
-                            String title = ani.getTitle();
-                            title = RenameUtil.renameDel(title);
-                            // 名称与季相同
-                            return title.equals(seriesName) && season == ani.getSeason();
-                        })
-                        .map(BgmUtil::getSubjectId)
-                        .findFirst();
-            }
 
             subjectId = first.orElseGet(() -> BgmUtil.getSubjectId(seriesName, season));
             episodeId = BgmUtil.getEpisodeId(subjectId, episode);
