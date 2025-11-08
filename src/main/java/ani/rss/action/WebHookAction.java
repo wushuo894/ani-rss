@@ -6,11 +6,12 @@ import ani.rss.auth.enums.AuthType;
 import ani.rss.entity.Ani;
 import ani.rss.entity.Config;
 import ani.rss.entity.EmbyWebHook;
-import ani.rss.entity.tmdb.Tmdb;
 import ani.rss.enums.StringEnum;
-import ani.rss.service.DownloadService;
 import ani.rss.util.basic.GsonStatic;
-import ani.rss.util.other.*;
+import ani.rss.util.other.AniUtil;
+import ani.rss.util.other.BgmUtil;
+import ani.rss.util.other.ConfigUtil;
+import ani.rss.util.other.ItemsUtil;
 import cn.hutool.core.thread.ExecutorBuilder;
 import cn.hutool.core.util.ReUtil;
 import cn.hutool.core.util.StrUtil;
@@ -19,11 +20,8 @@ import cn.hutool.http.server.HttpServerResponse;
 import lombok.Synchronized;
 import lombok.extern.slf4j.Slf4j;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.LinkedBlockingQueue;
 
@@ -59,8 +57,6 @@ public class WebHookAction implements BaseAction {
 
         EmbyWebHook.Item item = embyWebHook.getItem();
 
-        String path = item.getPath();
-        String parent = new File(path).getParent();
         String seriesName = item.getSeriesName();
         String fileName = item.getFileName();
         if (!ReUtil.contains(StringEnum.SEASON_REG, fileName)) {
@@ -94,61 +90,16 @@ public class WebHookAction implements BaseAction {
 
         EXECUTOR.execute(() -> {
             log.info("{} 标记为 [{}]", fileName, List.of("未看过", "想看", "看过").get(type));
-            String episodeId;
-            String subjectId;
             List<Ani> anis = AniUtil.ANI_LIST;
 
             // 优先匹配路径相同的
-            Optional<String> first = anis.stream()
-                    .filter(ani -> {
-                        if (season != ani.getSeason()) {
-                            return false;
-                        }
-
-                        String bgmUrl = ani.getBgmUrl();
-                        if (StrUtil.isBlank(bgmUrl)) {
-                            // bgmUrl为空
-                            return false;
-                        }
-
-                        File downloadPath = DownloadService.getDownloadPath(ani);
-                        if (downloadPath.toString().equals(parent)) {
-                            // 路径相同
-                            return true;
-                        }
-
-                        String title = ani.getTitle();
-                        title = RenameUtil.renameDel(title);
-                        if (title.equals(seriesName)) {
-                            // 名称与季相同
-                            return true;
-                        }
-
-                        Tmdb tmdb = ani.getTmdb();
-                        if (Objects.isNull(tmdb)) {
-                            return false;
-                        }
-
-                        // 对比tmdb名称
-                        String name = tmdb.getName();
-                        if (StrUtil.isNotBlank(name)) {
-                            if (name.equals(seriesName)) {
-                                return true;
-                            }
-                        }
-
-                        // 对比tmdb原名
-                        String originalName = tmdb.getOriginalName();
-                        if (StrUtil.isNotBlank(originalName)) {
-                            return originalName.equals(seriesName);
-                        }
-                        return false;
-                    })
+            String subjectId = anis.stream()
+                    .filter(embyWebHook::equalsAni)
                     .map(BgmUtil::getSubjectId)
-                    .findFirst();
+                    .findFirst()
+                    .orElseGet(() -> BgmUtil.getSubjectId(seriesName, season));
 
-            subjectId = first.orElseGet(() -> BgmUtil.getSubjectId(seriesName, season));
-            episodeId = BgmUtil.getEpisodeId(subjectId, episode);
+            String episodeId = BgmUtil.getEpisodeId(subjectId, episode);
 
             if (StrUtil.isBlank(episodeId)) {
                 log.info("获取bgm对应剧集失败");
