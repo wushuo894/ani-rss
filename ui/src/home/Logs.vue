@@ -44,6 +44,7 @@
 import {ref} from "vue";
 import {codeToHtml} from 'shiki'
 import api from "@/js/api.js";
+import {authorization} from "@/js/global.js";
 
 const dialogVisible = ref(false)
 const loading = ref(true)
@@ -117,11 +118,7 @@ const getLogs = () => {
 }
 
 let downloadLogs = () => {
-  window.open(`api/downloadLogs?s=${authorization()}`)
-}
-
-let authorization = () => {
-  return window.authorization;
+  window.open(`api/downloadLogs?s=${authorization.value}`)
 }
 
 let close = () => {

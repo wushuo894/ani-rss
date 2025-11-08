@@ -47,10 +47,10 @@
         <div style="margin: 0 4px;">
           <el-dropdown trigger="click">
             <el-button bg text type="primary">
-              <el-icon :class="elIconClass()">
+              <el-icon :class="elIconClass">
                 <Plus/>
               </el-icon>
-              <template v-if="isNotMobile()">
+              <template v-if="isNotMobile">
                 添加
               </template>
             </el-button>
@@ -68,10 +68,10 @@
         </div>
         <div style="margin: 0 4px;">
           <el-button bg text @click="torrentsInfosRef?.show">
-            <el-icon :class="elIconClass()">
+            <el-icon :class="elIconClass">
               <Download/>
             </el-icon>
-            <template v-if="isNotMobile()">
+            <template v-if="isNotMobile">
               下载
             </template>
           </el-button>
@@ -80,10 +80,10 @@
           <popconfirm title="立即刷新全部订阅?" @confirm="download">
             <template #reference>
               <el-button text bg :loading="downloadLoading">
-                <el-icon :class="elIconClass()">
+                <el-icon :class="elIconClass">
                   <Refresh/>
                 </el-icon>
-                <template v-if="isNotMobile()">
+                <template v-if="isNotMobile">
                   刷新
                 </template>
               </el-button>
@@ -92,10 +92,10 @@
         </div>
         <div style="margin: 0 4px;">
           <el-button text bg @click="manage?.show">
-            <el-icon :class="elIconClass()">
+            <el-icon :class="elIconClass">
               <Fold/>
             </el-icon>
-            <template v-if="isNotMobile()">
+            <template v-if="isNotMobile">
               管理
             </template>
           </el-button>
@@ -103,10 +103,10 @@
         <div style="margin: 0 4px;">
           <el-badge :is-dot="about.update" class="item">
             <el-button @click="config?.show(about.update)" text bg>
-              <el-icon :class="elIconClass()">
+              <el-icon :class="elIconClass">
                 <Setting/>
               </el-icon>
-              <template v-if="isNotMobile()">
+              <template v-if="isNotMobile">
                 设置
               </template>
             </el-button>
@@ -114,10 +114,10 @@
         </div>
         <div style="margin-left: 4px;">
           <el-button @click="logs?.show" text bg>
-            <el-icon :class="elIconClass()">
+            <el-icon :class="elIconClass">
               <Tickets/>
             </el-icon>
-            <template v-if="isNotMobile()">
+            <template v-if="isNotMobile">
               日志
             </template>
           </el-button>
@@ -141,9 +141,10 @@ import api from "@/js/api.js";
 import {ElMessage} from "element-plus";
 import Popconfirm from "@/other/Popconfirm.vue";
 import Manage from "./Manage.vue";
-import {useLocalStorage, useWindowSize} from "@vueuse/core";
+import {useLocalStorage} from "@vueuse/core";
 import Collection from "./Collection.vue";
 import TorrentsInfos from "./TorrentsInfos.vue";
+import {elIconClass, isNotMobile} from "@/js/global.js";
 
 const collection = ref()
 const manage = ref()
@@ -194,10 +195,6 @@ onMounted(() => {
   enableSelectChange()
 })
 
-let elIconClass = () => {
-  return isNotMobile() ? 'el-icon--left' : '';
-}
-
 const about = ref({
   'version': '',
   'latest': '',
@@ -222,12 +219,6 @@ let download = () => {
         downloadLoading.value = false
       })
 }
-
-let isNotMobile = () => {
-  return width.value > 800;
-}
-
-const {width, height} = useWindowSize()
 
 </script>
 

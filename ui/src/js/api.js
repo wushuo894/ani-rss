@@ -1,4 +1,5 @@
 import {ElMessage} from "element-plus";
+import {authorization} from "@/js/global.js";
 
 let post = async (url, body) => {
     return await fetch_(url, 'POST', body);
@@ -18,9 +19,8 @@ let put = async (url, body) => {
 
 let fetch_ = async (url, method, body) => {
     let headers = {}
-    let authorization = window.authorization
-    if (authorization) {
-        headers['Authorization'] = authorization
+    if (authorization.value) {
+        headers['Authorization'] = authorization.value
     }
     return await fetch(url, {
         'method': method,
@@ -41,7 +41,7 @@ let fetch_ = async (url, method, body) => {
 
             ElMessage.error(message)
             if (code === 403) {
-                localStorage.removeItem("authorization")
+                authorization.value = ''
                 setTimeout(() => {
                     location.reload()
                 }, 1000)
