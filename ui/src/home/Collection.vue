@@ -133,7 +133,7 @@
                 </el-tag>
                 <el-upload
                     v-else
-                    :action="`api/upload?type=getBase64&s=${authorization()}`"
+                    :action="`api/upload?type=getBase64&s=${authorization}`"
                     :before-upload="beforeAvatarUpload"
                     :on-success="onSuccess"
                     :show-file-list="false"
@@ -193,6 +193,7 @@ import CollectionPreview from "./CollectionPreview.vue";
 import AfdianPrompt from "@/other/AfdianPrompt.vue";
 import CustomTags from "@/config/CustomTags.vue";
 import {aniData} from "@/js/ani.js";
+import {authorization} from "@/js/global.js";
 
 let start = () => {
   startLoading.value = true
@@ -288,10 +289,6 @@ let onSuccess = (res) => {
           ElMessage.success(`字幕组已更新为 ${res.data}`)
         }
       })
-}
-
-let authorization = () => {
-  return window.authorization
 }
 
 let data = ref({

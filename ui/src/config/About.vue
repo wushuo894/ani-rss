@@ -105,6 +105,8 @@ import 'markdown-it-github-alerts/styles/github-colors-light.css'
 import 'markdown-it-github-alerts/styles/github-colors-dark-media.css'
 import 'markdown-it-github-alerts/styles/github-base.css'
 
+import {authorization} from "@/js/global.js";
+
 let md = markdownit({
   html: true,
   linkify: true
@@ -126,7 +128,7 @@ const stop = (status) => {
       .then(res => {
         ElMessage.success(res.message)
         setTimeout(() => {
-          localStorage.removeItem("authorization")
+          authorization.value = ''
           location.reload()
         }, 5000)
       })
@@ -141,7 +143,7 @@ const update = () => {
       .then(res => {
         ElMessage.success(res.message)
         setTimeout(() => {
-          localStorage.removeItem("authorization")
+          authorization.value = ''
           location.reload()
         }, 5000)
       })
@@ -165,7 +167,7 @@ onMounted(() => {
 })
 
 let logout = () => {
-  localStorage.removeItem('authorization')
+  authorization.value = ''
   location.reload()
 }
 

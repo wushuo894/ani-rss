@@ -100,3 +100,7 @@ html, body, #app {
 .el-collapse-item__header {
     width: auto;
 }
+
+#app {
+    margin: 0 auto;
+}

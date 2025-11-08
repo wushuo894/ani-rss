@@ -17,7 +17,7 @@
                 <el-card shadow="never">
                   <div style="display: flex;width: 100%;align-items: center;">
                     <div style="height: 100%;">
-                      <img :src="`api/file?filename=${item['cover']}&s=${authorization()}`" height="130" width="92"
+                      <img :src="`api/file?filename=${item['cover']}&s=${authorization}`" height="130" width="92"
                            :alt="item.title"
                            style="border-radius: 4px;cursor: pointer;"
                            @click="refCover?.show(item)"/>
@@ -56,7 +56,7 @@
                         display: grid;
                         grid-gap: 4px;
                         "
-                             :class="isNotMobile() ? 'gtc3' : 'gtc2'"
+                             :class="isNotMobile ? 'gtc3' : 'gtc2'"
                         >
                           <el-tag>
                             第 {{ item.season }} 季
@@ -134,9 +134,9 @@ import api from "@/js/api.js";
 import PlayList from "@/play/PlayList.vue";
 import Cover from "./Cover.vue";
 import Del from "./Del.vue";
-import {useWindowSize} from "@vueuse/core";
 import BgmRate from "./BgmRate.vue";
 import formatTime from "@/js/format-time.js";
+import {authorization, isNotMobile} from "@/js/global.js";
 
 const defaultWeekList = [
   {
@@ -172,7 +172,6 @@ const weekList = ref(defaultWeekList)
 
 const refEdit = ref()
 const refDel = ref()
-const pageSize = ref(40)
 const loading = ref(true)
 const playList = ref()
 const scoreShow = ref(false)
@@ -240,10 +239,6 @@ const getList = () => {
       })
 }
 
-let authorization = () => {
-  return window.authorization;
-}
-
 let updateGridLayout = () => {
   const gridContainer = document.querySelectorAll('.grid-container');
   if (!gridContainer.length) {
@@ -258,10 +253,6 @@ let updateGridLayout = () => {
 }
 
 onMounted(() => {
-  let size = window.localStorage.getItem('pageSize')
-  if (size) {
-    pageSize.value = Number.parseInt(size)
-  }
   window.addEventListener('resize', updateGridLayout);
   getList()
 })
@@ -285,15 +276,9 @@ let openBgmUrl = (it) => {
   }
 }
 
-let isNotMobile = () => {
-  return width.value > 800;
-}
-
 let decodeURLComponentSafe = (str) => {
   return decodeURIComponent(str.replace('+', ' '));
 }
-
-const {width} = useWindowSize()
 
 defineExpose({
   getList, yearMonth

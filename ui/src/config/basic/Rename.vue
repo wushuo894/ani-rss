@@ -17,7 +17,7 @@
       </el-input-number>
     </el-form-item>
     <el-form-item label="最大文件名长度">
-      <el-input-number v-model:model-value="props.config.maxFileNameLength" min="0"/>
+      <el-input-number v-model:model-value="props.config.maxFileNameLength" :min="0"/>
     </el-form-item>
     <el-form-item label="重命名模版">
       <div style="width: 100%">

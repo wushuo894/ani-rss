@@ -155,6 +155,7 @@ import {ref} from "vue";
 import api from "@/js/api.js";
 import {ElMessage, ElText} from "element-plus";
 import {DocumentCopy, Download as DownloadIcon} from "@element-plus/icons-vue";
+import {authorization} from "@/js/global.js";
 
 // 批量添加订阅
 let rssList = ref([]);
@@ -288,7 +289,7 @@ let callback = v => {
 
 
 let img = (it) => {
-  return `api/file?img=${btoa(it['cover'])}&s=${window.authorization}`;
+  return `api/file?img=${btoa(it['cover'])}&s=${authorization.value}`;
 }
 
 let showTag = () => {

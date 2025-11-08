@@ -98,7 +98,7 @@ import TryOut from "./TryOut.vue";
 
 let tryOutRef = ref()
 
-function timestampToDate(timestamp) {
+let timestampToDate = (timestamp) => {
   const date = new Date(timestamp);
 
   const year = date.getFullYear(); // 获取年份
