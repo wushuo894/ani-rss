@@ -6,6 +6,9 @@
         <h1>ANI-RSS</h1>
         <el-text class="mx-1" size="small">
           &nbsp;v{{ props.config.version }}
+          <template v-if="props.config.buildInfo">
+            {{ props.config.buildInfo }}
+          </template>
         </el-text>
       </div>
     </div>

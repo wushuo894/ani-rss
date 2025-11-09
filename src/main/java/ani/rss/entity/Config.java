@@ -650,4 +650,9 @@ public class Config implements Serializable {
      * 限制尝试次数
      */
     private Boolean limitLoginAttempts;
+
+    /**
+     * 构建信息
+     */
+    private String buildInfo;
 }

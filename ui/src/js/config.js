@@ -125,5 +125,6 @@ export let configData = {
     "priorityKeywordsEnable": false,
     "priorityKeywords": [],
     "procrastinatingMasterOnly": true,
-    "limitLoginAttempts": true
+    "limitLoginAttempts": true,
+    "buildInfo": ''
 }
