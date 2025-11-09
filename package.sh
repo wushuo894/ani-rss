@@ -1,5 +1,9 @@
 #!/bin/bash
 
+rm -rf src/main/resources/build_info
+git rev-parse --short HEAD >> src/main/resources/build_info
+git branch --show-current >> src/main/resources/build_info
+
 # 定义颜色代码
 RED='\033[0;31m'
 GREEN='\033[0;32m'

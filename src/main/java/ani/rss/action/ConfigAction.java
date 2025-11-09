@@ -11,6 +11,7 @@ import ani.rss.util.other.MavenUtil;
 import ani.rss.util.other.TorrentUtil;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.bean.copier.CopyOptions;
+import cn.hutool.core.io.resource.ResourceUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.server.HttpServerRequest;
@@ -31,9 +32,11 @@ public class ConfigAction implements BaseAction {
         String method = req.getMethod();
         if (method.equals("GET")) {
             String version = MavenUtil.getVersion();
+            String buildInfo = buildInfo();
             Config config = ObjectUtil.clone(ConfigUtil.CONFIG);
             config.getLogin().setPassword("");
             config.setVersion(version)
+                    .setBuildInfo(buildInfo)
                     .setVerifyExpirationTime(AfdianUtil.verifyExpirationTime());
             resultSuccess(config);
             return;
@@ -105,6 +108,18 @@ public class ConfigAction implements BaseAction {
         }
 
         resultSuccessMsg("修改成功");
+    }
+
+    /**
+     * 构建信息
+     */
+    public String buildInfo() {
+        String buildInfo = "";
+        try {
+            buildInfo = ResourceUtil.readUtf8Str("build_info");
+        } catch (Exception ignored) {
+        }
+        return buildInfo;
     }
 
 }
