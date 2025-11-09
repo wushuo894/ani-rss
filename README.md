@@ -23,7 +23,7 @@
 
 </div>
 
-![image](https://github.com/wushuo894/ani-rss-docs/raw/master/docs/public/screenshot/62f73859bd2fb7063f7f1eff12545fec-screenshot.webp)
+![image](https://github.com/wushuo894/ani-rss-docs/raw/main/docs/public/screenshot/62f73859bd2fb7063f7f1eff12545fec-screenshot.webp)
 
 ## 其他
 
@@ -52,7 +52,7 @@
 ## 爱发电
 
 <a href="https://afdian.com/a/wushuo894" target="_blank">
-  <img src="https://github.com/wushuo894/ani-rss-docs/raw/master/docs/image/support_aifadian.svg" alt="support_aifadian">
+  <img src="https://github.com/wushuo894/ani-rss-docs/raw/main/docs/image/support_aifadian.svg" alt="support_aifadian">
 </a>
 
 您的每一次 star ⭐ 和 赞助 🎁 都是我持续优化的动力。让我们一起维护这个用爱发电的项目！
@@ -99,7 +99,7 @@ SharonNetworks 为您的业务起飞保驾护航！
 想体验同款构建环境？欢迎 [访问 Sharon 官网](https://sharon.io) 或 [加入 Telegram 群组](https://t.me/SharonNetwork)
 了解更多并申请赞助。
 
-[<img alt="image" src="https://github.com/wushuo894/ani-rss-docs/raw/master/docs/image/support.nodeget.com_page_promotion_id%3D88.webp" width="300"/>](https://yxvm.com/)
+[<img alt="image" src="https://github.com/wushuo894/ani-rss-docs/raw/main/docs/image/support.nodeget.com_page_promotion_id%3D88.webp" width="300"/>](https://yxvm.com/)
 
 [NodeSupport](https://github.com/NodeSeekDev/NodeSupport) 赞助了本项目
 
