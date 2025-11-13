@@ -296,8 +296,27 @@ public class RenameUtil {
      * @return
      */
     public static String renameDel(String title) {
+        return renameDel(title, true);
+    }
+
+    /**
+     * 重命名剔除tmdbid与年份
+     *
+     * @param title
+     * @param isConfig 遵守设置
+     * @return
+     */
+    public static String renameDel(String title, Boolean isConfig) {
         if (StrUtil.isBlank(title)) {
             return "";
+        }
+
+        if (!isConfig) {
+            title = ReUtil.replaceAll(title, StringEnum.TMDB_ID_REG, "")
+                    .trim();
+            title = ReUtil.replaceAll(title, StringEnum.YEAR_REG, "")
+                    .trim();
+            return title;
         }
 
         Config config = ConfigUtil.CONFIG;

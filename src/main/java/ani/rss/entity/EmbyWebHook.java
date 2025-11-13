@@ -85,7 +85,7 @@ public class EmbyWebHook implements Serializable {
         }
 
         String title = ani.getTitle();
-        title = RenameUtil.renameDel(title);
+        title = RenameUtil.renameDel(title, false);
         String seriesName = item.getSeriesName();
         if (title.equals(seriesName)) {
             // 名称与季相同
