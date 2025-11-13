@@ -828,6 +828,9 @@ public class BgmUtil {
         if (StrUtil.isNotBlank(themoviedbName) && tmdb) {
             ani
                     .setTitle(themoviedbName);
+        } else {
+            title = BgmUtil.getName(bgmInfo, ani.getTmdb());
+            ani.setTitle(title);
         }
 
         // 下载位置
