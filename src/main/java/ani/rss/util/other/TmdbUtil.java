@@ -62,7 +62,7 @@ public class TmdbUtil {
     public synchronized static String getName(Ani ani) {
         Boolean ova = ani.getOva();
         String name = ani.getTitle();
-        name = RenameUtil.renameDel(name);
+        name = RenameUtil.renameDel(name, false);
         if (StrUtil.isBlank(name)) {
             return "";
         }
@@ -104,6 +104,7 @@ public class TmdbUtil {
 
         boolean titleYear = config.getTitleYear();
         if (titleYear) {
+            title = RenameUtil.renameDel(title, false);
             title = StrFormatter.format("{} ({})", title, DateUtil.year(tmdb.getDate()));
         }
 
@@ -307,7 +308,7 @@ public class TmdbUtil {
         Config config = ConfigUtil.CONFIG;
         String tmdbLanguage = config.getTmdbLanguage();
 
-        titleName = RenameUtil.renameDel(titleName);
+        titleName = RenameUtil.renameDel(titleName, false);
 
         if (StrUtil.isBlank(titleName)) {
             return null;
