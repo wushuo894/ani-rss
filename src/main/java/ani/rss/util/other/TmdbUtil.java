@@ -59,7 +59,7 @@ public class TmdbUtil {
      * @param ani 订阅
      * @return
      */
-    public synchronized static String getName(Ani ani) {
+    public synchronized static String getFinalName(Ani ani) {
         Boolean ova = ani.getOva();
         String name = ani.getTitle();
         name = RenameUtil.renameDel(name, false);
@@ -86,7 +86,7 @@ public class TmdbUtil {
         }
 
         String themoviedbName = tmdb.getName();
-        return getName(themoviedbName, tmdb);
+        return getFinalName(themoviedbName, tmdb);
     }
 
     /**
@@ -96,7 +96,7 @@ public class TmdbUtil {
      * @param tmdb  tmdb
      * @return
      */
-    public static String getName(String title, Tmdb tmdb) {
+    public static String getFinalName(String title, Tmdb tmdb) {
         if (Objects.isNull(tmdb)) {
             return title;
         }

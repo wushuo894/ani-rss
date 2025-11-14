@@ -14,16 +14,14 @@ import lombok.extern.slf4j.Slf4j;
 import java.util.Date;
 
 /**
- * 请 "盗版者" 存放于私人仓库 私人docker镜像
- * 请 "盗版者" 存放于私人仓库 私人docker镜像
- * 请 "盗版者" 存放于私人仓库 私人docker镜像
+ * 你可以修改后自用, 但请仅存放于 私人仓库、私人docker镜像
  */
 @Slf4j
 public class AfdianUtil {
     /**
      * 检测爱发电订单
      * <p>
-     * 请 "盗版者" 存放于私人仓库 私人docker镜像
+     * 你可以修改后自用, 但请仅存放于 私人仓库、私人docker镜像
      *
      * @param no 订单号
      * @return
@@ -45,7 +43,7 @@ public class AfdianUtil {
     /**
      * 捐赠是否有效
      * <p>
-     * 请 "盗版者" 存放于私人仓库 私人docker镜像
+     * 你可以修改后自用, 但请仅存放于 私人仓库、私人docker镜像
      *
      * @return
      */
@@ -73,7 +71,7 @@ public class AfdianUtil {
     /**
      * 校验捐赠信息
      * <p>
-     * 请 "盗版者" 存放于私人仓库 私人docker镜像
+     * 你可以修改后自用, 但请仅存放于 私人仓库、私人docker镜像
      */
     public static void verify() {
         if (!verifyExpirationTime()) {

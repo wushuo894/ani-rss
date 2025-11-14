@@ -51,7 +51,7 @@ public class BgmUtil {
      * @param bgmInfo
      * @return
      */
-    public static synchronized String getName(BgmInfo bgmInfo) {
+    public static synchronized String getFinalName(BgmInfo bgmInfo) {
         Config config = ConfigUtil.CONFIG;
 
         Boolean bgmJpName = config.getBgmJpName();
@@ -78,11 +78,11 @@ public class BgmUtil {
      * @param tmdb
      * @return
      */
-    public static synchronized String getName(BgmInfo bgmInfo, Tmdb tmdb) {
+    public static synchronized String getFinalName(BgmInfo bgmInfo, Tmdb tmdb) {
         Config config = ConfigUtil.CONFIG;
         Boolean titleYear = config.getTitleYear();
 
-        String title = getName(bgmInfo);
+        String title = getFinalName(bgmInfo);
 
         Date date = bgmInfo.getDate();
 
@@ -90,7 +90,7 @@ public class BgmUtil {
             title = StrFormatter.format("{} ({})", title, DateUtil.year(date));
         }
 
-        return TmdbUtil.getName(title, tmdb);
+        return TmdbUtil.getFinalName(title, tmdb);
     }
 
     /**
@@ -785,7 +785,7 @@ public class BgmUtil {
      * @return
      */
     public static Ani toAni(BgmInfo bgmInfo, Ani ani) {
-        String title = BgmUtil.getName(bgmInfo, null);
+        String title = BgmUtil.getFinalName(bgmInfo);
 
         int eps = getEps(bgmInfo);
 
@@ -822,14 +822,14 @@ public class BgmUtil {
                 .setCover(AniUtil.saveJpg(image));
 
         // 获取tmdb标题
-        String themoviedbName = TmdbUtil.getName(ani);
+        String themoviedbName = TmdbUtil.getFinalName(ani);
 
         // 是否使用tmdb标题
         if (StrUtil.isNotBlank(themoviedbName) && tmdb) {
             ani
                     .setTitle(themoviedbName);
         } else {
-            title = BgmUtil.getName(bgmInfo, ani.getTmdb());
+            title = BgmUtil.getFinalName(bgmInfo, ani.getTmdb());
             ani.setTitle(title);
         }
 
