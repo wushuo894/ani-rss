@@ -4,12 +4,11 @@
       <img alt="icon.svg" height="80" src="../../public/icon.svg" width="80"/>
       <div>
         <h1>ANI-RSS</h1>
-        <el-text class="mx-1" size="small">
-          &nbsp;v{{ props.config.version }}
-          <template v-if="props.config.buildInfo">
-            {{ props.config.buildInfo }}
-          </template>
-        </el-text>
+        <el-tooltip :content="props.config.buildInfo" placement="right">
+          <el-text class="mx-1" size="small" style="cursor: pointer;">
+            &nbsp;v{{ props.config.version }}
+          </el-text>
+        </el-tooltip>
       </div>
     </div>
     <div class="flex" style="margin-bottom: 12px;align-items: center;">
