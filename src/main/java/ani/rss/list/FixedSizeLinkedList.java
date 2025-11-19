@@ -22,9 +22,9 @@ public class FixedSizeLinkedList<T> extends LinkedList<T> {
         Config config = ConfigUtil.CONFIG;
         int logsMax = config.getLogsMax();
 
-        // 限制最大日志条数为 1024
-        if (logsMax > 1024) {
-            logsMax = 1024;
+        // 限制最大日志条数为 512
+        if (logsMax > 512) {
+            logsMax = 512;
             config.setLogsMax(logsMax);
         }
 
