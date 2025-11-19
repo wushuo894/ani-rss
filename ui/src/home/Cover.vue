@@ -93,7 +93,7 @@ let ok = () => {
   api.put("api/ani", ani.value)
       .then(res => {
         ElMessage.success(res.message)
-        emit('load')
+        window.$reLoadList()
         dialogVisible.value = false
       })
       .finally(() => {
@@ -114,5 +114,4 @@ const beforeAvatarUpload = (rawFile) => {
 }
 
 defineExpose({show})
-const emit = defineEmits(['load'])
 </script>

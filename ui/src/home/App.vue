@@ -1,8 +1,8 @@
 <template>
-  <Config ref="config" @load="list?.getList"/>
-  <Add ref="add" @load="list?.getList"/>
+  <Config ref="config"/>
+  <Add ref="add"/>
   <Logs ref="logs"/>
-  <Manage ref="manage" @load="list?.getList"/>
+  <Manage ref="manage"/>
   <Collection ref="collection"/>
   <TorrentsInfos ref="torrentsInfosRef"/>
   <div style="height: 100%;display: flex;flex-direction: column;">

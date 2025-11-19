@@ -64,7 +64,7 @@ const editAni = () => {
   let action = () => api.put('api/ani?move=' + move.value, ani.value)
       .then(res => {
         ElMessage.success(res.message)
-        emit('load')
+        window.$reLoadList()
         dialogVisible.value = false
       })
       .finally(callback.value)
@@ -98,6 +98,4 @@ const show = (item) => {
 defineExpose({
   show
 })
-
-const emit = defineEmits(['load'])
 </script>

@@ -138,7 +138,7 @@ const addAni = (fun) => {
   api.post('api/ani', ani.value)
       .then(res => {
         ElMessage.success(res.message)
-        emit('load')
+        window.$reLoadList()
         dialogVisible.value = false
       }).finally(fun)
 }
@@ -162,6 +162,5 @@ let mikanCallback = v => {
 }
 
 defineExpose({show})
-const emit = defineEmits(['load'])
 </script>
 

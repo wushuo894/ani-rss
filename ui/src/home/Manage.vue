@@ -172,7 +172,7 @@ const getList = () => {
       .then(res => {
         list.value = res.data
         selectChange()
-        emit('load')
+        window.$reLoadList()
       })
       .finally(() => {
         loading.value = false
@@ -211,7 +211,6 @@ let batchEnable = (value) => {
 let yearMonthValue = ref('')
 
 defineExpose({show})
-const emit = defineEmits(['load'])
 </script>
 
 <style>
