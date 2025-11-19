@@ -99,7 +99,7 @@ const saveConfig = () => {
   api.post('api/config', my_config)
       .then(res => {
         ElMessage.success(res.message)
-        emit('load')
+        window.$reLoadList()
         dialogVisible.value = false
       })
       .finally(() => {
@@ -110,5 +110,4 @@ const saveConfig = () => {
 defineExpose({
   show
 })
-const emit = defineEmits(['load'])
 </script>

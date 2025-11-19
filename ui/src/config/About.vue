@@ -4,7 +4,10 @@
       <img alt="icon.svg" height="80" src="../../public/icon.svg" width="80"/>
       <div>
         <h1>ANI-RSS</h1>
-        <el-tooltip :content="props.config.buildInfo" placement="right">
+        <el-tooltip
+            :disabled="!props.config.buildInfo"
+            :content="props.config.buildInfo"
+            placement="right">
           <el-text class="mx-1" size="small" style="cursor: pointer;">
             &nbsp;v{{ props.config.version }}
           </el-text>

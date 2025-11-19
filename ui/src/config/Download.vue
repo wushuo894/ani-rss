@@ -142,7 +142,8 @@
           <strong>主RSS</strong> 将 <span style="color: red;">不会自动删除</span>，仅在其更新后删除对应备用RSS的任务与文件
         </el-text>
         <br>
-        <el-checkbox v-model:model-value="props.config.deleteFiles">
+        <el-checkbox v-model:model-value="props.config.deleteFiles"
+                     :disabled="!props.config.delete">
           <span style="color: red;">删除本地文件</span>
         </el-checkbox>
         <br>
