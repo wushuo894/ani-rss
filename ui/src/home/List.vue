@@ -1,8 +1,8 @@
 <template>
-  <Edit ref="refEdit" @load="getList"/>
+  <Edit ref="refEdit"/>
   <PlayList ref="playList"/>
-  <Cover ref="refCover" @load="getList"/>
-  <Del ref="refDel" @load="getList"/>
+  <Cover ref="refCover"/>
+  <Del ref="refDel"/>
   <BgmRate ref="bgmRateRef"/>
   <div style="height: 100%;overflow: hidden;">
     <el-scrollbar>
@@ -254,6 +254,7 @@ let updateGridLayout = () => {
 
 onMounted(() => {
   window.addEventListener('resize', updateGridLayout);
+  window.$reLoadList = getList
   getList()
 })
 
@@ -281,7 +282,7 @@ let decodeURLComponentSafe = (str) => {
 }
 
 defineExpose({
-  getList, yearMonth
+  yearMonth
 })
 
 let props = defineProps({

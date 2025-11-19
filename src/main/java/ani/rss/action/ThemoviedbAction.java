@@ -25,7 +25,7 @@ public class ThemoviedbAction implements BaseAction {
         String s = request.getParam("method");
         if ("getThemoviedbName".equals(s)) {
             Ani ani = getBody(Ani.class);
-            String themoviedbName = TmdbUtil.getName(ani);
+            String themoviedbName = TmdbUtil.getFinalName(ani);
             Result<Ani> result = new Result<Ani>()
                     .setCode(HttpStatus.HTTP_OK)
                     .setMessage("获取TMDB成功")

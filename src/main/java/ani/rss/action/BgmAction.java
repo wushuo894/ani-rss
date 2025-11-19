@@ -42,7 +42,7 @@ public class BgmAction implements BaseAction {
                 Ani ani = getBody(Ani.class);
                 Tmdb tmdb = ani.getTmdb();
                 BgmInfo bgmInfo = BgmUtil.getBgmInfo(ani);
-                resultSuccess(BgmUtil.getName(bgmInfo, tmdb));
+                resultSuccess(BgmUtil.getFinalName(bgmInfo, tmdb));
             }
             case "rate" -> {
                 Ani ani = getBody(Ani.class);

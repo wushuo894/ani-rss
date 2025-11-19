@@ -36,7 +36,7 @@ const delAni = async () => {
   let action = () => api.del('api/ani?deleteFiles=' + deleteFiles.value, aniList.value.map(it => it['id']))
       .then(res => {
         ElMessage.success(res.message)
-        emit('load')
+        window.$reLoadList()
         dialogVisible.value = false
       })
       .finally(() => {
@@ -85,8 +85,6 @@ const show = (anis) => {
 defineExpose({
   show
 })
-
-const emit = defineEmits(['load'])
 </script>
 
 <style scoped>
