@@ -110,7 +110,7 @@
   </el-dialog>
 </template>
 <script setup>
-import {ref} from "vue";
+import {getCurrentInstance, ref} from "vue";
 import {Document, Setting, Upload, UploadFilled} from "@element-plus/icons-vue";
 import api from "@/js/api.js";
 import {ElMessage} from "element-plus";
@@ -122,9 +122,12 @@ let startImport = () => {
   api.post('api/ani/import', data.value)
       .then(res => {
         ElMessage.success(res.message)
-        setTimeout(() => {
-          location.reload();
-        }, 1000);
+        if (instance.vnode.props.onCallback) {
+          emit('callback')
+        } else {
+          window.$reLoadList()
+        }
+        dialogVisible.value = false
       })
       .finally(() => {
         importDataLoading.value = false
@@ -181,6 +184,10 @@ let show = () => {
 }
 
 defineExpose({show})
+
+const instance = getCurrentInstance()
+
+const emit = defineEmits(['callback'])
 </script>
 
 <style scoped>

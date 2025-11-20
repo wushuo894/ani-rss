@@ -19,7 +19,7 @@
 
 <script setup>
 
-import {markRaw, ref} from "vue";
+import {getCurrentInstance, markRaw, ref} from "vue";
 import api from "@/js/api.js";
 import {ElMessage, ElMessageBox} from "element-plus";
 import {Delete} from "@element-plus/icons-vue";
@@ -36,7 +36,11 @@ const delAni = async () => {
   let action = () => api.del('api/ani?deleteFiles=' + deleteFiles.value, aniList.value.map(it => it['id']))
       .then(res => {
         ElMessage.success(res.message)
-        window.$reLoadList()
+        if (instance.vnode.props.onCallback) {
+          emit('callback')
+        } else {
+          window.$reLoadList()
+        }
         dialogVisible.value = false
       })
       .finally(() => {
@@ -85,6 +89,10 @@ const show = (anis) => {
 defineExpose({
   show
 })
+
+const instance = getCurrentInstance()
+
+const emit = defineEmits(['callback'])
 </script>
 
 <style scoped>

@@ -1,6 +1,6 @@
 <template>
-  <ImportAni ref="importAniRef"/>
-  <Del ref="refDel" @load="getList"/>
+  <ImportAni ref="importAniRef" @callback="getList"/>
+  <Del ref="refDel" @callback="getList"/>
   <el-dialog v-model="dialogVisible" center class="manage-dialog" title="管理">
     <div style="min-height: 300px;" v-loading="loading">
       <div style="display: flex;justify-content: space-between;width: 100%;">

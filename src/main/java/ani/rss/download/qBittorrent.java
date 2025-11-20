@@ -354,7 +354,7 @@ public class qBittorrent implements BaseDownload {
         Optional<Ani> aniOpt = DownloadService.findAniByDownloadPath(torrentsInfo);
 
         if (aniOpt.isEmpty()) {
-            log.debug("未能获取番剧对象: {}", torrentsInfo.getName());
+            log.error("未能获取番剧对象: {}", torrentsInfo.getName());
             return;
         }
 
