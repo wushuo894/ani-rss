@@ -6,7 +6,6 @@ import ani.rss.entity.Config;
 import ani.rss.entity.tmdb.Tmdb;
 import ani.rss.enums.BgmTokenTypeEnum;
 import ani.rss.service.DownloadService;
-import ani.rss.util.basic.FilePathUtil;
 import ani.rss.util.basic.GsonStatic;
 import ani.rss.util.basic.HttpReq;
 import ani.rss.util.basic.MyCacheUtil;
@@ -834,9 +833,7 @@ public class BgmUtil {
         }
 
         // 下载位置
-        String downloadPath = FilePathUtil.getAbsolutePath(
-                DownloadService.getDownloadPath(ani)
-        );
+        String downloadPath = DownloadService.getDownloadPath(ani);
 
         String alistPath = config.getAlistPath();
         String completedPathTemplate = config.getCompletedPathTemplate();

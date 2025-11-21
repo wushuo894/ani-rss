@@ -1,11 +1,14 @@
 package ani.rss.util.basic;
 
 import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.ReUtil;
 
 import java.io.File;
+import java.util.List;
+import java.util.Objects;
 
-public class FilePathUtil {
+public class MyFileUtil {
 
     /**
      * 获取绝对路径 并把 windows 狗日的 \ 转换为 /
@@ -57,6 +60,55 @@ public class FilePathUtil {
             s = s.substring(0, s.length() - 1);
         }
         return s;
+    }
+
+    /**
+     * 获取文件列表 不会存在空指针问题
+     *
+     * @param path 文件夹位置
+     * @return 文件列表
+     */
+    public static List<File> listFileList(String path) {
+        return List.of(listFiles(path));
+    }
+
+    /**
+     * 获取文件列表 不会存在空指针问题
+     *
+     * @param file 文件夹位置
+     * @return 文件列表
+     */
+    public static List<File> listFileList(File file) {
+        return List.of(listFiles(file));
+    }
+
+    /**
+     * 获取文件列表 不会存在空指针问题
+     *
+     * @param path 文件夹位置
+     * @return 文件列表
+     */
+    public static File[] listFiles(String path) {
+        return listFiles(new File(path));
+    }
+
+    /**
+     * 获取文件列表 不会存在空指针问题
+     *
+     * @param file 文件夹位置
+     * @return 文件列表
+     */
+    public static File[] listFiles(File file) {
+        if (Objects.isNull(file)) {
+            return new File[0];
+        }
+        if (!file.exists()) {
+            return new File[0];
+        }
+        if (file.isDirectory()) {
+            return ObjectUtil.defaultIfNull(file.listFiles(), new File[0]);
+        }
+        return new File[0];
     }
 
 }

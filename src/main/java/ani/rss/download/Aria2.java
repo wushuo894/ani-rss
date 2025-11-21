@@ -4,9 +4,9 @@ import ani.rss.entity.Ani;
 import ani.rss.entity.Config;
 import ani.rss.entity.Item;
 import ani.rss.entity.TorrentsInfo;
-import ani.rss.util.basic.FilePathUtil;
 import ani.rss.util.basic.GsonStatic;
 import ani.rss.util.basic.HttpReq;
+import ani.rss.util.basic.MyFileUtil;
 import ani.rss.util.basic.RenameCacheUtil;
 import cn.hutool.core.codec.Base64;
 import cn.hutool.core.collection.CollUtil;
@@ -113,7 +113,7 @@ public class Aria2 implements BaseDownload {
                                 .setName(name)
                                 .setHash(infoHash)
                                 .setState(state)
-                                .setDownloadDir(FilePathUtil.getAbsolutePath(dir))
+                                .setDownloadDir(MyFileUtil.getAbsolutePath(dir))
                                 .setFiles(() -> files);
                         torrentsInfos.add(torrentsInfo);
                     }

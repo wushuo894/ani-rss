@@ -8,10 +8,11 @@ import ani.rss.entity.Config;
 import ani.rss.entity.Item;
 import ani.rss.entity.TorrentsInfo;
 import ani.rss.enums.SortTypeEnum;
+import ani.rss.service.ClearService;
 import ani.rss.service.DownloadService;
 import ani.rss.task.RssTask;
 import ani.rss.util.basic.ExceptionUtil;
-import ani.rss.util.basic.FilePathUtil;
+import ani.rss.util.basic.MyFileUtil;
 import ani.rss.util.other.*;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollUtil;
@@ -184,31 +185,33 @@ public class AniAction implements BaseAction {
         if (Boolean.parseBoolean(move)) {
             Ani get = ObjectUtil.clone(first.get());
             ThreadUtil.execute(() -> {
-                File downloadPath = DownloadService.getDownloadPath(get);
-                File newDownloadPath = DownloadService.getDownloadPath(ani);
+                String downloadPath = DownloadService.getDownloadPath(get);
+                String newDownloadPath = DownloadService.getDownloadPath(ani);
                 Boolean login = TorrentUtil.login();
                 List<TorrentsInfo> torrentsInfos = new ArrayList<>();
                 if (login) {
                     torrentsInfos = TorrentUtil.getTorrentsInfos();
                 }
-                if (downloadPath.toString().equals(newDownloadPath.toString())) {
+                if (downloadPath.equals(newDownloadPath)) {
                     // 位置未发生改变
                     return;
                 }
 
+                File downloadPathFile = new File(downloadPath);
+
                 for (TorrentsInfo torrentsInfo : torrentsInfos) {
                     String downloadDir = torrentsInfo.getDownloadDir();
-                    if (!downloadDir.equals(FilePathUtil.getAbsolutePath(downloadPath))) {
+                    if (!downloadDir.equals(downloadPath)) {
                         // 旧位置不相同
                         continue;
                     }
                     // 修改保存位置
-                    TorrentUtil.setSavePath(torrentsInfo, FilePathUtil.getAbsolutePath(newDownloadPath));
+                    TorrentUtil.setSavePath(torrentsInfo, newDownloadPath);
                 }
-                if (!downloadPath.exists()) {
+                if (!downloadPathFile.exists()) {
                     return;
                 }
-                if (downloadPath.isFile()) {
+                if (downloadPathFile.isFile()) {
                     return;
                 }
                 if (!torrentsInfos.isEmpty()) {
@@ -216,13 +219,13 @@ public class AniAction implements BaseAction {
                 }
                 try {
                     FileUtil.mkdir(newDownloadPath);
-                    File[] files = ObjectUtil.defaultIfNull(downloadPath.listFiles(), new File[]{});
+                    File[] files = MyFileUtil.listFiles(downloadPath);
                     for (File oldFile : files) {
                         log.info("移动文件 {} ==> {}", oldFile, newDownloadPath);
-                        FileUtil.move(oldFile, newDownloadPath, true);
+                        FileUtil.move(oldFile, new File(newDownloadPath), true);
                     }
                     FileUtil.del(downloadPath);
-                    ClearCacheAction.clearParentFile(downloadPath);
+                    ClearService.clearParentFile(downloadPath);
                 } catch (Exception e) {
                     log.error(ExceptionUtil.getMessage(e), e);
                 }
@@ -328,7 +331,7 @@ public class AniAction implements BaseAction {
             for (Ani ani : anis) {
                 File torrentDir = TorrentUtil.getTorrentDir(ani);
                 FileUtil.del(torrentDir);
-                ClearCacheAction.clearParentFile(torrentDir);
+                ClearService.clearParentFile(torrentDir);
                 log.info("删除订阅 {} {} {}", ani.getTitle(), ani.getUrl(), ani.getId());
             }
             if (!Boolean.parseBoolean(deleteFiles)) {
@@ -339,6 +342,7 @@ public class AniAction implements BaseAction {
             List<File> files = anis
                     .stream()
                     .map(DownloadService::getDownloadPath)
+                    .map(File::new)
                     .toList();
 
             Boolean login = TorrentUtil.login();
@@ -360,7 +364,7 @@ public class AniAction implements BaseAction {
                 ThreadUtil.sleep(3000);
                 log.info("删除 {}", file);
                 FileUtil.del(file);
-                ClearCacheAction.clearParentFile(file);
+                ClearService.clearParentFile(file);
             }
         });
     }

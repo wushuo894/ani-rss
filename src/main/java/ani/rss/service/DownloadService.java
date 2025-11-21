@@ -7,8 +7,8 @@ import ani.rss.enums.NotificationStatusEnum;
 import ani.rss.enums.StringEnum;
 import ani.rss.enums.TorrentsTags;
 import ani.rss.util.basic.ExceptionUtil;
-import ani.rss.util.basic.FilePathUtil;
 import ani.rss.util.basic.GsonStatic;
+import ani.rss.util.basic.MyFileUtil;
 import ani.rss.util.other.*;
 import cn.hutool.core.date.DateField;
 import cn.hutool.core.date.DateUtil;
@@ -81,10 +81,7 @@ public class DownloadService {
                 })
                 .count();
 
-        File downloadPathList = getDownloadPath(ani);
-        String savePath = FilePathUtil.getAbsolutePath(
-                downloadPathList
-        );
+        String savePath = getDownloadPath(ani);
 
         ItemsUtil.procrastinating(ani, items);
 
@@ -300,7 +297,7 @@ public class DownloadService {
         }
         reName = ReUtil.get(StringEnum.SEASON_REG, reName, 0);
 
-        File downloadPath = getDownloadPath(ani);
+        String downloadPath = getDownloadPath(ani);
 
         List<TorrentsInfo> torrentsInfos = TorrentUtil.getTorrentsInfos();
 
@@ -308,7 +305,8 @@ public class DownloadService {
         TorrentsInfo standbyRSS = torrentsInfos
                 .stream()
                 .filter(torrentsInfo -> {
-                    if (!torrentsInfo.getDownloadDir().equals(FilePathUtil.getAbsolutePath(downloadPath))) {
+                    String downloadDir = torrentsInfo.getDownloadDir();
+                    if (!downloadDir.equals(downloadPath)) {
                         return false;
                     }
                     if (!ReUtil.contains(StringEnum.SEASON_REG, torrentsInfo.getName())) {
@@ -323,8 +321,7 @@ public class DownloadService {
             TorrentUtil.delete(standbyRSS, true, true);
         }
 
-        File[] files = ObjectUtil.defaultIfNull(downloadPath.listFiles(), new File[]{});
-
+        File[] files = MyFileUtil.listFiles(downloadPath);
         for (File file : files) {
             String fileMainName = FileUtil.mainName(file);
             if (StrUtil.isBlank(fileMainName)) {
@@ -360,12 +357,12 @@ public class DownloadService {
                 isDel = true;
             }
             if (isDel) {
-                log.info("已开启备用RSS, 自动删除 {}", FilePathUtil.getAbsolutePath(file));
+                log.info("已开启备用RSS, 自动删除 {}", MyFileUtil.getAbsolutePath(file));
                 try {
                     FileUtil.del(file);
-                    log.info("删除成功 {}", FilePathUtil.getAbsolutePath(file));
+                    log.info("删除成功 {}", MyFileUtil.getAbsolutePath(file));
                 } catch (Exception e) {
-                    log.error("删除失败 {}", FilePathUtil.getAbsolutePath(file));
+                    log.error("删除失败 {}", MyFileUtil.getAbsolutePath(file));
                     log.error(e.getMessage(), e);
                 }
             }
@@ -393,11 +390,11 @@ public class DownloadService {
         log.info("添加下载 {}", name);
 
         if (!torrentFile.exists()) {
-            log.error("种子下载出现问题 {} {}", name, FilePathUtil.getAbsolutePath(torrentFile));
+            log.error("种子下载出现问题 {} {}", name, MyFileUtil.getAbsolutePath(torrentFile));
             return;
         }
         ThreadUtil.sleep(1000);
-        savePath = FilePathUtil.getAbsolutePath(savePath);
+        savePath = MyFileUtil.getAbsolutePath(savePath);
 
         String text = StrFormatter.format("{} 已更新", name);
         if (!master) {
@@ -518,7 +515,7 @@ public class DownloadService {
      * @param ani
      * @return
      */
-    public static File getDownloadPath(Ani ani) {
+    public static String getDownloadPath(Ani ani) {
         return getDownloadPath(ani, ConfigUtil.CONFIG);
     }
 
@@ -528,7 +525,7 @@ public class DownloadService {
      * @param ani
      * @return
      */
-    public static File getDownloadPath(Ani ani, Config config) {
+    public static String getDownloadPath(Ani ani, Config config) {
         Boolean customDownloadPath = ani.getCustomDownloadPath();
         String aniDownloadPath = ani.getDownloadPath();
         Boolean ova = ani.getOva();
@@ -544,7 +541,7 @@ public class DownloadService {
             // 自定义下载位置
             downloadPathTemplate = StrUtil.split(aniDownloadPath, "\n", true, true)
                     .stream()
-                    .map(FilePathUtil::getAbsolutePath)
+                    .map(MyFileUtil::getAbsolutePath)
                     .findFirst()
                     .orElse(downloadPathTemplate);
         }
@@ -619,7 +616,7 @@ public class DownloadService {
             downloadPathTemplate = downloadPathTemplate.replace("${jpTitle}", jpTitle);
         }
 
-        return new File(downloadPathTemplate);
+        return MyFileUtil.getAbsolutePath(downloadPathTemplate);
     }
 
 
@@ -654,7 +651,7 @@ public class DownloadService {
         String reName = item.getReName();
         Double episode = item.getEpisode();
 
-        File downloadPath = getDownloadPath(ani);
+        String downloadPath = getDownloadPath(ani);
 
         if (downloadList) {
             List<TorrentsInfo> torrentsInfos = TorrentUtil.getTorrentsInfos();
@@ -664,7 +661,7 @@ public class DownloadService {
                     continue;
                 }
                 String downloadDir = torrentsInfo.getDownloadDir();
-                if (!downloadDir.equals(FilePathUtil.getAbsolutePath(downloadPath))) {
+                if (!downloadDir.equals(downloadPath)) {
                     continue;
                 }
                 log.info("已存在下载任务 {}", reName);
@@ -673,7 +670,7 @@ public class DownloadService {
             }
         }
 
-        List<File> files = List.of(ObjectUtil.defaultIfNull(downloadPath.listFiles(), new File[]{}));
+        List<File> files = MyFileUtil.listFileList(downloadPath);
 
         if (files.stream()
                 .filter(file -> {
@@ -728,7 +725,7 @@ public class DownloadService {
         return AniUtil.ANI_LIST
                 .stream()
                 .filter(ani -> {
-                    String path = FilePathUtil.getAbsolutePath(getDownloadPath(ani));
+                    String path = getDownloadPath(ani);
                     return path.equals(downloadDir);
                 })
                 .map(ObjectUtil::clone)

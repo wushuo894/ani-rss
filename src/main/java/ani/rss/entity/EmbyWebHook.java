@@ -78,8 +78,8 @@ public class EmbyWebHook implements Serializable {
 
         String path = item.getPath();
         String parent = new File(path).getParent();
-        File downloadPath = DownloadService.getDownloadPath(ani);
-        if (downloadPath.toString().equals(parent)) {
+        String downloadPath = DownloadService.getDownloadPath(ani);
+        if (downloadPath.equals(parent)) {
             // 路径相同
             return true;
         }

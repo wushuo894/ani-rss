@@ -7,7 +7,6 @@ import ani.rss.entity.tmdb.Tmdb;
 import ani.rss.enums.NotificationStatusEnum;
 import ani.rss.enums.StringEnum;
 import ani.rss.service.DownloadService;
-import ani.rss.util.basic.FilePathUtil;
 import ani.rss.util.basic.NumberFormatUtil;
 import ani.rss.util.other.ConfigUtil;
 import ani.rss.util.other.ItemsUtil;
@@ -111,7 +110,7 @@ public interface BaseNotification {
         notificationTemplate = notificationTemplate.replace("${emoji}", emoji);
         notificationTemplate = notificationTemplate.replace("${action}", action);
 
-        String downloadPath = FilePathUtil.getAbsolutePath(DownloadService.getDownloadPath(ani));
+        String downloadPath = DownloadService.getDownloadPath(ani);
         notificationTemplate = notificationTemplate.replace("${downloadPath}", downloadPath);
 
         if (notificationTemplate.contains("${jpTitle}")) {
