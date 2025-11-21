@@ -6,9 +6,9 @@ import ani.rss.entity.TorrentsInfo;
 import ani.rss.enums.NotificationStatusEnum;
 import ani.rss.enums.TorrentsTags;
 import ani.rss.service.DownloadService;
-import ani.rss.util.basic.FilePathUtil;
 import ani.rss.util.basic.GsonStatic;
 import ani.rss.util.basic.HttpReq;
+import ani.rss.util.basic.MyFileUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.resource.ResourceUtil;
 import cn.hutool.core.lang.Assert;
@@ -73,7 +73,7 @@ public class OpenListUtil {
 
         TorrentUtil.addTags(torrentsInfo, TorrentsTags.OPEN_LIST.getValue());
 
-        String downloadDir = FilePathUtil.getAbsolutePath(torrentsInfo.getDownloadDir());
+        String downloadDir = MyFileUtil.getAbsolutePath(torrentsInfo.getDownloadDir());
 
         List<String> files = torrentsInfo.getFiles().get();
         String filePath = getPath(ani);
@@ -194,7 +194,7 @@ public class OpenListUtil {
     public static void verify() {
         Config config = ConfigUtil.CONFIG;
         String alistHost = config.getAlistHost();
-        String alistPath = FilePathUtil.getAbsolutePath(config.getAlistPath());
+        String alistPath = MyFileUtil.getAbsolutePath(config.getAlistPath());
         String alistToken = config.getAlistToken();
 
         Assert.notBlank(alistHost, "alistHost 未配置");
@@ -224,7 +224,7 @@ public class OpenListUtil {
                     .setOvaDownloadPathTemplate(alistPath);
         }
 
-        String path = FilePathUtil.getAbsolutePath(DownloadService.getDownloadPath(ani, config));
+        String path = DownloadService.getDownloadPath(ani, config);
 
         path = ReUtil.replaceAll(path, "^[A-z]:", "");
 

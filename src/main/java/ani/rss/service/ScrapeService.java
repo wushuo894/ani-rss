@@ -6,6 +6,7 @@ import ani.rss.entity.tmdb.*;
 import ani.rss.enums.StringEnum;
 import ani.rss.enums.TmdbTypeEnum;
 import ani.rss.util.basic.HttpReq;
+import ani.rss.util.basic.MyFileUtil;
 import ani.rss.util.other.TmdbUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.ArrayUtil;
@@ -68,12 +69,8 @@ public class ScrapeService {
         tmdb = TmdbUtil.getTmdb(tmdb, TmdbTypeEnum.MOVIE);
 
         // 下载位置
-        File downloadPath = DownloadService.getDownloadPath(ani);
-        if (!downloadPath.exists()) {
-            return;
-        }
-
-        File[] files = downloadPath.listFiles();
+        String downloadPath = DownloadService.getDownloadPath(ani);
+        File[] files = MyFileUtil.listFiles(downloadPath);
 
         if (ArrayUtil.isEmpty(files)) {
             return;
@@ -141,8 +138,8 @@ public class ScrapeService {
         tmdb = TmdbUtil.getTmdb(tmdb, TmdbTypeEnum.TV);
 
         // 下载位置
-        File downloadPath = DownloadService.getDownloadPath(ani);
-        if (!downloadPath.exists()) {
+        File downloadPath = new File(DownloadService.getDownloadPath(ani));
+        if (!FileUtil.exist(downloadPath)) {
             return;
         }
 
@@ -200,11 +197,7 @@ public class ScrapeService {
             NfoGenerator.generateSeasonNfo(tmdbSeason, seasonNfoFile);
         }
 
-        File[] files = downloadPath.listFiles();
-        if (Objects.isNull(files)) {
-            // 不存在集
-            return;
-        }
+        File[] files = MyFileUtil.listFiles(downloadPath);
 
         Map<Integer, TmdbEpisode> episodeMap = tmdbSeason
                 .getEpisodes()

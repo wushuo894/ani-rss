@@ -8,9 +8,9 @@ import ani.rss.enums.StringEnum;
 import ani.rss.enums.TorrentsTags;
 import ani.rss.service.DownloadService;
 import ani.rss.util.basic.ExceptionUtil;
-import ani.rss.util.basic.FilePathUtil;
 import ani.rss.util.basic.GsonStatic;
 import ani.rss.util.basic.HttpReq;
+import ani.rss.util.basic.MyFileUtil;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.lang.Assert;
@@ -252,7 +252,7 @@ public class qBittorrent implements BaseDownload {
                                     .progress(completed, size)
                                     .setName(name)
                                     .setHash(hash)
-                                    .setDownloadDir(FilePathUtil.getAbsolutePath(savePath))
+                                    .setDownloadDir(MyFileUtil.getAbsolutePath(savePath))
                                     .setTags(tagList)
                                     .setFiles(() ->
                                             files(torrentsInfo, true, config)

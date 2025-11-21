@@ -5,9 +5,9 @@ import ani.rss.entity.Config;
 import ani.rss.entity.Item;
 import ani.rss.entity.TorrentsInfo;
 import ani.rss.enums.TorrentsTags;
-import ani.rss.util.basic.FilePathUtil;
 import ani.rss.util.basic.GsonStatic;
 import ani.rss.util.basic.HttpReq;
+import ani.rss.util.basic.MyFileUtil;
 import ani.rss.util.basic.RenameCacheUtil;
 import cn.hutool.core.codec.Base64;
 import cn.hutool.core.io.FileUtil;
@@ -123,7 +123,7 @@ public class Transmission implements BaseDownload {
                                     .setHash(item.get("hashString").getAsString())
                                     .setState(state)
                                     .setId(item.get("id").getAsString())
-                                    .setDownloadDir(FilePathUtil.getAbsolutePath(downloadDir))
+                                    .setDownloadDir(MyFileUtil.getAbsolutePath(downloadDir))
                                     .setFiles(() -> files);
                             torrentsInfos.add(torrentsInfo);
                         }

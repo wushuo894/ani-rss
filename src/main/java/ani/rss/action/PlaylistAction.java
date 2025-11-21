@@ -8,7 +8,7 @@ import ani.rss.entity.Ani;
 import ani.rss.entity.PlayItem;
 import ani.rss.enums.StringEnum;
 import ani.rss.service.DownloadService;
-import ani.rss.util.basic.FilePathUtil;
+import ani.rss.util.basic.MyFileUtil;
 import ani.rss.util.other.AniUtil;
 import cn.hutool.core.codec.Base64;
 import cn.hutool.core.collection.CollUtil;
@@ -50,8 +50,8 @@ public class PlaylistAction implements BaseAction {
         }
         ani = first.get();
 
-        File downloadPath = DownloadService.getDownloadPath(ani);
-        List<PlayItem> collect = getPlayItem(downloadPath);
+        String downloadPath = DownloadService.getDownloadPath(ani);
+        List<PlayItem> collect = getPlayItem(new File(downloadPath));
         collect = CollUtil.distinct(collect, PlayItem::getTitle, false);
         collect = CollUtil.sort(collect, Comparator.comparingDouble(it -> Double.parseDouble(ReUtil.get(StringEnum.SEASON_REG, it.getTitle(), 2))));
         resultSuccess(collect);
@@ -60,8 +60,9 @@ public class PlaylistAction implements BaseAction {
     public List<PlayItem> getPlayItem(File file) {
         List<PlayItem> playItems = new ArrayList<>();
         if (file.isDirectory()) {
-            for (File listFile : ObjectUtil.defaultIfNull(file.listFiles(), new File[0])) {
-                playItems.addAll(getPlayItem(listFile));
+            File[] files = MyFileUtil.listFiles(file);
+            for (File itFile : files) {
+                playItems.addAll(getPlayItem(itFile));
             }
             return playItems;
         }
@@ -75,7 +76,7 @@ public class PlaylistAction implements BaseAction {
         if (!ReUtil.contains(StringEnum.SEASON_REG, file.getName())) {
             return playItems;
         }
-        File[] files = ObjectUtil.defaultIfNull(file.getParentFile().listFiles(), new File[]{});
+        File[] files = MyFileUtil.listFiles(file.getParentFile());
         List<PlayItem.Subtitles> subtitles = Arrays.stream(files)
                 .filter(f -> List.of("ass", "srt").contains(ObjectUtil.defaultIfNull(FileUtil.extName(f), "")))
                 .filter(f -> f.getName().startsWith(FileUtil.mainName(file.getName())))
@@ -84,13 +85,13 @@ public class PlaylistAction implements BaseAction {
                     return new PlayItem.Subtitles()
                             .setName(name)
                             .setHtml(name.toUpperCase())
-                            .setUrl(Base64.encode(FilePathUtil.getAbsolutePath(f)))
+                            .setUrl(Base64.encode(MyFileUtil.getAbsolutePath(f)))
                             .setType(FileUtil.extName(f));
                 }).toList();
         subtitles = CollUtil.distinct(subtitles, PlayItem.Subtitles::getName, true);
         PlayItem playItem = new PlayItem();
         playItem.setSubtitles(subtitles);
-        playItem.setFilename(Base64.encode(FilePathUtil.getAbsolutePath(file)))
+        playItem.setFilename(Base64.encode(MyFileUtil.getAbsolutePath(file)))
                 .setName(file.getName())
                 .setLastModify(file.lastModified())
                 .setTitle(ReUtil.get(StringEnum.SEASON_REG, file.getName(), 0));

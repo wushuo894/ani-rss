@@ -5,9 +5,9 @@ import ani.rss.entity.Login;
 import ani.rss.entity.NotificationConfig;
 import ani.rss.enums.BgmTokenTypeEnum;
 import ani.rss.enums.SortTypeEnum;
-import ani.rss.util.basic.FilePathUtil;
 import ani.rss.util.basic.GsonStatic;
 import ani.rss.util.basic.LogUtil;
+import ani.rss.util.basic.MyFileUtil;
 import ani.rss.util.basic.MyURLUtil;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.bean.DynaBean;
@@ -52,9 +52,9 @@ public class ConfigUtil {
             rootPath = FileUtil.getUserHomePath() + "/Movies";
         }
 
-        String downloadPath = FilePathUtil.getAbsolutePath(new File(rootPath + "/番剧"));
-        String ovaDownloadPath = FilePathUtil.getAbsolutePath(new File(rootPath + "/剧场版"));
-        String completedPath = FilePathUtil.getAbsolutePath(new File(rootPath + "/已完结番剧"));
+        String downloadPath = MyFileUtil.getAbsolutePath(new File(rootPath + "/番剧"));
+        String ovaDownloadPath = MyFileUtil.getAbsolutePath(new File(rootPath + "/剧场版"));
+        String completedPath = MyFileUtil.getAbsolutePath(new File(rootPath + "/已完结番剧"));
 
         String downloadPathTemplate = StrFormatter.format("{}/${letter}/${title}/Season ${season}", downloadPath);
         String ovaDownloadPathTemplate = StrFormatter.format("{}/${letter}/${title}", ovaDownloadPath);
@@ -362,7 +362,7 @@ public class ConfigUtil {
                     return !List.of(".DS_Store", ".DS_Store@SynoResource")
                             .contains(pathname.getName());
                 }
-                File[] files = pathname.listFiles();
+                File[] files = MyFileUtil.listFiles(pathname);
                 return !ArrayUtil.isEmpty(files);
             }, backupFiles.toArray(new File[0]));
 
@@ -389,7 +389,7 @@ public class ConfigUtil {
             return;
         }
 
-        File[] files = backupDir.listFiles();
+        File[] files = MyFileUtil.listFiles(backupDir);
         if (ArrayUtil.isEmpty(files)) {
             return;
         }
@@ -496,7 +496,7 @@ public class ConfigUtil {
         for (Func1<Config, String> func1 : func1List) {
             String fieldName = LambdaUtil.getFieldName(func1);
             String v = func1.callWithRuntimeException(config);
-            v = FilePathUtil.getAbsolutePath(v);
+            v = MyFileUtil.getAbsolutePath(v);
             dynaBean.set(fieldName, v);
         }
     }

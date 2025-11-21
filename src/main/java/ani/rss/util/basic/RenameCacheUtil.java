@@ -31,7 +31,7 @@ public class RenameCacheUtil {
         }
 
         File configDir = ConfigUtil.getConfigDir();
-        String absolutePath = FilePathUtil.getAbsolutePath(configDir);
+        String absolutePath = MyFileUtil.getAbsolutePath(configDir);
         try {
             Class.forName("org.sqlite.JDBC");
             connection = DriverManager.getConnection(StrFormatter.format("jdbc:sqlite:{}/database.db", absolutePath));

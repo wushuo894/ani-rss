@@ -1,6 +1,5 @@
 package ani.rss.util.other;
 
-import ani.rss.action.ClearCacheAction;
 import ani.rss.download.BaseDownload;
 import ani.rss.entity.Ani;
 import ani.rss.entity.Config;
@@ -8,9 +7,10 @@ import ani.rss.entity.Item;
 import ani.rss.entity.TorrentsInfo;
 import ani.rss.enums.StringEnum;
 import ani.rss.enums.TorrentsTags;
+import ani.rss.service.ClearService;
 import ani.rss.util.basic.ExceptionUtil;
-import ani.rss.util.basic.FilePathUtil;
 import ani.rss.util.basic.HttpReq;
+import ani.rss.util.basic.MyFileUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.text.StrFormatter;
 import cn.hutool.core.thread.ThreadUtil;
@@ -231,7 +231,7 @@ public class TorrentUtil {
             return true;
         }
         // 清理空文件夹
-        ClearCacheAction.clearParentFile(new File(torrentsInfo.getDownloadDir() + "/" + name));
+        ClearService.clearParentFile(new File(torrentsInfo.getDownloadDir() + "/" + name));
         return true;
     }
 
@@ -350,7 +350,7 @@ public class TorrentUtil {
             TorrentFile torrentFile = new TorrentFile(file);
             hexHash = torrentFile.getHexHash();
         } catch (Exception e) {
-            log.error("转换种子为磁力链接时出现错误 {}", FilePathUtil.getAbsolutePath(file));
+            log.error("转换种子为磁力链接时出现错误 {}", MyFileUtil.getAbsolutePath(file));
             log.error(e.getMessage(), e);
         }
         return StrFormatter.format("magnet:?xt=urn:btih:{}", hexHash);

@@ -3,11 +3,11 @@ package ani.rss.action;
 import ani.rss.annotation.Auth;
 import ani.rss.annotation.Path;
 import ani.rss.entity.Ani;
+import ani.rss.util.basic.MyFileUtil;
 import ani.rss.util.other.AniUtil;
 import ani.rss.util.other.ServerUtil;
 import ani.rss.util.other.TorrentUtil;
 import cn.hutool.core.io.FileUtil;
-import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.Method;
 import cn.hutool.http.server.HttpServerRequest;
@@ -53,7 +53,7 @@ public class TorrentAction implements BaseAction {
 
         Ani ani = first.get();
         File torrentDir = TorrentUtil.getTorrentDir(ani);
-        File[] files = ObjectUtil.defaultIfNull(torrentDir.listFiles(), new File[]{});
+        File[] files = MyFileUtil.listFiles(torrentDir);
         for (File file : files) {
             String s = FileUtil.mainName(file);
             if (infoHashList.contains(s)) {
