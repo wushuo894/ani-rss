@@ -1,4 +1,4 @@
-refactor: 优化导入与删除逻辑
+fix: 修复mikan页面日期不展示
 
 [请不要将本项目在国内宣传](https://github.com/wushuo894/ani-rss/discussions/504)
 
