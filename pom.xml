@@ -7,9 +7,17 @@
     <groupId>ani.rss</groupId>
     <artifactId>ani-rss</artifactId>
     <version>2.4.8</version>
+    <packaging>pom</packaging>
     <organization>
         <name>wushuo894</name>
     </organization>
+    <modules>
+        <module>ani-rss-commons</module>
+        <module>ani-rss-application</module>
+        <module>ani-rss-web</module>
+        <module>ani-rss-core</module>
+        <module>ani-rss-api</module>
+    </modules>
     <inceptionYear>2025</inceptionYear>
     <description>基于RSS自动追番、订阅、下载、刮削</description>
 
@@ -19,136 +27,54 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
-    <dependencies>
-        <dependency>
-            <groupId>org.eclipse</groupId>
-            <artifactId>bittorrent</artifactId>
-            <version>0.3.0-v20070627-1030</version>
-        </dependency>
-        <dependency>
-            <groupId>org.xerial</groupId>
-            <artifactId>sqlite-jdbc</artifactId>
-            <version>3.50.3.0</version>
-        </dependency>
-        <dependency>
-            <groupId>com.sun.mail</groupId>
-            <artifactId>javax.mail</artifactId>
-            <version>1.6.2</version>
-        </dependency>
-        <dependency>
-            <groupId>ch.qos.logback</groupId>
-            <artifactId>logback-classic</artifactId>
-            <version>1.5.19</version>
-        </dependency>
-        <dependency>
-            <groupId>io.github.biezhi</groupId>
-            <artifactId>TinyPinyin</artifactId>
-            <version>2.0.3.RELEASE</version>
-        </dependency>
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <version>1.18.42</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.google.code.gson</groupId>
-            <artifactId>gson</artifactId>
-            <version>2.13.2</version>
-        </dependency>
-        <dependency>
-            <groupId>cn.hutool</groupId>
-            <artifactId>hutool-all</artifactId>
-            <version>5.8.41</version>
-        </dependency>
-        <dependency>
-            <groupId>org.jsoup</groupId>
-            <artifactId>jsoup</artifactId>
-            <version>1.21.2</version>
-        </dependency>
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.13.2</version>
-            <scope>test</scope>
-        </dependency>
-    </dependencies>
-
-    <build>
-        <finalName>ani-rss</finalName>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-assembly-plugin</artifactId>
-                <version>3.7.1</version>
-                <configuration>
-                    <descriptorRefs>
-                        <descriptorRef>jar-with-dependencies</descriptorRef>
-                    </descriptorRefs>
-                    <archive>
-                        <manifest>
-                            <addClasspath>true</addClasspath>
-                            <mainClass>ani.rss.Main</mainClass>
-                        </manifest>
-                    </archive>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>make-assembly</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>single</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>com.akathist.maven.plugins.launch4j</groupId>
-                <artifactId>launch4j-maven-plugin</artifactId>
-                <version>2.6.0</version>
-                <executions>
-                    <execution>
-                        <id>l4j</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>launch4j</goal>
-                        </goals>
-                        <configuration>
-                            <headerType>gui</headerType>
-                            <outfile>target/ani-rss-launcher.exe</outfile>
-                            <jar>target/ani-rss-jar-with-dependencies.jar</jar>
-                            <errTitle>Java environment is required!</errTitle>
-                            <cmdLine>--gui</cmdLine>
-                            <chdir>.</chdir>
-                            <priority>normal</priority>
-                            <downloadUrl>https://adoptium.net/zh-CN/</downloadUrl>
-                            <supportUrl>https://whichjdk.com/</supportUrl>
-                            <stayAlive>false</stayAlive>
-                            <restartOnCrash>false</restartOnCrash>
-                            <icon>ui/public/favicon.ico</icon>
-                            <jre>
-                                <path>jre/bin;%JAVA_HOME%/bin;%PATH%</path>
-                                <minVersion>17</minVersion>
-                                <opts>
-                                    <opt>-Xms60m -Xmx1g -Xss256k</opt>
-                                    <opt>--enable-native-access=ALL-UNNAMED</opt>
-                                    <opt>--add-opens=java.base/java.net=ALL-UNNAMED</opt>
-                                    <opt>--add-opens=java.base/sun.net.www.protocol.https=ALL-UNNAMED</opt>
-                                </opts>
-                            </jre>
-                            <versionInfo>
-                                <fileDescription>https://docs.wushuo.top/</fileDescription>
-                                <copyright>Copyright (C) 2024-2025</copyright>
-                                <productName>${project.artifactId}</productName>
-                                <internalName>${project.artifactId}</internalName>
-                                <originalFilename>ani-rss-launcher.exe</originalFilename>
-                                <language>SIMPLIFIED_CHINESE</language>
-                            </versionInfo>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-        </plugins>
-    </build>
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>ani.rss</groupId>
+                <artifactId>ani-rss-commons</artifactId>
+                <version>${project.parent.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>ani.rss</groupId>
+                <artifactId>ani-rss-api</artifactId>
+                <version>${project.parent.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>ani.rss</groupId>
+                <artifactId>ani-rss-core</artifactId>
+                <version>${project.parent.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>ani.rss</groupId>
+                <artifactId>ani-rss-tmdb</artifactId>
+                <version>${project.parent.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>ani.rss</groupId>
+                <artifactId>ani-rss-web</artifactId>
+                <version>${project.parent.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.projectlombok</groupId>
+                <artifactId>lombok</artifactId>
+                <version>1.18.42</version>
+            </dependency>
+            <dependency>
+                <groupId>cn.hutool</groupId>
+                <artifactId>hutool-all</artifactId>
+                <version>5.8.41</version>
+            </dependency>
+            <dependency>
+                <groupId>com.google.code.gson</groupId>
+                <artifactId>gson</artifactId>
+                <version>2.13.2</version>
+            </dependency>
+            <dependency>
+                <groupId>ch.qos.logback</groupId>
+                <artifactId>logback-classic</artifactId>
+                <version>1.5.19</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 
 </project>

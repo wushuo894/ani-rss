@@ -26,11 +26,14 @@ GREEN='\033[0;32m'
 YELLOW='\033[0;33m'
 NC='\033[0m'
 
-if [ ! -f target/ani-rss-launcher.exe ]; then
+base_path=$(pwd)
+target_path=${base_path}/target
+
+if [ ! -f ${target_path}/ani-rss-launcher.exe ]; then
   bash package.sh
 fi
 
-cd target
+cd ${target_path}
 
 if [ -d ani-rss ]; then
   echo -e "${YELLOW}清理文件夹 ani-rss${NC}"
