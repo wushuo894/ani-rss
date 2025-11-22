@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>ani.rss</groupId>
+        <artifactId>ani-rss</artifactId>
+        <version>2.4.8</version>
+    </parent>
+
+    <artifactId>ani-rss-application</artifactId>
+
+    <properties>
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>ani.rss</groupId>
+            <artifactId>ani-rss-web</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.13.2</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <finalName>ani-rss</finalName>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <version>3.7.1</version>
+                <configuration>
+                    <descriptorRefs>
+                        <descriptorRef>jar-with-dependencies</descriptorRef>
+                    </descriptorRefs>
+                    <archive>
+                        <manifest>
+                            <addClasspath>true</addClasspath>
+                            <mainClass>ani.rss.ApplicationMain</mainClass>
+                        </manifest>
+                    </archive>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>make-assembly</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>com.akathist.maven.plugins.launch4j</groupId>
+                <artifactId>launch4j-maven-plugin</artifactId>
+                <version>2.6.0</version>
+                <executions>
+                    <execution>
+                        <id>l4j</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>launch4j</goal>
+                        </goals>
+                        <configuration>
+                            <headerType>gui</headerType>
+                            <outfile>target/ani-rss-launcher.exe</outfile>
+                            <jar>target/ani-rss-jar-with-dependencies.jar</jar>
+                            <errTitle>Java environment is required!</errTitle>
+                            <cmdLine>--gui</cmdLine>
+                            <chdir>.</chdir>
+                            <priority>normal</priority>
+                            <downloadUrl>https://adoptium.net/zh-CN/</downloadUrl>
+                            <supportUrl>https://whichjdk.com/</supportUrl>
+                            <stayAlive>false</stayAlive>
+                            <restartOnCrash>false</restartOnCrash>
+                            <icon>${project.parent.basedir}/ui/public/favicon.ico</icon>
+                            <jre>
+                                <path>jre/bin;%JAVA_HOME%/bin;%PATH%</path>
+                                <minVersion>17</minVersion>
+                                <opts>
+                                    <opt>-Xms60m -Xmx1g -Xss256k</opt>
+                                    <opt>--enable-native-access=ALL-UNNAMED</opt>
+                                    <opt>--add-opens=java.base/java.net=ALL-UNNAMED</opt>
+                                    <opt>--add-opens=java.base/sun.net.www.protocol.https=ALL-UNNAMED</opt>
+                                </opts>
+                            </jre>
+                            <versionInfo>
+                                <fileDescription>https://docs.wushuo.top/</fileDescription>
+                                <copyright>Copyright (C) 2024-2025</copyright>
+                                <productName>${project.artifactId}</productName>
+                                <internalName>${project.artifactId}</internalName>
+                                <originalFilename>ani-rss-launcher.exe</originalFilename>
+                                <language>SIMPLIFIED_CHINESE</language>
+                            </versionInfo>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
+
+</project>

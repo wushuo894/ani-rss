@@ -2,7 +2,7 @@ FROM wushuo894/openj9:open-25-jre
 
 COPY docker/run.sh /run.sh
 COPY docker/exec.sh /exec.sh
-COPY target/ani-rss-jar-with-dependencies.jar /usr/app/ani-rss-jar-with-dependencies.jar
+COPY ani-rss-application/target/ani-rss-jar-with-dependencies.jar /usr/app/ani-rss-jar-with-dependencies.jar
 WORKDIR /usr/app
 VOLUME /config
 ENV PUID=0 PGID=0 UMASK=022

@@ -35,12 +35,12 @@ jobs:
           append_body: false
           token: ${{ secrets.GITHUB_TOKEN }}
           files: |
-            ./target/ani-rss-jar-with-dependencies.jar
-            ./target/ani-rss-jar-with-dependencies.jar.md5
-            ./target/ani-rss-launcher.exe
-            ./target/ani-rss-launcher.exe.md5
-            ./target/ani-rss.win.x86_64.zip
-            ./target/ani-rss.win.x86_64.zip.md5
+            ./ani-rss-application/target/ani-rss-jar-with-dependencies.jar
+            ./ani-rss-application/target/ani-rss-jar-with-dependencies.jar.md5
+            ./ani-rss-application/target/ani-rss-launcher.exe
+            ./ani-rss-application/target/ani-rss-launcher.exe.md5
+            ./ani-rss-application/target/ani-rss.win.x86_64.zip
+            ./ani-rss-application/target/ani-rss.win.x86_64.zip.md5
             ./info.json
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
