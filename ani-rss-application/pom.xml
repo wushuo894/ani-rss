@@ -93,6 +93,8 @@
                                 <opts>
                                     <opt>-Xms60m -Xmx1g -Xss256k</opt>
                                     <opt>--enable-native-access=ALL-UNNAMED</opt>
+                                    <opt>-XX:+UseCompactObjectHeaders</opt>
+                                    <opt>-XX:+IgnoreUnrecognizedVMOptions</opt>
                                     <opt>--add-opens=java.base/java.net=ALL-UNNAMED</opt>
                                     <opt>--add-opens=java.base/sun.net.www.protocol.https=ALL-UNNAMED</opt>
                                 </opts>
