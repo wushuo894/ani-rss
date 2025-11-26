@@ -68,7 +68,10 @@ public class FileAction implements BaseAction {
     public void doImg(String img) {
         HttpServerResponse response = ServerUtil.RESPONSE.get();
 
-        response.setHeader(Header.CACHE_CONTROL, "private, max-age=86400");
+        // 30 天
+        long maxAge = 86400 * 30;
+
+        response.setHeader(Header.CACHE_CONTROL, "private, max-age=" + maxAge);
         img = Base64.decodeStr(img);
         response.setContentType(getContentType(URLUtil.getPath(img)));
 
@@ -129,7 +132,7 @@ public class FileAction implements BaseAction {
 
         String contentType = getContentType(file.getName());
 
-        response.setHeader("Content-Disposition", StrFormatter.format("inline; filename=\"{}\"", URLUtil.encode(file.getName())));
+        response.setHeader(Header.CONTENT_DISPOSITION, StrFormatter.format("inline; filename=\"{}\"", URLUtil.encode(file.getName())));
         if (contentType.startsWith("video/")) {
             response.setHeader("Content-Type", contentType);
             response.setHeader("Accept-Ranges", "bytes");
@@ -145,13 +148,24 @@ public class FileAction implements BaseAction {
                 }
                 long contentLength = end - start + 1;
                 response.setHeader("Content-Range", "bytes " + start + "-" + end + "/" + fileLength);
-                response.setHeader("Content-Length", String.valueOf(contentLength));
+                response.setHeader(Header.CONTENT_LENGTH, String.valueOf(contentLength));
                 hasRange = true;
             } else {
-                response.setHeader("Content-Length", String.valueOf(fileLength));
+                response.setHeader(Header.CONTENT_LENGTH, String.valueOf(fileLength));
             }
         } else {
-            response.setHeader(Header.CACHE_CONTROL, "private, max-age=86400");
+            long fileLength = file.length();
+
+            long maxAge = 0;
+
+            // 小于或者等于 1M 缓存
+            if (fileLength <= 1024 * 1024) {
+                // 30 天
+                fileLength = 86400 * 30;
+            }
+
+            response.setHeader(Header.CONTENT_LENGTH, String.valueOf(fileLength));
+            response.setHeader(Header.CACHE_CONTROL, "private, max-age=" + maxAge);
             response.setContentType(contentType);
         }
 
