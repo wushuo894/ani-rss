@@ -14,7 +14,6 @@ import cn.hutool.core.text.StrFormatter;
 import cn.hutool.core.util.ReflectUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.core.util.URLUtil;
-import cn.hutool.http.ContentType;
 import cn.hutool.http.Header;
 import cn.hutool.http.HttpConnection;
 import cn.hutool.http.server.HttpServerRequest;
@@ -71,7 +70,7 @@ public class FileAction implements BaseAction {
 
         response.setHeader(Header.CACHE_CONTROL, "private, max-age=86400");
         img = Base64.decodeStr(img);
-        response.setContentType(FileUtil.getMimeType(URLUtil.getPath(img)));
+        response.setContentType(getContentType(URLUtil.getPath(img)));
 
         File configDir = ConfigUtil.getConfigDir();
 
@@ -128,11 +127,11 @@ public class FileAction implements BaseAction {
         long start = 0;
         long end = file.length() - 1;
 
-        String mimeType = getMimeType(file.getName());
+        String contentType = getContentType(file.getName());
 
         response.setHeader("Content-Disposition", StrFormatter.format("inline; filename=\"{}\"", URLUtil.encode(file.getName())));
-        if (mimeType.startsWith("video/")) {
-            response.setHeader("Content-Type", mimeType);
+        if (contentType.startsWith("video/")) {
+            response.setHeader("Content-Type", contentType);
             response.setHeader("Accept-Ranges", "bytes");
             String rangeHeader = request.getHeader("Range");
             long fileLength = file.length();
@@ -153,7 +152,7 @@ public class FileAction implements BaseAction {
             }
         } else {
             response.setHeader(Header.CACHE_CONTROL, "private, max-age=86400");
-            response.setContentType(mimeType);
+            response.setContentType(contentType);
         }
 
         try {
@@ -202,35 +201,6 @@ public class FileAction implements BaseAction {
         }
 
         doFile(filename);
-    }
-
-    /**
-     * 根据文件扩展名获得MimeType
-     *
-     * @param filename 文件名
-     * @return MimeType
-     */
-    private String getMimeType(String filename) {
-        if (StrUtil.isBlank(filename)) {
-            return ContentType.OCTET_STREAM.getValue();
-        }
-
-        String extName = FileUtil.extName(filename);
-
-        if (StrUtil.isBlank(extName)) {
-            return ContentType.OCTET_STREAM.getValue();
-        }
-
-        if (extName.equalsIgnoreCase("mkv")) {
-            return "video/x-matroska";
-        }
-
-        String mimeType = FileUtil.getMimeType(filename);
-        if (StrUtil.isNotBlank(mimeType)) {
-            return mimeType;
-        }
-
-        return ContentType.OCTET_STREAM.getValue();
     }
 
 }

@@ -3,8 +3,11 @@ package ani.rss.action;
 import ani.rss.commons.GsonStatic;
 import ani.rss.entity.Result;
 import ani.rss.util.ServerUtil;
+import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.text.StrFormatter;
+import cn.hutool.core.util.StrUtil;
+import cn.hutool.http.ContentType;
 import cn.hutool.http.Header;
 import cn.hutool.http.server.HttpServerResponse;
 import cn.hutool.http.server.action.Action;
@@ -79,5 +82,34 @@ public interface BaseAction extends Action {
 
     default <T> void result(Result<T> result) {
         staticResult(result);
+    }
+
+    /**
+     * 根据文件扩展名获得ContentType
+     *
+     * @param filename 文件名
+     * @return ContentType
+     */
+    default String getContentType(String filename) {
+        if (StrUtil.isBlank(filename)) {
+            return ContentType.OCTET_STREAM.getValue();
+        }
+
+        String extName = FileUtil.extName(filename);
+
+        if (StrUtil.isBlank(extName)) {
+            return ContentType.OCTET_STREAM.getValue();
+        }
+
+        if (extName.equalsIgnoreCase("mkv")) {
+            return "video/x-matroska";
+        }
+
+        String mimeType = FileUtil.getMimeType(filename);
+        if (StrUtil.isNotBlank(mimeType)) {
+            return mimeType;
+        }
+
+        return ContentType.OCTET_STREAM.getValue();
     }
 }
