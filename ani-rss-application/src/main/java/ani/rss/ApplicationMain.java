@@ -2,6 +2,7 @@ package ani.rss;
 
 import ani.rss.commons.ExceptionUtil;
 import ani.rss.commons.MavenUtil;
+import ani.rss.entity.Global;
 import ani.rss.other.Cron;
 import ani.rss.service.TaskService;
 import ani.rss.util.ServerUtil;
@@ -11,17 +12,14 @@ import ani.rss.util.other.MenuUtil;
 import cn.hutool.core.util.ObjectUtil;
 import lombok.extern.slf4j.Slf4j;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
 public class ApplicationMain {
 
-    public static List<String> ARGS = new ArrayList<>();
-
     public static void main(String[] args) {
         System.setProperty("jdk.http.auth.tunneling.disabledSchemes", "");
-        ApplicationMain.ARGS = List.of(ObjectUtil.defaultIfNull(args, new String[]{}));
+        Global.ARGS = List.of(ObjectUtil.defaultIfNull(args, new String[]{}));
         try {
             ConfigUtil.load();
             ConfigUtil.backup();
