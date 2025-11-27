@@ -1,7 +1,7 @@
-package ani.rss.util;
+package ani.rss.web.util;
 
-import ani.rss.annotation.Auth;
-import ani.rss.auth.enums.AuthType;
+import ani.rss.web.annotation.Auth;
+import ani.rss.web.auth.enums.AuthType;
 import ani.rss.commons.CacheUtil;
 import ani.rss.commons.ExceptionUtil;
 import ani.rss.commons.GsonStatic;
@@ -179,8 +179,8 @@ public class AuthUtil {
         // 失败时 时间将重新计时
         CacheUtil.put(key, countAtomicInteger, timeout);
 
-        // 失败 10 次
-        if (count < 10) {
+        // 失败 30 次
+        if (count < 30) {
             return;
         }
 

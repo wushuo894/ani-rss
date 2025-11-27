@@ -1,9 +1,9 @@
-package ani.rss.auth.enums;
+package ani.rss.web.auth.enums;
 
-import ani.rss.auth.fun.ApiKey;
-import ani.rss.auth.fun.Form;
-import ani.rss.auth.fun.Header;
-import ani.rss.auth.fun.IpWhitelist;
+import ani.rss.web.auth.fun.ApiKey;
+import ani.rss.web.auth.fun.Form;
+import ani.rss.web.auth.fun.Header;
+import ani.rss.web.auth.fun.IpWhitelist;
 import cn.hutool.http.server.HttpServerRequest;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

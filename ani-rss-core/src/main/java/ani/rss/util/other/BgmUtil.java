@@ -198,11 +198,11 @@ public class BgmUtil {
         String bgmUrl = ani.getBgmUrl();
         if (StrUtil.isBlank(bgmUrl) && "mikan".equals(ani.getType())) {
             String bangumiId = AniUtil.getBangumiId(ani);
-            Assert.notBlank(bangumiId);
+            Assert.notBlank(bangumiId, "无法取得 bangumiId, {}", ani.getTitle());
             MikanUtil.getMikanInfo(ani, "");
             bgmUrl = ani.getUrl();
         }
-        Assert.notBlank(bgmUrl);
+        Assert.notBlank(bgmUrl, "bgmUrl 不能为空");
         String regStr = "^http(s)?://.+\\/(\\d+)(\\/)?$";
         Assert.isTrue(ReUtil.contains(regStr, bgmUrl));
         return ReUtil.get(regStr, bgmUrl, 2);
@@ -421,7 +421,7 @@ public class BgmUtil {
      */
     public static BgmInfo getBgmInfo(Ani ani, Boolean isCache) {
         String subjectId = getSubjectId(ani);
-        Assert.notBlank(subjectId);
+        Assert.notBlank(subjectId, "无法取得 subjectId, {}", ani.getTitle());
         return getBgmInfo(subjectId, isCache);
     }
 

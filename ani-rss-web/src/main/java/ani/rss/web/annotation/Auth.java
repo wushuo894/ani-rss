@@ -1,6 +1,6 @@
-package ani.rss.annotation;
+package ani.rss.web.annotation;
 
-import ani.rss.auth.enums.AuthType;
+import ani.rss.web.auth.enums.AuthType;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

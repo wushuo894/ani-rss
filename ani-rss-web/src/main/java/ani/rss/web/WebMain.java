@@ -1,4 +1,4 @@
-package ani.rss;
+package ani.rss.web;
 
 import lombok.extern.slf4j.Slf4j;
 

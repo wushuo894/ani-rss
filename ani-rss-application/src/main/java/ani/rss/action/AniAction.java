@@ -1,8 +1,9 @@
 package ani.rss.action;
 
-import ani.rss.annotation.Auth;
-import ani.rss.annotation.Path;
-import ani.rss.auth.enums.AuthType;
+import ani.rss.web.action.BaseAction;
+import ani.rss.web.annotation.Auth;
+import ani.rss.web.annotation.Path;
+import ani.rss.web.auth.enums.AuthType;
 import ani.rss.commons.ExceptionUtil;
 import ani.rss.commons.FileUtil;
 import ani.rss.entity.Ani;
@@ -13,7 +14,7 @@ import ani.rss.enums.SortTypeEnum;
 import ani.rss.service.ClearService;
 import ani.rss.service.DownloadService;
 import ani.rss.task.RssTask;
-import ani.rss.util.ServerUtil;
+import ani.rss.web.util.ServerUtil;
 import ani.rss.util.other.AniUtil;
 import ani.rss.util.other.ConfigUtil;
 import ani.rss.util.other.ItemsUtil;

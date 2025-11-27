@@ -5,7 +5,7 @@ import ani.rss.commons.MavenUtil;
 import ani.rss.entity.Global;
 import ani.rss.other.Cron;
 import ani.rss.service.TaskService;
-import ani.rss.util.ServerUtil;
+import ani.rss.web.util.ServerUtil;
 import ani.rss.util.other.AniUtil;
 import ani.rss.util.other.ConfigUtil;
 import ani.rss.util.other.MenuUtil;

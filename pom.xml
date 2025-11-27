@@ -46,11 +46,6 @@
             </dependency>
             <dependency>
                 <groupId>ani.rss</groupId>
-                <artifactId>ani-rss-tmdb</artifactId>
-                <version>${project.parent.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>ani.rss</groupId>
                 <artifactId>ani-rss-web</artifactId>
                 <version>${project.parent.version}</version>
             </dependency>
