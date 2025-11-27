@@ -1,7 +1,7 @@
-package ani.rss.auth.fun;
+package ani.rss.web.auth.fun;
 
 import ani.rss.entity.Login;
-import ani.rss.util.AuthUtil;
+import ani.rss.web.util.AuthUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.server.HttpServerRequest;
 

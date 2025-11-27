@@ -1,8 +1,8 @@
-package ani.rss.action;
+package ani.rss.web.action;
 
 import ani.rss.commons.GsonStatic;
 import ani.rss.entity.Result;
-import ani.rss.util.ServerUtil;
+import ani.rss.web.util.ServerUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.text.StrFormatter;

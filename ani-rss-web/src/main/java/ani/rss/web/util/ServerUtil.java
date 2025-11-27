@@ -1,9 +1,9 @@
-package ani.rss.util;
+package ani.rss.web.util;
 
-import ani.rss.action.BaseAction;
-import ani.rss.action.RootAction;
-import ani.rss.annotation.Auth;
-import ani.rss.annotation.Path;
+import ani.rss.web.action.BaseAction;
+import ani.rss.web.action.RootAction;
+import ani.rss.web.annotation.Auth;
+import ani.rss.web.annotation.Path;
 import ani.rss.commons.ExceptionUtil;
 import ani.rss.entity.Config;
 import ani.rss.entity.Global;
@@ -28,7 +28,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
-import static ani.rss.util.AuthUtil.getIp;
+import static ani.rss.web.util.AuthUtil.getIp;
 
 @Slf4j
 public class ServerUtil {

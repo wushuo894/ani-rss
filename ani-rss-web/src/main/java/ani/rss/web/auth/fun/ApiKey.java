@@ -1,4 +1,4 @@
-package ani.rss.auth.fun;
+package ani.rss.web.auth.fun;
 
 import ani.rss.entity.Config;
 import ani.rss.util.other.ConfigUtil;
