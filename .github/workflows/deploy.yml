@@ -1,4 +1,4 @@
-name: maven
+name: deploy
 
 on:
   workflow_dispatch:
@@ -7,13 +7,18 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - name: Set up pnpm 10
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+          run_install: false
       - name: Set up JDK 17
         uses: actions/setup-java@v4
         with:
           java-version: '17'
           distribution: 'temurin'
           cache: maven
-      - name: Build with Maven
+      - name: Build with Project
         run: |
           bash ./package.sh
           bash ./package-win.sh
@@ -51,7 +56,7 @@ jobs:
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
-      - name: Build and push Docker image
+      - name: Build and push Docker image (temurin)
         uses: docker/build-push-action@v6
         with:
           context: ./
@@ -59,7 +64,7 @@ jobs:
           platforms: linux/amd64,linux/arm64
           push: true
           tags: wushuo894/ani-rss:latest,wushuo894/ani-rss:${{ env.version }}
-      - name: Build and push Docker image
+      - name: Build and push Docker image (openj9)
         uses: docker/build-push-action@v6
         with:
           context: ./
@@ -67,7 +72,7 @@ jobs:
           platforms: linux/amd64,linux/arm64
           push: true
           tags: wushuo894/ani-rss:openj9,wushuo894/ani-rss:${{ env.version }}-openj9
-      - name: Build and push Docker image
+      - name: Build and push Docker image (arm32v7)
         uses: docker/build-push-action@v6
         with:
           context: ./

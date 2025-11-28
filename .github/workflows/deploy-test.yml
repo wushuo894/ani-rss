@@ -1,4 +1,4 @@
-name: maven-test
+name: deploy-test
 
 on:
   workflow_dispatch:
@@ -7,13 +7,18 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - name: Set up pnpm 10
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+          run_install: false
       - name: Set up JDK 17
         uses: actions/setup-java@v4
         with:
           java-version: '17'
           distribution: 'temurin'
           cache: maven
-      - name: Build with Maven
+      - name: Build with Project
         run: |
           bash ./package.sh
           version=$(cat pom.xml | grep -oPm1 '(?<=<version>).*?(?=</version>)')
@@ -28,14 +33,14 @@ jobs:
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
-      - name: Build and push Docker image
+      - name: Build and push Docker image (temurin)
         uses: docker/build-push-action@v6
         with:
           context: ./
           file: ./docker/Dockerfile
           push: true
           tags: wushuo894/ani-rss:test
-      - name: Build and push Docker image
+      - name: Build and push Docker image (openj9)
         uses: docker/build-push-action@v6
         with:
           context: ./
