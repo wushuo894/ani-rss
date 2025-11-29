@@ -1,10 +1,12 @@
 package ani.rss.action;
 
+import ani.rss.commons.FileUtil;
+import ani.rss.util.other.ConfigUtil;
 import ani.rss.web.action.BaseAction;
 import ani.rss.web.annotation.Auth;
 import ani.rss.web.annotation.Path;
-import ani.rss.util.other.ConfigUtil;
 import cn.hutool.core.text.StrFormatter;
+import cn.hutool.core.util.StrUtil;
 import cn.hutool.core.util.ZipUtil;
 import cn.hutool.http.server.HttpServerRequest;
 import cn.hutool.http.server.HttpServerResponse;
@@ -36,6 +38,15 @@ public class DownloadLogsAction implements BaseAction {
         @Cleanup
         OutputStream outputStream = response.getOut();
 
-        ZipUtil.zip(outputStream, StandardCharsets.UTF_8, false, s -> true, new File(logsPath));
+        ZipUtil.zip(outputStream, StandardCharsets.UTF_8, false, name -> {
+            if (FileUtil.isDirectory(name)) {
+                return true;
+            }
+            String extName = FileUtil.extName(name);
+            if (StrUtil.isBlank(extName)) {
+                return false;
+            }
+            return extName.equals("log");
+        }, new File(logsPath));
     }
 }
