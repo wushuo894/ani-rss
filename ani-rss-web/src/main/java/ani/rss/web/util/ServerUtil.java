@@ -1,15 +1,16 @@
 package ani.rss.web.util;
 
-import ani.rss.web.action.BaseAction;
-import ani.rss.web.action.RootAction;
-import ani.rss.web.annotation.Auth;
-import ani.rss.web.annotation.Path;
 import ani.rss.commons.ExceptionUtil;
 import ani.rss.entity.Config;
 import ani.rss.entity.Global;
 import ani.rss.entity.Result;
 import ani.rss.exception.ResultException;
 import ani.rss.util.other.ConfigUtil;
+import ani.rss.web.action.BaseAction;
+import ani.rss.web.action.RootAction;
+import ani.rss.web.annotation.Auth;
+import ani.rss.web.annotation.Path;
+import cn.hutool.core.io.resource.ResourceUtil;
 import cn.hutool.core.lang.PatternPool;
 import cn.hutool.core.net.Ipv4Util;
 import cn.hutool.core.net.NetUtil;
@@ -104,11 +105,11 @@ public class ServerUtil {
                 // 仅允许内网ip访问
                 if (isInnerIP) {
                     if (!PatternPool.IPV4.matcher(ip).matches()) {
-                        res.sendError(403, "已开启仅允许内网ip访问");
+                        writeInnerIP();
                         return;
                     }
                     if (!Ipv4Util.isInnerIP(ip)) {
-                        res.sendError(403, "已开启仅允许内网ip访问");
+                        writeInnerIP();
                         return;
                     }
                 }
@@ -118,6 +119,12 @@ public class ServerUtil {
                 RESPONSE.remove();
             }
         });
+    }
+
+    public static void writeInnerIP() {
+        HttpServerResponse response = RESPONSE.get();
+        String html = ResourceUtil.readUtf8Str("InnerIP.html");
+        response.sendError(403, html);
     }
 
     public static void addAction(SimpleServer server) {
