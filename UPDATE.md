@@ -1,3 +1,4 @@
+fix: 修复 允许内网ip访问 提示乱码问题
 refactor: 优化日志下载
 refactor: 优化错误提示
 
