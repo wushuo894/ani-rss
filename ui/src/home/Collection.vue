@@ -1,5 +1,5 @@
 <template>
-  <Bgm ref="bgmRef" @add="bgmAdd"/>
+  <Bgm ref="bgmRef" @callback="bgmAdd"/>
   <CollectionPreview ref="collectionPreviewRef" v-model:data="data"/>
   <el-dialog v-model="dialogVisible"
              center

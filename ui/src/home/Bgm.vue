@@ -73,11 +73,11 @@ let img = (url) => {
 }
 
 let ok = (it) => {
-  emit('add', it)
+  emit('callback', it)
   dialogVisible.value = false
 }
 
 defineExpose({show})
 
-const emit = defineEmits(['add'])
+const emit = defineEmits(['callback'])
 </script>
