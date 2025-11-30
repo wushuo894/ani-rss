@@ -18,6 +18,7 @@ import cn.hutool.core.util.ClassUtil;
 import cn.hutool.core.util.ReflectUtil;
 import cn.hutool.core.util.RuntimeUtil;
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.http.HttpStatus;
 import cn.hutool.http.server.HttpServerRequest;
 import cn.hutool.http.server.HttpServerResponse;
 import cn.hutool.http.server.SimpleServer;
@@ -123,8 +124,9 @@ public class ServerUtil {
 
     public static void writeInnerIP() {
         HttpServerResponse response = RESPONSE.get();
-        String html = ResourceUtil.readUtf8Str("InnerIP.html");
-        response.sendError(403, html);
+        String html = ResourceUtil.readUtf8Str("template.html");
+        html = html.replace("${text}", "已开启仅允许内网ip访问");
+        response.sendError(HttpStatus.HTTP_FORBIDDEN, html);
     }
 
     public static void addAction(SimpleServer server) {

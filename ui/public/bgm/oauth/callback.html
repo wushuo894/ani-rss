@@ -7,6 +7,10 @@
             rel="stylesheet"
             href="https://cdn.jsdelivr.net/npm/element-plus/dist/index.css"
     />
+    <link
+            rel="stylesheet"
+            href="https://cdn.jsdelivr.net/npm/element-plus/theme-chalk/dark/css-vars.css"
+    />
     <meta name="robots" content="noindex">
     <script src="https://cdn.jsdelivr.net/npm/vue@3"></script>
     <script src="https://cdn.jsdelivr.net/npm/element-plus"></script>
@@ -19,7 +23,6 @@
             justify-content: center;
             align-items: center;
             height: 100vh;
-            background: #FFF;
         }
     </style>
 </head>
@@ -98,6 +101,29 @@
 </div>
 </body>
 <script>
+    let changeToDark = () => {
+        document.documentElement.classList.toggle('dark');
+    }
+
+    (() => {
+        let color = localStorage.getItem('vueuse-color-scheme');
+        if (!color) {
+            return
+        }
+
+        if (color === 'auto') {
+            const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            if (isDarkMode) {
+                changeToDark();
+            }
+            return;
+        }
+
+        if (color === 'dark') {
+            changeToDark();
+        }
+    })()
+
     const App = {
         data() {
             return {

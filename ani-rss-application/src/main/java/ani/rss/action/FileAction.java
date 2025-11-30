@@ -1,13 +1,13 @@
 package ani.rss.action;
 
+import ani.rss.commons.ExceptionUtil;
+import ani.rss.util.basic.HttpReq;
+import ani.rss.util.other.ConfigUtil;
 import ani.rss.web.action.BaseAction;
 import ani.rss.web.annotation.Auth;
 import ani.rss.web.annotation.Path;
 import ani.rss.web.auth.enums.AuthType;
-import ani.rss.commons.ExceptionUtil;
 import ani.rss.web.util.ServerUtil;
-import ani.rss.util.basic.HttpReq;
-import ani.rss.util.other.ConfigUtil;
 import cn.hutool.core.codec.Base64;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IoUtil;
@@ -122,7 +122,7 @@ public class FileAction implements BaseAction {
             File configDir = ConfigUtil.getConfigDir();
             file = new File(configDir + "/files/" + filename);
             if (!file.exists()) {
-                response.send404("404 Not Found !");
+                BaseAction.writeNotFound();
                 return;
             }
         }
@@ -162,10 +162,9 @@ public class FileAction implements BaseAction {
             // 小于或者等于 1M 缓存
             if (fileLength <= 1024 * 1024) {
                 // 30 天
-                fileLength = 86400 * 30;
+                maxAge = 86400 * 30;
             }
 
-            response.setHeader(Header.CONTENT_LENGTH, String.valueOf(fileLength));
             response.setHeader(Header.CACHE_CONTROL, "private, max-age=" + maxAge);
             response.setContentType(contentType);
         }
@@ -207,7 +206,7 @@ public class FileAction implements BaseAction {
         String filename = request.getParam("filename");
 
         if (StrUtil.isBlank(filename)) {
-            response.send404("404 Not Found !");
+            BaseAction.writeNotFound();
             return;
         }
 
