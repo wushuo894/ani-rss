@@ -56,7 +56,7 @@ public class RootAction implements BaseAction {
 
         Boolean ok = file(response, fileName, true);
         if (!ok) {
-            response.send404("404 Not Found !");
+            BaseAction.writeNotFound();
         }
     }
 

@@ -5,10 +5,12 @@ import ani.rss.entity.Result;
 import ani.rss.web.util.ServerUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IoUtil;
+import cn.hutool.core.io.resource.ResourceUtil;
 import cn.hutool.core.text.StrFormatter;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.ContentType;
 import cn.hutool.http.Header;
+import cn.hutool.http.HttpStatus;
 import cn.hutool.http.server.HttpServerResponse;
 import cn.hutool.http.server.action.Action;
 import org.slf4j.Logger;
@@ -111,5 +113,12 @@ public interface BaseAction extends Action {
         }
 
         return ContentType.OCTET_STREAM.getValue();
+    }
+
+    static void writeNotFound() {
+        HttpServerResponse response = ServerUtil.RESPONSE.get();
+        String html = ResourceUtil.readUtf8Str("template.html");
+        html = html.replace("${text}", "404 Not Found !");
+        response.sendError(HttpStatus.HTTP_NOT_FOUND, html);
     }
 }
