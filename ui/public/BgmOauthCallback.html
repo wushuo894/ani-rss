@@ -139,7 +139,7 @@
             },
             load(code, authorization) {
                 this.loading = true
-                fetch(`/api/bgm/oauth/callback?code=${code}&s=${authorization}`)
+                fetch(`api/bgm/oauth/callback?code=${code}&s=${authorization}`)
                     .then(res => res.json())
                     .then(async res => {
                         let {code, message} = res
