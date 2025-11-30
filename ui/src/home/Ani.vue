@@ -248,7 +248,7 @@
       <el-button @click="items.show()" bg text icon="Grid">预览</el-button>
       <el-button icon="Check" type="primary" :loading="okLoading" @click="async ()=>{
         okLoading = true
-        emit('ok',()=>okLoading = false)
+        emit('callback',()=>okLoading = false)
       }" text bg>确定
       </el-button>
     </div>
@@ -386,5 +386,5 @@ let scrape = (force) => {
 }
 
 let props = defineProps(['ani'])
-const emit = defineEmits(['ok'])
+const emit = defineEmits(['callback'])
 </script>

@@ -1,6 +1,6 @@
 <template>
   <Mikan ref="mikan" @callback="mikanCallback"/>
-  <Bgm ref="bgmRef" @add="it => {
+  <Bgm ref="bgmRef" @callback="it => {
     ani.title = it['name_cn'] ? it['name_cn'] : it['name']
     ani.bgmUrl = it.url
   }"/>
@@ -88,7 +88,7 @@
       </div>
     </div>
     <div v-if="!showRss">
-      <Ani v-model:ani="ani" @ok="addAni"/>
+      <Ani v-model:ani="ani" @callback="addAni"/>
     </div>
   </el-dialog>
 </template>
