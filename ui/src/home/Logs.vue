@@ -41,10 +41,24 @@
 </template>
 
 <script setup>
-import {ref} from "vue";
-import {codeToHtml} from 'shiki'
+import {onMounted, ref} from "vue";
 import api from "@/js/api.js";
 import {authorization} from "@/js/global.js";
+
+import {createOnigurumaEngine} from 'shiki/engine/oniguruma'
+import log from 'shiki/langs/log'
+import nord from 'shiki/themes/nord'
+import wasm from 'shiki/wasm'
+import {createHighlighterCore} from "shiki";
+
+let highlighter = undefined
+onMounted(async () => {
+  highlighter = await createHighlighterCore({
+    themes: [nord],
+    langs: [log],
+    engine: createOnigurumaEngine(wasm)
+  })
+})
 
 const dialogVisible = ref(false)
 const loading = ref(true)
@@ -65,7 +79,7 @@ const getHtmlLogs = async () => {
     log = log.filter(it => selectLoggerNames.value.indexOf(it['loggerName']) > -1)
   }
   let code = log.map(it => it['message']).join('\r\n');
-  htmlLogs.value = await codeToHtml(code, {
+  htmlLogs.value = highlighter.codeToHtml(code, {
     lang: 'log',
     theme: 'nord'
   })
