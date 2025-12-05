@@ -1,4 +1,4 @@
-refactor: 优化DNS缓存配置
+refactor: 调整默认的TMDB API KEY
 
 [请不要将本项目在国内宣传](https://github.com/wushuo894/ani-rss/discussions/504)
 

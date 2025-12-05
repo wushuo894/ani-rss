@@ -50,7 +50,7 @@ public class TmdbUtil {
     public static String getTmdbApiKey() {
         Config config = ConfigUtil.CONFIG;
         String tmdbApiKey = config.getTmdbApiKey();
-        return StrUtil.blankToDefault(tmdbApiKey, "6bde7d268c5fd4b5baa41499612158e2");
+        return StrUtil.blankToDefault(tmdbApiKey, "450e4f651e1c93e31383e20f8e731e5f");
     }
 
     /**
