@@ -1,4 +1,4 @@
-refactor: 调整默认的TMDB API KEY
+refactor: 优化了日志的加载速度
 
 [请不要将本项目在国内宣传](https://github.com/wushuo894/ani-rss/discussions/504)
 
