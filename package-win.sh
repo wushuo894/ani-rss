@@ -27,10 +27,10 @@ YELLOW='\033[0;33m'
 NC='\033[0m'
 
 base_path=$(pwd)
-target_path=${base_path}/target
+target_path=${base_path}/ani-rss-application/target
 
 if [ ! -f ${target_path}/ani-rss-launcher.exe ]; then
-  bash package.sh
+  bash ${base_path}/package.sh
 fi
 
 cd ${target_path}
@@ -45,8 +45,8 @@ cp ani-rss-launcher.exe ani-rss
 
 install_zip
 
-if [ ! -f java-17-openjdk-17.0.3.0.6-1.jre.win.x86_64.zip ]; then
-  wget https://github.com/ojdkbuild/ojdkbuild/releases/download/java-17-openjdk-17.0.3.0.6-1/java-17-openjdk-17.0.3.0.6-1.jre.win.x86_64.zip
+if [ ! -f jre.zip ]; then
+  wget https://api.adoptium.net/v3/binary/latest/25/ga/windows/x64/jre/hotspot/normal/eclipse -O jre.zip
   if [ $? -eq 1 ]; then
     echo -e "${RED}JRE下载失败${NC}"
     exit 1
@@ -57,8 +57,8 @@ else
   echo -e "${YELLOW}JRE已存在${NC}"
 fi
 
-unzip java-17-openjdk-17.0.3.0.6-1.jre.win.x86_64.zip
-mv java-17-openjdk-17.0.3.0.6-1.jre.win.x86_64 ani-rss/jre
+unzip jre.zip
+mv jdk* ani-rss/jre
 cp ../windows/* ani-rss
 zip -r ani-rss.win.x86_64.zip ani-rss
 rm -rf ani-rss
