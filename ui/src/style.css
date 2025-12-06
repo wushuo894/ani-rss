@@ -101,6 +101,10 @@ html, body, #app {
     width: auto;
 }
 
+.el-collapse-item__content {
+    padding-top: 4px;
+}
+
 #app {
     margin: 0 auto;
 }
