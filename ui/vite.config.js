@@ -37,11 +37,12 @@ export default defineConfig({
         rollupOptions: {
             output: {
                 manualChunks: {
-                    vue: ['vue', '@vueuse/core', '@vicons/fa'],
-                    utils: ['crypto-js', 'markdown-it', 'markdown-it-github-alerts'],
+                    'vue': ['vue', '@vueuse/core', '@vicons/fa'],
+                    'utils': ['crypto-js', 'markdown-it', 'markdown-it-github-alerts'],
                     'element-icon': ['@element-plus/icons-vue'],
                     'artplayer': ['artplayer', 'artplayer-plugin-multiple-subtitles'],
-                    'shiki': ['shiki']
+                    'shiki': ['shiki'],
+                    'element-plus': ['element-plus']
                 },
                 chunkFileNames: () => {
                     return `assets/[name]-[hash].js`;
