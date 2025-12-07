@@ -183,7 +183,7 @@ let props = defineProps(['config'])
 
 </script>
 
-<style>
+<style scoped>
 .about-container {
   width: 100%;
   flex-flow: column;

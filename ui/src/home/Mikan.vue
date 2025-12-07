@@ -378,7 +378,7 @@ let openUrl = (url) => window.open(url)
 
 </script>
 
-<style>
+<style scoped>
 .el-card {
   --el-card-padding: 15px;
 }

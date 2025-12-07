@@ -213,7 +213,7 @@ let yearMonthValue = ref('')
 defineExpose({show})
 </script>
 
-<style>
+<style scoped>
 @media (min-width: 1400px) {
   .manage-dialog {
     width: 1000px;

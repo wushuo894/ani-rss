@@ -195,7 +195,7 @@ defineExpose({show})
 let props = defineProps(['ani'])
 </script>
 
-<style>
+<style scoped>
 @media (min-width: 1400px) {
   .items-dialog {
     width: 1000px;
