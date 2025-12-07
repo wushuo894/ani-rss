@@ -1,6 +1,6 @@
 <template>
   <el-form label-width="auto"
-           style="width: 100%"
+           class="form-full-width"
            @submit="(event)=>{
                     event.preventDefault()
                    }">
@@ -20,7 +20,7 @@
       <el-input-number v-model:model-value="props.config.maxFileNameLength" :min="0"/>
     </el-form-item>
     <el-form-item label="重命名模版">
-      <div style="width: 100%">
+      <div class="full-width">
         <div>
           <el-input v-model:model-value="props.config.renameTemplate"
                     placeholder="${title} S${seasonFormat}E${episodeFormat}"/>
@@ -28,7 +28,7 @@
         <div>
           <el-alert
               v-if="!testRenameTemplate(props.config.renameTemplate)"
-              style="margin-top: 8px;"
+              class="mt-8"
               type="warning"
               show-icon
               :closable="false"
@@ -40,7 +40,7 @@
         </div>
         <el-text class="mx-1" size="small">
           <el-link
-              style="font-size: var(--el-font-size-extra-small)"
+              class="text-extra-small"
               type="primary"
               href="https://docs.wushuo.top/config/basic/rename#rename-template"
               target="_blank">详细说明
@@ -87,3 +87,21 @@ let testRenameTemplate = renameTemplate => {
 
 let props = defineProps(['config'])
 </script>
+
+<style scoped>
+.form-full-width {
+  width: 100%;
+}
+
+.full-width {
+  width: 100%;
+}
+
+.mt-8 {
+  margin-top: 8px;
+}
+
+.text-extra-small {
+  font-size: var(--el-font-size-extra-small);
+}
+</style>

@@ -14,15 +14,15 @@
   <el-dialog v-model="matchDialogVisible" align-center center title="匹配" width="500">
     <div>
       <el-radio-group v-model="addAni.match">
-        <div v-for="match in matchList" style="margin-right: 12px;">
+        <div v-for="match in matchList" class="match-item">
           <el-radio :label="JSON.stringify(match)" :value="JSON.stringify(match)">
-            <el-tag v-if="match.length" v-for="item in match" style="margin-right: 4px;">{{ item }}</el-tag>
+            <el-tag v-if="match.length" v-for="item in match" class="tag-margin">{{ item }}</el-tag>
             <el-tag v-else type="success">全部</el-tag>
           </el-radio>
         </div>
       </el-radio-group>
     </div>
-    <div style="display: flex;width: 100%;justify-content: end;">
+    <div class="dialog-footer">
       <el-button icon="Check" @click="async ()=>{
           emit('callback', addAni)
           dialogVisible = false
@@ -33,9 +33,9 @@
   </el-dialog>
   <el-dialog v-model="dialogVisible" center title="Mikan">
     <el-checkbox-group v-model="rssList">
-      <div style="min-height: 300px;">
-        <div style="margin: 4px;">
-          <div style="display: flex;justify-content: space-between;">
+      <div class="content-wrapper">
+        <div class="search-section">
+          <div class="search-header">
             <el-input v-model:model-value="text" clearable placeholder="请输入搜索标题"
                       prefix-icon="Search"
                       @clear="()=>{
@@ -43,12 +43,11 @@
             search()
           }"
                       @keyup.enter="search"></el-input>
-            <div style="width: 4px;"></div>
+            <div class="spacer"></div>
             <el-button :loading="searchLoading" bg icon="Search" text @click="search">搜索</el-button>
           </div>
-          <div v-if="data.seasons.length" class="flex"
-               style="margin-top: 4px;width: 100%;justify-content: space-between;">
-            <el-select v-model:model-value="season" :disabled="text.length > 0 || loading" style="max-width: 140px"
+          <div v-if="data.seasons.length" class="flex season-selector">
+            <el-select v-model:model-value="season" :disabled="text.length > 0 || loading" class="season-select"
                        @change="change">
               <el-option v-for="item in data.seasons" :key="item.year+' '+item.season"
                          :label="item.year+' '+item.season" :value="item.year+' '+item.season">
@@ -57,51 +56,51 @@
             <el-button :disabled="rssList.length < 1" bg icon="Plus" text @click="batchAddition">批量添加</el-button>
           </div>
         </div>
-        <div v-loading="loading" style="margin: 8px 0 4px 0;height: 600px;">
+        <div v-loading="loading" class="scroll-container">
           <el-scrollbar>
             <el-collapse v-model="activeName">
               <el-collapse-item v-for="item in data.items" :name="item.label" :title="item.label">
-                <div style="margin-left: 15px;">
+                <div class="collapse-content">
                   <el-collapse accordion @change="collapseChange">
                     <el-collapse-item v-for="it in item.items" :name="it.url">
                       <template #title>
-                        <div class="flex" style="align-items: center;">
+                        <div class="flex collapse-title">
                           <img :src="img(it)" height="40" width="40" @click.stop="open(it.url)">
-                          <div class="flex" style="align-items: center;">
+                          <div class="flex collapse-title">
                             <el-text :truncated="false" line-clamp="1" size="small"
-                                     style="margin-left: 4px;line-height: 1.6;">
+                                     class="title-text">
                               {{ it.title }}
                             </el-text>
                           </div>
-                          <div v-if="it['score'] > 0" style="margin-left: 4px;">
-                            <h4 style="color: #E800A4;">
+                          <div v-if="it['score'] > 0" class="score-margin">
+                            <h4 class="score-color">
                               {{ it['score'].toFixed(1) }}
                             </h4>
                           </div>
-                          <el-badge v-if="it['exists']" class="item" style="margin-left: 4px;" type="primary"
+                          <el-badge v-if="it['exists']" class="item badge-margin" type="primary"
                                     value="已订阅"/>
                         </div>
                       </template>
                       <div v-if="selectName === it.url" v-loading="groupLoading"
-                           style="margin-left: 15px;min-height: 50px;">
+                           class="group-content">
                         <el-collapse accordion>
                           <el-collapse-item v-for="group in groups[it.url]">
                             <template #title>
-                              <div style="width: 100%;display: flex;justify-content: space-between;">
-                                <div style="height: 100%;">
-                                  <el-checkbox :value="JSON.stringify(group)" style="margin-right: 8px;" @click.stop/>
+                              <div class="group-title-wrapper">
+                                <div class="group-checkbox-wrapper">
+                                  <el-checkbox :value="JSON.stringify(group)" class="checkbox-margin" @click.stop/>
                                 </div>
-                                <div class="single-line" style="flex: 1;text-align: start;">
+                                <div class="single-line group-label">
                                   {{ group.label }}
                                   <el-text class="mx-1" size="small">{{ group['updateDay'] }}</el-text>
                                 </div>
                                 <div v-if="showTag()">
-                                  <el-tag v-for="tag in group['tags'].slice(0, 5)" style="margin-right: 4px;">{{
+                                  <el-tag v-for="tag in group['tags'].slice(0, 5)" class="tag-margin">{{
                                       tag
                                     }}
                                   </el-tag>
                                 </div>
-                                <div style="display: flex;align-items: center;margin-right: 14px;margin-left: 4px;">
+                                <div class="group-action">
                                   <el-button bg text @click.stop="callback({
                                   'title':it.title,
                                   'group':group.label,
@@ -113,15 +112,14 @@
                                 </div>
                               </div>
                             </template>
-                            <div style="margin-left: 15px;">
-                              <div v-for="ti in group.items" style="margin-bottom: 4px;">
+                            <div class="group-items">
+                              <div v-for="ti in group.items" class="item-margin">
                                 <el-card shadow="never">
                                   <div>
                                     <h5>
                                       {{ ti.name }}
                                     </h5>
-                                    <div
-                                        style="width: 100%;display: flex;justify-content: space-between;align-items: center;">
+                                    <div class="item-footer">
                                       <p>
                                         {{ ti['sizeStr'] }}
                                         {{ ti['dateStr'] }}
@@ -383,5 +381,122 @@ let openUrl = (url) => window.open(url)
 <style>
 .el-card {
   --el-card-padding: 15px;
+}
+
+.match-item {
+  margin-right: 12px;
+}
+
+.tag-margin {
+  margin-right: 4px;
+}
+
+.dialog-footer {
+  display: flex;
+  width: 100%;
+  justify-content: end;
+}
+
+.content-wrapper {
+  min-height: 300px;
+}
+
+.search-section {
+  margin: 4px;
+}
+
+.search-header {
+  display: flex;
+  justify-content: space-between;
+}
+
+.spacer {
+  width: 4px;
+}
+
+.season-selector {
+  margin-top: 4px;
+  width: 100%;
+  justify-content: space-between;
+}
+
+.season-select {
+  max-width: 140px;
+}
+
+.scroll-container {
+  margin: 8px 0 4px 0;
+  height: 600px;
+}
+
+.collapse-content {
+  margin-left: 15px;
+}
+
+.collapse-title {
+  align-items: center;
+}
+
+.title-text {
+  margin-left: 4px;
+  line-height: 1.6;
+}
+
+.score-margin {
+  margin-left: 4px;
+}
+
+.score-color {
+  color: #E800A4;
+}
+
+.badge-margin {
+  margin-left: 4px;
+}
+
+.group-content {
+  margin-left: 15px;
+  min-height: 50px;
+}
+
+.group-title-wrapper {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+}
+
+.group-checkbox-wrapper {
+  height: 100%;
+}
+
+.checkbox-margin {
+  margin-right: 8px;
+}
+
+.group-label {
+  flex: 1;
+  text-align: start;
+}
+
+.group-action {
+  display: flex;
+  align-items: center;
+  margin-right: 14px;
+  margin-left: 4px;
+}
+
+.group-items {
+  margin-left: 15px;
+}
+
+.item-margin {
+  margin-bottom: 4px;
+}
+
+.item-footer {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 </style>

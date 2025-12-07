@@ -1,7 +1,7 @@
 <template>
   <bangumi-me ref="bangumiMe"/>
   <el-form label-width="auto"
-           style="width: 100%">
+           class="form-full-width">
     <el-form-item label="获取方式">
       <el-radio-group v-model="props.config['bgmTokenType']">
         <el-radio label="手动输入" value="INPUT"/>
@@ -10,7 +10,7 @@
     </el-form-item>
     <template v-if="props.config['bgmTokenType'] === 'INPUT'">
       <el-form-item label="Token">
-        <div style="width: 100%;">
+        <div class="full-width">
           <el-input
               v-model="props.config.bgmToken"
               placeholder="ABCDEFGHIJKLMNOPQRS"
@@ -20,7 +20,7 @@
               你可以在&nbsp;
               <el-link
                   type="primary"
-                  style="font-size: var(--el-font-size-extra-small)"
+                  class="text-extra-small"
                   href="https://next.bgm.tv/demo/access-token"
                   target="_blank">
                 https://next.bgm.tv/demo/access-token
@@ -45,21 +45,21 @@
         />
       </el-form-item>
       <el-form-item label="回调地址">
-        <div style="width: 100%;">
+        <div class="full-width">
           <el-input v-model="props.config['bgmRedirectUri']"/>
           <el-button bg icon="Refresh"
-                     style="margin-top: 6px;"
+                     class="mt-6"
                      text
                      @click="setRedirectUri"/>
         </div>
       </el-form-item>
-      <div class="flex" style="justify-content: space-between;">
+      <div class="flex justify-space-between">
         <el-text class="mx-1" size="small">
           自动获取可以实现token自动续期
           <br>
           前往&nbsp;
           <el-link
-              style="font-size: var(--el-font-size-extra-small)"
+              class="text-extra-small"
               type="primary"
               target="_blank"
               href="https://bgm.tv/dev/app">
@@ -87,9 +87,9 @@
       </div>
     </template>
   </el-form>
-  <div class="flex" style="justify-content: start;">
+  <div class="flex justify-start">
     <el-link type="primary"
-             style="font-size: var(--el-font-size-extra-small)"
+             class="text-extra-small"
              href="https://docs.wushuo.top/config/basic/other#emby-webhook"
              target="_blank">支持自动点格子
     </el-link>
@@ -138,3 +138,29 @@ let start = () => {
 }
 
 </script>
+
+<style scoped>
+.form-full-width {
+  width: 100%;
+}
+
+.full-width {
+  width: 100%;
+}
+
+.text-extra-small {
+  font-size: var(--el-font-size-extra-small);
+}
+
+.mt-6 {
+  margin-top: 6px;
+}
+
+.justify-space-between {
+  justify-content: space-between;
+}
+
+.justify-start {
+  justify-content: start;
+}
+</style>

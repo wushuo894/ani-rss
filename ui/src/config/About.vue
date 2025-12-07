@@ -1,6 +1,6 @@
 <template>
-  <div class="flex-center" style="width: 100%;flex-flow: column;">
-    <div class="flex" style="margin-bottom: 12px;align-items: end;">
+  <div class="flex-center about-container">
+    <div class="flex about-header">
       <img alt="icon.svg" height="80" src="../../public/icon.svg" width="80"/>
       <div>
         <h1>ANI-RSS</h1>
@@ -8,13 +8,13 @@
             :disabled="!props.config.buildInfo"
             :content="props.config.buildInfo"
             placement="right">
-          <el-text class="mx-1" size="small" style="cursor: pointer;">
+          <el-text class="mx-1 cursor-pointer" size="small">
             &nbsp;v{{ props.config.version }}
           </el-text>
         </el-tooltip>
       </div>
     </div>
-    <div class="flex" style="margin-bottom: 12px;align-items: center;">
+    <div class="flex about-buttons">
       <div id="button-list">
         <el-button :icon="Github" bg text type="info" @click="openUrl('https://github.com/wushuo894/ani-rss')">GitHub
         </el-button>
@@ -22,7 +22,7 @@
         <el-button :icon="Telegram" bg text type="info" @click="openUrl('https://t.me/ani_rss')">TG群</el-button>
       </div>
     </div>
-    <div v-loading.fullscreen.lock="actionLoading" class="flex" style="margin-bottom: 8px;">
+    <div v-loading.fullscreen.lock="actionLoading" class="flex about-actions">
       <popconfirm title="你确定要退出吗?" @confirm="logout">
         <template #reference>
           <el-button type="danger" bg text icon="Back">
@@ -30,19 +30,19 @@
           </el-button>
         </template>
       </popconfirm>
-      <div style="margin: 6px;"></div>
+      <div class="about-action-spacer"></div>
       <popconfirm title="你确定重启吗?" @confirm="stop(0)">
         <template #reference>
           <el-button bg icon="RefreshRight" text type="warning">重启</el-button>
         </template>
       </popconfirm>
-      <div style="margin: 6px;"></div>
+      <div class="about-action-spacer"></div>
       <popconfirm title="你确定关闭吗?" @confirm="stop(1)">
         <template #reference>
           <el-button bg icon="SwitchButton" text type="danger">关闭</el-button>
         </template>
       </popconfirm>
-      <div style="margin: 6px;"></div>
+      <div class="about-action-spacer"></div>
       <el-badge :hidden="!about.update" class="item" value="new">
         <el-button :loading="about.version.length < 1" bg icon="Top" text type="success" @click="dialogVisible = true">
           更新
@@ -51,7 +51,7 @@
     </div>
   </div>
   <el-dialog v-if="dialogVisible" v-model="dialogVisible" align-center center title="版本更新"
-             style="max-width: 500px;">
+             class="about-dialog">
     <div v-if="about.update">
       <el-form label-width="auto">
         <el-form-item label="版本号">
@@ -64,12 +64,12 @@
           {{ about.date }}
         </el-form-item>
         <el-form-item label="更新内容">
-          <el-scrollbar style="margin-bottom: 16px;max-height: 400px;" :always="true">
-            <div class="markdown-body" style="width: 800px;" v-html="md.render(about.markdownBody)"></div>
+          <el-scrollbar class="about-scrollbar" :always="true">
+            <div class="markdown-body about-markdown" v-html="md.render(about.markdownBody)"></div>
             <el-alert
                 show-icon
                 :closable="false"
-                style="margin-top: 8px;"
+                class="about-alert"
                 title="更新依赖于Github, 需要网络环境支持"
                 type="info"
             />
@@ -80,7 +80,7 @@
     <div v-else>
       <el-empty description="无更新"></el-empty>
     </div>
-    <div style="width: 100%;justify-content: space-between;" class="flex">
+    <div class="flex about-dialog-footer">
       <el-button bg text icon="Tickets"
                  @click="openUrl('https://docs.wushuo.top/history')"
                  type="primary">
@@ -184,6 +184,55 @@ let props = defineProps(['config'])
 </script>
 
 <style>
+.about-container {
+  width: 100%;
+  flex-flow: column;
+}
+
+.about-header {
+  margin-bottom: 12px;
+  align-items: end;
+}
+
+.cursor-pointer {
+  cursor: pointer;
+}
+
+.about-buttons {
+  margin-bottom: 12px;
+  align-items: center;
+}
+
+.about-actions {
+  margin-bottom: 8px;
+}
+
+.about-action-spacer {
+  margin: 6px;
+}
+
+.about-dialog {
+  max-width: 500px;
+}
+
+.about-scrollbar {
+  margin-bottom: 16px;
+  max-height: 400px;
+}
+
+.about-markdown {
+  width: 800px;
+}
+
+.about-alert {
+  margin-top: 8px;
+}
+
+.about-dialog-footer {
+  width: 100%;
+  justify-content: space-between;
+}
+
 #button-list > button {
   margin-top: 12px;
   margin-left: 0;

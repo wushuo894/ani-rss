@@ -10,7 +10,7 @@
         {{ downloadPath }}
       </el-text>
     </div>
-    <div style="width:100%;display: flex;justify-content: end;margin-top: 8px;">
+    <div class="action">
       <el-button icon="Check" text bg type="danger" @click="()=>{
         move = true
         editAni()
@@ -99,3 +99,12 @@ defineExpose({
   show
 })
 </script>
+
+<style scoped>
+.action {
+  width: 100%;
+  display: flex;
+  justify-content: end;
+  margin-top: 8px;
+}
+</style>

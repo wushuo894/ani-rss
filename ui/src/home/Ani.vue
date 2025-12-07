@@ -15,7 +15,7 @@
             <div>
               <el-input v-model:model-value="props.ani.title" style="width: 100%"/>
             </div>
-            <div style="width: 100%;justify-content: end;display: flex;margin-top: 12px;">
+            <div class="change-title-button">
               <el-button :loading="getBgmNameLoading"
                          bg
                          icon="DocumentAdd" text @click="getBgmName">
@@ -48,7 +48,7 @@
           </div>
         </el-form-item>
         <el-form-item v-if="!props.ani.ova && props.ani.tmdb" label="剧集组">
-          <div style="display: flex;width: 100%;justify-content: space-between;">
+          <div class="tmdb-group">
             <el-input v-model="props.ani.tmdb['tmdbGroupId']" placeholder="留空不使用剧集组"/>
             <div style="width: 4px;"/>
             <el-button bg icon="Menu" text @click="tmdbGroupRef?.show"/>
@@ -58,7 +58,7 @@
           <el-input v-model:model-value="props.ani.bgmUrl" placeholder="https://xxx.xxx"/>
         </el-form-item>
         <el-form-item label="主 RSS">
-          <div style="width: 100%;display: flex;">
+          <div style="width: 100%;" class="flex">
             <el-input v-model:model-value="props.ani.subgroup" style="width: 140px" placeholder="字幕组"/>
             <div style="width: 6px;"></div>
             <el-input v-model:model-value="props.ani.url" placeholder="https://xxx.xxx"/>
@@ -69,12 +69,12 @@
           </div>
         </el-form-item>
         <el-form-item label="备用 RSS">
-          <div style="display: flex;justify-content: end;width: 100%;">
+          <div class="form-item-flex">
             <el-button bg icon="EditPen" text @click="standbyRss?.show">管理</el-button>
           </div>
         </el-form-item>
         <el-form-item label="日期">
-          <div style="display: flex;width: 100%;justify-content: end;">
+          <div class="form-item-flex">
             <el-date-picker
                 style="max-width: 150px;"
                 v-model="date"
@@ -83,18 +83,20 @@
           </div>
         </el-form-item>
         <el-form-item label="季">
-          <div style="display: flex;justify-content: end;width: 100%;">
-            <el-input-number style="max-width: 200px" :min="0" v-model:model-value="props.ani.season"
+          <div class="form-item-flex">
+            <el-input-number style="max-width: 200px"
+                             :min="0"
+                             v-model="props.ani.season"
                              :disabled="props.ani.ova"/>
           </div>
         </el-form-item>
         <el-form-item label="集数偏移">
-          <div style="display: flex;justify-content: end;width: 100%;">
+          <div class="form-item-flex">
             <el-input-number v-model:model-value="props.ani.offset" :disabled="props.ani.ova"/>
           </div>
         </el-form-item>
         <el-form-item label="总集数">
-          <div style="display: flex;justify-content: end;width: 100%;">
+          <div class="form-item-flex">
             <el-input-number v-model:model-value="props.ani.totalEpisodeNumber"/>
           </div>
         </el-form-item>
@@ -388,3 +390,24 @@ let scrape = (force) => {
 let props = defineProps(['ani'])
 const emit = defineEmits(['callback'])
 </script>
+
+<style scoped>
+.change-title-button {
+  width: 100%;
+  justify-content: end;
+  display: flex;
+  margin-top: 12px;
+}
+
+.tmdb-group {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+}
+
+.form-item-flex {
+  width: 100%;
+  display: flex;
+  justify-content: end;
+}
+</style>

@@ -3,23 +3,23 @@
     <el-collapse-item title="通知模板">
       <el-input v-model="props.config['notificationTemplate']" :autosize="{ minRows: 2}"
                 placeholder="${text}" type="textarea"/>
-      <div class="flex" style="width: 100%;justify-content: end;">
+      <div class="flex notification-template-link">
         <el-link type="primary" href="https://docs.wushuo.top/config/notification" target="_blank">
           通知模版示例
         </el-link>
       </div>
     </el-collapse-item>
   </el-collapse>
-  <div style="margin-top: 8px;">
+  <div class="notification-container">
     <div>
       <el-space wrap class="flex flex-wrap gap-4" size="small">
-        <el-card v-for="it in props.config['notificationConfigList']" shadow="never" style="min-width: 180px">
-          <div style="align-items: center;justify-content: space-between;" class="flex">
+        <el-card v-for="it in props.config['notificationConfigList']" shadow="never" class="notification-card">
+          <div class="flex notification-card-content">
             <div>
               <p>
                 {{ getLabel(it['notificationType']) }}
               </p>
-              <el-text line-clamp="1" size="small" style="max-width: 120px;" truncated>
+              <el-text line-clamp="1" size="small" class="notification-card-text" truncated>
                 {{ it['comment'] ? it['comment'] : '无备注' }}
               </el-text>
             </div>
@@ -47,7 +47,7 @@
         bg text
         type="primary"
         @click="add"
-        style="margin-top: 12px;"
+        class="notification-add-button"
         :loading="addLoading"
     >
       添加通知
@@ -86,10 +86,61 @@ let notificationConfigRef = ref()
 let props = defineProps(['config'])
 </script>
 
+<style scoped>
+.notification-template-link {
+  width: 100%;
+  justify-content: end;
+}
+
+.notification-container {
+  margin-top: 8px;
+}
+
+.notification-card {
+  min-width: 180px;
+}
+
+.notification-card-content {
+  align-items: center;
+  justify-content: space-between;
+}
+
+.notification-card-text {
+  max-width: 120px;
+}
+
+.notification-add-button {
+  margin-top: 12px;
+}
+</style>
+
 <style>
-@media (min-width: 1000px) {
-  .auto {
-    display: flex;
-  }
+/* 通知组件通用样式 - 非scoped以便子组件使用 */
+.notification-input-width {
+  width: 160px;
+}
+
+.notification-flex-between {
+  justify-content: space-between;
+  width: 100%;
+}
+
+.notification-margin-top-right {
+  margin-top: 4px;
+  margin-right: 4px;
+}
+
+.notification-margin-top-center {
+  margin-top: 4px;
+  align-items: center;
+}
+
+.notification-margin-left {
+  margin-left: 4px;
+}
+
+.notification-flex-end {
+  display: flex;
+  justify-content: end;
 }
 </style>

@@ -1,6 +1,6 @@
 <template>
   <el-dialog v-model="dialogVisible" center class="logs-dialog" title="日志" @close="close">
-    <div style="width: 100%;justify-content: space-between;align-items: center;" class="auto">
+    <div class="header auto-flex">
       <el-checkbox-group v-model:model-value="selectLevels" @change="()=>getHtmlLogs()">
         <el-checkbox v-for="item in levels" :key="item" :label="item" :value="item" size="large"/>
       </el-checkbox-group>
@@ -28,10 +28,7 @@
         <el-button icon="Delete" bg text @click="clear" :loading="clearLoading"/>
       </div>
     </div>
-    <div id="#logs" style="background-color:#2e3440ff;
-                  color:#d8dee9ff;
-                  margin-top: 5px;"
-         v-loading="loading">
+    <div class="content" v-loading="loading">
       <el-scrollbar ref="scrollbarRef" height="450">
         <div ref="innerRef" style="min-height: 400px;" v-html="htmlLogs">
         </div>
@@ -123,7 +120,7 @@ const getLogs = () => {
           }
           loggerNames.value.push(datum['loggerName'])
         }
-        getHtmlLogs()
+        await getHtmlLogs()
       })
       .finally(() => {
         loading.value = false
@@ -144,11 +141,18 @@ let close = () => {
 defineExpose({show})
 </script>
 
-<style>
-@media (min-width: 1000px) {
-  .auto {
-    display: flex;
-  }
+<style scoped>
+.header {
+  width: 100%;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.content {
+  background-color: #2e3440ff;
+  color: #d8dee9ff;
+  margin-top: 4px;
+  padding: 0 4px;
 }
 
 @media (min-width: 1400px) {

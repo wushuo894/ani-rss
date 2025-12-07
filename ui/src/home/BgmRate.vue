@@ -1,15 +1,15 @@
 <template>
-  <el-dialog v-model="dialogVisible" align-center center style="max-width: 300px;" title="评分">
+  <el-dialog v-model="dialogVisible" align-center center width="300" title="评分">
     <div v-loading="loading">
-      <div class="flex" style="justify-content: center;width: 100%;">
+      <div class="flex bgm-rate-rate-container">
         <el-rate v-model="ani.score"
                  :max="10"
                  :min="0"/>
       </div>
-      <div style="height: 12px;">
-        <p v-if="ani.score > 0" style="text-align: center;">{{ texts[ani.score - 1] }}</p>
+      <div class="bgm-rate-text-container">
+        <p v-if="ani.score > 0" class="bgm-rate-text">{{ texts[ani.score - 1] }}</p>
       </div>
-      <div class="flex" style="width: 100%;justify-content: space-between;margin-top: 14px;">
+      <div class="flex bgm-rate-button-container">
         <el-button :icon="Ban" bg text @click="clearRate">清空评分</el-button>
         <el-button :icon="Save" bg text @click="rate(ani)">保存评分</el-button>
       </div>
@@ -73,3 +73,24 @@ let rate = (v) => {
 
 defineExpose({show})
 </script>
+
+<style scoped>
+.bgm-rate-rate-container {
+  justify-content: center;
+  width: 100%;
+}
+
+.bgm-rate-text-container {
+  height: 12px;
+}
+
+.bgm-rate-text {
+  text-align: center;
+}
+
+.bgm-rate-button-container {
+  width: 100%;
+  justify-content: space-between;
+  margin-top: 14px;
+}
+</style>

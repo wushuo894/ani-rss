@@ -1,6 +1,6 @@
 <template>
   <el-form label-width="auto"
-           style="width: 100%"
+           class="form-full-width"
            @submit="(event)=>{
                     event.preventDefault()
                    }">
@@ -45,12 +45,12 @@
     <el-form-item label="TMDB语言">
       <div>
         <div>
-          <el-select v-model:model-value="props.config['tmdbLanguage']" style="width: 150px;">
+          <el-select v-model:model-value="props.config['tmdbLanguage']" class="select-width-150">
             <el-option v-for="item in tmdb_i18n" :value="item.i18n_tag"
                        :label="`${item.native_name} (${item.i18n_tag})`"
                        :key="item.i18n_tag">
-              <span style="float: left">{{ item.native_name }}</span>
-              <el-text type="info" style="float: right;" size="small">
+              <span class="float-left">{{ item.native_name }}</span>
+              <el-text type="info" class="float-right" size="small">
                 {{ item.i18n_tag }}
               </el-text>
             </el-option>
@@ -71,20 +71,20 @@
       <el-switch v-model:model-value="props.config.importExclude" :disabled="props.config.enabledExclude"/>
     </el-form-item>
     <el-form-item label="封面质量">
-      <el-select v-model="props.config['bgmImage']" style="width: 150px;">
+      <el-select v-model="props.config['bgmImage']" class="select-width-150">
         <el-option v-for="item in ['small','grid','large','medium','common']" :key="item"
                    :value="item"></el-option>
       </el-select>
     </el-form-item>
     <el-form-item label="自定义集数规则">
-      <div style="width: 100%;">
+      <div class="full-width">
         <div>
           <el-switch v-model="props.config.customEpisode"/>
         </div>
-        <div style="display: flex;width: 100%;">
+        <div class="flex-row-full">
           <el-input v-model="props.config.customEpisodeStr"
-                    style="width: 100%"/>
-          <div style="width: 4px;"></div>
+                    class="full-width"/>
+          <div class="spacer-4"></div>
           <el-input-number v-model="props.config.customEpisodeGroupIndex"/>
         </div>
       </div>
@@ -111,3 +111,34 @@ import {tmdb_i18n} from "@/js/tmdb-i18n.js";
 
 let props = defineProps(['config'])
 </script>
+
+<style scoped>
+.form-full-width {
+  width: 100%;
+}
+
+.select-width-150 {
+  width: 150px;
+}
+
+.float-left {
+  float: left;
+}
+
+.float-right {
+  float: right;
+}
+
+.full-width {
+  width: 100%;
+}
+
+.flex-row-full {
+  display: flex;
+  width: 100%;
+}
+
+.spacer-4 {
+  width: 4px;
+}
+</style>

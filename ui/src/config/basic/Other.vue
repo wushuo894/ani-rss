@@ -1,6 +1,6 @@
 <template>
   <el-form label-width="auto"
-           style="width: 100%"
+           class="form-full-width"
            @submit="(event)=>{
                     event.preventDefault()
                    }">
@@ -14,14 +14,14 @@
       <el-input v-model:model-value="props.config['tmdbApiKey']" placeholder="请自备 API 密钥, 留空使用系统默认"/>
     </el-form-item>
     <el-form-item label="最大日志条数">
-      <div style="width: 150px">
+      <div class="width-150">
         <el-select v-model:model-value="props.config.logsMax">
           <el-option v-for="it in [128,256,512]" :key="it" :label="it" :value="it"/>
         </el-select>
       </div>
     </el-form-item>
     <el-form-item label="自动更新">
-      <div style="width: 100%;">
+      <div class="full-width">
         <div>
           <el-switch v-model:model-value="props.config.autoUpdate"/>
         </div>
@@ -35,7 +35,7 @@
     <el-form-item label="GitHub加速">
       <div>
         <div>
-          <el-select v-model="props.config['github']" style="width: 150px;">
+          <el-select v-model="props.config['github']" class="select-width-150">
             <el-option v-for="it in githubList" :key="it" :label="it" :value="it"/>
           </el-select>
         </div>
@@ -142,3 +142,21 @@ let clearCache = () => {
 
 let props = defineProps(['config'])
 </script>
+
+<style scoped>
+.form-full-width {
+  width: 100%;
+}
+
+.width-150 {
+  width: 150px;
+}
+
+.full-width {
+  width: 100%;
+}
+
+.select-width-150 {
+  width: 150px;
+}
+</style>

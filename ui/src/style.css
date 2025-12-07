@@ -108,3 +108,9 @@ html, body, #app {
 #app {
     margin: 0 auto;
 }
+
+@media (min-width: 1000px) {
+    .auto-flex {
+        display: flex;
+    }
+}

@@ -15,7 +15,7 @@
     <el-input-number v-model:model-value="props.config['alistRetry']" :max="100" :min="1"/>
   </el-form-item>
   <el-form-item label="上传开关">
-    <div style="width: 100%">
+    <div class="openlist-container">
       <div>
         <el-switch v-model="props.config['alist']"/>
       </div>
@@ -30,7 +30,7 @@
     </div>
   </el-form-item>
   <el-form-item label="刷新开关">
-    <div style="width: 100%">
+    <div class="openlist-container">
       <div>
         <el-switch v-model:model-value="props.config['alistRefresh']"/>
       </div>
@@ -53,3 +53,9 @@
 <script setup>
 let props = defineProps(['config'])
 </script>
+
+<style scoped>
+.openlist-container {
+  width: 100%;
+}
+</style>

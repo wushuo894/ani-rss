@@ -1,18 +1,18 @@
 <template>
   <el-form label-width="auto"
-           style="width: 100%"
+           class="form-full-width"
            @submit="(event)=>{
                     event.preventDefault()
                    }">
     <el-form-item label="更新地址">
-      <div style="width: 100%">
+      <div class="full-width">
         <div>
           <el-input v-model:model-value="props.config.trackersUpdateUrls" :autosize="{ minRows: 2}"
                     placeholder="换行输入多个"
-                    style="width: 100%" type="textarea"/>
+                    class="full-width" type="textarea"/>
         </div>
-        <div style="height: 12px;"/>
-        <div class="flex" style="justify-content: space-between;">
+        <div class="spacer-12"/>
+        <div class="flex justify-space-between">
           <el-checkbox v-model:model-value="props.config.autoTrackersUpdate" label="每天1:00自动更新"/>
           <el-button :loading="trackersUpdateLoading" bg icon="Refresh" text @click="trackersUpdate">更新
           </el-button>
@@ -48,3 +48,21 @@ let trackersUpdate = () => {
 
 let props = defineProps(['config'])
 </script>
+
+<style scoped>
+.form-full-width {
+  width: 100%;
+}
+
+.full-width {
+  width: 100%;
+}
+
+.spacer-12 {
+  height: 12px;
+}
+
+.justify-space-between {
+  justify-content: space-between;
+}
+</style>

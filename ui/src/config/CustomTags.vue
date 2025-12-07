@@ -20,8 +20,7 @@
         v-model="inputValue"
         ref="inputRef"
         size="small"
-        class="margin-4px"
-        style="width: 120px;"
+        class="margin-4px custom-tags-input"
         @keyup.enter="handleInputConfirm"
         @blur="handleInputConfirm"
     />
@@ -72,5 +71,9 @@ const removeCustomTag = (index) => {
 <style scoped>
 .margin-4px {
   margin: 0 0 4px 4px;
+}
+
+.custom-tags-input {
+  width: 120px;
 }
 </style>

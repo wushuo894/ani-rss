@@ -1,22 +1,22 @@
 <template>
   <el-dialog v-model="dialogVisible" center title="下载">
-    <div style="height: 500px">
-      <el-empty v-if="!torrentsInfos.length" description="当前无下载任务" style="height: 100%"/>
+    <div class="torrents-container">
+      <el-empty v-if="!torrentsInfos.length" description="当前无下载任务" class="torrents-empty"/>
       <el-scrollbar v-else>
         <el-card v-for="torrentsInfo in torrentsInfos"
                  shadow="never"
-                 style="margin-bottom: 4px;">
+                 class="torrents-card">
           <p>{{ torrentsInfo.name }}</p>
           <el-progress :percentage="torrentsInfo['progress']"/>
           <template #footer>
-            <div class="flex" style="width: 100%;justify-content: space-between;">
+            <div class="flex torrents-footer">
               <div>
-                <el-tag v-for="tag in torrentsInfo['tags']" style="margin-left: 4px;" type="info">
+                <el-tag v-for="tag in torrentsInfo['tags']" class="torrents-tag-spacer" type="info">
                   {{ tag }}
                 </el-tag>
               </div>
               <div>
-                <el-tag style="margin-right: 4px;" type="success">
+                <el-tag class="torrents-tag-right" type="success">
                   {{ torrentsInfo['sizeStr'] }}&nbsp;MB
                 </el-tag>
                 <el-tag type="primary">
@@ -61,3 +61,30 @@ let sleep = ms => {
 
 defineExpose({show})
 </script>
+
+<style scoped>
+.torrents-container {
+  height: 500px;
+}
+
+.torrents-empty {
+  height: 100%;
+}
+
+.torrents-card {
+  margin-bottom: 4px;
+}
+
+.torrents-footer {
+  width: 100%;
+  justify-content: space-between;
+}
+
+.torrents-tag-spacer {
+  margin-left: 4px;
+}
+
+.torrents-tag-right {
+  margin-right: 4px;
+}
+</style>

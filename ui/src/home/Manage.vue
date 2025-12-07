@@ -2,10 +2,10 @@
   <ImportAni ref="importAniRef" @callback="getList"/>
   <Del ref="refDel" @callback="getList"/>
   <el-dialog v-model="dialogVisible" center class="manage-dialog" title="管理">
-    <div style="min-height: 300px;" v-loading="loading">
-      <div style="display: flex;justify-content: space-between;width: 100%;">
-        <div class="auto">
-          <div style="width: 120px;">
+    <div class="manage-content" v-loading="loading">
+      <div class="manage-header">
+        <div class="auto-flex">
+          <div class="select-width">
             <el-select v-model:model-value="selectFilter"
                        @change="selectChange">
               <el-option v-for="filter in selectFilters"
@@ -14,8 +14,8 @@
                          :value="filter.label"/>
             </el-select>
           </div>
-          <div style="height: 8px;width: 8px;"></div>
-          <div style="width: 120px;">
+          <div class="spacer"></div>
+          <div class="select-width">
             <el-select
                 v-model:model-value="yearMonthValue"
                 clearable
@@ -105,7 +105,7 @@
         </el-table-column>
       </el-table>
       <div>
-        <p style="margin: 6px;text-align: end;">共 {{ searchList.length }} 项</p>
+        <p class="manage-count">共 {{ searchList.length }} 项</p>
       </div>
     </div>
   </el-dialog>
@@ -218,5 +218,29 @@ defineExpose({show})
   .manage-dialog {
     width: 1000px;
   }
+}
+
+.manage-content {
+  min-height: 300px;
+}
+
+.manage-header {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.select-width {
+  width: 120px;
+}
+
+.spacer {
+  height: 8px;
+  width: 8px;
+}
+
+.manage-count {
+  margin: 6px;
+  text-align: end;
 }
 </style>

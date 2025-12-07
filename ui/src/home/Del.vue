@@ -9,7 +9,7 @@
       </div>
       <el-checkbox v-model="deleteFiles">同时删除下载任务与本地已下载的文件</el-checkbox>
     </div>
-    <div style="width:100%;display: flex;justify-content: end;margin-top: 8px;">
+    <div class="action">
       <el-button icon="Check" :loading="okLoading" @click="delAni" text bg type="danger">确定
       </el-button>
       <el-button icon="Close" bg text @click="dialogVisible = false">取消</el-button>
@@ -99,6 +99,13 @@ const emit = defineEmits(['callback'])
 .el-checkbox {
   --el-checkbox-checked-text-color: var(--el-color-danger);
   color: var(--el-color-danger);
+}
+
+.action {
+  width: 100%;
+  display: flex;
+  justify-content: end;
+  margin-top: 8px;
 }
 </style>
 

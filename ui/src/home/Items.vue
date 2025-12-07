@@ -1,17 +1,17 @@
 <template class="items">
   <el-dialog v-model="dialogVisible" center class="items-dialog" title="预览">
-    <div style="width: 100%;" v-loading="loading">
-      <div style="margin: 4px 0;display: flex;">
-        <el-select v-model:model-value="select" style="max-width: 120px;" @change="selectChange">
+    <div class="items-content" v-loading="loading">
+      <div class="items-select-container">
+        <el-select v-model:model-value="select" class="items-select" @change="selectChange">
           <el-option v-for="item in selectItems"
                      :key="item.label"
                      :label="item.label"
                      :value="item.label"/>
         </el-select>
-        <div style="width: 4px;"/>
+        <div class="items-spacer"/>
         <el-input v-model:model-value="data.downloadPath" readonly/>
       </div>
-      <div style="width: 100%;display: flex;justify-content: end;margin-top: 8px;">
+      <div class="items-button-container">
         <el-button bg text :disabled="!selectViews.length" @click="allowDownload" icon="Check" type="primary">允许下载
         </el-button>
         <el-button bg text :disabled="!selectViews.length" @click="notDownload" icon="Close">禁止下载</el-button>
@@ -24,7 +24,7 @@
           </template>
         </popconfirm>
       </div>
-      <div style="padding: 0 12px">
+      <div class="items-table-container">
         <el-table :data="showItems" height="500"
                   @selection-change="handleSelectionChange"
                   scrollbar-always-on
@@ -96,7 +96,7 @@
         </div>
       </div>
     </div>
-    <div class="flex" style="margin-top: 12px;justify-content: space-between;">
+    <div class="flex items-footer">
       <span>共 {{ showItems.length }} 项</span>
       <el-button bg text @click="dialogVisible = false" icon="Close">关闭</el-button>
     </div>
@@ -200,5 +200,38 @@ let props = defineProps(['ani'])
   .items-dialog {
     width: 1000px;
   }
+}
+
+.items-content {
+  width: 100%;
+}
+
+.items-select-container {
+  margin: 4px 0;
+  display: flex;
+}
+
+.items-select {
+  max-width: 120px;
+}
+
+.items-spacer {
+  width: 4px;
+}
+
+.items-button-container {
+  width: 100%;
+  display: flex;
+  justify-content: end;
+  margin-top: 8px;
+}
+
+.items-table-container {
+  padding: 0 12px;
+}
+
+.items-footer {
+  margin-top: 12px;
+  justify-content: space-between;
 }
 </style>

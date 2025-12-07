@@ -1,6 +1,6 @@
 <template>
   <el-form label-width="auto"
-           style="width: 100%"
+           class="form-full-width"
            @submit="(event)=>{
                     event.preventDefault()
                    }">
@@ -23,14 +23,14 @@
       </el-input-number>
     </el-form-item>
     <el-form-item label="自动跳过">
-      <div style="width: 100%">
+      <div class="full-width">
         <el-switch v-model:model-value="props.config.fileExist" :disabled="!config.rename"/>
         <br>
         <el-text class="mx-1" size="small">
           文件已下载自动跳过 此选项必须启用 自动重命名。确保 下载工具 与本程序 docker 映射挂载路径一致
           &nbsp;
           <el-link
-              style="font-size: var(--el-font-size-extra-small)"
+              class="text-extra-small"
               type="primary"
               href="https://docs.wushuo.top/config/basic/rss#auto-skip"
               target="_blank">
@@ -40,7 +40,7 @@
       </div>
     </el-form-item>
     <el-form-item label="自动禁用订阅">
-      <div style="width: 100%;">
+      <div class="full-width">
         <el-switch v-model:model-value="props.config.autoDisabled"/>
         <br>
         <el-text class="mx-1" size="small">
@@ -110,7 +110,7 @@
           <el-checkbox v-model="props.config['copyMasterToStandby']" :disabled="!props.config.standbyRss"
                        label="添加订阅时自动复制主rss至备用rss"/>
         </div>
-        <div class="flex" style="width: 100%;justify-content: end;">
+        <div class="flex full-width justify-end">
           <el-link
               type="primary"
               href="https://docs.wushuo.top/config/basic/rss#back-rss"
@@ -129,3 +129,21 @@ import AfdianPrompt from "@/other/AfdianPrompt.vue";
 
 let props = defineProps(['config'])
 </script>
+
+<style scoped>
+.form-full-width {
+  width: 100%;
+}
+
+.full-width {
+  width: 100%;
+}
+
+.text-extra-small {
+  font-size: var(--el-font-size-extra-small);
+}
+
+.justify-end {
+  justify-content: end;
+}
+</style>

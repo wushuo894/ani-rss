@@ -1,6 +1,6 @@
 <template>
   <el-dialog v-model="dialogVisible" center title="修改通知">
-    <el-scrollbar :always="true" style="height: 530px;padding: 15px;">
+    <el-scrollbar :always="true" class="notification-config-scrollbar">
       <el-form label-width="auto">
         <el-form-item label="通知类型">
           <el-select v-model="notificationConfig['notificationType']">
@@ -38,7 +38,7 @@
               :min="0"
               :max="100"
               v-model="notificationConfig['retry']"
-              style="width: 160px;"
+              class="notification-config-retry-input"
           >
             <template #suffix>
               <span>次</span>
@@ -50,7 +50,7 @@
         </el-form-item>
       </el-form>
     </el-scrollbar>
-    <div class="flex" style="justify-content: space-between;width: 100%;margin-top: 8px;">
+    <div class="flex notification-config-footer">
       <el-button bg text @click="messageTest" icon="Odometer" :loading="messageTestLoading">测试
       </el-button>
       <el-button @click="dialogVisible = false" text bg icon="Check" type="primary">确定
@@ -140,3 +140,20 @@ defineExpose({
 })
 
 </script>
+
+<style scoped>
+.notification-config-scrollbar {
+  height: 530px;
+  padding: 15px;
+}
+
+.notification-config-retry-input {
+  width: 160px;
+}
+
+.notification-config-footer {
+  justify-content: space-between;
+  width: 100%;
+  margin-top: 8px;
+}
+</style>

@@ -4,7 +4,7 @@
       <slot name="reference"/>
     </template>
     <template #actions="{ confirm, cancel }">
-      <div style="display: flex;">
+      <div class="flex">
         <div>
           <el-button size="small" @click="cancel" bg text icon="Close">取消</el-button>
         </div>
