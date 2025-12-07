@@ -7,30 +7,30 @@
                   @keyup.enter="addKeyword"/>
       </el-form-item>
     </el-form>
-    <div class="flex" style="width: 100%;justify-content: end;margin-top: 8px;">
+    <div class="flex prio-keys-dialog-footer">
       <el-button bg text @click="addKeyword" icon="Plus">添加</el-button>
     </div>
   </el-dialog>
-  <div style="width: 100%;">
+  <div class="prio-keys-container">
     <div class="gap-2">
-      <el-tag v-if="!props.keywords.length" type="info" style="margin-right: 4px;margin-bottom: 4px;">
+      <el-tag v-if="!props.keywords.length" type="info" class="prio-keys-tag">
         无
       </el-tag>
       <el-tag v-for="(tag, index) in props.keywords" :key="tag" closable :disable-translations="false"
-              @close="handleClose(index)" style="margin-right: 4px;margin-bottom: 4px;">
+              @close="handleClose(index)" class="prio-keys-tag">
         <el-tooltip :content="`优先级: ${index + 1}`">
-          <el-text line-clamp="1" size="small" style="max-width: 300px;color: var(--el-color-primary);">
+          <el-text line-clamp="1" size="small" class="prio-keys-tag-text">
             {{ tag }}
           </el-text>
         </el-tooltip>
       </el-tag>
-      <el-button bg icon="Plus" size="small" style="margin-right: 4px;margin-bottom: 4px;" text
+      <el-button bg icon="Plus" size="small" class="prio-keys-tag" text
                  @click="() => add = true"/>
       <el-button v-if="props.keywords.length" bg icon="Delete" size="small"
-                 style="margin-left: 0;margin-bottom: 4px;" text type="danger"
+                 class="prio-keys-delete-button" text type="danger"
                  @click="() => props.keywords.length = 0"/>
     </div>
-    <div class="flex" style="margin-top: 4px;width: 100%;justify-content: space-between;">
+    <div class="flex prio-keys-footer">
       <el-button bg text size="small" @click="importGlobalKeywords" v-if="props.importGlobal"
                  :disabled="disabledImport" :loading="importLoading">
         <el-icon>
@@ -99,3 +99,36 @@ let importGlobalKeywords = () => {
 
 let props = defineProps(['keywords', 'importGlobal', 'showText'])
 </script>
+
+<style scoped>
+.prio-keys-dialog-footer {
+  width: 100%;
+  justify-content: end;
+  margin-top: 8px;
+}
+
+.prio-keys-container {
+  width: 100%;
+}
+
+.prio-keys-tag {
+  margin-right: 4px;
+  margin-bottom: 4px;
+}
+
+.prio-keys-tag-text {
+  max-width: 300px;
+  color: var(--el-color-primary);
+}
+
+.prio-keys-delete-button {
+  margin-left: 0;
+  margin-bottom: 4px;
+}
+
+.prio-keys-footer {
+  margin-top: 4px;
+  width: 100%;
+  justify-content: space-between;
+}
+</style>

@@ -2,24 +2,24 @@
   <el-dialog v-model="jsDialogVisible" align-center center title="自定义JS" width="800">
     <el-input v-model:model-value="props.config['customJs']" :rows="6"
               type="textarea"/>
-    <div class="flex" style="justify-content:end; width: 100%;margin-top: 8px;">
+    <div class="flex justify-end full-width mt-8">
       <el-link type="primary" href="https://github.com/wushuo894/ani-rss-css"
                target="_blank">更多CSS
       </el-link>
     </div>
-    <div class="flex" style="justify-content:end; width: 100%;margin-top: 8px;">
+    <div class="flex justify-end full-width mt-8">
       <el-button bg icon="Close" text @click="jsDialogVisible = false">关闭</el-button>
     </div>
   </el-dialog>
   <el-dialog v-model="cssDialogVisible" align-center center title="自定义CSS" width="800">
     <el-input v-model:model-value="props.config['customCss']" :rows="6"
               type="textarea"/>
-    <div class="flex" style="justify-content:end; width: 100%;margin-top: 8px;">
+    <div class="flex justify-end full-width mt-8">
       <el-button bg icon="Close" text @click="cssDialogVisible = false">关闭</el-button>
     </div>
   </el-dialog>
   <el-form label-width="auto"
-           style="width: 100%"
+           class="form-full-width"
            @submit="(event)=>{
                     event.preventDefault()
                    }">
@@ -51,7 +51,7 @@
                        @active-change="colorChange"/>
     </el-form-item>
     <el-form-item label="排序">
-      <el-select v-model="props.config['sortType']" style="width: 150px;">
+      <el-select v-model="props.config['sortType']" class="select-width-150">
         <el-option value="SCORE" label="评分"/>
         <el-option value="PINYIN" label="拼音"/>
         <el-option value="DOWNLOAD_TIME" label="更新时间"/>
@@ -107,3 +107,25 @@ let cssDialogVisible = ref(false)
 
 let props = defineProps(['config'])
 </script>
+
+<style scoped>
+.justify-end {
+  justify-content: end;
+}
+
+.full-width {
+  width: 100%;
+}
+
+.mt-8 {
+  margin-top: 8px;
+}
+
+.form-full-width {
+  width: 100%;
+}
+
+.select-width-150 {
+  width: 150px;
+}
+</style>

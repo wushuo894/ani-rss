@@ -1,12 +1,12 @@
 <template>
   <el-dialog v-model="dialogVisible" center title="Bangumi">
-    <div style="min-height: 300px;">
+    <div class="bgm-dialog-content">
       <div>
-        <div style="display: flex;width: 100%;">
-          <div style="flex: 1;">
+        <div class="bgm-search-container">
+          <div class="bgm-search-input-wrapper">
             <el-input v-model:model-value="name" @keyup.enter="search" placeholder="请输入搜索标题" clearable/>
           </div>
-          <div style="width: 4px;"></div>
+          <div class="bgm-search-spacer"></div>
           <el-button @click="search" :loading="searchLoading" text bg icon="Search" :disabled="!name">搜索</el-button>
         </div>
       </div>
@@ -26,7 +26,7 @@
         <el-table-column label="url" prop="url" width="240"/>
         <el-table-column>
           <template #default="it">
-            <div class="flex flex-center" style="width: 100%;">
+            <div class="flex flex-center bgm-table-button-wrapper">
               <el-button bg text @click="ok(list[it.$index])">选择</el-button>
             </div>
           </template>
@@ -81,3 +81,26 @@ defineExpose({show})
 
 const emit = defineEmits(['callback'])
 </script>
+
+<style scoped>
+.bgm-dialog-content {
+  min-height: 300px;
+}
+
+.bgm-search-container {
+  display: flex;
+  width: 100%;
+}
+
+.bgm-search-input-wrapper {
+  flex: 1;
+}
+
+.bgm-search-spacer {
+  width: 4px;
+}
+
+.bgm-table-button-wrapper {
+  width: 100%;
+}
+</style>

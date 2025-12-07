@@ -1,5 +1,5 @@
 <template>
-  <el-dialog v-model="dialogVisible" align-center center style="max-width: 600px;" title="试用">
+  <el-dialog v-model="dialogVisible" align-center center class="dialog-max-width" title="试用">
     <el-alert :closable="false" type="warning">
       <template #title>
         <el-text class="mx-1" size="small">
@@ -9,10 +9,10 @@
         </el-text>
       </template>
     </el-alert>
-    <div style="margin: 8px 0 8px 0">
+    <div class="margin-vertical">
       <el-input v-model="props.config['githubToken']" clearable placeholder="在此处输入GithubToken"/>
     </div>
-    <div class="flex" style="justify-content: end;width: 100%;">
+    <div class="flex flex-end-full">
       <el-button bg icon="Star" text type="info" @click="openUrl('https://github.com/wushuo894/ani-rss')">去点个Star
       </el-button>
       <el-button :icon="Github" bg text type="info"
@@ -59,3 +59,18 @@ let tryOut = () => {
 defineExpose({show})
 let props = defineProps(['config'])
 </script>
+
+<style scoped>
+.dialog-max-width {
+  max-width: 600px;
+}
+
+.margin-vertical {
+  margin: 8px 0 8px 0;
+}
+
+.flex-end-full {
+  justify-content: end;
+  width: 100%;
+}
+</style>

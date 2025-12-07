@@ -1,11 +1,11 @@
 <template>
   <el-dialog v-model="dialogVisible" center title="封面">
-    <div style="width: 100%;display: flex;justify-content: space-between;">
+    <div class="content">
       <div>
         <el-image :alt="ani.title"
                   :src="`api/file?filename=${ani['cover']}&s=${authorization}&t=${time}`"
                   fit="cover"
-                  style="border-radius: 4px;cursor: pointer;height: 260px;width: 180px;"
+                  class="cover"
         />
       </div>
       <div style="width: 12px;">
@@ -14,7 +14,7 @@
         <el-form label-width="auto">
           <el-form-item label="URL">
             <div style="width: 100%">
-              <div style="width: 100%;display: flex;">
+              <div style="width: 100%;" class="flex">
                 <el-input v-model:model-value="ani.image" placeholder="https://lain.bgm.tv/pic/cover/1234.jpg"/>
                 <div style="width: 8px;"/>
                 <el-button :disabled="!ani.image" :loading="reLoadIng" bg icon="Refresh" text @click="reLoad"/>
@@ -39,7 +39,7 @@
                     在这里拖放文件或<em>点击上传</em>
                   </div>
                   <template #tip>
-                    <div class="el-upload__tip" style="display: flex;justify-content: end;">
+                    <div class="el-upload__tip flex" style="justify-content: end;">
                       jpg / png 文件小于 1M
                     </div>
                   </template>
@@ -50,7 +50,7 @@
         </el-form>
       </div>
     </div>
-    <div style="display: flex;justify-content: end;">
+    <div class="flex" style="justify-content: end;">
       <el-button :loading="okLoading" bg icon="Check" text @click="ok">确定</el-button>
     </div>
   </el-dialog>
@@ -115,3 +115,18 @@ const beforeAvatarUpload = (rawFile) => {
 
 defineExpose({show})
 </script>
+
+<style scoped>
+.content {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+}
+
+.cover {
+  border-radius: 4px;
+  cursor: pointer;
+  height: 260px;
+  width: 180px;
+}
+</style>

@@ -23,7 +23,7 @@
         </template>
       </el-alert>
     </div>
-    <div style="margin-top: 12px;display: flex;justify-content: space-between;">
+    <div class="action">
       <div>
         <span>共 {{ list.length }} 项</span>
       </div>
@@ -84,3 +84,10 @@ defineExpose({show})
 
 let props = defineProps(['data'])
 </script>
+<style scoped>
+.action {
+  margin-top: 12px;
+  display: flex;
+  justify-content: space-between;
+}
+</style>

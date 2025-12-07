@@ -22,7 +22,7 @@
     </el-form-item>
     <el-form-item label="延迟">
       <el-input-number v-model="props.notificationConfig['embyDelayed']"
-                       style="width: 160px;"
+                       class="notification-input-width"
                        :min="0">
         <template #suffix>
           <span>秒</span>

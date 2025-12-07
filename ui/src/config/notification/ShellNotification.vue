@@ -7,7 +7,7 @@
     </el-form-item>
     <el-form-item label="存活限制">
       <el-input-number v-model="props.notificationConfig['aliveLimit']"
-                       style="width: 160px;"
+                       class="notification-input-width"
                        :min="1">
         <template #suffix>
           <span>秒</span>

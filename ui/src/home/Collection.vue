@@ -24,7 +24,7 @@
                   <el-button :disabled="rssButtonLoading" bg icon="Search" text type="primary"
                              @click="bgmRef?.show(data.ani.title)"/>
                 </div>
-                <div v-if="data.show" style="width: 100%;justify-content: end;display: flex;margin-top: 12px;">
+                <div v-if="data.show" class="change-title-button">
                   <el-button :loading="getBgmNameLoading"
                              bg
                              icon="DocumentAdd" text @click="getBgmName">
@@ -42,7 +42,7 @@
             </el-form-item>
             <template v-if="data.show">
               <el-form-item label="TMDB">
-                <div style="display: flex;width: 100%;justify-content: space-between;">
+                <div class="flex" style="width: 100%;justify-content: space-between;">
                   <div class="el-input is-disabled">
                     <div class="el-input__wrapper"
                          style="pointer-events: auto;cursor: auto;justify-content: left;padding: 0 11px;"
@@ -61,22 +61,22 @@
                 </div>
               </el-form-item>
               <el-form-item label="字幕组">
-                <div class="flex" style="width: 100%;justify-content: end;">
+                <div class="form-item-flex">
                   <el-input v-model:model-value="data.ani.subgroup" placeholder="字幕组" style="width: 150px"/>
                 </div>
               </el-form-item>
               <el-form-item label="季">
-                <div class="flex" style="justify-content: end;width: 100%;">
+                <div class="form-item-flex">
                   <el-input-number v-model:model-value="data.ani.season" :min="0" style="max-width: 200px"/>
                 </div>
               </el-form-item>
               <el-form-item label="集数偏移">
-                <div class="flex" style="justify-content: end;width: 100%;">
+                <div class="form-item-flex">
                   <el-input-number v-model:model-value="data.ani.offset"/>
                 </div>
               </el-form-item>
               <el-form-item label="日期">
-                <div class="flex" style="width: 100%;justify-content: end;">
+                <div class="form-item-flex">
                   <el-date-picker
                       v-model="date"
                       style="max-width: 150px;"
@@ -126,7 +126,7 @@
                 data.torrent = ''
               }">
                   <el-tooltip :content="data.filename">
-                    <el-text line-clamp="1" size="small" style="max-width: 300px;color: var(--el-color-info);">
+                    <el-text line-clamp="1" size="small" class="filename">
                       {{ data.filename }}
                     </el-text>
                   </el-tooltip>
@@ -149,7 +149,7 @@
                     在这里拖放 .torrent 文件或<em>点击上传</em>
                   </div>
                   <template #tip>
-                    <div class="el-upload__tip" style="display: flex;justify-content: end;">
+                    <div class="el-upload__tip flex" style="justify-content: end;">
                       .torrent 文件小于 5M
                     </div>
                   </template>
@@ -160,7 +160,7 @@
         </div>
       </el-scrollbar>
     </div>
-    <div class="flex" style="justify-content: space-between;width: 100%;margin-top: 10px;">
+    <div class="action">
       <AfdianPrompt name="添加合集"/>
       <div>
         <el-button :disabled="!data.filename" bg
@@ -358,3 +358,30 @@ let getThemoviedbName = () => {
 defineExpose({show})
 
 </script>
+
+<style scoped>
+.change-title-button {
+  width: 100%;
+  justify-content: end;
+  display: flex;
+  margin-top: 12px;
+}
+
+.form-item-flex {
+  width: 100%;
+  display: flex;
+  justify-content: end;
+}
+
+.filename {
+  max-width: 300px;
+  color: var(--el-color-info);
+}
+
+.action {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10px;
+}
+</style>

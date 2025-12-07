@@ -27,7 +27,7 @@
                     placeholder="https://mikanani.me/RSS/Bangumi?bangumiId=xxx&subgroupid=xxx"
                 />
                 <br>
-                <div style="width: 100%;display: flex;justify-content: end;margin-top: 8px;">
+                <div class="mikan-button">
                   <el-button @click="mikan?.show()" text bg icon="VideoCamera" type="primary"
                              :disabled="rssButtonLoading">Mikan
                   </el-button>
@@ -83,7 +83,7 @@
           </el-text>
         </el-tab-pane>
       </el-tabs>
-      <div style="display: flex;justify-content: end;width: 100%;margin-top: 10px;">
+      <div class="action">
         <el-button :loading="rssButtonLoading" @click="getRss" text bg icon="Check">确定</el-button>
       </div>
     </div>
@@ -164,3 +164,18 @@ let mikanCallback = v => {
 defineExpose({show})
 </script>
 
+<style scoped>
+.mikan-button {
+  width: 100%;
+  display: flex;
+  justify-content: end;
+  margin-top: 8px;
+}
+
+.action {
+  width: 100%;
+  display: flex;
+  justify-content: end;
+  margin-top: 10px;
+}
+</style>

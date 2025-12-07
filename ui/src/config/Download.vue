@@ -1,6 +1,6 @@
 <template>
   <el-form label-width="auto"
-           style="width: 100%"
+           class="download-form"
            @submit="(event)=>{
                     event.preventDefault()
                    }">
@@ -41,7 +41,7 @@
         </el-text>
       </el-form-item>
       <el-form-item label="Driver">
-        <el-select v-model="props.config['provider']" style="width: 150px;">
+        <el-select v-model="props.config['provider']" class="download-provider-select">
           <el-option v-for="it in ['115 Cloud','115 Open', 'Thunder', 'PikPak']" :key="it" :label="it" :value="it"/>
         </el-select>
       </el-form-item>
@@ -83,17 +83,17 @@
       </el-form-item>
     </template>
     <el-form-item>
-      <div style="display:flex;width: 100%;justify-content: end;">
+      <div class="download-test-button">
         <el-button @click="downloadLoginTest" bg text :loading="downloadLoginTestLoading" icon="Odometer">测试
         </el-button>
       </div>
     </el-form-item>
     <el-form-item label="保存位置">
-      <div style="width: 100%;">
+      <div class="download-path-container">
         <el-input v-model:model-value="props.config['downloadPathTemplate']"/>
         <el-alert
             v-if="!testPathTemplate(props.config['downloadPathTemplate'])"
-            style="margin-top: 8px;"
+            class="download-alert"
             type="warning"
             show-icon
             :closable="false"
@@ -105,11 +105,11 @@
       </div>
     </el-form-item>
     <el-form-item label="剧场版保存位置">
-      <div style="width: 100%;">
+      <div class="download-path-container">
         <el-input v-model:model-value="props.config['ovaDownloadPathTemplate']"/>
         <el-alert
             v-if="!testPathTemplate(props.config['ovaDownloadPathTemplate'])"
-            style="margin-top: 8px;"
+            class="download-alert"
             type="warning"
             show-icon
             :closable="false"
@@ -139,12 +139,12 @@
                      label="仅在主RSS更新后删除备用RSS"/>
         <br>
         <el-text class="mx-1" size="small">
-          <strong>主RSS</strong> 将 <span style="color: red;">不会自动删除</span>，仅在其更新后删除对应备用RSS的任务与文件
+          <strong>主RSS</strong> 将 <span class="download-danger-text">不会自动删除</span>，仅在其更新后删除对应备用RSS的任务与文件
         </el-text>
         <br>
         <el-checkbox v-model:model-value="props.config.deleteFiles"
                      :disabled="!props.config.delete">
-          <span style="color: red;">删除本地文件</span>
+          <span class="download-danger-text">删除本地文件</span>
         </el-checkbox>
         <br>
         <el-text class="mx-1" size="small">
@@ -174,7 +174,7 @@
       <el-switch v-model:model-value="props.config.watchErrorTorrent"/>
     </el-form-item>
     <el-form-item label="优先保留">
-      <div style="width: 100%">
+      <div class="download-priority-container">
         <el-switch v-model:model-value="props.config.priorityKeywordsEnable"/>
         <div>
           <el-text class="mx-1" size="small">
@@ -241,3 +241,35 @@ let activeName = ref([])
 
 let props = defineProps(['config'])
 </script>
+
+<style scoped>
+.download-form {
+  width: 100%;
+}
+
+.download-provider-select {
+  width: 150px;
+}
+
+.download-test-button {
+  display: flex;
+  width: 100%;
+  justify-content: end;
+}
+
+.download-path-container {
+  width: 100%;
+}
+
+.download-alert {
+  margin-top: 8px;
+}
+
+.download-danger-text {
+  color: red;
+}
+
+.download-priority-container {
+  width: 100%;
+}
+</style>

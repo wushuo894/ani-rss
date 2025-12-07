@@ -34,12 +34,12 @@
       <el-checkbox v-model="props.config.limitLoginAttempts" label="限制尝试次数"/>
     </el-form-item>
     <el-form-item label="IP白名单">
-      <div style="width: 100%;">
+      <div class="login-whitelist-container">
         <div>
           <el-switch v-model:model-value="config['ipWhitelist']"/>
         </div>
-        <div style="width: 100%;">
-          <el-input style="width: 100%" type="textarea"
+        <div class="login-whitelist-input-container">
+          <el-input class="login-whitelist-input" type="textarea"
                     :autosize="{ minRows: 2}"
                     :disabled="!config['ipWhitelist']"
                     :placeholder="'127.0.0.1\n192.168.1.0/24'" v-model:model-value="config['ipWhitelistStr']"/>
@@ -51,9 +51,9 @@
       </div>
     </el-form-item>
     <el-form-item label="Api Key">
-      <div class="flex" style="width: 100%;">
+      <div class="flex login-api-key-container">
         <el-input v-model:model-value="props.config.apiKey" readonly/>
-        <div style="margin-left: 12px;" class="flex">
+        <div class="login-api-key-buttons flex">
           <el-button bg text @click="createApiKey">生成</el-button>
           <el-button bg text @click="copy(props.config.apiKey)">复制</el-button>
         </div>
@@ -92,3 +92,25 @@ let copy = (v) => {
 
 let props = defineProps(['config'])
 </script>
+
+<style scoped>
+.login-whitelist-container {
+  width: 100%;
+}
+
+.login-whitelist-input-container {
+  width: 100%;
+}
+
+.login-whitelist-input {
+  width: 100%;
+}
+
+.login-api-key-container {
+  width: 100%;
+}
+
+.login-api-key-buttons {
+  margin-left: 12px;
+}
+</style>

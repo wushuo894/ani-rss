@@ -3,16 +3,16 @@
   <el-dialog v-model="dialogVisible" center title="备用订阅">
     <el-alert v-if="!config.standbyRss" :closable="false"
               show-icon
-              style="margin-bottom: 8px;" type="warning">
+              class="standby-alert" type="warning">
       <template #title>
         当前备用RSS功能并未开启, 可前往 <strong>设置-基本设置-RSS设置-备用RSS</strong> 启用
       </template>
     </el-alert>
-    <div class="flex" style="width: 100%;">
+    <div class="flex standby-toolbar">
       <div>
         <el-button text bg icon="Plus" @click="plus" type="primary"/>
       </div>
-      <div style="margin: 3px;"></div>
+      <div class="standby-spacer"></div>
       <div>
         <el-button
             @click="mikan?.show(props.ani.mikanTitle ? props.ani.mikanTitle : props.ani.title)"
@@ -61,14 +61,14 @@
                 <el-button bg text icon="Edit" @click="editIndex = it.$index" v-if="editIndex !== it.$index"/>
                 <el-button bg text icon="Check" @click="check" type="primary" v-else/>
               </div>
-              <div style="margin-left: 4px;">
+              <div class="standby-action-spacer">
                 <el-button bg text @click="del(it.$index)" icon="Delete" type="danger"/>
               </div>
-              <div style="margin-left: 4px;">
+              <div class="standby-action-spacer">
                 <el-button :disabled="it.$index < 1" bg icon="ArrowUpBold" text type="primary"
                            @click="move(it.$index,-1)"/>
               </div>
-              <div style="margin-left: 4px;">
+              <div class="standby-action-spacer">
                 <el-button :disabled="it.$index >= standbyRss.length-1" bg icon="ArrowDownBold" text type="primary"
                            @click="move(it.$index,1)"/>
               </div>
@@ -77,7 +77,7 @@
         </el-table-column>
       </el-table>
     </div>
-    <div class="flex" style="width: 100%;justify-content: end;margin-top: 10px">
+    <div class="flex standby-footer">
       <el-button icon="Check" bg text @click="ok" :disabled="editIndex > -1">确定</el-button>
     </div>
   </el-dialog>
@@ -167,3 +167,27 @@ defineExpose({show})
 let props = defineProps(['ani'])
 
 </script>
+
+<style scoped>
+.standby-alert {
+  margin-bottom: 8px;
+}
+
+.standby-toolbar {
+  width: 100%;
+}
+
+.standby-spacer {
+  margin: 3px;
+}
+
+.standby-action-spacer {
+  margin-left: 4px;
+}
+
+.standby-footer {
+  width: 100%;
+  justify-content: end;
+  margin-top: 10px;
+}
+</style>

@@ -10,7 +10,7 @@
     <el-form-item label="SMTP端口">
       <el-input-number
           v-model="props.notificationConfig['mailSMTPPort']"
-          style="width: 160px;"
+          class="notification-input-width"
           :min="1" :max="65535"/>
     </el-form-item>
     <el-form-item label="发件人邮箱">

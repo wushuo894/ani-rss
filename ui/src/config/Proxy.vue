@@ -33,7 +33,7 @@
     </el-form-item>
     <el-form-item label="代理列表">
       <el-input
-          style="width: 100%"
+          class="proxy-list-input"
           type="textarea"
           :autosize="{ minRows: 3, maxRows: 3}"
           v-model="props.config.proxyList"
@@ -43,12 +43,12 @@
       <el-switch v-model:model-value="props.config.proxy"/>
     </el-form-item>
     <el-form-item label="ScrapeTest">
-      <div style="justify-content: space-between;width: 100%;" class="auto">
-        <div style="display: flex;">
-          <el-select v-model:model-value="url" style="width: 240px;">
+      <div class="auto-flex proxy-test-container">
+        <div class="proxy-test-controls">
+          <el-select v-model:model-value="url" class="proxy-test-select">
             <el-option :value="it" :label="it" :key="it" v-for="it in urls"/>
           </el-select>
-          <div style="width: 4px;"></div>
+          <div class="proxy-test-spacer"></div>
           <el-button bg text :loading="testLoading" @click="test" icon="Odometer">测试</el-button>
         </div>
         <div v-if="status && time">
@@ -108,10 +108,25 @@ let props = defineProps(['config'])
 
 </script>
 
-<style>
-@media (min-width: 1000px) {
-  .auto {
-    display: flex;
-  }
+<style scoped>
+.proxy-list-input {
+  width: 100%;
+}
+
+.proxy-test-container {
+  justify-content: space-between;
+  width: 100%;
+}
+
+.proxy-test-controls {
+  display: flex;
+}
+
+.proxy-test-select {
+  width: 240px;
+}
+
+.proxy-test-spacer {
+  width: 4px;
 }
 </style>

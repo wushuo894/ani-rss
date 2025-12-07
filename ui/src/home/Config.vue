@@ -39,7 +39,7 @@
           <About :config="config"/>
         </el-tab-pane>
       </el-tabs>
-      <div style="display: flex;justify-content: end;width: 100%;margin-top: 8px;">
+      <div class="action">
         <el-button :loading="configButtonLoading" bg icon="Check" text type="primary" @click="saveConfig">确定
         </el-button>
         <el-button icon="Close" bg text @click="dialogVisible = false">取消</el-button>
@@ -111,3 +111,11 @@ defineExpose({
   show
 })
 </script>
+<style scoped>
+.action {
+  display: flex;
+  justify-content: end;
+  width: 100%;
+  margin-top: 8px;
+}
+</style>

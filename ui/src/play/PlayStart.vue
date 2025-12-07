@@ -1,7 +1,7 @@
 <template>
   <el-dialog v-if="dialogVisible" v-model="dialogVisible" :title="playItem.name" center>
     <div
-        class="flex-center" style="width: 100%;max-height: 500px;min-height: 200px;">
+        class="flex-center content">
       <Artplayer :src="src" :subtitles="subtitles"/>
     </div>
   </el-dialog>
@@ -33,3 +33,11 @@ defineExpose({
   show
 })
 </script>
+
+<style scoped>
+.content {
+  width: 100%;
+  max-height: 500px;
+  min-height: 200px;
+}
+</style>

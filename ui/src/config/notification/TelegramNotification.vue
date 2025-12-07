@@ -14,21 +14,21 @@
     </el-form-item>
     <el-form-item label="ChatId">
       <div>
-        <div style="justify-content: space-between;width: 100%;" class="auto">
-          <div style="margin-top: 4px;margin-right: 4px;">
+        <div class="auto-flex notification-flex-between">
+          <div class="notification-margin-top-right">
             <el-input v-model:model-value="props.notificationConfig['telegramChatId']"
                       placeholder="123456789"/>
           </div>
-          <div class="flex" style="margin-top: 4px;align-items: center;">
+          <div class="flex notification-margin-top-center">
             <div>
-              <el-select v-model:model-value="chatId" @change="chatIdChange" style="width: 160px">
+              <el-select v-model:model-value="chatId" @change="chatIdChange" class="notification-input-width">
                 <el-option v-for="item in Object.keys(chatIdMap)"
                            :key="item"
                            :label="item"
                            :value="item"/>
               </el-select>
             </div>
-            <div style="margin-left: 4px;">
+            <div class="notification-margin-left">
               <el-button icon="Refresh" bg text @click="getUpdates" :loading="getUpdatesLoading"/>
             </div>
           </div>
@@ -37,13 +37,13 @@
     </el-form-item>
     <el-form-item label="话题ID">
       <el-input-number v-model="props.notificationConfig['telegramTopicId']"
-                       :min="-1" style="width: 160px;"/>
+                       :min="-1" class="notification-input-width"/>
     </el-form-item>
     <el-form-item label="图片">
       <el-switch v-model:model-value="props.notificationConfig['telegramImage']"/>
     </el-form-item>
     <el-form-item label="格式">
-      <div style="width: 160px;">
+      <div class="notification-input-width">
         <el-select v-model:model-value="props.notificationConfig['telegramFormat']" placeholder="None">
           <el-option label="None" value=""/>
           <el-option label="Markdown" value="Markdown"/>

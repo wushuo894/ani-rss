@@ -4,20 +4,20 @@
       <el-form-item label="字幕组">
         <el-input placeholder="留空匹配所有字幕组" v-model="subgroup"></el-input>
       </el-form-item>
-      <div style="margin: 4px;"></div>
+      <div class="exclude-spacer"></div>
       <el-form-item label="正则">
         <el-input placeholder="如 720、简、\d-\d" v-model="exclude"></el-input>
       </el-form-item>
     </el-form>
-    <div class="flex" style="width: 100%;justify-content: end;margin-top: 8px;">
+    <div class="flex exclude-dialog-footer">
       <el-button bg text @click="addExclude" icon="Plus">添加</el-button>
     </div>
   </el-dialog>
-  <div style="width: 100%;">
+  <div class="exclude-container">
     <div class="gap-2">
       <el-tag v-if="!props.exclude.length"
               type="info"
-              style="margin-right: 4px;margin-bottom: 4px;">
+              class="exclude-tag">
         无
       </el-tag>
       <el-tag
@@ -26,17 +26,18 @@
           closable
           :disable-transitions="false"
           @close="handleClose(tag)"
-          style="margin-right: 4px;margin-bottom: 4px;"
+          class="exclude-tag"
       >
         <el-tooltip :content="tag">
-          <el-text line-clamp="1" size="small" style="max-width: 300px;color: var(--el-color-primary);">
+          <el-text line-clamp="1" size="small" class="exclude-tag-text">
             {{ tag }}
           </el-text>
         </el-tooltip>
       </el-tag>
       <el-button bg
                  icon="Plus"
-                 size="small" style="margin-right: 4px;margin-bottom: 4px;"
+                 size="small"
+                 class="exclude-tag"
                  text
                  @click="()=> add = true"
       />
@@ -45,12 +46,13 @@
           bg
           icon="Delete"
           size="small"
-          style="margin-left: 0;margin-bottom: 4px;" text
+          class="exclude-delete-button"
+          text
           type="danger"
           @click="() => props.exclude.length = 0"
       />
     </div>
-    <div class="flex" style="margin-top: 4px;width: 100%;justify-content: space-between;">
+    <div class="flex exclude-footer">
       <el-button bg text size="small" @click="importExclude" v-if="props.importExclude"
                  :disabled="disabledImportExclude" :loading="importExcludeLoading">
         <el-icon>
@@ -61,7 +63,7 @@
       <el-text class="mx-1" size="small" v-if="props.showText">
         支持&nbsp;
         <el-link
-            style="font-size: var(--el-font-size-extra-small)"
+            class="exclude-link"
             type="primary"
             href="https://www.runoob.com/regexp/regexp-syntax.html"
             target="_blank">
@@ -133,3 +135,44 @@ let addExclude = () => {
 
 let props = defineProps(['exclude', 'importExclude', 'showText'])
 </script>
+
+<style scoped>
+.exclude-spacer {
+  margin: 4px;
+}
+
+.exclude-dialog-footer {
+  width: 100%;
+  justify-content: end;
+  margin-top: 8px;
+}
+
+.exclude-container {
+  width: 100%;
+}
+
+.exclude-tag {
+  margin-right: 4px;
+  margin-bottom: 4px;
+}
+
+.exclude-tag-text {
+  max-width: 300px;
+  color: var(--el-color-primary);
+}
+
+.exclude-delete-button {
+  margin-left: 0;
+  margin-bottom: 4px;
+}
+
+.exclude-footer {
+  margin-top: 4px;
+  width: 100%;
+  justify-content: space-between;
+}
+
+.exclude-link {
+  font-size: var(--el-font-size-extra-small);
+}
+</style>

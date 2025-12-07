@@ -12,7 +12,7 @@
       </div>
       <div v-else>
         <el-tag v-if="props.config['verifyExpirationTime']" type="success">
-          <div class="flex" style="align-items: center;">
+          <div class="flex afdian-tag-content">
             <el-icon>
               <Mug/>
             </el-icon>
@@ -27,33 +27,33 @@
       </div>
     </el-form-item>
   </el-form>
-  <div class="flex" style="justify-content: space-between">
+  <div class="flex afdian-header">
     <a href="https://afdian.com/a/wushuo894" target="_blank">
       <img :src="support_aifadian" alt="support_aifadian">
     </a>
-    <div style="flex: 1;padding-left: 8px;">
+    <div class="afdian-unlock">
       <h3>捐赠后解锁</h3>
       <el-tag v-for="it in ['Emby媒体库刷新','添加合集','摸鱼检测','订阅完结迁移','Mikan番剧列表显示评分']"
-              style="margin: 4px 4px 0 0;">
+              class="afdian-tag">
         {{ it }}
       </el-tag>
     </div>
   </div>
-  <div style="margin-top: 18px" v-if="!props.config['verifyExpirationTime'] || props.config['tryOut']">
+  <div class="afdian-section" v-if="!props.config['verifyExpirationTime'] || props.config['tryOut']">
     <el-text class="mx-1" size="small">
       已经捐赠？在这里输入您的订单号以激活您的捐赠
     </el-text>
-    <div class="flex" style="width: 100%;margin-top: 8px;justify-content: space-between;">
+    <div class="flex afdian-input-group">
       <div class="flex">
         <el-input v-model="props.config.outTradeNo"
-                  style="max-width: 200px;">
+                  class="afdian-input">
           <template #prefix>
             <el-icon class="el-input__icon">
               <EditPen/>
             </el-icon>
           </template>
         </el-input>
-        <div style="width: 8px"></div>
+        <div class="afdian-spacer"></div>
         <el-button :loading="verifyNoLoading"
                    bg text
                    type="primary"
@@ -61,7 +61,7 @@
           验证
         </el-button>
       </div>
-      <div style="margin-left: 8px;">
+      <div class="afdian-try-button">
         <el-button :disabled="props.config['verifyExpirationTime']"
                    bg
                    text
@@ -70,7 +70,7 @@
         </el-button>
       </div>
     </div>
-    <div style="margin-top: 8px">
+    <div class="afdian-link">
       <el-link
           type="primary"
           target="_blank"
@@ -79,7 +79,7 @@
       </el-link>
     </div>
   </div>
-  <div style="margin-top: 18px" v-else>
+  <div class="afdian-section" v-else>
     <el-alert
         :closable="false"
         title="感谢您的捐赠支持🎁"
@@ -87,6 +87,50 @@
   </div>
 </template>
 
+<style scoped>
+.afdian-tag-content {
+  align-items: center;
+}
+
+.afdian-header {
+  justify-content: space-between;
+}
+
+.afdian-unlock {
+  flex: 1;
+  padding-left: 8px;
+}
+
+.afdian-tag {
+  margin: 4px 4px 0 0;
+}
+
+.afdian-section {
+  margin-top: 18px;
+}
+
+.afdian-input-group {
+  width: 100%;
+  margin-top: 8px;
+  justify-content: space-between;
+}
+
+.afdian-input {
+  max-width: 200px;
+}
+
+.afdian-spacer {
+  width: 8px;
+}
+
+.afdian-try-button {
+  margin-left: 8px;
+}
+
+.afdian-link {
+  margin-top: 8px;
+}
+</style>
 
 <script setup>
 import {ref} from "vue";

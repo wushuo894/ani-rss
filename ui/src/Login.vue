@@ -1,19 +1,17 @@
 <template>
   <div
-      class="flex-center"
-      style="justify-content: space-between;flex-flow: column; height: 100%;width: 100%;">
+      class="flex-center content">
     <div id="login-page" class="flex-center" style="flex: 1">
-      <div id="form" style="max-width: 200px;">
+      <div id="form">
         <div style="text-align: center;">
           <img src="../public/icon.svg" height="80" width="80" alt="icon.svg"/>
         </div>
-        <h2 style="text-align: center">ANI-RSS</h2>
-        <div style="height: 30px;"></div>
+        <h2 class="title-h2">ANI-RSS</h2>
         <el-form
             @keyup.enter="login"
             @submit="login">
           <el-form-item>
-            <el-input v-model:model-value="user.username" placeholder="用户名" style="width: 200px;">
+            <el-input v-model="user.username" placeholder="用户名">
               <template #prefix>
                 <el-icon class="el-input__icon">
                   <User/>
@@ -22,7 +20,7 @@
             </el-input>
           </el-form-item>
           <el-form-item>
-            <el-input style="width: 200px;" v-model:model-value="user.password" show-password
+            <el-input v-model="user.password" show-password
                       placeholder="密码">
               <template #prefix>
                 <el-icon class="el-input__icon">
@@ -31,14 +29,14 @@
               </template>
             </el-input>
           </el-form-item>
-          <div class="flex-center" style="width: 100%;justify-content: space-between;">
+          <div class="flex-center action">
             <el-checkbox v-model:model-value="rememberThePassword.remember">记住密码</el-checkbox>
             <el-button @click="login" :loading="loading" text bg icon="Right">登录</el-button>
           </div>
         </el-form>
       </div>
     </div>
-    <div style="margin-bottom: 16px;" id="link">
+    <div class="footer">
       <el-link type="default"
                href="https://docs.wushuo.top"
                target="_blank">
@@ -144,7 +142,36 @@ onMounted(() => {
 
 </script>
 
-<style>
+<style scoped>
+.content {
+  width: 100%;
+  height: 100%;
+  flex-flow: column;
+  justify-content: space-between;
+}
+
+#form {
+  max-width: 200px;
+}
+
+.title-h2 {
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+el-input {
+  width: 200px;
+}
+
+.action {
+  width: 100%;
+  justify-content: space-between;
+}
+
+.footer {
+  margin-bottom: 16px;
+}
+
 @media (max-width: 450px) {
   #form {
     width: 80%;

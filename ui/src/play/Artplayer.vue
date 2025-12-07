@@ -1,46 +1,46 @@
 <template>
   <div>
     <div class="artplayer-app"></div>
-    <div style="margin-top: 8px;">
+    <div>
       <el-button bg text @click="openUrl(`potplayer://${src}`)">
         <template #icon>
-          <img alt="PotPlayer" class="el-icon--left" height="20" src="../icon/icon-PotPlayer.webp" width="20"/>
+          <img alt="PotPlayer" class="el-icon--left icon" src="../icon/icon-PotPlayer.webp"/>
         </template>
         Pot
       </el-button>
       <el-button bg text @click="openUrl(`vlc://${src}`)">
         <template #icon>
-          <img alt="VLC" class="el-icon--left" height="20" src="../icon/icon-VLC.webp" width="20"/>
+          <img alt="VLC" class="el-icon--left icon" src="../icon/icon-VLC.webp"/>
         </template>
         VLC
       </el-button>
       <el-button bg text @click="openUrl(`iina://weblink?url=${encodeUrl(src)}`)">
         <template #icon>
-          <img alt="IINA" class="el-icon--left" height="20" src="../icon/icon-IINA.webp" width="20"/>
+          <img alt="IINA" class="el-icon--left icon" src="../icon/icon-IINA.webp"/>
         </template>
         IINA
       </el-button>
       <el-button bg text @click="openUrl(`intent:${src}`)">
         <template #icon>
-          <img alt="MXPlayer" class="el-icon--left" height="20" src="../icon/icon-MXPlayer.webp" width="20"/>
+          <img alt="MXPlayer" class="el-icon--left icon" src="../icon/icon-MXPlayer.webp"/>
         </template>
         MX
       </el-button>
       <el-button bg text @click="openUrl(`mpvplay://${src}`)">
         <template #icon>
-          <img alt="MPV" class="el-icon--left" height="20" src="../icon/icon-MPV.webp" width="20"/>
+          <img alt="MPV" class="el-icon--left icon" src="../icon/icon-MPV.webp"/>
         </template>
         MPV
       </el-button>
       <el-button bg text @click="openUrl(`ddplay:${encodeUrl(src)}`)">
         <template #icon>
-          <img alt="DandanPlay" class="el-icon--left" height="20" src="../icon/icon-DandanPlay.webp" width="20"/>
+          <img alt="DandanPlay" class="el-icon--left icon" src="../icon/icon-DandanPlay.webp"/>
         </template>
         弹弹Play
       </el-button>
       <el-button bg text @click="openUrl(`anix://openVideo/${encodeUrl(src)}`)">
         <template #icon>
-          <img alt="AnimacX" class="el-icon--left" height="20" src="../icon/icon-AnimacX.webp" width="20"/>
+          <img alt="AnimacX" class="el-icon--left icon" src="../icon/icon-AnimacX.webp"/>
         </template>
         AnimacX
       </el-button>
@@ -116,11 +116,17 @@ onMounted(() => {
 })
 </script>
 
-<style>
+<style scoped>
 .artplayer-app {
   width: 700px;
   height: 450px;
   max-width: calc(100vw - 48px);
   max-height: calc(56.25vw - 27px);
+  margin-bottom: 8px;
+}
+
+.icon {
+  height: 20px;
+  width: 20px;
 }
 </style>

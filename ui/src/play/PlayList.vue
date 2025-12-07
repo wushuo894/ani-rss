@@ -1,12 +1,12 @@
 <template>
   <play-start ref="playStart"/>
   <el-dialog v-model="dialogVisible" :title="ani.title" center>
-    <div v-loading="listLoading" style="min-height: 200px;">
+    <div v-loading="listLoading" class="content">
       <el-scrollbar>
-        <div v-if="list.length" class="i-grid-container" style="max-height: 500px;">
+        <div v-if="list.length" class="grid-container" style="max-height: 500px;">
           <div v-for="it in list">
             <el-card shadow="never">
-              <div style="width: 100%;display: flex;justify-content: space-between;align-items: center;">
+              <div class="grid-item">
                 <div>
                   {{ it.title }}
                   <br/>
@@ -14,10 +14,15 @@
                     {{ it.lastModifyFormat }}
                   </el-text>
                 </div>
-                <el-button circle icon="VideoPlay" size="large" text type="primary" @click="playStart?.show(ani,it)"/>
+                <el-button circle
+                           icon="VideoPlay"
+                           size="large"
+                           text
+                           type="primary"
+                           @click="playStart?.show(ani,it)"
+                />
               </div>
             </el-card>
-            <div style="height: 4px;"/>
           </div>
         </div>
         <div v-else>
@@ -25,7 +30,7 @@
         </div>
       </el-scrollbar>
       <div v-if="list.length">
-        <p style="margin: 6px;text-align: end;">共 {{ list.length }} 项</p>
+        <p class="total-text">共 {{ list.length }} 项</p>
       </div>
     </div>
   </el-dialog>
@@ -67,11 +72,28 @@ defineExpose({
 </script>
 
 
-<style>
-.i-grid-container {
+<style scoped>
+.content {
+  min-height: 200px
+}
+
+.grid-container {
   display: grid;
   grid-gap: 5px;
   width: 100%;
   grid-template-columns: repeat(2, 1fr);
+}
+
+.grid-item {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 4px;
+}
+
+.total-text {
+  margin: 6px;
+  text-align: end;
 }
 </style>

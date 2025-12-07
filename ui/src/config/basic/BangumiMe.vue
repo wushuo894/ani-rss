@@ -1,5 +1,5 @@
 <template>
-  <el-dialog v-model="dialogVisible" align-center center style="max-width: 600px;" title="查看授权状态">
+  <el-dialog v-model="dialogVisible" align-center center class="dialog-max-width" title="查看授权状态">
     <el-descriptions
         v-loading="loading"
         direction="vertical"
@@ -24,7 +24,7 @@
       <el-descriptions-item label="主页">
         <el-link
             type="primary"
-            style="font-size: var(--el-font-size-extra-small)"
+            class="text-extra-small"
             :href="me['url']"
             target="_blank">
           {{ me['url'] }}
@@ -108,3 +108,13 @@ let show = () => {
 
 defineExpose({show})
 </script>
+
+<style scoped>
+.dialog-max-width {
+  max-width: 600px;
+}
+
+.text-extra-small {
+  font-size: var(--el-font-size-extra-small);
+}
+</style>

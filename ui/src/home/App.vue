@@ -5,9 +5,9 @@
   <Manage ref="manage"/>
   <Collection ref="collection"/>
   <TorrentsInfos ref="torrentsInfosRef"/>
-  <div style="height: 100%;display: flex;flex-direction: column;">
+  <div class="content">
     <div id="header">
-      <div style="margin: 10px;" class="auto">
+      <div style="margin: 10px;" class="auto-flex">
         <div>
           <el-input
               v-model:model-value="title"
@@ -43,7 +43,7 @@
           </div>
         </div>
       </div>
-      <div style="margin: 10px;display: flex;justify-content: flex-end;">
+      <div class="add-button">
         <div style="margin: 0 4px;">
           <el-dropdown trigger="click">
             <el-button bg text type="primary">
@@ -222,12 +222,17 @@ let download = () => {
 
 </script>
 
-<style>
-@media (min-width: 1000px) {
-  .auto {
-    display: flex;
-  }
+<style scoped>
+.content {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.add-button {
+  margin: 10px;
+  display: flex;
+  justify-content: flex-end;
 }
 </style>
-
 

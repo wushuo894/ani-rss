@@ -4,58 +4,48 @@
   <Cover ref="refCover"/>
   <Del ref="refDel"/>
   <BgmRate ref="bgmRateRef"/>
-  <div style="height: 100%;overflow: hidden;">
+  <div class="list-container">
     <el-scrollbar>
-      <div style="margin: 0 10px;min-height: 500px" v-loading="loading">
+      <div class="list-content" v-loading="loading">
         <template v-for="weekItem in weekList">
           <div v-show="searchList(weekItem.i).length">
-            <h2 style="margin: 16px 0 8px 4px;" v-if="weekItem['label'].length">
+            <h2 class="list-week-title" v-if="weekItem['label'].length">
               {{ weekItem['label'] }}
             </h2>
             <div class="grid-container">
               <div v-for="item in searchList(weekItem['i'])" v-if="searchList(weekItem['i']).length">
                 <el-card shadow="never">
-                  <div style="display: flex;width: 100%;align-items: center;">
-                    <div style="height: 100%;">
+                  <div class="list-card-content">
+                    <div class="list-card-image-container">
                       <img :src="`api/file?filename=${item['cover']}&s=${authorization}`" height="130" width="92"
                            :alt="item.title"
-                           style="border-radius: 4px;cursor: pointer;"
+                           class="list-card-image"
                            @click="refCover?.show(item)"/>
                     </div>
-                    <div style="flex-grow: 1;position: relative;">
-                      <div style="margin-left: 8px;">
+                    <div class="list-card-info">
+                      <div class="list-card-info-inner">
                         <div class="flex">
                           <el-tooltip :content="item.title" placement="top">
                             <el-text line-clamp="1"
                                      @click="openBgmUrl(item)"
-                                     style="max-width: 200px;
-                                       line-height: 1.6;
-                                       letter-spacing: 0.0125em;
-                                       font-weight: 500;
-                                       font-size: 0.97em;
-                                       cursor: pointer;
-                                       color: var(--el-text-color-primary);"
+                                     class="list-card-title"
                                      truncated>
                               {{ item.title }}
                             </el-text>
                           </el-tooltip>
                         </div>
-                        <div style="margin-bottom: 8px;" v-if="scoreShow">
-                          <h4 style="color: #E800A4;cursor: pointer;" @click="bgmRateRef?.show(item)">
+                        <div class="list-card-score-container" v-if="scoreShow">
+                          <h4 class="list-card-score" @click="bgmRateRef?.show(item)">
                             {{ item['score'].toFixed(1) }}
                           </h4>
                         </div>
                         <el-text v-else
                                  line-clamp="2"
                                  size="small"
-                                 style="max-width: 300px;">
+                                 class="list-card-url">
                           {{ decodeURLComponentSafe(item.url) }}
                         </el-text>
-                        <div style="
-                        width: 180px;
-                        display: grid;
-                        grid-gap: 4px;
-                        "
+                        <div class="list-card-tags"
                              :class="isNotMobile ? 'gtc3' : 'gtc2'"
                         >
                           <el-tag>
@@ -69,7 +59,7 @@
                           </el-tag>
                           <el-tag type="info">
                             <el-tooltip :content="item['subgroup']">
-                              <el-text line-clamp="1" size="small" style="max-width: 60px;color: var(--el-color-info);">
+                              <el-text line-clamp="1" size="small" class="list-card-subgroup">
                                 {{ item['subgroup'] ? item['subgroup'] : '未知字幕组' }}
                               </el-text>
                             </el-tooltip>
@@ -93,20 +83,19 @@
                           {{ item.lastDownloadFormat }}
                         </el-text>
                       </div>
-                      <div
-                          style="display: flex;align-items: flex-end;justify-content:flex-end; flex-direction: column;position: absolute;right: 0;bottom: 0;">
+                      <div class="list-card-actions">
                         <el-button text @click="playList?.show(item)" bg v-if="showPlaylist">
                           <el-icon>
                             <Files/>
                           </el-icon>
                         </el-button>
-                        <div style="height: 5px;" v-if="showPlaylist"></div>
+                        <div class="list-card-spacer" v-if="showPlaylist"></div>
                         <el-button bg text @click="refEdit?.show(item)">
                           <el-icon>
                             <EditIcon/>
                           </el-icon>
                         </el-button>
-                        <div style="height: 5px;"></div>
+                        <div class="list-card-spacer"></div>
                         <el-button type="danger" text @click="refDel?.show([item])" bg>
                           <el-icon>
                             <Delete/>
@@ -120,7 +109,7 @@
             </div>
           </div>
         </template>
-        <div style="height: 80px;"></div>
+        <div class="list-bottom-spacer"></div>
       </div>
     </el-scrollbar>
   </div>
@@ -296,7 +285,96 @@ let props = defineProps({
 
 </script>
 
-<style>
+<style scoped>
+.list-container {
+  height: 100%;
+  overflow: hidden;
+}
+
+.list-content {
+  margin: 0 10px;
+  min-height: 500px;
+}
+
+.list-week-title {
+  margin: 16px 0 8px 4px;
+}
+
+.list-card-content {
+  display: flex;
+  width: 100%;
+  align-items: center;
+}
+
+.list-card-image-container {
+  height: 100%;
+}
+
+.list-card-image {
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.list-card-info {
+  flex-grow: 1;
+  position: relative;
+}
+
+.list-card-info-inner {
+  margin-left: 8px;
+}
+
+.list-card-title {
+  max-width: 200px;
+  line-height: 1.6;
+  letter-spacing: 0.0125em;
+  font-weight: 500;
+  font-size: 0.97em;
+  cursor: pointer;
+  color: var(--el-text-color-primary);
+}
+
+.list-card-score-container {
+  margin-bottom: 8px;
+}
+
+.list-card-score {
+  color: #E800A4;
+  cursor: pointer;
+}
+
+.list-card-url {
+  max-width: 300px;
+}
+
+.list-card-tags {
+  width: 180px;
+  display: grid;
+  grid-gap: 4px;
+}
+
+.list-card-subgroup {
+  max-width: 60px;
+  color: var(--el-color-info);
+}
+
+.list-card-actions {
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-end;
+  flex-direction: column;
+  position: absolute;
+  right: 0;
+  bottom: 0;
+}
+
+.list-card-spacer {
+  height: 5px;
+}
+
+.list-bottom-spacer {
+  height: 80px;
+}
 
 .gtc3 {
   grid-template-columns: repeat(3, 1fr);
