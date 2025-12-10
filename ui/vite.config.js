@@ -35,6 +35,10 @@ export default defineConfig({
     },
     build: {
         rollupOptions: {
+            input: {
+                main: path.resolve(__dirname, 'index.html'),
+                bgmOauthCallback: path.resolve(__dirname, 'BgmOauthCallback.html')
+            },
             output: {
                 manualChunks: {
                     'vue': ['vue', '@vueuse/core', '@vicons/fa'],
