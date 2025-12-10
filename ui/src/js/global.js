@@ -1,4 +1,4 @@
-import {useColorMode, useLocalStorage} from "@vueuse/core";
+import {useColorMode, useDark, useLocalStorage} from "@vueuse/core";
 import {ref, watch} from "vue";
 
 /**
@@ -47,4 +47,33 @@ watch(isNotMobile, () => {
     }
 })
 
-export {authorization, store, maxContentWidth, color, colorChange, isNotMobile, elIconClass};
+/**
+ * 页面初始化
+ */
+const init = () => {
+    /**
+     * 夜间模式
+     */
+    useDark({
+        onChanged: dark => {
+            // 自动根据夜间模式修改沉浸式状态栏
+            const meta = document.getElementById('themeColorMeta');
+            meta.content = dark ? '#000000' : '#ffffff';
+        }
+    })
+
+    // 修改强调色
+    colorChange(color.value)
+
+    let app = document.querySelector('#app');
+
+    // 设置最大布局宽度
+    maxContentWidth.value = Math.max(maxContentWidth.value, 1200)
+    app
+        .style.maxWidth = `${maxContentWidth.value}px`
+
+    // 是否非移动设备
+    isNotMobile.value = app.offsetWidth > 800
+}
+
+export {authorization, store, maxContentWidth, color, colorChange, isNotMobile, elIconClass, init};

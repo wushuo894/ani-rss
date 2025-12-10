@@ -111,7 +111,7 @@ let setRedirectUri = () => {
   if (!redirectUri.endsWith("/")) {
     redirectUri += '/';
   }
-  props.config['bgmRedirectUri'] = redirectUri + 'BgmOauthCallback.html'
+  props.config['bgmRedirectUri'] = redirectUri + 'BgmOauthCallback'
 }
 
 onMounted(() => {

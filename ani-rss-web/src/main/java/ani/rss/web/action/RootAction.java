@@ -1,11 +1,12 @@
 package ani.rss.web.action;
 
-import ani.rss.web.annotation.Auth;
 import ani.rss.commons.MavenUtil;
+import ani.rss.web.annotation.Auth;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.EnumerationIter;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.resource.ResourceUtil;
+import cn.hutool.core.util.StrUtil;
 import cn.hutool.core.util.URLUtil;
 import cn.hutool.http.Header;
 import cn.hutool.http.server.HttpServerRequest;
@@ -61,6 +62,13 @@ public class RootAction implements BaseAction {
     }
 
     public Boolean file(HttpServerResponse response, String fileName, Boolean index) {
+        if (!fileName.endsWith("/")) {
+            String extName = FileUtil.extName(fileName);
+            if (StrUtil.isBlank(extName)) {
+                fileName += ".html";
+            }
+        }
+
         log.debug(fileName);
         try {
             EnumerationIter<URL> resourceIter = ResourceUtil.getResourceIter(fileName);
