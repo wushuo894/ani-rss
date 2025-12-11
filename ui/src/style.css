@@ -1,6 +1,10 @@
 html.dark {
     /* 自定义深色背景颜色 */
     --el-bg-color: #2D2E2F;
+    --el-bg-color-overlay: none;
+    --el-fill-color-blank: none;
+    --el-collapse-header-bg-color: none;
+    --el-collapse-content-bg-color: none;
 }
 
 * {
