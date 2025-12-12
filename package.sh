@@ -4,7 +4,7 @@
 base_path=$(pwd)
 
 # ui 位置
-ui_path=${base_path}/ui
+ui_path=${base_path}/ani-rss-ui
 # ani-rss-application 路径
 application_path=${base_path}/ani-rss-application
 # dist 位置
@@ -26,9 +26,16 @@ GREEN='\033[0;32m'
 YELLOW='\033[0;33m'
 NC='\033[0m'
 
-
-
 cd ${ui_path}
+
+mvn -B install -DskipTests --file pom.xml
+
+if [ $? -eq 1 ]; then
+  echo -e "${RED}web编译失败${NC}"
+  exit 1
+fi
+
+echo -e "${GREEN}web编译完成${NC}"
 
 if [ -d ${dist_path} ]; then
   echo -e "${YELLOW}清理 ${dist_path}${NC}"
@@ -37,21 +44,6 @@ else
   echo -e "${YELLOW}创建文件夹 ${dist_path}${NC}"
   mkdir -p ${dist_path}
 fi
-
-if ! command -v pnpm >/dev/null 2>&1; then
-  echo -e "${YELLOW}正在安装 pnpm ...${NC}"
-  npm install pnpm -g
-fi
-
-pnpm install
-pnpm run build
-
-if [ $? -eq 1 ]; then
-  echo -e "${RED}web编译失败${NC}"
-  exit 1
-fi
-
-echo -e "${GREEN}web编译完成${NC}"
 
 cp -r dist/* ${dist_path}
 

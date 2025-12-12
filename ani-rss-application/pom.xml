@@ -84,7 +84,7 @@
                             <supportUrl>https://whichjdk.com/</supportUrl>
                             <stayAlive>false</stayAlive>
                             <restartOnCrash>false</restartOnCrash>
-                            <icon>${project.parent.basedir}/ui/public/favicon.ico</icon>
+                            <icon>${project.parent.basedir}/ani-rss-ui/public/favicon.ico</icon>
                             <jre>
                                 <path>jre/bin;%JAVA_HOME%/bin;%PATH%</path>
                                 <minVersion>17</minVersion>
