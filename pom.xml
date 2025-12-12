@@ -17,6 +17,7 @@
         <module>ani-rss-web</module>
         <module>ani-rss-core</module>
         <module>ani-rss-api</module>
+        <module>ani-rss-ui</module>
     </modules>
     <inceptionYear>2025</inceptionYear>
     <description>基于RSS自动追番、订阅、下载、刮削</description>
