@@ -89,6 +89,7 @@ public class FileAction implements BaseAction {
                 BufferedInputStream inputStream = FileUtil.getInputStream(imgFile);
                 @Cleanup
                 OutputStream out = response.getOut();
+                response.setContentLength((int) file.length());
                 IoUtil.copy(inputStream, out);
             } catch (Exception ignored) {
             }
@@ -102,6 +103,7 @@ public class FileAction implements BaseAction {
                 BufferedInputStream inputStream = FileUtil.getInputStream(imgFile);
                 @Cleanup
                 OutputStream out = response.getOut();
+                response.setContentLength((int) file.length());
                 IoUtil.copy(inputStream, out);
             } catch (Exception ignored) {
             }
@@ -184,10 +186,8 @@ public class FileAction implements BaseAction {
                 IoUtil.copy(inputStream, out, 40960, end - start, null);
             } else {
                 @Cleanup
-                OutputStream out = response.getOut();
-                @Cleanup
                 InputStream inputStream = FileUtil.getInputStream(file);
-                IoUtil.copy(inputStream, out, 40960);
+                response.write(inputStream, (int) file.length());
             }
         } catch (Exception e) {
             String message = ExceptionUtil.getMessage(e);
