@@ -28,6 +28,8 @@ NC='\033[0m'
 
 base_path=$(pwd)
 target_path=${base_path}/ani-rss-application/target
+windows_path=${base_path}/windows
+jre_zip_path=${base_path}/ani-rss-application/jre.zip
 
 if [ ! -f ${target_path}/ani-rss-launcher.exe ]; then
   bash ${base_path}/package.sh
@@ -45,8 +47,8 @@ cp ani-rss-launcher.exe ani-rss
 
 install_zip
 
-if [ ! -f jre.zip ]; then
-  wget https://api.adoptium.net/v3/binary/latest/25/ga/windows/x64/jre/hotspot/normal/eclipse -O jre.zip
+if [ ! -f ${jre_zip_path} ]; then
+  wget https://api.adoptium.net/v3/binary/latest/25/ga/windows/x64/jre/hotspot/normal/eclipse -O ${jre_zip_path}
   if [ $? -eq 1 ]; then
     echo -e "${RED}JRE下载失败${NC}"
     exit 1
@@ -57,9 +59,9 @@ else
   echo -e "${YELLOW}JRE已存在${NC}"
 fi
 
-unzip jre.zip
+unzip ${jre_zip_path}
 mv jdk* ani-rss/jre
-cp ../windows/* ani-rss
+cp ${windows_path}/* ani-rss
 zip -r ani-rss.win.x86_64.zip ani-rss
 rm -rf ani-rss
 
