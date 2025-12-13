@@ -2,8 +2,9 @@
   <play-start ref="playStart"/>
   <el-dialog v-model="dialogVisible" :title="ani.title" center>
     <div v-loading="listLoading" class="content">
-      <el-scrollbar>
-        <div v-if="list.length" class="grid-container" style="max-height: 500px;">
+      <el-scrollbar v-if="list.length">
+        <div class="grid-container"
+             style="max-height: 500px;">
           <div v-for="it in list">
             <el-card shadow="never">
               <div class="grid-item">
@@ -25,10 +26,10 @@
             </el-card>
           </div>
         </div>
-        <div v-else>
-          <el-alert :closable="false" center show-icon title="未下载集数或docker映射存在问题" type="error"/>
-        </div>
       </el-scrollbar>
+      <el-text type="danger" v-else>
+        未下载集数或 docker 映射存在问题
+      </el-text>
       <div v-if="list.length">
         <p class="total-text">共 {{ list.length }} 项</p>
       </div>
@@ -74,7 +75,11 @@ defineExpose({
 
 <style scoped>
 .content {
-  min-height: 200px
+  min-height: 200px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .grid-container {

@@ -1,7 +1,7 @@
 <template>
   <div
       class="flex-center content">
-    <div id="login-page" class="flex-center" style="flex: 1">
+    <div id="login-page" class="flex-center">
       <div id="form">
         <div style="text-align: center;">
           <img src="../public/icon.svg" height="80" width="80" alt="icon.svg"/>
@@ -176,5 +176,10 @@ el-input {
   #form {
     width: 80%;
   }
+}
+
+#login-page {
+  flex: 1;
+  width: 100%;
 }
 </style>
