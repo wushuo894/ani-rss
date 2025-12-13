@@ -2,37 +2,39 @@
   <play-start ref="playStart"/>
   <el-dialog v-model="dialogVisible" :title="ani.title" center>
     <div v-loading="listLoading" class="content">
-      <el-scrollbar v-if="list.length">
-        <div class="grid-container"
-             style="max-height: 500px;">
-          <div v-for="it in list">
-            <el-card shadow="never">
-              <div class="grid-item">
-                <div>
-                  {{ it.title }}
-                  <br/>
-                  <el-text size="small" type="info">
-                    {{ it.lastModifyFormat }}
-                  </el-text>
+      <div v-if="list.length">
+        <el-scrollbar>
+          <div class="grid-container"
+               style="max-height: 500px;">
+            <div v-for="it in list">
+              <el-card shadow="never">
+                <div class="grid-item">
+                  <div>
+                    {{ it.title }}
+                    <br/>
+                    <el-text size="small" type="info">
+                      {{ it.lastModifyFormat }}
+                    </el-text>
+                  </div>
+                  <el-button circle
+                             icon="VideoPlay"
+                             size="large"
+                             text
+                             type="primary"
+                             @click="playStart?.show(ani,it)"
+                  />
                 </div>
-                <el-button circle
-                           icon="VideoPlay"
-                           size="large"
-                           text
-                           type="primary"
-                           @click="playStart?.show(ani,it)"
-                />
-              </div>
-            </el-card>
+              </el-card>
+            </div>
           </div>
+        </el-scrollbar>
+        <div>
+          <p class="total-text">共 {{ list.length }} 项</p>
         </div>
-      </el-scrollbar>
+      </div>
       <el-text type="danger" v-else>
         未下载集数或 docker 映射存在问题
       </el-text>
-      <div v-if="list.length">
-        <p class="total-text">共 {{ list.length }} 项</p>
-      </div>
     </div>
   </el-dialog>
 </template>

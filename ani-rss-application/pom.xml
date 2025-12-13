@@ -127,6 +127,7 @@
                             <arguments>
                                 <argument>./generate-resources.sh</argument>
                             </arguments>
+                            <workingDirectory>${project.basedir}</workingDirectory>
                         </configuration>
                     </execution>
                     <execution>

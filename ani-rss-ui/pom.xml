@@ -22,7 +22,6 @@
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>exec-maven-plugin</artifactId>
-                <version>3.6.2</version>
                 <executions>
                     <execution>
                         <phase>clean</phase>
@@ -37,14 +36,14 @@
                         <argument>-rf</argument>
                         <argument>./dist</argument>
                     </arguments>
+                    <workingDirectory>${project.basedir}</workingDirectory>
                 </configuration>
             </plugin>
             <plugin>
                 <groupId>com.github.eirslett</groupId>
                 <artifactId>frontend-maven-plugin</artifactId>
-                <version>1.15.4</version>
                 <configuration>
-                    <workingDirectory>${project.parent.basedir}/ani-rss-ui</workingDirectory>
+                    <workingDirectory>${project.basedir}</workingDirectory>
                 </configuration>
                 <executions>
                     <execution>
