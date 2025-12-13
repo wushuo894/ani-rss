@@ -79,7 +79,6 @@
           <el-button
               bg text
               type="success"
-              :disabled="!props.config['bgmToken']"
               @click="bangumiMe?.show">
             查看授权状态
           </el-button>
