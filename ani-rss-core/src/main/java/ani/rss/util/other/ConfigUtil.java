@@ -1,8 +1,8 @@
 package ani.rss.util.other;
 
-import ani.rss.commons.FileUtil;
+import ani.rss.commons.FileUtils;
 import ani.rss.commons.GsonStatic;
-import ani.rss.commons.URLUtil;
+import ani.rss.commons.URLUtils;
 import ani.rss.entity.Config;
 import ani.rss.entity.Login;
 import ani.rss.entity.NotificationConfig;
@@ -14,6 +14,7 @@ import cn.hutool.core.bean.DynaBean;
 import cn.hutool.core.bean.copier.CopyOptions;
 import cn.hutool.core.date.DatePattern;
 import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.lang.func.Func1;
 import cn.hutool.core.lang.func.LambdaUtil;
 import cn.hutool.core.text.StrFormatter;
@@ -51,9 +52,9 @@ public class ConfigUtil {
             rootPath = FileUtil.getUserHomePath() + "/Movies";
         }
 
-        String downloadPath = FileUtil.getAbsolutePath(new File(rootPath + "/番剧"));
-        String ovaDownloadPath = FileUtil.getAbsolutePath(new File(rootPath + "/剧场版"));
-        String completedPath = FileUtil.getAbsolutePath(new File(rootPath + "/已完结番剧"));
+        String downloadPath = FileUtils.getAbsolutePath(new File(rootPath + "/番剧"));
+        String ovaDownloadPath = FileUtils.getAbsolutePath(new File(rootPath + "/剧场版"));
+        String completedPath = FileUtils.getAbsolutePath(new File(rootPath + "/已完结番剧"));
 
         String downloadPathTemplate = StrFormatter.format("{}/${letter}/${title}/Season ${season}", downloadPath);
         String ovaDownloadPathTemplate = StrFormatter.format("{}/${letter}/${title}", ovaDownloadPath);
@@ -361,7 +362,7 @@ public class ConfigUtil {
                     return !List.of(".DS_Store", ".DS_Store@SynoResource")
                             .contains(pathname.getName());
                 }
-                File[] files = FileUtil.listFiles(pathname);
+                File[] files = FileUtils.listFiles(pathname);
                 return !ArrayUtil.isEmpty(files);
             }, backupFiles.toArray(new File[0]));
 
@@ -388,7 +389,7 @@ public class ConfigUtil {
             return;
         }
 
-        File[] files = FileUtil.listFiles(backupDir);
+        File[] files = FileUtils.listFiles(backupDir);
         if (ArrayUtil.isEmpty(files)) {
             return;
         }
@@ -471,7 +472,7 @@ public class ConfigUtil {
         for (Func1<Config, String> func1 : func1List) {
             String fieldName = LambdaUtil.getFieldName(func1);
             String v = func1.callWithRuntimeException(config);
-            v = URLUtil.getUrlStr(v);
+            v = URLUtils.getUrlStr(v);
             dynaBean.set(fieldName, v);
         }
     }
@@ -495,7 +496,7 @@ public class ConfigUtil {
         for (Func1<Config, String> func1 : func1List) {
             String fieldName = LambdaUtil.getFieldName(func1);
             String v = func1.callWithRuntimeException(config);
-            v = FileUtil.getAbsolutePath(v);
+            v = FileUtils.getAbsolutePath(v);
             dynaBean.set(fieldName, v);
         }
     }

@@ -1,6 +1,6 @@
 package ani.rss.download;
 
-import ani.rss.commons.FileUtil;
+import ani.rss.commons.FileUtils;
 import ani.rss.commons.GsonStatic;
 import ani.rss.entity.Ani;
 import ani.rss.entity.Config;
@@ -10,6 +10,7 @@ import ani.rss.enums.TorrentsTags;
 import ani.rss.util.basic.HttpReq;
 import ani.rss.util.basic.RenameCacheUtil;
 import cn.hutool.core.codec.Base64;
+import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.resource.ResourceUtil;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.text.StrFormatter;
@@ -122,7 +123,7 @@ public class Transmission implements BaseDownload {
                                     .setHash(item.get("hashString").getAsString())
                                     .setState(state)
                                     .setId(item.get("id").getAsString())
-                                    .setDownloadDir(FileUtil.getAbsolutePath(downloadDir))
+                                    .setDownloadDir(FileUtils.getAbsolutePath(downloadDir))
                                     .setFiles(() -> files);
                             torrentsInfos.add(torrentsInfo);
                         }

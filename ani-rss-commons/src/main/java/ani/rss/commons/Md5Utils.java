@@ -2,7 +2,7 @@ package ani.rss.commons;
 
 import cn.hutool.core.util.StrUtil;
 
-public class Md5Util {
+public class Md5Utils {
     /**
      * 校验MD5文本
      *

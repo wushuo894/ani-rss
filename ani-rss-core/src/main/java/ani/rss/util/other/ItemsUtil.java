@@ -1,6 +1,6 @@
 package ani.rss.util.other;
 
-import ani.rss.commons.CacheUtil;
+import ani.rss.commons.CacheUtils;
 import ani.rss.entity.Ani;
 import ani.rss.entity.Config;
 import ani.rss.entity.Item;
@@ -333,13 +333,13 @@ public class ItemsUtil {
         for (Integer ep : list) {
             String s = StrFormatter.format("缺少集数 {} S{}E{}", title, String.format("%02d", season), String.format("%02d", ep));
             String key = StrFormatter.format("omit:{}:ep-{}", id, ep);
-            if (CacheUtil.containsKey(key)) {
+            if (CacheUtils.containsKey(key)) {
                 // 一天内已经提醒过了
                 continue;
             }
             log.info(s);
             // 缓存一天 不重复发送
-            CacheUtil.put(key, s, TimeUnit.DAYS.toMillis(1));
+            CacheUtils.put(key, s, TimeUnit.DAYS.toMillis(1));
             sList.add(s);
         }
 
@@ -442,12 +442,12 @@ public class ItemsUtil {
 
                     String key = StrFormatter.format("procrastinating:{}", id);
 
-                    if (CacheUtil.containsKey(key)) {
+                    if (CacheUtils.containsKey(key)) {
                         // 一天内已经提醒过了
                         return;
                     }
 
-                    CacheUtil.put(key, text, TimeUnit.DAYS.toMillis(1));
+                    CacheUtils.put(key, text, TimeUnit.DAYS.toMillis(1));
                     NotificationUtil.send(config, ani, text, NotificationStatusEnum.PROCRASTINATING);
                 });
     }

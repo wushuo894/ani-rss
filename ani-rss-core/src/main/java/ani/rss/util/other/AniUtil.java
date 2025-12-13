@@ -1,6 +1,6 @@
 package ani.rss.util.other;
 
-import ani.rss.commons.FileUtil;
+import ani.rss.commons.FileUtils;
 import ani.rss.commons.GsonStatic;
 import ani.rss.entity.*;
 import ani.rss.entity.tmdb.Tmdb;
@@ -9,6 +9,7 @@ import ani.rss.service.DownloadService;
 import ani.rss.util.basic.HttpReq;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.bean.copier.CopyOptions;
+import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.resource.ResourceUtil;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.thread.ThreadUtil;
@@ -365,7 +366,7 @@ public class AniUtil {
             ThreadUtil.sleep(3000);
         }
 
-        File[] files = FileUtil.listFiles(oldPath);
+        File[] files = FileUtils.listFiles(oldPath);
 
         log.info("订阅已完结 {}, 移动已完结文件共 {} 个", title, files.length);
 

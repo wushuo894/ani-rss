@@ -1,13 +1,14 @@
 package ani.rss.action;
 
+import ani.rss.commons.FileUtils;
+import ani.rss.entity.Ani;
+import ani.rss.util.other.AniUtil;
+import ani.rss.util.other.TorrentUtil;
 import ani.rss.web.action.BaseAction;
 import ani.rss.web.annotation.Auth;
 import ani.rss.web.annotation.Path;
-import ani.rss.commons.FileUtil;
-import ani.rss.entity.Ani;
 import ani.rss.web.util.ServerUtil;
-import ani.rss.util.other.AniUtil;
-import ani.rss.util.other.TorrentUtil;
+import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.Method;
 import cn.hutool.http.server.HttpServerRequest;
@@ -53,7 +54,7 @@ public class TorrentAction implements BaseAction {
 
         Ani ani = first.get();
         File torrentDir = TorrentUtil.getTorrentDir(ani);
-        File[] files = FileUtil.listFiles(torrentDir);
+        File[] files = FileUtils.listFiles(torrentDir);
         for (File file : files) {
             String s = FileUtil.mainName(file);
             if (infoHashList.contains(s)) {

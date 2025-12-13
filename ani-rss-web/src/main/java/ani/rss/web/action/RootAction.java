@@ -1,6 +1,6 @@
 package ani.rss.web.action;
 
-import ani.rss.commons.MavenUtil;
+import ani.rss.commons.MavenUtils;
 import ani.rss.web.annotation.Auth;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.EnumerationIter;
@@ -109,7 +109,7 @@ public class RootAction implements BaseAction {
                 inputStream = FileUtil.getInputStream(file);
             }
         } else {
-            JarFile jarFile = MavenUtil.JAR_FILE;
+            JarFile jarFile = MavenUtils.JAR_FILE;
             if (Objects.isNull(jarFile)) {
                 return null;
             }

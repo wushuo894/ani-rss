@@ -4,7 +4,7 @@ import cn.hutool.core.text.StrFormatter;
 import cn.hutool.core.util.ReUtil;
 import cn.hutool.core.util.StrUtil;
 
-public class URLUtil extends cn.hutool.core.util.URLUtil {
+public class URLUtils {
     /**
      * 自动添加http协议
      *

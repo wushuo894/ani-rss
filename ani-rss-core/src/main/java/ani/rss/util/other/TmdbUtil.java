@@ -1,7 +1,7 @@
 package ani.rss.util.other;
 
-import ani.rss.commons.CacheUtil;
-import ani.rss.commons.ExceptionUtil;
+import ani.rss.commons.CacheUtils;
+import ani.rss.commons.ExceptionUtils;
 import ani.rss.commons.GsonStatic;
 import ani.rss.entity.Ani;
 import ani.rss.entity.Config;
@@ -75,7 +75,7 @@ public class TmdbUtil {
                 tmdb = getTmdbTv(name);
             }
         } catch (Exception e) {
-            String message = ExceptionUtil.getMessage(e);
+            String message = ExceptionUtils.getMessage(e);
             log.error(message, e);
             return "";
         }
@@ -504,16 +504,16 @@ public class TmdbUtil {
 
         String key = StrFormatter.format("TMDB_getEpisodeTitleMap:{}:{}:{}", tmdbId, tmdbGroupId, season);
 
-        Map<Integer, String> cacheMap = CacheUtil.get(key);
+        Map<Integer, String> cacheMap = CacheUtils.get(key);
         if (Objects.nonNull(cacheMap)) {
             return cacheMap;
         }
 
         episodeTitleMap = getEpisodeTitleMap(tmdb, season);
         if (episodeTitleMap.isEmpty()) {
-            CacheUtil.put(key, episodeTitleMap, 1000 * 10);
+            CacheUtils.put(key, episodeTitleMap, 1000 * 10);
         } else {
-            CacheUtil.put(key, episodeTitleMap, TimeUnit.MINUTES.toMillis(5));
+            CacheUtils.put(key, episodeTitleMap, TimeUnit.MINUTES.toMillis(5));
         }
         return episodeTitleMap;
     }
@@ -545,7 +545,7 @@ public class TmdbUtil {
                 map.put(episodeNumber, name);
             }
         } catch (Exception e) {
-            log.error(ExceptionUtil.getMessage(e), e);
+            log.error(ExceptionUtils.getMessage(e), e);
         }
         return map;
     }

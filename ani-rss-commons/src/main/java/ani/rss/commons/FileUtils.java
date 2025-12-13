@@ -1,6 +1,5 @@
 package ani.rss.commons;
 
-import cn.hutool.core.io.file.FileNameUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.ReUtil;
 
@@ -8,7 +7,7 @@ import java.io.File;
 import java.util.List;
 import java.util.Objects;
 
-public class FileUtil extends cn.hutool.core.io.FileUtil {
+public class FileUtils {
 
     /**
      * 获取绝对路径 并把 windows 狗日的 \ 转换为 /
@@ -60,17 +59,6 @@ public class FileUtil extends cn.hutool.core.io.FileUtil {
             s = s.substring(0, s.length() - 1);
         }
         return s;
-    }
-
-    /**
-     * 获得文件的扩展名（后缀名），扩展名不带“.”
-     *
-     * @param fileName 文件名
-     * @return 扩展名
-     * @see FileNameUtil#extName(String)
-     */
-    public static String extName(String fileName) {
-        return FileNameUtil.extName(fileName);
     }
 
     /**

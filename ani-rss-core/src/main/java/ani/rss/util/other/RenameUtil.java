@@ -1,6 +1,6 @@
 package ani.rss.util.other;
 
-import ani.rss.commons.NumberFormatUtil;
+import ani.rss.commons.NumberFormatUtils;
 import ani.rss.entity.Ani;
 import ani.rss.entity.BgmInfo;
 import ani.rss.entity.Config;
@@ -196,7 +196,7 @@ public class RenameUtil {
             bgmEpisodeTitleMap = BgmUtil.getEpisodeTitleMap(ani);
         }
 
-        String defaultEpisodeTitle = "第" + NumberFormatUtil.format(episode, 1, 0) + "集";
+        String defaultEpisodeTitle = "第" + NumberFormatUtils.format(episode, 1, 0) + "集";
 
         String episodeTitle = is5 ? defaultEpisodeTitle : episodeTitleMap
                 .getOrDefault(episode.intValue(), defaultEpisodeTitle);

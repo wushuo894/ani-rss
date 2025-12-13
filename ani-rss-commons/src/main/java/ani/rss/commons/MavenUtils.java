@@ -18,7 +18,7 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
 @Slf4j
-public class MavenUtil {
+public class MavenUtils {
     private static String version = "None";
     public static JarFile JAR_FILE = null;
 

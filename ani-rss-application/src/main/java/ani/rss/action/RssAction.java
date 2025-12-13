@@ -1,11 +1,11 @@
 package ani.rss.action;
 
+import ani.rss.commons.ExceptionUtils;
+import ani.rss.entity.Ani;
+import ani.rss.util.other.AniUtil;
 import ani.rss.web.action.BaseAction;
 import ani.rss.web.annotation.Auth;
 import ani.rss.web.annotation.Path;
-import ani.rss.commons.ExceptionUtil;
-import ani.rss.entity.Ani;
-import ani.rss.util.other.AniUtil;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.ReUtil;
 import cn.hutool.core.util.URLUtil;
@@ -41,7 +41,7 @@ public class RssAction implements BaseAction {
             Ani newAni = AniUtil.getAni(url, type, bgmUrl);
             resultSuccess(newAni);
         } catch (Exception e) {
-            String message = ExceptionUtil.getMessage(e);
+            String message = ExceptionUtils.getMessage(e);
             log.error(message, e);
             resultErrorMsg("RSS解析失败 {}", message);
         }

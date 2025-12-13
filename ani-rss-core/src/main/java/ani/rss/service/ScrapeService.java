@@ -1,6 +1,6 @@
 package ani.rss.service;
 
-import ani.rss.commons.FileUtil;
+import ani.rss.commons.FileUtils;
 import ani.rss.download.BaseDownload;
 import ani.rss.entity.Ani;
 import ani.rss.entity.tmdb.*;
@@ -8,6 +8,7 @@ import ani.rss.enums.StringEnum;
 import ani.rss.enums.TmdbTypeEnum;
 import ani.rss.util.basic.HttpReq;
 import ani.rss.util.other.TmdbUtil;
+import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.ReUtil;
 import cn.hutool.core.util.StrUtil;
@@ -69,7 +70,7 @@ public class ScrapeService {
 
         // 下载位置
         String downloadPath = DownloadService.getDownloadPath(ani);
-        File[] files = FileUtil.listFiles(downloadPath);
+        File[] files = FileUtils.listFiles(downloadPath);
 
         if (ArrayUtil.isEmpty(files)) {
             return;
@@ -196,7 +197,7 @@ public class ScrapeService {
             NfoGenerator.generateSeasonNfo(tmdbSeason, seasonNfoFile);
         }
 
-        File[] files = FileUtil.listFiles(downloadPath);
+        File[] files = FileUtils.listFiles(downloadPath);
 
         Map<Integer, TmdbEpisode> episodeMap = tmdbSeason
                 .getEpisodes()

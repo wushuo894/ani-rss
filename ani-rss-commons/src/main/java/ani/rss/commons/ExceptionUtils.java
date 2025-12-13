@@ -4,7 +4,7 @@ import cn.hutool.core.util.StrUtil;
 
 import java.util.Map;
 
-public class ExceptionUtil {
+public class ExceptionUtils {
     public static final Map<String, String> messageMap = Map.of(
             "SocketTimeoutException", "网络连接超时",
             "UnknownHostException", "DNS 解析出错",

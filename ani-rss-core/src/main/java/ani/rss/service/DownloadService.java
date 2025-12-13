@@ -1,7 +1,7 @@
 package ani.rss.service;
 
-import ani.rss.commons.ExceptionUtil;
-import ani.rss.commons.FileUtil;
+import ani.rss.commons.ExceptionUtils;
+import ani.rss.commons.FileUtils;
 import ani.rss.commons.GsonStatic;
 import ani.rss.download.BaseDownload;
 import ani.rss.entity.*;
@@ -12,6 +12,7 @@ import ani.rss.enums.TorrentsTags;
 import ani.rss.util.other.*;
 import cn.hutool.core.date.DateField;
 import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.lang.Opt;
 import cn.hutool.core.lang.func.Func1;
 import cn.hutool.core.text.StrFormatter;
@@ -320,7 +321,7 @@ public class DownloadService {
             TorrentUtil.delete(standbyRSS, true, true);
         }
 
-        File[] files = FileUtil.listFiles(downloadPath);
+        File[] files = FileUtils.listFiles(downloadPath);
         for (File file : files) {
             String fileMainName = FileUtil.mainName(file);
             if (StrUtil.isBlank(fileMainName)) {
@@ -356,12 +357,12 @@ public class DownloadService {
                 isDel = true;
             }
             if (isDel) {
-                log.info("已开启备用RSS, 自动删除 {}", FileUtil.getAbsolutePath(file));
+                log.info("已开启备用RSS, 自动删除 {}", FileUtils.getAbsolutePath(file));
                 try {
                     FileUtil.del(file);
-                    log.info("删除成功 {}", FileUtil.getAbsolutePath(file));
+                    log.info("删除成功 {}", FileUtils.getAbsolutePath(file));
                 } catch (Exception e) {
-                    log.error("删除失败 {}", FileUtil.getAbsolutePath(file));
+                    log.error("删除失败 {}", FileUtils.getAbsolutePath(file));
                     log.error(e.getMessage(), e);
                 }
             }
@@ -389,11 +390,11 @@ public class DownloadService {
         log.info("添加下载 {}", name);
 
         if (!torrentFile.exists()) {
-            log.error("种子下载出现问题 {} {}", name, FileUtil.getAbsolutePath(torrentFile));
+            log.error("种子下载出现问题 {} {}", name, FileUtils.getAbsolutePath(torrentFile));
             return;
         }
         ThreadUtil.sleep(1000);
-        savePath = FileUtil.getAbsolutePath(savePath);
+        savePath = FileUtils.getAbsolutePath(savePath);
 
         String text = StrFormatter.format("{} 已更新", name);
         if (!master) {
@@ -410,7 +411,7 @@ public class DownloadService {
                     return;
                 }
             } catch (Exception e) {
-                String message = ExceptionUtil.getMessage(e);
+                String message = ExceptionUtils.getMessage(e);
                 log.error(message, e);
             }
             log.error("{} 下载失败将进行重试, 当前重试次数为{}次", name, i);
@@ -540,7 +541,7 @@ public class DownloadService {
             // 自定义下载位置
             downloadPathTemplate = StrUtil.split(aniDownloadPath, "\n", true, true)
                     .stream()
-                    .map(FileUtil::getAbsolutePath)
+                    .map(FileUtils::getAbsolutePath)
                     .findFirst()
                     .orElse(downloadPathTemplate);
         }
@@ -615,7 +616,7 @@ public class DownloadService {
             downloadPathTemplate = downloadPathTemplate.replace("${jpTitle}", jpTitle);
         }
 
-        return FileUtil.getAbsolutePath(downloadPathTemplate);
+        return FileUtils.getAbsolutePath(downloadPathTemplate);
     }
 
 
@@ -669,7 +670,7 @@ public class DownloadService {
             }
         }
 
-        List<File> files = FileUtil.listFileList(downloadPath);
+        List<File> files = FileUtils.listFileList(downloadPath);
 
         if (files.stream()
                 .filter(file -> {

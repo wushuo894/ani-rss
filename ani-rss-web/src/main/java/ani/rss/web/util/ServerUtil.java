@@ -1,6 +1,6 @@
 package ani.rss.web.util;
 
-import ani.rss.commons.ExceptionUtil;
+import ani.rss.commons.ExceptionUtils;
 import ani.rss.entity.Config;
 import ani.rss.entity.Global;
 import ani.rss.entity.Result;
@@ -163,7 +163,7 @@ public class ServerUtil {
                             result(resultException.getResult());
                             return;
                         }
-                        String message = ExceptionUtil.getMessage(e);
+                        String message = ExceptionUtils.getMessage(e);
                         resultErrorMsg(message);
                         if (e instanceof IllegalArgumentException) {
                             // 断言日志将不进行打印

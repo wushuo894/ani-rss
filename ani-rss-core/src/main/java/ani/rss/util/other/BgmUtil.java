@@ -1,6 +1,6 @@
 package ani.rss.util.other;
 
-import ani.rss.commons.CacheUtil;
+import ani.rss.commons.CacheUtils;
 import ani.rss.commons.GsonStatic;
 import ani.rss.entity.Ani;
 import ani.rss.entity.BgmInfo;
@@ -151,8 +151,8 @@ public class BgmUtil {
 
         String key = "BGM_getSubjectId:" + bgmName;
 
-        if (CacheUtil.containsKey(key)) {
-            return CacheUtil.get(key);
+        if (CacheUtils.containsKey(key)) {
+            return CacheUtils.get(key);
         }
         List<JsonObject> list = search(bgmName);
         if (list.isEmpty()) {
@@ -184,7 +184,7 @@ public class BgmUtil {
             id = list.get(0).get("id").getAsString();
         }
         ThreadUtil.sleep(1000);
-        CacheUtil.put(key, id, TimeUnit.MINUTES.toMillis(10));
+        CacheUtils.put(key, id, TimeUnit.MINUTES.toMillis(10));
         return id;
     }
 
@@ -259,7 +259,7 @@ public class BgmUtil {
 
         String key = "BGM_me:" + bgmToken;
 
-        String me = CacheUtil.get(key);
+        String me = CacheUtils.get(key);
         if (StrUtil.isNotBlank(me)) {
             return GsonStatic.fromJson(me, JsonObject.class);
         }
@@ -270,7 +270,7 @@ public class BgmUtil {
                     return GsonStatic.fromJson(res.body(), JsonObject.class);
                 });
 
-        CacheUtil.put(key, GsonStatic.toJson(jsonObject), TimeUnit.MINUTES.toMillis(10));
+        CacheUtils.put(key, GsonStatic.toJson(jsonObject), TimeUnit.MINUTES.toMillis(10));
         return jsonObject;
     }
 
@@ -326,10 +326,10 @@ public class BgmUtil {
         Assert.notBlank(subjectId, "subjectId 不能为空");
 
         String key = "BGM_collections:" + subjectId;
-        if (CacheUtil.containsKey(key)) {
+        if (CacheUtils.containsKey(key)) {
             return;
         }
-        CacheUtil.put(key, subjectId, TimeUnit.MINUTES.toMillis(5));
+        CacheUtils.put(key, subjectId, TimeUnit.MINUTES.toMillis(5));
 
         String username = username();
 
@@ -362,10 +362,10 @@ public class BgmUtil {
 
         String key = "BGM_getEpisodeId:" + subjectId;
 
-        List<JsonObject> episodes = CacheUtil.get(key);
+        List<JsonObject> episodes = CacheUtils.get(key);
         if (Objects.isNull(episodes)) {
             episodes = getEpisodes(subjectId, 0);
-            CacheUtil.put(key, episodes, TimeUnit.MINUTES.toMillis(10));
+            CacheUtils.put(key, episodes, TimeUnit.MINUTES.toMillis(10));
         }
         for (JsonObject itemObject : episodes) {
             double ep = itemObject.get("ep").getAsDouble();
@@ -723,7 +723,7 @@ public class BgmUtil {
 
         String key = "BGM_getEpisodeTitleMap:" + subjectId;
 
-        Map<Integer, Function<Boolean, String>> cacheMap = CacheUtil.get(key);
+        Map<Integer, Function<Boolean, String>> cacheMap = CacheUtils.get(key);
         if (Objects.nonNull(cacheMap)) {
             return cacheMap;
         }
@@ -753,7 +753,7 @@ public class BgmUtil {
         } catch (Exception e) {
             log.error(e.getMessage(), e);
         }
-        CacheUtil.put(key, episodeTitleMap, TimeUnit.MINUTES.toMillis(5));
+        CacheUtils.put(key, episodeTitleMap, TimeUnit.MINUTES.toMillis(5));
         return episodeTitleMap;
     }
 

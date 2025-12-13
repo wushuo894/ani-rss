@@ -1,6 +1,6 @@
 package ani.rss.notification;
 
-import ani.rss.commons.NumberFormatUtil;
+import ani.rss.commons.NumberFormatUtils;
 import ani.rss.entity.Ani;
 import ani.rss.entity.Config;
 import ani.rss.entity.NotificationConfig;
@@ -63,7 +63,7 @@ public interface BaseNotification {
         }
 
         notificationTemplate = notificationTemplate.replace("${episode}",
-                NumberFormatUtil.format(episode, 1, 0)
+                NumberFormatUtils.format(episode, 1, 0)
         );
         notificationTemplate = notificationTemplate.replace("${episodeFormat}", episodeFormat);
 

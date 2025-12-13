@@ -1,7 +1,7 @@
 package ani.rss.util.basic;
 
 
-import ani.rss.commons.FileUtil;
+import ani.rss.commons.FileUtils;
 import ani.rss.util.other.ConfigUtil;
 import cn.hutool.core.text.StrFormatter;
 import cn.hutool.db.DbUtil;
@@ -32,7 +32,7 @@ public class RenameCacheUtil {
         }
 
         File configDir = ConfigUtil.getConfigDir();
-        String absolutePath = FileUtil.getAbsolutePath(configDir);
+        String absolutePath = FileUtils.getAbsolutePath(configDir);
         try {
             Class.forName("org.sqlite.JDBC");
             connection = DriverManager.getConnection(StrFormatter.format("jdbc:sqlite:{}/database.db", absolutePath));

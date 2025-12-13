@@ -1,10 +1,10 @@
 package ani.rss.web.auth.fun;
 
-import ani.rss.commons.CacheUtil;
+import ani.rss.commons.CacheUtils;
 import ani.rss.entity.Config;
-import ani.rss.web.util.AuthUtil;
 import ani.rss.util.basic.CidrRangeChecker;
 import ani.rss.util.other.ConfigUtil;
+import ani.rss.web.util.AuthUtil;
 import cn.hutool.core.lang.PatternPool;
 import cn.hutool.core.net.Ipv4Util;
 import cn.hutool.core.util.StrUtil;
@@ -39,7 +39,7 @@ public class IpWhitelist implements Function<HttpServerRequest, Boolean> {
             if (!PatternPool.IPV4.matcher(ip).matches() && !PatternPool.IPV6.matcher(ip).matches()) {
                 return false;
             }
-            Boolean b = CacheUtil.get(key);
+            Boolean b = CacheUtils.get(key);
             if (Objects.nonNull(b)) {
                 return b;
             }
@@ -48,27 +48,27 @@ public class IpWhitelist implements Function<HttpServerRequest, Boolean> {
                 // 判断是否为 ipv4 或 ipv6
                 if (PatternPool.IPV4.matcher(string).matches() || PatternPool.IPV6.matcher(string).matches()) {
                     if (string.equals(ip)) {
-                        CacheUtil.put(key, Boolean.TRUE, TimeUnit.MINUTES.toMillis(10));
+                        CacheUtils.put(key, Boolean.TRUE, TimeUnit.MINUTES.toMillis(10));
                         return true;
                     }
                 }
                 // 通配符，如 192.168.*.1
                 if (string.contains("*")) {
                     if (Ipv4Util.matches(string, ip)) {
-                        CacheUtil.put(key, Boolean.TRUE, TimeUnit.MINUTES.toMillis(10));
+                        CacheUtils.put(key, Boolean.TRUE, TimeUnit.MINUTES.toMillis(10));
                         return true;
                     }
                 }
                 // X.X.X.X/X
                 if (CidrRangeChecker.CIDR_PATTERN.matcher(string).matches()) {
                     if (CidrRangeChecker.isIpInRange(ip, string)) {
-                        CacheUtil.put(key, Boolean.TRUE, TimeUnit.MINUTES.toMillis(10));
+                        CacheUtils.put(key, Boolean.TRUE, TimeUnit.MINUTES.toMillis(10));
                         return true;
                     }
                 }
                 // X.X.X.X-X.X.X.X
                 if (isIpInRange(ip, string)) {
-                    CacheUtil.put(key, Boolean.TRUE, TimeUnit.MINUTES.toMillis(10));
+                    CacheUtils.put(key, Boolean.TRUE, TimeUnit.MINUTES.toMillis(10));
                     return true;
                 }
             }
@@ -76,7 +76,7 @@ public class IpWhitelist implements Function<HttpServerRequest, Boolean> {
             log.error("ip白名单存在问题");
             log.error(e.getMessage(), e);
         }
-        CacheUtil.put(key, Boolean.FALSE, TimeUnit.MINUTES.toMillis(10));
+        CacheUtils.put(key, Boolean.FALSE, TimeUnit.MINUTES.toMillis(10));
         return false;
     }
 

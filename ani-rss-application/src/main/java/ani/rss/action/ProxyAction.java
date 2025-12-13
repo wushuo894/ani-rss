@@ -1,12 +1,12 @@
 package ani.rss.action;
 
-import ani.rss.web.action.BaseAction;
-import ani.rss.web.annotation.Auth;
-import ani.rss.web.annotation.Path;
 import ani.rss.entity.Config;
 import ani.rss.entity.ProxyTest;
 import ani.rss.entity.Result;
 import ani.rss.util.basic.HttpReq;
+import ani.rss.web.action.BaseAction;
+import ani.rss.web.annotation.Auth;
+import ani.rss.web.annotation.Path;
 import cn.hutool.core.codec.Base64;
 import cn.hutool.core.date.LocalDateTimeUtil;
 import cn.hutool.core.text.StrFormatter;

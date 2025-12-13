@@ -1,7 +1,7 @@
 package ani.rss;
 
-import ani.rss.commons.ExceptionUtil;
-import ani.rss.commons.MavenUtil;
+import ani.rss.commons.ExceptionUtils;
+import ani.rss.commons.MavenUtils;
 import ani.rss.entity.Global;
 import ani.rss.other.Cron;
 import ani.rss.service.TaskService;
@@ -29,12 +29,12 @@ public class ApplicationMain {
 
             AniUtil.load();
             TaskService.start();
-            String version = MavenUtil.getVersion();
+            String version = MavenUtils.getVersion();
             log.info("version {}", version);
 
             Cron.start();
         } catch (Exception e) {
-            String message = ExceptionUtil.getMessage(e);
+            String message = ExceptionUtils.getMessage(e);
             log.error(message, e);
             System.exit(1);
         }

@@ -1,9 +1,9 @@
 package ani.rss.action;
 
+import ani.rss.commons.MavenUtils;
 import ani.rss.web.action.BaseAction;
 import ani.rss.web.annotation.Auth;
 import ani.rss.web.annotation.Path;
-import ani.rss.commons.MavenUtil;
 import ani.rss.web.util.ServerUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.thread.ThreadUtil;
@@ -33,7 +33,7 @@ public class StopAction implements BaseAction {
         resultSuccessMsg("正在{}", s);
         ThreadUtil.execute(() -> {
             ThreadUtil.sleep(3000);
-            File jar = MavenUtil.getJar();
+            File jar = MavenUtils.getJar();
             String extName = FileUtil.extName(jar);
             ServerUtil.stop();
             if ("exe".equals(extName) && status == 0) {

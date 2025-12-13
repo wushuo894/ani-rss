@@ -6,6 +6,7 @@ import ani.rss.entity.Config;
 import ani.rss.entity.Global;
 import ani.rss.util.basic.HttpReq;
 import cn.hutool.core.comparator.VersionComparator;
+import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.resource.ResourceUtil;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.text.StrFormatter;
@@ -36,13 +37,13 @@ public class UpdateUtil {
 
         String key = StrFormatter.format("github#{} {} {}", github, customGithub, customGithubUrl);
 
-        About cacheAbout = CacheUtil.get(key);
+        About cacheAbout = CacheUtils.get(key);
 
         if (Objects.nonNull(cacheAbout)) {
             return cacheAbout;
         }
 
-        String version = MavenUtil.getVersion();
+        String version = MavenUtils.getVersion();
 
         About about = new About()
                 .setVersion(version)
@@ -76,7 +77,7 @@ public class UpdateUtil {
                                 .setLatest(latest)
                                 .setMarkdownBody(jsonObject.get("markdown").getAsString());
                         String filename = "ani-rss-jar-with-dependencies.jar";
-                        File jar = MavenUtil.getJar();
+                        File jar = MavenUtils.getJar();
                         if ("exe".equals(FileUtil.extName(jar))) {
                             filename = "ani-rss-launcher.exe";
                         }
@@ -90,12 +91,12 @@ public class UpdateUtil {
                         }
                     });
         } catch (Exception e) {
-            String message = ExceptionUtil.getMessage(e);
+            String message = ExceptionUtils.getMessage(e);
             log.error("检测更新失败 {}", message);
             log.error(message, e);
         }
         // 缓存一分钟 防止加速网站风控
-        CacheUtil.put(key, about, 1000 * 60);
+        CacheUtils.put(key, about, 1000 * 60);
         return about;
     }
 
@@ -105,9 +106,9 @@ public class UpdateUtil {
             return;
         }
 
-        Assert.isTrue(MavenUtil.isJar(), "不支持更新");
+        Assert.isTrue(MavenUtils.isJar(), "不支持更新");
 
-        File jar = MavenUtil.getJar();
+        File jar = MavenUtils.getJar();
         String extName = StrUtil.blankToDefault(FileUtil.extName(jar), "");
         File file = new File(jar + ".tmp");
 
@@ -121,7 +122,7 @@ public class UpdateUtil {
                     if (StrUtil.isNotBlank(md5)) {
                         md5 = md5.split("\n")[0].trim();
                     }
-                    Assert.isTrue(Md5Util.isValidMD5(md5), "获取更新文件MD5失败");
+                    Assert.isTrue(Md5Utils.isValidMD5(md5), "获取更新文件MD5失败");
                     return md5;
                 });
 
@@ -147,7 +148,7 @@ public class UpdateUtil {
                 FileUtil.writeFromStream(stream, updateExe, true);
                 List<String> strings = new ArrayList<>();
                 strings.add(updateExe.toString());
-                strings.add(FileUtil.getAbsolutePath(jar));
+                strings.add(FileUtils.getAbsolutePath(jar));
                 strings.addAll(Global.ARGS);
                 String[] array = ArrayUtil.toArray(strings, String.class);
                 RuntimeUtil.exec(array);

@@ -1,6 +1,6 @@
 package ani.rss.download;
 
-import ani.rss.commons.ExceptionUtil;
+import ani.rss.commons.ExceptionUtils;
 import ani.rss.commons.GsonStatic;
 import ani.rss.entity.Ani;
 import ani.rss.entity.Config;
@@ -69,7 +69,7 @@ public class OpenList implements BaseDownload {
                         return true;
                     });
         } catch (Exception e) {
-            String message = ExceptionUtil.getMessage(e);
+            String message = ExceptionUtils.getMessage(e);
             log.error(e.getMessage(), e);
             log.error("登录 OpenList 失败 {}", message);
         }
