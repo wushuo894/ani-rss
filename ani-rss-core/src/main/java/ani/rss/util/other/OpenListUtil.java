@@ -1,6 +1,6 @@
 package ani.rss.util.other;
 
-import ani.rss.commons.FileUtil;
+import ani.rss.commons.FileUtils;
 import ani.rss.commons.GsonStatic;
 import ani.rss.entity.Ani;
 import ani.rss.entity.Config;
@@ -9,6 +9,7 @@ import ani.rss.enums.NotificationStatusEnum;
 import ani.rss.enums.TorrentsTags;
 import ani.rss.service.DownloadService;
 import ani.rss.util.basic.HttpReq;
+import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.resource.ResourceUtil;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.text.StrFormatter;
@@ -72,7 +73,7 @@ public class OpenListUtil {
 
         TorrentUtil.addTags(torrentsInfo, TorrentsTags.OPEN_LIST.getValue());
 
-        String downloadDir = FileUtil.getAbsolutePath(torrentsInfo.getDownloadDir());
+        String downloadDir = FileUtils.getAbsolutePath(torrentsInfo.getDownloadDir());
 
         List<String> files = torrentsInfo.getFiles().get();
         String filePath = getPath(ani);
@@ -193,7 +194,7 @@ public class OpenListUtil {
     public static void verify() {
         Config config = ConfigUtil.CONFIG;
         String alistHost = config.getAlistHost();
-        String alistPath = FileUtil.getAbsolutePath(config.getAlistPath());
+        String alistPath = FileUtils.getAbsolutePath(config.getAlistPath());
         String alistToken = config.getAlistToken();
 
         Assert.notBlank(alistHost, "alistHost 未配置");

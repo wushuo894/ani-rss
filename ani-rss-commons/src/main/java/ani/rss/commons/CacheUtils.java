@@ -1,12 +1,13 @@
 package ani.rss.commons;
 
+import cn.hutool.cache.CacheUtil;
 import cn.hutool.cache.impl.FIFOCache;
 import lombok.Synchronized;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class CacheUtil {
-    static final FIFOCache<Object, Object> CACHE = cn.hutool.cache.CacheUtil.newFIFOCache(1024 * 8);
+public class CacheUtils {
+    static final FIFOCache<Object, Object> CACHE = CacheUtil.newFIFOCache(1024 * 8);
 
     @Synchronized("CACHE")
     public static <V> V get(Object key) {

@@ -5,7 +5,7 @@ import java.text.NumberFormat;
 /**
  * 数字格式化
  */
-public class NumberFormatUtil {
+public class NumberFormatUtils {
 
     /**
      * @param number                数字

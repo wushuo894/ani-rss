@@ -1,6 +1,6 @@
 package ani.rss.util.basic;
 
-import ani.rss.commons.ExceptionUtil;
+import ani.rss.commons.ExceptionUtils;
 import ani.rss.entity.Config;
 import ani.rss.util.other.ConfigUtil;
 import cn.hutool.core.net.url.UrlBuilder;
@@ -70,7 +70,7 @@ public class HttpRequestPlus extends HttpRequest {
         try {
             return super.execute(isAsync);
         } catch (Exception e) {
-            String message = ExceptionUtil.getMessage(e);
+            String message = ExceptionUtils.getMessage(e);
             log.error("url: {}, error: {}", url, message);
             throw e;
         }

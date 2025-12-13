@@ -1,6 +1,6 @@
 package ani.rss.util.basic;
 
-import ani.rss.commons.CacheUtil;
+import ani.rss.commons.CacheUtils;
 import ani.rss.entity.Config;
 import ani.rss.util.other.ConfigUtil;
 import cn.hutool.core.lang.Assert;
@@ -156,11 +156,11 @@ public class HttpReq {
 
         String key = StrFormatter.format("proxyList:{}", SecureUtil.md5(proxyList));
 
-        List<String> split = CacheUtil.get(key);
+        List<String> split = CacheUtils.get(key);
 
         if (Objects.isNull(split)) {
             split = StrUtil.split(proxyList, "\n", true, true);
-            CacheUtil.put(key, split, TimeUnit.MINUTES.toMillis(10));
+            CacheUtils.put(key, split, TimeUnit.MINUTES.toMillis(10));
         }
 
         if (split.isEmpty()) {

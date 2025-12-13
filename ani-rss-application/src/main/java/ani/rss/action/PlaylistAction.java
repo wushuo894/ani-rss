@@ -1,18 +1,19 @@
 package ani.rss.action;
 
-import ani.rss.web.action.BaseAction;
-import ani.rss.web.annotation.Auth;
-import ani.rss.web.annotation.Path;
-import ani.rss.web.auth.enums.AuthType;
-import ani.rss.commons.FileUtil;
+import ani.rss.commons.FileUtils;
 import ani.rss.download.BaseDownload;
 import ani.rss.entity.Ani;
 import ani.rss.entity.PlayItem;
 import ani.rss.enums.StringEnum;
 import ani.rss.service.DownloadService;
 import ani.rss.util.other.AniUtil;
+import ani.rss.web.action.BaseAction;
+import ani.rss.web.annotation.Auth;
+import ani.rss.web.annotation.Path;
+import ani.rss.web.auth.enums.AuthType;
 import cn.hutool.core.codec.Base64;
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.ReUtil;
 import cn.hutool.core.util.StrUtil;
@@ -60,7 +61,7 @@ public class PlaylistAction implements BaseAction {
     public List<PlayItem> getPlayItem(File file) {
         List<PlayItem> playItems = new ArrayList<>();
         if (file.isDirectory()) {
-            File[] files = FileUtil.listFiles(file);
+            File[] files = FileUtils.listFiles(file);
             for (File itFile : files) {
                 playItems.addAll(getPlayItem(itFile));
             }
@@ -76,7 +77,7 @@ public class PlaylistAction implements BaseAction {
         if (!ReUtil.contains(StringEnum.SEASON_REG, file.getName())) {
             return playItems;
         }
-        File[] files = FileUtil.listFiles(file.getParentFile());
+        File[] files = FileUtils.listFiles(file.getParentFile());
         List<PlayItem.Subtitles> subtitles = Arrays.stream(files)
                 .filter(f -> List.of("ass", "srt").contains(ObjectUtil.defaultIfNull(FileUtil.extName(f), "")))
                 .filter(f -> f.getName().startsWith(FileUtil.mainName(file.getName())))
@@ -85,13 +86,13 @@ public class PlaylistAction implements BaseAction {
                     return new PlayItem.Subtitles()
                             .setName(name)
                             .setHtml(name.toUpperCase())
-                            .setUrl(Base64.encode(FileUtil.getAbsolutePath(f)))
+                            .setUrl(Base64.encode(FileUtils.getAbsolutePath(f)))
                             .setType(FileUtil.extName(f));
                 }).toList();
         subtitles = CollUtil.distinct(subtitles, PlayItem.Subtitles::getName, true);
         PlayItem playItem = new PlayItem();
         playItem.setSubtitles(subtitles);
-        playItem.setFilename(Base64.encode(FileUtil.getAbsolutePath(file)))
+        playItem.setFilename(Base64.encode(FileUtils.getAbsolutePath(file)))
                 .setName(file.getName())
                 .setLastModify(file.lastModified())
                 .setTitle(ReUtil.get(StringEnum.SEASON_REG, file.getName(), 0));

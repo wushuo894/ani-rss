@@ -1,7 +1,7 @@
 package ani.rss.download;
 
-import ani.rss.commons.ExceptionUtil;
-import ani.rss.commons.FileUtil;
+import ani.rss.commons.ExceptionUtils;
+import ani.rss.commons.FileUtils;
 import ani.rss.commons.GsonStatic;
 import ani.rss.entity.Ani;
 import ani.rss.entity.Config;
@@ -12,6 +12,7 @@ import ani.rss.enums.TorrentsTags;
 import ani.rss.service.DownloadService;
 import ani.rss.util.basic.HttpReq;
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.core.util.EnumUtil;
@@ -107,7 +108,7 @@ public class qBittorrent implements BaseDownload {
                         return true;
                     });
         } catch (Exception e) {
-            String message = ExceptionUtil.getMessage(e);
+            String message = ExceptionUtils.getMessage(e);
             log.error(message, e);
             log.error("登录 qBittorrent 失败 {}", message);
         }
@@ -251,7 +252,7 @@ public class qBittorrent implements BaseDownload {
                                     .progress(completed, size)
                                     .setName(name)
                                     .setHash(hash)
-                                    .setDownloadDir(FileUtil.getAbsolutePath(savePath))
+                                    .setDownloadDir(FileUtils.getAbsolutePath(savePath))
                                     .setTags(tagList)
                                     .setFiles(() ->
                                             files(torrentsInfo, true, config)

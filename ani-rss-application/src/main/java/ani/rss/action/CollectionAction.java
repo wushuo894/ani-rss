@@ -1,8 +1,5 @@
 package ani.rss.action;
 
-import ani.rss.web.action.BaseAction;
-import ani.rss.web.annotation.Auth;
-import ani.rss.web.annotation.Path;
 import ani.rss.download.BaseDownload;
 import ani.rss.download.qBittorrent;
 import ani.rss.entity.*;
@@ -12,6 +9,9 @@ import ani.rss.util.other.AfdianUtil;
 import ani.rss.util.other.ConfigUtil;
 import ani.rss.util.other.RenameUtil;
 import ani.rss.util.other.TorrentUtil;
+import ani.rss.web.action.BaseAction;
+import ani.rss.web.annotation.Auth;
+import ani.rss.web.annotation.Path;
 import cn.hutool.core.codec.Base64;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.io.FileUtil;

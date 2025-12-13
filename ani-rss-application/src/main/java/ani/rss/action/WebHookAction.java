@@ -1,9 +1,5 @@
 package ani.rss.action;
 
-import ani.rss.web.action.BaseAction;
-import ani.rss.web.annotation.Auth;
-import ani.rss.web.annotation.Path;
-import ani.rss.web.auth.enums.AuthType;
 import ani.rss.commons.GsonStatic;
 import ani.rss.entity.Ani;
 import ani.rss.entity.Config;
@@ -12,6 +8,10 @@ import ani.rss.entity.tmdb.Tmdb;
 import ani.rss.enums.StringEnum;
 import ani.rss.service.DownloadService;
 import ani.rss.util.other.*;
+import ani.rss.web.action.BaseAction;
+import ani.rss.web.annotation.Auth;
+import ani.rss.web.annotation.Path;
+import ani.rss.web.auth.enums.AuthType;
 import cn.hutool.core.thread.ExecutorBuilder;
 import cn.hutool.core.util.ReUtil;
 import cn.hutool.core.util.StrUtil;

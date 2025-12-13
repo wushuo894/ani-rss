@@ -1,6 +1,6 @@
 package ani.rss.notification;
 
-import ani.rss.commons.ExceptionUtil;
+import ani.rss.commons.ExceptionUtils;
 import ani.rss.entity.Ani;
 import ani.rss.entity.NotificationConfig;
 import ani.rss.enums.NotificationStatusEnum;
@@ -59,7 +59,7 @@ public class MailNotification implements BaseNotification {
             JakartaMailUtil.send(mailAccount, List.of(mailAddressee), title, notificationTemplate, true);
             return true;
         } catch (Exception e) {
-            String message = ExceptionUtil.getMessage(e);
+            String message = ExceptionUtils.getMessage(e);
             log.error(message, e);
             return false;
         }

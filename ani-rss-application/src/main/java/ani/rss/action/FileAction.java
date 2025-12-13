@@ -1,6 +1,6 @@
 package ani.rss.action;
 
-import ani.rss.commons.ExceptionUtil;
+import ani.rss.commons.ExceptionUtils;
 import ani.rss.util.basic.HttpReq;
 import ani.rss.util.other.ConfigUtil;
 import ani.rss.web.action.BaseAction;
@@ -190,7 +190,7 @@ public class FileAction implements BaseAction {
                 response.write(inputStream, (int) file.length());
             }
         } catch (Exception e) {
-            String message = ExceptionUtil.getMessage(e);
+            String message = ExceptionUtils.getMessage(e);
             log.debug(message, e);
         }
     }

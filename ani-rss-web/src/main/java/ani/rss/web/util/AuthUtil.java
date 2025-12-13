@@ -1,15 +1,15 @@
 package ani.rss.web.util;
 
-import ani.rss.web.annotation.Auth;
-import ani.rss.web.auth.enums.AuthType;
-import ani.rss.commons.CacheUtil;
-import ani.rss.commons.ExceptionUtil;
+import ani.rss.commons.CacheUtils;
+import ani.rss.commons.ExceptionUtils;
 import ani.rss.commons.GsonStatic;
 import ani.rss.entity.Config;
 import ani.rss.entity.Login;
 import ani.rss.entity.Result;
 import ani.rss.exception.ResultException;
 import ani.rss.util.other.ConfigUtil;
+import ani.rss.web.annotation.Auth;
+import ani.rss.web.auth.enums.AuthType;
 import cn.hutool.core.text.StrFormatter;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.RandomUtil;
@@ -42,13 +42,13 @@ public class AuthUtil {
      * 刷新有效时间
      */
     public static void resetTime() {
-        String key = CacheUtil.get("auth_key");
+        String key = CacheUtils.get("auth_key");
         if (StrUtil.isBlank(key)) {
             return;
         }
         Config config = ConfigUtil.CONFIG;
         Integer loginEffectiveHours = config.getLoginEffectiveHours();
-        CacheUtil.put("auth_key", key, TimeUnit.HOURS.toMillis(loginEffectiveHours));
+        CacheUtils.put("auth_key", key, TimeUnit.HOURS.toMillis(loginEffectiveHours));
     }
 
     /**
@@ -67,12 +67,12 @@ public class AuthUtil {
             // 禁止多端登录
             key = RandomUtil.randomString(128);
         }
-        CacheUtil.put("auth_key", key, TimeUnit.HOURS.toMillis(loginEffectiveHours));
+        CacheUtils.put("auth_key", key, TimeUnit.HOURS.toMillis(loginEffectiveHours));
         return key;
     }
 
     public static String getAuth(Login login) {
-        String key = CacheUtil.get("auth_key");
+        String key = CacheUtils.get("auth_key");
         if (StrUtil.isBlank(key)) {
             key = resetKey();
         }
@@ -102,7 +102,7 @@ public class AuthUtil {
             HttpExchange httpExchange = (HttpExchange) ReflectUtil.getFieldValue(request, "httpExchange");
             return httpExchange.getRemoteAddress().getAddress().getHostAddress();
         } catch (Exception e) {
-            String message = ExceptionUtil.getMessage(e);
+            String message = ExceptionUtils.getMessage(e);
             log.error(message, e);
         }
         return "未知";
@@ -166,18 +166,18 @@ public class AuthUtil {
         // 1 天内将不再允许尝试
         long timeout = TimeUnit.DAYS.toMillis(1);
 
-        if (!CacheUtil.containsKey(key)) {
+        if (!CacheUtils.containsKey(key)) {
             if (isAdd) {
-                CacheUtil.put(key, new AtomicInteger(1), timeout);
+                CacheUtils.put(key, new AtomicInteger(1), timeout);
             }
             return;
         }
 
-        AtomicInteger countAtomicInteger = CacheUtil.get(key);
+        AtomicInteger countAtomicInteger = CacheUtils.get(key);
         int count = countAtomicInteger.getAndAdd(isAdd ? 1 : 0);
 
         // 失败时 时间将重新计时
-        CacheUtil.put(key, countAtomicInteger, timeout);
+        CacheUtils.put(key, countAtomicInteger, timeout);
 
         // 失败 30 次
         if (count < 30) {

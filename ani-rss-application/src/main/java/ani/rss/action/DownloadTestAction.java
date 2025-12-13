@@ -1,11 +1,11 @@
 package ani.rss.action;
 
-import ani.rss.web.action.BaseAction;
-import ani.rss.web.annotation.Auth;
-import ani.rss.web.annotation.Path;
 import ani.rss.download.BaseDownload;
 import ani.rss.entity.Config;
 import ani.rss.util.other.ConfigUtil;
+import ani.rss.web.action.BaseAction;
+import ani.rss.web.annotation.Auth;
+import ani.rss.web.annotation.Path;
 import cn.hutool.core.util.ClassUtil;
 import cn.hutool.core.util.ReflectUtil;
 import cn.hutool.http.server.HttpServerRequest;

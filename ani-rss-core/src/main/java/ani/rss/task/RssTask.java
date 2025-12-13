@@ -1,6 +1,6 @@
 package ani.rss.task;
 
-import ani.rss.commons.ExceptionUtil;
+import ani.rss.commons.ExceptionUtils;
 import ani.rss.entity.Ani;
 import ani.rss.entity.Config;
 import ani.rss.service.DownloadService;
@@ -48,7 +48,7 @@ public class RssTask extends Thread {
                 try {
                     DownloadService.downloadAni(ani);
                 } catch (Exception e) {
-                    String message = ExceptionUtil.getMessage(e);
+                    String message = ExceptionUtils.getMessage(e);
                     log.error("{} {}", title, message);
                     log.error(message, e);
                 }
@@ -56,7 +56,7 @@ public class RssTask extends Thread {
                 ThreadUtil.sleep(500);
             }
         } catch (Exception e) {
-            String message = ExceptionUtil.getMessage(e);
+            String message = ExceptionUtils.getMessage(e);
             log.error(message, e);
         } finally {
             download.set(false);
@@ -88,7 +88,7 @@ public class RssTask extends Thread {
                 sync();
                 download(loop);
             } catch (Exception e) {
-                String message = ExceptionUtil.getMessage(e);
+                String message = ExceptionUtils.getMessage(e);
                 log.error(message, e);
             }
             ThreadUtil.sleep(sleep, TimeUnit.MINUTES);

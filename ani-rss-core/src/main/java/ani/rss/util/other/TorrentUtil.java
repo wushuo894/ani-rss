@@ -1,7 +1,7 @@
 package ani.rss.util.other;
 
-import ani.rss.commons.ExceptionUtil;
-import ani.rss.commons.FileUtil;
+import ani.rss.commons.ExceptionUtils;
+import ani.rss.commons.FileUtils;
 import ani.rss.download.BaseDownload;
 import ani.rss.entity.Ani;
 import ani.rss.entity.Config;
@@ -11,6 +11,7 @@ import ani.rss.enums.StringEnum;
 import ani.rss.enums.TorrentsTags;
 import ani.rss.service.ClearService;
 import ani.rss.util.basic.HttpReq;
+import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.text.StrFormatter;
 import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.core.util.ReUtil;
@@ -130,7 +131,7 @@ public class TorrentUtil {
                         return saveTorrentFile;
                     });
         } catch (Exception e) {
-            String message = ExceptionUtil.getMessage(e);
+            String message = ExceptionUtils.getMessage(e);
             log.error("下载种子时出现问题 {}", message);
             log.error(message, e);
             // 种子未下载异常，删除
@@ -349,7 +350,7 @@ public class TorrentUtil {
             TorrentFile torrentFile = new TorrentFile(file);
             hexHash = torrentFile.getHexHash();
         } catch (Exception e) {
-            log.error("转换种子为磁力链接时出现错误 {}", FileUtil.getAbsolutePath(file));
+            log.error("转换种子为磁力链接时出现错误 {}", FileUtils.getAbsolutePath(file));
             log.error(e.getMessage(), e);
         }
         return StrFormatter.format("magnet:?xt=urn:btih:{}", hexHash);

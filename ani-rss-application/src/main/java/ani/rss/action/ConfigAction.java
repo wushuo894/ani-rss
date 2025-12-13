@@ -1,15 +1,15 @@
 package ani.rss.action;
 
-import ani.rss.web.action.BaseAction;
-import ani.rss.web.annotation.Auth;
-import ani.rss.web.annotation.Path;
-import ani.rss.commons.MavenUtil;
+import ani.rss.commons.MavenUtils;
 import ani.rss.entity.Config;
 import ani.rss.entity.Login;
 import ani.rss.service.TaskService;
 import ani.rss.util.other.AfdianUtil;
 import ani.rss.util.other.ConfigUtil;
 import ani.rss.util.other.TorrentUtil;
+import ani.rss.web.action.BaseAction;
+import ani.rss.web.annotation.Auth;
+import ani.rss.web.annotation.Path;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.bean.copier.CopyOptions;
 import cn.hutool.core.io.resource.ResourceUtil;
@@ -32,7 +32,7 @@ public class ConfigAction implements BaseAction {
     public void doAction(HttpServerRequest req, HttpServerResponse res) throws IOException {
         String method = req.getMethod();
         if (method.equals("GET")) {
-            String version = MavenUtil.getVersion();
+            String version = MavenUtils.getVersion();
             String buildInfo = buildInfo();
             Config config = ObjectUtil.clone(ConfigUtil.CONFIG);
             config.getLogin().setPassword("");

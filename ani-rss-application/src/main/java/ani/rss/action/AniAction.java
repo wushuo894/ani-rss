@@ -1,11 +1,7 @@
 package ani.rss.action;
 
-import ani.rss.web.action.BaseAction;
-import ani.rss.web.annotation.Auth;
-import ani.rss.web.annotation.Path;
-import ani.rss.web.auth.enums.AuthType;
-import ani.rss.commons.ExceptionUtil;
-import ani.rss.commons.FileUtil;
+import ani.rss.commons.ExceptionUtils;
+import ani.rss.commons.FileUtils;
 import ani.rss.entity.Ani;
 import ani.rss.entity.Config;
 import ani.rss.entity.Item;
@@ -14,17 +10,22 @@ import ani.rss.enums.SortTypeEnum;
 import ani.rss.service.ClearService;
 import ani.rss.service.DownloadService;
 import ani.rss.task.RssTask;
-import ani.rss.web.util.ServerUtil;
 import ani.rss.util.other.AniUtil;
 import ani.rss.util.other.ConfigUtil;
 import ani.rss.util.other.ItemsUtil;
 import ani.rss.util.other.TorrentUtil;
+import ani.rss.web.action.BaseAction;
+import ani.rss.web.annotation.Auth;
+import ani.rss.web.annotation.Path;
+import ani.rss.web.auth.enums.AuthType;
+import ani.rss.web.util.ServerUtil;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.comparator.PinyinComparator;
 import cn.hutool.core.date.DatePattern;
 import cn.hutool.core.date.DateTime;
 import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.text.StrFormatter;
 import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.core.util.ObjectUtil;
@@ -90,7 +91,7 @@ public class AniAction implements BaseAction {
                     DownloadService.downloadAni(downloadAni);
                 }
             } catch (Exception e) {
-                String message = ExceptionUtil.getMessage(e);
+                String message = ExceptionUtils.getMessage(e);
                 log.error(message, e);
             }
             DOWNLOAD.set(false);
@@ -152,7 +153,7 @@ public class AniAction implements BaseAction {
                     int currentEpisodeNumber = ItemsUtil.currentEpisodeNumber(ani, items);
                     ani.setCurrentEpisodeNumber(currentEpisodeNumber);
                 } catch (Exception e) {
-                    log.error(ExceptionUtil.getMessage(e), e);
+                    log.error(ExceptionUtils.getMessage(e), e);
                 }
             });
         }
@@ -223,7 +224,7 @@ public class AniAction implements BaseAction {
                 }
                 try {
                     FileUtil.mkdir(newDownloadPath);
-                    File[] files = FileUtil.listFiles(downloadPath);
+                    File[] files = FileUtils.listFiles(downloadPath);
                     for (File oldFile : files) {
                         log.info("移动文件 {} ==> {}", oldFile, newDownloadPath);
                         FileUtil.move(oldFile, new File(newDownloadPath), true);
@@ -231,7 +232,7 @@ public class AniAction implements BaseAction {
                     FileUtil.del(downloadPath);
                     ClearService.clearParentFile(downloadPath);
                 } catch (Exception e) {
-                    log.error(ExceptionUtil.getMessage(e), e);
+                    log.error(ExceptionUtils.getMessage(e), e);
                 }
             });
         }
