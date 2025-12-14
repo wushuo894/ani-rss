@@ -73,8 +73,8 @@ public class FileAction implements BaseAction {
         long maxAge = 86400 * 30;
 
         response.setHeader(Header.CACHE_CONTROL, "private, max-age=" + maxAge);
-        img = Base64.decodeStr(img);
-        response.setContentType(getContentType(URLUtil.getPath(img)));
+
+        String contentType = getContentType(URLUtil.getPath(img));
 
         File configDir = ConfigUtil.getConfigDir();
 
@@ -86,11 +86,8 @@ public class FileAction implements BaseAction {
         if (imgFile.exists()) {
             try {
                 @Cleanup
-                BufferedInputStream inputStream = FileUtil.getInputStream(imgFile);
-                @Cleanup
-                OutputStream out = response.getOut();
-                response.setContentLength((int) file.length());
-                IoUtil.copy(inputStream, out);
+                InputStream inputStream = FileUtil.getInputStream(imgFile);
+                response.write(inputStream, (int) imgFile.length(), contentType);
             } catch (Exception ignored) {
             }
             return;
@@ -101,10 +98,7 @@ public class FileAction implements BaseAction {
                 FileUtil.writeFromStream(is, imgFile, true);
                 @Cleanup
                 BufferedInputStream inputStream = FileUtil.getInputStream(imgFile);
-                @Cleanup
-                OutputStream out = response.getOut();
-                response.setContentLength((int) file.length());
-                IoUtil.copy(inputStream, out);
+                response.write(inputStream, (int) imgFile.length(), contentType);
             } catch (Exception ignored) {
             }
         });
@@ -137,7 +131,7 @@ public class FileAction implements BaseAction {
 
         response.setHeader(Header.CONTENT_DISPOSITION, StrFormatter.format("inline; filename=\"{}\"", URLUtil.encode(file.getName())));
         if (contentType.startsWith("video/")) {
-            response.setHeader("Content-Type", contentType);
+            response.setContentType(contentType);
             response.setHeader("Accept-Ranges", "bytes");
             String rangeHeader = request.getHeader("Range");
             long fileLength = file.length();
@@ -151,10 +145,10 @@ public class FileAction implements BaseAction {
                 }
                 long contentLength = end - start + 1;
                 response.setHeader("Content-Range", "bytes " + start + "-" + end + "/" + fileLength);
-                response.setHeader(Header.CONTENT_LENGTH, String.valueOf(contentLength));
+                response.setContentLength(contentLength);
                 hasRange = true;
             } else {
-                response.setHeader(Header.CONTENT_LENGTH, String.valueOf(fileLength));
+                response.setContentLength(fileLength);
             }
         } else {
             long fileLength = file.length();
@@ -173,7 +167,8 @@ public class FileAction implements BaseAction {
 
         try {
             if (hasRange) {
-                response.send(206);
+                long length = end - start;
+                response.send(206, length + 1);
                 @Cleanup
                 OutputStream out = response.getOut();
                 @Cleanup
@@ -183,7 +178,7 @@ public class FileAction implements BaseAction {
                 FileChannel channel = randomAccessFile.getChannel();
                 @Cleanup
                 InputStream inputStream = Channels.newInputStream(channel);
-                IoUtil.copy(inputStream, out, 40960, end - start, null);
+                IoUtil.copy(inputStream, out, 40960, length, null);
             } else {
                 @Cleanup
                 InputStream inputStream = FileUtil.getInputStream(file);
@@ -199,6 +194,9 @@ public class FileAction implements BaseAction {
     public void doAction(HttpServerRequest request, HttpServerResponse response) throws IOException {
         String img = request.getParam("img");
         if (StrUtil.isNotBlank(img)) {
+            if (Base64.isBase64(img)) {
+                img = Base64.decodeStr(img);
+            }
             doImg(img);
             return;
         }

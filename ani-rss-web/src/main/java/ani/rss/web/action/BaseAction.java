@@ -4,7 +4,6 @@ import ani.rss.commons.GsonStatic;
 import ani.rss.entity.Result;
 import ani.rss.web.util.ServerUtil;
 import cn.hutool.core.io.FileUtil;
-import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.io.resource.ResourceUtil;
 import cn.hutool.core.text.StrFormatter;
 import cn.hutool.core.util.StrUtil;
@@ -33,9 +32,9 @@ public interface BaseAction extends Action {
         response.setHeader(Header.CACHE_CONTROL, "no-store, no-cache, must-revalidate, max-age=0");
         response.setHeader(Header.PRAGMA, "no-cache");
         response.setHeader("Expires", "0");
-        response.setContentType("application/json; charset=utf-8");
         String json = GsonStatic.toJson(result);
-        IoUtil.writeUtf8(response.getOut(), true, json);
+        String contentType = "application/json; charset=utf-8";
+        response.write(json, contentType);
     }
 
     default String getBody() {
