@@ -5,14 +5,16 @@ import AutoImport from 'unplugin-auto-import/vite'
 import Components from 'unplugin-vue-components/vite'
 import {ElementPlusResolver} from 'unplugin-vue-components/resolvers'
 
+let serverHost = process.env['SERVER_HOST'];
+
 export default defineConfig({
     base: './',
     server: {
         port: 30000,
         proxy: {
             '/api': {
-                target: 'http://127.0.0.1:7789',
-                changeOrigin: true,
+                target: serverHost ? serverHost : 'http://127.0.0.1:7789',
+                changeOrigin: false
             }
         }
     },

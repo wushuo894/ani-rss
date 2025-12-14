@@ -124,8 +124,9 @@ public class FileAction implements BaseAction {
         }
 
         boolean hasRange = false;
+        long fileLength = file.length();
         long start = 0;
-        long end = file.length() - 1;
+        long end = fileLength - 1;
 
         String contentType = getContentType(file.getName());
 
@@ -134,7 +135,6 @@ public class FileAction implements BaseAction {
             response.setContentType(contentType);
             response.setHeader("Accept-Ranges", "bytes");
             String rangeHeader = request.getHeader("Range");
-            long fileLength = file.length();
             if (StrUtil.isNotBlank(rangeHeader) && rangeHeader.startsWith("bytes=")) {
                 String[] range = rangeHeader.substring(6).split("-");
                 if (range.length > 0) {
@@ -143,16 +143,10 @@ public class FileAction implements BaseAction {
                 if (range.length > 1) {
                     end = Long.parseLong(range[1]);
                 }
-                long contentLength = end - start + 1;
                 response.setHeader("Content-Range", "bytes " + start + "-" + end + "/" + fileLength);
-                response.setContentLength(contentLength);
                 hasRange = true;
-            } else {
-                response.setContentLength(fileLength);
             }
         } else {
-            long fileLength = file.length();
-
             long maxAge = 0;
 
             // 小于或者等于 1M 缓存
@@ -168,7 +162,7 @@ public class FileAction implements BaseAction {
         try {
             if (hasRange) {
                 long length = end - start;
-                response.send(206, length + 1);
+                response.send(206, length);
                 @Cleanup
                 OutputStream out = response.getOut();
                 @Cleanup
@@ -182,7 +176,7 @@ public class FileAction implements BaseAction {
             } else {
                 @Cleanup
                 InputStream inputStream = FileUtil.getInputStream(file);
-                response.write(inputStream, (int) file.length());
+                response.write(inputStream, (int) fileLength);
             }
         } catch (Exception e) {
             String message = ExceptionUtils.getMessage(e);
