@@ -73,8 +73,8 @@ public class FileAction implements BaseAction {
         long maxAge = 86400 * 30;
 
         response.setHeader(Header.CACHE_CONTROL, "private, max-age=" + maxAge);
-        img = Base64.decodeStr(img);
-        response.setContentType(getContentType(URLUtil.getPath(img)));
+
+        String contentType = getContentType(URLUtil.getPath(img));
 
         File configDir = ConfigUtil.getConfigDir();
 
@@ -86,11 +86,8 @@ public class FileAction implements BaseAction {
         if (imgFile.exists()) {
             try {
                 @Cleanup
-                BufferedInputStream inputStream = FileUtil.getInputStream(imgFile);
-                @Cleanup
-                OutputStream out = response.getOut();
-                response.setContentLength((int) file.length());
-                IoUtil.copy(inputStream, out);
+                InputStream inputStream = FileUtil.getInputStream(imgFile);
+                response.write(inputStream, (int) imgFile.length(), contentType);
             } catch (Exception ignored) {
             }
             return;
@@ -101,10 +98,7 @@ public class FileAction implements BaseAction {
                 FileUtil.writeFromStream(is, imgFile, true);
                 @Cleanup
                 BufferedInputStream inputStream = FileUtil.getInputStream(imgFile);
-                @Cleanup
-                OutputStream out = response.getOut();
-                response.setContentLength((int) file.length());
-                IoUtil.copy(inputStream, out);
+                response.write(inputStream, (int) imgFile.length(), contentType);
             } catch (Exception ignored) {
             }
         });
@@ -130,17 +124,17 @@ public class FileAction implements BaseAction {
         }
 
         boolean hasRange = false;
+        long fileLength = file.length();
         long start = 0;
-        long end = file.length() - 1;
+        long end = fileLength - 1;
 
         String contentType = getContentType(file.getName());
 
         response.setHeader(Header.CONTENT_DISPOSITION, StrFormatter.format("inline; filename=\"{}\"", URLUtil.encode(file.getName())));
         if (contentType.startsWith("video/")) {
-            response.setHeader("Content-Type", contentType);
+            response.setContentType(contentType);
             response.setHeader("Accept-Ranges", "bytes");
             String rangeHeader = request.getHeader("Range");
-            long fileLength = file.length();
             if (StrUtil.isNotBlank(rangeHeader) && rangeHeader.startsWith("bytes=")) {
                 String[] range = rangeHeader.substring(6).split("-");
                 if (range.length > 0) {
@@ -149,16 +143,10 @@ public class FileAction implements BaseAction {
                 if (range.length > 1) {
                     end = Long.parseLong(range[1]);
                 }
-                long contentLength = end - start + 1;
                 response.setHeader("Content-Range", "bytes " + start + "-" + end + "/" + fileLength);
-                response.setHeader(Header.CONTENT_LENGTH, String.valueOf(contentLength));
                 hasRange = true;
-            } else {
-                response.setHeader(Header.CONTENT_LENGTH, String.valueOf(fileLength));
             }
         } else {
-            long fileLength = file.length();
-
             long maxAge = 0;
 
             // 小于或者等于 1M 缓存
@@ -173,7 +161,8 @@ public class FileAction implements BaseAction {
 
         try {
             if (hasRange) {
-                response.send(206);
+                long length = end - start;
+                response.send(206, length);
                 @Cleanup
                 OutputStream out = response.getOut();
                 @Cleanup
@@ -183,11 +172,11 @@ public class FileAction implements BaseAction {
                 FileChannel channel = randomAccessFile.getChannel();
                 @Cleanup
                 InputStream inputStream = Channels.newInputStream(channel);
-                IoUtil.copy(inputStream, out, 40960, end - start, null);
+                IoUtil.copy(inputStream, out, 40960, length, null);
             } else {
                 @Cleanup
                 InputStream inputStream = FileUtil.getInputStream(file);
-                response.write(inputStream, (int) file.length());
+                response.write(inputStream, (int) fileLength);
             }
         } catch (Exception e) {
             String message = ExceptionUtils.getMessage(e);
@@ -199,6 +188,9 @@ public class FileAction implements BaseAction {
     public void doAction(HttpServerRequest request, HttpServerResponse response) throws IOException {
         String img = request.getParam("img");
         if (StrUtil.isNotBlank(img)) {
+            if (Base64.isBase64(img)) {
+                img = Base64.decodeStr(img);
+            }
             doImg(img);
             return;
         }

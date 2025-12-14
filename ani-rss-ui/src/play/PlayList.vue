@@ -1,38 +1,38 @@
 <template>
   <play-start ref="playStart"/>
   <el-dialog v-model="dialogVisible" :title="ani.title" center>
-    <div v-loading="listLoading" class="content">
-      <div v-if="list.length">
-        <el-scrollbar>
-          <div class="grid-container"
-               style="max-height: 500px;">
-            <div v-for="it in list">
-              <el-card shadow="never">
-                <div class="grid-item">
-                  <div>
-                    {{ it.title }}
-                    <br/>
-                    <el-text size="small" type="info">
-                      {{ it.lastModifyFormat }}
-                    </el-text>
-                  </div>
-                  <el-button circle
-                             icon="VideoPlay"
-                             size="large"
-                             text
-                             type="primary"
-                             @click="playStart?.show(ani,it)"
-                  />
+    <div v-loading="listLoading" v-if="list.length">
+      <el-scrollbar>
+        <div class="grid-container"
+             style="max-height: 500px;">
+          <div v-for="it in list">
+            <el-card shadow="never">
+              <div class="grid-item">
+                <div>
+                  {{ it.title }}
+                  <br/>
+                  <el-text size="small" type="info">
+                    {{ it.lastModifyFormat }}
+                  </el-text>
                 </div>
-              </el-card>
-            </div>
+                <el-button circle
+                           icon="VideoPlay"
+                           size="large"
+                           text
+                           type="primary"
+                           @click="playStart?.show(ani,it)"
+                />
+              </div>
+            </el-card>
           </div>
-        </el-scrollbar>
-        <div>
-          <p class="total-text">共 {{ list.length }} 项</p>
         </div>
+      </el-scrollbar>
+      <div>
+        <p class="total-text">共 {{ list.length }} 项</p>
       </div>
-      <el-text type="danger" v-else>
+    </div>
+    <div class="content" v-else>
+      <el-text type="danger">
         未下载集数或 docker 映射存在问题
       </el-text>
     </div>
