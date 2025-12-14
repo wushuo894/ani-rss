@@ -10,7 +10,7 @@ let serverHost = process.env['SERVER_HOST'];
 export default defineConfig({
     base: './',
     server: {
-        port: 30000,
+        port: 37789,
         proxy: {
             '/api': {
                 target: serverHost ? serverHost : 'http://127.0.0.1:7789',
