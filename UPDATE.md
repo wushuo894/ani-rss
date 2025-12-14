@@ -1,5 +1,5 @@
-refactor: 优化夜间模式效果
-refactor: 优化bgm的oauth
+refactor: 页面优化
+refactor: 优化视频播放
 
 [请不要将本项目在国内宣传](https://github.com/wushuo894/ani-rss/discussions/504)
 
