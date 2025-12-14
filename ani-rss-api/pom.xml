@@ -27,6 +27,11 @@
             <groupId>ani.rss</groupId>
             <artifactId>ani-rss-commons</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <build>
