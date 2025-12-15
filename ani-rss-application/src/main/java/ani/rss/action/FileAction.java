@@ -149,8 +149,8 @@ public class FileAction implements BaseAction {
         } else {
             long maxAge = 0;
 
-            // 小于或者等于 1M 缓存
-            if (fileLength <= 1024 * 1024) {
+            // 小于或者等于 3M 缓存
+            if (fileLength <= 1024 * 1024 * 3) {
                 // 30 天
                 maxAge = 86400 * 30;
             }
