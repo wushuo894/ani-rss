@@ -8,6 +8,7 @@ import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.text.StrFormatter;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.core.util.ZipUtil;
+import cn.hutool.http.Header;
 import cn.hutool.http.server.HttpServerRequest;
 import cn.hutool.http.server.HttpServerResponse;
 import lombok.Cleanup;
@@ -33,7 +34,7 @@ public class DownloadLogsAction implements BaseAction {
         String contentType = getContentType(filename);
 
         response.setContentType(contentType);
-        response.setHeader("Content-Disposition", StrFormatter.format("inline; filename=\"{}\"", filename));
+        response.setHeader(Header.CONTENT_DISPOSITION, StrFormatter.format("inline; filename=\"{}\"", filename));
 
         @Cleanup
         OutputStream outputStream = response.getOut();

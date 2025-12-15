@@ -21,6 +21,7 @@
     "vue": "^3.5.25"
   },
   "devDependencies": {
+    "vite-plugin-compression": "^0.5.1",
     "@vitejs/plugin-vue": "^6.0.3",
     "shiki": "^3.20.0",
     "terser": "^5.44.1",
