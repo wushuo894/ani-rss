@@ -127,7 +127,7 @@ public class RootAction implements BaseAction {
             if (Objects.nonNull(jarEntry) && !jarEntry.isDirectory()) {
                 try {
                     InputStream inputStream = jarFile.getInputStream(jarEntry);
-                    return new FileInfo(fileName, (long) jarFile.size(), inputStream, true);
+                    return new FileInfo(fileName, jarEntry.getSize(), inputStream, true);
                 } catch (IOException ignored) {
                 }
             }
@@ -140,7 +140,7 @@ public class RootAction implements BaseAction {
         if (!jarEntry.isDirectory()) {
             try {
                 InputStream inputStream = jarFile.getInputStream(jarEntry);
-                return new FileInfo(fileName, (long) jarFile.size(), inputStream, false);
+                return new FileInfo(fileName, jarEntry.getSize(), inputStream, false);
             } catch (IOException ignored) {
             }
         }
