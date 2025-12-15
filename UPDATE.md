@@ -1,5 +1,5 @@
-refactor: 页面优化
-refactor: 优化视频播放
+feat: 支持gzip传输
+refactor: 调整缓存
 
 [请不要将本项目在国内宣传](https://github.com/wushuo894/ani-rss/discussions/504)
 
