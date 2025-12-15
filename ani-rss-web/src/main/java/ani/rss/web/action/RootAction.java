@@ -12,8 +12,10 @@ import cn.hutool.core.util.URLUtil;
 import cn.hutool.http.Header;
 import cn.hutool.http.server.HttpServerRequest;
 import cn.hutool.http.server.HttpServerResponse;
+import lombok.AllArgsConstructor;
 import lombok.Cleanup;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 import lombok.extern.slf4j.Slf4j;
 
@@ -26,7 +28,6 @@ import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
@@ -95,7 +96,9 @@ public class RootAction implements BaseAction {
                 if (List.of("text/css", "application/x-javascript").contains(contentType)) {
                     response.setHeader(Header.CACHE_CONTROL, "private, max-age=86400");
                 }
-                response.write(inputStream, contentType);
+
+                Long fileSize = fileInfo.getFileSize();
+                response.write(inputStream, Math.toIntExact(fileSize), contentType);
                 return true;
             }
             if (!index) {
@@ -112,24 +115,23 @@ public class RootAction implements BaseAction {
         return false;
     }
 
-    public InputStream toStream(AtomicBoolean gzip, String fileName) {
+    public FileInfo toFileInfo(Boolean gzip, String fileName) {
         JarFile jarFile = MavenUtils.JAR_FILE;
         if (Objects.isNull(jarFile)) {
             return null;
         }
 
-        if (gzip.get()) {
+        if (gzip) {
             String gzipFileName = fileName + ".gz";
             JarEntry jarEntry = jarFile.getJarEntry(gzipFileName);
             if (Objects.nonNull(jarEntry) && !jarEntry.isDirectory()) {
                 try {
-                    return jarFile.getInputStream(jarEntry);
+                    InputStream inputStream = jarFile.getInputStream(jarEntry);
+                    return new FileInfo(fileName, (long) jarFile.size(), inputStream, true);
                 } catch (IOException ignored) {
                 }
             }
         }
-
-        gzip.set(false);
 
         JarEntry jarEntry = jarFile.getJarEntry(fileName);
         if (Objects.isNull(jarEntry)) {
@@ -137,32 +139,34 @@ public class RootAction implements BaseAction {
         }
         if (!jarEntry.isDirectory()) {
             try {
-                return jarFile.getInputStream(jarEntry);
+                InputStream inputStream = jarFile.getInputStream(jarEntry);
+                return new FileInfo(fileName, (long) jarFile.size(), inputStream, false);
             } catch (IOException ignored) {
             }
         }
         return null;
     }
 
-    public InputStream toStream(AtomicBoolean gzip, URL url) {
+    public FileInfo toFileInfo(Boolean gzip, URL url) {
         String filepath = URLUtil.decode(url.getFile(), StandardCharsets.UTF_8);
         String gzipFilepath = filepath + ".gz";
-        if (gzip.get()) {
+        String fileName = FileUtil.getName(filepath);
+        if (gzip) {
             File file = new File(gzipFilepath);
             if (file.exists() && file.isFile()) {
                 try {
-                    return FileUtil.getInputStream(file);
+                    InputStream inputStream = FileUtil.getInputStream(file);
+                    return new FileInfo(fileName, file.length(), inputStream, true);
                 } catch (Exception ignored) {
                 }
             }
         }
 
-        gzip.set(false);
-
         File file = new File(filepath);
         if (file.exists() && file.isFile()) {
             try {
-                return FileUtil.getInputStream(file);
+                InputStream inputStream = FileUtil.getInputStream(file);
+                return new FileInfo(fileName, file.length(), inputStream, false);
             } catch (Exception ignored) {
             }
         }
@@ -172,32 +176,29 @@ public class RootAction implements BaseAction {
     public Optional<FileInfo> toFileInfo(URL url, String fileName) {
         HttpServerRequest request = ServerUtil.REQUEST.get();
         String acceptEncoding = request.getHeader(Header.ACCEPT_ENCODING);
-        AtomicBoolean gzip = new AtomicBoolean(StrUtil.contains(acceptEncoding, "gzip"));
+        boolean gzip = StrUtil.contains(acceptEncoding, "gzip");
 
         String protocol = url.getProtocol();
-        InputStream inputStream;
+        FileInfo fileInfo;
         if (protocol.equals("file")) {
-            inputStream = toStream(gzip, url);
+            fileInfo = toFileInfo(gzip, url);
         } else {
-            inputStream = toStream(gzip, fileName);
+            fileInfo = toFileInfo(gzip, fileName);
         }
 
-        if (Objects.isNull(inputStream)) {
+        if (Objects.isNull(fileInfo)) {
             return Optional.empty();
         }
-
-        FileInfo fileInfo = new FileInfo();
-        fileInfo.setInputStream(inputStream)
-                .setFileName(fileName)
-                .setGzip(gzip.get());
-
         return Optional.of(fileInfo);
     }
 
     @Data
     @Accessors(chain = true)
+    @AllArgsConstructor
+    @NoArgsConstructor
     public static class FileInfo implements Serializable {
         private String fileName;
+        private Long fileSize;
         private InputStream inputStream;
         private Boolean gzip;
     }

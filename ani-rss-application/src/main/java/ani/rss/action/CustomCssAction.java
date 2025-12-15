@@ -4,6 +4,7 @@ import ani.rss.util.other.ConfigUtil;
 import ani.rss.web.action.BaseAction;
 import ani.rss.web.annotation.Auth;
 import ani.rss.web.annotation.Path;
+import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.Header;
 import cn.hutool.http.server.HttpServerRequest;
 import cn.hutool.http.server.HttpServerResponse;
@@ -25,6 +26,7 @@ public class CustomCssAction implements BaseAction {
         response.setHeader("Expires", "0");
 
         String customCss = ConfigUtil.CONFIG.getCustomCss();
+        customCss = StrUtil.blankToDefault(customCss, "/* empty css */");
         String contentType = "text/css";
         response.write(customCss, contentType);
     }
