@@ -1,5 +1,5 @@
-feat: 支持gzip传输
-refactor: 调整缓存
+feat: 剧场版支持在线播放 close #586
+refactor: 优化视频列表展示效果
 
 [请不要将本项目在国内宣传](https://github.com/wushuo894/ani-rss/discussions/504)
 
