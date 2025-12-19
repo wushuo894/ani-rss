@@ -26,7 +26,7 @@
                       <div class="list-card-info-inner">
                         <div class="flex">
                           <el-tooltip :content="item.title" placement="top">
-                            <el-text line-clamp="1"
+                            <el-text :line-clamp="1"
                                      @click="openBgmUrl(item)"
                                      class="list-card-title"
                                      truncated>
