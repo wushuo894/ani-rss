@@ -56,7 +56,6 @@ import artplayerPluginMultipleSubtitles from 'artplayer-plugin-multiple-subtitle
 const props = defineProps(['src', 'subtitles'])
 
 let openUrl = (url) => {
-  console.log('openUrl', url)
   window.open(url)
 }
 
