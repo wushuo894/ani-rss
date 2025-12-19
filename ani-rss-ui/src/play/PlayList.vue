@@ -9,7 +9,11 @@
             <el-card shadow="never">
               <div class="grid-item">
                 <div>
-                  {{ it.title }}
+                  <el-tooltip :content="it.title" placement="top">
+                    <el-text :line-clamp="2">
+                      {{ it.title }}
+                    </el-text>
+                  </el-tooltip>
                   <br/>
                   <el-text size="small" type="info">
                     {{ it.size }}&nbsp;|&nbsp;{{ it.lastModifyFormat }}
