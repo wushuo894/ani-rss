@@ -13,13 +13,35 @@ import java.util.List;
 @Accessors(chain = true)
 public class PlayItem implements Serializable {
 
+    /**
+     * 显示标题
+     */
     private String title;
 
+    /**
+     * 路径+文件名 bash64
+     */
     private String filename;
 
+    /**
+     * 文件名
+     */
     private String name;
 
+    /**
+     * 最后修改日期
+     */
     private Long lastModify;
+
+    /**
+     * 集数
+     */
+    private Double episode;
+
+    /**
+     * 文件大小 MB
+     */
+    private String size;
 
     private List<Subtitles> subtitles;
 

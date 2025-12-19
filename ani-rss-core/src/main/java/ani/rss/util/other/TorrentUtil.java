@@ -343,7 +343,8 @@ public class TorrentUtil {
         if (file.length() < 1) {
             return StrFormatter.format("magnet:?xt=urn:btih:{}", hexHash);
         }
-        if (FileUtil.extName(file).equals("txt")) {
+        String extName = FileUtil.extName(file);
+        if ("txt".equals(extName)) {
             return FileUtil.readUtf8String(file);
         }
         try {
