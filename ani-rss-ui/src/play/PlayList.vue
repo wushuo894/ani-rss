@@ -12,7 +12,7 @@
                   {{ it.title }}
                   <br/>
                   <el-text size="small" type="info">
-                    {{ it.lastModifyFormat }}
+                    {{ it.size }}&nbsp;|&nbsp;{{ it.lastModifyFormat }}
                   </el-text>
                 </div>
                 <el-button circle

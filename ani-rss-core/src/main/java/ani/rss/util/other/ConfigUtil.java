@@ -399,7 +399,7 @@ public class ConfigUtil {
                 continue;
             }
             String extName = FileUtil.extName(file);
-            if (!extName.equals("zip")) {
+            if (!"zip".equals(extName)) {
                 continue;
             }
             String mainName = FileUtil.mainName(file);

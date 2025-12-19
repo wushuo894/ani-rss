@@ -79,6 +79,9 @@ public class ScrapeService {
         Optional<File> first = Stream.of(files)
                 .filter(file -> {
                     String extName = FileUtil.extName(file);
+                    if (StrUtil.isBlank(extName)) {
+                        return false;
+                    }
                     return BaseDownload.videoFormat.contains(extName);
                 })
                 .max(Comparator.comparingLong(File::length));
