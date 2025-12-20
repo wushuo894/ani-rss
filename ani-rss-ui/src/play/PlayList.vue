@@ -1,7 +1,7 @@
 <template>
   <play-start ref="playStart"/>
   <el-dialog v-model="dialogVisible" :title="ani.title" center>
-    <div v-loading="listLoading" v-if="list.length">
+    <div v-loading="listLoading" v-if="list.length || listLoading">
       <el-scrollbar>
         <div class="grid-container"
              style="max-height: 500px;">
@@ -24,7 +24,7 @@
                            size="large"
                            text
                            type="primary"
-                           @click="playStart?.show(ani,it)"
+                           @click="playStart?.show(it)"
                 />
               </div>
             </el-card>
