@@ -142,10 +142,13 @@ public class FileAction implements BaseAction {
                 }
                 if (range.length > 1) {
                     end = Long.parseLong(range[1]);
+                } else {
+                    long maxEnd = start + (1024 * 1024 * 10);
+                    end = Math.min(end, maxEnd);
                 }
-                response.setHeader("Content-Range", "bytes " + start + "-" + end + "/" + fileLength);
-                hasRange = true;
             }
+            response.setHeader("Content-Range", "bytes " + start + "-" + end + "/" + fileLength);
+            hasRange = true;
         } else {
             long maxAge = 0;
 

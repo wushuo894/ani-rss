@@ -43,6 +43,11 @@ public class PlayItem implements Serializable {
      */
     private String size;
 
+    /**
+     * 扩展名
+     */
+    private String extName;
+
     private List<Subtitles> subtitles;
 
     @Data

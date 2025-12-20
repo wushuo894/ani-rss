@@ -112,6 +112,7 @@ public class PlaylistAction implements BaseAction {
                 .setLastModify(lastModified)
                 .setEpisode(1.0)
                 .setSize(size)
+                .setExtName(extName)
                 .setSubtitles(subtitles);
 
         if (ReUtil.contains(StringEnum.SEASON_REG, file.getName())) {

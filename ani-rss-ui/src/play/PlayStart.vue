@@ -1,8 +1,8 @@
 <template>
-  <el-dialog v-if="dialogVisible" v-model="dialogVisible" :title="playItem.name" center>
+  <el-dialog v-model="dialogVisible" :title="playItem.name" center @close="onClose">
     <div
         class="flex-center content">
-      <Artplayer :src="src" :subtitles="subtitles"/>
+      <Artplayer :playItem="playItem" v-if="dialogVisible"/>
     </div>
   </el-dialog>
 </template>
@@ -13,25 +13,25 @@ import Artplayer from "./Artplayer.vue";
 import {authorization} from "@/js/global.js";
 
 let dialogVisible = ref(false)
-let src = ref('')
-let ani = ref({})
-let playItem = ref()
-let subtitles = ref([])
+let playItem = ref({})
 
-let show = (i, pi) => {
-  src.value = `api/files?filename=${pi.filename}&s=${authorization.value}`
-  for (let subtitle of pi.subtitles) {
-    subtitle.url = `api/files?filename=${subtitle.url}&s=${authorization.value}`
+let show = (pi) => {
+  playItem.value = {...pi};
+  playItem.value.src = `${location.href}api/files?filename=${playItem.value.filename}&s=${authorization.value}`
+  for (let subtitle of playItem.value.subtitles) {
+    subtitle.url = `${location.href}api/files?filename=${subtitle.url}&s=${authorization.value}`
   }
-  subtitles = pi.subtitles
-  ani.value = i
-  playItem.value = pi
   dialogVisible.value = true
 }
 
 defineExpose({
   show
 })
+
+let onClose = () => {
+  dialogVisible.value = false
+  playItem.value = {}
+}
 </script>
 
 <style scoped>
