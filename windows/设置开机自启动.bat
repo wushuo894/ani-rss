@@ -1,4 +1,8 @@
 @echo off
+
+:: 切换到当前脚本所在目录
+cd /D %~dp0
+
 :: 获取当前批处理文件所在目录
 set "currentDir=%CD%"
 
