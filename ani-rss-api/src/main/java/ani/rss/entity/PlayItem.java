@@ -56,6 +56,7 @@ public class PlayItem implements Serializable {
         private String html;
         private String name;
         private String url;
+        private String content;
         private String type;
     }
 
