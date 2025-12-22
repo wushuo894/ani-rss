@@ -24,7 +24,7 @@
                            size="large"
                            text
                            type="primary"
-                           @click="playStart?.show(it)"
+                           @click="playStartShow(it)"
                 />
               </div>
             </el-card>
@@ -56,6 +56,10 @@ const list = ref([])
 
 let ani = ref({})
 let playStart = ref()
+
+let playStartShow = (it)=>{
+  playStart.value?.show(JSON.parse(JSON.stringify(it)))
+}
 
 const show = (it) => {
   ani.value = it
