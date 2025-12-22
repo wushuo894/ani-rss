@@ -4,7 +4,6 @@ import ani.rss.commons.NumberFormatUtils;
 import ani.rss.entity.Ani;
 import ani.rss.entity.Config;
 import ani.rss.entity.NotificationConfig;
-import ani.rss.entity.tmdb.Tmdb;
 import ani.rss.enums.NotificationStatusEnum;
 import ani.rss.enums.StringEnum;
 import ani.rss.service.DownloadService;
@@ -16,6 +15,7 @@ import cn.hutool.core.lang.func.Func1;
 import cn.hutool.core.text.StrFormatter;
 import cn.hutool.core.util.ReUtil;
 import cn.hutool.core.util.StrUtil;
+import wushuo.tmdb.api.entity.Tmdb;
 
 import java.util.List;
 import java.util.Optional;

@@ -5,7 +5,6 @@ import ani.rss.commons.GsonStatic;
 import ani.rss.entity.Ani;
 import ani.rss.entity.BgmInfo;
 import ani.rss.entity.Config;
-import ani.rss.entity.tmdb.Tmdb;
 import ani.rss.enums.BgmTokenTypeEnum;
 import ani.rss.service.DownloadService;
 import ani.rss.util.basic.HttpReq;
@@ -29,6 +28,7 @@ import cn.hutool.json.JSONUtil;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import lombok.extern.slf4j.Slf4j;
+import wushuo.tmdb.api.entity.Tmdb;
 
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
@@ -89,7 +89,7 @@ public class BgmUtil {
             title = StrFormatter.format("{} ({})", title, DateUtil.year(date));
         }
 
-        return TmdbUtil.getFinalName(title, tmdb);
+        return TmdbUtils.getFinalName(title, tmdb);
     }
 
     /**
@@ -821,7 +821,7 @@ public class BgmUtil {
                 .setCover(AniUtil.saveJpg(image));
 
         // 获取tmdb标题
-        String themoviedbName = TmdbUtil.getFinalName(ani);
+        String themoviedbName = TmdbUtils.getFinalName(ani);
 
         // 是否使用tmdb标题
         if (StrUtil.isNotBlank(themoviedbName) && tmdb) {
