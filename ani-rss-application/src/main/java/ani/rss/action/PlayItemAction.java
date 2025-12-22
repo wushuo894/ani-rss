@@ -8,6 +8,7 @@ import ani.rss.web.auth.enums.AuthType;
 import cn.hutool.core.codec.Base64;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.lang.Assert;
+import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.server.HttpServerRequest;
 import cn.hutool.http.server.HttpServerResponse;
 import com.google.gson.JsonObject;
@@ -58,9 +59,20 @@ public class PlayItemAction implements BaseAction {
             file = Base64.decodeStr(file);
         }
 
-        Assert.isTrue(FileUtil.exist(file), "视频文件不存在");
-
         List<PlayItem.Subtitles> subtitlesList = new ArrayList<>();
+
+        String extName = FileUtil.extName(file);
+        if (StrUtil.isBlank(extName)) {
+            resultSuccess(subtitlesList);
+            return;
+        }
+
+        if (!"mkv".equals(extName)) {
+            resultSuccess(subtitlesList);
+            return;
+        }
+
+        Assert.isTrue(FileUtil.exist(file), "视频文件不存在");
 
         @Cleanup
         EBMLReader reader = new EBMLReader(file);
