@@ -8,6 +8,7 @@ import ani.rss.web.auth.enums.AuthType;
 import cn.hutool.core.codec.Base64;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.lang.Assert;
+import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.server.HttpServerRequest;
 import cn.hutool.http.server.HttpServerResponse;
 import com.google.gson.JsonObject;
@@ -56,6 +57,15 @@ public class PlayItemAction implements BaseAction {
 
         if (Base64.isBase64(file)) {
             file = Base64.decodeStr(file);
+        }
+
+        String extName = FileUtil.extName(file);
+        if (StrUtil.isBlank(extName)) {
+            return;
+        }
+
+        if (!"mkv".equals(extName)) {
+            return;
         }
 
         Assert.isTrue(FileUtil.exist(file), "视频文件不存在");
