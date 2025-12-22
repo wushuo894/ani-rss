@@ -3,7 +3,6 @@ package ani.rss.util.other;
 import ani.rss.commons.FileUtils;
 import ani.rss.commons.GsonStatic;
 import ani.rss.entity.*;
-import ani.rss.entity.tmdb.Tmdb;
 import ani.rss.service.ClearService;
 import ani.rss.service.DownloadService;
 import ani.rss.util.basic.HttpReq;
@@ -20,6 +19,7 @@ import cn.hutool.crypto.SecureUtil;
 import cn.hutool.http.HttpUtil;
 import cn.hutool.json.JSONUtil;
 import lombok.extern.slf4j.Slf4j;
+import wushuo.tmdb.api.entity.Tmdb;
 
 import java.io.File;
 import java.nio.charset.StandardCharsets;

@@ -5,7 +5,6 @@ import ani.rss.commons.FileUtils;
 import ani.rss.commons.GsonStatic;
 import ani.rss.download.BaseDownload;
 import ani.rss.entity.*;
-import ani.rss.entity.tmdb.Tmdb;
 import ani.rss.enums.NotificationStatusEnum;
 import ani.rss.enums.StringEnum;
 import ani.rss.enums.TorrentsTags;
@@ -24,6 +23,7 @@ import cn.hutool.extra.pinyin.PinyinUtil;
 import cn.hutool.json.JSONUtil;
 import lombok.Synchronized;
 import lombok.extern.slf4j.Slf4j;
+import wushuo.tmdb.api.entity.Tmdb;
 
 import java.io.File;
 import java.util.*;
