@@ -59,18 +59,20 @@ public class PlayItemAction implements BaseAction {
             file = Base64.decodeStr(file);
         }
 
+        List<PlayItem.Subtitles> subtitlesList = new ArrayList<>();
+
         String extName = FileUtil.extName(file);
         if (StrUtil.isBlank(extName)) {
+            resultSuccess(subtitlesList);
             return;
         }
 
         if (!"mkv".equals(extName)) {
+            resultSuccess(subtitlesList);
             return;
         }
 
         Assert.isTrue(FileUtil.exist(file), "视频文件不存在");
-
-        List<PlayItem.Subtitles> subtitlesList = new ArrayList<>();
 
         @Cleanup
         EBMLReader reader = new EBMLReader(file);
