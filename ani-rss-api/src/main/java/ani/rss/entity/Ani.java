@@ -1,8 +1,8 @@
 package ani.rss.entity;
 
-import ani.rss.entity.tmdb.Tmdb;
 import lombok.Data;
 import lombok.experimental.Accessors;
+import wushuo.tmdb.api.entity.Tmdb;
 
 import java.io.Serializable;
 import java.util.List;

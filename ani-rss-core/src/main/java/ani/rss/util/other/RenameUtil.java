@@ -5,7 +5,6 @@ import ani.rss.entity.Ani;
 import ani.rss.entity.BgmInfo;
 import ani.rss.entity.Config;
 import ani.rss.entity.Item;
-import ani.rss.entity.tmdb.Tmdb;
 import ani.rss.enums.StringEnum;
 import cn.hutool.core.lang.Opt;
 import cn.hutool.core.lang.func.Func1;
@@ -14,6 +13,7 @@ import cn.hutool.core.text.StrFormatter;
 import cn.hutool.core.util.ReUtil;
 import cn.hutool.core.util.StrUtil;
 import lombok.extern.slf4j.Slf4j;
+import wushuo.tmdb.api.entity.Tmdb;
 
 import java.util.*;
 import java.util.function.Function;
@@ -189,7 +189,7 @@ public class RenameUtil {
         Map<Integer, Function<Boolean, String>> bgmEpisodeTitleMap = new HashMap<>();
 
         if (template.contains("${episodeTitle}")) {
-            episodeTitleMap = TmdbUtil.getEpisodeTitleMap(ani);
+            episodeTitleMap = TmdbUtils.getEpisodeTitleMap(ani);
         }
 
         if (template.contains("${bgmEpisodeTitle}") || template.contains("${bgmJpEpisodeTitle}")) {

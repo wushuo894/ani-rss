@@ -4,7 +4,6 @@ import ani.rss.commons.GsonStatic;
 import ani.rss.entity.Ani;
 import ani.rss.entity.Config;
 import ani.rss.entity.EmbyWebHook;
-import ani.rss.entity.tmdb.Tmdb;
 import ani.rss.enums.StringEnum;
 import ani.rss.service.DownloadService;
 import ani.rss.util.other.*;
@@ -19,6 +18,7 @@ import cn.hutool.http.server.HttpServerRequest;
 import cn.hutool.http.server.HttpServerResponse;
 import lombok.Synchronized;
 import lombok.extern.slf4j.Slf4j;
+import wushuo.tmdb.api.entity.Tmdb;
 
 import java.io.File;
 import java.io.IOException;

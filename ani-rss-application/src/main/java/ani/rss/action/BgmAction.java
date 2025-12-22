@@ -2,7 +2,6 @@ package ani.rss.action;
 
 import ani.rss.entity.Ani;
 import ani.rss.entity.BgmInfo;
-import ani.rss.entity.tmdb.Tmdb;
 import ani.rss.util.other.AniUtil;
 import ani.rss.util.other.BgmUtil;
 import ani.rss.web.action.BaseAction;
@@ -13,6 +12,7 @@ import cn.hutool.http.server.HttpServerRequest;
 import cn.hutool.http.server.HttpServerResponse;
 import com.google.gson.JsonObject;
 import lombok.extern.slf4j.Slf4j;
+import wushuo.tmdb.api.entity.Tmdb;
 
 import java.io.IOException;
 import java.util.Objects;

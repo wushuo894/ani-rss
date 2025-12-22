@@ -3,7 +3,6 @@ package ani.rss.action;
 import ani.rss.entity.Ani;
 import ani.rss.entity.BgmInfo;
 import ani.rss.entity.NotificationConfig;
-import ani.rss.entity.tmdb.Tmdb;
 import ani.rss.enums.NotificationStatusEnum;
 import ani.rss.enums.NotificationTypeEnum;
 import ani.rss.notification.BaseNotification;
@@ -16,6 +15,7 @@ import ani.rss.web.annotation.Path;
 import cn.hutool.core.util.ReflectUtil;
 import cn.hutool.http.server.HttpServerRequest;
 import cn.hutool.http.server.HttpServerResponse;
+import wushuo.tmdb.api.entity.Tmdb;
 
 import java.io.IOException;
 import java.util.Date;

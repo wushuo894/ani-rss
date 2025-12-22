@@ -33,6 +33,10 @@
             <id>ebml-reader</id>
             <url>https://raw.github.com/wushuo894/EBMLReader/mvn-repo</url>
         </repository>
+        <repository>
+            <id>tmdb-api</id>
+            <url>https://raw.github.com/wushuo894/tmdb-api/mvn-repo</url>
+        </repository>
     </repositories>
 
     <dependencyManagement>
@@ -61,6 +65,11 @@
                 <groupId>ani.rss</groupId>
                 <artifactId>ani-rss-web</artifactId>
                 <version>${project.parent.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>wushuo.tmdb.api</groupId>
+                <artifactId>tmdb-api</artifactId>
+                <version>1.0.0</version>
             </dependency>
             <dependency>
                 <groupId>ebml.reader</groupId>

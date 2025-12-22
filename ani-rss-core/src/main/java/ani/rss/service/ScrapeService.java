@@ -3,16 +3,16 @@ package ani.rss.service;
 import ani.rss.commons.FileUtils;
 import ani.rss.download.BaseDownload;
 import ani.rss.entity.Ani;
-import ani.rss.entity.tmdb.*;
 import ani.rss.enums.StringEnum;
-import ani.rss.enums.TmdbTypeEnum;
 import ani.rss.util.basic.HttpReq;
-import ani.rss.util.other.TmdbUtil;
+import ani.rss.util.other.TmdbUtils;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.ReUtil;
 import cn.hutool.core.util.StrUtil;
 import lombok.extern.slf4j.Slf4j;
+import wushuo.tmdb.api.entity.*;
+import wushuo.tmdb.api.enums.TmdbTypeEnum;
 
 import java.io.File;
 import java.io.InputStream;
@@ -66,7 +66,12 @@ public class ScrapeService {
         Tmdb tmdb = ani.getTmdb();
 
         // 更新tmdb信息
-        tmdb = TmdbUtil.getTmdb(tmdb, TmdbTypeEnum.MOVIE);
+        Optional<Tmdb> tmdbOptional = TmdbUtils.getTmdb(tmdb, TmdbTypeEnum.MOVIE);
+        if (tmdbOptional.isEmpty()) {
+            log.warn("获取tmdb失败 {}", tmdb.getId());
+            return;
+        }
+        tmdb = tmdbOptional.get();
 
         // 下载位置
         String downloadPath = DownloadService.getDownloadPath(ani);
@@ -113,7 +118,7 @@ public class ScrapeService {
         saveImages(posterPath, posterFile, force);
         saveImages(fanartPath, fanartFile, force);
 
-        TmdbImages tmdbImages = TmdbUtil.getTmdbImages(tmdb, TmdbTypeEnum.MOVIE);
+        TmdbImages tmdbImages = TmdbUtils.getTmdbImages(tmdb, TmdbTypeEnum.MOVIE);
         List<TmdbImage> logos = tmdbImages.getLogos();
         if (logos.isEmpty()) {
             return;
@@ -138,7 +143,12 @@ public class ScrapeService {
         Tmdb tmdb = ani.getTmdb();
 
         // 更新tmdb信息
-        tmdb = TmdbUtil.getTmdb(tmdb, TmdbTypeEnum.TV);
+        Optional<Tmdb> tmdbOptional = TmdbUtils.getTmdb(tmdb, TmdbTypeEnum.TV);
+        if (tmdbOptional.isEmpty()) {
+            log.warn("获取tmdb失败 {}", tmdb.getId());
+            return;
+        }
+        tmdb = tmdbOptional.get();
 
         // 下载位置
         File downloadPath = new File(DownloadService.getDownloadPath(ani));
@@ -166,7 +176,7 @@ public class ScrapeService {
         saveImages(fanartPath, fanartFile, force);
 
         // 保存logo
-        TmdbImages tmdbImages = TmdbUtil.getTmdbImages(tmdb, TmdbTypeEnum.TV);
+        TmdbImages tmdbImages = TmdbUtils.getTmdbImages(tmdb, TmdbTypeEnum.TV);
         List<TmdbImage> logos = tmdbImages.getLogos();
         if (!logos.isEmpty()) {
             TmdbImage tmdbImage = logos.get(0);
@@ -178,7 +188,7 @@ public class ScrapeService {
 
         Integer season = ani.getSeason();
 
-        Optional<TmdbSeason> optional = TmdbUtil.getTmdbSeason(tmdb, season);
+        Optional<TmdbSeason> optional = TmdbUtils.getTmdbSeason(tmdb, season);
         if (optional.isEmpty()) {
             return;
         }
