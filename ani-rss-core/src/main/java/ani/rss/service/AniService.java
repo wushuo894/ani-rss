@@ -28,7 +28,12 @@ public class AniService {
         String title = ani.getTitle();
 
         // 自动更新总集数信息
-        totalEpisodeNumber = BgmUtil.getEps(bgmInfo);
+        int bgmEp = BgmUtil.getEps(bgmInfo);
+        if (bgmEp == totalEpisodeNumber) {
+            // 集数未发生改变
+            return;
+        }
+
         ani.setTotalEpisodeNumber(totalEpisodeNumber);
 
         log.info("{} 总集数发生更新: {}", title, totalEpisodeNumber);
