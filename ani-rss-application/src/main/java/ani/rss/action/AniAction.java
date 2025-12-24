@@ -400,6 +400,7 @@ public class AniAction implements BaseAction {
         Assert.notEmpty(ids, "未选择订阅");
         ThreadUtil.execute(() -> {
             log.info("开始手动更新总集数");
+            int count = 0;
             for (Ani ani : AniUtil.ANI_LIST) {
                 String id = ani.getId();
                 if (!ids.contains(id)) {
@@ -412,10 +413,13 @@ public class AniAction implements BaseAction {
                     log.error(e.getMessage(), e);
                     continue;
                 }
-                AniService.updateTotalEpisodeNumber(ani, bgmInfo, force);
+                Boolean b = AniService.updateTotalEpisodeNumber(ani, bgmInfo, force);
+                if (b) {
+                    count++;
+                }
             }
             AniUtil.sync();
-            log.info("手动更新总集数完成");
+            log.info("手动更新总集数完成 共更新{}条订阅", count);
         });
         resultSuccessMsg("已开始更新总集数");
     }

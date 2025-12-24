@@ -14,14 +14,15 @@ public class AniService {
      * @param ani     订阅
      * @param bgmInfo BGM
      * @param force   强制
+     * @return 是否已发生更新
      */
-    public static void updateTotalEpisodeNumber(Ani ani, BgmInfo bgmInfo, Boolean force) {
+    public static Boolean updateTotalEpisodeNumber(Ani ani, BgmInfo bgmInfo, Boolean force) {
         Integer totalEpisodeNumber = ani.getTotalEpisodeNumber();
         if (!force) {
             // 未开启强制更新
             if (totalEpisodeNumber > 0) {
                 // 总集数不为 0
-                return;
+                return false;
             }
         }
 
@@ -31,11 +32,12 @@ public class AniService {
         int bgmEp = BgmUtil.getEps(bgmInfo);
         if (bgmEp == totalEpisodeNumber) {
             // 集数未发生改变
-            return;
+            return false;
         }
 
         ani.setTotalEpisodeNumber(totalEpisodeNumber);
 
         log.info("{} 总集数发生更新: {}", title, totalEpisodeNumber);
+        return true;
     }
 }
