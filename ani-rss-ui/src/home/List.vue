@@ -325,7 +325,7 @@ let props = defineProps({
 }
 
 .list-card-title {
-  max-width: 200px;
+  width: 300px;
   line-height: 1.6;
   letter-spacing: 0.0125em;
   font-weight: 500;
