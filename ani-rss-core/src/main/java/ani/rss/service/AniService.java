@@ -35,9 +35,9 @@ public class AniService {
             return false;
         }
 
-        ani.setTotalEpisodeNumber(totalEpisodeNumber);
+        ani.setTotalEpisodeNumber(bgmEp);
 
-        log.info("{} 总集数发生更新: {}", title, totalEpisodeNumber);
+        log.info("{} 总集数发生更新: {}", title, bgmEp);
         return true;
     }
 }
