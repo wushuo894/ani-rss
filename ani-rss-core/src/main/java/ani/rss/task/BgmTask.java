@@ -3,6 +3,7 @@ package ani.rss.task;
 import ani.rss.entity.Ani;
 import ani.rss.entity.BgmInfo;
 import ani.rss.entity.Config;
+import ani.rss.service.AniService;
 import ani.rss.util.other.AniUtil;
 import ani.rss.util.other.BgmUtil;
 import ani.rss.util.other.ConfigUtil;
@@ -45,7 +46,6 @@ public class BgmTask extends Thread {
                 if (!enable) {
                     continue;
                 }
-                int totalEpisodeNumber = ani.getTotalEpisodeNumber();
                 BgmInfo bgmInfo;
                 try {
                     bgmInfo = BgmUtil.getBgmInfo(ani);
@@ -59,12 +59,14 @@ public class BgmTask extends Thread {
 
                 Config config = ConfigUtil.CONFIG;
                 Boolean updateTotalEpisodeNumber = config.getUpdateTotalEpisodeNumber();
+                Boolean forceUpdateTotalEpisodeNumber = config.getForceUpdateTotalEpisodeNumber();
 
-                if (totalEpisodeNumber < 1 && updateTotalEpisodeNumber) {
-                    // 自动更新总集数信息
-                    totalEpisodeNumber = BgmUtil.getEps(bgmInfo);
-                    ani.setTotalEpisodeNumber(totalEpisodeNumber);
+                if (!updateTotalEpisodeNumber) {
+                    // 未开启更新总集数
+                    continue;
                 }
+
+                AniService.updateTotalEpisodeNumber(ani, bgmInfo, forceUpdateTotalEpisodeNumber);
             }
             AniUtil.sync();
 

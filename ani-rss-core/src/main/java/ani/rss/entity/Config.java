@@ -577,6 +577,11 @@ public class Config implements Serializable {
     private Boolean updateTotalEpisodeNumber;
 
     /**
+     * 强制更新总集数信息
+     */
+    private Boolean forceUpdateTotalEpisodeNumber;
+
+    /**
      * OpenList 离线超时 分钟
      */
     private Integer alistDownloadTimeout;

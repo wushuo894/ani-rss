@@ -219,6 +219,7 @@ public class ConfigUtil {
                 .setAlistRefresh(false)
                 .setAlistRefreshDelayed(0L)
                 .setUpdateTotalEpisodeNumber(false)
+                .setForceUpdateTotalEpisodeNumber(false)
                 .setAlistDownloadTimeout(60)
                 .setAlistDownloadRetryNumber(5L)
                 .setConfigBackup(false)

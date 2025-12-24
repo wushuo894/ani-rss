@@ -2,18 +2,13 @@ package ani.rss.action;
 
 import ani.rss.commons.ExceptionUtils;
 import ani.rss.commons.FileUtils;
-import ani.rss.entity.Ani;
-import ani.rss.entity.Config;
-import ani.rss.entity.Item;
-import ani.rss.entity.TorrentsInfo;
+import ani.rss.entity.*;
 import ani.rss.enums.SortTypeEnum;
+import ani.rss.service.AniService;
 import ani.rss.service.ClearService;
 import ani.rss.service.DownloadService;
 import ani.rss.task.RssTask;
-import ani.rss.util.other.AniUtil;
-import ani.rss.util.other.ConfigUtil;
-import ani.rss.util.other.ItemsUtil;
-import ani.rss.util.other.TorrentUtil;
+import ani.rss.util.other.*;
 import ani.rss.web.action.BaseAction;
 import ani.rss.web.annotation.Auth;
 import ani.rss.web.annotation.Path;
@@ -26,6 +21,7 @@ import cn.hutool.core.date.DatePattern;
 import cn.hutool.core.date.DateTime;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.lang.Assert;
 import cn.hutool.core.text.StrFormatter;
 import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.core.util.ObjectUtil;
@@ -317,6 +313,7 @@ public class AniAction implements BaseAction {
         List<String> ids = jsonArray.asList()
                 .stream().map(JsonElement::getAsString)
                 .toList();
+        Assert.notEmpty(ids, "未选择订阅");
         List<Ani> anis = AniUtil.ANI_LIST.stream()
                 .filter(it -> ids.contains(it.getId()))
                 .toList();
@@ -380,6 +377,7 @@ public class AniAction implements BaseAction {
                 .stream()
                 .map(JsonElement::getAsString)
                 .toList();
+        Assert.notEmpty(ids, "未选择订阅");
         for (Ani ani : AniUtil.ANI_LIST) {
             String id = ani.getId();
             if (!ids.contains(id)) {
@@ -391,19 +389,55 @@ public class AniAction implements BaseAction {
         resultSuccessMsg("修改完成");
     }
 
+    private void updateTotalEpisodeNumber() {
+        HttpServerRequest request = ServerUtil.REQUEST.get();
+        boolean force = Boolean.parseBoolean(request.getParam("force"));
+        List<String> ids = getBody(JsonArray.class)
+                .asList()
+                .stream()
+                .map(JsonElement::getAsString)
+                .toList();
+        Assert.notEmpty(ids, "未选择订阅");
+        ThreadUtil.execute(() -> {
+            log.info("开始手动更新总集数");
+            for (Ani ani : AniUtil.ANI_LIST) {
+                String id = ani.getId();
+                if (!ids.contains(id)) {
+                    continue;
+                }
+                BgmInfo bgmInfo;
+                try {
+                    bgmInfo = BgmUtil.getBgmInfo(ani);
+                } catch (Exception e) {
+                    log.error(e.getMessage(), e);
+                    continue;
+                }
+                AniService.updateTotalEpisodeNumber(ani, bgmInfo, force);
+            }
+            AniUtil.sync();
+            log.info("手动更新总集数完成");
+        });
+        resultSuccessMsg("已开始更新总集数");
+    }
+
     @Override
     public void doAction(HttpServerRequest req, HttpServerResponse res) {
         String method = req.getMethod();
         String type = StrUtil.blankToDefault(req.getParam("type"), "");
-        if (type.equals("download")) {
-            download();
-            return;
-        }
-
-        if (type.equals("batchEnable")) {
-            boolean enable = Boolean.parseBoolean(req.getParam("value"));
-            batchEnable(enable);
-            return;
+        switch (type) {
+            case "download" -> {
+                download();
+                return;
+            }
+            case "batchEnable" -> {
+                boolean enable = Boolean.parseBoolean(req.getParam("value"));
+                batchEnable(enable);
+                return;
+            }
+            case "updateTotalEpisodeNumber" -> {
+                updateTotalEpisodeNumber();
+                return;
+            }
         }
 
         switch (method) {

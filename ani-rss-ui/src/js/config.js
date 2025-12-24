@@ -113,6 +113,7 @@ export let configData = {
     "alistRefresh": false,
     "alistRefreshDelayed": 0,
     "updateTotalEpisodeNumber": false,
+    "forceUpdateTotalEpisodeNumber": false,
     "alistDownloadTimeout": 60,
     "alistDownloadRetryNumber": 5,
     "tvShowNfo": false,

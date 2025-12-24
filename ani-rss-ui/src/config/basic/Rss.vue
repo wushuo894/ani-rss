@@ -47,9 +47,6 @@
           根据 Bangumi 获取总集数 当所有集数都已下载时自动禁用该订阅
         </el-text>
         <div>
-          <el-checkbox v-model="props.config['updateTotalEpisodeNumber']" label="自动更新总集数"/>
-        </div>
-        <div>
           <el-checkbox v-model="props.config['completed']"
                        :disabled="!props.config['verifyExpirationTime'] || !props.config.autoDisabled"
                        label="订阅完结迁移"/>
@@ -59,6 +56,17 @@
                     :disabled="!props.config.autoDisabled || !props.config['completed']"/>
         </div>
         <AfdianPrompt :config="props.config" name="订阅完结迁移"/>
+      </div>
+    </el-form-item>
+    <el-form-item label="自动更新总集数">
+      <div class="full-width">
+        <el-switch v-model="props.config.updateTotalEpisodeNumber"/>
+        <div>
+          <el-checkbox v-model="props.config.forceUpdateTotalEpisodeNumber"
+                       :disabled="!props.config.updateTotalEpisodeNumber"
+                       class="el-checkbox-danger"
+                       label="强制更新"/>
+        </div>
       </div>
     </el-form-item>
     <el-form-item label="自动跳过X.5集">

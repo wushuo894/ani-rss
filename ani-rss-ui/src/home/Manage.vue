@@ -27,23 +27,69 @@
           </div>
         </div>
         <div>
-          <el-button :disabled="!selectList.length" bg icon="Upload" text @click="exportData">
-            导出
-          </el-button>
-          <el-button bg icon="Download" text @click="importAniRef?.show">
-            导入
-          </el-button>
-          <el-button type="primary" :disabled="!selectList.length" bg icon="CircleCheck" text
-                     @click="batchEnable(true)">
-            启用
-          </el-button>
-          <el-button type="warning" :disabled="!selectList.length" bg icon="CircleClose" text
-                     @click="batchEnable(false)">
-            禁用
-          </el-button>
-          <el-button icon="Remove" bg text :disabled="!selectList.length" type="danger"
-                     @click="refDel?.show(selectList)">删除
-          </el-button>
+          <el-dropdown :trigger="'click'">
+            <el-button bg text icon="MoreFilled"/>
+            <template #dropdown>
+              <el-dropdown-menu>
+                <el-dropdown-item @click="updateTotalEpisodeNumber(false)">
+                  <template #default>
+                    <el-button icon="Refresh" link>
+                      更新总集数
+                    </el-button>
+                  </template>
+                </el-dropdown-item>
+                <el-dropdown-item @click="updateTotalEpisodeNumber(true)">
+                  <template #default>
+                    <el-button icon="Refresh"
+                               type="warning"
+                               link>
+                      更新总集数 [F]
+                    </el-button>
+                  </template>
+                </el-dropdown-item>
+                <el-dropdown-item divided @click="importAniRef?.show">
+                  <template #default>
+                    <el-button icon="Download" link>
+                      导入
+                    </el-button>
+                  </template>
+                </el-dropdown-item>
+                <el-dropdown-item @click="exportData">
+                  <template #default>
+                    <el-button icon="Upload" link>
+                      导出
+                    </el-button>
+                  </template>
+                </el-dropdown-item>
+                <el-dropdown-item divided @click="batchEnable(true)">
+                  <template #default>
+                    <el-button type="primary"
+                               icon="CircleCheck"
+                               link>
+                      启用
+                    </el-button>
+                  </template>
+                </el-dropdown-item>
+                <el-dropdown-item @click="batchEnable(false)">
+                  <template #default>
+                    <el-button type="warning"
+                               icon="CircleClose"
+                               link>
+                      禁用
+                    </el-button>
+                  </template>
+                </el-dropdown-item>
+                <el-dropdown-item divided @click="refDel?.show(selectList)">
+                  <template #default>
+                    <el-button icon="Remove" type="danger"
+                               link>
+                      删除
+                    </el-button>
+                  </template>
+                </el-dropdown-item>
+              </el-dropdown-menu>
+            </template>
+          </el-dropdown>
         </div>
       </div>
       <el-table
@@ -186,9 +232,15 @@ let handleSelectionChange = (v) => {
 }
 
 let exportData = () => {
+  if (!selectList.value.length) {
+    ElMessage.error('未选择订阅')
+    return
+  }
+  console.log(111);
   const textContent = JSON.stringify(selectList.value);
   const blob = new Blob([textContent], {type: "text/plain"});
   const url = URL.createObjectURL(blob);
+
   const a = document.createElement("a");
   a.style.display = "none";
   a.href = url;
@@ -201,14 +253,26 @@ let exportData = () => {
 
 let batchEnable = (value) => {
   loading.value = true
-  api.post('api/ani?type=batchEnable&value=' + value, selectList.value.map(it => it['id']))
+  let ids = selectList.value.map(it => it['id']);
+  api.post('api/ani?type=batchEnable&value=' + value, ids)
       .then(res => {
         ElMessage.success(res.message)
+      })
+      .finally(() => {
         getList()
       })
 }
 
 let yearMonthValue = ref('')
+
+let updateTotalEpisodeNumber = (force) => {
+  let ids = selectList.value.map(it => it['id']);
+  api.post('api/ani?type=updateTotalEpisodeNumber&force=' + force, ids)
+      .then(res => {
+        ElMessage.success(res.message)
+        getList()
+      })
+}
 
 defineExpose({show})
 </script>
