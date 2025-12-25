@@ -418,16 +418,6 @@ public class ConfigUtil {
     }
 
     /**
-     * 获取下载工具的密码
-     *
-     * @return
-     */
-    public static String getDownloadToolPassword() {
-        Map<String, String> env = System.getenv();
-        return env.getOrDefault("DOWNLOAD_TOOL_PASSWORD", "");
-    }
-
-    /**
      * 处理设置内的url与文件路径标准
      *
      * @param config
