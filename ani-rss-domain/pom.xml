@@ -9,7 +9,7 @@
         <version>2.4.22</version>
     </parent>
 
-    <artifactId>ani-rss-api</artifactId>
+    <artifactId>ani-rss-domain</artifactId>
 
     <properties>
         <maven.compiler.source>17</maven.compiler.source>

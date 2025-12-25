@@ -17,7 +17,7 @@
         <module>ani-rss-application</module>
         <module>ani-rss-web</module>
         <module>ani-rss-core</module>
-        <module>ani-rss-api</module>
+        <module>ani-rss-domain</module>
     </modules>
     <inceptionYear>2025</inceptionYear>
     <description>基于RSS自动追番、订阅、下载、刮削</description>
@@ -53,7 +53,7 @@
             </dependency>
             <dependency>
                 <groupId>ani.rss</groupId>
-                <artifactId>ani-rss-api</artifactId>
+                <artifactId>ani-rss-domain</artifactId>
                 <version>${project.parent.version}</version>
             </dependency>
             <dependency>
