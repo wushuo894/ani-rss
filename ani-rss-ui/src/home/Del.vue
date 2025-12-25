@@ -81,6 +81,11 @@ const delAni = async () => {
 }
 
 const show = (anis) => {
+  if (!anis.length) {
+    ElMessage.error('未选择订阅')
+    return
+  }
+
   aniList.value = JSON.parse(JSON.stringify(anis))
   deleteFiles.value = false
   dialogVisible.value = true
