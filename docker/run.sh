@@ -31,7 +31,7 @@ sigterm_handler() {
     exit 0
 }
 
-trap 'sigterm_handler' SIGTERM
+trap 'sigterm_handler' 15
 
 while :
 do
