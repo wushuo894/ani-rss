@@ -24,7 +24,7 @@
         </dependency>
         <dependency>
             <groupId>ani.rss</groupId>
-            <artifactId>ani-rss-api</artifactId>
+            <artifactId>ani-rss-domain</artifactId>
         </dependency>
         <dependency>
             <groupId>org.eclipse</groupId>
