@@ -52,7 +52,7 @@ export default defineConfig({
         rollupOptions: {
             input: {
                 main: path.resolve(__dirname, 'index.html'),
-                bgmOauthCallback: path.resolve(__dirname, 'BgmOauthCallback.html')
+                bgmOauthCallback: path.resolve(__dirname, 'bgm-oauth-callback.html')
             },
             output: {
                 manualChunks: {
