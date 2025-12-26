@@ -11,7 +11,7 @@
             @keyup.enter="login"
             @submit="login">
           <el-form-item>
-            <el-input v-model="user.username" placeholder="用户名">
+            <el-input v-model="user.username" placeholder="用户名" autocomplete="username">
               <template #prefix>
                 <el-icon class="el-input__icon">
                   <User/>
@@ -21,7 +21,7 @@
           </el-form-item>
           <el-form-item>
             <el-input v-model="user.password" show-password
-                      placeholder="密码">
+                      placeholder="密码" autocomplete="current-password">
               <template #prefix>
                 <el-icon class="el-input__icon">
                   <Key/>

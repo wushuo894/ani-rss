@@ -3,7 +3,7 @@
                       event.preventDefault()
                    }">
     <el-form-item label="用户名">
-      <el-input v-model:model-value="props.config.login.username">
+      <el-input v-model:model-value="props.config.login.username" autocomplete="new-password">
         <template #prefix>
           <el-icon class="el-input__icon">
             <User/>
@@ -12,7 +12,7 @@
       </el-input>
     </el-form-item>
     <el-form-item label="密码">
-      <el-input v-model:model-value="props.config.login.password">
+      <el-input v-model:model-value="props.config.login.password" autocomplete="new-password">
         <template #prefix>
           <el-icon class="el-input__icon">
             <Key/>

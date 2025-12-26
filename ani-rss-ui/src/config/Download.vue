@@ -64,7 +64,8 @@
     </template>
     <template v-else>
       <el-form-item label="用户名">
-        <el-input v-model:model-value="props.config.downloadToolUsername" placeholder="username">
+        <el-input v-model:model-value="props.config.downloadToolUsername" placeholder="username"
+                  autocomplete="new-password">
           <template #prefix>
             <el-icon class="el-input__icon">
               <User/>
@@ -73,7 +74,8 @@
         </el-input>
       </el-form-item>
       <el-form-item label="密码">
-        <el-input v-model:model-value="props.config.downloadToolPassword" placeholder="password" show-password>
+        <el-input v-model:model-value="props.config.downloadToolPassword" placeholder="password" show-password
+                  autocomplete="new-password">
           <template #prefix>
             <el-icon class="el-input__icon">
               <Key/>
