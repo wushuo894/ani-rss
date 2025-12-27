@@ -766,12 +766,17 @@ public class BgmUtil {
     public static Integer getEps(BgmInfo bgmInfo) {
         int eps = bgmInfo.getEps();
         String subjectId = bgmInfo.getSubjectId();
-        if (eps > 0) {
-            try {
-                eps = BgmUtil.getEpisodes(subjectId, 0).size();
-            } catch (Exception e) {
-                log.error(e.getMessage(), e);
+        if (eps < 1) {
+            return 0;
+        }
+        try {
+            int size = BgmUtil.getEpisodes(subjectId, 0).size();
+            if (size > 0) {
+                // 获取集数不为零
+                eps = size;
             }
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
         }
         return eps;
     }

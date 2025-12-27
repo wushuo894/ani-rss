@@ -1,7 +1,4 @@
-- fix: 修复订阅标题长度
-- fix: 修复可以删除0个订阅的问题
-- refactor: 尝试性解决登录页密码可能无法自定填充
-- refactor: 优化修改密码或配置下载器会触发自动填充的问题
+- fix: 修复在获取BGM总集数时可能导致的错误
 
 [请不要将本项目在国内宣传](https://github.com/wushuo894/ani-rss/discussions/504)
 
