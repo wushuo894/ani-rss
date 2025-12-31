@@ -1,7 +1,7 @@
 <template>
   <el-dialog v-model="dialogVisible" align-center center class="dialog-max-width" title="查看授权状态">
     <div class="content" v-loading="loading">
-      <el-text type="danger" v-if="errorMessage">{{ errorMessage}}</el-text>
+      <el-text v-if="errorMessage" type="danger">{{ errorMessage }}</el-text>
       <el-scrollbar v-if="me.username">
         <el-descriptions
             direction="vertical"
