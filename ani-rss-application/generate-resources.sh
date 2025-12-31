@@ -1,13 +1,5 @@
 #!/bin/bash
 
-if [ -d ../ani-rss-ui/dist ]; then
-  if [ -d ./src/main/resources/dist ]; then
-    rm -rf ./src/main/resources/dist
-  fi
-  mv ../ani-rss-ui/dist ./src/main/resources/dist
-  echo "move dist ..."
-fi
-
 # build_info 位置
 build_info_path=./src/main/resources/build_info
 
