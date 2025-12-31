@@ -57,7 +57,7 @@ const list = ref([])
 let ani = ref({})
 let playStart = ref()
 
-let playStartShow = (it)=>{
+let playStartShow = (it) => {
   playStart.value?.show(JSON.parse(JSON.stringify(it)))
 }
 

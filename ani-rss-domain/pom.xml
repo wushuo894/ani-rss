@@ -17,42 +17,30 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
+    <repositories>
+        <repository>
+            <id>ebml-reader</id>
+            <url>https://raw.github.com/wushuo894/EBMLReader/mvn-repo</url>
+        </repository>
+        <repository>
+            <id>tmdb-api</id>
+            <url>https://raw.github.com/wushuo894/tmdb-api/mvn-repo</url>
+        </repository>
+    </repositories>
+
     <dependencies>
+        <dependency>
+            <groupId>ebml.reader</groupId>
+            <artifactId>ebml-reader</artifactId>
+        </dependency>
         <dependency>
             <groupId>wushuo.tmdb.api</groupId>
             <artifactId>tmdb-api</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
             <groupId>ani.rss</groupId>
             <artifactId>ani-rss-commons</artifactId>
         </dependency>
-        <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter</artifactId>
-            <scope>test</scope>
-        </dependency>
     </dependencies>
-
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <configuration>
-                    <annotationProcessorPaths>
-                        <path>
-                            <groupId>org.projectlombok</groupId>
-                            <artifactId>lombok</artifactId>
-                        </path>
-                    </annotationProcessorPaths>
-                </configuration>
-            </plugin>
-        </plugins>
-    </build>
 
 </project>
