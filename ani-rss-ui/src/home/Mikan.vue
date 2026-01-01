@@ -210,17 +210,18 @@ let list = async (body, text) => {
   body = body ? body : {}
   return api.post('api/mikan?text=' + text, body)
       .then(res => {
-        let seasons = res.data['seasons']
-        let items = res.data['items']
+        let {seasons, items, totalItems} = res.data;
+
+        if (totalItems < 1) {
+          ElMessage.warning("搜索结果为空")
+        }
+
         if (seasons.length) {
           data.value.seasons = seasons
         }
         data.value.items = items
         if (items.length) {
           activeName.value = items[0].label
-          if (!items[0].items.length) {
-            ElMessage.warning("搜索结果为空")
-          }
         }
         for (let item of data.value.seasons) {
           if (item['select'] && !season.value) {

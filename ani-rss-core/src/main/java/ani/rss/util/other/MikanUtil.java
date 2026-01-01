@@ -143,21 +143,36 @@ public class MikanUtil {
             List<Ani> anis = get.apply(document.selectFirst(".an-ul"));
 
             Mikan.Item item = new Mikan.Item();
-            items.add(item);
             item.setItems(anis)
                     .setLabel("Search");
+
+            items.add(item);
         } else {
             for (Element skBangumi : skBangumis) {
-                Mikan.Item item = new Mikan.Item();
-                items.add(item);
-                String label = skBangumi.children().get(0).text().trim();
-                item.setLabel(label);
                 List<Ani> anis = get.apply(skBangumi);
-                item.setItems(anis);
+                if (anis.isEmpty()) {
+                    // 番剧为空
+                    continue;
+                }
+
+                // 星期
+                String label = skBangumi.children().get(0).text().trim();
+
+                Mikan.Item item = new Mikan.Item();
+                item.setLabel(label)
+                        .setItems(anis);
+                items.add(item);
             }
         }
+
+        int totalItems = items
+                .stream()
+                .mapToInt(it -> it.getItems().size())
+                .sum();
+
         return mikan
                 .setItems(items)
+                .setTotalItem(totalItems)
                 .setSeasons(seasons);
     }
 

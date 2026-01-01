@@ -18,6 +18,8 @@ public class Mikan implements Serializable {
 
     private List<Item> items;
 
+    private Integer totalItem;
+
     /**
      * 季度信息
      */
