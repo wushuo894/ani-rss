@@ -190,6 +190,7 @@ const weekShow = ref(false)
 const getList = () => {
   loading.value = true
 
+  list.value = []
   api.get('api/config')
       .then(res => {
         showPlaylist.value = res.data.showPlaylist
