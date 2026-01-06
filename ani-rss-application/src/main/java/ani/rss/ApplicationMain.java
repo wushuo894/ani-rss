@@ -10,6 +10,7 @@ import ani.rss.util.other.ConfigUtil;
 import ani.rss.util.other.MenuUtil;
 import ani.rss.web.util.ServerUtil;
 import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.core.util.RuntimeUtil;
 import lombok.extern.slf4j.Slf4j;
 
 import java.security.Security;
@@ -38,6 +39,7 @@ public class ApplicationMain {
             log.error(message, e);
             System.exit(1);
         }
+        RuntimeUtil.addShutdownHook(() -> log.info("程序退出..."));
     }
 
     public static void loadProperty() {
