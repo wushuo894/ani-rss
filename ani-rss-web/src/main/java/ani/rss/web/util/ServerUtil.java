@@ -183,6 +183,7 @@ public class ServerUtil {
         }
         try {
             HTTP_SERVER.getRawServer().stop(0);
+            log.info("http server stop");
         } catch (Exception e) {
             log.error(e.getMessage(), e);
         }
