@@ -44,6 +44,8 @@
 
 - [ANI-RSS：自动追番新姿势！](https://www.himiku.com/archives/ani-rss.html)
 
+- [📺 彻底解放双手！2025年最新 Ani-RSS + qBittorrent 全自动追番保姆级教程](http://www.nuan1145.eu.cc/archives/wei-ming-ming-wen-zhang-75sNBWk0)
+
 ### 贡献者
 
 <a href="https://github.com/wushuo894/ani-rss/graphs/contributors">
