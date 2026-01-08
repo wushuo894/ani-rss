@@ -1,13 +1,10 @@
 package ani.rss.util.other;
 
 import ani.rss.commons.GsonStatic;
-import ani.rss.entity.Ani;
-import ani.rss.entity.Config;
-import ani.rss.entity.Mikan;
-import ani.rss.entity.TorrentsInfo;
+import ani.rss.entity.*;
 import ani.rss.util.basic.HttpReq;
 import cn.hutool.core.collection.ListUtil;
-import cn.hutool.core.lang.Opt;
+import cn.hutool.core.lang.Assert;
 import cn.hutool.core.text.StrFormatter;
 import cn.hutool.core.util.ReUtil;
 import cn.hutool.core.util.StrUtil;
@@ -22,6 +19,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import java.net.URI;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
@@ -46,10 +44,71 @@ public class MikanUtil {
      * @return
      */
     public static Mikan list(String text, Mikan.Season season) {
+        AtomicReference<JsonObject> scoreAtomicReference = new AtomicReference<>();
+        AtomicReference<Mikan> mikanAtomicReference = new AtomicReference<>();
+
+        // 并行获取 mikan 番剧列表及其评分
+        CompletableFuture.allOf(
+                CompletableFuture.runAsync(() -> {
+                    JsonObject score = getScore();
+                    scoreAtomicReference.set(score);
+                }),
+                CompletableFuture.runAsync(() -> {
+                    Mikan mikan = search(text, season);
+                    mikanAtomicReference.set(mikan);
+                })
+        ).join();
+
+        JsonObject jsonObject = scoreAtomicReference.get();
+        Mikan mikan = mikanAtomicReference.get();
+
+        List<Mikan.Item> items = mikan.getItems();
+        for (Mikan.Item item : items) {
+            List<MikanInfo> mikanInfos = item.getItems();
+            for (MikanInfo mikanInfo : mikanInfos) {
+                String url = mikanInfo.getUrl();
+                String id = ReUtil.get("\\d+(/)?$", url, 0);
+                id = StrUtil.blankToDefault(id, "");
+                Double score = Optional.ofNullable(jsonObject.get(id))
+                        .map(JsonElement::getAsDouble)
+                        .orElse(0.0);
+                mikanInfo.setScore(score);
+            }
+            ListUtil.sort(mikanInfos, Comparator.comparingDouble(MikanInfo::getScore).reversed());
+        }
+
+        return mikan;
+    }
+
+    public static Mikan search(String text, Mikan.Season season) {
         Set<String> bangumiIdSet = AniUtil.ANI_LIST.stream()
                 .map(AniUtil::getBangumiId)
                 .filter(StrUtil::isNotBlank)
                 .collect(Collectors.toSet());
+
+        Mikan mikan = new Mikan();
+        List<Mikan.Item> items = new ArrayList<>();
+        List<Mikan.Season> seasons = new ArrayList<>();
+
+        String regex = "^bangumiId: (\\d+)$";
+
+        if (ReUtil.contains(regex, text)) {
+            String bangumiId = ReUtil.get(regex, text, 1);
+
+            MikanInfo mikanInfo = getMikanInfo(bangumiId);
+
+            items.add(
+                    new Mikan.Item()
+                            .setLabel("Search")
+                            .setItems(Collections.singletonList(mikanInfo))
+            );
+
+            return mikan
+                    .setTotalItem(1)
+                    .setItems(items)
+                    .setSeasons(seasons);
+        }
+
         String url = getMikanHost();
         if (StrUtil.isNotBlank(text)) {
             url = url + "/Home/Search?searchstr=" + URLUtil.encodeBlank(text);
@@ -61,109 +120,86 @@ public class MikanUtil {
             }
         }
 
-        AtomicReference<JsonObject> scoreAtomicReference = new AtomicReference<>();
-        AtomicReference<Document> documentAtomicReference = new AtomicReference<>();
-        String finalUrl = url;
+        HttpReq.get(url)
+                .then(res -> {
+                    Document document = Jsoup.parse(res.body());
+                    Elements dateSelects = document.select(".date-select");
+                    if (!dateSelects.isEmpty()) {
+                        Element dateSelect = dateSelects.get(0);
+                        String dateText = dateSelects.get(0).select(".date-text").text().trim();
+                        Element dropdownMenu = dateSelect.selectFirst(".dropdown-menu");
+                        for (Element child : dropdownMenu.children()) {
+                            Elements seasonItems = child.select("li");
+                            for (Element seasonItem : seasonItems.subList(1, seasonItems.size())) {
+                                Element a = seasonItem.selectFirst("a");
+                                String dataYear = a.attr("data-year");
+                                String dataSeason = a.attr("data-season");
+                                seasons.add(new Mikan.Season()
+                                        .setYear(Integer.parseInt(dataYear))
+                                        .setSeason(dataSeason)
+                                        .setSelect(dateText.equals(dataYear + " " + a.text())));
+                            }
+                        }
+                    }
 
-        // 并行获取mikan番剧列表及其评分
-        CompletableFuture.allOf(
-                CompletableFuture.runAsync(() -> {
-                    JsonObject score = getScore();
-                    scoreAtomicReference.set(score);
-                }),
-                CompletableFuture.runAsync(() -> {
-                    Document document = HttpReq.get(finalUrl)
-                            .thenFunction(res -> Jsoup.parse(res.body()));
-                    documentAtomicReference.set(document);
-                })
-        ).join();
+                    Function<Element, List<MikanInfo>> get = (el) -> {
+                        List<MikanInfo> mikanInfos = new ArrayList<>();
+                        if (Objects.isNull(el)) {
+                            return mikanInfos;
+                        }
+                        Elements lis = el.select("li");
+                        for (Element li : lis) {
+                            String img = getMikanHost() + li.selectFirst("span")
+                                    .attr("data-src");
+                            Elements aa = li.select("a");
+                            if (aa.isEmpty()) {
+                                continue;
+                            }
+                            String href = getMikanHost() + aa.get(0).attr("href");
+                            String title = aa.get(0).text();
 
-        Document document = documentAtomicReference.get();
-        JsonObject score = scoreAtomicReference.get();
+                            String id = ReUtil.get("\\d+(/)?$", href, 0);
+                            id = StrUtil.blankToDefault(id, "");
+                            mikanInfos.add(
+                                    new MikanInfo()
+                                            .setCover(img)
+                                            .setTitle(title)
+                                            .setUrl(href)
+                                            .setExists(bangumiIdSet.contains(id))
+                                            .setScore(0.0)
+                            );
+                        }
+                        return mikanInfos;
+                    };
 
-        Mikan mikan = new Mikan();
-        List<Mikan.Item> items = new ArrayList<>();
-        List<Mikan.Season> seasons = new ArrayList<>();
+                    Elements skBangumis = document.select(".sk-bangumi");
 
-        Elements dateSelects = document.select(".date-select");
-        if (!dateSelects.isEmpty()) {
-            Element dateSelect = dateSelects.get(0);
-            String dateText = dateSelects.get(0).select(".date-text").text().trim();
-            Element dropdownMenu = dateSelect.selectFirst(".dropdown-menu");
-            for (Element child : dropdownMenu.children()) {
-                Elements seasonItems = child.select("li");
-                for (Element seasonItem : seasonItems.subList(1, seasonItems.size())) {
-                    Element a = seasonItem.selectFirst("a");
-                    String dataYear = a.attr("data-year");
-                    String dataSeason = a.attr("data-season");
-                    seasons.add(new Mikan.Season()
-                            .setYear(Integer.parseInt(dataYear))
-                            .setSeason(dataSeason)
-                            .setSelect(dateText.equals(dataYear + " " + a.text())));
-                }
-            }
-        }
+                    if (skBangumis.isEmpty()) {
+                        List<MikanInfo> mikanInfos = get.apply(document.selectFirst(".an-ul"));
 
-        Function<Element, List<Ani>> get = (el) -> {
-            List<Ani> anis = new ArrayList<>();
-            if (Objects.isNull(el)) {
-                return anis;
-            }
-            Elements lis = el.select("li");
-            for (Element li : lis) {
-                String img = getMikanHost() + li.selectFirst("span")
-                        .attr("data-src");
-                Elements aa = li.select("a");
-                if (aa.isEmpty()) {
-                    continue;
-                }
-                String href = getMikanHost() + aa.get(0).attr("href");
-                String title = aa.get(0).text();
+                        Mikan.Item item = new Mikan.Item();
+                        item.setItems(mikanInfos)
+                                .setLabel("Search");
 
-                String id = ReUtil.get("\\d+(/)?$", href, 0);
-                id = StrUtil.blankToDefault(id, "");
-                anis.add(new Ani()
-                        .setCover(img)
-                        .setTitle(title)
-                        .setUrl(href)
-                        .setExists(bangumiIdSet.contains(id))
-                        .setScore(
-                                Opt.ofNullable(score.get(id))
-                                        .map(JsonElement::getAsDouble)
-                                        .orElse(0.0)
-                        )
-                );
-            }
-            return ListUtil.sort(anis, Comparator.comparingDouble(Ani::getScore).reversed());
-        };
+                        items.add(item);
+                    } else {
+                        for (Element skBangumi : skBangumis) {
+                            List<MikanInfo> mikanInfos = get.apply(skBangumi);
+                            if (mikanInfos.isEmpty()) {
+                                // 番剧为空
+                                continue;
+                            }
 
-        Elements skBangumis = document.select(".sk-bangumi");
+                            // 星期
+                            String label = skBangumi.children().get(0).text().trim();
 
-        if (skBangumis.isEmpty()) {
-            List<Ani> anis = get.apply(document.selectFirst(".an-ul"));
-
-            Mikan.Item item = new Mikan.Item();
-            item.setItems(anis)
-                    .setLabel("Search");
-
-            items.add(item);
-        } else {
-            for (Element skBangumi : skBangumis) {
-                List<Ani> anis = get.apply(skBangumi);
-                if (anis.isEmpty()) {
-                    // 番剧为空
-                    continue;
-                }
-
-                // 星期
-                String label = skBangumi.children().get(0).text().trim();
-
-                Mikan.Item item = new Mikan.Item();
-                item.setLabel(label)
-                        .setItems(anis);
-                items.add(item);
-            }
-        }
+                            Mikan.Item item = new Mikan.Item();
+                            item.setLabel(label)
+                                    .setItems(mikanInfos);
+                            items.add(item);
+                        }
+                    }
+                });
 
         int totalItems = items
                 .stream()
@@ -233,17 +269,26 @@ public class MikanUtil {
                 });
     }
 
-    public static void getMikanInfo(Ani ani, String subgroupId) {
-        String bangumiId = AniUtil.getBangumiId(ani);
-        if (StrUtil.isBlank(bangumiId)) {
-            return;
-        }
-        HttpReq.get(URLUtil.getHost(URLUtil.url(getMikanHost())) + "/Home/Bangumi/" + bangumiId)
-                .then(res -> {
-                    org.jsoup.nodes.Document html = Jsoup.parse(res.body());
+    public static MikanInfo getMikanInfo(String bangumiId) {
+        URI host = URLUtil.getHost(URLUtil.url(getMikanHost()));
+        String url = host + "/Home/Bangumi/" + bangumiId;
+        return HttpReq.get(url)
+                .thenFunction(res -> {
+                    MikanInfo mikanInfo = new MikanInfo();
+
+                    mikanInfo.setUrl(url);
+
+                    Document html = Jsoup.parse(res.body());
+
+                    Element cover = html.selectFirst(".content > img");
+                    if (Objects.nonNull(cover)) {
+                        mikanInfo.setCover(host + cover.attr("src"));
+                    }
 
                     Element bangumiTitle = html.selectFirst(".bangumi-title");
-                    ani.setMikanTitle(bangumiTitle.text().trim());
+                    if (Objects.nonNull(bangumiTitle)) {
+                        mikanInfo.setTitle(bangumiTitle.text().trim());
+                    }
 
                     Elements bangumiInfos = html.select(".bangumi-info");
                     for (Element bangumiInfo : bangumiInfos) {
@@ -251,29 +296,92 @@ public class MikanUtil {
                         if (string.equals("Bangumi番组计划链接：")) {
                             String bgmUrl = bangumiInfo.selectFirst("a")
                                     .attr("href");
-                            ani.setBgmUrl(bgmUrl);
+                            mikanInfo.setBgmUrl(bgmUrl);
                         }
-                    }
-
-                    if (StrUtil.isBlank(subgroupId)) {
-                        return;
                     }
 
                     // 获取字幕组
-                    Elements subgroupTexts = html.select(".subgroup-text");
-                    for (Element subgroupText : subgroupTexts) {
-                        String id = subgroupText.attr("id");
-                        if (!id.equalsIgnoreCase(subgroupId)) {
-                            continue;
+                    List<Mikan.Group> groups = new ArrayList<>();
+
+                    Elements subgroupTitles = html.select(".leftbar-item");
+
+                    for (Element subgroupText : subgroupTitles) {
+                        Mikan.Group group = new Mikan.Group();
+                        groups.add(group);
+
+                        List<TorrentsInfo> torrentsInfos = new ArrayList<>();
+                        group.setItems(torrentsInfos);
+
+                        String label = subgroupText.select("a.subgroup-name").text().trim();
+
+                        // id锚点，例如 #213
+                        String id = subgroupText.select("a.subgroup-name").attr("data-anchor");
+
+                        String attr = html.selectFirst(id)
+                                .selectFirst(".mikan-rss")
+                                .attr("href");
+
+                        group.setLabel(label)
+                                .setSubgroupId(id.replace("#", "").trim())
+                                .setRss(getMikanHost() + attr);
+
+                        // 字幕组更新日期
+                        String day = subgroupText.select(".date").text().trim();
+
+                        group.setUpdateDay(day);
+
+                        Element table = html.selectFirst(id).nextElementSibling();
+                        Element tbody = table.selectFirst("tbody");
+                        for (Element tr : tbody.children()) {
+                            String s = tr.select("a").get(0).ownText();
+                            String magnet = tr.select("a").get(1).attr("data-clipboard-text");
+                            String sizeStr = tr.select("td").get(2).text().trim();
+                            String dateStr = tr.select("td").get(3).text().trim();
+
+                            String torrent = tr.select("a").get(2).attr("href");
+
+                            String mikanHost = getMikanHost();
+
+                            torrentsInfos.add(
+                                    new TorrentsInfo()
+                                            .setName(s)
+                                            .setMagnet(magnet)
+                                            .setSizeStr(sizeStr)
+                                            .setDateStr(dateStr)
+                                            .setTorrent(mikanHost + torrent)
+                            );
                         }
-                        String ownText = subgroupText.ownText().trim();
-                        if (StrUtil.isNotBlank(ownText)) {
-                            ani.setSubgroup(ownText.replace("/", "或"));
-                            continue;
-                        }
-                        ani.setSubgroup(subgroupText.selectFirst("a").text().trim());
                     }
+
+                    mikanInfo.setGroups(groups);
+                    return mikanInfo;
                 });
+    }
+
+    public static void getMikanInfo(Ani ani, String subgroupId) {
+        String bangumiId = AniUtil.getBangumiId(ani);
+        if (StrUtil.isBlank(bangumiId)) {
+            return;
+        }
+
+        MikanInfo mikanInfo = getMikanInfo(bangumiId);
+        Assert.notNull(mikanInfo, "未获取到 Mikan 信息");
+
+        String title = mikanInfo.getTitle();
+        String bgmUrl = mikanInfo.getBgmUrl();
+        List<Mikan.Group> groups = mikanInfo.getGroups();
+
+        ani
+                .setMikanTitle(title)
+                .setBgmUrl(bgmUrl);
+
+        for (Mikan.Group group : groups) {
+            String id = group.getSubgroupId();
+            String label = group.getLabel();
+            if (subgroupId.equals(id)) {
+                ani.setSubgroup(label);
+            }
+        }
     }
 
     /**

@@ -1,5 +1,5 @@
 <template>
-  <Mikan ref="mikan" @callback="mikanCallback"/>
+  <Mikan ref="mikanRef" @callback="mikanCallback"/>
   <el-dialog v-model="dialogVisible" center title="备用订阅">
     <el-alert v-if="!config.standbyRss" :closable="false"
               show-icon
@@ -15,7 +15,7 @@
       <div class="standby-spacer"></div>
       <div>
         <el-button
-            @click="mikan?.show(props.ani.mikanTitle ? props.ani.mikanTitle : props.ani.title)"
+            @click="mikanShow"
             text bg
             icon="VideoCamera"/>
       </div>
@@ -92,7 +92,7 @@ const editIndex = ref(-1)
 
 const dialogVisible = ref(false)
 const standbyRss = ref()
-const mikan = ref()
+const mikanRef = ref()
 const config = ref({
   standbyRss: true
 })
@@ -161,6 +161,21 @@ let mikanCallback = v => {
   props.ani.match.push(...newMatch)
 
   editIndex.value = -1
+}
+
+let mikanShow = () => {
+  let query = props.ani.mikanTitle ? props.ani.mikanTitle : props.ani.title;
+
+  if (props.ani.url) {
+    let url = new URL(props.ani.url);
+    let searchParams = url.searchParams;
+    let bangumiId = searchParams.get("bangumiId");
+    if (bangumiId) {
+      query = `bangumiId: ${bangumiId}`
+    }
+  }
+
+  mikanRef.value?.show(query)
 }
 
 defineExpose({show})
