@@ -50,7 +50,7 @@ public class Mikan implements Serializable {
         /**
          * 番剧
          */
-        private List<Ani> items;
+        private List<MikanInfo> items;
     }
 
     /**
@@ -59,6 +59,12 @@ public class Mikan implements Serializable {
     @Data
     @Accessors(chain = true)
     public static class Group implements Serializable {
+
+        /**
+         * 字幕组 id
+         */
+        private String subgroupId;
+
         /**
          * 匹配
          */

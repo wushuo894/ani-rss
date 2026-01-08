@@ -64,7 +64,7 @@
             <el-input v-model:model-value="props.ani.url" placeholder="https://xxx.xxx"/>
             <div style="width: 6px;"></div>
             <el-button bg text
-                       @click="mikanRef?.show(props.ani.mikanTitle ? props.ani.mikanTitle : props.ani.title)"
+                       @click="mikanShow"
                        icon="VideoCamera"/>
           </div>
         </el-form-item>
@@ -385,6 +385,21 @@ let scrape = (force) => {
       .then(res => {
         ElMessage.success(res.message)
       })
+}
+
+let mikanShow = () => {
+  let query = props.ani.mikanTitle ? props.ani.mikanTitle : props.ani.title;
+
+  if (props.ani.url) {
+    let url = new URL(props.ani.url);
+    let searchParams = url.searchParams;
+    let bangumiId = searchParams.get("bangumiId");
+    if (bangumiId) {
+      query = `bangumiId: ${bangumiId}`
+    }
+  }
+
+  mikanRef.value?.show(query)
 }
 
 let props = defineProps(['ani'])
