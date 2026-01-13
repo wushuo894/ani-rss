@@ -23,6 +23,7 @@ import cn.hutool.http.server.HttpServerRequest;
 import cn.hutool.http.server.HttpServerResponse;
 import cn.hutool.http.server.SimpleServer;
 import cn.hutool.log.Log;
+import com.sun.net.httpserver.HttpServer;
 import lombok.extern.slf4j.Slf4j;
 
 import java.net.InetSocketAddress;
@@ -48,17 +49,22 @@ public class ServerUtil {
         // 添加 action
         addAction(HTTP_SERVER);
 
-        HTTP_SERVER.getRawServer().start();
+        HttpServer rawServer = HTTP_SERVER.getRawServer();
 
-        InetSocketAddress address = HTTP_SERVER.getAddress();
-        String hostName = address.getHostName();
+        rawServer.start();
+
+        InetSocketAddress address = rawServer.getAddress();
+        String hostAddress = address.getAddress().getHostAddress();
         int port = address.getPort();
         Global.HTTP_PORT = String.valueOf(port);
 
-        log.info("Http Server listen on [{}:{}]", hostName, port);
+        log.info("Http Server listen on [{}:{}]", hostAddress, port);
 
         for (String ip : NetUtil.localIpv4s()) {
-            log.info("http://{}:{}", ip, port);
+            InetSocketAddress inetSocketAddress = new InetSocketAddress(ip, port);
+            if (NetUtil.isOpen(inetSocketAddress, 100)) {
+                log.info("http://{}:{}", ip, port);
+            }
         }
 
         RuntimeUtil.addShutdownHook(ServerUtil::stop);
