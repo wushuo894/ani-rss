@@ -85,15 +85,11 @@ public class ServerUtil {
         Global.HTTP_PORT = env.getOrDefault("PORT", Global.HTTP_PORT);
         Global.HOST = env.getOrDefault("HOST", Global.HOST);
 
-        try {
-            InetSocketAddress inetSocketAddress = new InetSocketAddress(
-                    Global.HOST,
-                    Integer.parseInt(Global.HTTP_PORT)
-            );
-            HTTP_SERVER = new SimpleServer(inetSocketAddress);
-        } catch (Exception e) {
-            log.error(e.getMessage(), e);
-        }
+        InetSocketAddress inetSocketAddress = new InetSocketAddress(
+                Global.HOST,
+                Integer.parseInt(Global.HTTP_PORT)
+        );
+        HTTP_SERVER = new SimpleServer(inetSocketAddress);
     }
 
     public static void addFilter(SimpleServer server) {
