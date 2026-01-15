@@ -103,8 +103,6 @@ public class qBittorrent implements BaseDownload {
                     .disableCookie()
                     .thenFunction(res -> {
                         HttpReq.assertStatus(res);
-                        String body = res.body();
-                        Assert.isTrue("Ok.".equals(body), "body: {}", body);
                         return true;
                     });
         } catch (Exception e) {
