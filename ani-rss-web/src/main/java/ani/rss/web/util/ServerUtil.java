@@ -17,7 +17,6 @@ import cn.hutool.core.net.NetUtil;
 import cn.hutool.core.util.ClassUtil;
 import cn.hutool.core.util.ReflectUtil;
 import cn.hutool.core.util.RuntimeUtil;
-import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.HttpStatus;
 import cn.hutool.http.server.HttpServerRequest;
 import cn.hutool.http.server.HttpServerResponse;
@@ -86,19 +85,15 @@ public class ServerUtil {
         Global.HTTP_PORT = env.getOrDefault("PORT", Global.HTTP_PORT);
         Global.HOST = env.getOrDefault("HOST", Global.HOST);
 
-        if (StrUtil.isBlank(Global.HOST)) {
-            HTTP_SERVER = new SimpleServer(Integer.parseInt(Global.HTTP_PORT));
-            return;
-        }
-
         try {
-            HTTP_SERVER = new SimpleServer(Global.HOST, Integer.parseInt(Global.HTTP_PORT));
-            return;
+            InetSocketAddress inetSocketAddress = new InetSocketAddress(
+                    Global.HOST,
+                    Integer.parseInt(Global.HTTP_PORT)
+            );
+            HTTP_SERVER = new SimpleServer(inetSocketAddress);
         } catch (Exception e) {
             log.error(e.getMessage(), e);
         }
-
-        HTTP_SERVER = new SimpleServer(Integer.parseInt(Global.HTTP_PORT));
     }
 
     public static void addFilter(SimpleServer server) {
