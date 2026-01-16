@@ -161,23 +161,20 @@
       </el-scrollbar>
     </div>
     <div class="action">
-      <AfdianPrompt name="添加合集"/>
-      <div>
-        <el-button :disabled="!data.filename" bg
-                   icon="Grid"
-                   text
-                   @click="collectionPreviewRef?.show">
-          预览
-        </el-button>
-        <el-button :disabled="!data.filename"
-                   :loading="startLoading"
-                   bg
-                   icon="Check"
-                   text
-                   type="primary" @click="start">
-          开始
-        </el-button>
-      </div>
+      <el-button :disabled="!data.filename" bg
+                 icon="Grid"
+                 text
+                 @click="collectionPreviewRef?.show">
+        预览
+      </el-button>
+      <el-button :disabled="!data.filename"
+                 :loading="startLoading"
+                 bg
+                 icon="Check"
+                 text
+                 type="primary" @click="start">
+        开始
+      </el-button>
     </div>
   </el-dialog>
 </template>
@@ -190,7 +187,6 @@ import Bgm from "./Bgm.vue";
 import api from "@/js/api.js";
 import Exclude from "@/config/Exclude.vue";
 import CollectionPreview from "./CollectionPreview.vue";
-import AfdianPrompt from "@/other/AfdianPrompt.vue";
 import CustomTags from "@/config/CustomTags.vue";
 import {aniData} from "@/js/ani.js";
 import {authorization} from "@/js/global.js";

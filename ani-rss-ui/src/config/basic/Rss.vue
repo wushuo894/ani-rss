@@ -85,7 +85,7 @@
     <el-form-item label="摸鱼检测">
       <div>
         <div>
-          <el-switch v-model="props.config['procrastinating']" :disabled="!props.config['verifyExpirationTime']"/>
+          <el-switch v-model="props.config['procrastinating']"/>
         </div>
         <div>
           <el-input-number v-model="props.config['procrastinatingDay']"
@@ -100,7 +100,7 @@
             :disabled="!props.config['procrastinating']"
             v-model="props.config.procrastinatingMasterOnly"
             label="仅启用主RSS摸鱼检测"/>
-        <AfdianPrompt :config="props.config" name="摸鱼检测"/>
+        <br>
         <el-text class="mx-1" size="small">
           检测到主RSS更新摸鱼会发送通知<br>
           建议配合 <strong>自动禁用订阅</strong> 食用

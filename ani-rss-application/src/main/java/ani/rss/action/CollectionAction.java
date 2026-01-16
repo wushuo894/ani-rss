@@ -223,8 +223,6 @@ public class CollectionAction implements BaseAction {
             return;
         }
 
-        Assert.isTrue(AfdianUtil.verifyExpirationTime(), "未解锁捐赠, 无法使用添加合集");
-
         File tempFile = FileUtil.createTempFile();
         Base64.decodeToFile(torrent, tempFile);
         TorrentFile torrentFile;

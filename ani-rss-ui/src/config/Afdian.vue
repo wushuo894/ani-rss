@@ -33,7 +33,7 @@
     </a>
     <div class="afdian-unlock">
       <h3>捐赠后解锁</h3>
-      <el-tag v-for="it in ['Emby媒体库刷新','添加合集','摸鱼检测','订阅完结迁移','Mikan番剧列表显示评分']"
+      <el-tag v-for="it in ['Emby媒体库刷新','订阅完结迁移','Mikan番剧列表显示评分']"
               class="afdian-tag">
         {{ it }}
       </el-tag>

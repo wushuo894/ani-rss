@@ -403,11 +403,6 @@ public class ItemsUtil {
             return;
         }
 
-        if (!AfdianUtil.verifyExpirationTime()) {
-            log.info("未解锁捐赠, 无法使用摸鱼检测");
-            return;
-        }
-
         Boolean procrastinatingMasterOnly = config.getProcrastinatingMasterOnly();
         if (procrastinatingMasterOnly) {
             // 仅启用主rss摸鱼检测
