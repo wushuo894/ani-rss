@@ -11,6 +11,8 @@ import ani.rss.web.action.BaseAction;
 import ani.rss.web.annotation.Auth;
 import ani.rss.web.annotation.Path;
 import ani.rss.web.auth.enums.AuthType;
+import ani.rss.web.util.AuthUtil;
+import cn.hutool.core.lang.Assert;
 import cn.hutool.core.thread.ExecutorBuilder;
 import cn.hutool.core.util.ReUtil;
 import cn.hutool.core.util.StrUtil;
@@ -45,6 +47,9 @@ public class WebHookAction implements BaseAction {
     @Synchronized("EXECUTOR")
     public void doAction(HttpServerRequest request, HttpServerResponse response) throws IOException {
         String body = getBody();
+
+        Assert.notBlank(body, "WebHook body is empty");
+
         log.debug("webhook: {}", body);
 
         Config config = ConfigUtil.CONFIG;
@@ -56,6 +61,31 @@ public class WebHookAction implements BaseAction {
         }
 
         EmbyWebHook embyWebHook = GsonStatic.fromJson(body, EmbyWebHook.class);
+
+        String event = embyWebHook.getEvent();
+
+        if (event.equals("system.webhooktest")) {
+            EmbyWebHook.Server server = embyWebHook.getServer();
+            String id = server.getId();
+            String name = server.getName();
+            String version = server.getVersion();
+
+            String s = """
+                    接收到测试请求:
+                    ====================================
+                    IP: {}
+                    ServerId: {}
+                    ServerName: {}
+                    ServerVersion: {}
+                    ====================================
+                    """;
+
+            String ip = AuthUtil.getIp();
+            log.info(s, ip, id, name, version);
+            // 测试
+            response.sendOk();
+            return;
+        }
 
         EmbyWebHook.Item item = embyWebHook.getItem();
 
