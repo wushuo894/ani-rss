@@ -1,3 +1,5 @@
+import dayjs from "dayjs";
+
 let formatTime = timestamp => {
     const now = Date.now();
     const elapsedMs = now - timestamp;
@@ -29,14 +31,7 @@ let formatTime = timestamp => {
     // 是否为当前年
     const isCurrentYear = target.getFullYear() === nowDate.getFullYear();
 
-    return target.toLocaleString('zh-CN', {
-        hour: '2-digit',
-        minute: '2-digit',
-        month: isCurrentYear ? '2-digit' : undefined,
-        day: isCurrentYear ? '2-digit' : undefined,
-        year: isCurrentYear ? undefined : 'numeric',
-        formatMatcher: 'best fit'
-    }).replace(',', ' ');
+    return dayjs(target).format(isCurrentYear ? 'YYYY-MM-DD HH:mm:ss' : 'MM-DD HH:mm:ss');
 }
 
 export default formatTime;
