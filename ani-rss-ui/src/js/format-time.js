@@ -31,7 +31,7 @@ let formatTime = timestamp => {
     // 是否为当前年
     const isCurrentYear = target.getFullYear() === nowDate.getFullYear();
 
-    return dayjs(target).format(isCurrentYear ? 'YYYY-MM-DD HH:mm:ss' : 'MM-DD HH:mm:ss');
+    return dayjs(target).format(isCurrentYear ? 'MM-DD HH:mm:ss' : 'YYYY-MM-DD HH:mm:ss');
 }
 
 export default formatTime;
