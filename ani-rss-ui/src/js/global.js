@@ -1,5 +1,5 @@
-import {useColorMode, useDark, useLocalStorage} from "@vueuse/core";
-import {ref, watch} from "vue";
+import {useColorMode, useDark, useDebounceFn, useEventListener, useLocalStorage} from "@vueuse/core";
+import {ref} from "vue";
 
 /**
  * 令牌
@@ -41,16 +41,10 @@ const isNotMobile = ref(false)
  */
 const elIconClass = ref('')
 
-watch(isNotMobile, () => {
-    if (isNotMobile.value) {
-        elIconClass.value = 'el-icon--left'
-    }
-})
-
 /**
- * 页面初始化
+ * 主题初始化
  */
-const init = () => {
+const initTheme = () => {
     /**
      * 夜间模式
      */
@@ -64,16 +58,54 @@ const init = () => {
 
     // 修改强调色
     colorChange(color.value)
+}
 
+/**
+ * 布局初始化
+ */
+const initLayout = () => {
     let app = document.querySelector('#app');
 
     // 设置最大布局宽度
     maxContentWidth.value = Math.max(maxContentWidth.value, 1200)
+
     app
         .style.maxWidth = `${maxContentWidth.value}px`
 
     // 是否非移动设备
     isNotMobile.value = app.offsetWidth > 800
+
+    if (isNotMobile.value) {
+        elIconClass.value = 'el-icon--left'
+    } else {
+        // 用以控制图标与文字的间距 当为移动设备时便不需要间距了
+        elIconClass.value = ''
+    }
 }
 
-export {authorization, store, maxContentWidth, color, colorChange, isNotMobile, elIconClass, init};
+/**
+ * 初始化
+ */
+const init = () => {
+    initTheme()
+    initLayout()
+}
+
+/**
+ * 当页面大小变化时重新计算一下布局
+ * 对方法做节流处理
+ */
+useEventListener(window, 'resize', useDebounceFn(initLayout, 500))
+
+export {
+    authorization,
+    store,
+    maxContentWidth,
+    color,
+    colorChange,
+    isNotMobile,
+    elIconClass,
+    init,
+    initTheme,
+    initLayout
+};
