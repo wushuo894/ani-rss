@@ -97,8 +97,6 @@ let login = () => {
 
   api.post('api/login', my_user)
       .then(res => {
-        authorization.value = res.data
-
         // 记住密码
         if (rememberThePassword.value.remember) {
           rememberThePassword.value.username = user.value.username
@@ -107,6 +105,11 @@ let login = () => {
           rememberThePassword.value.username = ''
           rememberThePassword.value.password = ''
         }
+
+        // 延迟100毫秒 以确保记住密码已保存
+        setTimeout(() => {
+          authorization.value = res.data
+        }, 100)
       })
       .finally(() => {
         loading.value = false
