@@ -145,6 +145,7 @@ public class OpenListUtil {
         }
         String alistHost = config.getAlistHost();
         String alistToken = config.getAlistToken();
+        Integer alistRetry = config.getAlistRetry();
 
         verify();
 
@@ -156,33 +157,36 @@ public class OpenListUtil {
             }
             log.info("刷新 OpenList 路径: {}", finalPath);
 
-            try {
-                HttpReq
-                        .post(alistHost + "/api/fs/mkdir")
-                        .header(Header.AUTHORIZATION, alistToken)
-                        .body(GsonStatic.toJson(Map.of("path", finalPath)))
-                        .then(HttpReq::assertStatus);
+            for (int i = 0; i < alistRetry; i++) {
+                try {
+                    HttpReq
+                            .post(alistHost + "/api/fs/mkdir")
+                            .header(Header.AUTHORIZATION, alistToken)
+                            .body(GsonStatic.toJson(Map.of("path", finalPath)))
+                            .then(HttpReq::assertStatus);
 
-                String url = alistHost;
-                url += "/api/fs/list";
+                    String url = alistHost;
+                    url += "/api/fs/list";
 
-                Map<String, Object> resolved = Map.of(
-                        "path", finalPath,
-                        "refresh", true
-                );
-                HttpReq.post(url)
-                        .timeout(1000 * 20)
-                        .header(Header.AUTHORIZATION, alistToken)
-                        .body(GsonStatic.toJson(resolved))
-                        .then(res -> {
-                            Assert.isTrue(res.isOk(), "刷新失败 路径: {} 状态码: {}", finalPath, res.getStatus());
-                            JsonObject jsonObject = GsonStatic.fromJson(res.body(), JsonObject.class);
-                            int code = jsonObject.get("code").getAsInt();
-                            Assert.isTrue(code == 200, "刷新失败 路径: {} 状态码: {}", finalPath, code);
-                            log.info("已成功刷新 OpenList 路径: {}", finalPath);
-                        });
-            } catch (Exception e) {
-                log.error(e.getMessage(), e);
+                    Map<String, Object> resolved = Map.of(
+                            "path", finalPath,
+                            "refresh", true
+                    );
+                    HttpReq.post(url)
+                            .timeout(1000 * 20)
+                            .header(Header.AUTHORIZATION, alistToken)
+                            .body(GsonStatic.toJson(resolved))
+                            .then(res -> {
+                                Assert.isTrue(res.isOk(), "刷新失败 路径: {} 状态码: {}", finalPath, res.getStatus());
+                                JsonObject jsonObject = GsonStatic.fromJson(res.body(), JsonObject.class);
+                                int code = jsonObject.get("code").getAsInt();
+                                Assert.isTrue(code == 200, "刷新失败 路径: {} 状态码: {}", finalPath, code);
+                                log.info("已成功刷新 OpenList 路径: {}", finalPath);
+                            });
+                    break;
+                } catch (Exception e) {
+                    log.error(e.getMessage(), e);
+                }
             }
             ThreadUtil.sleep(3000);
         });
