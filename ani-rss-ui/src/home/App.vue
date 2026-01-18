@@ -144,7 +144,7 @@ import Manage from "./Manage.vue";
 import {useLocalStorage} from "@vueuse/core";
 import Collection from "./Collection.vue";
 import TorrentsInfos from "./TorrentsInfos.vue";
-import {elIconClass, isNotMobile} from "@/js/global.js";
+import {elIconClass, initLayout, isNotMobile} from "@/js/global.js";
 
 const collection = ref()
 const manage = ref()
@@ -192,6 +192,7 @@ const list = ref()
 const currentPage = ref(1)
 
 onMounted(() => {
+  initLayout()
   enableSelectChange()
 })
 
