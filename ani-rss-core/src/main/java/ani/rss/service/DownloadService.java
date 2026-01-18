@@ -561,34 +561,45 @@ public class DownloadService {
         int year = ani.getYear();
         int month = ani.getMonth();
         String monthFormat = String.format("%02d", month);
-        int quarter;
-        String quarterName;
 
-        /*
-        https://github.com/wushuo894/ani-rss/pull/451
-        优化季度判断规则，避免将月底先行播放的番归类到上个季度
-         */
-        if (List.of(12, 1, 2).contains(month)) {
-            quarter = 1;
-            quarterName = "冬";
-        } else if (List.of(3, 4, 5).contains(month)) {
-            quarter = 4;
-            quarterName = "春";
-        } else if (List.of(6, 7, 8).contains(month)) {
-            quarter = 7;
-            quarterName = "夏";
-        } else {
-            quarter = 10;
-            quarterName = "秋";
+        // 季度
+        if (
+                downloadPathTemplate.contains("${quarter}") ||
+                        downloadPathTemplate.contains("${quarterFormat}") ||
+                        downloadPathTemplate.contains("${quarterName}")
+        ) {
+            int quarter;
+            String quarterName;
+            /*
+            https://github.com/wushuo894/ani-rss/pull/451
+            优化季度判断规则，避免将月底先行播放的番归类到上个季度
+            */
+            if (List.of(12, 1, 2).contains(month)) {
+                if (month == 12) {
+                    // 当使用季度信息, 并且月份等于12时, 年份自动 +1。避免年份与月份不一致
+                    year++;
+                }
+                quarter = 1;
+                quarterName = "冬";
+            } else if (List.of(3, 4, 5).contains(month)) {
+                quarter = 4;
+                quarterName = "春";
+            } else if (List.of(6, 7, 8).contains(month)) {
+                quarter = 7;
+                quarterName = "夏";
+            } else {
+                quarter = 10;
+                quarterName = "秋";
+            }
+            String quarterFormat = String.format("%02d", quarter);
+            downloadPathTemplate = downloadPathTemplate.replace("${quarter}", String.valueOf(quarter));
+            downloadPathTemplate = downloadPathTemplate.replace("${quarterFormat}", quarterFormat);
+            downloadPathTemplate = downloadPathTemplate.replace("${quarterName}", quarterName);
         }
-        String quarterFormat = String.format("%02d", quarter);
 
         downloadPathTemplate = downloadPathTemplate.replace("${year}", String.valueOf(year));
         downloadPathTemplate = downloadPathTemplate.replace("${month}", String.valueOf(month));
         downloadPathTemplate = downloadPathTemplate.replace("${monthFormat}", monthFormat);
-        downloadPathTemplate = downloadPathTemplate.replace("${quarter}", String.valueOf(quarter));
-        downloadPathTemplate = downloadPathTemplate.replace("${quarterFormat}", quarterFormat);
-        downloadPathTemplate = downloadPathTemplate.replace("${quarterName}", quarterName);
 
         int season = ani.getSeason();
         String seasonFormat = String.format("%02d", season);
