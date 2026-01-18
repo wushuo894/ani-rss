@@ -1,4 +1,7 @@
-- refactor: 去除捐赠限制 摸鱼检测、添加合集
+- fix: 修复季度与年份不一致的问题
+- refactor: OpenList路径刷新失败可重试
+- refactor: 优化视频列表排序
+- refactor: 优化日期格式化
 
 [请不要将本项目在国内宣传](https://github.com/wushuo894/ani-rss/discussions/504)
 
