@@ -52,6 +52,10 @@ public class PlaylistAction implements BaseAction {
 
         String downloadPath = DownloadService.getDownloadPath(ani);
         List<PlayItem> collect = getPlayItem(new File(downloadPath));
+
+        // 按照集数排序
+        CollUtil.sort(collect, Comparator.comparingDouble(PlayItem::getEpisode));
+
         resultSuccess(collect);
     }
 
@@ -128,7 +132,7 @@ public class PlaylistAction implements BaseAction {
         playItems = CollUtil.distinct(playItems, PlayItem::getTitle, false);
 
         // 按照集数排序
-        return CollUtil.sort(playItems, Comparator.comparingDouble(PlayItem::getEpisode));
+        return playItems;
     }
 
     /**
