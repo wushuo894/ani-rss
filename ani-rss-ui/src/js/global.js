@@ -2,6 +2,15 @@ import {useColorMode, useDark, useDebounceFn, useEventListener, useLocalStorage}
 import {ref} from "vue";
 
 /**
+ * 保存登录信息
+ */
+let rememberThePassword = useLocalStorage('rememberThePassword', {
+    remember: false,
+    username: '',
+    password: ''
+})
+
+/**
  * 令牌
  */
 const authorization = useLocalStorage('authorization', '')
@@ -98,6 +107,7 @@ const init = () => {
 useEventListener(window, 'resize', useDebounceFn(initLayout, 500))
 
 export {
+    rememberThePassword,
     authorization,
     store,
     maxContentWidth,

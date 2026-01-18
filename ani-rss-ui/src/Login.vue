@@ -57,25 +57,15 @@
 import {onMounted, ref} from "vue";
 import CryptoJS from "crypto-js"
 import api from "./js/api.js";
-import {useLocalStorage} from '@vueuse/core'
 import {Key} from "@element-plus/icons-vue";
 import {ElMessage} from "element-plus";
-import {authorization} from "@/js/global.js";
+import {authorization, rememberThePassword} from "@/js/global.js";
 
 let loading = ref(false)
 
 let user = ref({
   'username': '',
   'password': ''
-})
-
-/**
- * 保存登录信息
- */
-let rememberThePassword = useLocalStorage('rememberThePassword', {
-  remember: false,
-  username: '',
-  password: ''
 })
 
 /**
@@ -90,12 +80,12 @@ let login = () => {
     return
   }
 
-  let my_user = JSON.parse(JSON.stringify(user.value))
-  my_user.password = CryptoJS['MD5'](my_user.password).toString()
-
   loading.value = true
 
-  api.post('api/login', my_user)
+  api.post('api/login', {
+    username: user.value.username,
+    password: CryptoJS['MD5'](user.value.password).toString()
+  })
       .then(res => {
         // 记住密码
         if (rememberThePassword.value.remember) {
@@ -106,10 +96,7 @@ let login = () => {
           rememberThePassword.value.password = ''
         }
 
-        // 延迟100毫秒 以确保记住密码已保存
-        setTimeout(() => {
-          authorization.value = res.data
-        }, 100)
+        authorization.value = res.data
       })
       .finally(() => {
         loading.value = false
