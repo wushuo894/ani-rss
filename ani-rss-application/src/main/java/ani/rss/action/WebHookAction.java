@@ -64,7 +64,7 @@ public class WebHookAction implements BaseAction {
 
         String event = embyWebHook.getEvent();
 
-        if (event.equals("system.webhooktest")) {
+        if (List.of("system.webhooktest", "system.notificationtest").contains(event)) {
             EmbyWebHook.Server server = embyWebHook.getServer();
             String id = server.getId();
             String name = server.getName();
