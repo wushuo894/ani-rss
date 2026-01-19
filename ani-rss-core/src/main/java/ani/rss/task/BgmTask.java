@@ -11,6 +11,7 @@ import cn.hutool.core.thread.ThreadUtil;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -54,7 +55,9 @@ public class BgmTask extends Thread {
                     continue;
                 }
 
-                double score = bgmInfo.getScore();
+                double score = Optional.ofNullable(bgmInfo.getRating())
+                        .map(BgmInfo.Rating::getScore)
+                        .orElse(0.0);
                 ani.setScore(score);
 
                 Config config = ConfigUtil.CONFIG;

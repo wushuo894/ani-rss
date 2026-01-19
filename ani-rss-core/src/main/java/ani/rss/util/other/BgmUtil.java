@@ -9,22 +9,19 @@ import ani.rss.enums.BgmTokenTypeEnum;
 import ani.rss.service.DownloadService;
 import ani.rss.util.basic.HttpReq;
 import cn.hutool.core.convert.Convert;
-import cn.hutool.core.date.DatePattern;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.lang.Opt;
 import cn.hutool.core.net.url.UrlBuilder;
 import cn.hutool.core.text.StrFormatter;
 import cn.hutool.core.thread.ThreadUtil;
-import cn.hutool.core.util.ObjectUtil;
-import cn.hutool.core.util.RandomUtil;
-import cn.hutool.core.util.ReUtil;
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.util.*;
 import cn.hutool.http.ContentType;
 import cn.hutool.http.Header;
 import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpResponse;
 import cn.hutool.json.JSONUtil;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import lombok.extern.slf4j.Slf4j;
@@ -35,7 +32,6 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 
 /**
  * BGM
@@ -98,7 +94,7 @@ public class BgmUtil {
      * @param name
      * @return
      */
-    public static List<JsonObject> search(String name) {
+    public static List<BgmInfo> search(String name) {
         if (StrUtil.isBlank(name)) {
             return new ArrayList<>();
         }
@@ -130,10 +126,13 @@ public class BgmUtil {
                             return new ArrayList<>();
                         }
                     }
-                    return jsonObject.get("list").getAsJsonArray()
-                            .asList()
-                            .stream().map(JsonElement::getAsJsonObject)
-                            .toList();
+                    JsonArray list = jsonObject.getAsJsonArray("list");
+                    List<BgmInfo> bgmInfos = GsonStatic.fromJsonList(list, BgmInfo.class);
+                    for (BgmInfo bgmInfo : bgmInfos) {
+                        Integer season = getSeasonByBgmInfo(bgmInfo);
+                        bgmInfo.setSeason(season);
+                    }
+                    return bgmInfos;
                 });
     }
 
@@ -154,7 +153,7 @@ public class BgmUtil {
         if (CacheUtils.containsKey(key)) {
             return CacheUtils.get(key);
         }
-        List<JsonObject> list = search(bgmName);
+        List<BgmInfo> list = search(bgmName);
         if (list.isEmpty()) {
             return "";
         }
@@ -163,25 +162,25 @@ public class BgmUtil {
 
         String id = "";
         // 优先使用名称完全匹配的
-        for (JsonObject itemObject : list) {
-            String name = itemObject.get("name").getAsString();
-            String nameCn = itemObject.get("name_cn").getAsString();
+        for (BgmInfo bgmInfo : list) {
+            String name = bgmInfo.getName();
+            String nameCn = bgmInfo.getNameCn();
 
             if (s == 1) {
                 if (List.of(name, nameCn).contains(bgmName)) {
-                    id = itemObject.get("id").getAsString();
+                    id = bgmInfo.getId();
                     break;
                 }
             }
 
             if (List.of(name, nameCn).contains(tempName)) {
-                id = itemObject.get("id").getAsString();
+                id = bgmInfo.getId();
                 break;
             }
         }
         // 次之使用第一个
         if (StrUtil.isBlank(id)) {
-            id = list.get(0).get("id").getAsString();
+            id = list.get(0).getId();
         }
         ThreadUtil.sleep(1000);
         CacheUtils.put(key, id, TimeUnit.MINUTES.toMillis(10));
@@ -458,92 +457,11 @@ public class BgmUtil {
             HttpReq.assertStatus(res);
             String body = res.body();
             Assert.isTrue(JSONUtil.isTypeJSON(body), "no json");
-            JsonObject jsonObject = GsonStatic.fromJson(body, JsonObject.class);
-            BgmInfo bgmInfo = new BgmInfo();
+            BgmInfo bgmInfo = GsonStatic.fromJson(body, BgmInfo.class);
 
-            String name = jsonObject.get("name").getAsString();
-            String nameCn = jsonObject.get("name_cn").getAsString();
+            int season = getSeasonByBgmInfo(bgmInfo);
 
-            String platform = jsonObject.get("platform").getAsString();
-            int eps = jsonObject.get("eps").getAsInt();
-
-            double score = 0.0;
-            JsonObject rating = jsonObject.getAsJsonObject("rating");
-            if (Objects.nonNull(rating)) {
-                score = rating.get("score").getAsDouble();
-            }
-            bgmInfo
-                    .setSubjectId(subjectId)
-                    .setNameCn(RenameUtil.getName(nameCn))
-                    .setName(RenameUtil.getName(name))
-                    .setEps(eps)
-                    .setScore(score)
-                    .setOva(List.of("OVA", "剧场版").contains(platform.toUpperCase()));
-
-            JsonElement date = jsonObject.get("date");
-
-            if (Objects.nonNull(date) && !date.isJsonNull()) {
-                bgmInfo.setDate(
-                        DateUtil.parse(date.getAsString(), DatePattern.NORM_DATE_PATTERN)
-                );
-            } else {
-                bgmInfo.setDate(new Date());
-            }
-
-
-            JsonObject images = jsonObject.getAsJsonObject("images");
-            if (Objects.nonNull(images)) {
-                Config config = ConfigUtil.CONFIG;
-                String bgmImage = config.getBgmImage();
-                bgmInfo.setImage(images.get(bgmImage).getAsString());
-            }
-
-            Set<String> tags = jsonObject.getAsJsonArray("tags")
-                    .asList()
-                    .stream()
-                    .map(JsonElement::getAsJsonObject)
-                    .map(o -> o.get("name").getAsString())
-                    .filter(StrUtil::isNotBlank)
-                    .collect(Collectors.toSet());
-
-            int season = 1;
-
-
-            // 从标签获取季
-            for (String tag : tags) {
-                String seasonReg = StrFormatter.format("第({}+)季", ReUtil.RE_CHINESE);
-                if (!ReUtil.contains(seasonReg, tag)) {
-                    continue;
-                }
-                try {
-                    season = Convert.chineseToNumber(ReUtil.get(seasonReg, tag, 1));
-                } catch (Exception e) {
-                    log.error(e.getMessage(), e);
-                }
-            }
-
-            // 从中文标题获取季
-            String seasonReg = StrFormatter.format("第({}+)季", ReUtil.RE_CHINESE);
-            if (ReUtil.contains(seasonReg, nameCn)) {
-                try {
-                    season = Convert.chineseToNumber(ReUtil.get(seasonReg, nameCn, 1));
-                } catch (Exception e) {
-                    log.error(e.getMessage(), e);
-                }
-            }
-
-            // 从原标题获取季
-            seasonReg = "[Ss]eason ?(\\d+)";
-            if (ReUtil.contains(seasonReg, name)) {
-                try {
-                    season = Integer.parseInt(ReUtil.get(seasonReg, name, 1));
-                } catch (Exception e) {
-                    log.error(e.getMessage(), e);
-                }
-            }
-
-            bgmInfo.setSeason(season);
-            return bgmInfo;
+            return bgmInfo.setSeason(season);
         };
 
         if (!isCache) {
@@ -587,6 +505,51 @@ public class BgmUtil {
         Assert.notNull(bgmInfo, "获取 bgmInfo 失败!");
 
         return bgmInfo;
+    }
+
+    public static Integer getSeasonByBgmInfo(BgmInfo bgmInfo) {
+        String name = bgmInfo.getName();
+        String nameCn = bgmInfo.getNameCn();
+        List<BgmInfo.Tag> tags = bgmInfo.getTags();
+        tags = ObjectUtil.defaultIfNull(tags, new ArrayList<>());
+
+        int season = 1;
+
+        // 从标签获取季
+        for (BgmInfo.Tag tag : tags) {
+            String tagName = tag.getName();
+            String seasonReg = StrFormatter.format("第({}+)季", ReUtil.RE_CHINESE);
+            if (!ReUtil.contains(seasonReg, tagName)) {
+                continue;
+            }
+            try {
+                season = Convert.chineseToNumber(ReUtil.get(seasonReg, tagName, 1));
+            } catch (Exception e) {
+                log.error(e.getMessage(), e);
+            }
+        }
+
+        // 从中文标题获取季
+        String seasonReg = StrFormatter.format("第({}+)季", ReUtil.RE_CHINESE);
+        if (ReUtil.contains(seasonReg, nameCn)) {
+            try {
+                season = Convert.chineseToNumber(ReUtil.get(seasonReg, nameCn, 1));
+            } catch (Exception e) {
+                log.error(e.getMessage(), e);
+            }
+        }
+
+        // 从原标题获取季
+        seasonReg = "[Ss]eason ?(\\d+)";
+        if (ReUtil.contains(seasonReg, name)) {
+            try {
+                season = Integer.parseInt(ReUtil.get(seasonReg, name, 1));
+            } catch (Exception e) {
+                log.error(e.getMessage(), e);
+            }
+        }
+
+        return season;
     }
 
     /**
@@ -765,7 +728,7 @@ public class BgmUtil {
      */
     public static Integer getEps(BgmInfo bgmInfo) {
         int eps = bgmInfo.getEps();
-        String subjectId = bgmInfo.getSubjectId();
+        String subjectId = bgmInfo.getId();
         if (eps < 1) {
             return 0;
         }
@@ -789,20 +752,31 @@ public class BgmUtil {
      * @return
      */
     public static Ani toAni(BgmInfo bgmInfo, Ani ani) {
+        Config config = ConfigUtil.CONFIG;
+        String bgmImage = config.getBgmImage();
+        // 使用tmdb标题
+        Boolean tmdb = config.getTmdb();
+
         String title = BgmUtil.getFinalName(bgmInfo);
 
         int eps = getEps(bgmInfo);
 
-        String image = bgmInfo.getImage();
+        BgmInfo.Images images = bgmInfo.getImages();
+
+        String image = (String) ReflectUtil.getFieldValue(images, bgmImage);
+
+        double score = Optional.ofNullable(bgmInfo.getRating())
+                .map(BgmInfo.Rating::getScore)
+                .orElse(0.0);
+
+        String platform = bgmInfo.getPlatform();
+
+        boolean ova = List.of("OVA", "剧场版").contains(platform.toUpperCase());
 
         Date date = bgmInfo.getDate();
 
-        Config config = ConfigUtil.CONFIG;
-        // 使用tmdb标题
-        Boolean tmdb = config.getTmdb();
-
         ani
-                .setBgmUrl("https://bgm.tv/subject/" + bgmInfo.getSubjectId())
+                .setBgmUrl("https://bgm.tv/subject/" + bgmInfo.getId())
                 // 标题
                 .setTitle(title)
                 .setJpTitle(bgmInfo.getName())
@@ -811,9 +785,9 @@ public class BgmUtil {
                 // 总集数
                 .setTotalEpisodeNumber(eps)
                 // 剧场版
-                .setOva(bgmInfo.getOva())
+                .setOva(ova)
                 // 评分
-                .setScore(bgmInfo.getScore())
+                .setScore(score)
                 // 年
                 .setYear(DateUtil.year(date))
                 // 月
@@ -843,7 +817,6 @@ public class BgmUtil {
         String alistPath = config.getAlistPath();
         String completedPathTemplate = config.getCompletedPathTemplate();
 
-        Boolean ova = ani.getOva();
         if (ova) {
             // 剧场版默认不开启摸鱼检测
             ani.setProcrastinating(false);
