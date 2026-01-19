@@ -17,7 +17,7 @@ if [ ! -f $jar_path ]; then
 fi
 
 stop() {
-  pid=$(ps -ef | grep java | grep "$jar" | awk '{print $2}')
+  pid=$(pgrep -f "$jar")
   if [ -n "$pid" ]; then
       echo "Stopping process $pid - $jar"
       kill "$pid"
