@@ -1,5 +1,5 @@
-- refactor: 优化图标比例
-- refactor: 优化 EmbyWebhook 的测试请求处理
+- refactor: 优化网络监听信息
+- refactor: 优化bgm点格子
 
 [请不要将本项目在国内宣传](https://github.com/wushuo894/ani-rss/discussions/504)
 
