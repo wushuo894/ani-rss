@@ -12,6 +12,6 @@ import java.util.List;
 public class Global implements Serializable {
     public static List<String> ARGS = new ArrayList<>();
 
-    public static String HOST = "0.0.0.0";
+    public static String HTTP_HOST = "0.0.0.0";
     public static String HTTP_PORT = "7789";
 }

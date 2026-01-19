@@ -52,15 +52,13 @@ public class ServerUtil {
 
         rawServer.start();
 
-        InetSocketAddress address = rawServer.getAddress();
-        String hostAddress = address.getAddress().getHostAddress();
-        int port = address.getPort();
-        Global.HTTP_PORT = String.valueOf(port);
+        String host = Global.HTTP_HOST;
+        String port = Global.HTTP_PORT;
 
-        log.info("Http Server listen on [{}:{}]", hostAddress, port);
+        log.info("Http Server listen on [{}:{}]", host, port);
 
         for (String ip : NetUtil.localIpv4s()) {
-            InetSocketAddress inetSocketAddress = new InetSocketAddress(ip, port);
+            InetSocketAddress inetSocketAddress = new InetSocketAddress(ip, Integer.parseInt(port));
             if (NetUtil.isOpen(inetSocketAddress, 100)) {
                 log.info("http://{}:{}", ip, port);
             }
@@ -80,13 +78,13 @@ public class ServerUtil {
         }
         i = Global.ARGS.indexOf("--host");
         if (i > -1) {
-            Global.HOST = Global.ARGS.get(i + 1);
+            Global.HTTP_HOST = Global.ARGS.get(i + 1);
         }
         Global.HTTP_PORT = env.getOrDefault("PORT", Global.HTTP_PORT);
-        Global.HOST = env.getOrDefault("HOST", Global.HOST);
+        Global.HTTP_HOST = env.getOrDefault("HOST", Global.HTTP_HOST);
 
         InetSocketAddress inetSocketAddress = new InetSocketAddress(
-                Global.HOST,
+                Global.HTTP_HOST,
                 Integer.parseInt(Global.HTTP_PORT)
         );
         HTTP_SERVER = new SimpleServer(inetSocketAddress);
