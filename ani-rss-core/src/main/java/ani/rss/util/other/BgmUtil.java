@@ -154,26 +154,23 @@ public class BgmUtil {
             return CacheUtils.get(key);
         }
         List<BgmInfo> list = search(bgmName);
+
+        // 仅保留季数一致
+        list = list.stream()
+                .filter(bgmInfo -> bgmInfo.getSeason() == s.intValue())
+                .toList();
+
         if (list.isEmpty()) {
             return "";
         }
 
-        String tempName = StrFormatter.format("{} 第{}季", bgmName, Convert.numberToChinese(s, false));
-
         String id = "";
-        // 优先使用名称完全匹配的
+        // 优先使用名称与季完全匹配的
         for (BgmInfo bgmInfo : list) {
             String name = bgmInfo.getName();
             String nameCn = bgmInfo.getNameCn();
 
-            if (s == 1) {
-                if (List.of(name, nameCn).contains(bgmName)) {
-                    id = bgmInfo.getId();
-                    break;
-                }
-            }
-
-            if (List.of(name, nameCn).contains(tempName)) {
+            if (List.of(name, nameCn).contains(bgmName)) {
                 id = bgmInfo.getId();
                 break;
             }
@@ -459,9 +456,18 @@ public class BgmUtil {
             Assert.isTrue(JSONUtil.isTypeJSON(body), "no json");
             BgmInfo bgmInfo = GsonStatic.fromJson(body, BgmInfo.class);
 
+            String name = bgmInfo.getName();
+            String nameCn = bgmInfo.getNameCn();
+
+            name = RenameUtil.getName(name);
+            nameCn = RenameUtil.getName(nameCn);
+
             int season = getSeasonByBgmInfo(bgmInfo);
 
-            return bgmInfo.setSeason(season);
+            return bgmInfo
+                    .setName(name)
+                    .setNameCn(nameCn)
+                    .setSeason(season);
         };
 
         if (!isCache) {
