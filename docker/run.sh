@@ -21,6 +21,7 @@ stop() {
   if [ -n "$pid" ]; then
       echo "Stopping process $pid - $jar"
       kill "$pid"
+      wait "$pid"
   fi
 }
 
@@ -28,7 +29,6 @@ stop
 
 sigterm_handler() {
     stop
-    exit 0
 }
 
 trap 'sigterm_handler' 15
@@ -51,7 +51,7 @@ do
       -jar $jar_path --port $port &
     wait $!
     if [ $? -ne 0 ]; then
-        break
+      break
     fi
 done
 
