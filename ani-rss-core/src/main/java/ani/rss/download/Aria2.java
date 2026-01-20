@@ -223,7 +223,7 @@ public class Aria2 implements BaseDownload {
                     if (file.length() < 1) {
                         return false;
                     }
-                    return videoFormat.contains(extName) || subtitleFormat.contains(extName);
+                    return FileUtils.isVideoFormat(extName) || FileUtils.isSubtitleFormat(extName);
                 })
                 .sorted(Comparator.comparingLong(file -> Long.MAX_VALUE - file.length()))
                 .toList();

@@ -68,7 +68,7 @@ public class qBittorrent implements BaseDownload {
                                 if (size < 1) {
                                     return false;
                                 }
-                                return videoFormat.contains(extName) || subtitleFormat.contains(extName);
+                                return FileUtils.isVideoFormat(extName) || FileUtils.isSubtitleFormat(extName);
                             })
                             .sorted((fileEntity1, fileEntity2) -> Long.compare(fileEntity2.getSize(), fileEntity1.getSize()))
                             .toList();

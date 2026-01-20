@@ -1,5 +1,6 @@
 package ani.rss.download;
 
+import ani.rss.commons.FileUtils;
 import ani.rss.entity.Ani;
 import ani.rss.entity.Config;
 import ani.rss.entity.Item;
@@ -16,17 +17,6 @@ import java.util.List;
 import java.util.Set;
 
 public interface BaseDownload {
-
-    /**
-     * 视频格式
-     */
-    List<String> videoFormat = List.of("mp4", "mkv", "avi", "wmv");
-
-    /**
-     * 字幕格式
-     */
-    List<String> subtitleFormat = List.of("ass", "ssa", "sub", "srt", "lyc");
-
     /**
      * 登录
      *
@@ -118,9 +108,9 @@ public interface BaseDownload {
             return name;
         }
         String newPath = reName;
-        if (videoFormat.contains(ext.toLowerCase())) {
+        if (FileUtils.isVideoFormat(ext)) {
             newPath = newPath + "." + ext;
-        } else if (subtitleFormat.contains(ext.toLowerCase())) {
+        } else if (FileUtils.isSubtitleFormat(ext)) {
             String s = FileUtil.extName(FileUtil.mainName(name));
             if (StrUtil.isNotBlank(s)) {
                 newPath = newPath + "." + s;

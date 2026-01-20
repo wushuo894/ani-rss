@@ -1,7 +1,6 @@
 package ani.rss.service;
 
 import ani.rss.commons.FileUtils;
-import ani.rss.download.BaseDownload;
 import ani.rss.entity.Ani;
 import ani.rss.enums.StringEnum;
 import ani.rss.util.basic.HttpReq;
@@ -87,7 +86,7 @@ public class ScrapeService {
                     if (StrUtil.isBlank(extName)) {
                         return false;
                     }
-                    return BaseDownload.videoFormat.contains(extName);
+                    return FileUtils.isVideoFormat(extName);
                 })
                 .max(Comparator.comparingLong(File::length));
 
@@ -224,7 +223,7 @@ public class ScrapeService {
                 continue;
             }
 
-            if (!BaseDownload.videoFormat.contains(extName)) {
+            if (!FileUtils.isVideoFormat(extName)) {
                 // 非视频文件
                 continue;
             }

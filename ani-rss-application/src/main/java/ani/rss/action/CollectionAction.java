@@ -1,11 +1,10 @@
 package ani.rss.action;
 
-import ani.rss.download.BaseDownload;
+import ani.rss.commons.FileUtils;
 import ani.rss.download.qBittorrent;
 import ani.rss.entity.*;
 import ani.rss.enums.StringEnum;
 import ani.rss.util.basic.HttpReq;
-import ani.rss.util.other.AfdianUtil;
 import ani.rss.util.other.ConfigUtil;
 import ani.rss.util.other.RenameUtil;
 import ani.rss.util.other.TorrentUtil;
@@ -129,7 +128,7 @@ public class CollectionAction implements BaseAction {
 
                     String extName = FileUtil.extName(title);
 
-                    if (BaseDownload.subtitleFormat.contains(extName)) {
+                    if (FileUtils.isSubtitleFormat(extName)) {
                         String lang = FileUtil.extName(FileUtil.mainName(title));
                         if (StrUtil.isNotBlank(lang)) {
                             reName += "." + lang;

@@ -1,6 +1,7 @@
 package ani.rss.download;
 
 import ani.rss.commons.ExceptionUtils;
+import ani.rss.commons.FileUtils;
 import ani.rss.commons.GsonStatic;
 import ani.rss.entity.Ani;
 import ani.rss.entity.Config;
@@ -190,7 +191,7 @@ public class OpenList implements BaseDownload {
             // 取大小最大的一个视频文件
             OpenListFileInfo videoFile = openListFileInfos.stream()
                     .filter(openListFileInfo ->
-                            videoFormat.contains(FileUtil.extName(openListFileInfo.getName())))
+                            FileUtils.isVideoFormat(openListFileInfo.getName()))
                     .findFirst()
                     .orElse(null);
 
@@ -200,7 +201,7 @@ public class OpenList implements BaseDownload {
 
             List<OpenListFileInfo> subtitleList = openListFileInfos.stream()
                     .filter(openListFileInfo ->
-                            subtitleFormat.contains(FileUtil.extName(openListFileInfo.getName())))
+                            FileUtils.isSubtitleFormat(openListFileInfo.getName()))
                     .toList();
 
             Map<String, String> renameMap = new HashMap<>();

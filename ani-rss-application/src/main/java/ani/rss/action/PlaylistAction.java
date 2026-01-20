@@ -1,7 +1,6 @@
 package ani.rss.action;
 
 import ani.rss.commons.FileUtils;
-import ani.rss.download.BaseDownload;
 import ani.rss.entity.Ani;
 import ani.rss.entity.PlayItem;
 import ani.rss.enums.StringEnum;
@@ -95,7 +94,7 @@ public class PlaylistAction implements BaseAction {
             // 扩展名为空直接跳过
             return playItems;
         }
-        if (!BaseDownload.videoFormat.contains(extName)) {
+        if (!FileUtils.isVideoFormat(extName)) {
             // 过滤出视频文件
             return playItems;
         }
