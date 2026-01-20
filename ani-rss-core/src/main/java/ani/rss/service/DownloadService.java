@@ -3,7 +3,6 @@ package ani.rss.service;
 import ani.rss.commons.ExceptionUtils;
 import ani.rss.commons.FileUtils;
 import ani.rss.commons.GsonStatic;
-import ani.rss.download.BaseDownload;
 import ani.rss.entity.*;
 import ani.rss.enums.NotificationStatusEnum;
 import ani.rss.enums.StringEnum;
@@ -342,8 +341,7 @@ public class DownloadService {
                 if (StrUtil.isBlank(extName)) {
                     continue;
                 }
-                extName = extName.toLowerCase();
-                if (BaseDownload.videoFormat.contains(extName)) {
+                if (FileUtils.isVideoFormat(extName)) {
                     isDel = true;
                 }
                 if (List.of("nfo", "bif").contains(extName)) {
@@ -690,7 +688,7 @@ public class DownloadService {
                         if (StrUtil.isBlank(extName)) {
                             return false;
                         }
-                        return BaseDownload.videoFormat.contains(extName);
+                        return FileUtils.isVideoFormat(extName);
                     }
                     return true;
                 })

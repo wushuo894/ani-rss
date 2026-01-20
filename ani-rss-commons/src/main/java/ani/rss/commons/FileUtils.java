@@ -1,13 +1,47 @@
 package ani.rss.commons;
 
+import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.ReUtil;
+import cn.hutool.core.util.StrUtil;
 
 import java.io.File;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 public class FileUtils {
+    /**
+     * 视频格式
+     */
+    private static final Set<String> VIDEO_FORMAT = Set.of("mp4", "mkv", "avi", "wmv");
+
+    /**
+     * 字幕格式
+     */
+    private static final Set<String> SUBTITLE_FORMAT = Set.of("ass", "ssa", "sub", "srt", "lyc");
+
+    public static Boolean isVideoFormat(String filename) {
+        return isFormat(filename, VIDEO_FORMAT);
+    }
+
+    public static Boolean isSubtitleFormat(String filename) {
+        return isFormat(filename, SUBTITLE_FORMAT);
+    }
+
+    public static Boolean isFormat(String filename, Set<String> extNames) {
+        if (StrUtil.isBlank(filename)) {
+            return false;
+        }
+        filename = filename.toLowerCase();
+
+        String extName = FileUtil.extName(filename);
+        if (StrUtil.isNotBlank(extName)) {
+            return extNames.contains(extName);
+        }
+
+        return extNames.contains(filename);
+    }
 
     /**
      * 获取绝对路径 并把 windows 狗日的 \ 转换为 /
