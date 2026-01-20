@@ -63,6 +63,7 @@ public class qBittorrent implements BaseDownload {
                                 if (StrUtil.isBlank(extName)) {
                                     return false;
                                 }
+                                extName = extName.toLowerCase();
                                 Long size = fileEntity.getSize();
                                 if (size < 1) {
                                     return false;
