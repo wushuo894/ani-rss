@@ -1,5 +1,8 @@
 #!/bin/sh
 
+export LANG=C.UTF-8
+export LC_ALL=C.UTF-8
+
 port="7789"
 path="./"
 jar="ani-rss-jar-with-dependencies.jar"
@@ -36,6 +39,7 @@ trap 'sigterm_handler' 15
 while :
 do
     java -Xms60m -Xmx1g -Xss256k \
+      -Dfile.encoding=UTF-8 \
       -Xgcpolicy:gencon \
       -Xshareclasses:none \
       -Xquickstart -Xcompressedrefs \
