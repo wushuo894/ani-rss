@@ -38,10 +38,17 @@ html.dark .el-card {
     background-color: #343536; /* 稍微提亮一点背景以区分 */
 }
 
-/* 优化对话框：大圆角 */
+/* 优化对话框：大圆角，且垂直居中 */
+.el-overlay-dialog {
+    display: flex;
+    flex-direction: column;
+    padding: 24px; /* 最小安全边距 */
+}
+
 .el-dialog {
     border-radius: 16px;
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+    margin: auto !important; /* 核心：在 flex 容器中自动垂直居中，过高时自动顶部对齐 */
 }
 
 /* 优化输入框和选择器：更圆润，边框更淡 */
@@ -90,7 +97,8 @@ html, body, #app {
 @media (max-width: 450px) {
     .el-dialog {
         --el-dialog-width: 100%;
-        margin-top: 55px;
+        margin-top: 55px !important;
+        margin-bottom: auto !important;
     }
 }
 
