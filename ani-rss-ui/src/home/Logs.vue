@@ -152,7 +152,8 @@ defineExpose({show})
   background-color: #2e3440ff;
   color: #d8dee9ff;
   margin-top: 4px;
-  padding: 0 4px;
+  padding: 4px;
+  border-radius: var(--el-border-radius-base);
 }
 
 @media (min-width: 1400px) {
