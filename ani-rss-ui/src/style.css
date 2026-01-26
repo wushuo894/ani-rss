@@ -19,6 +19,9 @@ html.dark {
     /* 全局边框淡化：使用更浅的颜色 */
     --el-border-color: var(--el-border-color-lighter);
     --el-border-color-light: var(--el-border-color-extra-light);
+
+    /* 字体优化：优先使用萍方和微软雅黑 */
+    --el-font-family: "PingFang SC", "Microsoft YaHei", "Helvetica Neue", Helvetica, "Hiragino Sans GB", Arial, sans-serif;
 }
 
 /* 优化卡片样式：去除厚重边框，增加柔和阴影 */
@@ -76,6 +79,7 @@ html.dark .el-card {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    font-family: "PingFang SC", "Microsoft YaHei", "Helvetica Neue", Helvetica, "Hiragino Sans GB", Arial, sans-serif;
 }
 
 html, body, #app {
