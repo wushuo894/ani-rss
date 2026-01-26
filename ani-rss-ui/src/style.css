@@ -5,6 +5,71 @@ html.dark {
     --el-fill-color-blank: var(--el-bg-color);
     --el-collapse-header-bg-color: none;
     --el-collapse-content-bg-color: none;
+    /* 深色模式下边框颜色调整，使其更融合 */
+    --el-border-color: #414243;
+    --el-border-color-light: #4C4D4F;
+}
+
+:root {
+    /* 全局圆角优化：更圆润 */
+    --el-border-radius-base: 8px;
+    --el-border-radius-small: 4px;
+    --el-border-radius-round: 24px;
+
+    /* 全局边框淡化：使用更浅的颜色 */
+    --el-border-color: var(--el-border-color-lighter);
+    --el-border-color-light: var(--el-border-color-extra-light);
+}
+
+/* 优化卡片样式：去除厚重边框，增加柔和阴影 */
+.el-card {
+    border: 1px solid var(--el-border-color-extra-light);
+    border-radius: 12px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
+    transition: all 0.3s ease;
+}
+
+html.dark .el-card {
+    border: 1px solid var(--el-border-color);
+    box-shadow: none;
+    background-color: #343536; /* 稍微提亮一点背景以区分 */
+}
+
+/* 优化对话框：大圆角 */
+.el-dialog {
+    border-radius: 16px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+}
+
+/* 优化输入框和选择器：更圆润，边框更淡 */
+.el-input__wrapper,
+.el-select__wrapper,
+.el-textarea__inner {
+    border-radius: 8px;
+    box-shadow: 0 0 0 1px var(--el-border-color) inset; /* 使用我们定义的淡化后的变量 */
+}
+
+/* 聚焦时保持高亮但不过分刺眼 */
+.el-input__wrapper.is-focus,
+.el-select__wrapper.is-focused,
+.el-textarea__inner:focus {
+    box-shadow: 0 0 0 1px var(--el-color-primary) inset;
+}
+
+/* 按钮圆角优化 */
+.el-button {
+    border-radius: 8px;
+}
+
+/* 圆形按钮保持圆形 */
+.el-button.is-circle {
+    border-radius: 50%;
+}
+
+/* 标签圆角 */
+.el-tag {
+    border-radius: 6px;
+    border-width: 0; /* 保持原有的去边框 */
 }
 
 * {
