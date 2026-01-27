@@ -1,5 +1,5 @@
 <template>
-  <el-dialog v-model="dialogVisible" align-center center width="300">
+  <el-dialog v-model="dialogVisible" align-center center width="300" title="删除订阅">
     <div>
       <div v-if="aniList.length === 1">
         <el-text class="mx-1" size="large">是否删除 {{ aniList[0].title }} 第{{ aniList[0].season }}季?</el-text>

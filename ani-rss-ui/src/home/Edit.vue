@@ -1,6 +1,6 @@
 <template>
   <el-dialog v-model="downloadPathDialogVisible" align-center center width="300"
-             @close="callback">
+             @close="callback" title="移动文件">
     <div>
       <strong>
         检测到修改后的下载位置发生了改动，是否将已下载文件移动到新的位置？
