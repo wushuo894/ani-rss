@@ -312,7 +312,7 @@ let props = defineProps({
 }
 
 .list-card-image {
-  border-radius: 4px;
+  border-radius: var(--el-border-radius-base);
   cursor: pointer;
 }
 

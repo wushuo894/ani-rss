@@ -70,7 +70,7 @@
                     <el-collapse-item v-for="it in item.items" :name="it.url">
                       <template #title>
                         <div class="flex collapse-title">
-                          <img :src="img(it)" height="40" width="40" @click.stop="open(it.url)">
+                          <img :src="img(it)" class="cover" @click.stop="open(it.url)">
                           <div class="flex collapse-title">
                             <el-text :truncated="false" line-clamp="1" size="small"
                                      class="title-text">
@@ -504,5 +504,12 @@ let openUrl = (url) => window.open(url)
   display: flex;
   justify-content: space-between;
   align-items: center;
+}
+
+.cover {
+  border-radius: var(--el-border-radius-base);
+  cursor: pointer;
+  width: 40px;
+  height: 40px;
 }
 </style>
