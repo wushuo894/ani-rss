@@ -280,3 +280,8 @@ html, body, #app {
 .el-select__wrapper {
     border-radius: var(--el-border-radius-base);
 }
+
+/* 修复tag文字圆角问题 */
+.el-tag .el-text {
+    border-radius: 0;
+}
