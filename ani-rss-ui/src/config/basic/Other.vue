@@ -53,7 +53,7 @@
     <el-form-item label="缓存">
       <div style="width: 100%;">
         <div>
-          <el-button :loading="clearCacheLoading" bg icon="Delete" text @click="clearCache">清理</el-button>
+          <el-button :loading="clearCacheLoading" bg icon="Delete" @click="clearCache">清理</el-button>
         </div>
         <div>
           <el-text class="mx-1" size="small">

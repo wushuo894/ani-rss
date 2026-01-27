@@ -14,7 +14,7 @@
         <div class="spacer-12"/>
         <div class="flex justify-space-between">
           <el-checkbox v-model:model-value="props.config.autoTrackersUpdate" label="每天1:00自动更新"/>
-          <el-button :loading="trackersUpdateLoading" bg icon="Refresh" text @click="trackersUpdate">更新
+          <el-button :loading="trackersUpdateLoading" bg icon="Refresh" @click="trackersUpdate">更新
           </el-button>
         </div>
         <div>
