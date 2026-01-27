@@ -72,13 +72,13 @@
       <el-checkbox v-model="props.config.showLastDownloadTime" label="显示更新时间"/>
     </el-form-item>
     <el-form-item label="自定义">
-      <el-button bg text @click="jsDialogVisible = true">
+      <el-button bg @click="jsDialogVisible = true">
         <template #icon>
           <Js/>
         </template>
         JavaScript
       </el-button>
-      <el-button bg text @click="cssDialogVisible = true">
+      <el-button bg @click="cssDialogVisible = true">
         <template #icon>
           <Css3Alt/>
         </template>

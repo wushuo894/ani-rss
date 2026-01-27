@@ -12,8 +12,8 @@ html.dark {
 
 :root {
     /* 全局圆角优化：更圆润 */
-    --el-border-radius-base: 8px;
-    --el-border-radius-small: 4px;
+    --el-border-radius-small: 8px;
+    --el-border-radius-base: 12px;
     --el-border-radius-round: 24px;
 
     /* 全局边框淡化：使用更浅的颜色 */
@@ -32,7 +32,6 @@ html.dark {
 /* 优化卡片样式：去除厚重边框，增加柔和阴影 */
 .el-card {
     border: 1px solid var(--el-border-color-extra-light);
-    border-radius: 12px;
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
     transition: all 0.3s ease;
 }
@@ -60,7 +59,6 @@ html.dark .el-card {
 .el-input__wrapper,
 .el-select__wrapper,
 .el-textarea__inner {
-    border-radius: 12px;
     box-shadow: 0 0 0 1px var(--el-border-color) inset; /* 使用我们定义的淡化后的变量 */
 }
 
@@ -74,18 +72,18 @@ html.dark .el-card {
 /* 下拉弹出层圆角优化 */
 .el-select__popper,
 .el-select__popper .el-select-dropdown {
-    border-radius: 12px;
+    border-radius: var(--el-border-radius-base);
     overflow: hidden;
 }
 
 .el-dropdown__popper,
 .el-dropdown__popper .el-dropdown-menu {
-    border-radius: 12px;
+    border-radius: var(--el-border-radius-base);
     overflow: hidden;
 }
 
 .el-select-dropdown__item {
-    border-radius: 10px;
+    border-radius: var(--el-border-radius-small);
     margin: 2px 8px;
     padding: 6px 10px;
     display: flex;
@@ -99,11 +97,6 @@ html.dark .el-card {
 .el-select-dropdown__item.selected {
     background-color: var(--el-color-primary-light-9);
     color: var(--el-color-primary);
-}
-
-/* 按钮圆角优化 */
-.el-button {
-    border-radius: 8px;
 }
 
 /* 圆形按钮保持圆形 */
@@ -238,7 +231,7 @@ html, body, #app {
 }
 
 .el-dropdown-menu__item {
-    border-radius: 10px;
+    border-radius: var(--el-border-radius-small);
     margin: 2px 8px;
     padding: 6px 10px;
 }
@@ -257,3 +250,21 @@ html, body, #app {
     --el-collapse-content-bg-color: none;
 }
 
+/*
+优化按钮圆角
+ */
+.el-input-number > span[role="button"]:nth-child(1) {
+    background-color: var(--el-bg-color);
+    border-radius: var(--el-border-radius-base) 0 0 var(--el-border-radius-base);
+}
+
+.el-input-number > span[role="button"]:nth-child(2) {
+    background-color: var(--el-bg-color);
+    border-radius: 0 var(--el-border-radius-base) var(--el-border-radius-base) 0;
+}
+
+.el-color-picker__color-inner, .el-color-picker__trigger,
+.el-color-picker, .el-tooltip__trigger,
+.el-color-picker__color {
+    border-radius: var(--el-border-radius-round);
+}

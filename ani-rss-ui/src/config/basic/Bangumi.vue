@@ -68,7 +68,7 @@
           &nbsp;设置你自己的应用
         </el-text>
         <div>
-          <el-button bg text
+          <el-button bg
                      type="primary"
                      :disabled="!props.config['bgmAppSecret'] || !props.config['bgmAppID']"
                      @click="start"
@@ -77,7 +77,7 @@
             获取授权
           </el-button>
           <el-button
-              bg text
+              bg
               type="success"
               @click="bangumiMe?.show">
             查看授权状态
