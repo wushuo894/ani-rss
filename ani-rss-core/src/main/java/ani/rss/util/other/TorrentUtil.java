@@ -219,8 +219,6 @@ public class TorrentUtil {
             log.info("删除已完成任务 {}", name);
         }
         ThreadUtil.sleep(500);
-        List<String> files = torrentsInfo.getFiles().get();
-
         Boolean b = DOWNLOAD.delete(torrentsInfo, deleteFiles);
         if (!b) {
             log.error("删除任务失败 {}", name);

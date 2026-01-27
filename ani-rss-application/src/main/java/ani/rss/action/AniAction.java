@@ -353,12 +353,12 @@ public class AniAction implements BaseAction {
                 torrentsInfos = TorrentUtil.getTorrentsInfos();
             }
             for (File file : files) {
-                List<TorrentsInfo> collect = torrentsInfos
-                        .stream()
-                        .filter(torrentsInfo -> torrentsInfo.getDownloadDir().equals(file.toString()))
-                        .toList();
-                for (TorrentsInfo torrentsInfo : collect) {
-                    TorrentUtil.delete(torrentsInfo, true, true);
+                String path = FileUtils.getAbsolutePath(file);
+                for (TorrentsInfo torrentsInfo : torrentsInfos) {
+                    String downloadDir = torrentsInfo.getDownloadDir();
+                    if (downloadDir.equals(path)) {
+                        TorrentUtil.delete(torrentsInfo, true, true);
+                    }
                 }
                 if (!file.exists()) {
                     continue;
