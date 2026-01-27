@@ -56,9 +56,9 @@ public class ConfigUtil {
         String ovaDownloadPath = FileUtils.getAbsolutePath(new File(rootPath + "/剧场版"));
         String completedPath = FileUtils.getAbsolutePath(new File(rootPath + "/已完结番剧"));
 
-        String downloadPathTemplate = StrFormatter.format("{}/${letter}/${title}/Season ${season}", downloadPath);
-        String ovaDownloadPathTemplate = StrFormatter.format("{}/${letter}/${title}", ovaDownloadPath);
-        String completedPathTemplate = StrFormatter.format("{}/${letter}/${title}/Season ${season}", completedPath);
+        String downloadPathTemplate = StrFormatter.format("{}/${title}/Season ${season}", downloadPath);
+        String ovaDownloadPathTemplate = StrFormatter.format("{}/${title}", ovaDownloadPath);
+        String completedPathTemplate = StrFormatter.format("{}/${title}/Season ${season}", completedPath);
 
         String password = SecureUtil.md5("admin");
 
@@ -191,8 +191,8 @@ public class ConfigUtil {
                 .setAlist(false)
                 .setAlistRetry(5)
                 .setAlistTask(true)
-                .setAlistPath("/115/Media/番剧/${letter}/${title}/Season ${season}")
-                .setAlistOvaPath("/115/Media/剧场版/${letter}/${title}")
+                .setAlistPath("/115/Media/番剧/${title}/Season ${season}")
+                .setAlistOvaPath("/115/Media/剧场版/${title}")
                 .setAlistHost("")
                 .setAlistToken("")
                 .setVersion("")
