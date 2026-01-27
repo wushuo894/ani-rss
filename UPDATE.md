@@ -1,8 +1,8 @@
-- refactor: 优化页面圆角与线条
-- refactor: 字体优化
-- refactor: 优化弹窗位置
-- refactor: 统一文件格式判断
-- fix: 修复POSIX环境下中文文件支持错误的问题 #609
+- refactor: 优化下拉菜单、日志的圆角
+- refactor: 修改默认下载位置
+- refactor: 弹窗标题补全
+- refactor: 优化mikan列表对齐
+- refactor: 折叠面板样式优化
 
 [请不要将本项目在国内宣传](https://github.com/wushuo894/ani-rss/discussions/504)
 
