@@ -272,3 +272,11 @@ html, body, #app {
 .el-button {
     border-radius: var(--el-border-radius-base);
 }
+
+.el-card {
+    border-radius: var(--el-border-radius-base);
+}
+
+.el-select__wrapper {
+    border-radius: var(--el-border-radius-base);
+}
