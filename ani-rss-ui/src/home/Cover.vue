@@ -121,10 +121,11 @@ defineExpose({show})
   width: 100%;
   display: flex;
   justify-content: space-between;
+  padding: 0 20px;
 }
 
 .cover {
-  border-radius: 4px;
+  border-radius: var(--el-border-radius-base);
   cursor: pointer;
   height: 260px;
   width: 180px;
