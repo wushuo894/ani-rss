@@ -24,6 +24,11 @@ html.dark {
     --el-font-family: "PingFang SC", "Microsoft YaHei", "Helvetica Neue", Helvetica, "Hiragino Sans GB", Arial, sans-serif;
 }
 
+.el-collapse {
+    --el-collapse-border-color: none;
+    --el-collapse-header-bg-color: none;
+}
+
 /* 优化卡片样式：去除厚重边框，增加柔和阴影 */
 .el-card {
     border: 1px solid var(--el-border-color-extra-light);
@@ -241,3 +246,14 @@ html, body, #app {
 .el-dropdown-menu__item:hover {
     background-color: var(--el-fill-color-light);
 }
+
+.el-collapse-item__content {
+    border-radius: var(--el-border-radius-base);
+    background-color: var(--el-fill-color-light);
+    padding: 8px;
+}
+
+.el-collapse-item__wrap {
+    --el-collapse-content-bg-color: none;
+}
+
