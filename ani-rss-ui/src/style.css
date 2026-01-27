@@ -268,3 +268,7 @@ html, body, #app {
 .el-color-picker__color {
     border-radius: var(--el-border-radius-round);
 }
+
+.el-button {
+    border-radius: var(--el-border-radius-base);
+}
