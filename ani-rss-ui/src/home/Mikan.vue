@@ -59,7 +59,12 @@
         <div v-loading="loading" class="scroll-container">
           <el-scrollbar>
             <el-collapse v-model="activeName">
-              <el-collapse-item v-for="item in data.items" :name="item.label" :title="item.label">
+              <el-collapse-item v-for="item in data.items" :name="item.label">
+                <template #title>
+                  <span style="margin-left: 4px;">
+                    {{ item.label }}
+                  </span>
+                </template>
                 <div class="collapse-content">
                   <el-collapse accordion @change="collapseChange">
                     <el-collapse-item v-for="it in item.items" :name="it.url">
