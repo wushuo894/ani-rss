@@ -234,13 +234,19 @@
         <template #dropdown>
           <el-dropdown-menu>
             <el-dropdown-item @click="download">
-              刷新
+              <el-button link icon="RefreshRight">
+                刷新
+              </el-button>
             </el-dropdown-item>
             <el-dropdown-item @click="scrape(false)">
-              刮削
+              <el-button link icon="RefreshRight">
+                刮削
+              </el-button>
             </el-dropdown-item>
             <el-dropdown-item @click="scrape(true)">
-              强制刮削
+              <el-button link icon="Refresh" type="warning">
+                强制刮削
+              </el-button>
             </el-dropdown-item>
           </el-dropdown-menu>
         </template>
