@@ -1,5 +1,5 @@
 <template class="items">
-  <el-dialog v-model="dialogVisible" center class="items-dialog" title="预览">
+  <el-dialog v-model="dialogVisible" center class="el-dialog-auto-width" title="预览">
     <div class="items-content" v-loading="loading">
       <div class="items-select-container">
         <el-select v-model:model-value="select" class="items-select" @change="selectChange">
@@ -26,6 +26,7 @@
       </div>
       <div class="items-table-container">
         <el-table :data="showItems" height="500"
+                  size="small"
                   @selection-change="handleSelectionChange"
                   scrollbar-always-on
                   stripe>
@@ -86,7 +87,7 @@
           <el-table-column prop="size" label="大小" width="120"/>
           <el-table-column label="种子" width="90">
             <template #default="it">
-              <el-button bg text @click="copy(showItems[it.$index]['torrent'])">复制</el-button>
+              <el-button size="small" bg text @click="copy(showItems[it.$index]['torrent'])">复制</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -196,12 +197,6 @@ let props = defineProps(['ani'])
 </script>
 
 <style scoped>
-@media (min-width: 1400px) {
-  .items-dialog {
-    width: 1000px;
-  }
-}
-
 .items-content {
   width: 100%;
 }

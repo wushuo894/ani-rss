@@ -21,7 +21,7 @@
       </div>
     </div>
     <div>
-      <el-table v-model:data="standbyRss" height="400px">
+      <el-table v-model:data="standbyRss" height="400px" size="small">
         <el-table-column fixed label="字幕组" min-width="100px">
           <template #default="it">
             <div v-if="editIndex !== it.$index">

@@ -81,6 +81,9 @@ const initLayout = () => {
     app
         .style.maxWidth = `${maxContentWidth.value}px`
 
+    const el = document.documentElement
+    el.style.setProperty('--max-content-width', `${maxContentWidth.value}px`)
+
     // 是否非移动设备
     isNotMobile.value = app.offsetWidth > 800
 
