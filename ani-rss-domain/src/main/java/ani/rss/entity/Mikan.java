@@ -1,11 +1,12 @@
 package ani.rss.entity;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
 import java.io.Serializable;
 import java.util.List;
-import java.util.Set;
 
 /**
  * mikan
@@ -59,25 +60,14 @@ public class Mikan implements Serializable {
     @Data
     @Accessors(chain = true)
     public static class Group implements Serializable {
-
         /**
          * 字幕组 id
          */
         private String subgroupId;
-
-        /**
-         * 匹配
-         */
-        private List<List<String>> matchList;
-
         /**
          * 字幕组名称
          */
         private String label;
-        /**
-         * 标签
-         */
-        private Set<String> tags;
         /**
          * rss地址
          */
@@ -90,5 +80,18 @@ public class Mikan implements Serializable {
          * 下载项
          */
         private List<TorrentsInfo> items;
+        /**
+         * Regex
+         */
+        private List<List<RegexItem>> regexList;
+    }
+
+    @Data
+    @Accessors(chain = true)
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class RegexItem implements Serializable {
+        private String label;
+        private String regex;
     }
 }

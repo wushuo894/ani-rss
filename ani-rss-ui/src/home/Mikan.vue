@@ -14,9 +14,12 @@
   <el-dialog v-model="matchDialogVisible" align-center center title="匹配" width="500">
     <div>
       <el-radio-group v-model="addAni.match">
-        <div v-for="match in matchList" class="match-item">
-          <el-radio :label="JSON.stringify(match)" :value="JSON.stringify(match)">
-            <el-tag v-if="match.length" v-for="item in match" class="tag-margin">{{ item }}</el-tag>
+        <div v-for="regexItems in regexList" class="match-item">
+          <el-radio :label="JSON.stringify(regexItems)"
+                    :value="JSON.stringify(regexItems.map(it => it.regex))">
+            <el-tag v-if="regexItems.length" v-for="regexItem in regexItems" class="tag-margin">
+              {{ regexItem.label }}
+            </el-tag>
             <el-tag v-else type="success">全部</el-tag>
           </el-radio>
         </div>
@@ -100,17 +103,16 @@
                                   <el-text class="mx-1" size="small">{{ group['updateDay'] }}</el-text>
                                 </div>
                                 <div v-if="showTag()">
-                                  <el-tag v-for="tag in group['tags'].slice(0, 5)" class="tag-margin">{{
-                                      tag
-                                    }}
+                                  <el-tag v-for="regexItem in group['regexList'].flat().slice(0, 5)" class="tag-margin">
+                                    {{ regexItem.label }}
                                   </el-tag>
                                 </div>
                                 <div class="group-action">
                                   <el-button bg text @click.stop="callback({
-                                  'title':it.title,
-                                  'group':group.label,
-                                  'url':group['rss'],
-                                  'matchList':group['matchList']
+                                  title:it.title,
+                                  group:group.label,
+                                  url:group['rss'],
+                                  regexList:group['regexList']
                                 })" icon="Plus">
                                     添加
                                   </el-button>
@@ -277,17 +279,17 @@ let addAni = ref({
   'group': ''
 })
 
-let matchList = ref([])
+let regexList = ref([])
 
 let callback = v => {
   let {url, group} = v
-  matchList.value = JSON.parse(JSON.stringify(v.matchList))
+  regexList.value = JSON.parse(JSON.stringify(v.regexList))
 
   addAni.value.url = url
   addAni.value.group = group
   addAni.value.match = '[]'
 
-  matchList.value.push([])
+  regexList.value.push([])
   matchDialogVisible.value = true
 }
 
