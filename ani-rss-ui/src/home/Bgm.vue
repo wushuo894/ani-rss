@@ -10,7 +10,7 @@
           <el-button @click="search" :loading="searchLoading" text bg icon="Search" :disabled="!name">搜索</el-button>
         </div>
       </div>
-      <el-table v-model:data="list" height="500px">
+      <el-table size="small" v-model:data="list" height="500px">
         <el-table-column prop="id" label="id" width="80"/>
         <el-table-column label="封面" width="120">
           <template #default="it">

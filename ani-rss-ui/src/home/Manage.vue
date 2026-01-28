@@ -1,7 +1,7 @@
 <template>
   <ImportAni ref="importAniRef" @callback="getList"/>
   <Del ref="refDel" @callback="getList"/>
-  <el-dialog v-model="dialogVisible" center class="manage-dialog" title="管理">
+  <el-dialog v-model="dialogVisible" center title="管理">
     <div class="manage-content" v-loading="loading">
       <div class="manage-header">
         <div class="auto-flex">
@@ -93,6 +93,7 @@
         </div>
       </div>
       <el-table
+          size="small"
           @selection-change="handleSelectionChange"
           v-model:data="searchList"
           height="400px"
@@ -278,12 +279,6 @@ defineExpose({show})
 </script>
 
 <style scoped>
-@media (min-width: 1400px) {
-  .manage-dialog {
-    width: 1000px;
-  }
-}
-
 .manage-content {
   min-height: 300px;
 }
