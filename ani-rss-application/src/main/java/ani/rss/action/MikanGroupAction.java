@@ -8,12 +8,13 @@ import ani.rss.web.action.BaseAction;
 import ani.rss.web.annotation.Auth;
 import ani.rss.web.annotation.Path;
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.util.ReUtil;
 import cn.hutool.http.server.HttpServerRequest;
 import cn.hutool.http.server.HttpServerResponse;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.LinkedHashSet;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -28,42 +29,39 @@ public class MikanGroupAction implements BaseAction {
         String url = request.getParam("url");
         List<Mikan.Group> groups = MikanUtil.getGroups(url);
 
-        List<String> tagList = List.of(
-                "1920x1080", "3840x2160", "1080p", "4k", "720p",
+        List<String> regexItemList = List.of(
+                "1920[Xx]1080", "3840[Xx]2160", "1080[Pp]", "4[Kk]", "720[Pp]",
                 "繁", "简", "日",
-                "cht", "chs", "hevc",
-                "10bit", "h265", "h264",
+                "cht|Cht|CHT", "chs|Chs|CHS", "hevc|Hevc|HEVC",
+                "10bit|10Bit|10BIT", "h265|H265", "h264|H264",
                 "内嵌", "内封", "外挂",
-                "mp4", "mkv"
+                "mp4|MP4", "mkv|MKV"
         );
 
-
         for (Mikan.Group group : groups) {
-            List<List<String>> matchList = new ArrayList<>();
-            Set<String> tags = new LinkedHashSet<>();
-            group.setTags(tags);
-
+            Set<String> tags = new HashSet<>();
+            List<List<Mikan.RegexItem>> regexList = new ArrayList<>();
             List<TorrentsInfo> items = group.getItems();
             for (TorrentsInfo item : items) {
                 String name = item.getName();
-                List<String> match = new ArrayList<>();
-                for (String s : tagList) {
-                    if (name.contains(s)) {
-                        tags.add(s);
-                        match.add(s);
+                List<Mikan.RegexItem> regexItems = new ArrayList<>();
+                for (String regex : regexItemList) {
+                    if (!ReUtil.contains(regex, name)) {
                         continue;
                     }
-                    if (name.contains(s.toUpperCase())) {
-                        tags.add(s.toUpperCase());
-                        match.add(s.toUpperCase());
-                    }
+                    String label = ReUtil.get(regex, name, 0);
+                    label = label.toUpperCase();
+                    Mikan.RegexItem regexItem = new Mikan.RegexItem(label, regex);
+                    regexItems.add(regexItem);
+                    tags.add(label);
                 }
-                match = CollUtil.distinct(match);
-                matchList.add(match);
+                regexItems = CollUtil.distinct(regexItems, GsonStatic::toJson, true);
+                regexList.add(regexItems);
             }
 
-            matchList = CollUtil.distinct(matchList, GsonStatic::toJson, true);
-            group.setMatchList(matchList);
+            regexList = CollUtil.distinct(regexList, GsonStatic::toJson, true);
+            group.setRegexList(regexList)
+                    .setTags(tags);
         }
         resultSuccess(groups);
     }
