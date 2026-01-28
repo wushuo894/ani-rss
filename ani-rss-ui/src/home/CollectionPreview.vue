@@ -1,9 +1,11 @@
 <template>
   <el-dialog v-model="dialogVisible"
              center
+             class="el-dialog-auto-width"
              title="合集预览">
     <div v-loading="loading">
       <el-table :data="list" height="500"
+                size="small"
                 scrollbar-always-on
                 stripe>
         <el-table-column label="标题" min-width="400" prop="title"/>
