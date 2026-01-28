@@ -103,8 +103,9 @@
                                   <el-text class="mx-1" size="small">{{ group['updateDay'] }}</el-text>
                                 </div>
                                 <div v-if="showTag()">
-                                  <el-tag v-for="regexItem in group['regexList'].flat().slice(0, 5)" class="tag-margin">
-                                    {{ regexItem.label }}
+                                  <el-tag v-for="tag in group['tags'].slice(0, 5)"
+                                          class="tag-margin">
+                                    {{ tag }}
                                   </el-tag>
                                 </div>
                                 <div class="group-action">

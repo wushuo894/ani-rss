@@ -7,6 +7,7 @@ import lombok.experimental.Accessors;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Set;
 
 /**
  * mikan
@@ -84,6 +85,7 @@ public class Mikan implements Serializable {
          * Regex
          */
         private List<List<RegexItem>> regexList;
+        private Set<String> tags;
     }
 
     @Data

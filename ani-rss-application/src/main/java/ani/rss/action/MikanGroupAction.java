@@ -14,7 +14,9 @@ import cn.hutool.http.server.HttpServerResponse;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Mikan字幕组
@@ -27,7 +29,7 @@ public class MikanGroupAction implements BaseAction {
         String url = request.getParam("url");
         List<Mikan.Group> groups = MikanUtil.getGroups(url);
 
-        List<String> tagList = List.of(
+        List<String> regexItemList = List.of(
                 "1920[Xx]1080", "3840[Xx]2160", "1080[Pp]", "4[Kk]", "720[Pp]",
                 "繁", "简", "日",
                 "cht|Cht|CHT", "chs|Chs|CHS", "hevc|Hevc|HEVC",
@@ -37,12 +39,13 @@ public class MikanGroupAction implements BaseAction {
         );
 
         for (Mikan.Group group : groups) {
+            Set<String> tags = new HashSet<>();
             List<List<Mikan.RegexItem>> regexList = new ArrayList<>();
             List<TorrentsInfo> items = group.getItems();
             for (TorrentsInfo item : items) {
                 String name = item.getName();
                 List<Mikan.RegexItem> regexItems = new ArrayList<>();
-                for (String regex : tagList) {
+                for (String regex : regexItemList) {
                     if (!ReUtil.contains(regex, name)) {
                         continue;
                     }
@@ -50,13 +53,15 @@ public class MikanGroupAction implements BaseAction {
                     label = label.toUpperCase();
                     Mikan.RegexItem regexItem = new Mikan.RegexItem(label, regex);
                     regexItems.add(regexItem);
+                    tags.add(label);
                 }
                 regexItems = CollUtil.distinct(regexItems, GsonStatic::toJson, true);
                 regexList.add(regexItems);
             }
 
             regexList = CollUtil.distinct(regexList, GsonStatic::toJson, true);
-            group.setRegexList(regexList);
+            group.setRegexList(regexList)
+                    .setTags(tags);
         }
         resultSuccess(groups);
     }
