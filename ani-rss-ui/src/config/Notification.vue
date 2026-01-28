@@ -29,10 +29,10 @@
                 <template #dropdown>
                   <el-dropdown-menu>
                     <el-dropdown-item @click="notificationConfigRef?.show(it)">
-                      编辑
+                      <el-button link icon="Edit" type="primary">编辑</el-button>
                     </el-dropdown-item>
                     <el-dropdown-item @click="del(it)">
-                      删除
+                      <el-button link icon="Delete" type="danger">删除</el-button>
                     </el-dropdown-item>
                   </el-dropdown-menu>
                 </template>
