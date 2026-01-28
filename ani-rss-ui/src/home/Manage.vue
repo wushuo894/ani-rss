@@ -1,7 +1,7 @@
 <template>
   <ImportAni ref="importAniRef" @callback="getList"/>
   <Del ref="refDel" @callback="getList"/>
-  <el-dialog v-model="dialogVisible" center class="el-dialog-auto-width" title="管理">
+  <el-dialog v-model="dialogVisible" center title="管理">
     <div class="manage-content" v-loading="loading">
       <div class="manage-header">
         <div class="auto-flex">
