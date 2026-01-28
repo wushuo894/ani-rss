@@ -1,6 +1,4 @@
-- fix: 修复tag文字圆角问题
-- fix: 修复windows端删除订阅时无法同步删除任务
-- refactor: 封面圆角
+- refactor: 优化过滤规则
 
 [请不要将本项目在国内宣传](https://github.com/wushuo894/ani-rss/discussions/504)
 
