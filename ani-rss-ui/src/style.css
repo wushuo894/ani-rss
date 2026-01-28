@@ -285,3 +285,7 @@ html, body, #app {
 .el-tag .el-text {
     border-radius: 0;
 }
+
+.el-popover.el-popper {
+    border-radius: var(--el-border-radius-base);
+}
