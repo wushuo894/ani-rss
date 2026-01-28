@@ -2,8 +2,9 @@
   <el-dialog v-model="dialogVisible" center title="下载">
     <div class="torrents-container">
       <div class="torrents-header">
-        <el-button size="small" @click="changeSort('name')">按名称排序</el-button>
-        <el-button size="small" @click="changeSort('progress')">按进度排序</el-button>
+        <el-radio-group v-model="sortType" @change="changeSort">
+          <el-radio-button v-for="sortType in sortTypeList" :value="sortType.value" :label="sortType.label"/>
+        </el-radio-group>
       </div>
       <el-empty v-if="!torrentsInfos.length" description="当前无下载任务" class="torrents-empty"/>
       <el-scrollbar v-else class="torrents-scrollbar">
@@ -39,8 +40,27 @@
 import {ref} from "vue";
 import api from "@/js/api.js";
 
+// 记录排序方式
+let sortType = ref('name')
+
+let sortTypeList = [
+  {
+    label: "按名称排序",
+    value: "name",
+    fun: (value) => {
+      return value.sort((a, b) => a.name.localeCompare(b.name));
+    }
+  },
+  {
+    label: "按进度排序",
+    value: "progress",
+    fun: (value) => {
+      return value.sort((a, b) => b.progress - a.progress);
+    }
+  }
+]
+
 let dialogVisible = ref(false)
-let sortType = ref('') // 记录排序方式
 
 let show = () => {
   dialogVisible.value = true
@@ -51,23 +71,26 @@ let torrentsInfos = ref([])
 
 let changeSort = (type) => {
   sortType.value = type
-  sortInfos()
+  torrentsInfos.value = sortInfos(torrentsInfos.value)
 }
 
-let sortInfos = () => {
-  if (sortType.value === 'name') {
-    torrentsInfos.value.sort((a, b) => a.name.localeCompare(b.name))
-  } else if (sortType.value === 'progress') {
-    torrentsInfos.value.sort((a, b) => b.progress - a.progress)
+let sortInfos = (infos) => {
+  for (let sortTypeItem of sortTypeList) {
+    let {value, fun} = sortTypeItem;
+    if (value !== sortType.value) {
+      continue
+    }
+    return fun(infos)
   }
+  return infos;
 }
 
 let getTorrentsInfos = async () => {
   while (dialogVisible.value) {
     try {
       let res = await api.get('api/torrentsInfos')
-      torrentsInfos.value = await res.data
-      sortInfos()
+      let infos = await res.data
+      torrentsInfos.value = sortInfos(infos)
     } catch (_) {
     }
     await sleep(3000)
