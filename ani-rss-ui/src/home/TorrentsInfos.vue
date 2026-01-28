@@ -1,8 +1,12 @@
 <template>
   <el-dialog v-model="dialogVisible" center title="下载">
     <div class="torrents-container">
+      <div class="torrents-header">
+        <el-button size="small" @click="changeSort('name')">按名称排序</el-button>
+        <el-button size="small" @click="changeSort('progress')">按进度排序</el-button>
+      </div>
       <el-empty v-if="!torrentsInfos.length" description="当前无下载任务" class="torrents-empty"/>
-      <el-scrollbar v-else>
+      <el-scrollbar v-else class="torrents-scrollbar">
         <el-card v-for="torrentsInfo in torrentsInfos"
                  shadow="never"
                  class="torrents-card">
@@ -36,6 +40,7 @@ import {ref} from "vue";
 import api from "@/js/api.js";
 
 let dialogVisible = ref(false)
+let sortType = ref('') // 记录排序方式
 
 let show = () => {
   dialogVisible.value = true
@@ -44,11 +49,25 @@ let show = () => {
 
 let torrentsInfos = ref([])
 
+let changeSort = (type) => {
+  sortType.value = type
+  sortInfos()
+}
+
+let sortInfos = () => {
+  if (sortType.value === 'name') {
+    torrentsInfos.value.sort((a, b) => a.name.localeCompare(b.name))
+  } else if (sortType.value === 'progress') {
+    torrentsInfos.value.sort((a, b) => b.progress - a.progress)
+  }
+}
+
 let getTorrentsInfos = async () => {
   while (dialogVisible.value) {
     try {
       let res = await api.get('api/torrentsInfos')
       torrentsInfos.value = await res.data
+      sortInfos()
     } catch (_) {
     }
     await sleep(3000)
@@ -65,10 +84,23 @@ defineExpose({show})
 <style scoped>
 .torrents-container {
   height: 500px;
+  display: flex;
+  flex-direction: column;
+}
+
+.torrents-header {
+  text-align: center;
+  margin-bottom: 10px;
+  flex-shrink: 0;
+}
+
+.torrents-scrollbar {
+  flex: 1;
+  overflow: hidden;
 }
 
 .torrents-empty {
-  height: 100%;
+  flex: 1;
 }
 
 .torrents-card {
