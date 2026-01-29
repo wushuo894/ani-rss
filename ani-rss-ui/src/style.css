@@ -16,6 +16,8 @@ html.dark {
     --el-border-radius-base: 12px;
     --el-border-radius-round: 24px;
 
+    --el-collapse-item-content-padding: 16px;
+
     /* 全局边框淡化：使用更浅的颜色 */
     --el-border-color: var(--el-border-color-lighter);
     --el-border-color-light: var(--el-border-color-extra-light);
@@ -128,6 +130,10 @@ html, body, #app {
         margin-top: 55px !important;
         margin-bottom: auto !important;
     }
+
+    :root {
+        --el-collapse-item-content-padding: 8px;
+    }
 }
 
 @media (min-width: 451px) {
@@ -150,7 +156,7 @@ html, body, #app {
     .el-dialog-auto-width {
         --el-dialog-width: 70%;
         min-width: 800px;
-        max-width: var(--max-content-width);
+        max-width: min(var(--max-content-width), 1400px);
     }
 }
 
@@ -207,10 +213,6 @@ html, body, #app {
     width: auto;
 }
 
-.el-collapse-item__content {
-    padding-top: 4px;
-}
-
 #app {
     margin: 0 auto;
 }
@@ -239,7 +241,7 @@ html, body, #app {
 .el-collapse-item__content {
     border-radius: var(--el-border-radius-base);
     background-color: var(--el-fill-color-light);
-    padding: 8px;
+    padding: var(--el-collapse-item-content-padding);
 }
 
 .el-collapse-item__wrap {
