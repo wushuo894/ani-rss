@@ -46,7 +46,7 @@ html.dark .el-card {
 .el-overlay-dialog {
     display: flex;
     flex-direction: column;
-    padding: 24px; /* 最小安全边距 */
+    padding: 12px; /* 最小安全边距 */
 }
 
 .el-dialog {
@@ -134,6 +134,12 @@ html, body, #app {
     .el-dialog {
         --el-dialog-width: 90%;
     }
+
+    #header {
+        display: flex;
+        justify-content: space-between;
+        width: 100%;
+    }
 }
 
 @media (min-width: 900px) {
@@ -152,22 +158,6 @@ html, body, #app {
     display: grid;
     grid-gap: 8px;
     width: 100%;
-}
-
-@media (min-width: 450px) {
-    #header {
-        display: flex;
-        justify-content: space-between;
-        width: 100%;
-    }
-
-    #page {
-        display: flex;
-    }
-
-    #page-size {
-        margin-left: 5px;
-    }
 }
 
 .el-card__body {
