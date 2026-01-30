@@ -49,7 +49,6 @@
           <el-input v-model="props.config['bgmRedirectUri']"/>
           <el-button bg icon="Refresh"
                      class="mt-6"
-                     text
                      @click="setRedirectUri"/>
         </div>
       </el-form-item>
