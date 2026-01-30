@@ -1,4 +1,7 @@
-- refactor: 优化弹窗宽度自适应
+- refactor: 调整弹窗安全边距, 优化BGM授权页
+- refactor: 调整折叠面板的内边距
+- refactor: 优化匹配规则弹窗
+- refactor: 优化弹窗居中
 
 [请不要将本项目在国内宣传](https://github.com/wushuo894/ani-rss/discussions/504)
 

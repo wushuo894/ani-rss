@@ -1,5 +1,5 @@
 <template>
-  <el-config-provider :locale="zhCn" :link="linkConfig">
+  <el-config-provider :locale="zhCn" :link="linkConfig" :dialog="dialogConfig">
     <Login v-if="!authorization"/>
     <App v-else/>
   </el-config-provider>
@@ -18,6 +18,10 @@ import {reactive} from "vue";
 let linkConfig = reactive({
   type: 'primary',
   underline: 'never'
+})
+
+let dialogConfig = reactive({
+  alignCenter: true
 })
 
 init()

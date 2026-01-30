@@ -16,6 +16,8 @@ html.dark {
     --el-border-radius-base: 12px;
     --el-border-radius-round: 24px;
 
+    --el-collapse-item-content-padding: 16px;
+
     /* 全局边框淡化：使用更浅的颜色 */
     --el-border-color: var(--el-border-color-lighter);
     --el-border-color-light: var(--el-border-color-extra-light);
@@ -42,17 +44,13 @@ html.dark .el-card {
     background-color: #343536; /* 稍微提亮一点背景以区分 */
 }
 
-/* 优化对话框：大圆角，且垂直居中 */
 .el-overlay-dialog {
-    display: flex;
-    flex-direction: column;
-    padding: 24px; /* 最小安全边距 */
+    padding: 12px; /* 最小安全边距 */
 }
 
 .el-dialog {
     border-radius: 16px;
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
-    margin: auto !important; /* 核心：在 flex 容器中自动垂直居中，过高时自动顶部对齐 */
 }
 
 /* 优化输入框和选择器：更圆润，边框更淡 */
@@ -128,11 +126,21 @@ html, body, #app {
         margin-top: 55px !important;
         margin-bottom: auto !important;
     }
+
+    :root {
+        --el-collapse-item-content-padding: 8px;
+    }
 }
 
 @media (min-width: 451px) {
     .el-dialog {
         --el-dialog-width: 90%;
+    }
+
+    #header {
+        display: flex;
+        justify-content: space-between;
+        width: 100%;
     }
 }
 
@@ -144,7 +152,7 @@ html, body, #app {
     .el-dialog-auto-width {
         --el-dialog-width: 70%;
         min-width: 800px;
-        max-width: var(--max-content-width);
+        max-width: min(var(--max-content-width), 1400px);
     }
 }
 
@@ -154,22 +162,6 @@ html, body, #app {
     width: 100%;
 }
 
-@media (min-width: 450px) {
-    #header {
-        display: flex;
-        justify-content: space-between;
-        width: 100%;
-    }
-
-    #page {
-        display: flex;
-    }
-
-    #page-size {
-        margin-left: 5px;
-    }
-}
-
 .el-card__body {
     height: 100%;
     box-sizing: border-box;
@@ -177,15 +169,6 @@ html, body, #app {
 
 .el-tag {
     border-width: 0
-}
-
-/**
-文字单行
- */
-.single-line {
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
 }
 
 .flex {
@@ -217,10 +200,6 @@ html, body, #app {
     width: auto;
 }
 
-.el-collapse-item__content {
-    padding-top: 4px;
-}
-
 #app {
     margin: 0 auto;
 }
@@ -249,7 +228,7 @@ html, body, #app {
 .el-collapse-item__content {
     border-radius: var(--el-border-radius-base);
     background-color: var(--el-fill-color-light);
-    padding: 8px;
+    padding: var(--el-collapse-item-content-padding);
 }
 
 .el-collapse-item__wrap {

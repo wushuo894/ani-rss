@@ -11,8 +11,8 @@
       {{ batchAdditionNum }} / {{ rssList.length }}
     </div>
   </el-dialog>
-  <el-dialog v-model="matchDialogVisible" align-center center title="匹配" width="500">
-    <div>
+  <el-dialog v-model="matchDialogVisible" align-center center title="匹配" width="auto">
+    <div class="match-content">
       <el-radio-group v-model="addAni.match">
         <div v-for="regexItems in regexList" class="match-item">
           <el-radio :label="JSON.stringify(regexItems)"
@@ -98,8 +98,9 @@
                                 <div class="group-checkbox-wrapper">
                                   <el-checkbox :value="JSON.stringify(group)" class="checkbox-margin" @click.stop/>
                                 </div>
-                                <div class="single-line group-label">
-                                  {{ group.label }}
+                                <div class="group-label">
+                                  <el-text style="max-width: 100px;" truncated>{{ group.label }}</el-text>
+                                  &nbsp;
                                   <el-text class="mx-1" size="small">{{ group['updateDay'] }}</el-text>
                                 </div>
                                 <div v-if="showTag()">
@@ -109,7 +110,7 @@
                                   </el-tag>
                                 </div>
                                 <div class="group-action">
-                                  <el-button bg text @click.stop="callback({
+                                  <el-button bg @click.stop="callback({
                                   title:it.title,
                                   group:group.label,
                                   url:group['rss'],
@@ -394,6 +395,7 @@ let openUrl = (url) => window.open(url)
 
 .match-item {
   margin-right: 12px;
+  display: inline;
 }
 
 .tag-margin {
@@ -483,6 +485,8 @@ let openUrl = (url) => window.open(url)
 }
 
 .group-label {
+  display: flex;
+  align-items: center;
   flex: 1;
   text-align: start;
 }
@@ -514,5 +518,9 @@ let openUrl = (url) => window.open(url)
   cursor: pointer;
   width: 40px;
   height: 40px;
+}
+
+.match-content {
+  max-width: 500px;
 }
 </style>
