@@ -175,15 +175,6 @@ html, body, #app {
     border-width: 0
 }
 
-/**
-文字单行
- */
-.single-line {
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
 .flex {
     display: flex;
 }
