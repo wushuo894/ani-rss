@@ -16,7 +16,7 @@
         <el-card v-for="it in props.config['notificationConfigList']" shadow="never" class="notification-card">
           <div class="flex notification-card-content">
             <div>
-              <p>
+              <p style="width: 110px;">
                 {{ getLabel(it['notificationType']) }}
               </p>
               <el-text line-clamp="1" size="small" class="notification-card-text" truncated>
@@ -29,10 +29,20 @@
                 <template #dropdown>
                   <el-dropdown-menu>
                     <el-dropdown-item @click="notificationConfigRef?.show(it)">
-                      <el-button link icon="Edit" type="primary">编辑</el-button>
+                      <el-text type="primary">
+                        <el-icon>
+                          <Edit/>
+                        </el-icon>
+                        编辑
+                      </el-text>
                     </el-dropdown-item>
                     <el-dropdown-item @click="del(it)">
-                      <el-button link icon="Delete" type="danger">删除</el-button>
+                      <el-text type="danger">
+                        <el-icon>
+                          <Delete/>
+                        </el-icon>
+                        删除
+                      </el-text>
                     </el-dropdown-item>
                   </el-dropdown-menu>
                 </template>
@@ -62,6 +72,7 @@ import {ref} from "vue";
 
 import {getLabel} from "@/js/notification-type.js";
 import api from "@/js/api.js";
+import {Delete, Edit} from "@element-plus/icons-vue";
 
 let addLoading = ref(false)
 

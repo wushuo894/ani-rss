@@ -11,19 +11,19 @@
   "dependencies": {
     "@element-plus/icons-vue": "^2.3.2",
     "@vicons/fa": "^0.13.0",
-    "@vueuse/core": "^14.1.0",
+    "@vueuse/core": "^14.2.0",
     "artplayer": "^5.3.0",
     "artplayer-plugin-multiple-subtitles": "^1.1.0",
     "crypto-js": "^4.2.0",
     "dayjs": "^1.11.19",
-    "element-plus": "^2.13.1",
+    "element-plus": "^2.13.2",
     "markdown-it": "^14.1.0",
     "markdown-it-github-alerts": "^1.0.1",
     "vue": "^3.5.27"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^6.0.3",
-    "shiki": "^3.21.0",
+    "shiki": "^3.22.0",
     "terser": "^5.46.0",
     "unplugin-auto-import": "^21.0.0",
     "unplugin-vue-components": "^31.0.0",

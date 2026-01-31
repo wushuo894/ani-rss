@@ -32,60 +32,60 @@
             <template #dropdown>
               <el-dropdown-menu>
                 <el-dropdown-item @click="updateTotalEpisodeNumber(false)">
-                  <template #default>
-                    <el-button icon="Refresh" link>
-                      更新总集数
-                    </el-button>
-                  </template>
+                  <el-text>
+                    <el-icon>
+                      <Refresh/>
+                    </el-icon>
+                    更新总集数
+                  </el-text>
                 </el-dropdown-item>
                 <el-dropdown-item @click="updateTotalEpisodeNumber(true)">
-                  <template #default>
-                    <el-button icon="Refresh"
-                               type="warning"
-                               link>
-                      更新总集数 [F]
-                    </el-button>
-                  </template>
+                  <el-text type="warning">
+                    <el-icon>
+                      <Refresh/>
+                    </el-icon>
+                    更新总集数 [F]
+                  </el-text>
                 </el-dropdown-item>
                 <el-dropdown-item divided @click="importAniRef?.show">
-                  <template #default>
-                    <el-button icon="Download" link>
-                      导入
-                    </el-button>
-                  </template>
+                  <el-text>
+                    <el-icon>
+                      <Download/>
+                    </el-icon>
+                    导入
+                  </el-text>
                 </el-dropdown-item>
                 <el-dropdown-item @click="exportData">
-                  <template #default>
-                    <el-button icon="Upload" link>
-                      导出
-                    </el-button>
-                  </template>
+                  <el-text>
+                    <el-icon>
+                      <Upload/>
+                    </el-icon>
+                    导出
+                  </el-text>
                 </el-dropdown-item>
                 <el-dropdown-item divided @click="batchEnable(true)">
-                  <template #default>
-                    <el-button type="primary"
-                               icon="CircleCheck"
-                               link>
-                      启用
-                    </el-button>
-                  </template>
+                  <el-text type="primary">
+                    <el-icon>
+                      <CircleCheck/>
+                    </el-icon>
+                    启用
+                  </el-text>
                 </el-dropdown-item>
                 <el-dropdown-item @click="batchEnable(false)">
-                  <template #default>
-                    <el-button type="warning"
-                               icon="CircleClose"
-                               link>
-                      禁用
-                    </el-button>
-                  </template>
+                  <el-text type="warning">
+                    <el-icon>
+                      <CircleClose/>
+                    </el-icon>
+                    禁用
+                  </el-text>
                 </el-dropdown-item>
                 <el-dropdown-item divided @click="refDel?.show(selectList)">
-                  <template #default>
-                    <el-button icon="Remove" type="danger"
-                               link>
-                      删除
-                    </el-button>
-                  </template>
+                  <el-text type="danger">
+                    <el-icon>
+                      <Remove/>
+                    </el-icon>
+                    删除
+                  </el-text>
                 </el-dropdown-item>
               </el-dropdown-menu>
             </template>
@@ -163,6 +163,7 @@ import api from "@/js/api.js";
 import {ElMessage} from "element-plus";
 import Del from "./Del.vue";
 import ImportAni from "@/home/ImportAni.vue";
+import {CircleCheck, CircleClose, Refresh, Remove, Upload} from "@element-plus/icons-vue";
 
 let yearMonth = (list) => {
   return new Set(
