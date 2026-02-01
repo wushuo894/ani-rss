@@ -522,5 +522,7 @@ let openUrl = (url) => window.open(url)
 
 .match-content {
   max-width: 500px;
+  min-width: 200px;
+  margin-bottom: 4px;
 }
 </style>

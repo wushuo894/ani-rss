@@ -234,19 +234,28 @@
         <template #dropdown>
           <el-dropdown-menu>
             <el-dropdown-item @click="download">
-              <el-button link icon="RefreshRight">
+              <el-text>
+                <el-icon>
+                  <RefreshRight/>
+                </el-icon>
                 刷新
-              </el-button>
+              </el-text>
             </el-dropdown-item>
             <el-dropdown-item @click="scrape(false)">
-              <el-button link icon="RefreshRight">
+              <el-text>
+                <el-icon>
+                  <RefreshRight/>
+                </el-icon>
                 刮削
-              </el-button>
+              </el-text>
             </el-dropdown-item>
             <el-dropdown-item @click="scrape(true)">
-              <el-button link icon="Refresh" type="warning">
+              <el-text type="warning">
+                <el-icon>
+                  <Refresh/>
+                </el-icon>
                 强制刮削
-              </el-button>
+              </el-text>
             </el-dropdown-item>
           </el-dropdown-menu>
         </template>
@@ -275,6 +284,7 @@ import StandbyRss from "./StandbyRss.vue";
 import Mikan from "./Mikan.vue";
 import TmdbGroup from "./TmdbGroup.vue";
 import CustomTags from "@/config/CustomTags.vue";
+import {Refresh, RefreshRight} from "@element-plus/icons-vue";
 
 const mikanRef = ref()
 const tmdbGroupRef = ref()
