@@ -42,7 +42,7 @@
       </el-form-item>
       <el-form-item label="Driver">
         <el-select v-model="props.config['provider']" class="download-provider-select">
-          <el-option v-for="it in ['115 Cloud','115 Open', 'Thunder', 'PikPak']" :key="it" :label="it" :value="it"/>
+          <el-option v-for="it in offlineList" :key="it" :label="it" :value="it"/>
         </el-select>
       </el-form-item>
       <el-form-item label="重试次数">
@@ -221,6 +221,12 @@ const downloadSelect = ref([
   'Transmission',
   'Aria2',
   'OpenList'
+])
+
+const offlineList = ref([
+  '115 Cloud', '115 Open',
+  '123Pan', '123 Open',
+  'Thunder', 'PikPak'
 ])
 
 const downloadLoginTestLoading = ref(false)
