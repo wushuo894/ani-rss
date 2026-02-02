@@ -42,7 +42,7 @@
       </el-form-item>
       <el-form-item label="Driver">
         <el-select v-model="props.config['provider']" class="download-provider-select">
-          <el-option v-for="it in offlineList" :key="it" :label="it" :value="it"/>
+          <el-option v-for="it in offlineList" :key="it.label" :label="it.label" :value="it.value"/>
         </el-select>
       </el-form-item>
       <el-form-item label="重试次数">
@@ -224,9 +224,30 @@ const downloadSelect = ref([
 ])
 
 const offlineList = ref([
-  '115 Cloud', '115 Open',
-  '123Pan', '123 Open',
-  'Thunder', 'PikPak'
+  {
+    label: '115 网盘',
+    value: '115 Cloud'
+  },
+  {
+    label: '115 开放平台',
+    value: '115 Open'
+  },
+  {
+    label: '123 网盘',
+    value: '123Pan'
+  },
+  {
+    label: '123 开放平台',
+    value: '123 Open'
+  },
+  {
+    label: '迅雷',
+    value: 'Thunder'
+  },
+  {
+    label: 'PikPak',
+    value: 'PikPak'
+  }
 ])
 
 const downloadLoginTestLoading = ref(false)
