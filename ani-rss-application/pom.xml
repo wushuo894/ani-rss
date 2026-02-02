@@ -79,8 +79,8 @@
                             <restartOnCrash>false</restartOnCrash>
                             <icon>${project.parent.basedir}/ani-rss-ui/public/favicon.ico</icon>
                             <singleInstance>
-                                <mutexName>ani-rss-launcher</mutexName>
-                                <windowTitle>ani-rss</windowTitle>
+                                <mutexName>ani-rss-launcher (${project.version})</mutexName>
+                                <windowTitle>ani-rss (${project.version})</windowTitle>
                             </singleInstance>
                             <jre>
                                 <path>jre/bin;%JAVA_HOME%/bin;%PATH%</path>
