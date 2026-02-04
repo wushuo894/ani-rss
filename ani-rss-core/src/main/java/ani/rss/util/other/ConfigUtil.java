@@ -106,13 +106,12 @@ public class ConfigUtil {
                 telegram.org
                 """;
 
-        CONFIG.setSleep(15)
+        CONFIG.setRssSleepMinutes(15)
                 .setMikanHost("https://mikanani.me")
                 .setTmdbApi("https://api.themoviedb.org")
                 .setTmdbApiKey("")
                 .setTmdbAnime(true)
                 .setRenameSleepSeconds(10)
-                .setGcSleep(10)
                 .setRename(true)
                 .setRss(true)
                 .setRssTimeout(20)

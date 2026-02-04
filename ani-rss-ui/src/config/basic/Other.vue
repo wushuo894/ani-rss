@@ -62,13 +62,6 @@
         </div>
       </div>
     </el-form-item>
-    <el-form-item label="自动GC间隔">
-      <el-input-number v-model:model-value="props.config['gcSleep']" :min="0">
-        <template #suffix>
-          <span>分钟</span>
-        </template>
-      </el-input-number>
-    </el-form-item>
     <el-form-item label="自动备份配置">
       <div>
         <el-switch v-model="props.config['configBackup']"/>

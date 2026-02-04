@@ -18,7 +18,7 @@ export let configData = {
     "customTags": [],
     "delayedDownload": 0,
     "scoreShow": true,
-    "sleep": 15,
+    "rssSleepMinutes": 15,
     "renameSleepSeconds": 10,
     "gcSleep": 10,
     "rename": true,

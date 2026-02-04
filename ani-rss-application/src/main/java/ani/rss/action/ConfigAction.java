@@ -51,8 +51,7 @@ public class ConfigAction implements BaseAction {
         String username = login.getUsername();
         String password = login.getPassword();
         Integer renameSleepSeconds = config.getRenameSleepSeconds();
-        Integer sleep = config.getSleep();
-        Integer gcSleep = config.getGcSleep();
+        Integer sleep = config.getRssSleepMinutes();
         String download = config.getDownloadToolType();
 
         Config newConfig = getBody(Config.class);
@@ -92,14 +91,12 @@ public class ConfigAction implements BaseAction {
 
         ConfigUtil.sync();
         Integer newRenameSleepSeconds = config.getRenameSleepSeconds();
-        Integer newSleep = config.getSleep();
-        Integer newGcSleep = config.getGcSleep();
+        Integer newSleep = config.getRssSleepMinutes();
 
         // 时间间隔发生改变，重启任务
         if (
                 !Objects.equals(newSleep, sleep) ||
-                        !Objects.equals(newRenameSleepSeconds, renameSleepSeconds) ||
-                        !Objects.equals(newGcSleep, gcSleep)
+                        !Objects.equals(newRenameSleepSeconds, renameSleepSeconds)
         ) {
             TaskService.restart();
         }

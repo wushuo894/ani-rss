@@ -8,7 +8,7 @@
       <el-switch v-model:model-value="props.config.rss"/>
     </el-form-item>
     <el-form-item label="RSS间隔">
-      <el-input-number v-model:model-value="props.config.sleep" :disabled="!props.config.rss" :min="5">
+      <el-input-number v-model:model-value="props.config.rssSleepMinutes" :disabled="!props.config.rss" :min="10">
         <template #suffix>
           <span>分钟</span>
         </template>
