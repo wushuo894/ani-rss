@@ -274,3 +274,7 @@ html, body, #app {
 .el-popover.el-popper {
     border-radius: var(--el-border-radius-base);
 }
+
+.el-loading-mask {
+    border-radius: var(--el-border-radius-base);
+}
