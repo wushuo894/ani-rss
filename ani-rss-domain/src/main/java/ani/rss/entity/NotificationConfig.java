@@ -169,6 +169,16 @@ public class NotificationConfig implements Serializable {
     private Integer aliveLimit;
 
     /**
+     * 文件移动目标位置
+     */
+    private String fileMoveTarget;
+
+    /**
+     * 文件移动目标位置 OVA
+     */
+    private String fileMoveOvaTarget;
+
+    /**
      * 通知 状态
      */
     private List<NotificationStatusEnum> statusList;
@@ -232,6 +242,10 @@ public class NotificationConfig implements Serializable {
 
         notificationConfig.setShell("")
                 .setAliveLimit(10);
+
+        notificationConfig
+                .setFileMoveTarget("/CD2/115/Media/番剧/${title}/Season ${season}")
+                .setFileMoveOvaTarget("/CD2/115/Media/剧场版/${title}");
 
         return notificationConfig;
     }

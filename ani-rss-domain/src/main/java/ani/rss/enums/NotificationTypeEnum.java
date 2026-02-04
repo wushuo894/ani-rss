@@ -10,5 +10,6 @@ public enum NotificationTypeEnum {
     SYSTEM,
     TELEGRAM,
     WEB_HOOK,
-    SHELL
+    SHELL,
+    FILE_MOVE
 }

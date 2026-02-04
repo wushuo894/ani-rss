@@ -33,6 +33,7 @@
         <WebhookNotification v-model:notification-config="notificationConfig" v-model:config="props.config"/>
         <SystemNotification v-model:notification-config="notificationConfig" v-model:config="props.config"/>
         <ShellNotification v-model:notification-config="notificationConfig" v-model:config="props.config"/>
+        <FileMoveNotification v-model:notification-config="notificationConfig" v-model:config="props.config"/>
         <el-form-item label="重试">
           <el-input-number
               :min="0"
@@ -71,6 +72,7 @@ import SystemNotification from "@/config/notification/SystemNotification.vue";
 import {notificationTypeList} from "@/js/notification-type.js";
 import {ElMessage} from "element-plus";
 import api from "@/js/api.js";
+import FileMoveNotification from "@/config/notification/FileMoveNotification.vue";
 
 
 let notificationConfig = ref({
