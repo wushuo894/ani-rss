@@ -120,19 +120,14 @@ public class Config implements Serializable {
     private Boolean scoreShow;
 
     /**
-     * 间隔/分钟
+     * RSS 间隔(分钟)
      */
-    private Integer sleep;
+    private Integer rssSleepMinutes;
 
     /**
      * 重命名间隔(秒)
      */
     private Integer renameSleepSeconds;
-
-    /**
-     * GC 间隔/分钟
-     */
-    private Integer gcSleep;
 
     /**
      * 自动重命名

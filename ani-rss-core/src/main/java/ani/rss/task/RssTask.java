@@ -76,7 +76,7 @@ public class RssTask extends Thread {
     public void run() {
         super.setName("rss-task-thread");
         Config config = ConfigUtil.CONFIG;
-        Integer sleep = config.getSleep();
+        Integer sleep = config.getRssSleepMinutes();
         log.info("{} 当前设置间隔为 {} 分钟", getName(), sleep);
         while (loop.get()) {
             if (!config.getRss()) {
