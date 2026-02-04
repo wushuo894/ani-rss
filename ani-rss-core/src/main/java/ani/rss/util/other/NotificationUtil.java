@@ -33,7 +33,8 @@ public class NotificationUtil {
                     NotificationTypeEnum.SYSTEM, SystemNotification.class,
                     NotificationTypeEnum.TELEGRAM, TelegramNotification.class,
                     NotificationTypeEnum.WEB_HOOK, WebHookNotification.class,
-                    NotificationTypeEnum.SHELL, ShellNotification.class
+                    NotificationTypeEnum.SHELL, ShellNotification.class,
+                    NotificationTypeEnum.FILE_MOVE, FileMoveNotification.class
             );
 
     /**
