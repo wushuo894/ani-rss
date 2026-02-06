@@ -1,6 +1,4 @@
-- feat: 新增通知 文件移动
-- refactor: 优化加载蒙层
-- build: 更新日志库
+- feat: 文件移动通知新增删除旧的同集文件(用于洗版)
 
 [请不要将本项目在国内宣传](https://github.com/wushuo894/ani-rss/discussions/504)
 
