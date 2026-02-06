@@ -67,10 +67,29 @@ public class HttpRequestPlus extends HttpRequest {
     @Override
     public HttpResponse execute(boolean isAsync) {
         String url = getUrl();
+        HttpResponse response = null;
         try {
-            return super.execute(isAsync);
+            response = super.execute(isAsync);
+            return response;
         } catch (Exception e) {
             String message = ExceptionUtils.getMessage(e);
+
+            // SSL/握手异常特殊处理 - 确保资源清理
+            if (message.contains("SSL") || message.contains("handshake") ||
+                message.contains("EOFException") || message.contains("远程主机")) {
+
+                log.warn("检测到 SSL/握手异常，连接可能已损坏: {}", url);
+
+                // 尝试清理可能损坏的连接
+                if (response != null) {
+                    try {
+                        response.close();
+                    } catch (Exception closeEx) {
+                        log.debug("关闭响应失败: {}", closeEx.getMessage());
+                    }
+                }
+            }
+
             log.error("url: {}, error: {}", url, message);
             throw e;
         }

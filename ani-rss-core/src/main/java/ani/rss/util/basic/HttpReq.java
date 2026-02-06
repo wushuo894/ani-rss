@@ -36,7 +36,8 @@ public class HttpReq {
         GlobalCookieManager.setCookieManager(COOKIE_MANAGER);
 
         req.timeout(1000 * 20)
-                .setFollowRedirects(true);
+                .setFollowRedirects(true)
+                .header("Connection", "close");  // 修复 SSL 阻塞问题：禁用 HTTP Keep-Alive
 
         String ua = "wushuo894/ani-rss (https://github.com/wushuo894/ani-rss)";
 

@@ -41,12 +41,19 @@ public class ItemsUtil {
 
         Config config = ConfigUtil.CONFIG;
 
-        String s = HttpReq.get(url)
-                .timeout(config.getRssTimeout() * 1000)
-                .thenFunction(res -> {
-                    HttpReq.assertStatus(res);
-                    return res.body();
-                });
+        // 修复：显式管理 HttpResponse 资源
+        String s;
+        HttpResponse res = null;
+        try {
+            res = HttpReq.get(url)
+                    .timeout(config.getRssTimeout() * 1000)
+                    .execute();
+            HttpReq.assertStatus(res);
+            s = res.body();
+        } finally {
+            closeQuietly(res);
+        }
+
         String subgroup = StrUtil.blankToDefault(ani.getSubgroup(), "未知字幕组");
         List<Item> items = new ArrayList<>(ItemsUtil.getItems(ani, s, new Item().setSubgroup(subgroup))
                 .stream()
@@ -61,9 +68,20 @@ public class ItemsUtil {
         List<StandbyRss> standbyRssList = ani.getStandbyRssList();
         for (StandbyRss rss : standbyRssList) {
             ThreadUtil.sleep(1000);
-            s = HttpReq.get(rss.getUrl())
-                    .timeout(config.getRssTimeout() * 1000)
-                    .thenFunction(HttpResponse::body);
+            // 修复：显式管理备用 RSS 的 HttpResponse 资源
+            HttpResponse standbyRes = null;
+            try {
+                standbyRes = HttpReq.get(rss.getUrl())
+                        .timeout(config.getRssTimeout() * 1000)
+                        .execute();
+                s = standbyRes.body();
+            } catch (Exception e) {
+                log.error("获取备用 RSS 失败: {} - {}", rss.getLabel(), e.getMessage());
+                // 继续处理下一个备用 RSS
+                continue;
+            } finally {
+                closeQuietly(standbyRes);
+            }
             subgroup = StrUtil.blankToDefault(rss.getLabel(), "未知字幕组");
             Ani clone = ObjUtil.clone(ani);
             clone.setOffset(rss.getOffset());
@@ -81,6 +99,23 @@ public class ItemsUtil {
         }
         items.sort(Comparator.comparingDouble(Item::getEpisode));
         return items;
+    }
+
+    /**
+     * 安静地关闭 HttpResponse，忽略异常
+     * 修复 SSL 阻塞问题：确保资源正确释放
+     */
+    private static void closeQuietly(HttpResponse response) {
+        if (response != null) {
+            try {
+                if (response instanceof AutoCloseable) {
+                    ((AutoCloseable) response).close();
+                }
+            } catch (Exception e) {
+                // 忽略关闭异常
+                log.debug("关闭 HttpResponse 失败: {}", e.getMessage());
+            }
+        }
     }
 
     /**
