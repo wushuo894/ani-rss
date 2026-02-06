@@ -179,6 +179,11 @@ public class NotificationConfig implements Serializable {
     private String fileMoveOvaTarget;
 
     /**
+     * 文件移动时删除旧的同集视频
+     */
+    private Boolean fileMoveDeleteOldEpisode;
+
+    /**
      * 通知 状态
      */
     private List<NotificationStatusEnum> statusList;
@@ -245,7 +250,8 @@ public class NotificationConfig implements Serializable {
 
         notificationConfig
                 .setFileMoveTarget("/CD2/115/Media/番剧/${title}/Season ${season}")
-                .setFileMoveOvaTarget("/CD2/115/Media/剧场版/${title}");
+                .setFileMoveOvaTarget("/CD2/115/Media/剧场版/${title}")
+                .setFileMoveDeleteOldEpisode(false);
 
         return notificationConfig;
     }
