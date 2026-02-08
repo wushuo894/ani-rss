@@ -51,6 +51,12 @@ jobs:
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
+      - name: Login to ghcr.io
+        uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
       - name: Build and push Docker image (temurin)
         uses: docker/build-push-action@v6
         with:
@@ -58,7 +64,13 @@ jobs:
           file: ./docker/Dockerfile
           platforms: linux/amd64,linux/arm64
           push: true
-          tags: wushuo894/ani-rss:latest,wushuo894/ani-rss:${{ env.version }}
+          tags: |
+            wushuo894/ani-rss:latest
+            ghcr.io/wushuo894/ani-rss:latest
+            wushuo894/ani-rss:${{ env.version }}
+            ghcr.io/wushuo894/ani-rss:${{ env.version }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
       - name: Build and push Docker image (openj9)
         uses: docker/build-push-action@v6
         with:
@@ -66,7 +78,13 @@ jobs:
           file: ./docker/Dockerfile-openj9
           platforms: linux/amd64,linux/arm64
           push: true
-          tags: wushuo894/ani-rss:openj9,wushuo894/ani-rss:${{ env.version }}-openj9
+          tags: |
+            wushuo894/ani-rss:openj9
+            ghcr.io/wushuo894/ani-rss:openj9
+            wushuo894/ani-rss:${{ env.version }}-openj9
+            ghcr.io/wushuo894/ani-rss:${{ env.version }}-openj9
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
       - name: Build and push Docker image (arm32v7)
         uses: docker/build-push-action@v6
         with:
@@ -74,4 +92,10 @@ jobs:
           file: ./docker/Dockerfile-arm32v7
           platforms: linux/arm/v7
           push: true
-          tags: wushuo894/ani-rss:arm32v7,wushuo894/ani-rss:${{ env.version }}-arm32v7
+          tags: |
+            wushuo894/ani-rss:arm32v7
+            ghcr.io/wushuo894/ani-rss:arm32v7
+            wushuo894/ani-rss:${{ env.version }}-arm32v7
+            ghcr.io/wushuo894/ani-rss:${{ env.version }}-arm32v7
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
