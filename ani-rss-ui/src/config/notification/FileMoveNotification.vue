@@ -15,7 +15,7 @@
         <el-checkbox v-model="notificationConfig['fileMoveDeleteOldEpisode']" label="删除旧的同集文件"/>
         <br/>
         <el-text class="mx-1" size="small">
-          自动时将目标位置存在的同集文件删除, 可达到洗版的效果
+          自动将目标位置存在的同集文件删除, 可达到洗版的效果
         </el-text>
       </div>
     </el-form-item>
