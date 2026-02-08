@@ -1,5 +1,6 @@
 package ani.rss.entity;
 
+import com.google.gson.annotations.SerializedName;
 import lombok.Data;
 import lombok.experimental.Accessors;
 import wushuo.tmdb.api.entity.Tmdb;
@@ -229,12 +230,14 @@ public class Ani implements Serializable {
     /**
      * 自定义上传
      */
-    private Boolean customAlistPath;
+    @SerializedName(value = "customUploadEnable", alternate = "customAlistPath")
+    private Boolean customUploadEnable;
 
     /**
      * 自定义上传
      */
-    private String alistPath;
+    @SerializedName(value = "customUploadPathTarget", alternate = "alistPath")
+    private String customUploadPathTarget;
 
     /**
      * 消息通知

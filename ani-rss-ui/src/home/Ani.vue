@@ -150,12 +150,15 @@
         <el-form-item label="自定义上传">
           <div style="width: 100%;">
             <div>
-              <el-switch v-model="props.ani.customAlistPath"/>
+              <el-switch v-model="props.ani.customUploadEnable"/>
             </div>
             <div>
-              <el-input v-model:model-value="props.ani.alistPath" :autosize="{ minRows: 2}" :disabled="!props.ani.customAlistPath"
-                        style="width: 100%"
-                        type="textarea"/>
+              <el-input
+                  v-model="props.ani.customUploadPathTarget"
+                  :autosize="{ minRows: 2}"
+                  :disabled="!props.ani.customUploadEnable"
+                  style="width: 100%"
+                  type="textarea"/>
             </div>
           </div>
         </el-form-item>
