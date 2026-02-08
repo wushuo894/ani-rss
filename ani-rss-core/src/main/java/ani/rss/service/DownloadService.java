@@ -480,17 +480,6 @@ public class DownloadService {
             // 刮削
             ScrapeService.scrape(ani, false);
         }
-
-        try {
-            OpenListUtil.upload(torrentsInfo, ani);
-        } catch (Exception e) {
-            log.error(e.getMessage(), e);
-        }
-        try {
-            OpenListUtil.refresh(ani);
-        } catch (Exception e) {
-            log.error(e.getMessage(), e);
-        }
         String text = StrFormatter.format("{} 下载完成", name);
         if (tags.contains(TorrentsTags.BACK_RSS.getValue())) {
             text = StrFormatter.format("(备用RSS) {}", text);

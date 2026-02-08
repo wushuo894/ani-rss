@@ -21,7 +21,6 @@
             <el-checkbox label="下载完成" value="DOWNLOAD_END"/>
             <el-checkbox label="缺集" value="OMIT"/>
             <el-checkbox label="错误" value="ERROR"/>
-            <el-checkbox label="OpenList 上传通知" value="OPEN_LIST_UPLOAD"/>
             <el-checkbox label="订阅完结" value="COMPLETED"/>
             <el-checkbox label="摸鱼检测" value="PROCRASTINATING"/>
           </el-checkbox-group>
@@ -34,9 +33,13 @@
         <SystemNotification v-model:notification-config="notificationConfig" v-model:config="props.config"/>
         <ShellNotification v-model:notification-config="notificationConfig" v-model:config="props.config"/>
         <FileMoveNotification v-model:notification-config="notificationConfig" v-model:config="props.config"/>
+        <OpenListNotification v-model:config="props.config" v-model:notification-config="notificationConfig"/>
         <el-form-item label="顺序">
           <div>
-            <el-input-number v-model="notificationConfig['sort']"/>
+            <el-input-number
+                v-model="notificationConfig['sort']"
+                class="notification-input-width"
+            />
           </div>
         </el-form-item>
         <el-form-item label="重试">
@@ -44,12 +47,8 @@
               :min="0"
               :max="100"
               v-model="notificationConfig['retry']"
-              class="notification-config-retry-input"
-          >
-            <template #suffix>
-              <span>次</span>
-            </template>
-          </el-input-number>
+              class="notification-input-width"
+          />
         </el-form-item>
         <el-form-item label="开启">
           <el-switch v-model="notificationConfig['enable']"/>
@@ -78,6 +77,7 @@ import {notificationTypeList} from "@/js/notification-type.js";
 import {ElMessage} from "element-plus";
 import api from "@/js/api.js";
 import FileMoveNotification from "@/config/notification/FileMoveNotification.vue";
+import OpenListNotification from "@/config/notification/OpenListNotification.vue";
 
 
 let notificationConfig = ref({
@@ -152,10 +152,6 @@ defineExpose({
 .notification-config-scrollbar {
   height: 530px;
   padding: 15px;
-}
-
-.notification-config-retry-input {
-  width: 160px;
 }
 
 .notification-config-footer {

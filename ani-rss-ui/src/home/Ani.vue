@@ -147,18 +147,6 @@
             </div>
           </div>
         </el-form-item>
-        <el-form-item label="自定义上传">
-          <div style="width: 100%;">
-            <div>
-              <el-switch v-model="props.ani.customAlistPath"/>
-            </div>
-            <div>
-              <el-input type="textarea" style="width: 100%" :disabled="!props.ani.customAlistPath"
-                        :autosize="{ minRows: 2}"
-                        v-model:model-value="props.ani.alistPath"/>
-            </div>
-          </div>
-        </el-form-item>
         <el-form-item label="自定义完结迁移">
           <div style="width: 100%;">
             <div>

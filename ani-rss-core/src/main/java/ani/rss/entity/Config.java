@@ -165,11 +165,6 @@ public class Config implements Serializable {
     private Boolean deleteStandbyRSSOnly;
 
     /**
-     * 删除本地文件
-     */
-    private Boolean deleteFiles;
-
-    /**
      * 自动推断剧集偏移
      */
     private Boolean offset;
@@ -415,41 +410,6 @@ public class Config implements Serializable {
      * 自动更新
      */
     private Boolean autoUpdate;
-
-    /**
-     * OpenList
-     */
-    private String alistHost;
-
-    /**
-     * OpenList 令牌
-     */
-    private String alistToken;
-
-    /**
-     * 上传位置
-     */
-    private String alistPath;
-
-    /**
-     * 剧场版上传位置
-     */
-    private String alistOvaPath;
-
-    /**
-     * 启用 OpenList
-     */
-    private Boolean alist;
-
-    /**
-     * OpenList 上传失败时的重试次数
-     */
-    private Integer alistRetry;
-
-    /**
-     * OpenList 添加上传任务
-     */
-    private Boolean alistTask;
 
     /**
      * 版本

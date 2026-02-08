@@ -21,10 +21,6 @@ public enum NotificationStatusEnum {
      */
     ERROR("❌", "发生错误"),
     /**
-     * OpenList 上传通知
-     */
-    OPEN_LIST_UPLOAD("🙌", "OpenList 上传通知"),
-    /**
      * 订阅完结
      */
     COMPLETED("🎊", "订阅完结"),
