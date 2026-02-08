@@ -34,6 +34,11 @@
         <SystemNotification v-model:notification-config="notificationConfig" v-model:config="props.config"/>
         <ShellNotification v-model:notification-config="notificationConfig" v-model:config="props.config"/>
         <FileMoveNotification v-model:notification-config="notificationConfig" v-model:config="props.config"/>
+        <el-form-item label="顺序">
+          <div>
+            <el-input-number v-model="notificationConfig['sort']"/>
+          </div>
+        </el-form-item>
         <el-form-item label="重试">
           <el-input-number
               :min="0"

@@ -188,6 +188,10 @@ public class NotificationConfig implements Serializable {
      */
     private List<NotificationStatusEnum> statusList;
 
+    /**
+     * 顺序
+     */
+    private Long sort;
 
     public static NotificationConfig createNotificationConfig() {
         NotificationConfig notificationConfig = new NotificationConfig();
@@ -195,6 +199,7 @@ public class NotificationConfig implements Serializable {
         notificationConfig
                 .setEnable(true)
                 .setRetry(3)
+                .setSort(1L)
                 .setNotificationType(NotificationTypeEnum.TELEGRAM)
                 .setNotificationTemplate("${notification}")
                 .setComment("")
