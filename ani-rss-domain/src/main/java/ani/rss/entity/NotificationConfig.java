@@ -184,6 +184,41 @@ public class NotificationConfig implements Serializable {
     private Boolean fileMoveDeleteOldEpisode;
 
     /**
+     * OpenList Host
+     */
+    private String openListUploadHost;
+
+    /**
+     * OpenList ApiKey
+     */
+    private String openListUploadApiKey;
+
+    /**
+     * OpenList 上传位置
+     */
+    private String openListUploadPath;
+
+    /**
+     * OpenList OVA/剧场版 上传位置
+     */
+    private String openListUploadOvaPath;
+
+    /**
+     * 添加为上传任务
+     */
+    private Boolean openListUploadTask;
+
+    /**
+     * 上传完成后删除本地文件
+     */
+    private Boolean openListUploadDeleteLocalFile;
+
+    /**
+     * 删除同及文件
+     */
+    private Boolean openListUploadDeleteOldEpisode;
+
+    /**
      * 通知 状态
      */
     private List<NotificationStatusEnum> statusList;
@@ -250,13 +285,25 @@ public class NotificationConfig implements Serializable {
                 .setEmbyRefreshViewIds(new ArrayList<>())
                 .setEmbyDelayed(0L);
 
+        // SHELL
         notificationConfig.setShell("")
                 .setAliveLimit(10);
 
+        // FileMove
         notificationConfig
                 .setFileMoveTarget("/CD2/115/Media/番剧/${title}/Season ${season}")
                 .setFileMoveOvaTarget("/CD2/115/Media/剧场版/${title}")
                 .setFileMoveDeleteOldEpisode(false);
+
+        // OpenList
+        notificationConfig
+                .setOpenListUploadHost("http://127.0.0.1:5244")
+                .setOpenListUploadApiKey("")
+                .setOpenListUploadPath("/115/Media/番剧/${title}/Season ${season}")
+                .setOpenListUploadOvaPath("/115/Media/剧场版/${title}")
+                .setOpenListUploadTask(false)
+                .setOpenListUploadDeleteLocalFile(true)
+                .setOpenListUploadDeleteOldEpisode(false);
 
         return notificationConfig;
     }

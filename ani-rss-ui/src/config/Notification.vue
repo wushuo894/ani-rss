@@ -128,7 +128,7 @@ let props = defineProps(['config'])
 <style>
 /* 通知组件通用样式 - 非scoped以便子组件使用 */
 .notification-input-width {
-  width: 160px;
+  width: 160px !important;
 }
 
 .notification-flex-between {

@@ -1,27 +1,29 @@
 <template>
   <template v-if="notificationConfig['notificationType'] === 'TELEGRAM'">
     <el-form-item label="通知模版">
-      <el-input v-model:model-value="props.notificationConfig['notificationTemplate']" :autosize="{ minRows: 2}"
+      <el-input v-model="notificationConfig['notificationTemplate']" :autosize="{ minRows: 2}"
                 placeholder="${notification}" type="textarea"/>
     </el-form-item>
     <el-form-item label="Api Host">
-      <el-input v-model:model-value="props.notificationConfig['telegramApiHost']"
+      <el-input v-model="notificationConfig['telegramApiHost']"
                 placeholder="https://api.telegram.org"/>
     </el-form-item>
     <el-form-item label="Token">
-      <el-input v-model:model-value="props.notificationConfig['telegramBotToken']"
+      <el-input v-model="notificationConfig['telegramBotToken']"
                 placeholder="123456:ABC-DEF1234ghIkl-zyx57W2v1u123ew11"/>
     </el-form-item>
     <el-form-item label="ChatId">
       <div>
         <div class="auto-flex notification-flex-between">
           <div class="notification-margin-top-right">
-            <el-input v-model:model-value="props.notificationConfig['telegramChatId']"
+            <el-input v-model="notificationConfig['telegramChatId']"
                       placeholder="123456789"/>
           </div>
           <div class="flex notification-margin-top-center">
             <div>
-              <el-select v-model:model-value="chatId" @change="chatIdChange" class="notification-input-width">
+              <el-select v-model="chatId"
+                         class="notification-input-width"
+                         @change="chatIdChange">
                 <el-option v-for="item in Object.keys(chatIdMap)"
                            :key="item"
                            :label="item"
@@ -36,15 +38,15 @@
       </div>
     </el-form-item>
     <el-form-item label="话题ID">
-      <el-input-number v-model="props.notificationConfig['telegramTopicId']"
+      <el-input-number v-model="notificationConfig['telegramTopicId']"
                        :min="-1" class="notification-input-width"/>
     </el-form-item>
     <el-form-item label="图片">
-      <el-switch v-model:model-value="props.notificationConfig['telegramImage']"/>
+      <el-switch v-model="notificationConfig['telegramImage']"/>
     </el-form-item>
     <el-form-item label="格式">
       <div class="notification-input-width">
-        <el-select v-model:model-value="props.notificationConfig['telegramFormat']" placeholder="None">
+        <el-select v-model="notificationConfig['telegramFormat']" placeholder="None">
           <el-option label="None" value=""/>
           <el-option label="Markdown" value="Markdown"/>
           <el-option label="HTML" value="HTML"/>

@@ -11,5 +11,6 @@ public enum NotificationTypeEnum {
     TELEGRAM,
     WEB_HOOK,
     SHELL,
-    FILE_MOVE
+    FILE_MOVE,
+    OPEN_LIST_UPLOAD
 }

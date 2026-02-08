@@ -3,10 +3,7 @@ package ani.rss.download;
 import ani.rss.commons.ExceptionUtils;
 import ani.rss.commons.FileUtils;
 import ani.rss.commons.GsonStatic;
-import ani.rss.entity.Ani;
-import ani.rss.entity.Config;
-import ani.rss.entity.Item;
-import ani.rss.entity.TorrentsInfo;
+import ani.rss.entity.*;
 import ani.rss.enums.NotificationStatusEnum;
 import ani.rss.enums.StringEnum;
 import ani.rss.util.basic.HttpReq;
@@ -28,12 +25,9 @@ import cn.hutool.http.HttpResponse;
 import cn.hutool.http.Method;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import lombok.Data;
-import lombok.experimental.Accessors;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.File;
-import java.io.Serializable;
 import java.util.*;
 import java.util.stream.Stream;
 
@@ -384,7 +378,7 @@ public class OpenList implements BaseDownload {
         List<OpenListFileInfo> openListFileInfos = ls(path);
         List<OpenListFileInfo> list = openListFileInfos.stream()
                 .flatMap(openListFileInfo -> {
-                    if (openListFileInfo.getIs_dir()) {
+                    if (openListFileInfo.getIsDir()) {
                         return findFiles(path + "/" + openListFileInfo.getName()).stream();
                     }
                     return Stream.of(openListFileInfo);
@@ -394,17 +388,6 @@ public class OpenList implements BaseDownload {
             Long size = fileInfo.getSize();
             return Long.MAX_VALUE - ObjectUtil.defaultIfNull(size, 0L);
         }));
-    }
-
-    @Data
-    @Accessors(chain = true)
-    public static class OpenListFileInfo implements Serializable {
-        private String name;
-        private Long size;
-        private Boolean is_dir;
-        private Date modified;
-        private Date created;
-        private String path;
     }
 
     /**

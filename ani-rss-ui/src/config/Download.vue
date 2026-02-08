@@ -143,15 +143,6 @@
         <el-text class="mx-1" size="small">
           <strong>主RSS</strong> 将 <span class="download-danger-text">不会自动删除</span>，仅在其更新后删除对应备用RSS的任务与文件
         </el-text>
-        <br>
-        <el-checkbox v-model:model-value="props.config.deleteFiles"
-                     :disabled="!props.config.delete">
-          <span class="download-danger-text">删除本地文件</span>
-        </el-checkbox>
-        <br>
-        <el-text class="mx-1" size="small">
-          删除本地文件, 仅在同时开启了 <strong>OpenList 上传</strong> 并上传成功后删除
-        </el-text>
       </div>
     </el-form-item>
     <el-form-item label="失败重试次数">
@@ -199,9 +190,6 @@
       <el-collapse-item name="qBittorrent" title="qBittorrent 设置">
         <QBittorrent v-if="activeName.indexOf('qBittorrent') > -1" :config="props.config"/>
       </el-collapse-item>
-      <el-collapse-item name="OpenList" title="OpenList 设置">
-        <OpenList v-if="activeName.indexOf('OpenList') > -1" :config="props.config"/>
-      </el-collapse-item>
     </el-collapse>
   </el-form>
 </template>
@@ -212,7 +200,6 @@ import api from "@/js/api.js";
 import {ElMessage, ElText} from "element-plus";
 import {Key, User} from "@element-plus/icons-vue";
 import QBittorrent from "@/config/download/qBittorrent.vue";
-import OpenList from "@/config/download/OpenList.vue";
 import PrioKeys from "@/config/PrioKeys.vue";
 import CustomTags from "@/config/CustomTags.vue";
 

@@ -35,7 +35,8 @@ public class NotificationUtil {
                     NotificationTypeEnum.TELEGRAM, TelegramNotification.class,
                     NotificationTypeEnum.WEB_HOOK, WebHookNotification.class,
                     NotificationTypeEnum.SHELL, ShellNotification.class,
-                    NotificationTypeEnum.FILE_MOVE, FileMoveNotification.class
+                    NotificationTypeEnum.FILE_MOVE, FileMoveNotification.class,
+                    NotificationTypeEnum.OPEN_LIST_UPLOAD, OpenListUploadNotification.class
             );
 
     /**

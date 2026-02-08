@@ -122,7 +122,6 @@ public class ConfigUtil {
                 .setAwaitStalledUP(true)
                 .setDelete(false)
                 .setDeleteStandbyRSSOnly(false)
-                .setDeleteFiles(false)
                 .setOffset(false)
                 .setTitleYear(false)
                 .setAutoDisabled(false)
@@ -187,13 +186,6 @@ public class ConfigUtil {
                 .setAutoTrackersUpdate(false)
                 .setTrackersUpdateUrls("https://cf.trackerslist.com/best.txt")
                 .setAutoUpdate(false)
-                .setAlist(false)
-                .setAlistRetry(5)
-                .setAlistTask(true)
-                .setAlistPath("/115/Media/番剧/${title}/Season ${season}")
-                .setAlistOvaPath("/115/Media/剧场版/${title}")
-                .setAlistHost("")
-                .setAlistToken("")
                 .setVersion("")
                 .setBgmImage("large")
                 .setCustomCss("")
@@ -451,7 +443,6 @@ public class ConfigUtil {
     public static void formatUrl(Config config) {
         List<Func1<Config, String>> func1List = List.of(
                 Config::getDownloadToolHost,
-                Config::getAlistHost,
                 Config::getMikanHost,
                 Config::getTmdbApi,
                 Config::getCustomGithubUrl
@@ -476,9 +467,7 @@ public class ConfigUtil {
         List<Func1<Config, String>> func1List = List.of(
                 Config::getDownloadPathTemplate,
                 Config::getOvaDownloadPathTemplate,
-                Config::getCompletedPathTemplate,
-                Config::getAlistPath,
-                Config::getAlistOvaPath
+                Config::getCompletedPathTemplate
         );
 
         DynaBean dynaBean = DynaBean.create(config);

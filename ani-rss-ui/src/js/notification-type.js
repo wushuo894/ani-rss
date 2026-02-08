@@ -30,6 +30,10 @@ export let notificationTypeList = [
     {
         name: 'FILE_MOVE',
         label: '文件移动'
+    },
+    {
+        name: 'OPEN_LIST_UPLOAD',
+        label: 'OpenList上传'
     }
 ]
 
