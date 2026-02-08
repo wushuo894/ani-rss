@@ -210,7 +210,7 @@ public class OpenListUploadNotification implements BaseNotification {
                 .setConfig(httpConfig)
                 .header(Header.AUTHORIZATION, openListUploadApiKey)
                 .header("As-Task", Boolean.toString(openListUploadTask))
-                .header("File-Path", URLUtil.encode(cloudFilePath))
+                .header("File-Path", URLUtil.encode(cloudFilePath + "/" + filename))
                 .contentType("application/octet-stream")
                 .body(ResourceUtil.getResourceObj(localFilePath))
                 .then(res -> {
