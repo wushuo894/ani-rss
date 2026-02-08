@@ -64,7 +64,7 @@
             <el-collapse v-model="activeName">
               <el-collapse-item v-for="item in data.items" :name="item.label">
                 <template #title>
-                  <span style="margin-left: 4px;">
+                  <span style="margin-left: 4px;font-weight: bold;">
                     {{ item.label }}
                   </span>
                 </template>
@@ -389,6 +389,11 @@ let openUrl = (url) => window.open(url)
 </script>
 
 <style scoped>
+
+.el-collapse {
+  --el-collapse-header-height: 55px;
+}
+
 .el-card {
   --el-card-padding: 15px;
 }
@@ -449,8 +454,9 @@ let openUrl = (url) => window.open(url)
 }
 
 .title-text {
-  margin-left: 4px;
+  margin-left: 6px;
   line-height: 1.6;
+  font-weight: bold;
 }
 
 .score-margin {
@@ -516,8 +522,8 @@ let openUrl = (url) => window.open(url)
 .cover {
   border-radius: var(--el-border-radius-base);
   cursor: pointer;
-  width: 40px;
-  height: 40px;
+  width: 45px;
+  height: 45px;
 }
 
 .match-content {
