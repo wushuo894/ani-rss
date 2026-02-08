@@ -48,7 +48,6 @@ public class OpenListUploadNotification implements BaseNotification {
 
         this.notificationConfig = notificationConfig;
 
-
         String openListUploadPath = notificationConfig.getOpenListUploadPath();
         String openListUploadOvaPath = notificationConfig.getOpenListUploadOvaPath();
         Boolean deleteOldEpisode = notificationConfig.getOpenListUploadDeleteOldEpisode();
@@ -63,6 +62,13 @@ public class OpenListUploadNotification implements BaseNotification {
         } else {
             ani.setDownloadPath(openListUploadPath);
         }
+
+        Boolean customAlistPath = ani.getCustomAlistPath();
+        if (customAlistPath) {
+            // 自定义上传位置
+            ani.setDownloadPath(ani.getAlistPath());
+        }
+
         ani.setCustomDownloadPath(true);
 
         String target = DownloadService.getDownloadPath(ani);
