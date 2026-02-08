@@ -63,10 +63,10 @@ public class OpenListUploadNotification implements BaseNotification {
             ani.setDownloadPath(openListUploadPath);
         }
 
-        Boolean customAlistPath = ani.getCustomAlistPath();
-        if (customAlistPath) {
+        Boolean customUploadEnable = ani.getCustomUploadEnable();
+        if (customUploadEnable) {
             // 自定义上传位置
-            ani.setDownloadPath(ani.getAlistPath());
+            ani.setDownloadPath(ani.getCustomUploadPathTarget());
         }
 
         ani.setCustomDownloadPath(true);
