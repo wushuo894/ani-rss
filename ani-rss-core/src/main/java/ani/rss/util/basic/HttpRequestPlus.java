@@ -49,10 +49,14 @@ public class HttpRequestPlus extends HttpRequest {
     }
 
     public static HttpRequest of(String url) {
+        // 去除分隔符重复
+        url = url.replaceAll("(?<!https?:?)//", "/");
         return HttpRequestPlus.of(UrlBuilder.ofHttp(url, StandardCharsets.UTF_8));
     }
 
     public static HttpRequest of(String url, Charset charset) {
+        // 去除分隔符重复
+        url = url.replaceAll("(?<!https?:?)//", "/");
         return HttpRequestPlus.of(UrlBuilder.ofHttp(url, charset));
     }
 
