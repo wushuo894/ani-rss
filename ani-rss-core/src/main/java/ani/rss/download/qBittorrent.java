@@ -104,7 +104,12 @@ public class qBittorrent implements BaseDownload {
                     .disableCookie()
                     .thenFunction(res -> {
                         HttpReq.assertStatus(res);
-                        return true;
+                        String body = res.body();
+                        if (StrUtil.isBlank(body)) {
+                            // 在 5.2.0 后登录会响应空 body
+                            return true;
+                        }
+                        return "Ok.".equalsIgnoreCase(body);
                     });
         } catch (Exception e) {
             String message = ExceptionUtils.getMessage(e);
