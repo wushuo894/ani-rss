@@ -261,8 +261,10 @@ public class TorrentUtil {
         }
 
         ThreadUtil.sleep(1000);
-        DOWNLOAD.rename(torrentsInfo);
-        addTags(torrentsInfo, TorrentsTags.RENAME.getValue());
+        Boolean renamed = DOWNLOAD.rename(torrentsInfo);
+        if (renamed) {
+            addTags(torrentsInfo, TorrentsTags.RENAME.getValue());
+        }
     }
 
     /**

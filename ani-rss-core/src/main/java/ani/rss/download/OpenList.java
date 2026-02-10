@@ -268,8 +268,8 @@ public class OpenList implements BaseDownload {
     }
 
     @Override
-    public void rename(TorrentsInfo torrentsInfo) {
-
+    public Boolean rename(TorrentsInfo torrentsInfo) {
+        return false;
     }
 
     @Override

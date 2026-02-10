@@ -69,7 +69,7 @@ public interface BaseDownload {
      *
      * @param torrentsInfo 任务
      */
-    void rename(TorrentsInfo torrentsInfo);
+    Boolean rename(TorrentsInfo torrentsInfo);
 
     /**
      * 为任务添加标签

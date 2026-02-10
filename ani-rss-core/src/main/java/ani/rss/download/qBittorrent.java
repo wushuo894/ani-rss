@@ -339,16 +339,17 @@ public class qBittorrent implements BaseDownload {
     }
 
     @Override
-    public void rename(TorrentsInfo torrentsInfo) {
+    public Boolean rename(TorrentsInfo torrentsInfo) {
         String reName = torrentsInfo.getName();
 
         if (StrUtil.isBlank(reName) || !ReUtil.contains(StringEnum.SEASON_REG, reName)) {
+            // 剧场版 OR OVA 直接开始任务
             Boolean start = start(torrentsInfo, config);
             Assert.isTrue(start, "开始任务失败 {}", reName);
             if (start) {
                 log.info("开始任务 {}", reName);
             }
-            return;
+            return true;
         }
 
         String hash = torrentsInfo.getHash();
@@ -359,7 +360,7 @@ public class qBittorrent implements BaseDownload {
 
         if (aniOpt.isEmpty()) {
             log.error("未能获取番剧对象: {}", torrentsInfo.getName());
-            return;
+            return false;
         }
 
         Ani ani = aniOpt.get();
@@ -389,7 +390,10 @@ public class qBittorrent implements BaseDownload {
                 .map(FileEntity::getName)
                 .toList();
 
-        Assert.notEmpty(files, "{} 磁力链接还在获取原数据中", hash);
+        if (files.isEmpty()) {
+            log.debug("{} 磁力链接还在获取原数据中", hash);
+            return false;
+        }
 
         List<String> newNames = new ArrayList<>();
 
@@ -431,7 +435,7 @@ public class qBittorrent implements BaseDownload {
         log.info("开始任务 {}", reName);
 
         if (newNames.isEmpty()) {
-            return;
+            return true;
         }
 
         // qb重命名具有延迟，等待重命名完成
@@ -439,10 +443,12 @@ public class qBittorrent implements BaseDownload {
             ThreadUtil.sleep(1000);
             names = torrentsInfo.getFiles().get();
             if (new HashSet<>(names).containsAll(newNames)) {
-                return;
+                return true;
             }
         }
+
         log.warn("重命名貌似出现了问题？{}", reName);
+        return false;
     }
 
     @Override
