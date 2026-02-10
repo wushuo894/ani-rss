@@ -7,7 +7,6 @@ import ani.rss.enums.NotificationStatusEnum;
 import ani.rss.enums.StringEnum;
 import ani.rss.service.DownloadService;
 import cn.hutool.core.io.FileUtil;
-import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.ReUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -21,7 +20,10 @@ import java.util.stream.Collectors;
 public class FileMoveNotification implements BaseNotification {
     @Override
     public Boolean send(NotificationConfig notificationConfig, Ani ani, String text, NotificationStatusEnum notificationStatusEnum) {
-        Assert.isTrue(NotificationStatusEnum.DOWNLOAD_END == notificationStatusEnum, "文件移动仅支持下载完成通知");
+        if (NotificationStatusEnum.DOWNLOAD_END != notificationStatusEnum) {
+            log.info("文件移动 仅支持下载完成通知");
+            return true;
+        }
 
         // 首先就要深度克隆 防止影响原订阅设置
         ani = ObjectUtil.clone(ani);
