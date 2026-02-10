@@ -218,16 +218,19 @@ public class Transmission implements BaseDownload {
     }
 
     @Override
-    public void rename(TorrentsInfo torrentsInfo) {
+    public Boolean rename(TorrentsInfo torrentsInfo) {
         String id = torrentsInfo.getId();
         String name = torrentsInfo.getName();
 
-        Assert.isTrue(!ReUtil.contains("^\\w{40}$", name), "{} 磁力链接还在获取原数据中", name);
+        if (ReUtil.contains("^\\w{40}$", name)) {
+            log.debug("{} 磁力链接还在获取原数据中", name);
+            return false;
+        }
 
         String reName = RenameCacheUtil.get(id);
         if (StrUtil.isBlank(reName)) {
             log.debug("未获取到重命名 => id: {}", id);
-            return;
+            return false;
         }
 
         String extName = FileUtil.extName(name);
@@ -257,10 +260,12 @@ public class Transmission implements BaseDownload {
                 break;
             }
             if (first.get().getName().equals(reName)) {
-                return;
+                return true;
             }
         }
+
         log.warn("重命名貌似出现了问题？{}", reName);
+        return false;
     }
 
     @Override
