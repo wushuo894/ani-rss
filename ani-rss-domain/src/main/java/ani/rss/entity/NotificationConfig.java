@@ -234,7 +234,7 @@ public class NotificationConfig implements Serializable {
         notificationConfig
                 .setEnable(true)
                 .setRetry(3)
-                .setSort(1L)
+                .setSort(10L)
                 .setNotificationType(NotificationTypeEnum.TELEGRAM)
                 .setNotificationTemplate("${notification}")
                 .setComment("")
