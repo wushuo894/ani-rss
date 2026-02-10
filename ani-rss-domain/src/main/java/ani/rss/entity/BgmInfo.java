@@ -17,6 +17,8 @@ import java.util.Map;
 public class BgmInfo implements Serializable {
     private String id;
 
+    private String url;
+
     /**
      * 名称
      */
