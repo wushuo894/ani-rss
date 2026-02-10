@@ -42,7 +42,10 @@ public class OpenListUploadNotification implements BaseNotification {
 
     @Override
     public Boolean send(NotificationConfig notificationConfig, Ani ani, String text, NotificationStatusEnum notificationStatusEnum) {
-        Assert.isTrue(NotificationStatusEnum.DOWNLOAD_END == notificationStatusEnum, "OpenListUpload 仅支持下载完成通知");
+        if (NotificationStatusEnum.DOWNLOAD_END != notificationStatusEnum) {
+            log.info("OpenListUpload 仅支持下载完成通知");
+            return true;
+        }
 
         ani = ObjectUtil.clone(ani);
 
