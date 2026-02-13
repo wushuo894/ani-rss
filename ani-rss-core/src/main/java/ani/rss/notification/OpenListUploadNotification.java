@@ -111,7 +111,15 @@ public class OpenListUploadNotification implements BaseNotification {
     }
 
     public void deleteOldEpisode(String localFilePath, String cloudFilePath) {
-        Set<String> episodeSet = FileUtils.listFileList(localFilePath)
+        // 本地文件列表
+        List<File> localFileList = FileUtils.listFileList(localFilePath);
+
+        // 存储为MAP便于根据文件名寻找
+        Map<String, File> localFileMap = localFileList.stream()
+                .collect(Collectors.toMap(File::getName, i -> i));
+
+        // 本地集数列表
+        Set<String> localEpisodeSet = localFileList
                 .stream()
                 .filter(FileUtil::isFile)
                 .map(File::getName)
@@ -133,10 +141,19 @@ public class OpenListUploadNotification implements BaseNotification {
                 continue;
             }
 
+            if (localFileMap.containsKey(name)) {
+                long cloudFileLength = fileInfo.getSize();
+                long localFileLength = localFileMap.get(name).length();
+                if (cloudFileLength == localFileLength) {
+                    // 文件名与大小一致 跳过删除
+                    continue;
+                }
+            }
+
             String episode = ReUtil.get(StringEnum.SEASON_REG, name, 0);
             episode = episode.toUpperCase();
-            if (!episodeSet.contains(episode)) {
-                // 新位置没有旧的同集文件, 不需要删除
+            if (!localEpisodeSet.contains(episode)) {
+                // 新位置没有旧的同集文件 不需要删除
                 continue;
             }
 
@@ -154,6 +171,11 @@ public class OpenListUploadNotification implements BaseNotification {
     private void upload(String localFilePath, String cloudFilePath) {
         Boolean openListUploadDeleteLocalFile = notificationConfig.getOpenListUploadDeleteLocalFile();
 
+        // 云端文件列表 存储为MAP便于根据文件名寻找
+        Map<String, OpenListFileInfo> cloudFileMap = fileList(cloudFilePath)
+                .stream()
+                .collect(Collectors.toMap(OpenListFileInfo::getName, i -> i));
+
         for (File file : FileUtils.listFileList(localFilePath)) {
             if (file.isDirectory()) {
                 // 过滤掉文件夹
@@ -169,6 +191,17 @@ public class OpenListUploadNotification implements BaseNotification {
                 // 确保命名
                 continue;
             }
+
+            if (cloudFileMap.containsKey(name)) {
+                long localFileLength = file.length();
+                long cloudFileLength = cloudFileMap.get(name)
+                        .getSize();
+                if (localFileLength == cloudFileLength) {
+                    // 文件名与大小一致 跳过上传
+                    continue;
+                }
+            }
+
             log.info("文件上传: {} => {}", file, cloudFilePath);
 
             uploadFile(file.getAbsolutePath(), cloudFilePath);
