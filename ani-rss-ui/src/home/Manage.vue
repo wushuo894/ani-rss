@@ -1,6 +1,6 @@
 <template>
   <ImportAni ref="importAniRef" @callback="getList"/>
-  <Del ref="refDel" @callback="getList"/>
+  <Del ref="refDel" @callback="reLoadList"/>
   <el-dialog v-model="dialogVisible" center title="管理">
     <div class="manage-content" v-loading="loading">
       <div class="manage-header">
@@ -214,17 +214,23 @@ let show = () => {
 
 const list = ref([])
 
+const reLoadList = () => {
+  return getList()
+      .then(() => {
+        window.$reLoadList()
+      });
+}
+
 const getList = () => {
   loading.value = true
-  api.get('api/ani')
+  return api.get('api/ani')
       .then(res => {
         list.value = res.data
         selectChange()
-        window.$reLoadList()
       })
       .finally(() => {
         loading.value = false
-      })
+      });
 }
 
 let selectList = ref([])
@@ -238,7 +244,6 @@ let exportData = () => {
     ElMessage.error('未选择订阅')
     return
   }
-  console.log(111);
   const textContent = JSON.stringify(selectList.value);
   const blob = new Blob([textContent], {type: "text/plain"});
   const url = URL.createObjectURL(blob);
@@ -261,7 +266,7 @@ let batchEnable = (value) => {
         ElMessage.success(res.message)
       })
       .finally(() => {
-        getList()
+        reLoadList()
       })
 }
 
@@ -272,7 +277,7 @@ let updateTotalEpisodeNumber = (force) => {
   api.post('api/ani?type=updateTotalEpisodeNumber&force=' + force, ids)
       .then(res => {
         ElMessage.success(res.message)
-        getList()
+        reLoadList()
       })
 }
 
