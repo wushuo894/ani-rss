@@ -1,6 +1,6 @@
-- refactor: 优化磁力链接下载
-- refactor: 修改默认的通知排序
-- fix: 修复添加订阅时手动选择BGM时无法自动带入URL的问题
+- refactor: 优化管理列表加载
+- refactor: 优化删除确认框
+- refactor: 优化OpenList上传
 
 [请不要将本项目在国内宣传](https://github.com/wushuo894/ani-rss/discussions/504)
 
