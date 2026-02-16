@@ -14,6 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.LinkedBlockingQueue;
 
@@ -77,8 +78,13 @@ public class NotificationUtil {
                 continue;
             }
 
+            if (Objects.isNull(notificationType)) {
+                // 通知类型可能已经被删除
+                continue;
+            }
+
             if (!NOTIFICATION_MAP.containsKey(notificationType)) {
-                return;
+                continue;
             }
 
             Class<? extends BaseNotification> aClass = NOTIFICATION_MAP.get(notificationType);
