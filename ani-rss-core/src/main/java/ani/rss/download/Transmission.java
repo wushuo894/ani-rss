@@ -174,15 +174,8 @@ public class Transmission implements BaseDownload {
 
         log.info("tr 添加下载 => name: {} id: {}", name, id);
 
-        Boolean watchErrorTorrent = config.getWatchErrorTorrent();
-
         if (!ova) {
             RenameCacheUtil.put(id, name);
-        }
-
-        if (!watchErrorTorrent) {
-            ThreadUtil.sleep(1000 * 10);
-            return true;
         }
 
         for (int i = 0; i < 3; i++) {

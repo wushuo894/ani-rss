@@ -414,6 +414,10 @@ public class DownloadService {
             }
             log.error("{} 下载失败将进行重试, 当前重试次数为{}次", name, i);
         }
+
+        // 删除下载失败的种子, 下次轮询仍会重试
+        FileUtil.del(torrentFile);
+
         log.error("{} 添加失败，疑似为坏种", name);
         NotificationUtil.send(ConfigUtil.CONFIG, ani,
                 StrFormatter.format("{} 添加失败，疑似为坏种", name),
