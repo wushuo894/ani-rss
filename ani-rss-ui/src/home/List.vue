@@ -230,16 +230,11 @@ const getList = () => {
 }
 
 let updateGridLayout = () => {
-  const gridContainer = document.querySelectorAll('.grid-container');
-  if (!gridContainer.length) {
-    return
-  }
   const app = document.querySelector('#app');
-  let itemsPerRow = Math.max(1, Math.floor(app.offsetWidth / 400));
+  let gridColumns = Math.max(1, Math.floor(app.offsetWidth / 400));
 
-  for (let gridContainerElement of gridContainer) {
-    gridContainerElement.style.gridTemplateColumns = `repeat(${itemsPerRow}, 1fr)`;
-  }
+  const el = document.documentElement
+  el.style.setProperty('--grid-columns', gridColumns)
 }
 
 onMounted(() => {
@@ -287,6 +282,13 @@ let props = defineProps({
 </script>
 
 <style scoped>
+.grid-container {
+  display: grid;
+  grid-gap: 8px;
+  width: 100%;
+  grid-template-columns: repeat(var(--grid-columns), 1fr);
+}
+
 .list-container {
   height: 100%;
   overflow: hidden;

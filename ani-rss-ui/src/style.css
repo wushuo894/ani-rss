@@ -24,6 +24,9 @@ html.dark {
 
     /* 字体优化：优先使用萍方和微软雅黑 */
     --el-font-family: "PingFang SC", "Microsoft YaHei", "Helvetica Neue", Helvetica, "Hiragino Sans GB", Arial, sans-serif;
+
+    /* 订阅卡片列数 */
+    --grid-columns: 1;
 }
 
 .el-collapse {
@@ -154,12 +157,6 @@ html, body, #app {
         min-width: 800px;
         max-width: min(var(--max-content-width), 1400px);
     }
-}
-
-.grid-container {
-    display: grid;
-    grid-gap: 8px;
-    width: 100%;
 }
 
 .el-card__body {
