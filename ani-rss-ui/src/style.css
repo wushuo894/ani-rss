@@ -275,3 +275,9 @@ html, body, #app {
 .el-loading-mask {
     border-radius: var(--el-border-radius-base);
 }
+
+.hide-scrollbar {
+    .el-scrollbar__bar {
+        display: none !important;
+    }
+}
