@@ -68,6 +68,9 @@ public class NotificationUtil {
             NotificationTypeEnum notificationType = notificationConfig.getNotificationType();
             List<NotificationStatusEnum> statusList = notificationConfig.getStatusList();
 
+            // 通知状态可能被删除
+            statusList = statusList.stream().filter(Objects::nonNull).toList();
+
             if (!enable) {
                 // 未开启
                 continue;
