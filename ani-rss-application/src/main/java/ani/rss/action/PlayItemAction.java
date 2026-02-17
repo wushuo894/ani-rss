@@ -4,7 +4,6 @@ import ani.rss.entity.PlayItem;
 import ani.rss.web.action.BaseAction;
 import ani.rss.web.annotation.Auth;
 import ani.rss.web.annotation.Path;
-import ani.rss.web.auth.enums.AuthType;
 import cn.hutool.core.codec.Base64;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.lang.Assert;
@@ -24,12 +23,7 @@ import java.util.List;
 /**
  * 视频操作
  */
-@Auth(type = {
-        AuthType.IP_WHITE_LIST,
-        AuthType.HEADER,
-        AuthType.FORM,
-        AuthType.API_KEY
-})
+@Auth
 @Slf4j
 @Path("/playitem")
 public class PlayItemAction implements BaseAction {

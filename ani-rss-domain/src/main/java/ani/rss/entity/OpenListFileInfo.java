@@ -13,7 +13,7 @@ public class OpenListFileInfo implements Serializable {
     private String name;
     private Long size;
 
-    @SerializedName(value = "isDir",alternate = "is_dir")
+    @SerializedName(value = "isDir", alternate = "is_dir")
     private Boolean isDir;
     private Date modified;
     private Date created;

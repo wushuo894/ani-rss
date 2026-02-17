@@ -9,7 +9,6 @@ import ani.rss.util.other.AniUtil;
 import ani.rss.web.action.BaseAction;
 import ani.rss.web.annotation.Auth;
 import ani.rss.web.annotation.Path;
-import ani.rss.web.auth.enums.AuthType;
 import cn.hutool.core.codec.Base64;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.io.FileUtil;
@@ -26,12 +25,7 @@ import java.util.*;
 /**
  * 视频列表
  */
-@Auth(type = {
-        AuthType.IP_WHITE_LIST,
-        AuthType.HEADER,
-        AuthType.FORM,
-        AuthType.API_KEY
-})
+@Auth
 @Slf4j
 @Path("/playlist")
 public class PlaylistAction implements BaseAction {
