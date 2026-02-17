@@ -176,13 +176,6 @@ public class qBittorrent implements BaseDownload {
         httpRequest.thenFunction(HttpResponse::isOk);
 
         String hash = FileUtil.mainName(torrentFile);
-        Boolean watchErrorTorrent = config.getWatchErrorTorrent();
-
-        if (!watchErrorTorrent) {
-            ThreadUtil.sleep(3000);
-            return true;
-        }
-
 
         for (int i = 0; i < 3; i++) {
             ThreadUtil.sleep(1000 * 10);

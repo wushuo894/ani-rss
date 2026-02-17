@@ -163,9 +163,6 @@
         </template>
       </el-input-number>
     </el-form-item>
-    <el-form-item label="检测添加失败">
-      <el-switch v-model:model-value="props.config.watchErrorTorrent"/>
-    </el-form-item>
     <el-form-item label="优先保留">
       <div class="download-priority-container">
         <el-switch v-model:model-value="props.config.priorityKeywordsEnable"/>

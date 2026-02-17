@@ -90,11 +90,6 @@ public class Config implements Serializable {
     private String ovaDownloadPathTemplate;
 
     /**
-     * 检测添加失败
-     */
-    private Boolean watchErrorTorrent;
-
-    /**
      * 自定义标签
      */
     private List<String> customTags;

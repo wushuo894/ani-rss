@@ -14,7 +14,6 @@ export let configData = {
     "inactiveSeedingTimeLimit": -2,
     "downloadPathTemplate": "/Users/wushuo/Movies/番剧/${letter}/${title}/Season ${season}",
     "ovaDownloadPathTemplate": "/Users/wushuo/Movies/剧场版/${letter}/${title}",
-    "watchErrorTorrent": true,
     "customTags": [],
     "delayedDownload": 0,
     "scoreShow": true,

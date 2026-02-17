@@ -115,7 +115,6 @@ public class ConfigUtil {
                 .setRename(true)
                 .setRss(true)
                 .setRssTimeout(20)
-                .setWatchErrorTorrent(true)
                 .setCustomTags(new ArrayList<>())
                 .setDelayedDownload(0)
                 .setFileExist(false)
