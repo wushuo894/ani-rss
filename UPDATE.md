@@ -1,4 +1,5 @@
-- fix: 修复一个可能会遇到的通知错误
+- fix: 修复视频列表列数异常
+- refactor: 隐藏订阅列表滚动条
 
 [请不要将本项目在国内宣传](https://github.com/wushuo894/ani-rss/discussions/504)
 
