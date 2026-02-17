@@ -12,7 +12,6 @@ import ani.rss.util.other.*;
 import ani.rss.web.action.BaseAction;
 import ani.rss.web.annotation.Auth;
 import ani.rss.web.annotation.Path;
-import ani.rss.web.auth.enums.AuthType;
 import ani.rss.web.util.ServerUtil;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollUtil;
@@ -41,12 +40,7 @@ import java.util.function.ToLongFunction;
 /**
  * 订阅 增删改查
  */
-@Auth(type = {
-        AuthType.IP_WHITE_LIST,
-        AuthType.HEADER,
-        AuthType.FORM,
-        AuthType.API_KEY
-})
+@Auth
 @Slf4j
 @Path("/ani")
 public class AniAction implements BaseAction {

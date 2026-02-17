@@ -9,6 +9,7 @@ import ani.rss.util.other.ConfigUtil;
 import ani.rss.web.action.BaseAction;
 import ani.rss.web.annotation.Auth;
 import ani.rss.web.annotation.Path;
+import ani.rss.web.auth.enums.AuthType;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.http.HttpResponse;
@@ -22,7 +23,11 @@ import java.util.Date;
 /**
  * 爱发电
  */
-@Auth
+@Auth(type = {
+        AuthType.IP_WHITE_LIST,
+        AuthType.HEADER,
+        AuthType.FORM
+})
 @Slf4j
 @Path("/afdian")
 public class AfdianAction implements BaseAction {
