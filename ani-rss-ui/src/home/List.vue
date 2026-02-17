@@ -5,7 +5,7 @@
   <Del ref="refDel"/>
   <BgmRate ref="bgmRateRef"/>
   <div class="list-container">
-    <el-scrollbar>
+    <el-scrollbar class="hide-scrollbar">
       <div class="list-content" v-loading="loading">
         <template v-for="weekItem in weekList">
           <div v-show="searchList(weekItem.i).length">
