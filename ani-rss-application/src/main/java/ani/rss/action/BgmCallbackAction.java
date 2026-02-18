@@ -14,6 +14,9 @@ import com.google.gson.JsonObject;
 import java.io.IOException;
 import java.util.Map;
 
+/**
+ * BGM 授权回调
+ */
 @Auth
 @Path("/bgm/oauth/callback")
 public class BgmCallbackAction implements BaseAction {

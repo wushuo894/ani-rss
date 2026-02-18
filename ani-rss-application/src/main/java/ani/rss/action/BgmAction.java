@@ -29,10 +29,12 @@ public class BgmAction implements BaseAction {
         String type = request.getParam("type");
         switch (type) {
             case "search" -> {
+                // 搜索
                 String name = request.getParam("name");
                 resultSuccess(BgmUtil.search(name));
             }
             case "getAniBySubjectId" -> {
+                // 将指定id的BGM番剧转换为订阅
                 String id = request.getParam("id");
                 BgmInfo bgmInfo = BgmUtil.getBgmInfo(id, true);
                 Ani ani = BgmUtil.toAni(bgmInfo, AniUtil.createAni());
@@ -41,12 +43,14 @@ public class BgmAction implements BaseAction {
                 resultSuccess(ani);
             }
             case "getTitle" -> {
+                // 获取BGM标题
                 Ani ani = getBody(Ani.class);
                 Tmdb tmdb = ani.getTmdb();
                 BgmInfo bgmInfo = BgmUtil.getBgmInfo(ani);
                 resultSuccess(BgmUtil.getFinalName(bgmInfo, tmdb));
             }
             case "rate" -> {
+                // 评分
                 Ani ani = getBody(Ani.class);
                 String subjectId = BgmUtil.getSubjectId(ani);
                 Integer score = Opt.ofNullable(ani.getScore())
@@ -61,6 +65,7 @@ public class BgmAction implements BaseAction {
                 });
             }
             case "me" -> {
+                // 获取当前BGM账号信息
                 Long expiresDays = BgmUtil.getExpiresDays();
                 JsonObject me = BgmUtil.me();
                 me.addProperty("expires_days", expiresDays);

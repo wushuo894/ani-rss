@@ -22,7 +22,7 @@
             <el-select
                 v-model:model-value="yearMonth"
                 clearable
-                @change="enableSelectChange"
+                @change="selectChange"
             >
               <el-option v-for="it in list?.yearMonth()"
                          :key="it" :label="it" :value="it"
@@ -32,7 +32,7 @@
           <div style="height: 8px;width: 8px;"></div>
           <div style="flex: 1;">
             <el-select v-model:model-value="enable"
-                       @change="enableSelectChange">
+                       @change="selectChange">
               <el-option v-for="selectItem in enableSelect"
                          :key="selectItem.label"
                          :label="selectItem.label"
@@ -77,9 +77,9 @@
           </el-button>
         </div>
         <div style="margin: 0 4px;">
-          <popconfirm title="立即刷新全部订阅?" @confirm="download">
+          <popconfirm title="立即刷新全部订阅?" @confirm="refreshAni">
             <template #reference>
-              <el-button text bg :loading="downloadLoading">
+              <el-button bg text>
                 <el-icon :class="elIconClass">
                   <Refresh/>
                 </el-icon>
@@ -169,7 +169,7 @@ const enableSelect = ref([
 const filter = ref(() => true)
 const yearMonth = ref('')
 
-const enableSelectChange = () => {
+const selectChange = () => {
   filter.value = (it) => {
     if (!enableSelect.value.filter(it => it.label === enable.value)[0].fun(it)) {
       return false
@@ -177,10 +177,7 @@ const enableSelectChange = () => {
     if (!yearMonth.value) {
       return true
     }
-    if (yearMonth.value !== `${it.year}-${it.month < 10 ? '0' + it.month : it.month}`) {
-      return false
-    }
-    return true
+    return yearMonth.value === `${it.year}-${it.month < 10 ? '0' + it.month : it.month}`;
   }
 }
 
@@ -191,10 +188,6 @@ const list = ref()
 
 const currentPage = ref(1)
 
-onMounted(() => {
-  initLayout()
-  enableSelectChange()
-})
 
 const about = ref({
   'version': '',
@@ -203,24 +196,23 @@ const about = ref({
   'markdownBody': ''
 })
 
-api.get('api/about')
-    .then(res => {
-      about.value = res.data
-    })
 
-let downloadLoading = ref(false)
-
-let download = () => {
-  downloadLoading.value = true
-  api.post('api/ani?type=download')
+let refreshAni = () => {
+  api.post('api/ani?type=refreshAni')
       .then(res => {
         ElMessage.success(res.message)
       })
-      .finally(() => {
-        downloadLoading.value = false
-      })
 }
 
+onMounted(() => {
+  initLayout()
+  selectChange()
+
+  api.get('api/about')
+      .then(res => {
+        about.value = res.data
+      })
+})
 </script>
 
 <style scoped>
