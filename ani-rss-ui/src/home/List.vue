@@ -376,7 +376,7 @@ let props = defineProps({
 }
 
 .list-bottom-spacer {
-  height: 80px;
+  height: 8px;
 }
 
 .gtc3 {

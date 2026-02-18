@@ -236,7 +236,7 @@
         </el-button>
         <template #dropdown>
           <el-dropdown-menu>
-            <el-dropdown-item @click="download">
+            <el-dropdown-item @click="refreshAni">
               <el-text>
                 <el-icon>
                   <RefreshRight/>
@@ -346,16 +346,10 @@ let dateChange = () => {
   }
 }
 
-
-let downloadLoading = ref(false)
-let download = () => {
-  downloadLoading.value = true
-  api.post('api/ani?type=download', props.ani)
+let refreshAni = () => {
+  api.post('api/ani?type=refreshAni', props.ani)
       .then(res => {
         ElMessage.success(res.message)
-      })
-      .finally(() => {
-        downloadLoading.value = false
       })
 }
 

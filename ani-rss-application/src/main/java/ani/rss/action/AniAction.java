@@ -50,10 +50,11 @@ public class AniAction implements BaseAction {
     /**
      * 手动刷新订阅
      */
-    private void download() {
+    private void refreshAni() {
         Ani ani = getBody(Ani.class);
 
         if (Objects.isNull(ani)) {
+            // 未传Body, 刷新所有订阅
             RssTask.sync();
             ThreadUtil.execute(() -> RssTask.download(new AtomicBoolean(true)));
             resultSuccessMsg("已开始刷新RSS");
@@ -86,7 +87,7 @@ public class AniAction implements BaseAction {
             }
             DOWNLOAD.set(false);
         });
-        resultSuccessMsg("已开始刷新RSS {} {}", downloadAni.getTitle(), downloadAni.getUrl());
+        resultSuccessMsg("已开始刷新RSS {}", downloadAni.getTitle());
     }
 
     /**
@@ -423,16 +424,19 @@ public class AniAction implements BaseAction {
         String method = req.getMethod();
         String type = StrUtil.blankToDefault(req.getParam("type"), "");
         switch (type) {
-            case "download" -> {
-                download();
+            case "refreshAni" -> {
+                // 刷新订阅
+                refreshAni();
                 return;
             }
             case "batchEnable" -> {
+                // 批量 启用/禁用
                 boolean enable = Boolean.parseBoolean(req.getParam("value"));
                 batchEnable(enable);
                 return;
             }
             case "updateTotalEpisodeNumber" -> {
+                // 更新总集数
                 updateTotalEpisodeNumber();
                 return;
             }
@@ -440,18 +444,22 @@ public class AniAction implements BaseAction {
 
         switch (method) {
             case "POST": {
+                // 添加订阅
                 post();
                 return;
             }
             case "PUT": {
+                // 修改订阅
                 put();
                 return;
             }
             case "GET": {
+                // 获取订阅列表
                 get();
                 return;
             }
             case "DELETE": {
+                // 删除订阅
                 delete();
                 break;
             }
