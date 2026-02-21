@@ -1,5 +1,4 @@
-- fix: 修复视频列表文字显示
-- refactor: 优化OpenList上传
+- refactor: 优化通知测试
 
 [请不要将本项目在国内宣传](https://github.com/wushuo894/ani-rss/discussions/504)
 
