@@ -1,5 +1,5 @@
-- refactor: 开放更多的api
-- refactor: 修改刷新订阅接口
+- fix: 修复视频列表文字显示
+- refactor: 优化OpenList上传
 
 [请不要将本项目在国内宣传](https://github.com/wushuo894/ani-rss/discussions/504)
 
