@@ -23,13 +23,23 @@ import java.util.Optional;
 public interface BaseNotification {
 
     /**
+     * 测试
+     *
+     * @param notificationConfig     通知配置
+     * @param ani                    订阅
+     * @param text                   通知内容
+     * @param notificationStatusEnum 通知状态
+     */
+    void test(NotificationConfig notificationConfig, Ani ani, String text, NotificationStatusEnum notificationStatusEnum);
+
+    /**
      * 发送通知
      *
-     * @param notificationConfig
-     * @param ani
-     * @param text
-     * @param notificationStatusEnum
-     * @return
+     * @param notificationConfig     通知配置
+     * @param ani                    订阅
+     * @param text                   通知内容
+     * @param notificationStatusEnum 通知状态
+     * @return 是否成功
      */
     Boolean send(NotificationConfig notificationConfig, Ani ani, String text, NotificationStatusEnum notificationStatusEnum);
 

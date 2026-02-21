@@ -39,6 +39,41 @@ public class OpenListUploadNotification implements BaseNotification {
             .setBlockSize(1024 * 1024 * 50);
     private NotificationConfig notificationConfig;
 
+    /**
+     * 测试
+     *
+     * @param notificationConfig     通知配置
+     * @param ani                    订阅
+     * @param text                   通知内容
+     * @param notificationStatusEnum 通知状态
+     */
+    @Override
+    public void test(NotificationConfig notificationConfig, Ani ani, String text, NotificationStatusEnum notificationStatusEnum) {
+        List<NotificationStatusEnum> statusList = notificationConfig.getStatusList();
+        Assert.isTrue(statusList.contains(NotificationStatusEnum.DOWNLOAD_END), "请设置为下载完成通知");
+
+        String openListUploadHost = notificationConfig.getOpenListUploadHost();
+        String openListUploadApiKey = notificationConfig.getOpenListUploadApiKey();
+
+        HttpReq.get(openListUploadHost + "/api/me")
+                .header(Header.AUTHORIZATION, openListUploadApiKey)
+                .then(res -> {
+                    HttpReq.assertStatus(res);
+                    JsonObject jsonObject = GsonStatic.fromJson(res.body(), JsonObject.class);
+                    int code = jsonObject.get("code").getAsInt();
+                    Assert.isTrue(code == 200);
+                });
+    }
+
+    /**
+     * 发送通知
+     *
+     * @param notificationConfig     通知配置
+     * @param ani                    订阅
+     * @param text                   通知内容
+     * @param notificationStatusEnum 通知状态
+     * @return 是否成功
+     */
     @Override
     public Boolean send(NotificationConfig notificationConfig, Ani ani, String text, NotificationStatusEnum notificationStatusEnum) {
         if (NotificationStatusEnum.DOWNLOAD_END != notificationStatusEnum) {
@@ -211,7 +246,6 @@ public class OpenListUploadNotification implements BaseNotification {
             }
         }
     }
-
 
     /**
      * 上传文件

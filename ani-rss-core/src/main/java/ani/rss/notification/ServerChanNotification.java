@@ -18,8 +18,30 @@ import java.util.Map;
  */
 @Slf4j
 public class ServerChanNotification implements BaseNotification {
+    /**
+     * 测试
+     *
+     * @param notificationConfig     通知配置
+     * @param ani                    订阅
+     * @param text                   通知内容
+     * @param notificationStatusEnum 通知状态
+     */
+    @Override
+    public void test(NotificationConfig notificationConfig, Ani ani, String text, NotificationStatusEnum notificationStatusEnum) {
+        send(notificationConfig, ani, text, notificationStatusEnum);
+    }
+
     private static final String MARKDOWN_STRING = "# <message>\n\n![<image>](<image>)";
 
+    /**
+     * 发送通知
+     *
+     * @param notificationConfig     通知配置
+     * @param ani                    订阅
+     * @param text                   通知内容
+     * @param notificationStatusEnum 通知状态
+     * @return 是否成功
+     */
     @Override
     public Boolean send(NotificationConfig notificationConfig, Ani ani, String text, NotificationStatusEnum notificationStatusEnum) {
         ServerChanTypeEnum type = notificationConfig.getServerChanType();
