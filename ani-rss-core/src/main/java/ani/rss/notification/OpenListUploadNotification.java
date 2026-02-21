@@ -13,7 +13,6 @@ import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.resource.ResourceUtil;
 import cn.hutool.core.lang.Assert;
-import cn.hutool.core.text.StrFormatter;
 import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.ReUtil;
@@ -233,7 +232,6 @@ public class OpenListUploadNotification implements BaseNotification {
 
         String openListUploadHost = notificationConfig.getOpenListUploadHost();
         String openListUploadApiKey = notificationConfig.getOpenListUploadApiKey();
-        Boolean openListUploadTask = notificationConfig.getOpenListUploadTask();
 
         String url = StrUtil.format("{}/api/fs/put", openListUploadHost);
 
@@ -245,7 +243,7 @@ public class OpenListUploadNotification implements BaseNotification {
                 .timeout(1000 * 60 * 2)
                 .setConfig(httpConfig)
                 .header(Header.AUTHORIZATION, openListUploadApiKey)
-                .header("As-Task", Boolean.toString(openListUploadTask))
+                .header("As-Task", "false")
                 .header("File-Path", URLUtil.encode(cloudFilePath + "/" + filename))
                 .contentType("application/octet-stream")
                 .body(ResourceUtil.getResourceObj(localFilePath))
@@ -256,11 +254,7 @@ public class OpenListUploadNotification implements BaseNotification {
                     log.info(jsonObject.toString());
                     Assert.isTrue(code == 200, "上传失败 {} 状态码:{}", localFilePath, code);
 
-                    String text = StrFormatter.format("OpenList 上传完成 {}", filename);
-                    if (openListUploadTask) {
-                        text = StrFormatter.format("已向 OpenList 添加上传任务 {}", filename);
-                    }
-                    log.info(text);
+                    log.info("OpenList 上传完成 {}", filename);
                 });
     }
 

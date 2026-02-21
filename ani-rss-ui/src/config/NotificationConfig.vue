@@ -33,7 +33,7 @@
         <SystemNotification v-model:notification-config="notificationConfig" v-model:config="props.config"/>
         <ShellNotification v-model:notification-config="notificationConfig" v-model:config="props.config"/>
         <FileMoveNotification v-model:notification-config="notificationConfig" v-model:config="props.config"/>
-        <OpenListNotification v-model:config="props.config" v-model:notification-config="notificationConfig"/>
+        <OpenListUploadNotification v-model:config="props.config" v-model:notification-config="notificationConfig"/>
         <el-form-item label="顺序">
           <div>
             <el-input-number
@@ -77,7 +77,7 @@ import {notificationTypeList} from "@/js/notification-type.js";
 import {ElMessage} from "element-plus";
 import api from "@/js/api.js";
 import FileMoveNotification from "@/config/notification/FileMoveNotification.vue";
-import OpenListNotification from "@/config/notification/OpenListNotification.vue";
+import OpenListUploadNotification from "@/config/notification/OpenListUploadNotification.vue";
 
 
 let notificationConfig = ref({

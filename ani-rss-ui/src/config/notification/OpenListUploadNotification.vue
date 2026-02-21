@@ -19,7 +19,6 @@
     <el-form-item label="其他">
       <div>
         <el-checkbox v-model="notificationConfig['openListUploadDeleteLocalFile']" label="上传完成后删除本地文件"/>
-        <el-checkbox v-model="notificationConfig['openListUploadTask']" label="添加为上传任务"/>
         <br/>
         <el-checkbox v-model="notificationConfig['openListUploadDeleteOldEpisode']" label="删除旧的同集文件"/>
         <br/>
