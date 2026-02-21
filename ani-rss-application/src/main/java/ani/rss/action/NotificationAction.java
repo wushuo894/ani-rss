@@ -67,12 +67,12 @@ public class NotificationAction implements BaseAction {
 
         tmdb.ifPresent(ani::setTmdb);
 
-        Boolean test = baseNotification.send(notificationConfig, ani, "test", NotificationStatusEnum.DOWNLOAD_START);
-        if (test) {
+        try {
+            baseNotification.test(notificationConfig, ani, "test", NotificationStatusEnum.DOWNLOAD_START);
             resultSuccess();
-            return;
+        } catch (Exception e) {
+            resultErrorMsg(e.getMessage());
         }
-        resultError();
     }
 
 }

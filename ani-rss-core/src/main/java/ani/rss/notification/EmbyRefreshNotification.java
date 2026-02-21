@@ -13,6 +13,29 @@ import java.util.concurrent.TimeUnit;
 
 @Slf4j
 public class EmbyRefreshNotification implements BaseNotification {
+
+    /**
+     * 测试
+     *
+     * @param notificationConfig     通知配置
+     * @param ani                    订阅
+     * @param text                   通知内容
+     * @param notificationStatusEnum 通知状态
+     */
+    @Override
+    public void test(NotificationConfig notificationConfig, Ani ani, String text, NotificationStatusEnum notificationStatusEnum) {
+        send(notificationConfig, ani, text, notificationStatusEnum);
+    }
+
+    /**
+     * 发送通知
+     *
+     * @param notificationConfig     通知配置
+     * @param ani                    订阅
+     * @param text                   通知内容
+     * @param notificationStatusEnum 通知状态
+     * @return 是否成功
+     */
     @Override
     public Boolean send(NotificationConfig notificationConfig, Ani ani, String text, NotificationStatusEnum notificationStatusEnum) {
         Assert.isTrue(AfdianUtil.verifyExpirationTime(), "未解锁捐赠, 无法使用Emby媒体库刷新");

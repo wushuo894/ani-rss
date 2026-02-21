@@ -27,6 +27,20 @@ import java.util.Optional;
  */
 @Slf4j
 public class TelegramNotification implements BaseNotification {
+
+    /**
+     * 测试
+     *
+     * @param notificationConfig     通知配置
+     * @param ani                    订阅
+     * @param text                   通知内容
+     * @param notificationStatusEnum 通知状态
+     */
+    @Override
+    public void test(NotificationConfig notificationConfig, Ani ani, String text, NotificationStatusEnum notificationStatusEnum) {
+        send(notificationConfig, ani, text, notificationStatusEnum);
+    }
+
     public static synchronized Map<String, String> getUpdates(NotificationConfig notificationConfig) {
         String telegramBotToken = notificationConfig.getTelegramBotToken();
         if (StrUtil.isBlank(telegramBotToken)) {
@@ -74,6 +88,15 @@ public class TelegramNotification implements BaseNotification {
         return firstName + " " + lastName;
     }
 
+    /**
+     * 发送通知
+     *
+     * @param notificationConfig     通知配置
+     * @param ani                    订阅
+     * @param text                   通知内容
+     * @param notificationStatusEnum 通知状态
+     * @return 是否成功
+     */
     public Boolean send(NotificationConfig notificationConfig, Ani ani, String text, NotificationStatusEnum notificationStatusEnum) {
         notificationConfig = ObjectUtil.clone(notificationConfig);
 
