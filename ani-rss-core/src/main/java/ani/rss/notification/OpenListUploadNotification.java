@@ -61,7 +61,8 @@ public class OpenListUploadNotification implements BaseNotification {
                     HttpReq.assertStatus(res);
                     JsonObject jsonObject = GsonStatic.fromJson(res.body(), JsonObject.class);
                     int code = jsonObject.get("code").getAsInt();
-                    Assert.isTrue(code == 200);
+                    String message = jsonObject.get("message").getAsString();
+                    Assert.isTrue(code == 200, message);
                 });
     }
 
