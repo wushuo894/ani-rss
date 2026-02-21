@@ -245,8 +245,8 @@ html, body, #app {
     border-radius: 0 var(--el-border-radius-base) var(--el-border-radius-base) 0;
 }
 
-.el-color-picker__color-inner, .el-color-picker__trigger,
-.el-color-picker, .el-tooltip__trigger,
+.el-color-picker__color-inner,
+.el-color-picker__trigger,
 .el-color-picker__color {
     border-radius: var(--el-border-radius-round);
 }
