@@ -204,11 +204,6 @@ public class NotificationConfig implements Serializable {
     private String openListUploadOvaPath;
 
     /**
-     * 添加为上传任务
-     */
-    private Boolean openListUploadTask;
-
-    /**
      * 上传完成后删除本地文件
      */
     private Boolean openListUploadDeleteLocalFile;
@@ -301,8 +296,7 @@ public class NotificationConfig implements Serializable {
                 .setOpenListUploadApiKey("")
                 .setOpenListUploadPath("/115/Media/番剧/${title}/Season ${season}")
                 .setOpenListUploadOvaPath("/115/Media/剧场版/${title}")
-                .setOpenListUploadTask(false)
-                .setOpenListUploadDeleteLocalFile(true)
+                .setOpenListUploadDeleteLocalFile(false)
                 .setOpenListUploadDeleteOldEpisode(false);
 
         return notificationConfig;
