@@ -1,0 +1,14 @@
+{
+  "jsonrpc": "2.0",
+  "method": "aria2.addUri",
+  "id": "qwer",
+  "params": [
+    "token:{}",
+    [
+      "{}"
+    ],
+    {
+      "dir": "{}"
+    }
+  ]
+}

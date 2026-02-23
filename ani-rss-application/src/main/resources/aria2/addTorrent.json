@@ -1,0 +1,13 @@
+{
+  "jsonrpc": "2.0",
+  "method": "aria2.addTorrent",
+  "id": "qwer",
+  "params": [
+    "token:{}",
+    "{}",
+    [],
+    {
+      "dir": "{}"
+    }
+  ]
+}

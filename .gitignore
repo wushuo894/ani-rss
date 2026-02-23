@@ -1,0 +1,5 @@
+.idea
+target
+logs
+config
+*.log

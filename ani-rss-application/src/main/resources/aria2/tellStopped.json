@@ -1,0 +1,28 @@
+{
+  "jsonrpc": "2.0",
+  "method": "aria2.tellStopped",
+  "id": "qwer",
+  "params": [
+    "token:{}",
+    -1,
+    1000,
+    [
+      "gid",
+      "totalLength",
+      "completedLength",
+      "uploadSpeed",
+      "downloadSpeed",
+      "connections",
+      "numSeeders",
+      "seeder",
+      "status",
+      "errorCode",
+      "verifiedLength",
+      "verifyIntegrityPending",
+      "files",
+      "bittorrent",
+      "infoHash",
+      "dir"
+    ]
+  ]
+}

@@ -1,0 +1,19 @@
+spring:
+  application:
+    name: ani-rss-application
+  web:
+    resources:
+      static-locations: classpath:/META-INF/dist
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
+server:
+  port: 7789
+  address: 0.0.0.0
+
+springdoc:
+  swagger-ui:
+    enabled: true
+  allowed-locales: 127.0.0.1
+  api-docs:
+    enabled: true
