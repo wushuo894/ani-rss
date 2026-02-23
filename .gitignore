@@ -1,5 +1,5 @@
 .idea
 target
 logs
-config
+/config
 *.log
