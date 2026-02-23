@@ -1,5 +1,6 @@
 package ani.rss.controller;
 
+import ani.rss.annotation.Auth;
 import ani.rss.entity.Ani;
 import ani.rss.entity.Result;
 import ani.rss.util.other.TmdbUtils;
@@ -17,6 +18,8 @@ import java.util.List;
 
 @RestController
 public class ThemoviedbController {
+
+    @Auth
     @Operation(summary = "获取TMDB标题")
     @PostMapping("/getThemoviedbName")
     public Result<Ani> getThemoviedbName(@RequestBody Ani ani) {
@@ -32,6 +35,7 @@ public class ThemoviedbController {
         return result;
     }
 
+    @Auth
     @Operation(summary = "获取TMDB剧集组")
     @PostMapping("/getThemoviedbGroup")
     public Result<List<TmdbGroup>> getThemoviedbGroup(@RequestBody Ani ani) {

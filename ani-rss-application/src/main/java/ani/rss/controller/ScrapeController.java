@@ -1,5 +1,6 @@
 package ani.rss.controller;
 
+import ani.rss.annotation.Auth;
 import ani.rss.entity.Ani;
 import ani.rss.entity.Result;
 import ani.rss.service.ScrapeService;
@@ -12,6 +13,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class ScrapeController {
+
+    @Auth
     @Operation(summary = "刮削")
     @PostMapping("/scrape")
     public Result<Void> scrape(@RequestParam("force") Boolean force, @RequestBody Ani ani) {

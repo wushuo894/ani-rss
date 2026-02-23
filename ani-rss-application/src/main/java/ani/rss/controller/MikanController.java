@@ -1,5 +1,6 @@
 package ani.rss.controller;
 
+import ani.rss.annotation.Auth;
 import ani.rss.commons.GsonStatic;
 import ani.rss.entity.Mikan;
 import ani.rss.entity.Result;
@@ -21,6 +22,7 @@ import java.util.Set;
 @RestController
 public class MikanController {
 
+    @Auth
     @Operation(summary = "获取Mikan番剧列表")
     @PostMapping("/mikan")
     public Result<Mikan> mikan(@RequestParam("text") String text, @RequestBody Mikan.Season season) {
@@ -28,6 +30,7 @@ public class MikanController {
         return Result.success(list);
     }
 
+    @Auth
     @Operation(summary = "获取Mikan番剧的字幕组列表")
     @PostMapping("/mikanGroup")
     public Result<List<Mikan.Group>> mikanGroup(@RequestParam("url") String url) {

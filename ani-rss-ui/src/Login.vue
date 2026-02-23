@@ -110,7 +110,7 @@ let test = () => {
   if (authorization.value) {
     return
   }
-  fetch('api/test')
+  fetch('api/test', {method: 'post'})
       .then(res => res.json())
       .then(res => {
         if (res.code === 200) {

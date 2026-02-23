@@ -1,11 +1,14 @@
 package ani.rss.controller;
 
+import ani.rss.annotation.Auth;
 import ani.rss.commons.FileUtils;
+import ani.rss.commons.MavenUtils;
 import ani.rss.config.CronConfig;
 import ani.rss.entity.*;
 import ani.rss.service.ClearService;
 import ani.rss.service.TaskService;
 import ani.rss.util.basic.HttpReq;
+import ani.rss.util.other.AfdianUtil;
 import ani.rss.util.other.AniUtil;
 import ani.rss.util.other.ConfigUtil;
 import ani.rss.util.other.TorrentUtil;
@@ -14,8 +17,10 @@ import cn.hutool.core.bean.copier.CopyOptions;
 import cn.hutool.core.codec.Base64;
 import cn.hutool.core.date.LocalDateTimeUtil;
 import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.io.resource.ResourceUtil;
 import cn.hutool.core.text.StrFormatter;
 import cn.hutool.core.util.NumberUtil;
+import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpStatus;
@@ -40,12 +45,33 @@ public class ConfigController {
 
     private final CronConfig cronConfig;
 
+    /**
+     * 构建信息
+     */
+    public String buildInfo() {
+        String buildInfo = "";
+        try {
+            buildInfo = ResourceUtil.readUtf8Str("build_info");
+        } catch (Exception ignored) {
+        }
+        return buildInfo;
+    }
+
+    @Auth
     @Operation(summary = "获取设置")
     @PostMapping("/config")
     public Result<Config> config() {
-        return Result.success(ConfigUtil.CONFIG);
+        String version = MavenUtils.getVersion();
+        String buildInfo = buildInfo();
+        Config config = ObjectUtil.clone(ConfigUtil.CONFIG);
+        config.getLogin().setPassword("");
+        config.setVersion(version)
+                .setBuildInfo(buildInfo)
+                .setVerifyExpirationTime(AfdianUtil.verifyExpirationTime());
+        return Result.success(config);
     }
 
+    @Auth
     @Operation(summary = "修改设置")
     @PostMapping("/setConfig")
     public Result<Void> setConfig(@RequestBody Config newConfig) {
@@ -109,6 +135,7 @@ public class ConfigController {
         return Result.success("修改成功");
     }
 
+    @Auth
     @Operation(summary = "清理缓存")
     @PostMapping("/clearCache")
     public Result<Void> clearCache() {
@@ -153,6 +180,7 @@ public class ConfigController {
         return Result.success("清理完成, 共清理{}MB", mb);
     }
 
+    @Auth
     @Operation(summary = "更新trackers")
     @PostMapping("/trackersUpdate")
     public Result<Void> trackersUpdate(@RequestBody Config config) {
@@ -160,6 +188,7 @@ public class ConfigController {
         return Result.success();
     }
 
+    @Auth
     @Operation(summary = "代理测试")
     @PostMapping("/testProxy")
     public Result<ProxyTest> testProxy(@RequestParam("url") String url, @RequestBody Config config) {

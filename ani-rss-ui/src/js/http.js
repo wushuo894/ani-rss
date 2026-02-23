@@ -72,3 +72,9 @@ export let newNotification = () => api.post('api/newNotification')
 export let getBgmTitle = (ani) => api.post('api/getBgmTitle',ani)
 
 export let testProxy = (url,config) => api.post(`api/testProxy?url=${url}`, config)
+
+export let torrentsInfos = () => api.post('api/torrentsInfos')
+
+export let verifyNo = (config) => api.post('api/verifyNo',config)
+
+export let tryOut = (config) => api.post('api/tryOut',config)

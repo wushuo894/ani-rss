@@ -17,5 +17,5 @@ import java.io.Serializable;
 @EqualsAndHashCode(callSuper = true)
 public class ResultException extends RuntimeException
         implements Serializable {
-    public final Result<Void> result;
+    private final Result<Void> result;
 }

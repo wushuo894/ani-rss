@@ -1,5 +1,6 @@
 package ani.rss.controller;
 
+import ani.rss.annotation.Auth;
 import ani.rss.entity.About;
 import ani.rss.entity.Result;
 import ani.rss.util.other.UpdateUtil;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class AboutController {
 
+    @Auth
     @Operation(summary = "查看关于信息")
     @PostMapping("/about")
     public Result<About> about() {

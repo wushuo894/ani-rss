@@ -1,5 +1,6 @@
 package ani.rss.controller;
 
+import ani.rss.annotation.Auth;
 import ani.rss.commons.ExceptionUtils;
 import ani.rss.entity.Global;
 import ani.rss.util.basic.HttpReq;
@@ -30,6 +31,8 @@ import java.util.function.Consumer;
 @Slf4j
 @RestController
 public class FileController extends BaseController {
+
+    @Auth
     @GetMapping("/file")
     public void file() {
         HttpServletRequest request = Global.REQUEST.get();

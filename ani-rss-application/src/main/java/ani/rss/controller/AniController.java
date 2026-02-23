@@ -1,5 +1,6 @@
 package ani.rss.controller;
 
+import ani.rss.annotation.Auth;
 import ani.rss.commons.ExceptionUtils;
 import ani.rss.commons.FileUtils;
 import ani.rss.entity.*;
@@ -41,6 +42,7 @@ import java.util.function.ToLongFunction;
 public class AniController {
     public static final AtomicBoolean DOWNLOAD = new AtomicBoolean(false);
 
+    @Auth
     @Operation(summary = "添加订阅")
     @PostMapping("/addAni")
     public Result<Void> addAni(@RequestBody Ani ani) {
@@ -100,6 +102,7 @@ public class AniController {
         return Result.success("添加订阅成功");
     }
 
+    @Auth
     @Operation(summary = "修改订阅")
     @PostMapping("/setAni")
     public Result<Void> setAni(@RequestBody Ani ani) {
@@ -186,6 +189,7 @@ public class AniController {
         return Result.success("修改成功");
     }
 
+    @Auth
     @Operation(summary = "删除订阅")
     @PostMapping("/deleteAni")
     public Result<Void> deleteAni(@RequestBody List<String> ids, @RequestParam("deleteFiles") Boolean deleteFiles) {
@@ -244,6 +248,7 @@ public class AniController {
         return Result.success("删除订阅成功");
     }
 
+    @Auth
     @Operation(summary = "订阅列表")
     @PostMapping("/listAni")
     public Result<List<Ani>> list() {
@@ -302,6 +307,7 @@ public class AniController {
         return Result.success(list);
     }
 
+    @Auth
     @Operation(summary = "更新总集数")
     @PostMapping("/updateTotalEpisodeNumber")
     public Result<Void> updateTotalEpisodeNumber(@RequestParam("force") Boolean force, @RequestBody List<String> ids) {
@@ -332,6 +338,7 @@ public class AniController {
         return Result.success("已开始更新总集数");
     }
 
+    @Auth
     @Operation(summary = "批量 启用/禁用 订阅")
     @PostMapping("/batchEnable")
     public Result<Void> batchEnable(@RequestParam("value") Boolean value, @RequestBody List<String> ids) {
@@ -347,6 +354,7 @@ public class AniController {
         return Result.success("修改完成");
     }
 
+    @Auth
     @Operation(summary = "手动刷新订阅")
     @PostMapping("/refreshAll")
     public Result<Void> refreshAni() {
@@ -356,6 +364,7 @@ public class AniController {
         return Result.success("已开始刷新RSS");
     }
 
+    @Auth
     @Operation(summary = "手动刷新订阅")
     @PostMapping("/refreshAni")
     public Result<Void> refreshAni(@RequestBody Ani ani) {
@@ -386,6 +395,7 @@ public class AniController {
         return Result.success("已开始刷新RSS {}", downloadAni.getTitle());
     }
 
+    @Auth
     @Operation(summary = "将RSS转换为订阅")
     @PostMapping("/rssToAni")
     public Result<Ani> rssToAni(@RequestBody Ani ani) {
@@ -407,6 +417,7 @@ public class AniController {
         }
     }
 
+    @Auth
     @Operation(summary = "预览订阅")
     @PostMapping("/previewAni")
     public Result<Map<String, Object>> previewAni(@RequestBody Ani ani) {
@@ -436,6 +447,7 @@ public class AniController {
         return Result.success(map);
     }
 
+    @Auth
     @Operation(summary = "获取订阅的下载位置")
     @PostMapping("/downloadPath")
     public Result<Map<String, Object>> downloadPath(@RequestBody Ani ani) {

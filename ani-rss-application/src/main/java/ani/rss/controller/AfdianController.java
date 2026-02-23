@@ -1,5 +1,6 @@
 package ani.rss.controller;
 
+import ani.rss.annotation.Auth;
 import ani.rss.entity.Config;
 import ani.rss.entity.Result;
 import ani.rss.entity.TryOut;
@@ -20,6 +21,8 @@ import java.util.Date;
 @Hidden
 @RestController
 public class AfdianController {
+
+    @Auth
     @PostMapping("/verifyNo")
     public Result<Void> verifyNo(@RequestBody Config config) {
         String outTradeNo = config.getOutTradeNo();
@@ -37,6 +40,7 @@ public class AfdianController {
         return result;
     }
 
+    @Auth
     @PostMapping("/tryOut")
     public Result<Long> tryOut(@RequestBody Config config) {
         if (AfdianUtil.verifyExpirationTime()) {

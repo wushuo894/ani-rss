@@ -1,5 +1,6 @@
 package ani.rss.controller;
 
+import ani.rss.annotation.Auth;
 import ani.rss.entity.Ani;
 import ani.rss.entity.BgmInfo;
 import ani.rss.entity.NotificationConfig;
@@ -23,6 +24,7 @@ import java.util.Optional;
 @RestController
 public class NotificationController {
 
+    @Auth
     @Operation(summary = "测试通知")
     @PostMapping("/testNotification")
     public Result<Void> testNotification(@RequestBody NotificationConfig notificationConfig) {
@@ -53,6 +55,7 @@ public class NotificationController {
         }
     }
 
+    @Auth
     @Operation(summary = "新的通知")
     @PostMapping("/newNotification")
     public Result<NotificationConfig> newNotification() {

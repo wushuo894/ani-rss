@@ -1,13 +1,15 @@
 package ani.rss.commons;
 
 import cn.hutool.core.io.FileUtil;
-import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.util.ReUtil;
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.util.XmlUtil;
 import cn.hutool.system.OsInfo;
 import cn.hutool.system.SystemUtil;
 import lombok.Cleanup;
 import lombok.extern.slf4j.Slf4j;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 
 import java.io.File;
 import java.io.IOException;
@@ -66,8 +68,9 @@ public class MavenUtils {
                 JarEntry jarEntry = JAR_FILE.getJarEntry(pomPath);
                 @Cleanup
                 InputStream inputStream = JAR_FILE.getInputStream(jarEntry);
-                String s = IoUtil.readUtf8(inputStream);
-                version = ReUtil.get("<version>(.*?)</version>", s, 1);
+                Document document = XmlUtil.readXML(inputStream);
+                Element element = XmlUtil.getElement(document.getDocumentElement(), "version");
+                version = element.getTextContent();
                 return version;
             }
         } catch (Exception e) {
@@ -75,8 +78,9 @@ public class MavenUtils {
         }
         File file = new File("pom.xml");
         if (file.exists()) {
-            String s = FileUtil.readUtf8String(file);
-            version = ReUtil.get("<version>(.*?)</version>", s, 1);
+            Document document = XmlUtil.readXML(file);
+            Element element = XmlUtil.getElement(document.getDocumentElement(), "version");
+            version = element.getTextContent();
         }
         return version;
     }

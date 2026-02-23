@@ -1,5 +1,6 @@
 package ani.rss.controller;
 
+import ani.rss.annotation.Auth;
 import ani.rss.commons.GsonStatic;
 import ani.rss.entity.Ani;
 import ani.rss.entity.BgmInfo;
@@ -24,6 +25,7 @@ import java.util.Map;
 @RestController
 public class BgmController {
 
+    @Auth
     @Operation(summary = "搜索BGM条目")
     @PostMapping("/searchBgm")
     public Result<List<BgmInfo>> searchBgm(@RequestParam("name") String name) {
@@ -31,6 +33,7 @@ public class BgmController {
         return Result.success(search);
     }
 
+    @Auth
     @Operation(summary = "将指定id的BGM番剧转换为订阅")
     @PostMapping("/getAniBySubjectId")
     public Result<Ani> getAniBySubjectId(@RequestParam("id") String id) {
@@ -41,6 +44,7 @@ public class BgmController {
         return Result.success(ani);
     }
 
+    @Auth
     @Operation(summary = "获取BGM标题")
     @PostMapping("/getBgmTitle")
     public Result<String> getBgmTitle(@RequestBody Ani ani) {
@@ -50,6 +54,7 @@ public class BgmController {
         return Result.success(r -> r.setData(finalName));
     }
 
+    @Auth
     @Operation(summary = "评分")
     @PostMapping("/rate")
     public Result<Integer> rate(@RequestBody Ani ani) {
@@ -62,6 +67,7 @@ public class BgmController {
         return Result.success(rate).setMessage("保存评分成功");
     }
 
+    @Auth
     @Operation(summary = "获取当前BGM账号信息")
     @PostMapping("/meBgm")
     public Result<JsonObject> meBgm() {
@@ -71,6 +77,7 @@ public class BgmController {
         return Result.success(me);
     }
 
+    @Auth
     @Operation(summary = "BGM授权回调")
     @PostMapping("/bgm/oauth/callback")
     public Result<Void> callback(@RequestParam("code") String code) {
