@@ -70,6 +70,7 @@
 import {onMounted, ref} from 'vue'
 import {init} from "@/js/global.js";
 import api from "@/js/api.js";
+import * as http from "@/js/http.js";
 
 const type = ref('success')
 const text = ref('')
@@ -81,7 +82,7 @@ const close = () => {
 }
 
 const loadMe = async () => {
-  return api.post('api/meBgm')
+  return http.meBgm()
       .then(res => {
         me.value = res.data
       });

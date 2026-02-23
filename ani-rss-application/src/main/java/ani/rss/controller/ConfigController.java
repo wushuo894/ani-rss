@@ -4,6 +4,7 @@ import ani.rss.annotation.Auth;
 import ani.rss.commons.FileUtils;
 import ani.rss.commons.MavenUtils;
 import ani.rss.config.CronConfig;
+import ani.rss.download.BaseDownload;
 import ani.rss.entity.*;
 import ani.rss.service.ClearService;
 import ani.rss.service.TaskService;
@@ -17,23 +18,24 @@ import cn.hutool.core.bean.copier.CopyOptions;
 import cn.hutool.core.codec.Base64;
 import cn.hutool.core.date.LocalDateTimeUtil;
 import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.io.resource.ResourceUtil;
 import cn.hutool.core.text.StrFormatter;
-import cn.hutool.core.util.NumberUtil;
-import cn.hutool.core.util.ObjectUtil;
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.util.*;
+import cn.hutool.http.Header;
 import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpStatus;
 import io.swagger.v3.oas.annotations.Operation;
+import jakarta.servlet.http.HttpServletResponse;
+import lombok.Cleanup;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jsoup.Jsoup;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.File;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -221,5 +223,56 @@ public class ConfigController {
         long end = LocalDateTimeUtil.toEpochMilli(LocalDateTimeUtil.now());
         proxyTest.setTime(end - start);
         return result;
+    }
+
+    @Auth
+    @Operation(summary = "下载器测试")
+    @PostMapping("/downloadLoginTest")
+    public Result<Void> downloadLoginTest(@RequestBody Config config) {
+        ConfigUtil.format(config);
+        String download = config.getDownloadToolType();
+        Class<Object> loadClass = ClassUtil.loadClass("ani.rss.download." + download);
+        BaseDownload baseDownload = (BaseDownload) ReflectUtil.newInstance(loadClass);
+        Boolean login = baseDownload.login(true, config);
+        if (login) {
+            return Result.success("登录成功");
+        }
+        return Result.error("登录失败");
+    }
+
+    @Operation(summary = "自定义JS")
+    @GetMapping("/custom.js")
+    public void customJs() throws IOException {
+        HttpServletResponse response = Global.RESPONSE.get();
+        response.setHeader(Header.CACHE_CONTROL.toString(), "no-store, no-cache, must-revalidate, max-age=0");
+        response.setHeader(Header.PRAGMA.toString(), "no-cache");
+        response.setHeader("Expires", "0");
+
+        String customJs = ConfigUtil.CONFIG.getCustomJs();
+        customJs = StrUtil.blankToDefault(customJs, "// empty js");
+        String contentType = "application/javascript; charset=utf-8";
+
+        response.setContentType(contentType);
+        @Cleanup
+        OutputStream outputStream = response.getOutputStream();
+        IoUtil.writeUtf8(outputStream, true, customJs);
+    }
+
+    @Operation(summary = "自定义CSS")
+    @GetMapping("/custom.css")
+    public void customCss() throws IOException {
+        HttpServletResponse response = Global.RESPONSE.get();
+        response.setHeader(Header.CACHE_CONTROL.toString(), "no-store, no-cache, must-revalidate, max-age=0");
+        response.setHeader(Header.PRAGMA.toString(), "no-cache");
+        response.setHeader("Expires", "0");
+
+        String customCss = ConfigUtil.CONFIG.getCustomCss();
+        customCss = StrUtil.blankToDefault(customCss, "/* empty css */");
+        String contentType = "text/css";
+
+        response.setContentType(contentType);
+        @Cleanup
+        OutputStream outputStream = response.getOutputStream();
+        IoUtil.writeUtf8(outputStream, true, customCss);
     }
 }

@@ -97,7 +97,7 @@ const saveConfig = () => {
     my_config.login.password = CryptoJS['MD5'](password).toString();
   }
 
-  api.post('api/setConfig', my_config)
+  http.setConfig(my_config)
       .then(res => {
         ElMessage.success(res.message)
         window.$reLoadList()

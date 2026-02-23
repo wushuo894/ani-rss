@@ -91,7 +91,7 @@ let show = (newAni) => {
 let okLoading = ref(false)
 let ok = () => {
   okLoading.value = true
-  http.setAni(ani.value)
+  http.setAni(false,ani.value)
       .then(res => {
         ElMessage.success(res.message)
         window.$reLoadList()

@@ -8,6 +8,7 @@ import ani.rss.entity.Result;
 import ani.rss.enums.NotificationStatusEnum;
 import ani.rss.enums.NotificationTypeEnum;
 import ani.rss.notification.BaseNotification;
+import ani.rss.notification.TelegramNotification;
 import ani.rss.util.other.AniUtil;
 import ani.rss.util.other.BgmUtil;
 import ani.rss.util.other.NotificationUtil;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import wushuo.tmdb.api.entity.Tmdb;
 
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -61,6 +63,14 @@ public class NotificationController {
     public Result<NotificationConfig> newNotification() {
         NotificationConfig notificationConfig = NotificationConfig.createNotificationConfig();
         return Result.success(notificationConfig);
+    }
+
+    @Auth
+    @Operation(summary = "获取TG最近消息")
+    @PostMapping("/getUpdates")
+    public Result<Map<String, String>> getUpdates(NotificationConfig notificationConfig) {
+        Map<String, String> map = TelegramNotification.getUpdates(notificationConfig);
+        return Result.success(map);
     }
 
 }

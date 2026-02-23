@@ -145,7 +145,7 @@ const stop = (status) => {
 
 const update = () => {
   actionLoading.value = true
-  api.post("api/update")
+  http.update()
       .then(res => {
         ElMessage.success(res.message)
         setTimeout(() => {

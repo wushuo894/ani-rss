@@ -20,10 +20,10 @@
 <script setup>
 
 import {getCurrentInstance, markRaw, ref} from "vue";
-import api from "@/js/api.js";
+import * as http from "@/js/http.js";
+import {deleteAni} from "@/js/http.js";
 import {ElMessage, ElMessageBox} from "element-plus";
 import {Delete} from "@element-plus/icons-vue";
-import {deleteAni} from "@/js/http.js";
 
 const dialogVisible = ref(false)
 
@@ -57,7 +57,7 @@ const delAni = async () => {
   let downloadPath = ''
 
   if (aniList.value.length === 1) {
-    let res = await api.post('api/downloadPath', aniList.value[0])
+    let res = await http.downloadPath(aniList.value[0])
     downloadPath = res.data['downloadPath']
   }
 

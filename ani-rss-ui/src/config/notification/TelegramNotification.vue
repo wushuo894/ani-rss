@@ -60,6 +60,7 @@
 import {ElMessage} from "element-plus";
 import api from "@/js/api.js";
 import {ref} from "vue";
+import * as http from "@/js/http.js";
 
 let chatIdMap = ref({})
 let chatId = ref('')
@@ -72,7 +73,7 @@ let getUpdates = () => {
   }
 
   getUpdatesLoading.value = true
-  api.post("api/telegram?method=getUpdates", props.notificationConfig)
+  http.getUpdates(props.notificationConfig)
       .then(res => {
         chatIdMap.value = res.data
         if (Object.keys(chatIdMap.value).length) {

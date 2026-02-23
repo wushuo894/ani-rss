@@ -350,7 +350,7 @@ let batchAddition = async () => {
         "type": "mikan"
       }
 
-      ani = (await api.post('api/rss', ani)).data
+      ani = (await http.rssToAni(ani)).data
       if (item.length > 1) {
         ani.standbyRssList = item.slice(1)
             .map(o => {

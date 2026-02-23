@@ -11,7 +11,7 @@
 import {ref} from "vue";
 import Artplayer from "./Artplayer.vue";
 import {authorization} from "@/js/global.js";
-import api from "@/js/api.js";
+import * as http from "@/js/http.js";
 
 let loading = ref(false);
 let dialogVisible = ref(false)
@@ -26,10 +26,7 @@ let show = (pi) => {
 
   loading.value = true;
   // 获取内封字幕
-  api.post('api/playitem', {
-    'type': 'getSubtitles',
-    'file': playItem.value.filename
-  })
+  http.getSubtitles(playItem.value.filename)
       .then(res => {
         for (let sub of res.data) {
           const blob = new Blob([sub.content], {type: "text/plain"});

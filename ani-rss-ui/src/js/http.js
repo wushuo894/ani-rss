@@ -29,7 +29,7 @@ export let addAni = (ani) => api.post('api/addAni', ani)
  * 修改订阅
  * @returns {Promise<unknown>}
  */
-export let setAni = (ani) => api.post('api/setAni', ani)
+export let setAni = (move, ani) => api.post(`api/setAni?move=${move}`, ani)
 
 /**
  * 删除订阅
@@ -44,6 +44,8 @@ export let deleteAni = (deleteFiles, ids) => api.post(`api/deleteAni?deleteFiles
  * @returns {Promise<unknown>}
  */
 export let about = () => api.post('api/about')
+
+export let update = () => api.post('api/update')
 
 export let mikan = (text, body) => api.post(`api/mikan?text=${text}`, body)
 
@@ -92,3 +94,35 @@ export let stop = (status) => api.post('api/stop', status)
 export let cover = (ani) => api.post('api/cover', ani)
 
 export let rate = (ani) => api.post('api/rate', ani)
+
+export let downloadPath = (ani) => api.post('api/downloadPath', ani)
+
+export let scrape = (force, ani) => api.post(`api/scrape?force=${force}`, ani)
+
+export let meBgm = (ani) => api.post('api/meBgm', ani)
+
+export let trackersUpdate = (config) => api.post('api/trackersUpdate', config)
+
+export let getViews = (config) => api.post('api/getViews', config)
+
+export let clearCache = () => api.post('api/clearCache')
+
+export let downloadLoginTest = (config) => api.post('api/downloadLoginTest', config)
+
+export let getUpdates = (config) => api.post('api/updates', config)
+
+export let login = (v) => api.post('api/login', v)
+
+export let test = () => fetch('api/test', {method: 'post'})
+
+export let playList = (it) => api.post('api/playList', it)
+
+export let getSubtitles = (file) => api.post('api/getSubtitles', {file})
+
+export let startCollection = (info) => api.post('api/startCollection', info)
+
+export let previewCollection = (info) => api.post('api/previewCollection', info)
+
+export let getCollectionSubgroup = (info) => api.post('api/getCollectionSubgroup', info)
+
+export let getAniBySubjectId = (id) => api.post(`api/getAniBySubjectId?id=${id}`)

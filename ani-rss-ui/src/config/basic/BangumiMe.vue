@@ -66,6 +66,7 @@
 
 import {ref} from "vue";
 import api from "@/js/api.js";
+import * as http from "@/js/http.js";
 
 let me = ref({
   "avatar": {
@@ -94,7 +95,7 @@ let show = () => {
   errorMessage.value = '';
   dialogVisible.value = true;
   loading.value = true;
-  api.post('api/meBgm')
+  http.meBgm()
       .then(res => {
         me.value = res.data;
       })

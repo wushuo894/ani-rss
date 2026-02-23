@@ -281,7 +281,6 @@ import Exclude from "@/config/Exclude.vue";
 import PrioKeys from "@/config/PrioKeys.vue";
 import Items from "./Items.vue";
 import {onMounted, ref} from "vue";
-import api from "@/js/api.js";
 import {ElMessage, ElText} from "element-plus";
 import StandbyRss from "./StandbyRss.vue";
 import Mikan from "./Mikan.vue";
@@ -360,7 +359,7 @@ let downloadPath = () => {
   downloadPathLoading.value = true
   let newAni = JSON.parse(JSON.stringify(props.ani))
   newAni.customDownloadPath = false
-  api.post('api/downloadPath', newAni)
+  http.downloadPath(newAni)
       .then(res => {
         props.ani.downloadPath = res.data.downloadPath
       })
@@ -396,7 +395,7 @@ let mikanCallback = v => {
 }
 
 let scrape = (force) => {
-  api.post('api/scrape?force=' + force, props.ani)
+  http.scrape(force, props.ani)
       .then(res => {
         ElMessage.success(res.message)
       })

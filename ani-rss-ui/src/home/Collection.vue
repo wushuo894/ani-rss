@@ -195,7 +195,7 @@ import {getBgmTitle} from "@/js/http.js";
 
 let start = () => {
   startLoading.value = true
-  api.post('api/collection?type=start', data.value)
+  http.startCollection(data.value)
       .then((res) => {
         ElMessageBox.confirm(
             res.message,
@@ -219,7 +219,7 @@ let downloadPath = () => {
   downloadPathLoading.value = true
   let newAni = JSON.parse(JSON.stringify(data.value.ani))
   newAni.customDownloadPath = false
-  api.post('api/downloadPath', newAni)
+  http.downloadPath(newAni)
       .then(res => {
         data.value.ani.downloadPath = res.data.downloadPath
       })
@@ -263,7 +263,7 @@ let bgmAdd = (bgm) => {
   data.value.show = false
   data.value.torrent = ''
   data.value.filename = ''
-  api.post('api/bgm?type=getAniBySubjectId&id=' + bgm['id'])
+  http.getAniBySubjectId(bgm['id'])
       .then((res) => {
         data.value.ani = res.data
         data.value.ani.subgroup = '未知字幕组'
@@ -280,7 +280,7 @@ let bgmAdd = (bgm) => {
 let onSuccess = (res) => {
   data.value.torrent = res.data
   // 获取字幕组
-  api.post('api/collection?type=subgroup', data.value)
+  http.getCollectionSubgroup(data.value)
       .then(res => {
         data.value.ani.subgroup = res.data
         if (res.data !== '未知字幕组') {
