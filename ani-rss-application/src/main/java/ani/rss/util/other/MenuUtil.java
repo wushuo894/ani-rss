@@ -52,7 +52,6 @@ public class MenuUtil {
         double uiScaleX = tx.getScaleX();
         double uiScaleY = tx.getScaleY();
 
-
         SystemTray tray = SystemTray.getSystemTray();
         trayIcon = new TrayIcon(
                 Toolkit.getDefaultToolkit().getImage(

@@ -2,10 +2,7 @@ package ani.rss.controller;
 
 import ani.rss.annotation.Auth;
 import ani.rss.commons.GsonStatic;
-import ani.rss.entity.Ani;
-import ani.rss.entity.BgmInfo;
-import ani.rss.entity.Config;
-import ani.rss.entity.Result;
+import ani.rss.entity.*;
 import ani.rss.util.basic.HttpReq;
 import ani.rss.util.other.AniUtil;
 import ani.rss.util.other.BgmUtil;
@@ -70,10 +67,10 @@ public class BgmController {
     @Auth
     @Operation(summary = "获取当前BGM账号信息")
     @PostMapping("/meBgm")
-    public Result<JsonObject> meBgm() {
-        Long expiresDays = BgmUtil.getExpiresDays();
-        JsonObject me = BgmUtil.me();
-        me.addProperty("expires_days", expiresDays);
+    public Result<BgmMe> meBgm() {
+        int expiresDays = BgmUtil.getExpiresDays();
+        BgmMe me = BgmUtil.me();
+        me.setExpiresDays(expiresDays);
         return Result.success(me);
     }
 

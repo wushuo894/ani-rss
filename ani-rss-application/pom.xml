@@ -98,10 +98,98 @@
     </dependencies>
 
     <build>
+        <finalName>ani-rss</finalName>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>com.akathist.maven.plugins.launch4j</groupId>
+                <artifactId>launch4j-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>l4j</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>launch4j</goal>
+                        </goals>
+                        <configuration>
+                            <headerType>gui</headerType>
+                            <outfile>target/ani-rss.exe</outfile>
+                            <jar>target/ani-rss.jar</jar>
+                            <errTitle>Java environment is required!</errTitle>
+                            <cmdLine>--gui</cmdLine>
+                            <chdir>.</chdir>
+                            <priority>normal</priority>
+                            <downloadUrl>https://adoptium.net/zh-CN/</downloadUrl>
+                            <supportUrl>https://whichjdk.com/</supportUrl>
+                            <stayAlive>false</stayAlive>
+                            <restartOnCrash>false</restartOnCrash>
+                            <icon>${project.parent.basedir}/ani-rss-ui/public/favicon.ico</icon>
+                            <singleInstance>
+                                <mutexName>ani-rss (${project.version})</mutexName>
+                                <windowTitle>ani-rss (${project.version})</windowTitle>
+                            </singleInstance>
+                            <jre>
+                                <path>jre/bin;%JAVA_HOME%/bin;%PATH%</path>
+                                <minVersion>17</minVersion>
+                                <opts>
+                                    <opt>-Xms60m -Xmx1g -Xss256k</opt>
+                                    <opt>--enable-native-access=ALL-UNNAMED</opt>
+                                    <opt>-XX:+UseCompactObjectHeaders</opt>
+                                    <opt>-XX:+IgnoreUnrecognizedVMOptions</opt>
+                                    <opt>--add-opens=java.base/java.net=ALL-UNNAMED</opt>
+                                    <opt>--add-opens=java.base/sun.net.www.protocol.https=ALL-UNNAMED</opt>
+                                </opts>
+                            </jre>
+                            <versionInfo>
+                                <fileDescription>https://docs.wushuo.top/</fileDescription>
+                                <copyright>Copyright (C) 2024-2025</copyright>
+                                <productName>${project.artifactId}</productName>
+                                <internalName>${project.artifactId}</internalName>
+                                <originalFilename>ani-rss.exe</originalFilename>
+                                <language>SIMPLIFIED_CHINESE</language>
+                            </versionInfo>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>generate-resources</id>
+                        <phase>generate-resources</phase>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                        <configuration>
+                            <executable>bash</executable>
+                            <arguments>
+                                <argument>./generate-resources.sh</argument>
+                            </arguments>
+                            <workingDirectory>${project.basedir}</workingDirectory>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>generate-md5sum</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>java</goal>
+                        </goals>
+                        <configuration>
+                            <mainClass>ani.rss.build.Md5Sum</mainClass>
+                            <systemProperties>
+                                <systemProperty>
+                                    <key>basedir</key>
+                                    <value>${project.basedir}</value>
+                                </systemProperty>
+                            </systemProperties>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>

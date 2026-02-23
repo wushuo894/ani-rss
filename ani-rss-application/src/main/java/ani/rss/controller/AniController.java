@@ -3,6 +3,7 @@ package ani.rss.controller;
 import ani.rss.annotation.Auth;
 import ani.rss.commons.ExceptionUtils;
 import ani.rss.commons.FileUtils;
+import ani.rss.dto.ImportAniDataDTO;
 import ani.rss.entity.*;
 import ani.rss.enums.SortTypeEnum;
 import ani.rss.service.AniService;
@@ -18,6 +19,7 @@ import cn.hutool.core.date.DateTime;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.lang.Assert;
+import cn.hutool.core.lang.UUID;
 import cn.hutool.core.text.StrFormatter;
 import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.core.util.ObjectUtil;
@@ -471,4 +473,60 @@ public class AniController {
         );
         return Result.success(map);
     }
+
+    @Auth
+    @Operation(summary = "导入订阅")
+    @PostMapping("/importAni")
+    public Result<Void> importAni(@RequestBody ImportAniDataDTO dto) {
+        List<Ani> aniList = dto.getAniList();
+        if (aniList.isEmpty()) {
+            return Result.error("导入列表为空");
+        }
+
+        ImportAniDataDTO.Conflict conflict = dto.getConflict();
+
+        for (Ani ani : aniList) {
+            AniUtil.verify(ani);
+
+            String title = ani.getTitle();
+            int season = ani.getSeason();
+            Optional<Ani> first = AniUtil.ANI_LIST.stream()
+                    .filter(it -> it.getTitle().equals(title) && it.getSeason() == season)
+                    .findFirst();
+
+            if (first.isEmpty()) {
+                String image = ani.getImage();
+                String cover = AniUtil.saveJpg(image);
+                ani.setCover(cover)
+                        .setId(UUID.fastUUID().toString());
+                AniUtil.ANI_LIST.add(ani);
+                continue;
+            }
+
+            if (conflict == ImportAniDataDTO.Conflict.SKIP) {
+                log.info("存在冲突，已跳过 {} 第{}季", title, season);
+                continue;
+            }
+
+            log.info("存在冲突，已替换 {} 第{}季", title, season);
+            String image = ani.getImage();
+            String cover = AniUtil.saveJpg(image);
+            ani.setCover(cover);
+
+            String[] ignoreProperties = new String[]{"id", "currentEpisodeNumber", "lastDownloadTime"};
+            BeanUtil.copyProperties(ani, first.get(), ignoreProperties);
+        }
+
+        AniUtil.sync();
+        return Result.success("导入成功");
+    }
+
+    @Auth
+    @Operation(summary = "更新封面")
+    @PostMapping("/cover")
+    public Result<String> cover(@RequestBody Ani ani) {
+        String s = AniUtil.saveJpg(ani.getImage(), true);
+        return Result.success(r -> r.setData(s));
+    }
+
 }

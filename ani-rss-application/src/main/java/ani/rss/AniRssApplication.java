@@ -1,6 +1,7 @@
 package ani.rss;
 
 import ani.rss.entity.Global;
+import ani.rss.util.other.MenuUtil;
 import cn.hutool.core.util.ObjectUtil;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -14,6 +15,7 @@ public class AniRssApplication {
     public static void main(String[] args) {
         Global.ARGS = List.of(ObjectUtil.defaultIfNull(args, new String[]{}));
         loadProperty();
+        MenuUtil.start();
         SpringApplication.run(AniRssApplication.class, args);
     }
 

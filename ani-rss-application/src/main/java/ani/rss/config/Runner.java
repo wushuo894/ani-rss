@@ -21,7 +21,6 @@ public class Runner implements ApplicationRunner {
         try {
             ConfigUtil.load();
             ConfigUtil.backup();
-            MenuUtil.start();
 
             AniUtil.load();
             TaskService.start();

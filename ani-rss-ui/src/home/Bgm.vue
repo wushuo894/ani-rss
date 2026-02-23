@@ -39,6 +39,7 @@
 import {ref} from "vue";
 import api from "@/js/api.js";
 import {authorization} from "@/js/global.js";
+import * as http from "@/js/http.js";
 
 let dialogVisible = ref(false)
 
@@ -49,7 +50,7 @@ let list = ref([])
 
 let search = () => {
   searchLoading.value = true
-  api.get('api/bgm?type=search&name=' + name.value)
+  http.searchBgm(name.value)
       .then(res => {
         list.value = res.data
       })

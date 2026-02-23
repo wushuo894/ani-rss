@@ -4,6 +4,7 @@ import ani.rss.commons.CacheUtils;
 import ani.rss.commons.GsonStatic;
 import ani.rss.entity.Ani;
 import ani.rss.entity.BgmInfo;
+import ani.rss.entity.BgmMe;
 import ani.rss.entity.Config;
 import ani.rss.enums.BgmTokenTypeEnum;
 import ani.rss.service.DownloadService;
@@ -248,7 +249,7 @@ public class BgmUtil {
                 });
     }
 
-    public static JsonObject me() {
+    public static BgmMe me() {
         Config config = ConfigUtil.CONFIG;
         String bgmToken = config.getBgmToken();
         Assert.notBlank(bgmToken, "BgmToken 未填写");
@@ -257,17 +258,17 @@ public class BgmUtil {
 
         String me = CacheUtils.get(key);
         if (StrUtil.isNotBlank(me)) {
-            return GsonStatic.fromJson(me, JsonObject.class);
+            return GsonStatic.fromJson(me, BgmMe.class);
         }
 
-        JsonObject jsonObject = setToken(HttpReq.get(host + "/v0/me"))
+        BgmMe bgmMe = setToken(HttpReq.get(host + "/v0/me"))
                 .thenFunction(res -> {
                     HttpReq.assertStatus(res);
-                    return GsonStatic.fromJson(res.body(), JsonObject.class);
+                    return GsonStatic.fromJson(res.body(), BgmMe.class);
                 });
 
-        CacheUtils.put(key, GsonStatic.toJson(jsonObject), TimeUnit.MINUTES.toMillis(10));
-        return jsonObject;
+        CacheUtils.put(key, GsonStatic.toJson(bgmMe), TimeUnit.MINUTES.toMillis(10));
+        return bgmMe;
     }
 
     /**
@@ -276,13 +277,12 @@ public class BgmUtil {
      * @return
      */
     public static String username() {
-        JsonObject me = me();
+        BgmMe me = me();
         return Opt.of(me)
-                .map(o -> o.get("username"))
+                .map(BgmMe::getUsername)
                 .filter(Objects::nonNull)
-                .map(JsonElement::getAsString)
                 .filter(StrUtil::isNotBlank)
-                .orElse(String.valueOf(me.get("id").getAsInt()));
+                .orElse(String.valueOf(me.getId()));
     }
 
     /**
@@ -582,11 +582,11 @@ public class BgmUtil {
      *
      * @return
      */
-    public static Long getExpiresDays() {
+    public static Integer getExpiresDays() {
         Config config = ConfigUtil.CONFIG;
         String bgmToken = config.getBgmToken();
         if (StrUtil.isBlank(bgmToken)) {
-            return 0L;
+            return 0;
         }
         long expires = HttpReq.post("https://bgm.tv/oauth/token_status")
                 .form("access_token", bgmToken)
@@ -598,10 +598,10 @@ public class BgmUtil {
 
         long currentTimeMillis = System.currentTimeMillis();
 
-        long days = 0;
+        int days = 0;
 
         if (expires > currentTimeMillis) {
-            days = TimeUnit.MILLISECONDS.toDays(expires - currentTimeMillis);
+            days = Math.toIntExact(TimeUnit.MILLISECONDS.toDays(expires - currentTimeMillis));
         }
         return days;
     }

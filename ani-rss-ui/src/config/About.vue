@@ -130,7 +130,7 @@ const actionLoading = ref(false)
 
 const stop = (status) => {
   actionLoading.value = true
-  api.post("api/stop?status=" + status)
+  http.stop(status)
       .then(res => {
         ElMessage.success(res.message)
         setTimeout(() => {

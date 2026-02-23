@@ -76,10 +76,10 @@ public class UpdateUtil {
                                 .setUpdate(VersionComparator.INSTANCE.compare(latest, version) > 0)
                                 .setLatest(latest)
                                 .setMarkdownBody(jsonObject.get("markdown").getAsString());
-                        String filename = "ani-rss-jar-with-dependencies.jar";
+                        String filename = "ani-rss.jar";
                         File jar = MavenUtils.getJar();
                         if ("exe".equals(FileUtil.extName(jar))) {
-                            filename = "ani-rss-launcher.exe";
+                            filename = "ani-rss.exe";
                         }
                         String downloadUrl = StrFormatter.format("https://github.com/wushuo894/ani-rss/releases/download/v{}/{}", latest, filename);
                         about.setDownloadUrl(downloadUrl);

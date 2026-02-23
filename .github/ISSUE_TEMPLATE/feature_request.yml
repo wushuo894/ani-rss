@@ -1,0 +1,28 @@
+name: "功能请求🚀"
+description: Feature request
+labels: [ feature ]
+body:
+  - type: checkboxes
+    attributes:
+      label: 请勾选您确认过的前置条件
+      options:
+        - label: |
+            我已经确认此功能还未实现
+  - type: textarea
+    id: feature-description
+    attributes:
+      label: 需求描述
+    validations:
+      required: true
+  - type: textarea
+    id: suggested-solution
+    attributes:
+      label: 实现思路
+      description: |
+        实现此需求的解决思路。
+  - type: textarea
+    id: additional-context
+    attributes:
+      label: 附件
+      description: |
+        相关的任何其他上下文或截图，或者你觉得有帮助的信息

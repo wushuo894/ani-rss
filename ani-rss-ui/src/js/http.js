@@ -69,12 +69,26 @@ export let testNotification = (notificationConfig) => api.post('api/testNotifica
 
 export let newNotification = () => api.post('api/newNotification')
 
-export let getBgmTitle = (ani) => api.post('api/getBgmTitle',ani)
+export let getBgmTitle = (ani) => api.post('api/getBgmTitle', ani)
 
-export let testProxy = (url,config) => api.post(`api/testProxy?url=${url}`, config)
+export let searchBgm = (name) => api.post(`api/searchBgm?name=${name}`)
+
+export let testProxy = (url, config) => api.post(`api/testProxy?url=${url}`, config)
 
 export let torrentsInfos = () => api.post('api/torrentsInfos')
 
-export let verifyNo = (config) => api.post('api/verifyNo',config)
+export let verifyNo = (config) => api.post('api/verifyNo', config)
 
-export let tryOut = (config) => api.post('api/tryOut',config)
+export let tryOut = (config) => api.post('api/tryOut', config)
+
+export let updateTotalEpisodeNumber = (force, ids) => api.post(`api/updateTotalEpisodeNumber?force=${force}`, ids)
+
+export let batchEnable = (value, ids) => api.post(`api/batchEnable?value=${value}`, ids)
+
+export let importAni = (data) => api.post('api/importAni', data)
+
+export let stop = (status) => api.post('api/stop', status)
+
+export let cover = (ani) => api.post('api/cover', ani)
+
+export let rate = (ani) => api.post('api/rate', ani)

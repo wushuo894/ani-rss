@@ -3,3 +3,5 @@ target
 logs
 /config
 *.log
+ani-rss-update.exe
+build_info

@@ -1,6 +1,7 @@
 package ani.rss.commons;
 
 import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.util.ReUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.core.util.XmlUtil;
@@ -68,9 +69,8 @@ public class MavenUtils {
                 JarEntry jarEntry = JAR_FILE.getJarEntry(pomPath);
                 @Cleanup
                 InputStream inputStream = JAR_FILE.getInputStream(jarEntry);
-                Document document = XmlUtil.readXML(inputStream);
-                Element element = XmlUtil.getElement(document.getDocumentElement(), "version");
-                version = element.getTextContent();
+                String s = IoUtil.readUtf8(inputStream);
+                version = ReUtil.get("<version>(.*?)</version>", s, 1);
                 return version;
             }
         } catch (Exception e) {

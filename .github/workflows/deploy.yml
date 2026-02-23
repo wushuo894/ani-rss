@@ -1,0 +1,101 @@
+name: deploy
+
+on:
+  workflow_dispatch:
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up JDK 17
+        uses: actions/setup-java@v5
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: maven
+      - name: Build with Project
+        run: |
+          bash ./package.sh
+          bash ./package-win.sh
+
+          time=$(date +%s%3N)
+          version=$(cat pom.xml | grep -oPm1 '(?<=<version>).*?(?=</version>)')
+          echo "{\"time\":$time,\"version\":\"$version\"}" > info.json
+          jq --arg content "$(cat UPDATE.md)" '. += {markdown: $content}' info.json > temp.json && mv temp.json info.json
+
+          echo "$(cat info.json)"
+
+          echo "version=v$version" >> $GITHUB_ENV
+      - name: Release
+        uses: softprops/action-gh-release@v2
+        with:
+          name: ${{ env.version }}
+          body_path: UPDATE.md
+          tag_name: ${{ env.version }}
+          append_body: false
+          token: ${{ secrets.GITHUB_TOKEN }}
+          files: |
+            ./ani-rss-application/target/ani-rss.jar
+            ./ani-rss-application/target/ani-rss.jar.md5
+            ./ani-rss-application/target/ani-rss.exe
+            ./ani-rss-application/target/ani-rss.exe.md5
+            ./ani-rss-application/target/ani-rss.win.x86_64.zip
+            ./ani-rss-application/target/ani-rss.win.x86_64.zip.md5
+            ./info.json
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+      - name: Login to ghcr.io
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Build and push Docker image (temurin)
+        uses: docker/build-push-action@v6
+        with:
+          context: ./
+          file: ./docker/Dockerfile
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: |
+            wushuo894/ani-rss:latest
+            ghcr.io/wushuo894/ani-rss:latest
+            wushuo894/ani-rss:${{ env.version }}
+            ghcr.io/wushuo894/ani-rss:${{ env.version }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+      - name: Build and push Docker image (openj9)
+        uses: docker/build-push-action@v6
+        with:
+          context: ./
+          file: ./docker/Dockerfile-openj9
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: |
+            wushuo894/ani-rss:openj9
+            ghcr.io/wushuo894/ani-rss:openj9
+            wushuo894/ani-rss:${{ env.version }}-openj9
+            ghcr.io/wushuo894/ani-rss:${{ env.version }}-openj9
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+      - name: Build and push Docker image (arm32v7)
+        uses: docker/build-push-action@v6
+        with:
+          context: ./
+          file: ./docker/Dockerfile-arm32v7
+          platforms: linux/arm/v7
+          push: true
+          tags: |
+            wushuo894/ani-rss:arm32v7
+            ghcr.io/wushuo894/ani-rss:arm32v7
+            wushuo894/ani-rss:${{ env.version }}-arm32v7
+            ghcr.io/wushuo894/ani-rss:${{ env.version }}-arm32v7
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
