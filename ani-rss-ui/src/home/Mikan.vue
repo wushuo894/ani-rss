@@ -159,12 +159,11 @@
 
 <script setup>
 import {ref} from "vue";
-import api from "@/js/api.js";
 import {ElMessage, ElText} from "element-plus";
 import {DocumentCopy, Download as DownloadIcon} from "@element-plus/icons-vue";
 import {authorization} from "@/js/global.js";
 import * as http from "@/js/http.js";
-import {mikanGroup, setAni} from "@/js/http.js";
+import {addAni} from "@/js/http.js";
 
 // 批量添加订阅
 let rssList = ref([]);
@@ -265,7 +264,7 @@ let collapseChange = (v) => {
     return;
   }
   groupLoading.value = true
-  mikanGroup(v)
+  http.mikanGroup(v)
       .then(res => {
         groups.value[v] = res.data
       })
@@ -362,7 +361,7 @@ let batchAddition = async () => {
             })
       }
       batchAdditionNum.value += item.length
-      await setAni(ani)
+      await http.setAni(ani)
     }
     ElMessage.success("添加成功")
 

@@ -17,7 +17,7 @@
                 <el-card shadow="never">
                   <div class="list-card-content">
                     <div class="list-card-image-container">
-                      <img :src="`api/file?filename=${item['refreshCover']}&s=${authorization}`" height="130" width="92"
+                      <img :src="`api/file?filename=${item['cover']}&s=${authorization}`" height="130" width="92"
                            :alt="item.title"
                            class="list-card-image"
                            @click="refCover?.show(item)"/>
@@ -119,7 +119,6 @@
 import {onMounted, ref} from "vue";
 import {Delete, Edit as EditIcon, Files} from "@element-plus/icons-vue"
 import Edit from "./Edit.vue";
-import api from "@/js/api.js";
 import PlayList from "@/play/PlayList.vue";
 import Cover from "./Cover.vue";
 import Del from "./Del.vue";

@@ -3,7 +3,7 @@
     <div class="content">
       <div>
         <el-image :alt="ani.title"
-                  :src="`api/file?filename=${ani['refreshCover']}&s=${authorization}&t=${time}`"
+                  :src="`api/file?filename=${ani['cover']}&s=${authorization}&t=${time}`"
                   fit="cover"
                   class="cover"
         />
@@ -24,7 +24,7 @@
                     :action="`api/upload?s=${authorization}`"
                     :before-upload="beforeAvatarUpload"
                     :on-success="res => {
-                      ani['refreshCover'] = res.data.data
+                      ani['cover'] = res.data.data
                       time = new Date().getTime()
                     }"
                     :show-file-list="false"
