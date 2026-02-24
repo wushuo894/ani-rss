@@ -163,7 +163,6 @@ import {ElMessage, ElText} from "element-plus";
 import {DocumentCopy, Download as DownloadIcon} from "@element-plus/icons-vue";
 import {authorization} from "@/js/global.js";
 import * as http from "@/js/http.js";
-import {addAni} from "@/js/http.js";
 
 // 批量添加订阅
 let rssList = ref([]);
