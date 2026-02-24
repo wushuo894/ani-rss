@@ -12,7 +12,7 @@ NC='\033[0m'
 INSTALL_DIR="/opt/ani-rss"
 SERVICE_USER="ani-rss"
 SERVICE_NAME="ani-rss.service"
-PORT=7789
+SERVER_PORT="7789"
 
 # 检查root权限
 check_root() {
@@ -58,13 +58,13 @@ deploy_app() {
     echo -e "${YELLOW}正在部署应用程序...${NC}"
     mkdir -p "$INSTALL_DIR" || exit 1
 
-    echo "正在下载 ani-rss-jar-with-dependencies.jar"
+    echo "正在下载 ani-rss.jar"
     # 下载jar包
-    if ! wget -q https://github.com/wushuo894/ani-rss/releases/latest/download/ani-rss-jar-with-dependencies.jar -O "$INSTALL_DIR/ani-rss-jar-with-dependencies.jar"; then
-        echo -e "${RED}下载 ani-rss-jar-with-dependencies.jar 失败${NC}"
+    if ! wget -q https://github.com/wushuo894/ani-rss/releases/latest/download/ani-rss.jar -O "$INSTALL_DIR/ani-rss.jar"; then
+        echo -e "${RED}下载 ani-rss.jar 失败${NC}"
         exit 1
     fi
-    echo "下载完成 ani-rss-jar-with-dependencies.jar"
+    echo "下载完成 ani-rss.jar"
 
     echo "正在下载 run.sh"
     # 下载启动脚本
@@ -75,7 +75,7 @@ deploy_app() {
     echo "下载完成 run.sh"
 
     echo "正在下载 ani-rss.sh"
-    # 下载启动脚本
+    # 下载管理脚本
     if ! wget -q https://github.com/wushuo894/ani-rss/raw/master/linux/ani-rss.sh -O "/usr/local/bin/ani-rss"; then
         echo -e "${RED}下载启动脚本失败${NC}"
         exit 1
@@ -89,6 +89,26 @@ deploy_app() {
     chmod 750 "$INSTALL_DIR"
     chmod 770 "$INSTALL_DIR/run.sh"
     echo -e "${GREEN}程序部署完成${NC}"
+}
+
+configure_port() {
+    echo -e "${YELLOW}正在配置端口...${NC}"
+    echo -e "当前默认端口: $SERVER_PORT"
+    read -p "是否使用默认端口 $SERVER_PORT? [Y/n]: " choice
+    case "$choice" in
+        [Nn]*)
+            while true; do
+                read -p "请输入端口号(1-65535): " input_port
+                if [[ "$input_port" =~ ^[0-9]+$ ]] && [ "$input_port" -ge 1 ] && [ "$input_port" -le 65535 ]; then
+                    SERVER_PORT="$input_port"
+                    break
+                else
+                    echo -e "${RED}端口无效${NC}"
+                fi
+            done
+        ;;
+    esac
+    echo -e "${GREEN}已选择端口: $SERVER_PORT${NC}"
 }
 
 # 配置系统服务
@@ -108,6 +128,7 @@ ExecStart=/bin/bash $INSTALL_DIR/run.sh
 Restart=on-failure
 RestartSec=30
 LimitNOFILE=65535
+Environment="SERVER_PORT=$SERVER_PORT"
 
 [Install]
 WantedBy=multi-user.target
@@ -138,7 +159,7 @@ verify_install() {
 show_info() {
     IP=$(hostname -I | awk '{print $1}')
     echo -e "\n${GREEN}安装完成！访问信息："
-    echo -e "URL: http://$IP:$PORT"
+    echo -e "URL: http://$IP:$SERVER_PORT"
     echo -e "用户名: admin"
     echo -e "初始密码: admin${NC}"
     echo -e "${RED}请务必及时修改默认用户名与密码${NC}"
@@ -151,6 +172,7 @@ main() {
     install_jdk
     create_user
     deploy_app
+    configure_port
     setup_service
     verify_install
     show_info
