@@ -12,7 +12,7 @@ import java.util.TimeZone;
 
 @Slf4j
 public class GsonStatic {
-    private static final Gson GSON = new GsonBuilder()
+    public static final Gson GSON = new GsonBuilder()
             .disableHtmlEscaping()
             .disableJdkUnsafe()
             .disableInnerClassSerialization()
