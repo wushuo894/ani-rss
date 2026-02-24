@@ -67,7 +67,7 @@ public class NotificationController {
 
     @Auth
     @Operation(summary = "获取TG最近消息")
-    @PostMapping("/getUpdates")
+    @PostMapping("/updates")
     public Result<Map<String, String>> getUpdates(NotificationConfig notificationConfig) {
         Map<String, String> map = TelegramNotification.getUpdates(notificationConfig);
         return Result.success(map);
