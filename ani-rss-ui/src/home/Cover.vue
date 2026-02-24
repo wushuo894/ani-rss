@@ -24,7 +24,7 @@
                     :action="`api/upload?s=${authorization}`"
                     :before-upload="beforeAvatarUpload"
                     :on-success="res => {
-                      ani['cover'] = res.data.data
+                      ani['cover'] = res.data
                       time = new Date().getTime()
                     }"
                     :show-file-list="false"
@@ -69,7 +69,7 @@ let reLoad = () => {
   http.refreshCover(ani.value)
       .then(res => {
         time.value = new Date().getTime()
-        ani.value.refreshCover = res.data
+        ani.value.cover = res.data
       })
       .finally(res => {
         reLoadIng.value = false
