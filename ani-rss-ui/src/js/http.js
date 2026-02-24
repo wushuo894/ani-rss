@@ -256,7 +256,7 @@ export let trackersUpdate = (config) => api.post('api/trackersUpdate', config)
  * @param config 设置
  * @returns {Promise<unknown>}
  */
-export let getEmbyViews = (config) => api.post('api/emby/getEmbyViews', config)
+export let getEmbyViews = (config) => api.post('api/getEmbyViews', config)
 
 /**
  * 清理缓存
