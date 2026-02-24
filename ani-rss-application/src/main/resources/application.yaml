@@ -12,6 +12,8 @@ spring:
       max-request-size: 50MB
       max-file-size: 50MB
       enabled: true
+  jmx:
+    enabled: false
 server:
   port: 7789
   address: 0.0.0.0
