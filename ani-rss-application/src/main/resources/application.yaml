@@ -20,7 +20,6 @@ server:
 
 springdoc:
   swagger-ui:
-    enabled: true
-  allowed-locales: 127.0.0.1
+    enabled: ${SWAGGER_ENABLED:false}
   api-docs:
-    enabled: true
+    enabled: ${SWAGGER_ENABLED:false}

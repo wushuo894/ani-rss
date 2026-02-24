@@ -128,7 +128,9 @@ ExecStart=/bin/bash $INSTALL_DIR/run.sh
 Restart=on-failure
 RestartSec=30
 LimitNOFILE=65535
+Environment="SERVER_ADDRESS=0.0.0.0"
 Environment="SERVER_PORT=$SERVER_PORT"
+Environment="SWAGGER_ENABLED=false"
 
 [Install]
 WantedBy=multi-user.target
