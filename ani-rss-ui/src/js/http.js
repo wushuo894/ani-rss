@@ -206,7 +206,7 @@ export let importAni = (anis) => api.post('api/importAni', anis)
  * @param status 0:重启 2:关闭
  * @returns {Promise<unknown>}
  */
-export let stop = (status) => api.post('api/stop', status)
+export let stop = (status) => api.post(`api/stop?status=${status}`)
 
 /**
  * 刷新封面

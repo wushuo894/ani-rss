@@ -15,7 +15,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.File;
@@ -35,7 +35,7 @@ public class AboutController {
     @Auth
     @Operation(summary = "停止服务")
     @PostMapping("/stop")
-    public Result<Void> stop(@RequestBody Integer status) {
+    public Result<Void> stop(@RequestParam("status") Integer status) {
         String s = List.of("重启", "关闭").get(status);
         log.info("正在{}", s);
         ThreadUtil.execute(() -> {
