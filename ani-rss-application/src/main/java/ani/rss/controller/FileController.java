@@ -53,6 +53,7 @@ public class FileController extends BaseController {
         }
 
         if (Base64.isBase64(filename)) {
+            filename = filename.replace(" ", "+");
             filename = Base64.decodeStr(filename);
         }
 

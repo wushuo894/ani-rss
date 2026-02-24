@@ -1,5 +1,6 @@
 package ani.rss.controller;
 
+import ani.rss.annotation.Auth;
 import ani.rss.entity.Result;
 import ani.rss.entity.TorrentsInfo;
 import ani.rss.util.other.TorrentUtil;
@@ -12,6 +13,7 @@ import java.util.List;
 @RestController
 public class TorrentsInfosController {
 
+    @Auth
     @Operation(summary = "下载列表")
     @PostMapping("/torrentsInfos")
     public Result<List<TorrentsInfo>> torrentsInfos() {

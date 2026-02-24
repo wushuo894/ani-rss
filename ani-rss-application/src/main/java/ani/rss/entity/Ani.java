@@ -1,6 +1,7 @@
 package ani.rss.entity;
 
 import com.google.gson.annotations.SerializedName;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.experimental.Accessors;
 import wushuo.tmdb.api.entity.Tmdb;
@@ -17,16 +18,19 @@ public class Ani implements Serializable {
     /**
      * id
      */
+    @Schema(description = "id")
     private String id;
 
     /**
      * 不在页面显示
      */
+    @Schema(description = "不在页面显示")
     private String mikanTitle;
 
     /**
      * RSS URL
      */
+    @Schema(description = "RSS URL")
     private String url;
 
     private Boolean exists;
@@ -34,6 +38,7 @@ public class Ani implements Serializable {
     /**
      * 备用rss
      */
+    @Schema(description = "备用rss")
     private List<StandbyRss> standbyRssList;
 
     /**

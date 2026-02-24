@@ -19,9 +19,9 @@ let playItem = ref({})
 
 let show = (pi) => {
   playItem.value = {...pi};
-  playItem.value.src = `${location.href}api/files?filename=${playItem.value.filename}&s=${authorization.value}`
+  playItem.value.src = `${location.href}api/file?filename=${playItem.value.filename}&s=${authorization.value}`
   for (let subtitle of playItem.value.subtitles) {
-    subtitle.url = `${location.href}api/files?filename=${subtitle.url}&s=${authorization.value}`
+    subtitle.url = `${location.href}api/file?filename=${subtitle.url}&s=${authorization.value}`
   }
 
   loading.value = true;
