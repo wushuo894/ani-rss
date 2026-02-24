@@ -1,15 +1,18 @@
 package ani.rss.controller;
 
 import ani.rss.annotation.Auth;
+import ani.rss.auth.fun.IpWhitelist;
 import ani.rss.commons.ExceptionUtils;
 import ani.rss.commons.MavenUtils;
 import ani.rss.entity.About;
+import ani.rss.entity.Global;
 import ani.rss.entity.Result;
 import ani.rss.util.other.UpdateUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.core.util.RuntimeUtil;
 import io.swagger.v3.oas.annotations.Operation;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -63,5 +66,18 @@ public class AboutController {
             log.info("更新失败 {}, {}", about.getLatest(), message);
             return Result.success("更新失败 {}, {}", about.getLatest(), message);
         }
+    }
+
+    private final IpWhitelist ipWhitelist = new IpWhitelist();
+
+    @Operation(summary = "IP白名单测试")
+    @PostMapping("/testIpWhitelist")
+    public Result<Void> testIpWhitelist() {
+        HttpServletRequest request = Global.REQUEST.get();
+        Boolean b = ipWhitelist.apply(request);
+        if (b) {
+            return Result.success();
+        }
+        return Result.error();
     }
 }

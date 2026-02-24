@@ -299,7 +299,7 @@ let callback = v => {
 
 
 let img = (it) => {
-  return `api/file?img=${btoa(it['cover'])}&s=${authorization.value}`;
+  return `api/file?img=${btoa(it['refreshCover'])}&s=${authorization.value}`;
 }
 
 let showTag = () => {

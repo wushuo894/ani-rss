@@ -18,16 +18,16 @@ import java.util.List;
 public class EmbyController {
     @Auth
     @Operation(summary = "获取媒体库")
-    @PostMapping("/getViews")
-    public Result<List<EmbyViews>> getViews(@RequestBody NotificationConfig notificationConfig) {
+    @PostMapping("/getEmbyViews")
+    public Result<List<EmbyViews>> getEmbyViews(@RequestBody NotificationConfig notificationConfig) {
         List<EmbyViews> views = EmbyUtil.getViews(notificationConfig);
         return Result.success(views);
     }
 
     @Auth
     @Operation(summary = "刷新媒体库")
-    @PostMapping("/refresh")
-    public Result<Void> refresh(@RequestBody NotificationConfig notificationConfig) {
+    @PostMapping("/refreshEmbyViews")
+    public Result<Void> refreshEmbyViews(@RequestBody NotificationConfig notificationConfig) {
         EmbyUtil.refresh(notificationConfig);
         return Result.success();
     }

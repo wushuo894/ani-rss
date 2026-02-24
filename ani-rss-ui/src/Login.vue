@@ -110,8 +110,7 @@ let test = () => {
   if (authorization.value) {
     return
   }
-  http.test()
-      .then(res => res.json())
+  http.testIpWhitelist()
       .then(res => {
         if (res.code === 200) {
           authorization.value = new Date().getTime() + '';

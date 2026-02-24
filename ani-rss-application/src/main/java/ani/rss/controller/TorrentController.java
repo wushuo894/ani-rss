@@ -10,7 +10,7 @@ import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.StrUtil;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -24,8 +24,8 @@ public class TorrentController {
 
     @Auth
     @Operation(summary = "删除缓存种子")
-    @DeleteMapping("/torrent")
-    public Result<Void> del(@RequestParam("id") String id, @RequestParam("infoHash") String infoHash) {
+    @PostMapping("/deleteTorrent")
+    public Result<Void> del(@RequestParam("id") String id, @RequestParam("hash") String hash) {
         Optional<Ani> first = AniUtil.ANI_LIST.stream()
                 .filter(ani -> id.equals(ani.getId()))
                 .findFirst();
@@ -33,13 +33,13 @@ public class TorrentController {
             return Result.error("此订阅不存在");
         }
 
-        List<String> infoHashList = StrUtil.split(infoHash, ",", true, true);
+        List<String> hashList = StrUtil.split(hash, ",", true, true);
         Ani ani = first.get();
         File torrentDir = TorrentUtil.getTorrentDir(ani);
         File[] files = FileUtils.listFiles(torrentDir);
         for (File file : files) {
             String name = FileUtil.mainName(file);
-            if (infoHashList.contains(name)) {
+            if (hashList.contains(name)) {
                 log.info("删除种子 {}", file);
                 FileUtil.del(file);
             }

@@ -42,7 +42,7 @@ const getEmbyViewsLoading = ref(false)
 
 const getEmbyViews = () => {
   getEmbyViewsLoading.value = true
-  http.getViews(props.notificationConfig)
+  http.getEmbyViews(props.notificationConfig)
       .then(res => {
         views.value = res.data
       })

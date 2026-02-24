@@ -73,7 +73,7 @@ let getUpdates = () => {
   }
 
   getUpdatesLoading.value = true
-  http.getUpdates(props.notificationConfig)
+  http.getTgUpdates(props.notificationConfig)
       .then(res => {
         chatIdMap.value = res.data
         if (Object.keys(chatIdMap.value).length) {

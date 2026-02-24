@@ -522,9 +522,9 @@ public class AniController {
     }
 
     @Auth
-    @Operation(summary = "更新封面")
-    @PostMapping("/cover")
-    public Result<String> cover(@RequestBody Ani ani) {
+    @Operation(summary = "刷新封面")
+    @PostMapping("/refreshCover")
+    public Result<String> refreshCover(@RequestBody Ani ani) {
         String s = AniUtil.saveJpg(ani.getImage(), true);
         return Result.success(r -> r.setData(s));
     }
