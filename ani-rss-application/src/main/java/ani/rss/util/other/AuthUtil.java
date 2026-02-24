@@ -1,6 +1,7 @@
 package ani.rss.util.other;
 
 import ani.rss.annotation.Auth;
+import ani.rss.auth.enums.AuthType;
 import ani.rss.commons.CacheUtils;
 import ani.rss.commons.ExceptionUtils;
 import ani.rss.commons.GsonStatic;
@@ -15,10 +16,8 @@ import cn.hutool.core.util.RandomUtil;
 import cn.hutool.core.util.ReflectUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.crypto.SecureUtil;
-import com.sun.net.httpserver.HttpExchange;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
-import ani.rss.auth.enums.AuthType;
 
 import java.util.HashMap;
 import java.util.Map;

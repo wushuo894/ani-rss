@@ -20,7 +20,7 @@ import java.util.List;
 import java.util.Set;
 
 @RestController
-public class MikanController {
+public class MikanController extends BaseController {
 
     @Auth
     @Operation(summary = "获取Mikan番剧列表")

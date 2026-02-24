@@ -9,7 +9,6 @@ import cn.hutool.core.lang.PatternPool;
 import cn.hutool.core.net.Ipv4Util;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.crypto.SecureUtil;
-import cn.hutool.http.server.HttpServerRequest;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 

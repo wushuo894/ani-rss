@@ -20,7 +20,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-public class BgmController {
+public class BgmController extends BaseController {
 
     @Auth
     @Operation(summary = "搜索BGM条目")

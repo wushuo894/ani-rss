@@ -27,7 +27,7 @@ import java.io.IOException;
 import java.util.*;
 
 @RestController
-public class PlayController {
+public class PlayController extends BaseController {
 
     @Auth
     @Operation(summary = "获取内封字幕")

@@ -20,7 +20,7 @@ import java.util.Optional;
 
 @Slf4j
 @RestController
-public class TorrentController {
+public class TorrentController extends BaseController {
 
     @Auth
     @Operation(summary = "删除缓存种子")

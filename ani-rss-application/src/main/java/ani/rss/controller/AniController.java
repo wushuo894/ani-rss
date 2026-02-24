@@ -41,7 +41,7 @@ import java.util.function.ToLongFunction;
 
 @Slf4j
 @RestController
-public class AniController {
+public class AniController extends BaseController {
     public static final AtomicBoolean DOWNLOAD = new AtomicBoolean(false);
 
     @Auth

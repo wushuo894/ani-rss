@@ -17,7 +17,7 @@ import wushuo.tmdb.api.entity.TmdbGroup;
 import java.util.List;
 
 @RestController
-public class ThemoviedbController {
+public class ThemoviedbController extends BaseController {
 
     @Auth
     @Operation(summary = "获取TMDB标题")

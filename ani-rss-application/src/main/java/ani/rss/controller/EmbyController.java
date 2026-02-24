@@ -25,7 +25,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 @Slf4j
 @RestController
 @RequestMapping
-public class EmbyController {
+public class EmbyController extends BaseController {
     @Auth
     @Operation(summary = "获取媒体库")
     @PostMapping("/getEmbyViews")

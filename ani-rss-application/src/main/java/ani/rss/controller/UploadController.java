@@ -19,7 +19,7 @@ import java.io.File;
 import java.io.IOException;
 
 @RestController
-public class UploadController {
+public class UploadController extends BaseController {
     @Auth
     @Operation(summary = "上传文件")
     @PostMapping("/upload")

@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
 @RestController
-public class LoginController {
+public class LoginController extends BaseController {
 
     @Operation(summary = "登录")
     @PostMapping("/login")

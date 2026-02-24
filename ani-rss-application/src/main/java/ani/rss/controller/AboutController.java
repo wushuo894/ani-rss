@@ -23,7 +23,7 @@ import java.util.List;
 
 @Slf4j
 @RestController
-public class AboutController {
+public class AboutController extends BaseController {
 
     @Auth
     @Operation(summary = "查看关于信息")

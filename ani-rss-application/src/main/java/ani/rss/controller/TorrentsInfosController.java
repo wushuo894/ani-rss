@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-public class TorrentsInfosController {
+public class TorrentsInfosController extends BaseController {
 
     @Auth
     @Operation(summary = "下载列表")

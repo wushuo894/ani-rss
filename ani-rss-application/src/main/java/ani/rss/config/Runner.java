@@ -5,7 +5,6 @@ import ani.rss.commons.MavenUtils;
 import ani.rss.service.TaskService;
 import ani.rss.util.other.AniUtil;
 import ani.rss.util.other.ConfigUtil;
-import ani.rss.util.other.MenuUtil;
 import cn.hutool.core.util.RuntimeUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.jspecify.annotations.NonNull;

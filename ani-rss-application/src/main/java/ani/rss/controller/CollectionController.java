@@ -33,7 +33,7 @@ import java.util.stream.Collectors;
 
 @Slf4j
 @RestController
-public class CollectionController {
+public class CollectionController extends BaseController {
 
     @Auth
     @Operation(summary = "开始下载合集")

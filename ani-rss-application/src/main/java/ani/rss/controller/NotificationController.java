@@ -24,7 +24,7 @@ import java.util.Map;
 import java.util.Optional;
 
 @RestController
-public class NotificationController {
+public class NotificationController extends BaseController {
 
     @Auth
     @Operation(summary = "测试通知")

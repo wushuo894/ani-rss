@@ -3,7 +3,6 @@ package ani.rss.auth.fun;
 import ani.rss.entity.Login;
 import ani.rss.util.other.AuthUtil;
 import cn.hutool.core.util.StrUtil;
-import cn.hutool.http.server.HttpServerRequest;
 import jakarta.servlet.http.HttpServletRequest;
 
 import java.util.function.Function;
