@@ -20,6 +20,7 @@ import java.util.function.Consumer;
 @Accessors(chain = true)
 @AllArgsConstructor
 @NoArgsConstructor
+@Schema(description = "返回包装体")
 public class Result<T> implements Serializable {
     @Schema(description = "状态码", defaultValue = "200")
     private Integer code;

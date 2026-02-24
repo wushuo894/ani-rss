@@ -2,8 +2,10 @@ package ani.rss.entity;
 
 import ani.rss.util.other.ConfigUtil;
 import cn.hutool.core.util.StrUtil;
+import io.swagger.v3.oas.annotations.media.Schema;
 import wushuo.tmdb.api.entity.TmdbConfig;
 
+@Schema(description = "自定义 TMDB 配置")
 public class CustomTmdbConfig extends TmdbConfig {
 
     public final static Config CONFIG = ConfigUtil.CONFIG;

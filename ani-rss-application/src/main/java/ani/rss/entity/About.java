@@ -12,6 +12,7 @@ import java.util.Date;
  */
 @Data
 @Accessors(chain = true)
+@Schema(description = "关于")
 public class About implements Serializable {
     /**
      * 版本

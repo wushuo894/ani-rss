@@ -8,6 +8,7 @@ import java.io.Serializable;
 
 @Data
 @Accessors(chain = true)
+@Schema(description = "备用rss")
 public class StandbyRss implements Serializable {
     /**
      * 字幕组

@@ -1,6 +1,7 @@
 package ani.rss.entity;
 
 import cn.hutool.core.util.NumberUtil;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
@@ -13,72 +14,87 @@ import java.util.function.Supplier;
  */
 @Data
 @Accessors(chain = true)
+@Schema(description = "种子信息")
 public class TorrentsInfo implements Serializable {
+    @Schema(description = "id")
     private String id;
 
     /**
      * hash
      */
+    @Schema(description = "hash")
     private String hash;
 
     /**
      * 名称
      */
+    @Schema(description = "名称")
     private String name;
 
     /**
      * 状态
      */
+    @Schema(description = "状态")
     private State state;
 
     /**
      * 标签
      */
+    @Schema(description = "标签")
     private List<String> tags;
 
     /**
      * 磁链
      */
+    @Schema(description = "磁链")
     private String magnet;
 
     /**
      * 已下载的大小
      */
+    @Schema(description = "已下载的大小")
     private Long completed;
 
     /**
      * 大小
      */
+    @Schema(description = "大小")
     private Long size;
 
     /**
      * 进度
      */
+    @Schema(description = "进度")
     private Double progress;
 
     /**
      * 大小
      */
+    @Schema(description = "大小(字符串)")
     private String sizeStr;
 
     /**
      * 时间
      */
+    @Schema(description = "时间")
     private String dateStr;
 
     /**
      * 下载位置
      */
+    @Schema(description = "下载位置")
     private String downloadDir;
 
     /**
      * 种子地址
      */
+    @Schema(description = "种子地址")
     private String torrent;
 
     /**
      * 文件列表
      */
+    @Schema(description = "文件列表")
     private Supplier<List<String>> files;
 
     public TorrentsInfo progress(long completed, long size) {

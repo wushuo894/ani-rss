@@ -1,5 +1,6 @@
 package ani.rss.entity;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -14,12 +15,16 @@ import java.util.Set;
  */
 @Data
 @Accessors(chain = true)
+@Schema(description = "mikan")
 public class Mikan implements Serializable {
 
+    @Schema(description = "季度信息")
     private List<Season> seasons;
 
+    @Schema(description = "星期信息")
     private List<Item> items;
 
+    @Schema(description = "总番剧数")
     private Integer totalItem;
 
     /**
@@ -31,10 +36,12 @@ public class Mikan implements Serializable {
         /**
          * 年
          */
+        @Schema(description = "年")
         private Integer year;
         /**
          * 季度
          */
+        @Schema(description = "季度")
         private String season;
         private Boolean select;
     }
@@ -48,10 +55,12 @@ public class Mikan implements Serializable {
         /**
          * 星期
          */
+        @Schema(description = "星期")
         private String label;
         /**
          * 番剧
          */
+        @Schema(description = "番剧")
         private List<MikanInfo> items;
     }
 
