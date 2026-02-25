@@ -281,13 +281,14 @@ import Exclude from "@/config/Exclude.vue";
 import PrioKeys from "@/config/PrioKeys.vue";
 import Items from "./Items.vue";
 import {onMounted, ref} from "vue";
-import api from "@/js/api.js";
 import {ElMessage, ElText} from "element-plus";
 import StandbyRss from "./StandbyRss.vue";
 import Mikan from "./Mikan.vue";
 import TmdbGroup from "./TmdbGroup.vue";
 import CustomTags from "@/config/CustomTags.vue";
 import {Refresh, RefreshRight} from "@element-plus/icons-vue";
+import * as http from "@/js/http.js";
+import {getBgmTitle} from "@/js/http.js";
 
 const mikanRef = ref()
 const tmdbGroupRef = ref()
@@ -306,7 +307,7 @@ let getThemoviedbName = () => {
   }
 
   getThemoviedbNameLoading.value = true
-  api.post('api/tmdb?method=getThemoviedbName', props.ani)
+  http.getThemoviedbName(props.ani)
       .then(res => {
         ElMessage.success(res.message)
         props.ani['themoviedbName'] = res.data['themoviedbName']
@@ -347,7 +348,7 @@ let dateChange = () => {
 }
 
 let refreshAni = () => {
-  api.post('api/ani?type=refreshAni', props.ani)
+  http.refreshAni(props.ani)
       .then(res => {
         ElMessage.success(res.message)
       })
@@ -358,7 +359,7 @@ let downloadPath = () => {
   downloadPathLoading.value = true
   let newAni = JSON.parse(JSON.stringify(props.ani))
   newAni.customDownloadPath = false
-  api.post('api/downloadPath', newAni)
+  http.downloadPath(newAni)
       .then(res => {
         props.ani.downloadPath = res.data.downloadPath
       })
@@ -371,7 +372,7 @@ let getBgmNameLoading = ref(false)
 
 let getBgmName = () => {
   getBgmNameLoading.value = true
-  api.post('api/bgm?type=getTitle', props.ani)
+  getBgmTitle(props.ani)
       .then(res => {
         props.ani.title = res.data
       })
@@ -394,7 +395,7 @@ let mikanCallback = v => {
 }
 
 let scrape = (force) => {
-  api.post('api/scrape?force=' + force, props.ani)
+  http.scrape(force, props.ani)
       .then(res => {
         ElMessage.success(res.message)
       })

@@ -27,8 +27,8 @@
 <script setup>
 import {ref} from "vue";
 import {Github} from "@vicons/fa";
-import api from "@/js/api.js";
 import {ElMessage} from "element-plus";
+import * as http from "@/js/http.js";
 
 let dialogVisible = ref(false)
 
@@ -43,7 +43,7 @@ let tryOutLoading = ref(false)
 
 let tryOut = () => {
   tryOutLoading.value = true
-  api.post('api/afdian?type=tryOut', props.config)
+  http.tryOut(props.config)
       .then(res => {
         ElMessage.success(res.message)
         props.config['expirationTime'] = res.data

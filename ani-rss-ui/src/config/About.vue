@@ -111,6 +111,7 @@ import 'markdown-it-github-alerts/styles/github-colors-dark-media.css'
 import 'markdown-it-github-alerts/styles/github-base.css'
 
 import {authorization} from "@/js/global.js";
+import * as http from "@/js/http.js";
 
 let md = markdownit({
   html: true,
@@ -129,7 +130,7 @@ const actionLoading = ref(false)
 
 const stop = (status) => {
   actionLoading.value = true
-  api.post("api/stop?status=" + status)
+  http.stop(status)
       .then(res => {
         ElMessage.success(res.message)
         setTimeout(() => {
@@ -144,7 +145,7 @@ const stop = (status) => {
 
 const update = () => {
   actionLoading.value = true
-  api.post("api/update")
+  http.update()
       .then(res => {
         ElMessage.success(res.message)
         setTimeout(() => {
@@ -165,7 +166,7 @@ const about = ref({
 })
 
 onMounted(() => {
-  api.get('api/about')
+  http.about()
       .then(res => {
         about.value = res.data
       })

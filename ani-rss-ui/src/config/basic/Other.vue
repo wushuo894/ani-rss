@@ -79,7 +79,7 @@
 <script setup>
 import {ElMessage, ElText} from "element-plus";
 import {ref} from "vue";
-import api from "@/js/api.js";
+import * as http from "@/js/http.js";
 
 let githubList = new Set([
   'None',
@@ -124,7 +124,7 @@ let githubList = new Set([
 let clearCacheLoading = ref(false)
 let clearCache = () => {
   clearCacheLoading.value = true
-  api.post('api/clearCache')
+  http.clearCache()
       .then(res => {
         ElMessage.success(res.message);
       })

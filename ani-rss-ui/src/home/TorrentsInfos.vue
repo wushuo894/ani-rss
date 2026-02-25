@@ -39,6 +39,7 @@
 <script setup>
 import {ref} from "vue";
 import api from "@/js/api.js";
+import * as http from "@/js/http.js";
 
 // 记录排序方式
 let sortType = ref('name')
@@ -88,7 +89,7 @@ let sortInfos = (infos) => {
 let getTorrentsInfos = async () => {
   while (dialogVisible.value) {
     try {
-      let res = await api.get('api/torrentsInfos')
+      let res = await http.torrentsInfos()
       let infos = await res.data
       torrentsInfos.value = sortInfos(infos)
     } catch (_) {

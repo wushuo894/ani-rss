@@ -12,7 +12,7 @@
 <script setup>
 import AfdianDialog from "@/config/AfdianDialog.vue";
 import {onMounted, ref} from "vue";
-import api from "@/js/api.js";
+import {config} from "@/js/http.js";
 
 let afdian = ref()
 
@@ -26,7 +26,7 @@ onMounted(() => {
     return
   }
 
-  api.get('api/config')
+  config()
       .then(res => {
         myConfig.value = res.data
       })

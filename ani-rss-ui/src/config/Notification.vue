@@ -71,14 +71,14 @@ import NotificationConfig from "./NotificationConfig.vue";
 import {ref} from "vue";
 
 import {getLabel} from "@/js/notification-type.js";
-import api from "@/js/api.js";
 import {Delete, Edit} from "@element-plus/icons-vue";
+import {newNotification} from "@/js/http.js";
 
 let addLoading = ref(false)
 
 let add = () => {
   addLoading.value = true
-  api.post('api/notification?type=add')
+  newNotification()
       .then((res) => {
         props.config['notificationConfigList'].push(res.data)
         notificationConfigRef.value?.show(res.data)

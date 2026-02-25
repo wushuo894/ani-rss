@@ -46,9 +46,9 @@
 <script setup>
 
 import {ref} from "vue";
-import api from "@/js/api.js";
 import PlayStart from "./PlayStart.vue";
 import formatTime from "@/js/format-time.js";
+import * as http from "@/js/http.js";
 
 const dialogVisible = ref(false)
 const listLoading = ref(false)
@@ -66,7 +66,7 @@ const show = (it) => {
   listLoading.value = true
   list.value = []
   dialogVisible.value = true
-  api.post('api/playlist', it)
+  http.playList(it)
       .then(res => {
         list.value = res.data.map(it => {
           return {...it, lastModifyFormat: formatTime(it['lastModify'])}
