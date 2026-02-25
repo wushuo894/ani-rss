@@ -19,6 +19,8 @@ import java.util.stream.Collectors;
 
 @Slf4j
 public class FileMoveNotification implements BaseNotification {
+    private NotificationConfig notificationConfig;
+
     /**
      * 测试
      *
@@ -49,6 +51,8 @@ public class FileMoveNotification implements BaseNotification {
             log.info("文件移动 仅支持下载完成通知");
             return true;
         }
+
+        this.notificationConfig = notificationConfig;
 
         // 首先就要深度克隆 防止影响原订阅设置
         ani = ObjectUtil.clone(ani);
@@ -88,6 +92,8 @@ public class FileMoveNotification implements BaseNotification {
     }
 
     public void startMoveOva(String src, String target) {
+        Boolean copyModel = notificationConfig.getFileMoveCopyModel();
+
         for (File file : FileUtils.listFiles(src)) {
             if (!file.isFile()) {
                 continue;
@@ -96,12 +102,17 @@ public class FileMoveNotification implements BaseNotification {
             log.info("OVA/剧场版 文件移动: {} => {}", file, target);
             FileUtil.copy(file, new File(target), true);
 
+            if (copyModel) {
+                continue;
+            }
             // 复制后再删除 确保不会中途失败
             FileUtil.del(file);
         }
     }
 
     public void startMove(String src, String target) {
+        Boolean copyModel = notificationConfig.getFileMoveCopyModel();
+
         for (File file : FileUtils.listFileList(src)) {
             if (!file.isFile()) {
                 // 过滤掉文件夹
@@ -119,6 +130,10 @@ public class FileMoveNotification implements BaseNotification {
             }
             log.info("文件移动: {} => {}", file, target);
             FileUtil.copy(file, new File(target), true);
+
+            if (copyModel) {
+                continue;
+            }
 
             // 复制后再删除 确保不会中途失败
             FileUtil.del(file);

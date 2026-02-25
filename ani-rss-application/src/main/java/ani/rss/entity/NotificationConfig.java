@@ -224,6 +224,12 @@ public class NotificationConfig implements Serializable {
     private Boolean fileMoveDeleteOldEpisode;
 
     /**
+     * 文件移动 复制模式
+     */
+    @Schema(description = "文件移动 复制模式")
+    private Boolean fileMoveCopyModel;
+
+    /**
      * OpenList Host
      */
     @Schema(description = "OpenList Host")
@@ -336,7 +342,8 @@ public class NotificationConfig implements Serializable {
         notificationConfig
                 .setFileMoveTarget("/CD2/115/Media/番剧/${title}/Season ${season}")
                 .setFileMoveOvaTarget("/CD2/115/Media/剧场版/${title}")
-                .setFileMoveDeleteOldEpisode(false);
+                .setFileMoveDeleteOldEpisode(false)
+                .setFileMoveCopyModel(false);
 
         // OpenList
         notificationConfig
