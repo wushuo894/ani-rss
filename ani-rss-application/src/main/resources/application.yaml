@@ -21,5 +21,6 @@ server:
 springdoc:
   swagger-ui:
     enabled: ${SWAGGER_ENABLED:false}
+    url: /v3/api-docs.yaml
   api-docs:
     enabled: ${SWAGGER_ENABLED:false}
