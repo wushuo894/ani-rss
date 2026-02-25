@@ -16,7 +16,6 @@ jobs:
       - name: Build with Project
         run: |
           bash ./package.sh
-          bash ./package-win.sh
 
           time=$(date +%s%3N)
           version=$(cat pom.xml | grep -oPm1 '(?<=<version>).*?(?=</version>)')
@@ -39,8 +38,6 @@ jobs:
             ./ani-rss-application/target/ani-rss.jar.md5
             ./ani-rss-application/target/ani-rss.exe
             ./ani-rss-application/target/ani-rss.exe.md5
-            ./ani-rss-application/target/ani-rss.win.x86_64.zip
-            ./ani-rss-application/target/ani-rss.win.x86_64.zip.md5
             ./info.json
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3

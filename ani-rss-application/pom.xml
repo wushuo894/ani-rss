@@ -132,7 +132,7 @@
                                 <windowTitle>ani-rss (${project.version})</windowTitle>
                             </singleInstance>
                             <jre>
-                                <path>jre/bin;%JAVA_HOME%/bin;%PATH%</path>
+                                <path>%JAVA_HOME%/bin;%PATH%</path>
                                 <minVersion>17</minVersion>
                                 <opts>
                                     <opt>-Xms60m -Xmx1g -Xss256k</opt>
