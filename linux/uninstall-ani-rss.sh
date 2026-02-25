@@ -12,7 +12,6 @@ NC='\033[0m' # 重置颜色
 SERVICE_NAME="ani-rss.service"
 INSTALL_DIR="/opt/ani-rss"
 SERVICE_USER="ani-rss"
-FIREWALL_PORT=7789  # 根据安装时使用的端口修改
 
 # 检查root权限
 check_root() {
@@ -45,7 +44,7 @@ remove_service() {
     if systemctl is-active --quiet "$SERVICE_NAME"; then
         systemctl stop "$SERVICE_NAME" || {
             echo -e "${RED}服务停止失败，尝试强制终止...${NC}"
-            pkill -f "ani-rss-jar-with-dependencies.jar" && echo -e "${GREEN}进程已终止${NC}"
+            pkill -f "ani-rss.jar" && echo -e "${GREEN}进程已终止${NC}"
         }
     fi
 
@@ -88,27 +87,6 @@ remove_service_user() {
         }
     else
         echo -e "${YELLOW}用户不存在，跳过${NC}"
-    fi
-}
-
-# 清理防火墙规则
-clean_firewall() {
-    echo -e "${YELLOW}清理防火墙规则...${NC}"
-    # 处理UFW
-    if command -v ufw >/dev/null; then
-        if ufw status | grep -q "$FIREWALL_PORT"; then
-            ufw delete allow "$FIREWALL_PORT/tcp"
-            echo -e "${GREEN}UFW规则已移除${NC}"
-        fi
-    fi
-
-    # 处理Firewalld
-    if command -v firewall-cmd >/dev/null; then
-        if firewall-cmd --list-ports | grep -q "$FIREWALL_PORT/tcp"; then
-            firewall-cmd --remove-port="$FIREWALL_PORT/tcp" --permanent
-            firewall-cmd --reload
-            echo -e "${GREEN}Firewalld规则已移除${NC}"
-        fi
     fi
 }
 
@@ -179,7 +157,6 @@ main() {
     remove_service
     remove_install_dir
     remove_service_user
-    clean_firewall
     verify_uninstall
     remove_jdk
     echo -e "\n${GREEN}===== 卸载完成 =====${NC}"

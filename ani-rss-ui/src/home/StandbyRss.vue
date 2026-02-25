@@ -102,7 +102,7 @@ let show = () => {
   dialogVisible.value = true
   standbyRss.value = JSON.parse(JSON.stringify(props.ani.standbyRssList))
 
-  api.get('api/config')
+  config
       .then(res => {
         config.value = res.data;
       })

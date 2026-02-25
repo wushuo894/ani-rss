@@ -119,13 +119,13 @@
 import {onMounted, ref} from "vue";
 import {Delete, Edit as EditIcon, Files} from "@element-plus/icons-vue"
 import Edit from "./Edit.vue";
-import api from "@/js/api.js";
 import PlayList from "@/play/PlayList.vue";
 import Cover from "./Cover.vue";
 import Del from "./Del.vue";
 import BgmRate from "./BgmRate.vue";
 import formatTime from "@/js/format-time.js";
 import {authorization, isNotMobile} from "@/js/global.js";
+import {config, listAni} from "@/js/http.js";
 
 const defaultWeekList = [
   {
@@ -191,7 +191,7 @@ const getList = () => {
   loading.value = true
 
   list.value = []
-  api.get('api/config')
+  config()
       .then(res => {
         showPlaylist.value = res.data.showPlaylist
         weekShow.value = res.data.weekShow
@@ -212,7 +212,7 @@ const getList = () => {
           weekList.value = [{i: 1, label: ''}];
         }
         let showLastDownloadTime = res.data['showLastDownloadTime']
-        api.get('api/ani')
+        listAni()
             .then(res => {
               if (showLastDownloadTime) {
                 list.value = res.data.map(it => {

@@ -50,6 +50,7 @@ import {ref} from "vue";
 import api from "@/js/api.js";
 import {ElMessage} from "element-plus";
 import {Download} from '@element-plus/icons-vue'
+import {config} from "@/js/http.js";
 
 const handleClose = (index) => {
   props.keywords.splice(index, 1)
@@ -77,7 +78,7 @@ let disabledImport = ref(false)
 
 let importGlobalKeywords = () => {
   importLoading.value = true
-  api.get("api/config")
+  config()
       .then(res => {
         disabledImport.value = true
         if (!res.data.priorityKeywords || !res.data.priorityKeywords.length) {

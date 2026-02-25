@@ -193,12 +193,12 @@
 
 <script setup>
 import {ref} from "vue";
-import api from "@/js/api.js";
 import {ElMessage, ElText} from "element-plus";
 import {Key, User} from "@element-plus/icons-vue";
 import QBittorrent from "@/config/download/qBittorrent.vue";
 import PrioKeys from "@/config/PrioKeys.vue";
 import CustomTags from "@/config/CustomTags.vue";
+import * as http from "@/js/http.js";
 
 const downloadSelect = ref([
   'qBittorrent',
@@ -237,7 +237,7 @@ const offlineList = ref([
 const downloadLoginTestLoading = ref(false)
 const downloadLoginTest = () => {
   downloadLoginTestLoading.value = true
-  api.post("api/downloadLoginTestLoading", props.config)
+  http.downloadLoginTest(props.config)
       .then(res => {
         ElMessage.success(res.message)
       })

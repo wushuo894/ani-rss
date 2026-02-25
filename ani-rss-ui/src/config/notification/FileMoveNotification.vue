@@ -12,6 +12,8 @@
     </el-form-item>
     <el-form-item label="其他">
       <div>
+        <el-checkbox v-model="notificationConfig['fileMoveCopyModel']" label="复制模式"/>
+        <br/>
         <el-checkbox v-model="notificationConfig['fileMoveDeleteOldEpisode']" label="删除旧的同集文件"/>
         <br/>
         <el-text class="mx-1" size="small">

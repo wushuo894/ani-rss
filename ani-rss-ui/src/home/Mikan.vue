@@ -159,10 +159,10 @@
 
 <script setup>
 import {ref} from "vue";
-import api from "@/js/api.js";
 import {ElMessage, ElText} from "element-plus";
 import {DocumentCopy, Download as DownloadIcon} from "@element-plus/icons-vue";
 import {authorization} from "@/js/global.js";
+import * as http from "@/js/http.js";
 
 // 批量添加订阅
 let rssList = ref([]);
@@ -217,7 +217,7 @@ let list = async (body, text) => {
   loading.value = true
   text = text ? text : ''
   body = body ? body : {}
-  return api.post('api/mikan?text=' + text, body)
+  return http.mikan(text, body)
       .then(res => {
         let {seasons, items, totalItems} = res.data;
 
@@ -263,7 +263,7 @@ let collapseChange = (v) => {
     return;
   }
   groupLoading.value = true
-  api.get('api/mikan/group?url=' + v)
+  http.mikanGroup(v)
       .then(res => {
         groups.value[v] = res.data
       })
@@ -297,7 +297,7 @@ let callback = v => {
 
 
 let img = (it) => {
-  return `api/file?img=${btoa(it['cover'])}&s=${authorization.value}`;
+  return `api/mikanCover?img=${btoa(it['cover'])}&s=${authorization.value}`;
 }
 
 let showTag = () => {
@@ -348,7 +348,7 @@ let batchAddition = async () => {
         "type": "mikan"
       }
 
-      ani = (await api.post('api/rss', ani)).data
+      ani = (await http.rssToAni(ani)).data
       if (item.length > 1) {
         ani.standbyRssList = item.slice(1)
             .map(o => {
@@ -360,7 +360,7 @@ let batchAddition = async () => {
             })
       }
       batchAdditionNum.value += item.length
-      await api.post('api/ani', ani)
+      await http.setAni(ani)
     }
     ElMessage.success("添加成功")
 

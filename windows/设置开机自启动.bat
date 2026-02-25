@@ -10,7 +10,7 @@ set "currentDir=%CD%"
 set "shortcutName=ani-rss.lnk"
 
 :: 设置目标程序路径（假设目标程序在当前目录）
-set "targetPath=%currentDir%\ani-rss-launcher.exe"
+set "targetPath=%currentDir%\ani-rss.exe"
 
 :: 设置启动文件夹路径
 set "startupFolder=C:\ProgramData\Microsoft\Windows\Start Menu\Programs\StartUp"

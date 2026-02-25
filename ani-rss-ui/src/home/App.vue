@@ -145,6 +145,7 @@ import {useLocalStorage} from "@vueuse/core";
 import Collection from "./Collection.vue";
 import TorrentsInfos from "./TorrentsInfos.vue";
 import {elIconClass, initLayout, isNotMobile} from "@/js/global.js";
+import * as http from "@/js/http.js";
 
 const collection = ref()
 const manage = ref()
@@ -198,7 +199,7 @@ const about = ref({
 
 
 let refreshAni = () => {
-  api.post('api/ani?type=refreshAni')
+  http.refreshAll()
       .then(res => {
         ElMessage.success(res.message)
       })
@@ -208,7 +209,7 @@ onMounted(() => {
   initLayout()
   selectChange()
 
-  api.get('api/about')
+  http.about()
       .then(res => {
         about.value = res.data
       })

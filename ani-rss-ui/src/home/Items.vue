@@ -106,9 +106,9 @@
 
 <script setup>
 import {ref} from "vue";
-import api from "@/js/api.js";
 import {ElMessage} from "element-plus";
 import Popconfirm from "@/other/Popconfirm.vue";
+import * as http from "@/js/http.js";
 
 let selectViews = ref([])
 let handleSelectionChange = (selectViewsValue) => {
@@ -164,7 +164,7 @@ let showItems = ref([])
 
 let load = () => {
   loading.value = true
-  api.post('api/items', props.ani)
+  http.previewAni(props.ani)
       .then(res => {
         data.value = res.data
         selectChange()
@@ -176,7 +176,7 @@ let load = () => {
 
 let delTorrent = () => {
   let infoHash = selectViews.value.filter(it => it['local']).map(it => it['infoHash']).join(",")
-  api.del(`api/torrent?id=${props.ani.id}&infoHash=${infoHash}`)
+  http.deleteTorrent(props.ani.id, infoHash)
       .then(res => {
         ElMessage.success(res.message)
         load()

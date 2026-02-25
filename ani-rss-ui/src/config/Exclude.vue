@@ -78,6 +78,7 @@
 import {ref} from "vue";
 import api from "@/js/api.js";
 import {ElMessage} from "element-plus";
+import {config} from "@/js/http.js";
 
 const excludeValue = ref('')
 
@@ -100,7 +101,7 @@ let disabledImportExclude = ref(false)
 
 let importExclude = () => {
   importExcludeLoading.value = true
-  api.get("api/config")
+  config()
       .then(res => {
         disabledImportExclude.value = true
         for (let it of res.data.exclude) {

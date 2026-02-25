@@ -16,10 +16,9 @@ jobs:
       - name: Build with Project
         run: |
           bash ./package.sh
-          bash ./package-win.sh
 
           time=$(date +%s%3N)
-          version=$(cat pom.xml | grep -oPm1 '(?<=<version>).*?(?=</version>)')
+          version=$(cat ani-rss-application/pom.xml | grep -oPm1 '(?<=<version>).*?(?=</version>)')
           echo "{\"time\":$time,\"version\":\"$version\"}" > info.json
           jq --arg content "$(cat UPDATE.md)" '. += {markdown: $content}' info.json > temp.json && mv temp.json info.json
 
@@ -35,12 +34,10 @@ jobs:
           append_body: false
           token: ${{ secrets.GITHUB_TOKEN }}
           files: |
-            ./ani-rss-application/target/ani-rss-jar-with-dependencies.jar
-            ./ani-rss-application/target/ani-rss-jar-with-dependencies.jar.md5
-            ./ani-rss-application/target/ani-rss-launcher.exe
-            ./ani-rss-application/target/ani-rss-launcher.exe.md5
-            ./ani-rss-application/target/ani-rss.win.x86_64.zip
-            ./ani-rss-application/target/ani-rss.win.x86_64.zip.md5
+            ./ani-rss-application/target/ani-rss.jar
+            ./ani-rss-application/target/ani-rss.jar.md5
+            ./ani-rss-application/target/ani-rss.exe
+            ./ani-rss-application/target/ani-rss.exe.md5
             ./info.json
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3

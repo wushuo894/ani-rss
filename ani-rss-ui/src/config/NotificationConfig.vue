@@ -75,9 +75,9 @@ import ShellNotification from "@/config/notification/ShellNotification.vue";
 import SystemNotification from "@/config/notification/SystemNotification.vue";
 import {notificationTypeList} from "@/js/notification-type.js";
 import {ElMessage} from "element-plus";
-import api from "@/js/api.js";
 import FileMoveNotification from "@/config/notification/FileMoveNotification.vue";
 import OpenListUploadNotification from "@/config/notification/OpenListUploadNotification.vue";
+import {testNotification} from "@/js/http.js";
 
 
 let notificationConfig = ref({
@@ -124,7 +124,7 @@ const messageTest = () => {
   let config = JSON.parse(JSON.stringify(notificationConfig.value))
   config.embyDelayed = 0
 
-  api.post("api/notification?type=test", config)
+  testNotification(config)
       .then(res => {
         ElMessage.success(res.message)
       })
