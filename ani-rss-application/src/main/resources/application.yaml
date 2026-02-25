@@ -1,0 +1,26 @@
+spring:
+  application:
+    name: ani-rss-application
+  web:
+    resources:
+      static-locations: classpath:/META-INF/dist
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
+  servlet:
+    multipart:
+      max-request-size: 50MB
+      max-file-size: 50MB
+      enabled: true
+  jmx:
+    enabled: false
+server:
+  port: 7789
+  address: 0.0.0.0
+
+springdoc:
+  swagger-ui:
+    enabled: ${SWAGGER_ENABLED:false}
+    url: /v3/api-docs.yaml
+  api-docs:
+    enabled: ${SWAGGER_ENABLED:false}

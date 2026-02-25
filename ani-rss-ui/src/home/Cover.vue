@@ -24,7 +24,7 @@
                     :action="`api/upload?s=${authorization}`"
                     :before-upload="beforeAvatarUpload"
                     :on-success="res => {
-                      ani['cover'] = res.data.data
+                      ani['cover'] = res.data
                       time = new Date().getTime()
                     }"
                     :show-file-list="false"
@@ -61,11 +61,12 @@ import api from "@/js/api.js";
 import {ElMessage} from "element-plus";
 import {UploadFilled} from "@element-plus/icons-vue";
 import {authorization} from "@/js/global.js";
+import * as http from "@/js/http.js";
 
 let reLoadIng = ref(false)
 let reLoad = () => {
   reLoadIng.value = true
-  api.post("api/cover", ani.value)
+  http.refreshCover(ani.value)
       .then(res => {
         time.value = new Date().getTime()
         ani.value.cover = res.data
@@ -90,7 +91,7 @@ let show = (newAni) => {
 let okLoading = ref(false)
 let ok = () => {
   okLoading.value = true
-  api.put("api/ani", ani.value)
+  http.setAni(false,ani.value)
       .then(res => {
         ElMessage.success(res.message)
         window.$reLoadList()

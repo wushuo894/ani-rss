@@ -112,14 +112,14 @@
 <script setup>
 import {getCurrentInstance, ref} from "vue";
 import {Document, Setting, Upload, UploadFilled} from "@element-plus/icons-vue";
-import api from "@/js/api.js";
 import {ElMessage} from "element-plus";
+import {importAni} from "@/js/http.js";
 
 let importDataLoading = ref(false);
 
 let startImport = () => {
   importDataLoading.value = true;
-  api.post('api/ani/import', data.value)
+  importAni(data.value)
       .then(res => {
         ElMessage.success(res.message)
         if (instance.vnode.props.onCallback) {

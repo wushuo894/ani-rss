@@ -36,7 +36,7 @@
 
 <script setup>
 import {ref} from "vue";
-import api from "@/js/api.js";
+import * as http from "@/js/http.js";
 
 let dialogVisible = ref(false)
 let loading = ref(false)
@@ -49,7 +49,7 @@ let show = () => {
   subgroup.value = ''
   dialogVisible.value = true
   loading.value = true
-  api.post('api/collection?type=preview', props.data)
+  http.previewCollection(props.data)
       .then(res => {
         list.value = res.data
         subgroup.value = getSubgroup()

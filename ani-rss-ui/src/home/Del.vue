@@ -20,7 +20,8 @@
 <script setup>
 
 import {getCurrentInstance, markRaw, ref} from "vue";
-import api from "@/js/api.js";
+import * as http from "@/js/http.js";
+import {deleteAni} from "@/js/http.js";
 import {ElMessage, ElMessageBox} from "element-plus";
 import {Delete} from "@element-plus/icons-vue";
 
@@ -33,7 +34,8 @@ let deleteFiles = ref(false)
 
 const delAni = async () => {
   okLoading.value = true
-  let action = () => api.del('api/ani?deleteFiles=' + deleteFiles.value, aniList.value.map(it => it['id']))
+  let ids = aniList.value.map(it => it['id'])
+  let action = () => deleteAni(deleteFiles.value, ids)
       .then(res => {
         ElMessage.success(res.message)
         if (instance.vnode.props.onCallback) {
@@ -55,7 +57,7 @@ const delAni = async () => {
   let downloadPath = ''
 
   if (aniList.value.length === 1) {
-    let res = await api.post('api/downloadPath', aniList.value[0])
+    let res = await http.downloadPath(aniList.value[0])
     downloadPath = res.data['downloadPath']
   }
 

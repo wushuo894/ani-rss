@@ -11,7 +11,7 @@
 import {ref} from "vue";
 import Artplayer from "./Artplayer.vue";
 import {authorization} from "@/js/global.js";
-import api from "@/js/api.js";
+import * as http from "@/js/http.js";
 
 let loading = ref(false);
 let dialogVisible = ref(false)
@@ -19,17 +19,14 @@ let playItem = ref({})
 
 let show = (pi) => {
   playItem.value = {...pi};
-  playItem.value.src = `${location.href}api/files?filename=${playItem.value.filename}&s=${authorization.value}`
+  playItem.value.src = `${location.href}api/file?filename=${playItem.value.filename}&s=${authorization.value}`
   for (let subtitle of playItem.value.subtitles) {
-    subtitle.url = `${location.href}api/files?filename=${subtitle.url}&s=${authorization.value}`
+    subtitle.url = `${location.href}api/file?filename=${subtitle.url}&s=${authorization.value}`
   }
 
   loading.value = true;
   // 获取内封字幕
-  api.post('api/playitem', {
-    'type': 'getSubtitles',
-    'file': playItem.value.filename
-  })
+  http.getSubtitles(playItem.value.filename)
       .then(res => {
         for (let sub of res.data) {
           const blob = new Blob([sub.content], {type: "text/plain"});

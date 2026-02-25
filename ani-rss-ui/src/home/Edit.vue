@@ -34,9 +34,9 @@
 
 import {ref} from "vue";
 import {ElMessage, ElMessageBox} from "element-plus";
-import api from "@/js/api.js";
 import Ani from "./Ani.vue";
 import {aniData} from "@/js/ani.js";
+import * as http from '@/js/http.js'
 
 
 const dialogVisible = ref(false)
@@ -51,7 +51,7 @@ let callback = ref(() => {
 
 const editChange = async (fun) => {
   callback.value = fun
-  let req = await api.post('api/downloadPath', ani.value)
+  let req = await http.downloadPath(ani.value)
   downloadPath.value = req.data.downloadPath
   if (req.data.change) {
     downloadPathDialogVisible.value = true
@@ -61,7 +61,7 @@ const editChange = async (fun) => {
 }
 
 const editAni = () => {
-  let action = () => api.put('api/ani?move=' + move.value, ani.value)
+  let action = () => http.setAni(move.value, ani.value)
       .then(res => {
         ElMessage.success(res.message)
         window.$reLoadList()

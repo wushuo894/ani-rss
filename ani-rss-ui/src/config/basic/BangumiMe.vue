@@ -37,15 +37,15 @@
           </el-descriptions-item>
           <el-descriptions-item label="注册日期">
             <el-text>
-              {{ me['reg_time'] }}
+              {{ me['regTime'] }}
             </el-text>
           </el-descriptions-item>
           <el-descriptions-item label="授权剩余过期时间">
-            <el-tag type="success" v-if="me['expires_days'] > 3">
-              {{ me['expires_days'] }} 天
+            <el-tag type="success" v-if="me['expiresDays'] > 3">
+              {{ me['expiresDays'] }} 天
             </el-tag>
             <el-tag type="danger" v-else>
-              {{ me['expires_days'] }} 天
+              {{ me['expiresDays'] }} 天
             </el-tag>
           </el-descriptions-item>
           <el-descriptions-item label="签名">
@@ -66,6 +66,7 @@
 
 import {ref} from "vue";
 import api from "@/js/api.js";
+import * as http from "@/js/http.js";
 
 let me = ref({
   "avatar": {
@@ -78,11 +79,11 @@ let me = ref({
   "username": "",
   "nickname": "",
   "id": 0,
-  "user_group": 10,
-  "reg_time": "2022-05-27T15:35:45+08:00",
+  "userGroup": 10,
+  "regTime": "2022-05-27T15:35:45+08:00",
   "email": "xxxx@xx.com",
-  "time_offset": 8,
-  "expires_days": 6
+  "timeOffset": 8,
+  "expiresDays": 6
 })
 
 let errorMessage = ref('')
@@ -94,19 +95,9 @@ let show = () => {
   errorMessage.value = '';
   dialogVisible.value = true;
   loading.value = true;
-  api.get('api/bgm?type=me')
+  http.meBgm()
       .then(res => {
         me.value = res.data;
-        const formatter = new Intl.DateTimeFormat('zh-CN', {
-          year: 'numeric',
-          month: '2-digit',
-          day: '2-digit',
-          hour: '2-digit',
-          minute: '2-digit',
-          second: '2-digit',
-          hour12: false
-        })
-        me.value['reg_time'] = formatter.format(new Date(me.value['reg_time']))
       })
       .catch(err => {
         errorMessage.value = err.message

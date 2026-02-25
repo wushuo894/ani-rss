@@ -62,6 +62,7 @@ import About from "@/config/About.vue";
 import LoginConfig from "@/config/LoginConfig.vue";
 import Afdian from "@/config/Afdian.vue";
 import {configData} from "@/js/config.js";
+import * as http from "@/js/http.js";
 
 const dialogVisible = ref(false)
 const configButtonLoading = ref(false)
@@ -75,7 +76,7 @@ const show = (update) => {
   activeName.value = update ? 'about' : 'download'
   dialogVisible.value = true
   loading.value = true
-  api.get('api/config')
+  http.config()
       .then(res => {
         config.value = res.data
       })
@@ -96,7 +97,7 @@ const saveConfig = () => {
     my_config.login.password = CryptoJS['MD5'](password).toString();
   }
 
-  api.post('api/config', my_config)
+  http.setConfig(my_config)
       .then(res => {
         ElMessage.success(res.message)
         window.$reLoadList()

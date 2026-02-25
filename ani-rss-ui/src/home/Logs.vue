@@ -39,7 +39,6 @@
 
 <script setup>
 import {onMounted, ref} from "vue";
-import api from "@/js/api.js";
 import {authorization} from "@/js/global.js";
 
 import {createOnigurumaEngine} from 'shiki/engine/oniguruma'
@@ -47,6 +46,7 @@ import log from 'shiki/langs/log'
 import nord from 'shiki/themes/nord'
 import wasm from 'shiki/wasm'
 import {createHighlighterCore} from "shiki";
+import * as http from "@/js/http.js";
 
 let highlighter = undefined
 onMounted(async () => {
@@ -99,8 +99,8 @@ const clearLoading = ref(false)
 
 const clear = () => {
   clearLoading.value = true
-  api.del('api/logs')
-      .then(res => {
+  http.clearLogs()
+      .then(() => {
         getLogs();
       })
       .finally(() => {
@@ -110,7 +110,7 @@ const clear = () => {
 
 const getLogs = () => {
   getLogsLoading.value = true
-  api.get('api/logs')
+  http.logs()
       .then(async res => {
         logs.value = res.data
         loggerNames.value = []

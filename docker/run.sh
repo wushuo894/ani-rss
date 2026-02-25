@@ -3,13 +3,12 @@
 export LANG=C.UTF-8
 export LC_ALL=C.UTF-8
 
-port="7789"
 path="./"
-jar="ani-rss-jar-with-dependencies.jar"
+jar="ani-rss.jar"
 jar_path=$path$jar
 
 if [ ! -f $jar_path ]; then
-    url="https://github.com/wushuo894/ani-rss/releases/latest/download/ani-rss-jar-with-dependencies.jar"
+    url="https://github.com/wushuo894/ani-rss/releases/latest/download/ani-rss.jar"
     wget -O $jar_path $url
 
     if [ $? -eq 0 ]; then
@@ -52,7 +51,7 @@ do
       --enable-native-access=ALL-UNNAMED \
       --add-opens=java.base/java.net=ALL-UNNAMED \
       --add-opens=java.base/sun.net.www.protocol.https=ALL-UNNAMED \
-      -jar $jar_path --port $port &
+      -jar $jar_path&
     wait $!
     if [ $? -ne 0 ]; then
       break

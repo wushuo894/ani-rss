@@ -63,9 +63,9 @@
 
 <script setup>
 import {onMounted, ref} from "vue";
-import api from "@/js/api.js";
 import {ElMessage} from "element-plus";
 import {Key, User} from "@element-plus/icons-vue";
+import {testProxy} from "@/js/http.js";
 
 let urls = ref([
   'https://mikanani.me',
@@ -93,7 +93,7 @@ let test = () => {
   testLoading.value = true
   status.value = ''
   time.value = ''
-  api.post('api/proxy?url=' + btoa(url.value), props.config)
+  testProxy(btoa(url.value), props.config)
       .then(res => {
         status.value = res.data.status
         time.value = res.data.time

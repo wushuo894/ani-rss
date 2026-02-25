@@ -29,15 +29,14 @@
 
 <script setup>
 import {ElMessage, ElText} from "element-plus";
-import api from "@/js/api.js";
 import {ref} from "vue";
+import * as http from "@/js/http.js";
 
 let trackersUpdateLoading = ref(false)
 
-
 let trackersUpdate = () => {
   trackersUpdateLoading.value = true
-  api.post('api/trackersUpdate', props.config)
+  http.trackersUpdate(props.config)
       .then(res => {
         ElMessage.success(res.message);
       })

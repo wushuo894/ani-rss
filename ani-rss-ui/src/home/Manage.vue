@@ -159,11 +159,11 @@
 </template>
 <script setup>
 import {ref} from "vue";
-import api from "@/js/api.js";
 import {ElMessage} from "element-plus";
 import Del from "./Del.vue";
 import ImportAni from "@/home/ImportAni.vue";
 import {CircleCheck, CircleClose, Refresh, Remove, Upload} from "@element-plus/icons-vue";
+import * as http from "@/js/http.js";
 
 let yearMonth = (list) => {
   return new Set(
@@ -223,7 +223,7 @@ const reLoadList = () => {
 
 const getList = () => {
   loading.value = true
-  return api.get('api/ani')
+  return http.listAni()
       .then(res => {
         list.value = res.data
         selectChange()
@@ -261,7 +261,7 @@ let exportData = () => {
 let batchEnable = (value) => {
   loading.value = true
   let ids = selectList.value.map(it => it['id']);
-  api.post('api/ani?type=batchEnable&value=' + value, ids)
+  http.batchEnable(value, ids)
       .then(res => {
         ElMessage.success(res.message)
       })
@@ -274,7 +274,7 @@ let yearMonthValue = ref('')
 
 let updateTotalEpisodeNumber = (force) => {
   let ids = selectList.value.map(it => it['id']);
-  api.post('api/ani?type=updateTotalEpisodeNumber&force=' + force, ids)
+  http.updateTotalEpisodeNumber(force, ids)
       .then(res => {
         ElMessage.success(res.message)
         reLoadList()

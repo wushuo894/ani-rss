@@ -21,9 +21,9 @@
 <script setup>
 
 import {ref} from "vue";
-import api from "@/js/api.js";
 import {Ban, Save} from "@vicons/fa";
 import {ElMessage} from "element-plus";
+import * as http from "@/js/http.js";
 
 let texts = ref([
   '不忍直视 1 (请谨慎评价)', '很差 2', '差 3', '较差 4', '不过不失 5',
@@ -57,7 +57,7 @@ let clearRate = () => {
 
 let rate = (v) => {
   loading.value = true
-  api.post('api/bgm?type=rate', v)
+  http.rate(v)
       .then(res => {
         ani.value.score = res.data
 

@@ -96,11 +96,11 @@
 <script setup>
 import {ref} from "vue";
 import {ElMessage} from "element-plus";
-import api from "@/js/api.js";
 import Mikan from "./Mikan.vue";
 import Ani from "./Ani.vue";
 import Bgm from "./Bgm.vue";
 import {aniData} from "@/js/ani.js";
+import * as http  from "@/js/http.js";
 
 const showRss = ref(true)
 const mikan = ref()
@@ -121,7 +121,7 @@ const getRss = () => {
   }
   rssButtonLoading.value = true
   ani.value.type = activeName.value
-  api.post('api/rss', ani.value)
+  http.rssToAni(ani.value)
       .then(res => {
         let match = ani.value['match'];
         ani.value = res['data']
@@ -135,7 +135,7 @@ const getRss = () => {
 }
 
 const addAni = (fun) => {
-  api.post('api/ani', ani.value)
+  http.addAni(ani.value)
       .then(res => {
         ElMessage.success(res.message)
         window.$reLoadList()

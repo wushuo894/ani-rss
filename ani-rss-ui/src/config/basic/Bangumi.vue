@@ -96,9 +96,9 @@
 
 <script setup>
 import {ElText} from "element-plus";
-import api from "@/js/api.js";
 import BangumiMe from "@/config/basic/BangumiMe.vue";
-import {onMounted} from "vue";
+import {onMounted, ref} from "vue";
+import {setConfig} from "@/js/http.js";
 
 let bangumiMe = ref()
 
@@ -123,7 +123,7 @@ let loading = ref(false);
 
 let start = () => {
   loading.value = true;
-  api.post('api/config', props.config)
+  setConfig(props.config)
       .then(async res => {
         let redirect = window.encodeURI(props.config['bgmRedirectUri'])
         let url = `https://bgm.tv/oauth/authorize?client_id=${props.config['bgmAppID']}&response_type=code&redirect_uri=${redirect}`

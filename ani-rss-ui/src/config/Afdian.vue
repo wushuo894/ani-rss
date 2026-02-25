@@ -135,10 +135,10 @@
 <script setup>
 import {ref} from "vue";
 import support_aifadian from "@/icon/support_aifadian.svg";
-import api from "@/js/api.js";
 import {ElMessage} from "element-plus";
 import {EditPen, Mug} from "@element-plus/icons-vue";
 import TryOut from "./TryOut.vue";
+import * as http from "@/js/http.js";
 
 let tryOutRef = ref()
 
@@ -159,7 +159,7 @@ let verifyNoLoading = ref(false)
 
 let verifyNo = () => {
   verifyNoLoading.value = true
-  api.post('api/afdian?type=verifyNo', {
+  http.verifyNo({
     outTradeNo: props.config.outTradeNo,
   }).then(res => {
     ElMessage.success(res.message)

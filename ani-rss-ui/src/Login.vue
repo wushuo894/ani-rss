@@ -56,7 +56,7 @@
 
 import {onMounted, ref} from "vue";
 import CryptoJS from "crypto-js"
-import api from "./js/api.js";
+import * as http from "./js/http.js";
 import {Key} from "@element-plus/icons-vue";
 import {ElMessage} from "element-plus";
 import {authorization, rememberThePassword} from "@/js/global.js";
@@ -82,7 +82,7 @@ let login = () => {
 
   loading.value = true
 
-  api.post('api/login', {
+  http.login({
     username: user.value.username,
     password: CryptoJS['MD5'](user.value.password).toString()
   })
@@ -110,8 +110,7 @@ let test = () => {
   if (authorization.value) {
     return
   }
-  fetch('api/test')
-      .then(res => res.json())
+  http.testIpWhitelist()
       .then(res => {
         if (res.code === 200) {
           authorization.value = new Date().getTime() + '';

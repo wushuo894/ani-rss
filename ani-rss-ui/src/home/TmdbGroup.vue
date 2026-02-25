@@ -37,7 +37,7 @@
 
 <script setup>
 import {ref} from "vue";
-import api from "@/js/api.js";
+import * as http from "@/js/http.js";
 
 let dialogVisible = ref(false)
 
@@ -48,7 +48,7 @@ let loading = ref(false)
 let show = () => {
   loading.value = true
   dialogVisible.value = true
-  api.post('api/tmdb?method=getTmdbGroup', props.ani)
+  http.getThemoviedbGroup(props.ani)
       .then(res => {
         groupList.value = res.data
       })
