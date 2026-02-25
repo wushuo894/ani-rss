@@ -18,6 +18,10 @@
 
     <repositories>
         <repository>
+            <id>central</id>
+            <url>https://repo.maven.apache.org/maven2</url>
+        </repository>
+        <repository>
             <id>ebml-reader</id>
             <url>https://raw.github.com/wushuo894/EBMLReader/mvn-repo</url>
         </repository>

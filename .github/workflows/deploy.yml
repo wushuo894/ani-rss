@@ -18,7 +18,7 @@ jobs:
           bash ./package.sh
 
           time=$(date +%s%3N)
-          version=$(cat pom.xml | grep -oPm1 '(?<=<version>).*?(?=</version>)')
+          version=$(cat ani-rss-application/pom.xml | grep -oPm1 '(?<=<version>).*?(?=</version>)')
           echo "{\"time\":$time,\"version\":\"$version\"}" > info.json
           jq --arg content "$(cat UPDATE.md)" '. += {markdown: $content}' info.json > temp.json && mv temp.json info.json
 

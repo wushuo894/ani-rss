@@ -16,7 +16,7 @@ jobs:
       - name: Build with Project
         run: |
           bash ./package.sh
-          version=$(cat pom.xml | grep -oPm1 '(?<=<version>).*?(?=</version>)')
+          version=$(cat ani-rss-application/pom.xml | grep -oPm1 '(?<=<version>).*?(?=</version>)')
           echo "version=v$version" >> $GITHUB_ENV
       - name: Upload to Artifacts
         uses: actions/upload-artifact@v4
