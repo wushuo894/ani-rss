@@ -70,7 +70,7 @@ let show = (s) => {
 }
 
 let img = (url) => {
-  return `api/file?img=${btoa(url)}&s=${authorization.value}`;
+  return `api/mikanCover?img=${btoa(url)}&s=${authorization.value}`;
 }
 
 let ok = (it) => {

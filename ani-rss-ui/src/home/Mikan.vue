@@ -297,7 +297,7 @@ let callback = v => {
 
 
 let img = (it) => {
-  return `api/file?img=${btoa(it['refreshCover'])}&s=${authorization.value}`;
+  return `api/mikanCover?img=${btoa(it['cover'])}&s=${authorization.value}`;
 }
 
 let showTag = () => {
