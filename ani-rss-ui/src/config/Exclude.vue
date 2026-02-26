@@ -76,7 +76,6 @@
 
 <script setup>
 import {ref} from "vue";
-import api from "@/js/api.js";
 import {ElMessage} from "element-plus";
 import {config} from "@/js/http.js";
 

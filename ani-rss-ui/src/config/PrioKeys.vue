@@ -47,7 +47,6 @@
 
 <script setup>
 import {ref} from "vue";
-import api from "@/js/api.js";
 import {ElMessage} from "element-plus";
 import {Download} from '@element-plus/icons-vue'
 import {config} from "@/js/http.js";

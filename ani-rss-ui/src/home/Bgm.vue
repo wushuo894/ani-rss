@@ -37,7 +37,6 @@
 </template>
 <script setup>
 import {ref} from "vue";
-import api from "@/js/api.js";
 import {authorization} from "@/js/global.js";
 import * as http from "@/js/http.js";
 

@@ -65,7 +65,6 @@
 <script setup>
 
 import {ref} from "vue";
-import api from "@/js/api.js";
 import * as http from "@/js/http.js";
 
 let me = ref({
