@@ -5,6 +5,7 @@ import ani.rss.util.other.ConfigUtil;
 import cn.hutool.core.util.StrUtil;
 import jakarta.servlet.http.HttpServletRequest;
 
+import java.util.List;
 import java.util.function.Function;
 
 /**
@@ -18,7 +19,18 @@ public class ApiKey implements Function<HttpServletRequest, Boolean> {
         if (StrUtil.isBlank(apiKey)) {
             return false;
         }
-        String s = StrUtil.blankToDefault(request.getParameter("s"), request.getHeader("s"));
-        return StrUtil.equals(apiKey, s);
+
+        for (String key : List.of("api-key", "s")) {
+            String s = request.getHeader(key);
+            if (StrUtil.isBlank(s)) {
+                s = request.getParameter(key);
+            }
+            if (StrUtil.isBlank(s)) {
+                continue;
+            }
+            return StrUtil.equals(apiKey, s);
+        }
+
+        return false;
     }
 }
