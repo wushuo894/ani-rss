@@ -100,7 +100,7 @@ import Mikan from "./Mikan.vue";
 import Ani from "./Ani.vue";
 import Bgm from "./Bgm.vue";
 import {aniData} from "@/js/ani.js";
-import * as http  from "@/js/http.js";
+import * as http from "@/js/http.js";
 
 const showRss = ref(true)
 const mikan = ref()

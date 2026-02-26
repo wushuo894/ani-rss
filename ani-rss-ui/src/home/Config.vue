@@ -52,7 +52,6 @@
 import {ref} from "vue";
 import {ElMessage} from "element-plus";
 import CryptoJS from "crypto-js";
-import api from "@/js/api.js";
 import Exclude from "@/config/Exclude.vue";
 import Notification from "@/config/Notification.vue";
 import Proxy from "@/config/Proxy.vue";

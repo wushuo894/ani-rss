@@ -57,7 +57,6 @@
 </template>
 <script setup>
 import {ref} from "vue";
-import api from "@/js/api.js";
 import {ElMessage} from "element-plus";
 import {UploadFilled} from "@element-plus/icons-vue";
 import {authorization} from "@/js/global.js";
@@ -91,7 +90,7 @@ let show = (newAni) => {
 let okLoading = ref(false)
 let ok = () => {
   okLoading.value = true
-  http.setAni(false,ani.value)
+  http.setAni(false, ani.value)
       .then(res => {
         ElMessage.success(res.message)
         window.$reLoadList()

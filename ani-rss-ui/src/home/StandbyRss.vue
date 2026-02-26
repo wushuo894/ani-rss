@@ -86,7 +86,6 @@
 <script setup>
 import {ref} from "vue";
 import Mikan from "./Mikan.vue";
-import api from "@/js/api.js";
 
 const editIndex = ref(-1)
 

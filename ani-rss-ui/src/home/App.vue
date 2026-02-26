@@ -137,7 +137,6 @@ import Config from "./Config.vue";
 import List from "./List.vue";
 import Add from "./Add.vue";
 import Logs from "./Logs.vue";
-import api from "@/js/api.js";
 import {ElMessage} from "element-plus";
 import Popconfirm from "@/other/Popconfirm.vue";
 import Manage from "./Manage.vue";
