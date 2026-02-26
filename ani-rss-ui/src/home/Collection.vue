@@ -184,7 +184,6 @@ import {ref} from "vue";
 import {UploadFilled} from "@element-plus/icons-vue";
 import {ElMessage, ElMessageBox} from "element-plus";
 import Bgm from "./Bgm.vue";
-import api from "@/js/api.js";
 import Exclude from "@/config/Exclude.vue";
 import CollectionPreview from "./CollectionPreview.vue";
 import CustomTags from "@/config/CustomTags.vue";

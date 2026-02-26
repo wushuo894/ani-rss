@@ -38,7 +38,6 @@
 
 <script setup>
 import {ref} from "vue";
-import api from "@/js/api.js";
 import * as http from "@/js/http.js";
 
 // 记录排序方式
