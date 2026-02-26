@@ -35,6 +35,7 @@ import java.util.Objects;
 public class LogUtil {
 
     public static final List<Log> LOG_LIST = Collections.synchronizedList(new FixedSizeLinkedList<>());
+    public static final List<String> HIDDE_LOG_LIST = List.of("org.apache.coyote.http11.Http11Processor");
 
     public static void loadLogback() {
         Config config = ConfigUtil.CONFIG;
@@ -53,6 +54,19 @@ public class LogUtil {
 
             byteArrayInputStream = new ByteArrayInputStream(s.getBytes(StandardCharsets.UTF_8));
             configurator.doConfigure(byteArrayInputStream);
+
+            Appender<ILoggingEvent> stdout = rootLogger.getAppender("STDOUT");
+            stdout.clearAllFilters();
+            stdout.addFilter(new AbstractMatcherFilter<>() {
+                @Override
+                public FilterReply decide(ILoggingEvent event) {
+                    String loggerName = event.getLoggerName();
+                    if (HIDDE_LOG_LIST.contains(loggerName)) {
+                        return FilterReply.DENY;
+                    }
+                    return FilterReply.NEUTRAL;
+                }
+            });
 
             Appender<ILoggingEvent> file = rootLogger.getAppender("FILE");
             file.clearAllFilters();
@@ -73,6 +87,11 @@ public class LogUtil {
                             .setLevel(level)
                             .setLoggerName(loggerName)
                             .setThreadName(threadName);
+
+                    if (HIDDE_LOG_LIST.contains(loggerName)) {
+                        return FilterReply.DENY;
+                    }
+
                     synchronized (LOG_LIST) {
                         LOG_LIST.add(logEntity);
                     }
