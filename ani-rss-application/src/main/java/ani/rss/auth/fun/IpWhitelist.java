@@ -31,16 +31,13 @@ public class IpWhitelist implements Function<HttpServletRequest, Boolean> {
             return false;
         }
         try {
-            if (!PatternPool.IPV4.matcher(ip).matches() && !PatternPool.IPV6.matcher(ip).matches()) {
-                return false;
-            }
             List<String> list = StrUtil.split(ipWhitelistStr, "\n", true, true);
             for (String string : list) {
                 if (string.equals(ip)) {
                     return true;
                 }
                 // 非ipv4
-                if (!PatternPool.IPV4.matcher(string).matches()) {
+                if (!PatternPool.IPV4.matcher(ip).matches()) {
                     continue;
                 }
                 // 通配符，如 192.168.*.1
