@@ -30,6 +30,7 @@
             </el-card>
           </div>
         </div>
+        <div class="bottom-spacer"></div>
       </el-scrollbar>
       <div>
         <p class="total-text">共 {{ list.length }} 项</p>
@@ -84,6 +85,10 @@ defineExpose({
 
 
 <style scoped>
+.bottom-spacer {
+  height: 5px;
+}
+
 .content {
   min-height: 200px;
   width: 100%;
@@ -97,7 +102,7 @@ defineExpose({
   grid-gap: 5px;
   width: 100%;
   grid-template-columns: repeat(2, 1fr);
-  padding: 0 4px;
+  padding: 0 5px;
 }
 
 .grid-item {
