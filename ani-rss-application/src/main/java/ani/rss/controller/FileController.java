@@ -81,9 +81,6 @@ public class FileController extends BaseController {
                 }
                 if (range.length > 1) {
                     end = Long.parseLong(range[1]);
-                } else {
-                    long maxEnd = start + (1024 * 1024 * 10);
-                    end = Math.min(end, maxEnd);
                 }
             }
             response.setHeader("Content-Range", "bytes " + start + "-" + end + "/" + fileLength);
