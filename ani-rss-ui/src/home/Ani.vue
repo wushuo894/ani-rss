@@ -1,5 +1,5 @@
 <template>
-  <Items ref="items" :ani="props.ani"/>
+  <Preview ref="preview" :ani="props.ani"/>
   <StandbyRss ref="standbyRss" :ani="props.ani"/>
   <Mikan ref="mikanRef" @callback="mikanCallback"/>
   <TmdbGroup ref="tmdbGroupRef" :ani="props.ani"/>
@@ -265,7 +265,7 @@
       </el-dropdown>
     </div>
     <div>
-      <el-button @click="items.show()" bg text icon="Grid">预览</el-button>
+      <el-button @click="preview.show()" bg text icon="Grid">预览</el-button>
       <el-button icon="Check" type="primary" :loading="okLoading" @click="async ()=>{
         okLoading = true
         emit('callback',()=>okLoading = false)
@@ -279,7 +279,7 @@
 
 import Exclude from "@/config/Exclude.vue";
 import PrioKeys from "@/config/PrioKeys.vue";
-import Items from "./Items.vue";
+import Preview from "./Preview.vue";
 import {onMounted, ref} from "vue";
 import {ElMessage, ElText} from "element-plus";
 import StandbyRss from "./StandbyRss.vue";
@@ -296,7 +296,7 @@ const tmdbGroupRef = ref()
 let standbyRss = ref()
 let date = ref()
 
-let items = ref()
+let preview = ref()
 let okLoading = ref(false)
 
 let getThemoviedbNameLoading = ref(false)

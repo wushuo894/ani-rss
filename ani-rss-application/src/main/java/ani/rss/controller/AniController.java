@@ -253,7 +253,7 @@ public class AniController extends BaseController {
     @Auth
     @Operation(summary = "订阅列表")
     @PostMapping("/listAni")
-    public Result<List<Ani>> list() {
+    public Result<List<Ani>> listAni() {
         Config config = ConfigUtil.CONFIG;
 
         SortTypeEnum sortType = config.getSortType();
@@ -359,7 +359,7 @@ public class AniController extends BaseController {
     @Auth
     @Operation(summary = "手动刷新订阅")
     @PostMapping("/refreshAll")
-    public Result<Void> refreshAni() {
+    public Result<Void> refreshAll() {
         // 未传Body, 刷新所有订阅
         RssTask.sync();
         ThreadUtil.execute(() -> RssTask.download(new AtomicBoolean(true)));

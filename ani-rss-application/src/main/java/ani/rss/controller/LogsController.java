@@ -33,7 +33,7 @@ public class LogsController extends BaseController {
     @Auth
     @Operation(summary = "日志")
     @PostMapping("/logs")
-    public Result<List<Log>> list() {
+    public Result<List<Log>> logs() {
         return Result.success(LOG_LIST);
     }
 
