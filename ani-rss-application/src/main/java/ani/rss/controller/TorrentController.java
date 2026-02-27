@@ -25,7 +25,7 @@ public class TorrentController extends BaseController {
     @Auth
     @Operation(summary = "删除缓存种子")
     @PostMapping("/deleteTorrent")
-    public Result<Void> del(@RequestParam("id") String id, @RequestParam("hash") String hash) {
+    public Result<Void> deleteTorrent(@RequestParam("id") String id, @RequestParam("hash") String hash) {
         Optional<Ani> first = AniUtil.ANI_LIST.stream()
                 .filter(ani -> id.equals(ani.getId()))
                 .findFirst();

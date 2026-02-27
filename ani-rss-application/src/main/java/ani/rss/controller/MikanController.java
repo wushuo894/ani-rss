@@ -92,7 +92,7 @@ public class MikanController extends BaseController {
     @Auth
     @Operation(summary = "获取Mikan封面")
     @GetMapping("/mikanCover")
-    public void MikanCover(@RequestParam("img") String img) {
+    public void mikanCover(@RequestParam("img") String img) {
         if (Base64.isBase64(img)) {
             img = img.replace(" ", "+");
             img = Base64.decodeStr(img);
