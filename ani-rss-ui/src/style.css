@@ -37,7 +37,7 @@ html.dark {
 /* 优化卡片样式：去除厚重边框，增加柔和阴影 */
 .el-card {
     border: 1px solid var(--el-border-color-extra-light);
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.04);
     transition: all 0.3s ease;
 }
 

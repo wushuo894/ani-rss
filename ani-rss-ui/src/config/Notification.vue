@@ -105,6 +105,7 @@ let props = defineProps(['config'])
 
 .notification-container {
   margin-top: 8px;
+  padding: 0 4px;
 }
 
 .notification-card {

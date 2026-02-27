@@ -79,21 +79,11 @@ import {ref} from "vue";
 import {ElMessage} from "element-plus";
 import {config} from "@/js/http.js";
 
-const excludeValue = ref('')
-
 const handleClose = (tag) => {
   props.exclude.splice(props.exclude.indexOf(tag), 1)
 }
 
 const add = ref(false)
-const InputRef = ref()
-
-const handleInputConfirm = () => {
-  if (excludeValue.value) {
-    props.exclude.push(excludeValue.value)
-  }
-  excludeValue.value = ''
-}
 
 let importExcludeLoading = ref(false)
 let disabledImportExclude = ref(false)
