@@ -109,6 +109,9 @@ public class RenameUtil {
 
         renameTemplate = replaceEpisodeTitle(renameTemplate, episode, ani);
 
+        String bgmId = BgmUtil.getSubjectId(ani);
+        renameTemplate = renameTemplate.replace("${bgmId}", bgmId);
+
         if (renameTemplate.contains("${jpTitle}")) {
             String jpTitle = getJpTitle(ani);
             renameTemplate = renameTemplate.replace("${jpTitle}", jpTitle);
