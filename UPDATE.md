@@ -1,9 +1,6 @@
-- refactor: 优化ip白名单
-- refactor: 更新前端依赖
-- feat: swagger支持鉴权
-- feat: 添加banner
-- feat: 过滤掉tomcat错误
-- fix: 修复调用MPV播放器播放异常
+- feat: 新增${bgmId}模板
+- refactor: 优化拼音
+- fix: 修复番剧评分问题
 
 [请不要将本项目在国内宣传](https://github.com/wushuo894/ani-rss/discussions/504)
 
