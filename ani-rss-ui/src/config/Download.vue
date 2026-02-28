@@ -4,6 +4,28 @@
            @submit="(event)=>{
                     event.preventDefault()
                    }">
+    <el-form-item label="路径保存方式">
+      <div class="download-path-mode-container">
+        <el-select v-model:model-value="props.config.pathSaveMode">
+          <el-option
+              v-for="mode in pathSaveModeOptions"
+              :key="mode.key"
+              :label="mode.label"
+              :value="mode.key"
+          />
+        </el-select>
+        <div class="download-path-mode-description">
+          <el-text class="mx-1" size="small">
+            {{ currentPathSaveModeMeta.description }}
+          </el-text>
+        </div>
+        <div class="download-path-mode-recommend">
+          <el-text class="mx-1" size="small">
+            推荐模版：{{ currentPathSaveModeMeta.recommendedTemplates?.downloadPathTemplate ?? '' }}
+          </el-text>
+        </div>
+      </div>
+    </el-form-item>
     <el-form-item label="下载工具">
       <el-select v-model:model-value="props.config.downloadToolType">
         <el-option v-for="item in downloadSelect"
@@ -106,7 +128,9 @@
         </el-alert>
       </div>
     </el-form-item>
-    <el-form-item label="剧场版保存位置">
+    <el-form-item
+        v-if="props.config.pathSaveMode !== PATH_SAVE_MODES.BANGUMI_SUBJECT_ID"
+        label="剧场版保存位置">
       <div class="download-path-container">
         <el-input v-model:model-value="props.config['ovaDownloadPathTemplate']"/>
         <el-alert
@@ -192,13 +216,14 @@
 </template>
 
 <script setup>
-import {ref} from "vue";
+import {ref, computed} from "vue";
 import {ElMessage, ElText} from "element-plus";
 import {Key, User} from "@element-plus/icons-vue";
 import QBittorrent from "@/config/download/qBittorrent.vue";
 import PrioKeys from "@/config/PrioKeys.vue";
 import CustomTags from "@/config/CustomTags.vue";
 import * as http from "@/js/http.js";
+import {PATH_SAVE_MODES, PATH_SAVE_MODE_META} from "@/js/pathMode.js";
 
 const downloadSelect = ref([
   'qBittorrent',
@@ -250,6 +275,13 @@ let testPathTemplate = (path) => {
   return new RegExp('\\$\{[A-z]+\}').test(path);
 }
 
+const pathSaveModeOptions = computed(() => Object.values(PATH_SAVE_MODE_META));
+
+const currentPathSaveModeMeta = computed(() => {
+  const mode = props.config.pathSaveMode || PATH_SAVE_MODES.LEGACY_LETTER_TITLE_SEASON
+  return PATH_SAVE_MODE_META[mode] || PATH_SAVE_MODE_META[PATH_SAVE_MODES.LEGACY_LETTER_TITLE_SEASON]
+})
+
 let activeName = ref([])
 
 let props = defineProps(['config'])
@@ -284,5 +316,27 @@ let props = defineProps(['config'])
 
 .download-priority-container {
   width: 100%;
+}
+
+.download-path-mode-container {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.download-path-mode-description {
+  max-width: 640px;
+}
+
+.download-path-mode-recommend {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.download-path-mode-recommend-input {
+  max-width: 480px;
 }
 </style>

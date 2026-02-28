@@ -126,5 +126,9 @@ export let configData = {
     "priorityKeywords": [],
     "procrastinatingMasterOnly": true,
     "limitLoginAttempts": true,
-    "buildInfo": ''
+    "buildInfo": '',
+    // 路径保存方式
+    // LegacyLetterTitleSeason: 旧版 按拼音首字母/标题/Season
+    // BangumiSubjectId: 使用 Bangumi subject 数字 ID 作为目录名
+    "pathSaveMode": "LegacyLetterTitleSeason"
 }

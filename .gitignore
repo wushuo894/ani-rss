@@ -1,7 +1,11 @@
 .idea
 target
 logs
+node_modules
 /config
 *.log
 ani-rss-update.exe
 build_info
+*.iml
+.DS_Store
+Thumbs.db

@@ -523,9 +523,13 @@ public class DownloadService {
 
         String downloadPathTemplate = config.getDownloadPathTemplate();
         String ovaDownloadPathTemplate = config.getOvaDownloadPathTemplate();
-        if (ova && StrUtil.isNotBlank(ovaDownloadPathTemplate)) {
-            // 剧场版位置
-            downloadPathTemplate = ovaDownloadPathTemplate;
+        String pathSaveMode = config.getPathSaveMode();
+        // 当使用 Bangumi ID 路径模式时，不再单独区分剧场版下载路径，全部使用统一模版
+        if (!"BangumiSubjectId".equals(pathSaveMode)) {
+            if (ova && StrUtil.isNotBlank(ovaDownloadPathTemplate)) {
+                // 剧场版位置
+                downloadPathTemplate = ovaDownloadPathTemplate;
+            }
         }
 
         if (customDownloadPath && StrUtil.isNotBlank(aniDownloadPath)) {
@@ -612,6 +616,14 @@ public class DownloadService {
                 .orElse("");
 
         downloadPathTemplate = downloadPathTemplate.replace("${tmdbid}", tmdbId);
+
+        // 解析 bangumi subject 的数字 ID，例如 https://bangumi.tv/subject/123456
+        String bgmId = Opt.ofNullable(ani.getBgmUrl())
+                .filter(StrUtil::isNotBlank)
+                .map(url -> ReUtil.get("subject/(\\d+)", url, 1))
+                .orElse("");
+
+        downloadPathTemplate = downloadPathTemplate.replace("${bgmId}", bgmId);
 
         if (downloadPathTemplate.contains("${jpTitle}")) {
             String jpTitle = RenameUtil.getJpTitle(ani);

@@ -227,7 +227,8 @@ public class ConfigUtil {
                 .setScrape(false)
                 .setReplace(false)
                 .setMaxFileNameLength(0)
-                .setLimitLoginAttempts(true);
+                .setLimitLoginAttempts(true)
+                .setPathSaveMode("LegacyLetterTitleSeason");
     }
 
     /**

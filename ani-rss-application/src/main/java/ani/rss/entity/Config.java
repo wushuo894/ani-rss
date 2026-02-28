@@ -731,4 +731,13 @@ public class Config implements Serializable {
      */
     @Schema(description = "构建信息")
     private String buildInfo;
+
+    /**
+     * 路径保存方式
+     * 例如:
+     * - LegacyLetterTitleSeason: 旧版 按拼音首字母/标题/Season 结构
+     * - BangumiSubjectId: 按 Bangumi subject 数字 ID 作为目录
+     */
+    @Schema(description = "路径保存方式")
+    private String pathSaveMode;
 }
