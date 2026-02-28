@@ -598,6 +598,9 @@ public class DownloadService {
         downloadPathTemplate = downloadPathTemplate.replace("${season}", String.valueOf(season));
         downloadPathTemplate = downloadPathTemplate.replace("${seasonFormat}", seasonFormat);
 
+        String bgmId = BgmUtil.getSubjectId(ani);
+        downloadPathTemplate = downloadPathTemplate.replace("${bgmId}", bgmId);
+
         List<Func1<Ani, Object>> list = List.of(
                 Ani::getTitle,
                 Ani::getThemoviedbName,
