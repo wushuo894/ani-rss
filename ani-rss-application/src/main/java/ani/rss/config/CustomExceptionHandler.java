@@ -15,18 +15,18 @@ import org.springframework.web.servlet.resource.NoResourceFoundException;
 public class CustomExceptionHandler {
 
     @ExceptionHandler(IllegalArgumentException.class)
-    public Result<Void> handleException(IllegalArgumentException e) {
+    public Result<Void> illegalArgumentException(IllegalArgumentException e) {
         return Result.error(e.getMessage());
     }
 
     @ExceptionHandler(ResultException.class)
-    public Result<Void> handleException(ResultException e) {
+    public Result<Void> resultException(ResultException e) {
         return e.getResult();
     }
 
     @ExceptionHandler({NoResourceFoundException.class, HttpRequestMethodNotSupportedException.class})
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public Result<Void> handleException(NoResourceFoundException e) {
+    public Result<Void> notFoundException(Exception e) {
         return Result.error(e.getMessage());
     }
 
