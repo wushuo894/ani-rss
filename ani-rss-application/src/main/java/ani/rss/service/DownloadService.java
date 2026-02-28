@@ -3,6 +3,7 @@ package ani.rss.service;
 import ani.rss.commons.ExceptionUtils;
 import ani.rss.commons.FileUtils;
 import ani.rss.commons.GsonStatic;
+import ani.rss.commons.PinyinUtils;
 import ani.rss.entity.*;
 import ani.rss.enums.NotificationStatusEnum;
 import ani.rss.enums.StringEnum;
@@ -18,7 +19,6 @@ import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.ReUtil;
 import cn.hutool.core.util.StrUtil;
-import cn.hutool.extra.pinyin.PinyinUtil;
 import cn.hutool.json.JSONUtil;
 import lombok.Synchronized;
 import lombok.extern.slf4j.Slf4j;
@@ -539,7 +539,7 @@ public class DownloadService {
 
         String title = ani.getTitle().trim();
 
-        String pinyin = PinyinUtil.getPinyin(title);
+        String pinyin = PinyinUtils.getPinyin(title);
         String letter = pinyin.substring(0, 1).toUpperCase();
         if (ReUtil.isMatch("^\\d$", letter)) {
             letter = "0";

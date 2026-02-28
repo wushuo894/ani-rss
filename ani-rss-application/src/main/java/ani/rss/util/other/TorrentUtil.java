@@ -2,6 +2,7 @@ package ani.rss.util.other;
 
 import ani.rss.commons.ExceptionUtils;
 import ani.rss.commons.FileUtils;
+import ani.rss.commons.PinyinUtils;
 import ani.rss.download.BaseDownload;
 import ani.rss.entity.Ani;
 import ani.rss.entity.Config;
@@ -17,7 +18,6 @@ import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.core.util.ReUtil;
 import cn.hutool.core.util.ReflectUtil;
 import cn.hutool.core.util.StrUtil;
-import cn.hutool.extra.pinyin.PinyinUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.eclipse.bittorrent.TorrentFile;
 
@@ -55,7 +55,7 @@ public class TorrentUtil {
 
         File configDir = ConfigUtil.getConfigDir();
 
-        String pinyin = PinyinUtil.getPinyin(title);
+        String pinyin = PinyinUtils.getPinyin(title);
         String s = pinyin.toUpperCase().substring(0, 1);
         if (ReUtil.isMatch("^\\d$", s)) {
             s = "0";

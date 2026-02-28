@@ -3,6 +3,7 @@ package ani.rss.controller;
 import ani.rss.annotation.Auth;
 import ani.rss.commons.ExceptionUtils;
 import ani.rss.commons.FileUtils;
+import ani.rss.commons.PinyinUtils;
 import ani.rss.dto.ImportAniDataDTO;
 import ani.rss.entity.*;
 import ani.rss.enums.SortTypeEnum;
@@ -25,7 +26,6 @@ import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.ReUtil;
 import cn.hutool.core.util.URLUtil;
-import cn.hutool.extra.pinyin.PinyinUtil;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
@@ -265,8 +265,8 @@ public class AniController extends BaseController {
                 .parallelStream()
                 .forEach(ani -> {
                     String title = ani.getTitle();
-                    String pinyin = PinyinUtil.getPinyin(title, "");
-                    String pinyinInitials = PinyinUtil.getFirstLetter(title, "");
+                    String pinyin = PinyinUtils.getPinyin(title, "");
+                    String pinyinInitials = PinyinUtils.getFirstLetter(title, "");
 
                     Integer year = ani.getYear();
                     Integer month = ani.getMonth();

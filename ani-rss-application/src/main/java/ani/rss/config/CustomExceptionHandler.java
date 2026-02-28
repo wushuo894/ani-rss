@@ -3,8 +3,10 @@ package ani.rss.config;
 import ani.rss.entity.Result;
 import ani.rss.exception.ResultException;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
 
@@ -23,11 +25,13 @@ public class CustomExceptionHandler {
     }
 
     @ExceptionHandler({NoResourceFoundException.class, HttpRequestMethodNotSupportedException.class})
+    @ResponseStatus(HttpStatus.NOT_FOUND)
     public Result<Void> handleException(NoResourceFoundException e) {
         return Result.error(e.getMessage());
     }
 
     @ExceptionHandler(Exception.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public Result<Void> handleException(Exception e) {
         log.error(e.getMessage(), e);
         return Result.error();
