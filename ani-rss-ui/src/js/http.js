@@ -216,11 +216,18 @@ export let stop = (status) => api.post(`api/stop?status=${status}`)
 export let refreshCover = (ani) => api.post('api/refreshCover', ani)
 
 /**
- * 评分
+ * 获取评分
  * @param ani 订阅
  * @returns {Promise<unknown>}
  */
 export let rate = (ani) => api.post('api/rate', ani)
+
+/**
+ * 进行评分
+ * @param ani 订阅
+ * @returns {Promise<unknown>}
+ */
+export let setRate = (ani) => api.post('api/setRate', ani)
 
 /**
  * 获取下载位置
