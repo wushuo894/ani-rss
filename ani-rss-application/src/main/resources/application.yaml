@@ -24,3 +24,4 @@ springdoc:
     url: /v3/api-docs.yaml
   api-docs:
     enabled: ${SWAGGER_ENABLED:false}
+  default-produces-media-type: application/json
