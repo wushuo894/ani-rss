@@ -11,7 +11,7 @@
       </div>
       <div class="flex bgm-rate-button-container">
         <el-button :icon="Ban" bg text @click="clearRate">清空评分</el-button>
-        <el-button :icon="Save" bg text @click="rate(ani)">保存评分</el-button>
+        <el-button :icon="Save" bg text @click="setRate(ani)">保存评分</el-button>
       </div>
     </div>
   </el-dialog>
@@ -58,6 +58,17 @@ let clearRate = () => {
 let rate = (v) => {
   loading.value = true
   http.rate(v)
+      .then(res => {
+        ani.value.score = res.data
+      })
+      .finally(() => {
+        loading.value = false
+      })
+}
+
+let setRate = (v) => {
+  loading.value = true
+  http.setRate(v)
       .then(res => {
         ani.value.score = res.data
 

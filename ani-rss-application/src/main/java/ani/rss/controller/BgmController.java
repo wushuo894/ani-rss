@@ -52,9 +52,18 @@ public class BgmController extends BaseController {
     }
 
     @Auth
-    @Operation(summary = "评分")
+    @Operation(summary = "获取评分")
     @PostMapping("/rate")
     public Result<Integer> rate(@RequestBody Ani ani) {
+        String subjectId = BgmUtil.getSubjectId(ani);
+        Integer rate = BgmUtil.rate(subjectId, null);
+        return Result.success(rate);
+    }
+
+    @Auth
+    @Operation(summary = "进行评分")
+    @PostMapping("/setRate")
+    public Result<Integer> setRate(@RequestBody Ani ani) {
         String subjectId = BgmUtil.getSubjectId(ani);
         Integer score = Opt.ofNullable(ani.getScore())
                 .map(Double::intValue)
