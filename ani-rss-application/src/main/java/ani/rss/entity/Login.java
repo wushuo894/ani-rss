@@ -21,16 +21,16 @@ public class Login implements Serializable {
     /**
      * 密码
      */
-    @Schema(description = "密码")
+    @Schema(description = "密码 (MD5摘要)")
     private String password;
     /**
      * ip
      */
-    @Schema(description = "ip")
+    @Schema(description = "ip", hidden = true)
     private String ip;
     /**
      * key
      */
-    @Schema(description = "key")
+    @Schema(description = "key", hidden = true)
     private String key;
 }
