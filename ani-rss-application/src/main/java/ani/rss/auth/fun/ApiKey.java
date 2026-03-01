@@ -20,7 +20,7 @@ public class ApiKey implements Function<HttpServletRequest, Boolean> {
             return false;
         }
 
-        for (String key : List.of("api-key", "s")) {
+        for (String key : List.of("api-key", "x-api-key", "s")) {
             String s = request.getHeader(key);
             if (StrUtil.isBlank(s)) {
                 s = request.getParameter(key);
