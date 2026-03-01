@@ -2,9 +2,8 @@
   <play-start ref="playStart"/>
   <el-dialog v-model="dialogVisible" :title="ani.title" center>
     <div v-loading="listLoading" v-if="list.length || listLoading">
-      <el-scrollbar>
-        <div class="grid-container"
-             style="max-height: 500px;">
+      <el-scrollbar style="height: 500px;">
+        <div class="grid-container">
           <div v-for="it in list">
             <el-card shadow="never">
               <div class="grid-item">
