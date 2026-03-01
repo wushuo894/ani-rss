@@ -253,6 +253,7 @@ public class ConfigController extends BaseController {
         String contentType = "application/javascript; charset=utf-8";
 
         response.setContentType(contentType);
+        response.setContentLength(customJs.length());
         @Cleanup
         OutputStream outputStream = response.getOutputStream();
         IoUtil.writeUtf8(outputStream, true, customJs);
@@ -271,6 +272,7 @@ public class ConfigController extends BaseController {
         String contentType = "text/css";
 
         response.setContentType(contentType);
+        response.setContentLength(customCss.length());
         @Cleanup
         OutputStream outputStream = response.getOutputStream();
         IoUtil.writeUtf8(outputStream, true, customCss);

@@ -113,6 +113,8 @@ public class FileController extends BaseController {
                 InputStream inputStream = Channels.newInputStream(channel);
                 IoUtil.copy(inputStream, out, 40960, length, null);
             } else {
+                response.setContentLengthLong(file.length());
+
                 @Cleanup
                 InputStream inputStream = FileUtil.getInputStream(file);
                 @Cleanup
