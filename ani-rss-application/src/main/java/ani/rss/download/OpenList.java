@@ -10,8 +10,8 @@ import ani.rss.util.basic.HttpReq;
 import ani.rss.util.other.NotificationUtil;
 import ani.rss.util.other.TorrentUtil;
 import cn.hutool.core.collection.ListUtil;
+import cn.hutool.core.date.DateTime;
 import cn.hutool.core.date.DateUtil;
-import cn.hutool.core.date.TimeInterval;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.text.StrFormatter;
@@ -118,6 +118,7 @@ public class OpenList implements BaseDownload {
                             "delete_policy", "delete_on_upload_succeed"
                     )))
                     .thenFunction(res -> {
+                        HttpReq.assertStatus(res);
                         JsonObject jsonObject = GsonStatic.fromJson(res.body(), JsonObject.class);
                         Assert.isTrue(jsonObject.get("code").getAsInt() == 200, "添加离线下载失败 {}", reName);
                         log.info("添加离线下载成功 {}", reName);
@@ -127,15 +128,19 @@ public class OpenList implements BaseDownload {
                                 .get("id").getAsString();
                     });
 
-            TimeInterval timer = DateUtil.timer();
+            // 记录开始时间
+            DateTime startTime = DateTime.now();
+
             // 重试次数
             long retry = 0;
             while (true) {
                 Integer alistDownloadTimeout = config.getAlistDownloadTimeout();
                 Long alistDownloadRetryNumber = config.getAlistDownloadRetryNumber();
-                if (timer.intervalMinute() > alistDownloadTimeout) {
+
+                DateTime endTime = DateUtil.offsetMinute(startTime, alistDownloadTimeout);
+                DateTime currentTime = DateTime.now();
+                if (currentTime.getTime() >= endTime.getTime()) {
                     // 超过下载超时限制
-                    timer.clear();
                     log.error("{} {} 分钟还未下载完成, 停止检测下载", reName, alistDownloadTimeout);
                     return false;
                 }
