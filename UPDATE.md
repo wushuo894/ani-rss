@@ -1,6 +1,7 @@
-- feat: 新增${bgmId}模板
-- refactor: 优化拼音
-- fix: 修复番剧评分问题
+- feat: 支持x-api-key鉴权
+- fix: 修复批量添加错误 close #631
+- refactor: 优化视频列表
+- refactor: 优化OpenList下载
 
 [请不要将本项目在国内宣传](https://github.com/wushuo894/ani-rss/discussions/504)
 
