@@ -360,7 +360,7 @@ let batchAddition = async () => {
             })
       }
       batchAdditionNum.value += item.length
-      await http.setAni(ani)
+      await http.addAni(ani)
     }
     ElMessage.success("添加成功")
 
