@@ -227,7 +227,24 @@ public class ConfigUtil {
                 .setScrape(false)
                 .setReplace(false)
                 .setMaxFileNameLength(0)
-                .setLimitLoginAttempts(true);
+                .setLimitLoginAttempts(true)
+                .setFfmpegEnable(false)
+                .setFfmpegPath("ffmpeg")
+                .setFfprobePath("ffprobe")
+                .setFfmpegCachePath(FileUtils.getAbsolutePath(new File(rootPath + "/cache")))
+                .setFfmpegAcceptVideoCodecs(new ArrayList<>())
+                .setFfmpegVideoCodec("")
+                .setFfmpegAcceptAudioCodecs(new ArrayList<>())
+                .setFfmpegAudioCodec("")
+                .setFfmpegAcceptFormats(new ArrayList<>())
+                .setFfmpegFormat("")
+                .setFfmpegCrf(23)
+                .setFfmpegPreset("medium")
+                .setFfmpegSeeding(true)
+                .setFfmpegExtraArgs("")
+                .setFfmpegSubtitleMode("copy")
+                .setFfmpegSleepSeconds(30)
+                .setFfmpegMaxConcurrent(1);
     }
 
     /**
@@ -466,7 +483,8 @@ public class ConfigUtil {
         List<Func1<Config, String>> func1List = List.of(
                 Config::getDownloadPathTemplate,
                 Config::getOvaDownloadPathTemplate,
-                Config::getCompletedPathTemplate
+                Config::getCompletedPathTemplate,
+                Config::getFfmpegCachePath
         );
 
         DynaBean dynaBean = DynaBean.create(config);

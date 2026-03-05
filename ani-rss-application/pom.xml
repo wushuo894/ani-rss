@@ -23,11 +23,11 @@
         </repository>
         <repository>
             <id>ebml-reader</id>
-            <url>https://raw.github.com/wushuo894/EBMLReader/mvn-repo</url>
+            <url>https://raw.githubusercontent.com/wushuo894/EBMLReader/mvn-repo</url>
         </repository>
         <repository>
             <id>tmdb-api</id>
-            <url>https://raw.github.com/wushuo894/tmdb-api/mvn-repo</url>
+            <url>https://raw.githubusercontent.com/wushuo894/tmdb-api/mvn-repo</url>
         </repository>
     </repositories>
 
@@ -101,63 +101,78 @@
         </dependency>
     </dependencies>
 
+    <profiles>
+        <profile>
+            <id>windows-exe</id>
+            <activation>
+                <os>
+                    <family>windows</family>
+                </os>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>com.akathist.maven.plugins.launch4j</groupId>
+                        <artifactId>launch4j-maven-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>l4j</id>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>launch4j</goal>
+                                </goals>
+                                <configuration>
+                                    <headerType>gui</headerType>
+                                    <outfile>target/ani-rss.exe</outfile>
+                                    <jar>target/ani-rss.jar</jar>
+                                    <errTitle>Java environment is required!</errTitle>
+                                    <cmdLine>--gui</cmdLine>
+                                    <chdir>.</chdir>
+                                    <priority>normal</priority>
+                                    <downloadUrl>https://adoptium.net/zh-CN/</downloadUrl>
+                                    <supportUrl>https://whichjdk.com/</supportUrl>
+                                    <stayAlive>false</stayAlive>
+                                    <restartOnCrash>false</restartOnCrash>
+                                    <icon>${project.parent.basedir}/ani-rss-ui/public/favicon.ico</icon>
+                                    <singleInstance>
+                                        <mutexName>ani-rss (${project.version})</mutexName>
+                                        <windowTitle>ani-rss (${project.version})</windowTitle>
+                                    </singleInstance>
+                                    <jre>
+                                        <path>%JAVA_HOME%/bin;%PATH%</path>
+                                        <minVersion>17</minVersion>
+                                        <opts>
+                                            <opt>-Xms60m -Xmx1g -Xss256k</opt>
+                                            <opt>--enable-native-access=ALL-UNNAMED</opt>
+                                            <opt>-XX:+UseCompactObjectHeaders</opt>
+                                            <opt>-XX:+IgnoreUnrecognizedVMOptions</opt>
+                                            <opt>--add-opens=java.base/java.net=ALL-UNNAMED</opt>
+                                            <opt>--add-opens=java.base/sun.net.www.protocol.https=ALL-UNNAMED</opt>
+                                        </opts>
+                                    </jre>
+                                    <versionInfo>
+                                        <fileDescription>https://docs.wushuo.top/</fileDescription>
+                                        <copyright>Copyright (C) 2024-2025</copyright>
+                                        <productName>${project.artifactId}</productName>
+                                        <internalName>${project.artifactId}</internalName>
+                                        <originalFilename>ani-rss.exe</originalFilename>
+                                        <language>SIMPLIFIED_CHINESE</language>
+                                    </versionInfo>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+
     <build>
         <finalName>ani-rss</finalName>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
-            </plugin>
-            <plugin>
-                <groupId>com.akathist.maven.plugins.launch4j</groupId>
-                <artifactId>launch4j-maven-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>l4j</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>launch4j</goal>
-                        </goals>
-                        <configuration>
-                            <headerType>gui</headerType>
-                            <outfile>target/ani-rss.exe</outfile>
-                            <jar>target/ani-rss.jar</jar>
-                            <errTitle>Java environment is required!</errTitle>
-                            <cmdLine>--gui</cmdLine>
-                            <chdir>.</chdir>
-                            <priority>normal</priority>
-                            <downloadUrl>https://adoptium.net/zh-CN/</downloadUrl>
-                            <supportUrl>https://whichjdk.com/</supportUrl>
-                            <stayAlive>false</stayAlive>
-                            <restartOnCrash>false</restartOnCrash>
-                            <icon>${project.parent.basedir}/ani-rss-ui/public/favicon.ico</icon>
-                            <singleInstance>
-                                <mutexName>ani-rss (${project.version})</mutexName>
-                                <windowTitle>ani-rss (${project.version})</windowTitle>
-                            </singleInstance>
-                            <jre>
-                                <path>%JAVA_HOME%/bin;%PATH%</path>
-                                <minVersion>17</minVersion>
-                                <opts>
-                                    <opt>-Xms60m -Xmx1g -Xss256k</opt>
-                                    <opt>--enable-native-access=ALL-UNNAMED</opt>
-                                    <opt>-XX:+UseCompactObjectHeaders</opt>
-                                    <opt>-XX:+IgnoreUnrecognizedVMOptions</opt>
-                                    <opt>--add-opens=java.base/java.net=ALL-UNNAMED</opt>
-                                    <opt>--add-opens=java.base/sun.net.www.protocol.https=ALL-UNNAMED</opt>
-                                </opts>
-                            </jre>
-                            <versionInfo>
-                                <fileDescription>https://docs.wushuo.top/</fileDescription>
-                                <copyright>Copyright (C) 2024-2025</copyright>
-                                <productName>${project.artifactId}</productName>
-                                <internalName>${project.artifactId}</internalName>
-                                <originalFilename>ani-rss.exe</originalFilename>
-                                <language>SIMPLIFIED_CHINESE</language>
-                            </versionInfo>
-                        </configuration>
-                    </execution>
-                </executions>
             </plugin>
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>

@@ -21,6 +21,9 @@
     <el-collapse-item name="7" title="其他">
       <other :config="props.config"/>
     </el-collapse-item>
+    <el-collapse-item name="8" title="归一化设置">
+      <ffmpeg :config="props.config"/>
+    </el-collapse-item>
   </el-collapse>
 </template>
 
@@ -33,6 +36,7 @@ import Rss from "@/config/basic/Rss.vue";
 import Trackers from "@/config/basic/Trackers.vue";
 import Other from "@/config/basic/Other.vue";
 import Bangumi from "@/config/basic/Bangumi.vue";
+import Ffmpeg from "@/config/basic/Ffmpeg.vue";
 
 let activeName = ref('1')
 

@@ -296,7 +296,7 @@ export let login = (v) => api.post('api/login', v)
  * 测试IP白名单
  * @returns {Promise<Response>}
  */
-export let testIpWhitelist = () => fetch('api/testIpWhitelist', {method: 'post'}).then(res => res.json())
+export let testIpWhitelist = () => fetch('api/testIpWhitelist', { method: 'post' }).then(res => res.json())
 
 /**
  * 获取视频列表
@@ -310,7 +310,7 @@ export let playList = (ani) => api.post('api/playList', ani)
  * @param file 视频文件路径
  * @returns {Promise<unknown>}
  */
-export let getSubtitles = (file) => api.post('api/getSubtitles', {file})
+export let getSubtitles = (file) => api.post('api/getSubtitles', { file })
 
 /**
  * 开始下载合集
@@ -347,3 +347,10 @@ export let getAniBySubjectId = (id) => api.post(`api/getAniBySubjectId?id=${id}`
  * @returns {Promise<unknown>}
  */
 export let deleteTorrent = (id, hash) => api.post(`api/deleteTorrent?id=${id}&hash=${hash}`)
+
+/**
+ * FFmpeg 测试
+ * @param config 设置
+ * @returns {Promise<unknown>}
+ */
+export let ffmpegTest = (config) => api.post('api/ffmpegTest', config)

@@ -3,10 +3,12 @@ package ani.rss.task;
 import ani.rss.commons.ExceptionUtils;
 import ani.rss.entity.Config;
 import ani.rss.entity.TorrentsInfo;
+import ani.rss.enums.TorrentsTags;
 import ani.rss.service.DownloadService;
 import ani.rss.util.other.ConfigUtil;
 import ani.rss.util.other.TorrentUtil;
 import cn.hutool.core.thread.ThreadUtil;
+import cn.hutool.core.util.BooleanUtil;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
@@ -44,6 +46,14 @@ public class RenameTask extends Thread {
                     }
                     Boolean deleteStandbyRSSOnly = config.getDeleteStandbyRSSOnly();
                     try {
+                        // FFmpeg 归一化开启时，等待 FFmpeg 处理完成再重命名
+                        if (BooleanUtil.isTrue(config.getFfmpegEnable())) {
+                            List<String> tags = torrentsInfo.getTags();
+                            if (tags.contains(TorrentsTags.ANI_RSS.getValue())
+                                    && !tags.contains(TorrentsTags.FFMPEG_DONE.getValue())) {
+                                continue;
+                            }
+                        }
                         TorrentUtil.rename(torrentsInfo);
                         DownloadService.notification(torrentsInfo);
                         if (deleteStandbyRSSOnly) {

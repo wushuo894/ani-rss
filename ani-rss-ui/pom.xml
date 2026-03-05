@@ -63,7 +63,7 @@
                         </goals>
                         <phase>generate-resources</phase>
                         <configuration>
-                            <arguments>install</arguments>
+                            <arguments>install --force</arguments>
                         </configuration>
                     </execution>
                     <execution>
