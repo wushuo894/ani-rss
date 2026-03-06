@@ -1,5 +1,6 @@
-- feat: 新增设置导入与导出 close #623
-- refactor: 优化webhook日志
+- feat: 增加信任的反代IP设置 close #636
+
+<https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Reference/Headers/X-Forwarded-For>
 
 [请不要将本项目在国内宣传](https://github.com/wushuo894/ani-rss/discussions/504)
 
