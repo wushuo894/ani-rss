@@ -15,6 +15,7 @@ import cn.hutool.core.bean.copier.CopyOptions;
 import cn.hutool.core.date.DatePattern;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.lang.func.Func1;
 import cn.hutool.core.lang.func.LambdaUtil;
 import cn.hutool.core.text.StrFormatter;
@@ -25,9 +26,11 @@ import cn.hutool.core.util.ZipUtil;
 import cn.hutool.crypto.SecureUtil;
 import cn.hutool.system.OsInfo;
 import cn.hutool.system.SystemUtil;
+import lombok.Cleanup;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.File;
+import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Date;
@@ -338,6 +341,19 @@ public class ConfigUtil {
 
         log.info("正在备份设置 {}", backupFile.getName());
 
+        try {
+            @Cleanup
+            OutputStream outputStream = FileUtil.getOutputStream(backupFile);
+            backup(outputStream);
+            log.info("备份设置成功 {}", backupFile.getName());
+        } catch (Exception e) {
+            log.error("备份失败 {}", backupFile.getName());
+            log.error(e.getMessage(), e);
+        }
+    }
+
+    public static synchronized void backup(OutputStream outputStream) {
+        File configDir = getConfigDir();
         List<File> backupFiles = Stream.of(
                         "files", "torrents", "database.db",
                         AniUtil.FILE_NAME, ConfigUtil.FILE_NAME
@@ -348,19 +364,16 @@ public class ConfigUtil {
                 .toList();
 
         try {
-            ZipUtil.zip(backupFile, StandardCharsets.UTF_8, true, pathname -> {
+            ZipUtil.zip(outputStream, StandardCharsets.UTF_8, true, pathname -> {
                 if (pathname.isFile()) {
-                    return !List.of(".DS_Store", ".DS_Store@SynoResource")
-                            .contains(pathname.getName());
+                    String name = pathname.getName();
+                    return !name.startsWith(".");
                 }
                 File[] files = FileUtils.listFiles(pathname);
                 return !ArrayUtil.isEmpty(files);
             }, backupFiles.toArray(new File[0]));
-
-            log.info("备份设置成功 {}", backupFile.getName());
-        } catch (Exception e) {
-            log.error("备份失败 {}", backupFile.getName());
-            log.error(e.getMessage(), e);
+        } finally {
+            IoUtil.close(outputStream);
         }
     }
 

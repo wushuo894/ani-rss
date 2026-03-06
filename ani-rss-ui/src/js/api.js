@@ -26,9 +26,9 @@ let fetch_ = async (url, method, body) => {
         headers['Content-Type'] = 'application/json'
     }
     return await fetch(url, {
-        'method': method,
-        'body': body ? JSON.stringify(body) : null,
-        'headers': headers
+        method: method,
+        body: body ? JSON.stringify(body) : null,
+        headers: headers
     })
         .then(res => res.json())
         .then(res => {

@@ -1,5 +1,6 @@
 import api from "@/js/api.js";
 import CryptoJS from "crypto-js";
+import {authorization} from "./global.js";
 
 /**
  * 获取设置
@@ -352,3 +353,15 @@ export let getAniBySubjectId = (id) => api.post(`api/getAniBySubjectId?id=${id}`
  * @returns {Promise<unknown>}
  */
 export let deleteTorrent = (id, hash) => api.post(`api/deleteTorrent?id=${id}&hash=${hash}`)
+
+export let importConfig = (file) => {
+    const formData = new FormData();
+    formData.append("file", file);
+    return fetch('api/importConfig', {
+        method: 'POST',
+        body: formData,
+        headers: {
+            'Authorization': authorization.value
+        }
+    }).then(res => res.json())
+}
