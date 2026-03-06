@@ -731,4 +731,150 @@ public class Config implements Serializable {
      */
     @Schema(description = "构建信息")
     private String buildInfo;
+
+    // ===== FFmpeg 转码 =====
+
+    /**
+     * FFmpeg 转码开关
+     */
+    @Schema(description = "FFmpeg 转码开关")
+    private Boolean ffmpegEnable;
+
+    /**
+     * FFmpeg 可执行文件路径
+     */
+    @Schema(description = "FFmpeg 路径")
+    private String ffmpegPath;
+
+    /**
+     * FFprobe 可执行文件路径
+     */
+    @Schema(description = "FFprobe 路径")
+    private String ffprobePath;
+
+    /**
+     * FFmpeg 转码输出目录（BT 下载到此目录后进行转码，转码完成再输出到最终保存路径）
+     */
+    @Schema(description = "FFmpeg 转码输出目录")
+    private String ffmpegOutputPath;
+
+    /**
+     * 可接受的视频编码列表（白名单，留空不检测）
+     */
+    @Schema(description = "可接受视频编码白名单")
+    private List<String> ffmpegAcceptVideoCodecs;
+
+    /**
+     * 目标视频编码，空字符串表示保持原编码
+     */
+    @Schema(description = "目标视频编码")
+    private String ffmpegVideoCodec;
+
+    /**
+     * 可接受的音频编码列表（白名单，留空不检测）
+     */
+    @Schema(description = "可接受音频编码白名单")
+    private List<String> ffmpegAcceptAudioCodecs;
+
+    /**
+     * 目标音频编码，空字符串表示保持原编码
+     */
+    @Schema(description = "目标音频编码")
+    private String ffmpegAudioCodec;
+
+    /**
+     * 可接受的容器格式列表（白名单，留空不检测）
+     */
+    @Schema(description = "可接受容器格式白名单")
+    private List<String> ffmpegAcceptFormats;
+
+    /**
+     * 目标容器格式，空字符串表示保持原格式
+     */
+    @Schema(description = "目标容器格式")
+    private String ffmpegFormat;
+
+    /**
+     * 视频质量参数 CRF (0-51, 越小质量越高)
+     */
+    @Schema(description = "视频质量 CRF")
+    private Integer ffmpegCrf;
+
+    /**
+     * 视频编码预设
+     */
+    @Schema(description = "编码预设")
+    private String ffmpegPreset;
+
+    /**
+     * 转码后是否保持做种（不删除缓存文件）
+     */
+    @Schema(description = "转码后保持做种")
+    private Boolean ffmpegSeeding;
+
+    /**
+     * 额外 FFmpeg 参数
+     */
+    @Schema(description = "额外 FFmpeg 参数")
+    private String ffmpegExtraArgs;
+
+    /**
+     * 字幕处理方式 (copy: 拷贝, remove: 移除)
+     */
+    @Schema(description = "字幕处理方式")
+    private String ffmpegSubtitleMode;
+
+    /**
+     * FFmpeg 队列空闲等待时间（秒）
+     */
+    @Schema(description = "FFmpeg 空闲等待时间(秒)")
+    private Integer ffmpegSleepSeconds;
+
+    /**
+     * FFmpeg 最大并发转码数
+     */
+    @Schema(description = "FFmpeg 最大并发转码数")
+    private Integer ffmpegMaxConcurrent;
+
+    /**
+     * 转封装为 MP4 时将内封字幕烧录到视频画面（hardSub）
+     */
+    @Schema(description = "MP4 内嵌字幕烧录开关")
+    private Boolean ffmpegHardSub;
+
+    /**
+     * 可接受分辨率高度白名单（如 1080、720、4K，留空不检测）
+     */
+    @Schema(description = "可接受分辨率白名单")
+    private List<String> ffmpegAcceptResolutions;
+
+    /**
+     * 目标分辨率（FFmpeg scale 参数，如 -2:1080、1920:1080，留空不调整）
+     */
+    @Schema(description = "目标分辨率")
+    private String ffmpegTargetResolution;
+
+    /**
+     * 可接受帧率白名单（如 24、30，留空不检测）
+     */
+    @Schema(description = "可接受帧率白名单")
+    private List<String> ffmpegAcceptFrameRates;
+
+    /**
+     * 目标帧率（如 24、30，留空不调整）
+     */
+    @Schema(description = "目标帧率")
+    private String ffmpegTargetFrameRate;
+
+    /**
+     * 可接受最大码率（kbps，0 表示不检测）
+     */
+    @Schema(description = "可接受最大码率 (kbps)")
+    private Integer ffmpegAcceptMaxBitrate;
+
+    /**
+     * 目标视频码率（如 4000k、2M，留空不限制）
+     */
+    @Schema(description = "目标视频码率")
+    private String ffmpegTargetBitrate;
 }

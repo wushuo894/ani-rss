@@ -130,12 +130,15 @@ public class WebHookNotification implements BaseNotification {
         }
 
         for (String s : split) {
-            List<String> header = StrUtil.split(s, ":", true, true);
-            if (header.size() != 2) {
+            int idx = s.indexOf(':');
+            if (idx <= 0) {
                 continue;
             }
-            String k = header.get(0);
-            String v = header.get(1);
+            String k = s.substring(0, idx).trim();
+            String v = s.substring(idx + 1).trim();
+            if (StrUtil.isBlank(k)) {
+                continue;
+            }
             headerMap.put(k, v);
         }
 
@@ -157,7 +160,12 @@ public class WebHookNotification implements BaseNotification {
                     if (!file.exists()) {
                         return null;
                     }
-                    return Base64.getEncoder().encodeToString(FileUtil.readBytes(file));
+                    try {
+                        return Base64.getEncoder().encodeToString(FileUtil.readBytes(file));
+                    } catch (Exception e) {
+                        log.warn("读取封面图片失败: {} - {}", filename, e.getMessage());
+                        return null;
+                    }
                 }).filter(StrUtil::isNotBlank)
                 .orElse(imageBase64);
         return imageBase64;

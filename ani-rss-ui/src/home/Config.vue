@@ -99,6 +99,7 @@ const saveConfig = () => {
   http.setConfig(my_config)
       .then(res => {
         ElMessage.success(res.message)
+        window.$reloadFfmpegEnable?.()
         window.$reLoadList()
         dialogVisible.value = false
       })

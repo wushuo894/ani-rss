@@ -1,5 +1,4 @@
 import api from "@/js/api.js";
-import CryptoJS from "crypto-js";
 import {authorization} from "./global.js";
 
 /**
@@ -289,20 +288,16 @@ export let getTgUpdates = (notificationConfig) => api.post('api/getTgUpdates', n
 
 /**
  * 登录
- * @param user
+ * @param v
  * @returns {Promise<unknown>}
  */
-export let login = (user) => {
-    user = JSON.parse(JSON.stringify(user))
-    user.password = CryptoJS['MD5'](user.password).toString()
-    return api.post('api/login', user)
-}
+export let login = (v) => api.post('api/login', v)
 
 /**
  * 测试IP白名单
  * @returns {Promise<Response>}
  */
-export let testIpWhitelist = () => fetch('api/testIpWhitelist', {method: 'post'}).then(res => res.json())
+export let testIpWhitelist = () => fetch('api/testIpWhitelist', { method: 'post' }).then(res => res.json())
 
 /**
  * 获取视频列表
@@ -316,7 +311,7 @@ export let playList = (ani) => api.post('api/playList', ani)
  * @param file 视频文件路径
  * @returns {Promise<unknown>}
  */
-export let getSubtitles = (file) => api.post('api/getSubtitles', {file})
+export let getSubtitles = (file) => api.post('api/getSubtitles', { file })
 
 /**
  * 开始下载合集
@@ -354,6 +349,11 @@ export let getAniBySubjectId = (id) => api.post(`api/getAniBySubjectId?id=${id}`
  */
 export let deleteTorrent = (id, hash) => api.post(`api/deleteTorrent?id=${id}&hash=${hash}`)
 
+/**
+ * 导入设置
+ * @param file
+ * @returns {Promise<unknown>}
+ */
 export let importConfig = (file) => {
     const formData = new FormData();
     formData.append("file", file);
@@ -365,3 +365,16 @@ export let importConfig = (file) => {
         }
     }).then(res => res.json())
 }
+
+/**
+ * FFmpeg 测试
+ * @param config 设置
+ * @returns {Promise<unknown>}
+ */
+export let ffmpegTest = (config) => api.post('api/ffmpegTest', config)
+
+/**
+ * 转码队列状态
+ * @returns {Promise<unknown>}
+ */
+export let ffmpegQueue = () => api.post('api/ffmpegQueue')

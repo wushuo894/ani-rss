@@ -23,7 +23,10 @@ stop() {
   if [ -n "$pid" ]; then
       echo "Stopping process $pid - $jar"
       kill "$pid"
-      wait "$pid"
+      # pgrep 找到的进程不一定是当前 shell 的子进程，用 kill -0 轮询替代 wait
+      while kill -0 "$pid" 2>/dev/null; do
+          sleep 0.1
+      done
   fi
 }
 
