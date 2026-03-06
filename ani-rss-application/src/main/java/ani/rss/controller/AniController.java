@@ -357,7 +357,7 @@ public class AniController extends BaseController {
     }
 
     @Auth
-    @Operation(summary = "手动刷新订阅")
+    @Operation(summary = "刷新全部订阅")
     @PostMapping("/refreshAll")
     public Result<Void> refreshAll() {
         // 未传Body, 刷新所有订阅
@@ -367,7 +367,7 @@ public class AniController extends BaseController {
     }
 
     @Auth
-    @Operation(summary = "手动刷新订阅")
+    @Operation(summary = "刷新订阅")
     @PostMapping("/refreshAni")
     public Result<Void> refreshAni(@RequestBody Ani ani) {
         Optional<Ani> first = AniUtil.ANI_LIST.stream()

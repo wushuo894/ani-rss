@@ -10,7 +10,6 @@ import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.lang.Opt;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.HttpRequest;
-import cn.hutool.http.HttpResponse;
 import cn.hutool.http.Method;
 import cn.hutool.json.JSONUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -104,7 +103,15 @@ public class WebHookNotification implements BaseNotification {
             httpRequest.body(webHookBody);
             log.debug("webhook body: {}", webHookBody);
         }
-        return httpRequest.thenFunction(HttpResponse::isOk);
+        return httpRequest.thenFunction(res -> {
+            boolean ok = res.isOk();
+            if (ok) {
+                return true;
+            }
+            int status = res.getStatus();
+            log.error("webhook error, status: {}", status);
+            return false;
+        });
     }
 
     private static Map<String, String> getHeaderMap(NotificationConfig notificationConfig) {
