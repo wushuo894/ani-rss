@@ -5,6 +5,7 @@
   <Manage ref="manage"/>
   <Collection ref="collection"/>
   <TorrentsInfos ref="torrentsInfosRef"/>
+  <FfmpegQueue ref="ffmpegQueueRef"/>
   <div class="content">
     <div id="header">
       <div style="margin: 10px;" class="auto-flex">
@@ -76,6 +77,16 @@
             </template>
           </el-button>
         </div>
+        <div v-if="ffmpegEnable" style="margin: 0 4px;">
+          <el-button bg text @click="ffmpegQueueRef?.show">
+            <el-icon :class="elIconClass">
+              <VideoCamera/>
+            </el-icon>
+            <template v-if="isNotMobile">
+              转码
+            </template>
+          </el-button>
+        </div>
         <div style="margin: 0 4px;">
           <popconfirm title="立即刷新全部订阅?" @confirm="refreshAni">
             <template #reference>
@@ -132,7 +143,7 @@
 
 <script setup>
 import {onMounted, ref} from "vue";
-import {Fold, Plus, Refresh, Setting, Tickets} from "@element-plus/icons-vue"
+import {Fold, Plus, Refresh, Setting, Tickets, VideoCamera} from "@element-plus/icons-vue"
 import Config from "./Config.vue";
 import List from "./List.vue";
 import Add from "./Add.vue";
@@ -143,12 +154,15 @@ import Manage from "./Manage.vue";
 import {useLocalStorage} from "@vueuse/core";
 import Collection from "./Collection.vue";
 import TorrentsInfos from "./TorrentsInfos.vue";
+import FfmpegQueue from "./FfmpegQueue.vue";
 import {elIconClass, initLayout, isNotMobile} from "@/js/global.js";
 import * as http from "@/js/http.js";
 
 const collection = ref()
 const manage = ref()
 const torrentsInfosRef = ref()
+const ffmpegQueueRef = ref()
+const ffmpegEnable = ref(false)
 
 const title = ref('')
 const enable = useLocalStorage('select-enable', '已启用')
@@ -204,6 +218,13 @@ let refreshAni = () => {
       })
 }
 
+const loadFfmpegEnable = () => {
+  http.config()
+      .then(res => {
+        ffmpegEnable.value = !!res.data?.ffmpegEnable
+      })
+}
+
 onMounted(() => {
   initLayout()
   selectChange()
@@ -212,6 +233,9 @@ onMounted(() => {
       .then(res => {
         about.value = res.data
       })
+
+  loadFfmpegEnable()
+  window.$reloadFfmpegEnable = loadFfmpegEnable
 })
 </script>
 

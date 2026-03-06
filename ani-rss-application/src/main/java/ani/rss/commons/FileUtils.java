@@ -14,7 +14,7 @@ public class FileUtils {
     /**
      * 视频格式
      */
-    private static final Set<String> VIDEO_FORMAT = Set.of("mp4", "mkv", "avi", "wmv");
+    private static final Set<String> VIDEO_FORMAT = Set.of("mp4", "mkv", "avi", "wmv", "ts", "m4v", "mov", "flv", "m2ts", "webm");
 
     /**
      * 字幕格式
@@ -56,7 +56,7 @@ public class FileUtils {
             return normalize(absolutePath);
         }
 
-        if (ReUtil.contains("^[A-z]:", absolutePath)) {
+        if (ReUtil.contains("^[A-Za-z]:", absolutePath)) {
             // 已是绝对路径
             return normalize(absolutePath);
         }
@@ -77,7 +77,7 @@ public class FileUtils {
             return normalize(absolutePath);
         }
 
-        if (ReUtil.contains("^[A-z]:", absolutePath)) {
+        if (ReUtil.contains("^[A-Za-z]:", absolutePath)) {
             // 已是绝对路径
             return normalize(absolutePath);
         }
