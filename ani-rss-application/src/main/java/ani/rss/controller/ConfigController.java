@@ -32,6 +32,7 @@ import lombok.Cleanup;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jsoup.Jsoup;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -304,7 +305,7 @@ public class ConfigController extends BaseController {
 
     @Auth
     @Operation(summary = "导入设置")
-    @PostMapping("/importConfig")
+    @PostMapping(value = "/importConfig", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public Result<Void> importConfig(@RequestParam("file") MultipartFile file) throws IOException {
         String originalFilename = file.getOriginalFilename();
         String extName = FileUtil.extName(originalFilename);

@@ -9,6 +9,7 @@ import cn.hutool.core.io.FileUtil;
 import cn.hutool.crypto.SecureUtil;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -22,7 +23,7 @@ import java.io.IOException;
 public class UploadController extends BaseController {
     @Auth
     @Operation(summary = "上传文件")
-    @PostMapping("/upload")
+    @PostMapping(value = "/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public Result<Object> upload(@RequestParam("file") MultipartFile file) throws IOException {
         HttpServletRequest request = Global.REQUEST.get();
         String type = request.getParameter("type");

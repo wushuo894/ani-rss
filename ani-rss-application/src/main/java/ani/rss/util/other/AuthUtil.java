@@ -10,6 +10,7 @@ import ani.rss.entity.Global;
 import ani.rss.entity.Login;
 import ani.rss.entity.Result;
 import ani.rss.exception.ResultException;
+import cn.hutool.core.net.NetUtil;
 import cn.hutool.core.text.StrFormatter;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.RandomUtil;
@@ -20,6 +21,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
@@ -97,8 +99,30 @@ public class AuthUtil {
      */
     public static String getIp() {
         try {
+            Config config = ConfigUtil.CONFIG;
+            List<String> reverseProxyTrustIpList = config.getReverseProxyTrustIpList();
+            Boolean reverseProxyTrustIpListEnabled = config.getReverseProxyTrustIpListEnabled();
+
             HttpServletRequest request = Global.REQUEST.get();
-            return request.getRemoteAddr();
+            String ip = request.getRemoteAddr();
+            if (!reverseProxyTrustIpListEnabled) {
+                // 未启用 受信任的反向代理IP
+                return ip;
+            }
+
+            if (!reverseProxyTrustIpList.contains(ip)) {
+                // 不在名单中, 受信任的反向代理IP
+                return ip;
+            }
+
+            // https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Reference/Headers/X-Forwarded-For
+            String forwardedFor = request.getHeader("X-Forwarded-For");
+            if (StrUtil.isNotBlank(forwardedFor)) {
+                // 获取第一个IP
+                return NetUtil.getMultistageReverseProxyIp(forwardedFor);
+            }
+
+            return ip;
         } catch (Exception e) {
             String message = ExceptionUtils.getMessage(e);
             log.error(message, e);
