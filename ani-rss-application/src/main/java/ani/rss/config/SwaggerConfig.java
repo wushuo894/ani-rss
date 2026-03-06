@@ -42,11 +42,10 @@ public class SwaggerConfig {
                                 .in(SecurityScheme.In.HEADER)
                 );
 
-        OpenAPI openAPI = new OpenAPI()
+        return new OpenAPI()
                 .components(components)
                 .addSecurityItem(new SecurityRequirement().addList("api-key"))
                 .info(info)
                 .externalDocs(externalDocumentation);
-        return openAPI;
     }
 }

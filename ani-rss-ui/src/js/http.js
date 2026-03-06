@@ -1,4 +1,5 @@
 import api from "@/js/api.js";
+import CryptoJS from "crypto-js";
 
 /**
  * 获取设置
@@ -287,10 +288,14 @@ export let getTgUpdates = (notificationConfig) => api.post('api/getTgUpdates', n
 
 /**
  * 登录
- * @param v
+ * @param user
  * @returns {Promise<unknown>}
  */
-export let login = (v) => api.post('api/login', v)
+export let login = (user) => {
+    user = JSON.parse(JSON.stringify(user))
+    user.password = CryptoJS['MD5'](user.password).toString()
+    return api.post('api/login', user)
+}
 
 /**
  * 测试IP白名单
