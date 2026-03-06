@@ -323,6 +323,7 @@ public class ConfigController extends BaseController {
         // 重新加载设置
         ConfigUtil.load();
         AniUtil.load();
+        TaskService.restart();
 
         return Result.success("导入成功");
     }
