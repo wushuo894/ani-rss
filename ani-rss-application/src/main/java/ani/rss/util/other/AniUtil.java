@@ -59,6 +59,7 @@ public class AniUtil {
                 .setIgnoreNullValue(true)
                 .setOverride(false);
 
+        ANI_LIST.clear();
         for (Ani ani : anis) {
             Ani newAni = AniUtil.createAni();
             BeanUtil.copyProperties(newAni, ani, copyOptions);

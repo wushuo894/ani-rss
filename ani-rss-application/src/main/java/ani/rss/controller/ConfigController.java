@@ -20,6 +20,7 @@ import cn.hutool.core.date.LocalDateTimeUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.io.resource.ResourceUtil;
+import cn.hutool.core.lang.Assert;
 import cn.hutool.core.text.StrFormatter;
 import cn.hutool.core.util.*;
 import cn.hutool.http.Header;
@@ -32,10 +33,13 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jsoup.Jsoup;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -276,5 +280,50 @@ public class ConfigController extends BaseController {
         @Cleanup
         OutputStream outputStream = response.getOutputStream();
         IoUtil.writeUtf8(outputStream, true, customCss);
+    }
+
+    @Auth
+    @Operation(summary = "导出设置")
+    @GetMapping("/exportConfig")
+    public void backupConfig() throws IOException {
+        String version = MavenUtils.getVersion();
+        String filename = StrUtil.format("ani-rss.backup.{}.zip", version);
+
+        String contentType = getContentType(filename);
+
+        HttpServletResponse response = Global.RESPONSE.get();
+
+        response.setContentType(contentType);
+        response.setHeader(Header.CONTENT_DISPOSITION.toString(), StrFormatter.format("inline; filename=\"{}\"", filename));
+
+        @Cleanup
+        OutputStream outputStream = response.getOutputStream();
+
+        ConfigUtil.backup(outputStream);
+    }
+
+    @Auth
+    @Operation(summary = "导入设置")
+    @PostMapping("/importConfig")
+    public Result<Void> importConfig(@RequestParam("file") MultipartFile file) throws IOException {
+        String originalFilename = file.getOriginalFilename();
+        String extName = FileUtil.extName(originalFilename);
+        Assert.isTrue("zip".equals(extName), "导入格式异常");
+
+        File configDir = ConfigUtil.getConfigDir();
+
+        // 删除旧的种子记录
+        FileUtil.del(configDir + "/torrents");
+
+        @Cleanup
+        InputStream inputStream = file.getInputStream();
+
+        ZipUtil.unzip(inputStream, configDir, StandardCharsets.UTF_8);
+
+        // 重新加载设置
+        ConfigUtil.load();
+        AniUtil.load();
+
+        return Result.success("导入成功");
     }
 }
