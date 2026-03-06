@@ -11,7 +11,8 @@
             @keyup.enter="login"
             @submit="login">
           <el-form-item>
-            <el-input v-model="user.username" placeholder="用户名" autocomplete="username">
+            <el-input v-model.trim="user.username"
+                      placeholder="用户名" autocomplete="username">
               <template #prefix>
                 <el-icon class="el-input__icon">
                   <User/>
@@ -20,7 +21,7 @@
             </el-input>
           </el-form-item>
           <el-form-item>
-            <el-input v-model="user.password" show-password
+            <el-input v-model.trim="user.password" show-password
                       placeholder="密码" autocomplete="current-password">
               <template #prefix>
                 <el-icon class="el-input__icon">
@@ -53,9 +54,7 @@
 </template>
 
 <script setup>
-
 import {onMounted, ref} from "vue";
-import CryptoJS from "crypto-js"
 import * as http from "./js/http.js";
 import {Key} from "@element-plus/icons-vue";
 import {ElMessage} from "element-plus";
@@ -64,33 +63,29 @@ import {authorization, rememberThePassword} from "@/js/global.js";
 let loading = ref(false)
 
 let user = ref({
-  'username': '',
-  'password': ''
+  username: '',
+  password: ''
 })
 
 /**
  * 登录
  */
 let login = () => {
-  user.value.password = user.value.password.trim()
-  user.value.username = user.value.username.trim()
+  let {username, password} = user.value;
 
-  if (!user.value.password || !user.value.username) {
+  if (!password || !username) {
     ElMessage.error('请输入账号与密码')
     return
   }
 
   loading.value = true
 
-  http.login({
-    username: user.value.username,
-    password: CryptoJS['MD5'](user.value.password).toString()
-  })
+  http.login(user.value)
       .then(res => {
         // 记住密码
         if (rememberThePassword.value.remember) {
-          rememberThePassword.value.username = user.value.username
-          rememberThePassword.value.password = user.value.password
+          rememberThePassword.value.username = username
+          rememberThePassword.value.password = password
         } else {
           rememberThePassword.value.username = ''
           rememberThePassword.value.password = ''
