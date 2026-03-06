@@ -731,4 +731,10 @@ public class Config implements Serializable {
      */
     @Schema(description = "构建信息")
     private String buildInfo;
+
+    @Schema(description = "启用 受信任的反向代理IP")
+    private Boolean reverseProxyTrustIpListEnabled;
+
+    @Schema(description = "受信任的反向代理IP")
+    private List<String> reverseProxyTrustIpList;
 }

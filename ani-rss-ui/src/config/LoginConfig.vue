@@ -50,6 +50,13 @@
         </div>
       </div>
     </el-form-item>
+    <el-form-item label="信任的反代IP">
+      <div style="width: 100%;">
+        <el-checkbox label="启用" v-model="config.reverseProxyTrustIpListEnabled"/>
+        <br>
+        <el-input-tag v-model="config.reverseProxyTrustIpList"/>
+      </div>
+    </el-form-item>
     <el-form-item label="Api Key">
       <div class="flex login-api-key-container">
         <el-input v-model:model-value="props.config.apiKey" readonly/>

@@ -230,7 +230,9 @@ public class ConfigUtil {
                 .setScrape(false)
                 .setReplace(false)
                 .setMaxFileNameLength(0)
-                .setLimitLoginAttempts(true);
+                .setLimitLoginAttempts(true)
+                .setReverseProxyTrustIpList(List.of("127.0.0.1"))
+                .setReverseProxyTrustIpListEnabled(false);
     }
 
     /**
