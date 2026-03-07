@@ -130,10 +130,10 @@ public class MikanController extends BaseController {
 
         getImg(img, is -> {
             try {
+                FileUtil.writeFromStream(is, imgFile, true);
+
                 response.setContentType(contentType);
                 response.setContentLengthLong(imgFile.length());
-
-                FileUtil.writeFromStream(is, imgFile, true);
 
                 @Cleanup
                 BufferedInputStream inputStream = FileUtil.getInputStream(imgFile);
