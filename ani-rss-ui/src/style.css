@@ -281,3 +281,7 @@ html, body, #app {
         display: none !important;
     }
 }
+
+.el-link {
+    vertical-align: baseline;
+}
