@@ -16,7 +16,7 @@
     "artplayer-plugin-multiple-subtitles": "^1.1.0",
     "crypto-js": "^4.2.0",
     "dayjs": "^1.11.19",
-    "element-plus": "^2.13.4",
+    "element-plus": "^2.13.5",
     "markdown-it": "^14.1.1",
     "markdown-it-github-alerts": "^1.0.1",
     "vue": "^3.5.29"
