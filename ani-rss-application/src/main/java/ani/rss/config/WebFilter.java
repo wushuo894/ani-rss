@@ -11,11 +11,22 @@ import java.io.IOException;
 @Component
 public class WebFilter implements Filter {
     @Override
-    public void doFilter(ServletRequest request, ServletResponse response, FilterChain filterChain) throws IOException, ServletException {
-        Global.REQUEST.set((HttpServletRequest) request);
-        Global.RESPONSE.set((HttpServletResponse) response);
+    public void doFilter(ServletRequest req, ServletResponse res, FilterChain filterChain) throws IOException, ServletException {
+        HttpServletRequest request = (HttpServletRequest) req;
+        HttpServletResponse response = (HttpServletResponse) res;
+
+        String uri = request.getRequestURI();
+
+        if (!uri.startsWith("/api") && !uri.contains(".") && !uri.equals("/")) {
+            String htmlPath = uri + ".html";
+            request.getRequestDispatcher(htmlPath).forward(request, response);
+            return;
+        }
+
+        Global.REQUEST.set(request);
+        Global.RESPONSE.set(response);
         try {
-            filterChain.doFilter(request, response);
+            filterChain.doFilter(req, res);
         } finally {
             Global.REQUEST.remove();
             Global.RESPONSE.remove();
