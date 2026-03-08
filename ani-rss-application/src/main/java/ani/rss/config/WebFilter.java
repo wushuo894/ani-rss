@@ -17,7 +17,7 @@ public class WebFilter implements Filter {
 
         String uri = request.getRequestURI();
 
-        if (!uri.startsWith("/api") && !uri.contains(".") && !uri.equals("/")) {
+        if (!uri.startsWith("/api") && !uri.contains(".") && !uri.endsWith("/")) {
             String htmlPath = uri + ".html";
             request.getRequestDispatcher(htmlPath).forward(request, response);
             return;
