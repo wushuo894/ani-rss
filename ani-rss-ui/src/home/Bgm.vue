@@ -20,7 +20,7 @@
         </el-table-column>
         <el-table-column label="名称" width="200">
           <template #default="it">
-            <span>{{ list[it.$index]['name_cn'] ? list[it.$index]['name_cn'] : list[it.$index]['name'] }}</span>
+            <span>{{ list[it.$index]['nameCn'] ? list[it.$index]['nameCn'] : list[it.$index]['name'] }}</span>
           </template>
         </el-table-column>
         <el-table-column label="url" prop="url" width="240"/>
