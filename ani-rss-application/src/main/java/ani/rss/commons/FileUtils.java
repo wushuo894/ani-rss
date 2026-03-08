@@ -4,12 +4,17 @@ import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.ReUtil;
 import cn.hutool.core.util.StrUtil;
+import lombok.extern.slf4j.Slf4j;
 
 import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
+@Slf4j
 public class FileUtils {
     /**
      * 视频格式
@@ -126,5 +131,26 @@ public class FileUtils {
 
     public static List<File> listFileList(String path) {
         return List.of(listFiles(path));
+    }
+
+    /**
+     * 文件移动 优先尝试原子移动
+     *
+     * @param source 原位置
+     * @param target 目标位置
+     */
+    public static void move(Path source, Path target) {
+        try {
+            Files.move(source, target, StandardCopyOption.ATOMIC_MOVE, StandardCopyOption.REPLACE_EXISTING);
+            return;
+        } catch (Exception e) {
+            log.debug(e.getMessage(), e);
+        }
+
+        try {
+            Files.move(source, target, StandardCopyOption.REPLACE_EXISTING);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 }
