@@ -79,7 +79,7 @@ public class AniUtil {
             File temp = new File(configFile + ".temp");
             FileUtil.del(temp);
             FileUtil.writeUtf8String(json, temp);
-            FileUtil.rename(temp, configFile.getName(), true);
+            FileUtils.move(temp.toPath(), configFile.toPath());
             log.debug("保存成功 {}", configFile);
         } catch (Exception e) {
             log.error("保存失败 {}", configFile);

@@ -311,7 +311,7 @@ public class ConfigUtil {
             File temp = new File(configFile + ".temp");
             FileUtil.del(temp);
             FileUtil.writeUtf8String(json, temp);
-            FileUtil.rename(temp, configFile.getName(), true);
+            FileUtils.move(temp.toPath(), configFile.toPath());
             LogUtil.loadLogback();
             log.debug("保存成功 {}", configFile);
         } catch (Exception e) {
