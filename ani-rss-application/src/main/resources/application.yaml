@@ -4,6 +4,8 @@ spring:
   web:
     resources:
       static-locations: classpath:/META-INF/dist
+      chain:
+        compressed: true
   jackson:
     date-format: yyyy-MM-dd HH:mm:ss
     time-zone: GMT+8
