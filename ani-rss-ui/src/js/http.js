@@ -365,3 +365,7 @@ export let importConfig = (file) => {
         }
     }).then(res => res.json())
 }
+
+export let ffmpegTest = (config) => api.post('api/ffmpegTest', config)
+
+export let ffmpegQueue = () => api.post('api/ffmpegQueue')
