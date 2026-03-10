@@ -327,6 +327,29 @@ public class ConfigUtil {
     }
 
     /**
+     * 向前兼容：将旧配置键 ffmpegCachePath 的值迁移到 ffmpegOutputPath
+     * 仅当新字段为空且旧字段有值时执行
+     */
+    private static void migrateOldFfmpegCachePath(String json, Config config) {
+        if (StrUtil.isNotBlank(config.getFfmpegOutputPath())) {
+            return;
+        }
+        try {
+            com.google.gson.JsonObject obj = com.google.gson.JsonParser.parseString(json).getAsJsonObject();
+            com.google.gson.JsonElement old = obj.get("ffmpegCachePath");
+            if (old != null && !old.isJsonNull()) {
+                String oldValue = old.getAsString();
+                if (StrUtil.isNotBlank(oldValue)) {
+                    config.setFfmpegOutputPath(oldValue);
+                    log.info("配置迁移: ffmpegCachePath → ffmpegOutputPath = {}", oldValue);
+                }
+            }
+        } catch (Exception e) {
+            log.warn("ffmpegCachePath 迁移失败: {}", e.getMessage());
+        }
+    }
+
+    /**
      * 将设置保存到磁盘
      */
     public static synchronized void sync() {
