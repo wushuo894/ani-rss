@@ -4,7 +4,6 @@ target/
 !**/src/test/**/target/
 
 package-lock.json
-pnpm-lock.yaml
 
 ### IntelliJ IDEA ###
 .idea
