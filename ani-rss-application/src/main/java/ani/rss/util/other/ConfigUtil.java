@@ -22,6 +22,7 @@ import cn.hutool.core.text.StrFormatter;
 import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.RandomUtil;
+import cn.hutool.core.util.StrUtil;
 import cn.hutool.core.util.ZipUtil;
 import cn.hutool.crypto.SecureUtil;
 import cn.hutool.system.OsInfo;
@@ -230,7 +231,31 @@ public class ConfigUtil {
                 .setScrape(false)
                 .setReplace(false)
                 .setMaxFileNameLength(0)
-                .setLimitLoginAttempts(true);
+                .setLimitLoginAttempts(true)
+                .setFfmpegEnable(false)
+                .setFfmpegPath("ffmpeg")
+                .setFfprobePath("ffprobe")
+                .setFfmpegOutputPath(rootPath + "/transcode")
+                .setFfmpegAcceptVideoCodecs(new ArrayList<>())
+                .setFfmpegVideoCodec("")
+                .setFfmpegAcceptAudioCodecs(new ArrayList<>())
+                .setFfmpegAudioCodec("")
+                .setFfmpegAcceptFormats(new ArrayList<>())
+                .setFfmpegFormat("")
+                .setFfmpegCrf(23)
+                .setFfmpegPreset("medium")
+                .setFfmpegSeeding(true)
+                .setFfmpegExtraArgs("")
+                .setFfmpegSubtitleMode("copy")
+                .setFfmpegSleepSeconds(30)
+                .setFfmpegMaxConcurrent(1)
+                .setFfmpegHardSub(false)
+                .setFfmpegAcceptResolutions(new ArrayList<>())
+                .setFfmpegTargetResolution("")
+                .setFfmpegAcceptFrameRates(new ArrayList<>())
+                .setFfmpegTargetFrameRate("")
+                .setFfmpegAcceptMaxBitrate(0)
+                .setFfmpegTargetBitrate("");
     }
 
     /**
@@ -284,6 +309,10 @@ public class ConfigUtil {
                 .create()
                 .setIgnoreNullValue(true);
         BeanUtil.copyProperties(GsonStatic.fromJson(s, Config.class), CONFIG, copyOptions);
+
+        // 向前兼容迁移：旧版配置键 ffmpegCachePath → ffmpegOutputPath
+        migrateOldFfmpegCachePath(s, CONFIG);
+
         format(CONFIG);
         LogUtil.loadLogback();
         log.debug("加载配置文件 {}", configFile);
@@ -479,7 +508,8 @@ public class ConfigUtil {
         List<Func1<Config, String>> func1List = List.of(
                 Config::getDownloadPathTemplate,
                 Config::getOvaDownloadPathTemplate,
-                Config::getCompletedPathTemplate
+                Config::getCompletedPathTemplate,
+                Config::getFfmpegOutputPath
         );
 
         DynaBean dynaBean = DynaBean.create(config);
@@ -487,6 +517,10 @@ public class ConfigUtil {
         for (Func1<Config, String> func1 : func1List) {
             String fieldName = LambdaUtil.getFieldName(func1);
             String v = func1.callWithRuntimeException(config);
+            if (StrUtil.isBlank(v)) {
+                // 空字符串跳过，避免 getAbsolutePath("") 转换为 JVM 工作目录
+                continue;
+            }
             v = FileUtils.getAbsolutePath(v);
             dynaBean.set(fieldName, v);
         }
