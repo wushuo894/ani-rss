@@ -7,6 +7,7 @@ import ani.rss.util.other.AniUtil;
 import ani.rss.util.other.ConfigUtil;
 import cn.hutool.core.net.NetUtil;
 import cn.hutool.core.util.RuntimeUtil;
+import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.jspecify.annotations.NonNull;
 import org.springframework.beans.factory.annotation.Value;
@@ -20,6 +21,9 @@ import java.net.InetSocketAddress;
 @Component
 public class Runner implements ApplicationRunner {
 
+    @Resource
+    private TaskService taskService;
+
     @Value("${server.port}")
     private String port;
 
@@ -30,7 +34,7 @@ public class Runner implements ApplicationRunner {
             ConfigUtil.backup();
 
             AniUtil.load();
-            TaskService.start();
+            taskService.start();
             String version = MavenUtils.getVersion();
             log.info("version {}", version);
 

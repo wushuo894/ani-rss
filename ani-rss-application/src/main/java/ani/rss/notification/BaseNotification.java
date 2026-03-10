@@ -15,6 +15,7 @@ import cn.hutool.core.lang.func.Func1;
 import cn.hutool.core.text.StrFormatter;
 import cn.hutool.core.util.ReUtil;
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.extra.spring.SpringUtil;
 import wushuo.tmdb.api.entity.Tmdb;
 
 import java.util.List;
@@ -120,7 +121,7 @@ public interface BaseNotification {
         notificationTemplate = notificationTemplate.replace("${emoji}", emoji);
         notificationTemplate = notificationTemplate.replace("${action}", action);
 
-        String downloadPath = DownloadService.getDownloadPath(ani);
+        String downloadPath = SpringUtil.getBean(DownloadService.class).getDownloadPath(ani);
         notificationTemplate = notificationTemplate.replace("${downloadPath}", downloadPath);
 
         if (notificationTemplate.contains("${jpTitle}")) {

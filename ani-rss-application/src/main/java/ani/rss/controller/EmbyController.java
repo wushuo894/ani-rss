@@ -9,6 +9,7 @@ import cn.hutool.core.thread.ExecutorBuilder;
 import cn.hutool.core.util.ReUtil;
 import cn.hutool.core.util.StrUtil;
 import io.swagger.v3.oas.annotations.Operation;
+import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -26,6 +27,10 @@ import java.util.concurrent.LinkedBlockingQueue;
 @RestController
 @RequestMapping
 public class EmbyController extends BaseController {
+
+    @Resource
+    private DownloadService downloadService;
+
     @Auth
     @Operation(summary = "获取媒体库")
     @PostMapping("/getEmbyViews")
@@ -159,7 +164,7 @@ public class EmbyController extends BaseController {
 
         String path = item.getPath();
         String parent = new File(path).getParent();
-        String downloadPath = DownloadService.getDownloadPath(ani);
+        String downloadPath = downloadService.getDownloadPath(ani);
         if (downloadPath.equals(parent)) {
             // 路径相同
             return true;

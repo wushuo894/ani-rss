@@ -17,6 +17,7 @@ import cn.hutool.core.util.StrUtil;
 import com.matthewn4444.ebml.EBMLReader;
 import com.matthewn4444.ebml.subtitles.Subtitles;
 import io.swagger.v3.oas.annotations.Operation;
+import jakarta.annotation.Resource;
 import lombok.Cleanup;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -28,6 +29,9 @@ import java.util.*;
 
 @RestController
 public class PlayController extends BaseController {
+
+    @Resource
+    private DownloadService downloadService;
 
     @Auth
     @Operation(summary = "获取内封字幕")
@@ -96,7 +100,7 @@ public class PlayController extends BaseController {
         }
         ani = first.get();
 
-        String downloadPath = DownloadService.getDownloadPath(ani);
+        String downloadPath = downloadService.getDownloadPath(ani);
         List<PlayItem> collect = getPlayItem(new File(downloadPath));
 
         // 按照集数排序

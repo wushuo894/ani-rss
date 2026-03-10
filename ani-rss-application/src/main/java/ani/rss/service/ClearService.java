@@ -4,19 +4,21 @@ import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.ReUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
 
 import java.io.File;
 import java.util.Arrays;
 import java.util.List;
 
 @Slf4j
+@Service
 public class ClearService {
     /**
      * 清理父级空文件夹
      *
      * @param path
      */
-    public static void clearParentFile(String path) {
+    public void clearParentFile(String path) {
         clearParentFile(new File(path));
     }
 
@@ -25,7 +27,7 @@ public class ClearService {
      *
      * @param file
      */
-    public static void clearParentFile(File file) {
+    public void clearParentFile(File file) {
         if (file.exists()) {
             return;
         }

@@ -27,6 +27,7 @@ import cn.hutool.http.Header;
 import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpStatus;
 import io.swagger.v3.oas.annotations.Operation;
+import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.Cleanup;
 import lombok.RequiredArgsConstructor;
@@ -51,6 +52,12 @@ import java.util.stream.Collectors;
 public class ConfigController extends BaseController {
 
     private final CronConfig cronConfig;
+
+    @Resource
+    private TaskService taskService;
+
+    @Resource
+    private ClearService clearService;
 
     /**
      * 构建信息
@@ -132,7 +139,7 @@ public class ConfigController extends BaseController {
                 !Objects.equals(newSleep, sleep) ||
                         !Objects.equals(newRenameSleepSeconds, renameSleepSeconds)
         ) {
-            TaskService.restart();
+            taskService.restart();
         }
         // 下载工具发生改变
         if (!download.equals(config.getDownloadToolType())) {
@@ -177,7 +184,7 @@ public class ConfigController extends BaseController {
 
         for (File file : files) {
             FileUtil.del(file);
-            ClearService.clearParentFile(file);
+            clearService.clearParentFile(file);
         }
 
         FileUtil.del(configDirStr + "/img");
@@ -324,7 +331,7 @@ public class ConfigController extends BaseController {
         // 重新加载设置
         ConfigUtil.load();
         AniUtil.load();
-        TaskService.restart();
+        taskService.restart();
 
         return Result.success("导入成功");
     }

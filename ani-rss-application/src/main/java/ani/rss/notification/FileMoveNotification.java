@@ -10,6 +10,7 @@ import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.ReUtil;
+import cn.hutool.extra.spring.SpringUtil;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.File;
@@ -58,7 +59,7 @@ public class FileMoveNotification implements BaseNotification {
         ani = ObjectUtil.clone(ani);
 
         // 旧的位置
-        String src = DownloadService.getDownloadPath(ani);
+        String src = SpringUtil.getBean(DownloadService.class).getDownloadPath(ani);
 
         // 新的位置; 设置自定义下载位置同时启用, 用以获取新的位置
         Boolean ova = ani.getOva();
@@ -72,7 +73,7 @@ public class FileMoveNotification implements BaseNotification {
         }
         ani.setCustomDownloadPath(true);
 
-        String target = DownloadService.getDownloadPath(ani);
+        String target = SpringUtil.getBean(DownloadService.class).getDownloadPath(ani);
 
         // 进行移动
         FileUtil.mkdir(target);

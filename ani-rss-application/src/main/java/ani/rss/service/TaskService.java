@@ -5,17 +5,19 @@ import ani.rss.task.RenameTask;
 import ani.rss.task.RssTask;
 import cn.hutool.core.thread.ThreadUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Vector;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 @Slf4j
+@Service
 public class TaskService {
     public static final AtomicBoolean LOOP = new AtomicBoolean(false);
     public static final List<Thread> THREADS = new Vector<>();
 
-    public static synchronized void stop() {
+    public synchronized void stop() {
         LOOP.set(false);
         for (Thread thread : THREADS) {
             try {
@@ -32,12 +34,16 @@ public class TaskService {
         THREADS.clear();
     }
 
-    public static synchronized void restart() {
+    public synchronized void restart() {
         stop();
         start();
     }
 
-    public static synchronized void start() {
+    public synchronized void start() {
+        if (LOOP.get() && !THREADS.isEmpty()) {
+            log.warn("任务已经在运行中");
+            return;
+        }
         LOOP.set(true);
         THREADS.add(new RenameTask(LOOP));
         THREADS.add(new RssTask(LOOP));
