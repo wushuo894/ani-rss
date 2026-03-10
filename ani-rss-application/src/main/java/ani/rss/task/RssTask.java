@@ -8,6 +8,7 @@ import ani.rss.util.other.AniUtil;
 import ani.rss.util.other.ConfigUtil;
 import ani.rss.util.other.TorrentUtil;
 import cn.hutool.core.thread.ThreadUtil;
+import cn.hutool.extra.spring.SpringUtil;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.concurrent.TimeUnit;
@@ -46,7 +47,7 @@ public class RssTask extends Thread {
                     continue;
                 }
                 try {
-                    DownloadService.downloadAni(ani);
+                    SpringUtil.getBean(DownloadService.class).downloadAni(ani);
                 } catch (Exception e) {
                     String message = ExceptionUtils.getMessage(e);
                     log.error("{} {}", title, message);

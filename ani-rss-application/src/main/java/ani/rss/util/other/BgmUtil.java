@@ -17,6 +17,7 @@ import cn.hutool.core.net.url.UrlBuilder;
 import cn.hutool.core.text.StrFormatter;
 import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.core.util.*;
+import cn.hutool.extra.spring.SpringUtil;
 import cn.hutool.http.ContentType;
 import cn.hutool.http.Header;
 import cn.hutool.http.HttpRequest;
@@ -818,7 +819,7 @@ public class BgmUtil {
         }
 
         // 下载位置
-        String downloadPath = DownloadService.getDownloadPath(ani);
+        String downloadPath = SpringUtil.getBean(DownloadService.class).getDownloadPath(ani);
 
         String completedPathTemplate = config.getCompletedPathTemplate();
 

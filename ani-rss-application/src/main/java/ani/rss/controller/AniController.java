@@ -27,6 +27,7 @@ import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.ReUtil;
 import cn.hutool.core.util.URLUtil;
 import io.swagger.v3.oas.annotations.Operation;
+import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -43,6 +44,15 @@ import java.util.function.ToLongFunction;
 @RestController
 public class AniController extends BaseController {
     public static final AtomicBoolean DOWNLOAD = new AtomicBoolean(false);
+
+    @Resource
+    private AniService aniService;
+
+    @Resource
+    private ClearService clearService;
+
+    @Resource
+    private DownloadService downloadService;
 
     @Auth
     @Operation(summary = "添加订阅")
@@ -84,7 +94,7 @@ public class AniController extends BaseController {
         if (enable) {
             ThreadUtil.execute(() -> {
                 if (TorrentUtil.login()) {
-                    DownloadService.downloadAni(ani);
+                    downloadService.downloadAni(ani);
                 }
             });
         } else {
@@ -130,8 +140,8 @@ public class AniController extends BaseController {
         if (Boolean.parseBoolean(move)) {
             Ani get = ObjectUtil.clone(first.get());
             ThreadUtil.execute(() -> {
-                String downloadPath = DownloadService.getDownloadPath(get);
-                String newDownloadPath = DownloadService.getDownloadPath(ani);
+                String downloadPath = downloadService.getDownloadPath(get);
+                String newDownloadPath = downloadService.getDownloadPath(ani);
                 Boolean login = TorrentUtil.login();
                 List<TorrentsInfo> torrentsInfos = new ArrayList<>();
                 if (login) {
@@ -170,7 +180,7 @@ public class AniController extends BaseController {
                         FileUtil.move(oldFile, new File(newDownloadPath), true);
                     }
                     FileUtil.del(downloadPath);
-                    ClearService.clearParentFile(downloadPath);
+                    clearService.clearParentFile(downloadPath);
                 } catch (Exception e) {
                     log.error(ExceptionUtils.getMessage(e), e);
                 }
@@ -211,7 +221,7 @@ public class AniController extends BaseController {
             for (Ani ani : anis) {
                 File torrentDir = TorrentUtil.getTorrentDir(ani);
                 FileUtil.del(torrentDir);
-                ClearService.clearParentFile(torrentDir);
+                clearService.clearParentFile(torrentDir);
                 log.info("删除订阅 {} {} {}", ani.getTitle(), ani.getUrl(), ani.getId());
             }
             if (!deleteFiles) {
@@ -221,7 +231,7 @@ public class AniController extends BaseController {
 
             List<File> files = anis
                     .stream()
-                    .map(DownloadService::getDownloadPath)
+                    .map(ani -> downloadService.getDownloadPath(ani))
                     .map(File::new)
                     .toList();
 
@@ -244,7 +254,7 @@ public class AniController extends BaseController {
                 ThreadUtil.sleep(3000);
                 log.info("删除 {}", file);
                 FileUtil.del(file);
-                ClearService.clearParentFile(file);
+                clearService.clearParentFile(file);
             }
         });
         return Result.success("删除订阅成功");
@@ -329,7 +339,7 @@ public class AniController extends BaseController {
                     log.error(e.getMessage(), e);
                     continue;
                 }
-                Boolean b = AniService.updateTotalEpisodeNumber(ani, bgmInfo, force);
+                Boolean b = aniService.updateTotalEpisodeNumber(ani, bgmInfo, force);
                 if (b) {
                     count++;
                 }
@@ -386,7 +396,7 @@ public class AniController extends BaseController {
         ThreadUtil.execute(() -> {
             try {
                 if (TorrentUtil.login()) {
-                    DownloadService.downloadAni(downloadAni);
+                    downloadService.downloadAni(downloadAni);
                 }
             } catch (Exception e) {
                 String message = ExceptionUtils.getMessage(e);
@@ -425,7 +435,7 @@ public class AniController extends BaseController {
     public Result<Map<String, Object>> previewAni(@RequestBody Ani ani) {
         List<Item> items = ItemsUtil.getItems(ani);
 
-        String downloadPath = DownloadService.getDownloadPath(ani);
+        String downloadPath = downloadService.getDownloadPath(ani);
 
         for (Item item : items) {
             item.setLocal(false);
@@ -434,7 +444,7 @@ public class AniController extends BaseController {
                 item.setLocal(true);
                 continue;
             }
-            if (DownloadService.itemDownloaded(ani, item, false)) {
+            if (downloadService.itemDownloaded(ani, item, false)) {
                 item.setLocal(true);
             }
         }
@@ -453,7 +463,7 @@ public class AniController extends BaseController {
     @Operation(summary = "获取订阅的下载位置")
     @PostMapping("/downloadPath")
     public Result<Map<String, Object>> downloadPath(@RequestBody Ani ani) {
-        String downloadPath = DownloadService.getDownloadPath(ani);
+        String downloadPath = downloadService.getDownloadPath(ani);
 
         boolean change = false;
         Optional<Ani> first = AniUtil.ANI_LIST.stream()
@@ -463,7 +473,7 @@ public class AniController extends BaseController {
             Ani oldAni = ObjectUtil.clone(first.get());
             // 只在名称改变时移动
             oldAni.setSeason(ani.getSeason());
-            String oldDownloadPath = DownloadService.getDownloadPath(oldAni);
+            String oldDownloadPath = downloadService.getDownloadPath(oldAni);
             change = !downloadPath.equals(oldDownloadPath);
         }
 

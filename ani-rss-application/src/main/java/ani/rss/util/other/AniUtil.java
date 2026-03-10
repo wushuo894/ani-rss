@@ -16,6 +16,7 @@ import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.core.util.URLUtil;
 import cn.hutool.crypto.SecureUtil;
+import cn.hutool.extra.spring.SpringUtil;
 import cn.hutool.http.HttpUtil;
 import cn.hutool.json.JSONUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -335,14 +336,14 @@ public class AniUtil {
         }
 
         // 旧文件路径
-        String oldPath = DownloadService.getDownloadPath(ani, config);
+        String oldPath = SpringUtil.getBean(DownloadService.class).getDownloadPath(ani, config);
 
         config.setDownloadPathTemplate(completedPathTemplate);
         // 因为临时修改下载位置模版以获取对应下载位置, 要关闭自定义下载位置
         ani.setCustomDownloadPath(false);
 
         // 新文件路径
-        String newPath = DownloadService.getDownloadPath(ani, config);
+        String newPath = SpringUtil.getBean(DownloadService.class).getDownloadPath(ani, config);
 
         if (!FileUtil.exist(oldPath)) {
             // 旧文件不存在
@@ -379,7 +380,7 @@ public class AniUtil {
             log.info("移动 {} ==> {}", file, newPath);
             FileUtil.move(file, new File(newPath), true);
             // 清理残留文件夹
-            ClearService.clearParentFile(file);
+            SpringUtil.getBean(ClearService.class).clearParentFile(file);
         }
     }
 

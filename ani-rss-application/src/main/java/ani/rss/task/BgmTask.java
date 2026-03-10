@@ -8,6 +8,7 @@ import ani.rss.util.other.AniUtil;
 import ani.rss.util.other.BgmUtil;
 import ani.rss.util.other.ConfigUtil;
 import cn.hutool.core.thread.ThreadUtil;
+import cn.hutool.extra.spring.SpringUtil;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
@@ -69,7 +70,7 @@ public class BgmTask extends Thread {
                     continue;
                 }
 
-                AniService.updateTotalEpisodeNumber(ani, bgmInfo, forceUpdateTotalEpisodeNumber);
+                SpringUtil.getBean(AniService.class).updateTotalEpisodeNumber(ani, bgmInfo, forceUpdateTotalEpisodeNumber);
             }
             AniUtil.sync();
 
