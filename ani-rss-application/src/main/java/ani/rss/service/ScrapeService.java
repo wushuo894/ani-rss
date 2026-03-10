@@ -9,7 +9,10 @@ import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.ReUtil;
 import cn.hutool.core.util.StrUtil;
+import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.stereotype.Service;
 import wushuo.tmdb.api.entity.*;
 import wushuo.tmdb.api.enums.TmdbTypeEnum;
 
@@ -23,14 +26,23 @@ import java.util.stream.Stream;
  * 刮削
  */
 @Slf4j
+@Service
 public class ScrapeService {
+
+    @Resource
+    private NfoGenerator nfoGenerator;
+
+    @Lazy
+    @Resource
+    private DownloadService downloadService;
+
     /**
      * 刮削
      *
      * @param ani   订阅
      * @param force 强制
      */
-    public static void scrape(Ani ani, Boolean force) {
+    public void scrape(Ani ani, Boolean force) {
         String title = ani.getTitle();
 
         Tmdb tmdb = ani.getTmdb();
@@ -39,13 +51,14 @@ public class ScrapeService {
             return;
         }
 
-        Boolean ova = ani.getOva();
+        boolean isForce = Boolean.TRUE.equals(force);
+        boolean isOva = Boolean.TRUE.equals(ani.getOva());
         try {
             log.info("正在刮削 ... {}", title);
-            if (ova) {
-                scrapeMovie(ani, force);
+            if (isOva) {
+                scrapeMovie(ani, isForce);
             } else {
-                scrapeTv(ani, force);
+                scrapeTv(ani, isForce);
             }
             log.info("刮削完成 {}", title);
         } catch (Exception e) {
@@ -61,7 +74,7 @@ public class ScrapeService {
      * @param force 强制
      * @throws Exception
      */
-    public static void scrapeMovie(Ani ani, Boolean force) throws Exception {
+    public void scrapeMovie(Ani ani, Boolean force) throws Exception {
         Tmdb tmdb = ani.getTmdb();
 
         // 更新tmdb信息
@@ -73,7 +86,7 @@ public class ScrapeService {
         tmdb = tmdbOptional.get();
 
         // 下载位置
-        String downloadPath = DownloadService.getDownloadPath(ani);
+        String downloadPath = downloadService.getDownloadPath(ani);
         File[] files = FileUtils.listFiles(downloadPath);
 
         if (ArrayUtil.isEmpty(files)) {
@@ -101,7 +114,7 @@ public class ScrapeService {
         // 保存nfo
         String outputPath = downloadPath + "/" + mainName + ".nfo";
         if (force || !FileUtil.exist(outputPath)) {
-            NfoGenerator.generateMovieNfo(tmdb, outputPath);
+            nfoGenerator.generateMovieNfo(tmdb, outputPath);
         }
 
         String posterPath = tmdb.getPosterPath();
@@ -138,7 +151,7 @@ public class ScrapeService {
      * @param force 强制
      * @throws Exception
      */
-    public static void scrapeTv(Ani ani, Boolean force) throws Exception {
+    public void scrapeTv(Ani ani, Boolean force) throws Exception {
         Tmdb tmdb = ani.getTmdb();
 
         // 更新tmdb信息
@@ -150,7 +163,7 @@ public class ScrapeService {
         tmdb = tmdbOptional.get();
 
         // 下载位置
-        File downloadPath = new File(DownloadService.getDownloadPath(ani));
+        File downloadPath = new File(downloadService.getDownloadPath(ani));
         if (!FileUtil.exist(downloadPath)) {
             return;
         }
@@ -158,7 +171,7 @@ public class ScrapeService {
         // tvshow.nfo
         String tvShowNfoFile = downloadPath.getParent() + "/tvshow.nfo";
         if (force || !FileUtil.exist(tvShowNfoFile)) {
-            NfoGenerator.generateTvShowNfo(tmdb, tvShowNfoFile);
+            nfoGenerator.generateTvShowNfo(tmdb, tvShowNfoFile);
         }
 
         String posterPath = tmdb.getPosterPath();
@@ -206,7 +219,7 @@ public class ScrapeService {
         // 季nfo
         String seasonNfoFile = downloadPath + "/season.nfo";
         if (force || !FileUtil.exist(seasonNfoFile)) {
-            NfoGenerator.generateSeasonNfo(tmdbSeason, seasonNfoFile);
+            nfoGenerator.generateSeasonNfo(tmdbSeason, seasonNfoFile);
         }
 
         File[] files = FileUtils.listFiles(downloadPath);
@@ -260,7 +273,7 @@ public class ScrapeService {
             // 集图片
             String episodeFile = downloadPath + "/" + mainName + ".nfo";
             if (force || !FileUtil.exist(episodeFile)) {
-                NfoGenerator.generateEpisodeNfo(tmdbEpisode, episodeFile);
+                nfoGenerator.generateEpisodeNfo(tmdbEpisode, episodeFile);
             }
         }
     }
@@ -273,7 +286,7 @@ public class ScrapeService {
      * @param force    强制
      * @throws Exception
      */
-    public static void saveImages(String tmdbPath, File saveFile, Boolean force) throws Exception {
+    public void saveImages(String tmdbPath, File saveFile, Boolean force) throws Exception {
         if (StrUtil.isBlank(tmdbPath)) {
             return;
         }

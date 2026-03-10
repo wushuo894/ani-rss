@@ -4,8 +4,10 @@ import ani.rss.entity.Ani;
 import ani.rss.entity.BgmInfo;
 import ani.rss.util.other.BgmUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
 
 @Slf4j
+@Service
 public class AniService {
 
     /**
@@ -16,7 +18,7 @@ public class AniService {
      * @param force   强制
      * @return 是否已发生更新
      */
-    public static Boolean updateTotalEpisodeNumber(Ani ani, BgmInfo bgmInfo, Boolean force) {
+    public Boolean updateTotalEpisodeNumber(Ani ani, BgmInfo bgmInfo, Boolean force) {
         Integer totalEpisodeNumber = ani.getTotalEpisodeNumber();
         if (!force) {
             // 未开启强制更新

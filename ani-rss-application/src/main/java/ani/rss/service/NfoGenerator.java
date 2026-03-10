@@ -5,6 +5,7 @@ import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.StrUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import wushuo.tmdb.api.entity.*;
@@ -24,6 +25,7 @@ import java.util.Objects;
  * nfo生成
  */
 @Slf4j
+@Service
 public class NfoGenerator {
 
     /**
@@ -33,7 +35,7 @@ public class NfoGenerator {
      * @param outputPath  输出位置
      * @throws Exception
      */
-    public static void generateEpisodeNfo(TmdbEpisode tmdbEpisode, String outputPath) throws Exception {
+    public void generateEpisodeNfo(TmdbEpisode tmdbEpisode, String outputPath) throws Exception {
         DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
         DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
         Document doc = docBuilder.newDocument();
@@ -60,7 +62,7 @@ public class NfoGenerator {
      * @param outputPath
      * @throws Exception
      */
-    public static void generateSeasonNfo(TmdbSeason tmdbSeason, String outputPath) throws Exception {
+    public void generateSeasonNfo(TmdbSeason tmdbSeason, String outputPath) throws Exception {
         DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
         DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
         Document doc = docBuilder.newDocument();
@@ -90,7 +92,7 @@ public class NfoGenerator {
      * @param outputPath 输出位置
      * @throws Exception
      */
-    public static void generateTvShowNfo(Tmdb tmdb, String outputPath) throws Exception {
+    public void generateTvShowNfo(Tmdb tmdb, String outputPath) throws Exception {
         generateNfo(tmdb, outputPath, "tvshow");
     }
 
@@ -101,7 +103,7 @@ public class NfoGenerator {
      * @param outputPath 输出位置
      * @throws Exception
      */
-    public static void generateMovieNfo(Tmdb tmdb, String outputPath) throws Exception {
+    public void generateMovieNfo(Tmdb tmdb, String outputPath) throws Exception {
         generateNfo(tmdb, outputPath, "movie");
     }
 
@@ -113,7 +115,7 @@ public class NfoGenerator {
      * @param rootTag    根标签
      * @throws Exception
      */
-    public static void generateNfo(Tmdb tmdb, String outputPath, String rootTag) throws Exception {
+    public void generateNfo(Tmdb tmdb, String outputPath, String rootTag) throws Exception {
         // 创建 XML 文档
         DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
         DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
@@ -191,7 +193,7 @@ public class NfoGenerator {
      * @param tagName 标签名
      * @param value   文本值
      */
-    private static void addElement(Document doc, Element parent, String tagName, Object value) {
+    private void addElement(Document doc, Element parent, String tagName, Object value) {
         if (Objects.isNull(value)) {
             return;
         }
@@ -214,7 +216,7 @@ public class NfoGenerator {
      * @param savePath 保存位置
      * @throws Exception
      */
-    private static void saveXmlDocument(Document doc, String savePath) throws Exception {
+    private void saveXmlDocument(Document doc, String savePath) throws Exception {
         FileUtil.mkdir(new File(savePath).getParentFile());
 
         TransformerFactory transformerFactory = TransformerFactory.newInstance();

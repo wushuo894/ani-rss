@@ -15,9 +15,10 @@ import ani.rss.util.basic.HttpReq;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.text.StrFormatter;
 import cn.hutool.core.thread.ThreadUtil;
+import cn.hutool.core.util.ClassUtil;
 import cn.hutool.core.util.ReUtil;
-import cn.hutool.core.util.ReflectUtil;
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.extra.spring.SpringUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.eclipse.bittorrent.TorrentFile;
 
@@ -229,7 +230,7 @@ public class TorrentUtil {
             return true;
         }
         // 清理空文件夹
-        ClearService.clearParentFile(new File(torrentsInfo.getDownloadDir() + "/" + name));
+        SpringUtil.getBean(ClearService.class).clearParentFile(new File(torrentsInfo.getDownloadDir() + "/" + name));
         return true;
     }
 
@@ -318,7 +319,7 @@ public class TorrentUtil {
             ConfigUtil.sync();
         }
 
-        DOWNLOAD = ReflectUtil.newInstance("ani.rss.download." + download);
+        DOWNLOAD = SpringUtil.getBean(ClassUtil.loadClass("ani.rss.download." + download));
         log.info("下载工具 {}", download);
     }
 

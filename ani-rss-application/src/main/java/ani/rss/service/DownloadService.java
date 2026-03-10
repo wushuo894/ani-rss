@@ -20,8 +20,10 @@ import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.ReUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONUtil;
+import jakarta.annotation.Resource;
 import lombok.Synchronized;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
 import wushuo.tmdb.api.entity.Tmdb;
 
 import java.io.File;
@@ -32,16 +34,20 @@ import java.util.stream.Collectors;
  * 下载的主要逻辑
  */
 @Slf4j
+@Service
 public class DownloadService {
-    private static final String lock = "lock";
+    private static final Object LOCK = new Object();
+
+    @Resource
+    private ScrapeService scrapeService;
 
     /**
      * 下载动漫
      *
      * @param ani
      */
-    @Synchronized("lock")
-    public static void downloadAni(Ani ani) {
+    @Synchronized("LOCK")
+    public void downloadAni(Ani ani) {
         Config config = ConfigUtil.CONFIG;
         Boolean delete = config.getDelete();
         Boolean autoDisabled = config.getAutoDisabled();
@@ -271,7 +277,7 @@ public class DownloadService {
      * @param ani
      * @param item
      */
-    public static void deleteStandbyRss(Ani ani, Item item) {
+    public void deleteStandbyRss(Ani ani, Item item) {
         Config config = ConfigUtil.CONFIG;
         Boolean standbyRss = config.getStandbyRss();
         Boolean coexist = config.getCoexist();
@@ -375,7 +381,7 @@ public class DownloadService {
      * @param savePath
      * @param torrentFile
      */
-    public static synchronized void download(Ani ani, Item item, String savePath, File torrentFile) {
+    public synchronized void download(Ani ani, Item item, String savePath, File torrentFile) {
         ani = ObjectUtil.clone(ani);
 
         String name = item.getReName();
@@ -429,7 +435,7 @@ public class DownloadService {
      *
      * @param torrentsInfo
      */
-    public static synchronized void notification(TorrentsInfo torrentsInfo) {
+    public synchronized void notification(TorrentsInfo torrentsInfo) {
         TorrentsInfo.State state = torrentsInfo.getState();
         String name = torrentsInfo.getName();
 
@@ -481,8 +487,13 @@ public class DownloadService {
         Config config = ConfigUtil.CONFIG;
         Boolean scrape = config.getScrape();
         if (scrape) {
-            // 刮削
-            ScrapeService.scrape(ani, false);
+            try {
+                // 刮削
+                scrapeService.scrape(ani, false);
+            } catch (Exception e) {
+                log.error("刮削失败: {}", ani.getTitle());
+                log.error(e.getMessage(), e);
+            }
         }
         String text = StrFormatter.format("{} 下载完成", name);
         if (tags.contains(TorrentsTags.BACK_RSS.getValue())) {
@@ -506,7 +517,7 @@ public class DownloadService {
      * @param ani
      * @return
      */
-    public static String getDownloadPath(Ani ani) {
+    public String getDownloadPath(Ani ani) {
         return getDownloadPath(ani, ConfigUtil.CONFIG);
     }
 
@@ -516,7 +527,7 @@ public class DownloadService {
      * @param ani
      * @return
      */
-    public static String getDownloadPath(Ani ani, Config config) {
+    public String getDownloadPath(Ani ani, Config config) {
         Boolean customDownloadPath = ani.getCustomDownloadPath();
         String aniDownloadPath = ani.getDownloadPath();
         Boolean ova = ani.getOva();
@@ -633,7 +644,7 @@ public class DownloadService {
      * @param downloadList
      * @return
      */
-    public static Boolean itemDownloaded(Ani ani, Item item, Boolean downloadList) {
+    public Boolean itemDownloaded(Ani ani, Item item, Boolean downloadList) {
         Config config = ConfigUtil.CONFIG;
         Boolean rename = config.getRename();
         if (!rename) {
@@ -725,7 +736,7 @@ public class DownloadService {
      * @param torrentsInfo
      * @return
      */
-    public static synchronized Optional<Ani> findAniByDownloadPath(TorrentsInfo torrentsInfo) {
+    public synchronized Optional<Ani> findAniByDownloadPath(TorrentsInfo torrentsInfo) {
         String downloadDir = torrentsInfo.getDownloadDir();
         return AniUtil.ANI_LIST
                 .stream()

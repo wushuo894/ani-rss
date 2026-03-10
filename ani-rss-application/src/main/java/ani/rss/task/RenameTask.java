@@ -7,6 +7,7 @@ import ani.rss.service.DownloadService;
 import ani.rss.util.other.ConfigUtil;
 import ani.rss.util.other.TorrentUtil;
 import cn.hutool.core.thread.ThreadUtil;
+import cn.hutool.extra.spring.SpringUtil;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
@@ -45,7 +46,7 @@ public class RenameTask extends Thread {
                     Boolean deleteStandbyRSSOnly = config.getDeleteStandbyRSSOnly();
                     try {
                         TorrentUtil.rename(torrentsInfo);
-                        DownloadService.notification(torrentsInfo);
+                        SpringUtil.getBean(DownloadService.class).notification(torrentsInfo);
                         if (deleteStandbyRSSOnly) {
                             continue;
                         }

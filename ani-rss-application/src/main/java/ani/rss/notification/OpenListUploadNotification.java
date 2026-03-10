@@ -18,6 +18,7 @@ import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.ReUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.core.util.URLUtil;
+import cn.hutool.extra.spring.SpringUtil;
 import cn.hutool.http.Header;
 import cn.hutool.http.HttpConfig;
 import cn.hutool.http.HttpRequest;
@@ -91,7 +92,7 @@ public class OpenListUploadNotification implements BaseNotification {
         Boolean deleteOldEpisode = notificationConfig.getOpenListUploadDeleteOldEpisode();
 
         // 本地位置
-        String localPath = DownloadService.getDownloadPath(ani);
+        String localPath = SpringUtil.getBean(DownloadService.class).getDownloadPath(ani);
 
         // 新的位置; 设置自定义下载位置同时启用, 用以获取新的位置
         Boolean ova = ani.getOva();
@@ -109,7 +110,7 @@ public class OpenListUploadNotification implements BaseNotification {
 
         ani.setCustomDownloadPath(true);
 
-        String target = DownloadService.getDownloadPath(ani);
+        String target = SpringUtil.getBean(DownloadService.class).getDownloadPath(ani);
         target = ReUtil.replaceAll(target, "^[A-z]:", "");
 
         if (ova) {

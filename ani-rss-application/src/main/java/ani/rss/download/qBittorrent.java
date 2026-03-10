@@ -40,6 +40,8 @@ import java.util.*;
 @RequiredArgsConstructor
 public class qBittorrent implements BaseDownload {
 
+    private final DownloadService downloadService;
+
     private Config config;
 
     /**
@@ -354,7 +356,7 @@ public class qBittorrent implements BaseDownload {
 
         String host = config.getDownloadToolHost();
 
-        Optional<Ani> aniOpt = DownloadService.findAniByDownloadPath(torrentsInfo);
+        Optional<Ani> aniOpt = downloadService.findAniByDownloadPath(torrentsInfo);
 
         if (aniOpt.isEmpty()) {
             log.error("未能获取番剧对象: {}", torrentsInfo.getName());
