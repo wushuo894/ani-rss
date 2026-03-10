@@ -1,0 +1,27 @@
+services:
+  ani-rss:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+    image: ani-rss:local
+    container_name: ani-rss
+    restart: unless-stopped
+    ports:
+      - "7789:7789"
+    environment:
+      - TZ=Asia/Shanghai
+      - CONFIG=/config
+      - PUID=0
+      - PGID=0
+    volumes:
+      # 配置文件目录
+      - /root/ani-rss/config:/config
+      # 媒体/下载目录（与 qBittorrent 使用相同的宿主机路径）
+      - /mnt/ani-rss/media:/Media
+      # FFmpeg 转码功能：将宿主机的 ffmpeg/ffprobe 挂载到容器内（二选一）
+      # 方式一：挂载宿主机已安装的 ffmpeg（推荐）
+      # - /usr/bin/ffmpeg:/usr/bin/ffmpeg:ro
+      # - /usr/bin/ffprobe:/usr/bin/ffprobe:ro
+      # 方式二：挂载自定义静态版本
+      # - /path/to/static/ffmpeg:/usr/local/bin/ffmpeg:ro
+      # - /path/to/static/ffprobe:/usr/local/bin/ffprobe:ro
