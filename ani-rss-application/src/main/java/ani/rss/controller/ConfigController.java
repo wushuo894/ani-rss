@@ -244,6 +244,21 @@ public class ConfigController extends BaseController {
         return Result.error("登录失败");
     }
 
+    @Auth
+    @Operation(summary = "FFmpeg 测试")
+    @PostMapping("/ffmpegTest")
+    public Result<Void> ffmpegTest(@RequestBody Config config) {
+        String ffmpegVersion = ani.rss.util.other.FfmpegUtil.getVersion(config.getFfmpegPath());
+        if (StrUtil.isBlank(ffmpegVersion)) {
+            return Result.error("FFmpeg 不可用，请检查路径配置");
+        }
+        String ffprobeVersion = ani.rss.util.other.FfmpegUtil.getVersion(config.getFfprobePath());
+        if (StrUtil.isBlank(ffprobeVersion)) {
+            return Result.error("FFprobe 不可用，请检查路径配置");
+        }
+        return Result.success("FFmpeg 可用: " + ffmpegVersion);
+    }
+
     @Operation(summary = "自定义JS")
     @GetMapping("/custom.js")
     public void customJs() throws IOException {
