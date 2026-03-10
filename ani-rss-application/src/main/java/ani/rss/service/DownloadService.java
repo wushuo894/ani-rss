@@ -27,6 +27,8 @@ import wushuo.tmdb.api.entity.Tmdb;
 
 import java.io.File;
 import java.util.*;
+import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 /**
@@ -35,6 +37,27 @@ import java.util.stream.Collectors;
 @Slf4j
 public class DownloadService {
     private static final String lock = "lock";
+
+    /**
+     * 下载完成事件监听器列表
+     * 通过 {@link #addDownloadCompleteListener} 注册，下载完成时依次触发
+     */
+    private static final List<Consumer<TorrentsInfo>> DOWNLOAD_COMPLETE_LISTENERS = new CopyOnWriteArrayList<>();
+
+    /**
+     * 注册下载完成监听器
+     * 各组件在自身初始化时调用此方法注册，无需修改 DownloadService
+     */
+    public static void addDownloadCompleteListener(Consumer<TorrentsInfo> listener) {
+        DOWNLOAD_COMPLETE_LISTENERS.add(listener);
+    }
+
+    /**
+     * 移除下载完成监听器
+     */
+    public static void removeDownloadCompleteListener(Consumer<TorrentsInfo> listener) {
+        DOWNLOAD_COMPLETE_LISTENERS.remove(listener);
+    }
 
     /**
      * 下载动漫
@@ -458,6 +481,15 @@ public class DownloadService {
         if (!b) {
             return;
         }
+
+        // 触发下载完成事件，通知所有已注册的监听器（如 FfmpegTask）
+        DOWNLOAD_COMPLETE_LISTENERS.forEach(listener -> {
+            try {
+                listener.accept(torrentsInfo);
+            } catch (Exception e) {
+                log.error("下载完成事件处理失败: {}", e.getMessage(), e);
+            }
+        });
 
         Optional<Ani> aniOpt = findAniByDownloadPath(torrentsInfo);
 
