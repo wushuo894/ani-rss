@@ -3,10 +3,12 @@ package ani.rss.task;
 import ani.rss.commons.ExceptionUtils;
 import ani.rss.entity.Config;
 import ani.rss.entity.TorrentsInfo;
+import ani.rss.enums.TorrentsTags;
 import ani.rss.service.DownloadService;
 import ani.rss.util.other.ConfigUtil;
 import ani.rss.util.other.TorrentUtil;
 import cn.hutool.core.thread.ThreadUtil;
+import cn.hutool.core.util.BooleanUtil;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
@@ -26,7 +28,7 @@ public class RenameTask extends Thread {
 
     @Override
     public void run() {
-        super.setName("rename-task-thread");
+        setName("rename-task-thread");
         Config config = ConfigUtil.CONFIG;
         int renameSleepSeconds = config.getRenameSleepSeconds();
 
@@ -44,7 +46,18 @@ public class RenameTask extends Thread {
                     }
                     Boolean deleteStandbyRSSOnly = config.getDeleteStandbyRSSOnly();
                     try {
+                        // 下载前重命名（种子暂停状态），始终执行
                         TorrentUtil.rename(torrentsInfo);
+                        // FFmpeg 开启时：下载完成但转码未完成，等待 FfmpegTask 处理后再继续
+                        if (BooleanUtil.isTrue(config.getFfmpegEnable())) {
+                            List<String> tags = torrentsInfo.getTags();
+                            boolean isAniRss = tags.contains(TorrentsTags.ANI_RSS.getValue());
+                            boolean downloadComplete = tags.contains(TorrentsTags.DOWNLOAD_COMPLETE.getValue());
+                            boolean ffmpegDone = tags.contains(TorrentsTags.FFMPEG_DONE.getValue());
+                            if (isAniRss && downloadComplete && !ffmpegDone) {
+                                continue;
+                            }
+                        }
                         DownloadService.notification(torrentsInfo);
                         if (deleteStandbyRSSOnly) {
                             continue;
