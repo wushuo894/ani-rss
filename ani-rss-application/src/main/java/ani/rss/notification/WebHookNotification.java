@@ -160,7 +160,12 @@ public class WebHookNotification implements BaseNotification {
                     if (!file.exists()) {
                         return null;
                     }
-                    return Base64.getEncoder().encodeToString(FileUtil.readBytes(file));
+                    try {
+                        return Base64.getEncoder().encodeToString(FileUtil.readBytes(file));
+                    } catch (Exception e) {
+                        log.warn("读取封面图片失败: {} - {}", filename, e.getMessage());
+                        return null;
+                    }
                 }).filter(StrUtil::isNotBlank)
                 .orElse(imageBase64);
         return imageBase64;
