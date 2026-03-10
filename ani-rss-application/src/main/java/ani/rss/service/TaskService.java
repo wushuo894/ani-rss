@@ -1,9 +1,11 @@
 package ani.rss.service;
 
+import ani.rss.task.BaseTask;
 import ani.rss.task.BgmTask;
 import ani.rss.task.RenameTask;
 import ani.rss.task.RssTask;
 import cn.hutool.core.thread.ThreadUtil;
+import cn.hutool.extra.spring.SpringUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -45,9 +47,14 @@ public class TaskService {
             return;
         }
         LOOP.set(true);
-        THREADS.add(new RenameTask(LOOP));
-        THREADS.add(new RssTask(LOOP));
-        THREADS.add(new BgmTask(LOOP));
+
+        List<Class<? extends BaseTask>> classList = List.of(RenameTask.class, RssTask.class, BgmTask.class);
+
+        for (Class<? extends BaseTask> aClass : classList) {
+            BaseTask task = SpringUtil.getBean(aClass);
+            String name = aClass.getSimpleName();
+            THREADS.add(new Thread(() -> task.run(name, LOOP)));
+        }
         for (Thread thread : THREADS) {
             thread.start();
         }
