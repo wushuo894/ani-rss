@@ -10,6 +10,7 @@ import ani.rss.util.other.TorrentUtil;
 import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.extra.spring.SpringUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Component;
 
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -18,15 +19,13 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * RSS
  */
 @Slf4j
-public class RssTask extends Thread {
+@Component
+public class RssTask implements BaseTask {
     public static final AtomicBoolean download = new AtomicBoolean(false);
-    private final AtomicBoolean loop;
-
-    public RssTask(AtomicBoolean loop) {
-        this.loop = loop;
-    }
 
     public static void download(AtomicBoolean loop) {
+        DownloadService downloadService = SpringUtil.getBean(DownloadService.class);
+
         try {
             if (!TorrentUtil.login()) {
                 return;
@@ -47,7 +46,7 @@ public class RssTask extends Thread {
                     continue;
                 }
                 try {
-                    SpringUtil.getBean(DownloadService.class).downloadAni(ani);
+                    downloadService.downloadAni(ani);
                 } catch (Exception e) {
                     String message = ExceptionUtils.getMessage(e);
                     log.error("{} {}", title, message);
@@ -74,26 +73,23 @@ public class RssTask extends Thread {
     }
 
     @Override
-    public void run() {
-        super.setName("rss-task-thread");
+    public void accept(String threadName, AtomicBoolean loop) {
         Config config = ConfigUtil.CONFIG;
         Integer sleep = config.getRssSleepMinutes();
-        log.info("{} 当前设置间隔为 {} 分钟", getName(), sleep);
-        while (loop.get()) {
-            if (!config.getRss()) {
-                log.debug("rss未启用");
-                ThreadUtil.sleep(sleep, TimeUnit.MINUTES);
-                continue;
-            }
-            try {
-                sync();
-                download(loop);
-            } catch (Exception e) {
-                String message = ExceptionUtils.getMessage(e);
-                log.error(message, e);
-            }
+
+        if (!config.getRss()) {
+            log.debug("rss未启用");
             ThreadUtil.sleep(sleep, TimeUnit.MINUTES);
+            return;
         }
-        log.info("{} 任务已停止", getName());
+
+        try {
+            sync();
+            download(loop);
+        } catch (Exception e) {
+            String message = ExceptionUtils.getMessage(e);
+            log.error(message, e);
+        }
+        ThreadUtil.sleep(sleep, TimeUnit.MINUTES);
     }
 }
