@@ -16,6 +16,7 @@ import cn.hutool.core.lang.Opt;
 import cn.hutool.core.lang.func.Func1;
 import cn.hutool.core.text.StrFormatter;
 import cn.hutool.core.thread.ThreadUtil;
+import cn.hutool.core.util.BooleanUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.ReUtil;
 import cn.hutool.core.util.StrUtil;
@@ -80,7 +81,8 @@ public class DownloadService {
                 })
                 .count();
 
-        String savePath = getDownloadPath(ani);
+        String savePath = getActualDownloadPath(ani);
+        String finalSavePath = getDownloadPath(ani);
 
         ItemsUtil.procrastinating(ani, items);
 
@@ -155,7 +157,8 @@ public class DownloadService {
                 TorrentsInfo standbyRSS = torrentsInfos
                         .stream()
                         .filter(torrentsInfo -> {
-                            if (!torrentsInfo.getDownloadDir().equals(savePath)) {
+                            String downloadDir = torrentsInfo.getDownloadDir();
+                            if (!downloadDir.equals(savePath) && !downloadDir.equals(finalSavePath)) {
                                 return false;
                             }
                             if (!ReUtil.contains(StringEnum.SEASON_REG, torrentsInfo.getName())) {
@@ -297,6 +300,7 @@ public class DownloadService {
         reName = ReUtil.get(StringEnum.SEASON_REG, reName, 0);
 
         String downloadPath = getDownloadPath(ani);
+        String actualDownloadPath = getActualDownloadPath(ani);
 
         List<TorrentsInfo> torrentsInfos = TorrentUtil.getTorrentsInfos();
 
@@ -305,7 +309,7 @@ public class DownloadService {
                 .stream()
                 .filter(torrentsInfo -> {
                     String downloadDir = torrentsInfo.getDownloadDir();
-                    if (!downloadDir.equals(downloadPath)) {
+                    if (!downloadDir.equals(downloadPath) && !downloadDir.equals(actualDownloadPath)) {
                         return false;
                     }
                     if (!ReUtil.contains(StringEnum.SEASON_REG, torrentsInfo.getName())) {
@@ -454,6 +458,7 @@ public class DownloadService {
         if (!b) {
             return;
         }
+
         Optional<Ani> aniOpt = findAniByDownloadPath(torrentsInfo);
 
         if (aniOpt.isEmpty()) {
@@ -624,6 +629,75 @@ public class DownloadService {
         return FileUtils.getAbsolutePath(downloadPathTemplate);
     }
 
+    /**
+     * 获取 BT 客户端实际下载位置
+     * 如果 FFmpeg 转码开启，返回转码目标目录下的对应路径
+     *
+     * @param ani
+     * @return
+     */
+    public static String getActualDownloadPath(Ani ani) {
+        return getActualDownloadPath(ani, ConfigUtil.CONFIG);
+    }
+
+    /**
+     * 获取 BT 客户端实际下载位置
+     * 如果 FFmpeg 转码开启，返回转码目标目录下的对应路径
+     *
+     * @param ani
+     * @param config
+     * @return
+     */
+    public static String getActualDownloadPath(Ani ani, Config config) {
+        String originalPath = getDownloadPath(ani, config);
+        if (BooleanUtil.isTrue(config.getFfmpegEnable())) {
+            String outputPath = config.getFfmpegOutputPath();
+            if (StrUtil.isNotBlank(outputPath)) {
+                String subPath = getRelativeSubPath(outputPath, originalPath);
+                return FileUtils.getAbsolutePath(outputPath + File.separator + subPath);
+            }
+        }
+        return originalPath;
+    }
+
+    /**
+     * 计算 originalPath 相对于 transcodePath 的去重子路径
+     * 去除两者的公共路径前缀，保留 originalPath 独有的部分
+     * <p>
+     * 例：transcodePath=/Media/transcode, originalPath=/Media/517057 → 517057
+     * 例：transcodePath=/Media/transcode, originalPath=/Media/番剧/Title/Season 3 → 番剧/Title/Season 3
+     */
+    private static String getRelativeSubPath(String cachePath, String originalPath) {
+        String[] cacheParts = cachePath.replace('\\', '/').split("/");
+        String[] originalParts = originalPath.replace('\\', '/').split("/");
+
+        int commonLen = 0;
+        int minLen = Math.min(cacheParts.length, originalParts.length);
+        for (int i = 0; i < minLen; i++) {
+            if (cacheParts[i].equalsIgnoreCase(originalParts[i])) {
+                commonLen = i + 1;
+            } else {
+                break;
+            }
+        }
+
+        StringBuilder sb = new StringBuilder();
+        for (int i = commonLen; i < originalParts.length; i++) {
+            if (StrUtil.isNotBlank(originalParts[i])) {
+                if (sb.length() > 0) {
+                    sb.append(File.separator);
+                }
+                sb.append(originalParts[i]);
+            }
+        }
+
+        String subPath = sb.toString();
+        if (StrUtil.isBlank(subPath)) {
+            subPath = new File(originalPath).getName();
+        }
+        return subPath;
+    }
+
 
     /**
      * 判断是否已经下载过
@@ -657,6 +731,7 @@ public class DownloadService {
         Double episode = item.getEpisode();
 
         String downloadPath = getDownloadPath(ani);
+        String actualDownloadPath = getActualDownloadPath(ani);
 
         if (downloadList) {
             List<TorrentsInfo> torrentsInfos = TorrentUtil.getTorrentsInfos();
@@ -666,7 +741,7 @@ public class DownloadService {
                     continue;
                 }
                 String downloadDir = torrentsInfo.getDownloadDir();
-                if (!downloadDir.equals(downloadPath)) {
+                if (!downloadDir.equals(downloadPath) && !downloadDir.equals(actualDownloadPath)) {
                     continue;
                 }
                 log.info("已存在下载任务 {}", reName);
@@ -726,12 +801,16 @@ public class DownloadService {
      * @return
      */
     public static synchronized Optional<Ani> findAniByDownloadPath(TorrentsInfo torrentsInfo) {
-        String downloadDir = torrentsInfo.getDownloadDir();
+        String downloadDir = FileUtils.normalize(torrentsInfo.getDownloadDir());
         return AniUtil.ANI_LIST
                 .stream()
                 .filter(ani -> {
                     String path = getDownloadPath(ani);
-                    return path.equals(downloadDir);
+                    if (path.equals(downloadDir)) {
+                        return true;
+                    }
+                    String actualPath = getActualDownloadPath(ani);
+                    return actualPath.equals(downloadDir);
                 })
                 .map(ObjectUtil::clone)
                 .findFirst();
