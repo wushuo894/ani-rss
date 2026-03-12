@@ -320,8 +320,18 @@ public class qBittorrent implements BaseDownload {
                     .filter(File::isDirectory)
                     .toList();
 
+            Boolean subtitleIndependentFolderEnabled = config.getSubtitleIndependentFolderEnabled();
+            String subtitleIndependentFolderName = config.getSubtitleIndependentFolderName();
+
             // 清空剩余文件夹
             for (File file : dirList) {
+                if (subtitleIndependentFolderEnabled) {
+                    if (subtitleIndependentFolderName.equals(file.getName())) {
+                        // 字幕独立文件夹 不进行删除
+                        continue;
+                    }
+                }
+
                 log.info("删除剩余文件夹: {}", file);
                 try {
                     FileUtil.del(file);
