@@ -737,4 +737,10 @@ public class Config implements Serializable {
 
     @Schema(description = "受信任的反向代理IP")
     private List<String> reverseProxyTrustIpList;
+
+    @Schema(description = "启用 字幕独立文件夹")
+    private Boolean subtitleIndependentFolderEnabled;
+
+    @Schema(description = "字幕独立文件夹")
+    private String subtitleIndependentFolderName;
 }

@@ -128,5 +128,7 @@ export let configData = {
     "limitLoginAttempts": true,
     "buildInfo": '',
     "reverseProxyTrustIpList": [],
-    "reverseProxyTrustIpListEnabled": false
+    "reverseProxyTrustIpListEnabled": false,
+    "subtitleIndependentFolderEnabled": false,
+    "subtitleIndependentFolderName": "Subs"
 }

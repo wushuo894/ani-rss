@@ -232,7 +232,9 @@ public class ConfigUtil {
                 .setMaxFileNameLength(0)
                 .setLimitLoginAttempts(true)
                 .setReverseProxyTrustIpList(List.of("127.0.0.1"))
-                .setReverseProxyTrustIpListEnabled(false);
+                .setReverseProxyTrustIpListEnabled(false)
+                .setSubtitleIndependentFolderEnabled(false)
+                .setSubtitleIndependentFolderName("Subs");
     }
 
     /**
