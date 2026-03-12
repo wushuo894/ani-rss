@@ -570,7 +570,11 @@ public class BgmUtil {
 
             try {
                 String s = ReUtil.get(regex, name, 1);
-                season = Convert.chineseToNumber(s);
+                if (NumberUtil.isInteger(s)) {
+                    season = Integer.parseInt(s);
+                } else {
+                    season = Convert.chineseToNumber(s);
+                }
             } catch (Exception ignored) {
             }
         }
