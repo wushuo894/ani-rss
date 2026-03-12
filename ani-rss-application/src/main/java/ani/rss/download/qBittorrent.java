@@ -395,11 +395,23 @@ public class qBittorrent implements BaseDownload {
             return false;
         }
 
+        Boolean subtitleIndependentFolderEnabled = config.getSubtitleIndependentFolderEnabled();
+        String subtitleIndependentFolderName = config.getSubtitleIndependentFolderName();
+
         List<String> newNames = new ArrayList<>();
 
         for (FileEntity fileEntity : files) {
             String name = fileEntity.getName();
             String newPath = getFileReName(name, reName);
+
+            if (
+                    FileUtils.isSubtitleFormat(newPath) &&
+                            subtitleIndependentFolderEnabled &&
+                            StrUtil.isNotBlank(subtitleIndependentFolderName)
+            ) {
+                // 字幕独立文件夹
+                newPath = subtitleIndependentFolderName + "/" + newPath;
+            }
 
             if (names.contains(newPath)) {
                 continue;
