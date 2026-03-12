@@ -23,6 +23,7 @@ import cn.hutool.core.io.resource.ResourceUtil;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.text.StrFormatter;
 import cn.hutool.core.util.*;
+import cn.hutool.extra.spring.SpringUtil;
 import cn.hutool.http.Header;
 import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpStatus;
@@ -243,8 +244,8 @@ public class ConfigController extends BaseController {
     public Result<Void> downloadLoginTest(@RequestBody Config config) {
         ConfigUtil.format(config);
         String download = config.getDownloadToolType();
-        Class<Object> loadClass = ClassUtil.loadClass("ani.rss.download." + download);
-        BaseDownload baseDownload = (BaseDownload) ReflectUtil.newInstance(loadClass);
+        Class<BaseDownload> loadClass = ClassUtil.loadClass("ani.rss.download." + download);
+        BaseDownload baseDownload = SpringUtil.getBean(loadClass);
         Boolean login = baseDownload.login(true, config);
         if (login) {
             return Result.success("登录成功");

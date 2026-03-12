@@ -8,8 +8,8 @@ import ani.rss.util.other.ConfigUtil;
 import ani.rss.util.other.UpdateUtil;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.ClassUtil;
-import cn.hutool.core.util.ReflectUtil;
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.extra.spring.SpringUtil;
 import cn.hutool.http.ContentType;
 import cn.hutool.http.Header;
 import lombok.extern.slf4j.Slf4j;
@@ -114,8 +114,8 @@ public class CronConfig {
         Assert.isTrue(!trackers.isEmpty(), "获取到0个trackers, 不进行更新");
 
         String download = config.getDownloadToolType();
-        Class<Object> loadClass = ClassUtil.loadClass("ani.rss.download." + download);
-        BaseDownload baseDownload = (BaseDownload) ReflectUtil.newInstance(loadClass);
+        Class<BaseDownload> loadClass = ClassUtil.loadClass("ani.rss.download." + download);
+        BaseDownload baseDownload = SpringUtil.getBean(loadClass);
         Boolean login = baseDownload.login(config);
         Assert.isTrue(login, "{} 登录失败", download);
         baseDownload.updateTrackers(trackers);
