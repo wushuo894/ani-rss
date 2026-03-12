@@ -520,42 +520,60 @@ public class BgmUtil {
         List<BgmInfo.Tag> tags = bgmInfo.getTags();
         tags = ObjectUtil.defaultIfNull(tags, new ArrayList<>());
 
-        int season = 1;
-
         // 从标签获取季
         for (BgmInfo.Tag tag : tags) {
             String tagName = tag.getName();
-            String seasonReg = StrFormatter.format("第({}+)季", ReUtil.RE_CHINESE);
-            if (!ReUtil.contains(seasonReg, tagName)) {
-                continue;
-            }
-            try {
-                season = Convert.chineseToNumber(ReUtil.get(seasonReg, tagName, 1));
-            } catch (Exception e) {
-                log.error(e.getMessage(), e);
+            int season = getSeasonByName(tagName);
+            if (season > 1) {
+                return season;
             }
         }
 
         // 从中文标题获取季
-        String seasonReg = StrFormatter.format("第({}+)季", ReUtil.RE_CHINESE);
-        if (ReUtil.contains(seasonReg, nameCn)) {
-            try {
-                season = Convert.chineseToNumber(ReUtil.get(seasonReg, nameCn, 1));
-            } catch (Exception e) {
-                log.error(e.getMessage(), e);
+        if (StrUtil.isNotBlank(nameCn)) {
+            int season = getSeasonByName(nameCn);
+            if (season > 1) {
+                return season;
             }
         }
 
         // 从原标题获取季
-        seasonReg = "[Ss]eason ?(\\d+)";
-        if (ReUtil.contains(seasonReg, name)) {
-            try {
-                season = Integer.parseInt(ReUtil.get(seasonReg, name, 1));
-            } catch (Exception e) {
-                log.error(e.getMessage(), e);
+        if (StrUtil.isNotBlank(name)) {
+            int season = getSeasonByName(name);
+            if (season > 1) {
+                return season;
             }
         }
 
+        // 都未匹配到 返回季度1
+        return 1;
+    }
+
+    public static Integer getSeasonByName(String name) {
+        int season = 1;
+
+        List<String> regexList = List.of(
+                // 第一季 第一期
+                "第 ?([一二三四五六七八九十百千]+) ?[季期]",
+                // Season 1
+                "[Ss]eason ?(\\d+)",
+                // 1st Season
+                "(\\d+)(st|nd|rd|th) ?[Ss]eason",
+                // S1 S01
+                "[Ss](\\d+)$"
+        );
+
+        for (String regex : regexList) {
+            if (!ReUtil.contains(regex, name)) {
+                continue;
+            }
+
+            try {
+                String s = ReUtil.get(regex, name, 1);
+                season = Convert.chineseToNumber(s);
+            } catch (Exception ignored) {
+            }
+        }
         return season;
     }
 
