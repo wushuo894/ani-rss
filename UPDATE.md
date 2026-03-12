@@ -1,5 +1,4 @@
-- feat: 字幕独立文件夹
-- refactor: 优化季度识别
+- fix: 修复会删除字幕独立文件夹的问题
 
 [请不要将本项目在国内宣传](https://github.com/wushuo894/ani-rss/discussions/504)
 
