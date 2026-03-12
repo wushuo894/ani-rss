@@ -8,6 +8,7 @@ import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.servlet.NoHandlerFoundException;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 @Slf4j
@@ -24,10 +25,10 @@ public class CustomExceptionHandler {
         return e.getResult();
     }
 
-    @ExceptionHandler({NoResourceFoundException.class, HttpRequestMethodNotSupportedException.class})
+    @ExceptionHandler({NoResourceFoundException.class, NoHandlerFoundException.class, HttpRequestMethodNotSupportedException.class})
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public Result<Void> notFoundException(Exception e) {
-        return Result.error(e.getMessage());
+    public Result<Void> notFoundException() {
+        return new Result<>(404,"404 Not Found !");
     }
 
     @ExceptionHandler(Exception.class)
