@@ -22,6 +22,17 @@ import java.util.function.Consumer;
 @NoArgsConstructor
 @Schema(description = "返回包装体")
 public class Result<T> implements Serializable {
+    public Result(Integer code, String message) {
+        this.code = code;
+        this.message = message;
+    }
+
+    public Result(Integer code, String message, T data) {
+        this.code = code;
+        this.message = message;
+        this.data = data;
+    }
+
     @Schema(description = "状态码", defaultValue = "200")
     private Integer code;
     @Schema(description = "响应消息")
