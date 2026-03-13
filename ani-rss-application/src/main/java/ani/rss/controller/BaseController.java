@@ -6,6 +6,7 @@ import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.io.resource.ResourceUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.ContentType;
+import cn.hutool.http.Header;
 import cn.hutool.http.HttpStatus;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.Cleanup;
@@ -42,6 +43,17 @@ public class BaseController {
         return ContentType.OCTET_STREAM.getValue();
     }
 
+    public static void setCacheControl(HttpServletResponse response, long maxAge) {
+        if (maxAge > 0) {
+            response.setHeader(Header.CACHE_CONTROL.toString(), "private, max-age=" + maxAge);
+            return;
+        }
+
+        response.setHeader(Header.CACHE_CONTROL.toString(), "no-store, no-cache, must-revalidate, max-age=0");
+        response.setHeader(Header.PRAGMA.toString(), "no-cache");
+        response.setHeader("Expires", "0");
+    }
+
     public static void writeNotFound() {
         writeHtml(HttpStatus.HTTP_NOT_FOUND, "404 Not Found !");
     }
@@ -53,6 +65,7 @@ public class BaseController {
         try {
             response.setStatus(status);
             response.setContentType("text/html;charset=UTF-8");
+            response.setContentLength(html.length());
 
             @Cleanup
             OutputStream outputStream = response.getOutputStream();

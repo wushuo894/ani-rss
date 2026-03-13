@@ -16,7 +16,6 @@ import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.util.ReUtil;
 import cn.hutool.core.util.ReflectUtil;
 import cn.hutool.core.util.URLUtil;
-import cn.hutool.http.Header;
 import cn.hutool.http.HttpConnection;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.servlet.ServletOutputStream;
@@ -101,8 +100,7 @@ public class MikanController extends BaseController {
 
         // 30 天
         long maxAge = 86400 * 30;
-
-        response.setHeader(Header.CACHE_CONTROL.toString(), "private, max-age=" + maxAge);
+        setCacheControl(response, maxAge);
 
         String contentType = getContentType(URLUtil.getPath(img));
 
