@@ -55,13 +55,33 @@ export default defineConfig({
                 bgmOauthCallback: path.resolve(__dirname, 'bgm-oauth-callback.html')
             },
             output: {
-                manualChunks: {
-                    'vue': ['vue', '@vueuse/core', '@vicons/fa'],
-                    'utils': ['crypto-js', 'markdown-it', 'markdown-it-github-alerts'],
-                    'element-icon': ['@element-plus/icons-vue'],
-                    'artplayer': ['artplayer', 'artplayer-plugin-multiple-subtitles'],
-                    'shiki': ['shiki'],
-                    'element-plus': ['element-plus']
+                codeSplitting: {
+                    groups: [
+                        {
+                            name: 'vue',
+                            test: /node_modules[\\/](vue|@vueuse[\\/]core|@vicons[\\/]fa)/,
+                        },
+                        {
+                            name: 'utils',
+                            test: /node_modules[\\/](crypto-js|markdown-it|markdown-it-github-alerts)/,
+                        },
+                        {
+                            name: 'element-icon',
+                            test: /node_modules[\\/](@element-plus[\\/]icons-vue)/,
+                        },
+                        {
+                            name: 'artplayer',
+                            test: /node_modules[\\/](artplayer|artplayer-plugin-multiple-subtitles)/,
+                        },
+                        {
+                            name: 'shiki',
+                            test: /node_modules[\\/]shiki/,
+                        },
+                        {
+                            name: 'element-plus',
+                            test: /node_modules[\\/]element-plus/
+                        }
+                    ]
                 },
                 chunkFileNames: () => {
                     return `assets/[name]-[hash].js`;
