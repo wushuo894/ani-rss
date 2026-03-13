@@ -13,17 +13,13 @@ import ani.rss.exception.ResultException;
 import cn.hutool.core.net.NetUtil;
 import cn.hutool.core.text.StrFormatter;
 import cn.hutool.core.util.ObjectUtil;
-import cn.hutool.core.util.RandomUtil;
 import cn.hutool.core.util.ReflectUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.crypto.SecureUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
@@ -62,11 +58,11 @@ public class AuthUtil {
         Integer loginEffectiveHours = config.getLoginEffectiveHours();
         Boolean multiLoginForbidden = config.getMultiLoginForbidden();
 
-        String key = "123";
+        String key = config.getUuid();
 
         if (multiLoginForbidden) {
             // 禁止多端登录
-            key = RandomUtil.randomString(128);
+            key = UUID.randomUUID().toString();
         }
         CacheUtils.put("auth_key", key, TimeUnit.HOURS.toMillis(loginEffectiveHours));
         return key;
