@@ -257,9 +257,7 @@ public class ConfigController extends BaseController {
     @GetMapping("/custom.js")
     public void customJs() throws IOException {
         HttpServletResponse response = Global.RESPONSE.get();
-        response.setHeader(Header.CACHE_CONTROL.toString(), "no-store, no-cache, must-revalidate, max-age=0");
-        response.setHeader(Header.PRAGMA.toString(), "no-cache");
-        response.setHeader("Expires", "0");
+        setCacheControl(response, 0);
 
         String customJs = ConfigUtil.CONFIG.getCustomJs();
         customJs = StrUtil.blankToDefault(customJs, "// empty js");
@@ -276,9 +274,7 @@ public class ConfigController extends BaseController {
     @GetMapping("/custom.css")
     public void customCss() throws IOException {
         HttpServletResponse response = Global.RESPONSE.get();
-        response.setHeader(Header.CACHE_CONTROL.toString(), "no-store, no-cache, must-revalidate, max-age=0");
-        response.setHeader(Header.PRAGMA.toString(), "no-cache");
-        response.setHeader("Expires", "0");
+        setCacheControl(response, 0);
 
         String customCss = ConfigUtil.CONFIG.getCustomCss();
         customCss = StrUtil.blankToDefault(customCss, "/* empty css */");
