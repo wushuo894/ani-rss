@@ -94,7 +94,7 @@ public class FileController extends BaseController {
                 maxAge = 86400 * 30;
             }
 
-            response.setHeader(Header.CACHE_CONTROL.toString(), "private, max-age=" + maxAge);
+            setCacheControl(response, maxAge);
             response.setContentType(contentType);
         }
 
