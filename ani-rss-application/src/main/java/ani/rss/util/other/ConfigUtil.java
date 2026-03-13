@@ -32,10 +32,7 @@ import lombok.extern.slf4j.Slf4j;
 import java.io.File;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Stream;
 
 @Slf4j
@@ -234,7 +231,8 @@ public class ConfigUtil {
                 .setReverseProxyTrustIpList(List.of("127.0.0.1"))
                 .setReverseProxyTrustIpListEnabled(false)
                 .setSubtitleIndependentFolderEnabled(false)
-                .setSubtitleIndependentFolderName("Subs");
+                .setSubtitleIndependentFolderName("Subs")
+                .setUuid(UUID.randomUUID().toString());
     }
 
     /**
