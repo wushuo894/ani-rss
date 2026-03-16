@@ -28,7 +28,7 @@
     </el-form-item>
   </el-form>
   <div class="flex afdian-header">
-    <a href="https://afdian.com/a/wushuo894" target="_blank">
+    <a href="https://ifdian.net/a/wushuo894" target="_blank">
       <img :src="support_aifadian" alt="support_aifadian">
     </a>
     <div class="afdian-unlock">
