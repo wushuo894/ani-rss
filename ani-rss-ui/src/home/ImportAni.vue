@@ -294,6 +294,7 @@ const emit = defineEmits(['callback'])
   border: 1px solid #dcdfe6;
   border-radius: 6px;
   transition: all 0.3s;
+  box-sizing: content-box;
 }
 
 .conflict-option:hover {
