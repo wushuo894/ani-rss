@@ -1,13 +1,13 @@
 package ani.rss.controller;
 
 import ani.rss.entity.Global;
+import ani.rss.entity.web.ContentType;
+import ani.rss.entity.web.Header;
+import ani.rss.entity.web.ResultCode;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.io.resource.ResourceUtil;
 import cn.hutool.core.util.StrUtil;
-import cn.hutool.http.ContentType;
-import cn.hutool.http.Header;
-import cn.hutool.http.HttpStatus;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.Cleanup;
 
@@ -22,17 +22,17 @@ public class BaseController {
      */
     public static String getContentType(String filename) {
         if (StrUtil.isBlank(filename)) {
-            return ContentType.OCTET_STREAM.getValue();
+            return ContentType.OCTET_STREAM;
         }
 
         String extName = FileUtil.extName(filename);
 
         if (StrUtil.isBlank(extName)) {
-            return ContentType.OCTET_STREAM.getValue();
+            return ContentType.OCTET_STREAM;
         }
 
         if (extName.equalsIgnoreCase("mkv")) {
-            return "video/x-matroska";
+            return ContentType.VIDEO_X_MATROSKA;
         }
 
         String mimeType = FileUtil.getMimeType(filename);
@@ -40,22 +40,22 @@ public class BaseController {
             return mimeType;
         }
 
-        return ContentType.OCTET_STREAM.getValue();
+        return ContentType.OCTET_STREAM;
     }
 
     public static void setCacheControl(HttpServletResponse response, long maxAge) {
         if (maxAge > 0) {
-            response.setHeader(Header.CACHE_CONTROL.toString(), "private, max-age=" + maxAge);
+            response.setHeader(Header.CACHE_CONTROL, "private, max-age=" + maxAge);
             return;
         }
 
-        response.setHeader(Header.CACHE_CONTROL.toString(), "no-store, no-cache, must-revalidate, max-age=0");
-        response.setHeader(Header.PRAGMA.toString(), "no-cache");
-        response.setHeader("Expires", "0");
+        response.setHeader(Header.CACHE_CONTROL, "no-store, no-cache, must-revalidate, max-age=0");
+        response.setHeader(Header.PRAGMA, "no-cache");
+        response.setHeader(Header.EXPIRES, "0");
     }
 
     public static void writeNotFound() {
-        writeHtml(HttpStatus.HTTP_NOT_FOUND, "404 Not Found !");
+        writeHtml(ResultCode.HTTP_NOT_FOUND, "404 Not Found !");
     }
 
     public static void writeHtml(Integer status, String text) {
@@ -64,7 +64,7 @@ public class BaseController {
         html = html.replace("${text}", text);
         try {
             response.setStatus(status);
-            response.setContentType("text/html;charset=UTF-8");
+            response.setContentType(ContentType.TEXT_HTML);
             response.setContentLength(html.length());
 
             @Cleanup

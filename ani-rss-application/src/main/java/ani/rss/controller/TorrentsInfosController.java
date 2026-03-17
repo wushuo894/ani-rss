@@ -1,8 +1,8 @@
 package ani.rss.controller;
 
 import ani.rss.annotation.Auth;
-import ani.rss.entity.Result;
 import ani.rss.entity.TorrentsInfo;
+import ani.rss.entity.web.Result;
 import ani.rss.util.other.TorrentUtil;
 import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.web.bind.annotation.PostMapping;

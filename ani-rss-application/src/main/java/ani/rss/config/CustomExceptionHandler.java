@@ -1,6 +1,6 @@
 package ani.rss.config;
 
-import ani.rss.entity.Result;
+import ani.rss.entity.web.Result;
 import ani.rss.exception.ResultException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -28,7 +28,7 @@ public class CustomExceptionHandler {
     @ExceptionHandler({NoResourceFoundException.class, NoHandlerFoundException.class, HttpRequestMethodNotSupportedException.class})
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public Result<Void> notFoundException() {
-        return new Result<>(404,"404 Not Found !");
+        return new Result<>(404, "404 Not Found !");
     }
 
     @ExceptionHandler(Exception.class)

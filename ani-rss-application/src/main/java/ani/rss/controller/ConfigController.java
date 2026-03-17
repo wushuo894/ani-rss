@@ -6,6 +6,10 @@ import ani.rss.commons.MavenUtils;
 import ani.rss.config.CronConfig;
 import ani.rss.download.BaseDownload;
 import ani.rss.entity.*;
+import ani.rss.entity.web.ContentType;
+import ani.rss.entity.web.Header;
+import ani.rss.entity.web.Result;
+import ani.rss.entity.web.ResultCode;
 import ani.rss.service.ClearService;
 import ani.rss.service.TaskService;
 import ani.rss.util.basic.HttpReq;
@@ -24,9 +28,7 @@ import cn.hutool.core.lang.Assert;
 import cn.hutool.core.text.StrFormatter;
 import cn.hutool.core.util.*;
 import cn.hutool.extra.spring.SpringUtil;
-import cn.hutool.http.Header;
 import cn.hutool.http.HttpRequest;
-import cn.hutool.http.HttpStatus;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletResponse;
@@ -230,7 +232,7 @@ public class ConfigController extends BaseController {
                     });
         } catch (Exception e) {
             result.setMessage(e.getMessage())
-                    .setCode(HttpStatus.HTTP_INTERNAL_ERROR);
+                    .setCode(ResultCode.HTTP_INTERNAL_ERROR);
         }
 
         long end = LocalDateTimeUtil.toEpochMilli(LocalDateTimeUtil.now());
@@ -261,9 +263,8 @@ public class ConfigController extends BaseController {
 
         String customJs = ConfigUtil.CONFIG.getCustomJs();
         customJs = StrUtil.blankToDefault(customJs, "// empty js");
-        String contentType = "application/javascript; charset=utf-8";
 
-        response.setContentType(contentType);
+        response.setContentType(ContentType.JAVASCRIPT);
         response.setContentLength(customJs.length());
         @Cleanup
         OutputStream outputStream = response.getOutputStream();
@@ -278,9 +279,8 @@ public class ConfigController extends BaseController {
 
         String customCss = ConfigUtil.CONFIG.getCustomCss();
         customCss = StrUtil.blankToDefault(customCss, "/* empty css */");
-        String contentType = "text/css";
 
-        response.setContentType(contentType);
+        response.setContentType(ContentType.TEXT_CSS);
         response.setContentLength(customCss.length());
         @Cleanup
         OutputStream outputStream = response.getOutputStream();
@@ -299,7 +299,7 @@ public class ConfigController extends BaseController {
         HttpServletResponse response = Global.RESPONSE.get();
 
         response.setContentType(contentType);
-        response.setHeader(Header.CONTENT_DISPOSITION.toString(), StrFormatter.format("inline; filename=\"{}\"", filename));
+        response.setHeader(Header.CONTENT_DISPOSITION, StrFormatter.format("inline; filename=\"{}\"", filename));
 
         @Cleanup
         OutputStream outputStream = response.getOutputStream();

@@ -2,6 +2,7 @@ package ani.rss.util.basic;
 
 import ani.rss.commons.CacheUtils;
 import ani.rss.entity.Config;
+import ani.rss.entity.web.Header;
 import ani.rss.util.other.ConfigUtil;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.text.StrFormatter;
@@ -9,7 +10,6 @@ import cn.hutool.core.util.ReflectUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.core.util.URLUtil;
 import cn.hutool.crypto.SecureUtil;
-import cn.hutool.http.Header;
 import cn.hutool.http.HttpConnection;
 import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpResponse;

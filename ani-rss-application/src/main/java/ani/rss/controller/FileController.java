@@ -3,6 +3,7 @@ package ani.rss.controller;
 import ani.rss.annotation.Auth;
 import ani.rss.commons.ExceptionUtils;
 import ani.rss.entity.Global;
+import ani.rss.entity.web.Header;
 import ani.rss.util.other.ConfigUtil;
 import cn.hutool.core.codec.Base64;
 import cn.hutool.core.io.FileUtil;
@@ -10,7 +11,6 @@ import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.text.StrFormatter;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.core.util.URLUtil;
-import cn.hutool.http.Header;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -69,10 +69,10 @@ public class FileController extends BaseController {
 
         String contentType = getContentType(file.getName());
 
-        response.setHeader(Header.CONTENT_DISPOSITION.toString(), StrFormatter.format("inline; filename=\"{}\"", URLUtil.encode(file.getName())));
+        response.setHeader(Header.CONTENT_DISPOSITION, StrFormatter.format("inline; filename=\"{}\"", URLUtil.encode(file.getName())));
         if (contentType.startsWith("video/")) {
             response.setContentType(contentType);
-            response.setHeader("Accept-Ranges", "bytes");
+            response.setHeader(Header.ACCEPT_RANGES, "bytes");
             String rangeHeader = request.getHeader("Range");
             if (StrUtil.isNotBlank(rangeHeader) && rangeHeader.startsWith("bytes=")) {
                 String[] range = rangeHeader.substring(6).split("-");
@@ -83,7 +83,7 @@ public class FileController extends BaseController {
                     end = Long.parseLong(range[1]);
                 }
             }
-            response.setHeader("Content-Range", "bytes " + start + "-" + end + "/" + fileLength);
+            response.setHeader(Header.CONTENT_RANGE, "bytes " + start + "-" + end + "/" + fileLength);
             hasRange = true;
         } else {
             long maxAge = 0;

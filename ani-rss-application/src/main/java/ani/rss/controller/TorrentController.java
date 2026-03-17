@@ -3,7 +3,7 @@ package ani.rss.controller;
 import ani.rss.annotation.Auth;
 import ani.rss.commons.FileUtils;
 import ani.rss.entity.Ani;
-import ani.rss.entity.Result;
+import ani.rss.entity.web.Result;
 import ani.rss.util.other.AniUtil;
 import ani.rss.util.other.TorrentUtil;
 import cn.hutool.core.io.FileUtil;

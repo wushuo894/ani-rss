@@ -1,7 +1,6 @@
-package ani.rss.entity;
+package ani.rss.entity.web;
 
 import cn.hutool.core.text.StrFormatter;
-import cn.hutool.http.HttpStatus;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -44,26 +43,26 @@ public class Result<T> implements Serializable {
 
     public static <Void> Result<Void> success() {
         return new Result<Void>()
-                .setCode(HttpStatus.HTTP_OK)
+                .setCode(ResultCode.HTTP_OK)
                 .setMessage("success");
     }
 
     public static <T> Result<T> success(T data) {
         return new Result<T>()
-                .setCode(HttpStatus.HTTP_OK)
+                .setCode(ResultCode.HTTP_OK)
                 .setMessage("success")
                 .setData(data);
     }
 
     public static <T> Result<T> success(String message) {
         return new Result<T>()
-                .setCode(HttpStatus.HTTP_OK)
+                .setCode(ResultCode.HTTP_OK)
                 .setMessage(message);
     }
 
     public static <T> Result<T> success(String message, Object... argArray) {
         return new Result<T>()
-                .setCode(HttpStatus.HTTP_OK)
+                .setCode(ResultCode.HTTP_OK)
                 .setMessage(StrFormatter.format(message, argArray));
     }
 
@@ -75,26 +74,26 @@ public class Result<T> implements Serializable {
 
     public static <Void> Result<Void> error() {
         return new Result<Void>()
-                .setCode(HttpStatus.HTTP_INTERNAL_ERROR)
+                .setCode(ResultCode.HTTP_INTERNAL_ERROR)
                 .setMessage("error");
     }
 
     public static <T> Result<T> error(T data) {
         return new Result<T>()
-                .setCode(HttpStatus.HTTP_INTERNAL_ERROR)
+                .setCode(ResultCode.HTTP_INTERNAL_ERROR)
                 .setMessage("error")
                 .setData(data);
     }
 
     public static <T> Result<T> error(String message) {
         return new Result<T>()
-                .setCode(HttpStatus.HTTP_INTERNAL_ERROR)
+                .setCode(ResultCode.HTTP_INTERNAL_ERROR)
                 .setMessage(message);
     }
 
     public static <T> Result<T> error(String message, Object... argArray) {
         return new Result<T>()
-                .setCode(HttpStatus.HTTP_INTERNAL_ERROR)
+                .setCode(ResultCode.HTTP_INTERNAL_ERROR)
                 .setMessage(StrFormatter.format(message, argArray));
     }
 

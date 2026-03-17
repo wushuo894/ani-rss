@@ -3,14 +3,14 @@ package ani.rss.controller;
 import ani.rss.annotation.Auth;
 import ani.rss.entity.Global;
 import ani.rss.entity.Log;
-import ani.rss.entity.Result;
+import ani.rss.entity.web.Header;
+import ani.rss.entity.web.Result;
 import ani.rss.util.basic.LogUtil;
 import ani.rss.util.other.ConfigUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.text.StrFormatter;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.core.util.ZipUtil;
-import cn.hutool.http.Header;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.Cleanup;
@@ -60,7 +60,7 @@ public class LogsController extends BaseController {
         HttpServletResponse response = Global.RESPONSE.get();
 
         response.setContentType(contentType);
-        response.setHeader(Header.CONTENT_DISPOSITION.toString(), StrFormatter.format("inline; filename=\"{}\"", filename));
+        response.setHeader(Header.CONTENT_DISPOSITION, StrFormatter.format("inline; filename=\"{}\"", filename));
 
         @Cleanup
         OutputStream outputStream = response.getOutputStream();

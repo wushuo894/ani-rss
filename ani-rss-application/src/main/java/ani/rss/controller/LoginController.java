@@ -3,7 +3,8 @@ package ani.rss.controller;
 import ani.rss.commons.CacheUtils;
 import ani.rss.entity.Config;
 import ani.rss.entity.Login;
-import ani.rss.entity.Result;
+import ani.rss.entity.web.Result;
+import ani.rss.entity.web.ResultCode;
 import ani.rss.util.other.AuthUtil;
 import ani.rss.util.other.ConfigUtil;
 import cn.hutool.core.lang.Assert;
@@ -50,7 +51,7 @@ public class LoginController extends BaseController {
             log.info("登录成功 {} ip: {}", username, ip);
             String s = AuthUtil.getAuth(myLogin);
             return new Result<String>()
-                    .setCode(200)
+                    .setCode(ResultCode.HTTP_OK)
                     .setMessage("登录成功")
                     .setData(s);
         }

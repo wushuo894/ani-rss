@@ -2,7 +2,8 @@ package ani.rss.auth;
 
 import ani.rss.annotation.Auth;
 import ani.rss.entity.Global;
-import ani.rss.entity.Result;
+import ani.rss.entity.web.Result;
+import ani.rss.entity.web.ResultCode;
 import ani.rss.exception.ResultException;
 import ani.rss.util.other.AuthUtil;
 import jakarta.servlet.http.HttpServletRequest;
@@ -24,7 +25,7 @@ public class AuthAspect {
 
         throw new ResultException(
                 Result.error(r ->
-                        r.setCode(403)
+                        r.setCode(ResultCode.HTTP_FORBIDDEN)
                                 .setMessage("登录已失效")
                 )
         );

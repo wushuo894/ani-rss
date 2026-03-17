@@ -1,6 +1,6 @@
 package ani.rss.exception;
 
-import ani.rss.entity.Result;
+import ani.rss.entity.web.Result;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;

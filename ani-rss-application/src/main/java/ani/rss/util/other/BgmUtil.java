@@ -6,6 +6,8 @@ import ani.rss.entity.Ani;
 import ani.rss.entity.BgmInfo;
 import ani.rss.entity.BgmMe;
 import ani.rss.entity.Config;
+import ani.rss.entity.web.ContentType;
+import ani.rss.entity.web.Header;
 import ani.rss.enums.BgmTokenTypeEnum;
 import ani.rss.service.DownloadService;
 import ani.rss.util.basic.HttpReq;
@@ -18,8 +20,6 @@ import cn.hutool.core.text.StrFormatter;
 import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.core.util.*;
 import cn.hutool.extra.spring.SpringUtil;
-import cn.hutool.http.ContentType;
-import cn.hutool.http.Header;
 import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpResponse;
 import cn.hutool.json.JSONUtil;
@@ -305,7 +305,7 @@ public class BgmUtil {
         }
 
         setToken(HttpReq.post(host + "/v0/users/-/collections/" + subjectId))
-                .contentType(ContentType.JSON.getValue())
+                .contentType(ContentType.JSON)
                 .body(GsonStatic.toJson(Map.of(
                         "type", 3,
                         "rate", rate
@@ -341,7 +341,7 @@ public class BgmUtil {
         }
 
         setToken(HttpReq.post(host + "/v0/users/-/collections/" + subjectId))
-                .contentType(ContentType.JSON.getValue())
+                .contentType(ContentType.JSON)
                 .body(GsonStatic.toJson(Map.of("type", 3)))
                 .thenFunction(HttpResponse::isOk);
     }
@@ -392,7 +392,7 @@ public class BgmUtil {
 
         // bgm点格子前先判断状态，防止刷屏 #142
         JsonObject jsonObject = setToken(HttpReq.get(host + "/v0/users/-/collections/-/episodes/" + episodeId))
-                .contentType(ContentType.JSON.getValue())
+                .contentType(ContentType.JSON)
                 .thenFunction(res -> GsonStatic.fromJson(res.body(), JsonObject.class));
 
         int typeNow = jsonObject.get("type").getAsInt();
@@ -404,7 +404,7 @@ public class BgmUtil {
         ThreadUtil.sleep(500);
 
         setToken(HttpReq.put(host + "/v0/users/-/collections/-/episodes/" + episodeId))
-                .contentType(ContentType.JSON.getValue())
+                .contentType(ContentType.JSON)
                 .body(GsonStatic.toJson(Map.of("type", type)))
                 .thenFunction(HttpResponse::isOk);
     }

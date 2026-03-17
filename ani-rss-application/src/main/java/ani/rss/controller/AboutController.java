@@ -6,7 +6,7 @@ import ani.rss.commons.ExceptionUtils;
 import ani.rss.commons.MavenUtils;
 import ani.rss.entity.About;
 import ani.rss.entity.Global;
-import ani.rss.entity.Result;
+import ani.rss.entity.web.Result;
 import ani.rss.util.other.UpdateUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.thread.ThreadUtil;

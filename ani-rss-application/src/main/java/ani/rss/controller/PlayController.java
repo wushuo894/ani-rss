@@ -4,7 +4,7 @@ import ani.rss.annotation.Auth;
 import ani.rss.commons.FileUtils;
 import ani.rss.entity.Ani;
 import ani.rss.entity.PlayItem;
-import ani.rss.entity.Result;
+import ani.rss.entity.web.Result;
 import ani.rss.enums.StringEnum;
 import ani.rss.service.DownloadService;
 import ani.rss.util.other.AniUtil;

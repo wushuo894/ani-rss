@@ -4,7 +4,7 @@ import ani.rss.annotation.Auth;
 import ani.rss.entity.Ani;
 import ani.rss.entity.BgmInfo;
 import ani.rss.entity.NotificationConfig;
-import ani.rss.entity.Result;
+import ani.rss.entity.web.Result;
 import ani.rss.enums.NotificationStatusEnum;
 import ani.rss.enums.NotificationTypeEnum;
 import ani.rss.notification.BaseNotification;
