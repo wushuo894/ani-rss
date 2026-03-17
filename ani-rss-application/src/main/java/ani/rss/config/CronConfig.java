@@ -3,6 +3,8 @@ package ani.rss.config;
 import ani.rss.download.BaseDownload;
 import ani.rss.entity.About;
 import ani.rss.entity.Config;
+import ani.rss.entity.web.ContentType;
+import ani.rss.entity.web.Header;
 import ani.rss.util.basic.HttpReq;
 import ani.rss.util.other.ConfigUtil;
 import ani.rss.util.other.UpdateUtil;
@@ -10,8 +12,6 @@ import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.ClassUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.extra.spring.SpringUtil;
-import cn.hutool.http.ContentType;
-import cn.hutool.http.Header;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -91,7 +91,7 @@ public class CronConfig {
                         Assert.isTrue(ok, "更新trackers失败 {} {}", status, url);
                         String contentType = res.header(Header.CONTENT_TYPE);
                         Assert.notBlank(contentType, "更新trackers失败 contentType 为空 {}", url);
-                        Assert.isTrue(contentType.contains(ContentType.TEXT_PLAIN.getValue()), "更新trackers失败 {} {}", contentType, url);
+                        Assert.isTrue(contentType.contains(ContentType.TEXT_PLAIN), "更新trackers失败 {} {}", contentType, url);
 
                         String body = res.body();
                         StrUtil.split(body, "\n")

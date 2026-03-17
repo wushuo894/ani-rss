@@ -2,8 +2,8 @@ package ani.rss.controller;
 
 import ani.rss.annotation.Auth;
 import ani.rss.entity.Config;
-import ani.rss.entity.Result;
 import ani.rss.entity.TryOut;
+import ani.rss.entity.web.Result;
 import ani.rss.util.basic.HttpReq;
 import ani.rss.util.other.AfdianUtil;
 import ani.rss.util.other.ConfigUtil;

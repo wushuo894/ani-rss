@@ -3,13 +3,13 @@ package ani.rss.notification;
 import ani.rss.commons.GsonStatic;
 import ani.rss.entity.Ani;
 import ani.rss.entity.NotificationConfig;
+import ani.rss.entity.web.ContentType;
 import ani.rss.enums.NotificationStatusEnum;
 import ani.rss.util.basic.HttpReq;
 import ani.rss.util.other.ConfigUtil;
 import cn.hutool.core.text.StrFormatter;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
-import cn.hutool.http.ContentType;
 import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpResponse;
 import com.google.gson.JsonElement;
@@ -150,7 +150,7 @@ public class TelegramNotification implements BaseNotification {
         String url = StrFormatter.format("{}/bot{}/sendPhoto", telegramApiHost, telegramBotToken);
 
         HttpRequest request = HttpReq.post(url)
-                .contentType(ContentType.MULTIPART.getValue())
+                .contentType(ContentType.MULTIPART)
                 .form("chat_id", telegramChatId)
                 .form("caption", notificationTemplate)
                 .form("photo", photo)
