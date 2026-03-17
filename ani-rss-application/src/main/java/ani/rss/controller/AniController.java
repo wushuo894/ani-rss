@@ -4,7 +4,9 @@ import ani.rss.annotation.Auth;
 import ani.rss.commons.ExceptionUtils;
 import ani.rss.commons.FileUtils;
 import ani.rss.commons.PinyinUtils;
+import ani.rss.dto.IdDTO;
 import ani.rss.dto.ImportAniDataDTO;
+import ani.rss.dto.RssToAniDTO;
 import ani.rss.entity.*;
 import ani.rss.entity.web.Result;
 import ani.rss.enums.SortTypeEnum;
@@ -380,9 +382,9 @@ public class AniController extends BaseController {
     @Auth
     @Operation(summary = "刷新订阅")
     @PostMapping("/refreshAni")
-    public Result<Void> refreshAni(@RequestBody Ani ani) {
+    public Result<Void> refreshAni(@RequestBody IdDTO dto) {
         Optional<Ani> first = AniUtil.ANI_LIST.stream()
-                .filter(it -> it.getId().equals(ani.getId()))
+                .filter(it -> it.getId().equals(dto.getId()))
                 .findFirst();
         if (first.isEmpty()) {
             return Result.error("修改失败");
@@ -411,10 +413,10 @@ public class AniController extends BaseController {
     @Auth
     @Operation(summary = "将RSS转换为订阅")
     @PostMapping("/rssToAni")
-    public Result<Ani> rssToAni(@RequestBody Ani ani) {
-        String url = ani.getUrl();
-        String type = ani.getType();
-        String bgmUrl = ani.getBgmUrl();
+    public Result<Ani> rssToAni(@RequestBody RssToAniDTO dto) {
+        String url = dto.getUrl();
+        String type = dto.getType();
+        String bgmUrl = dto.getBgmUrl();
         Assert.notBlank(url, "RSS地址 不能为空");
         if (!ReUtil.contains("http(s*)://", url)) {
             url = "https://" + url;
