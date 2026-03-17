@@ -1,6 +1,5 @@
-- refactor: 优化登录安全
-- refactor: 优化页面缓存
-- refactor: 优化404响应
+- refactor: 优化响应状态码
+- docs: 更新爱发电地址
 
 [请不要将本项目在国内宣传](https://github.com/wushuo894/ani-rss/discussions/504)
 
