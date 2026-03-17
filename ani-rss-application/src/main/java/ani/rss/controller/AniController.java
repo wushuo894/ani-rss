@@ -6,6 +6,7 @@ import ani.rss.commons.FileUtils;
 import ani.rss.commons.PinyinUtils;
 import ani.rss.dto.ImportAniDataDTO;
 import ani.rss.entity.*;
+import ani.rss.entity.web.Result;
 import ani.rss.enums.SortTypeEnum;
 import ani.rss.service.AniService;
 import ani.rss.service.ClearService;

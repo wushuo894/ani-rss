@@ -2,7 +2,7 @@ package ani.rss.controller;
 
 import ani.rss.annotation.Auth;
 import ani.rss.entity.Ani;
-import ani.rss.entity.Result;
+import ani.rss.entity.web.Result;
 import ani.rss.service.ScrapeService;
 import cn.hutool.core.thread.ThreadUtil;
 import io.swagger.v3.oas.annotations.Operation;

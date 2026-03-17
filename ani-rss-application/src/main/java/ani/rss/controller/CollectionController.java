@@ -4,6 +4,7 @@ import ani.rss.annotation.Auth;
 import ani.rss.commons.FileUtils;
 import ani.rss.download.qBittorrent;
 import ani.rss.entity.*;
+import ani.rss.entity.web.Result;
 import ani.rss.enums.StringEnum;
 import ani.rss.util.basic.HttpReq;
 import ani.rss.util.other.ConfigUtil;

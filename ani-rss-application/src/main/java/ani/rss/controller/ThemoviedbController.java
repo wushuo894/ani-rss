@@ -2,11 +2,11 @@ package ani.rss.controller;
 
 import ani.rss.annotation.Auth;
 import ani.rss.entity.Ani;
-import ani.rss.entity.Result;
+import ani.rss.entity.web.Result;
+import ani.rss.entity.web.ResultCode;
 import ani.rss.util.other.TmdbUtils;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.StrUtil;
-import cn.hutool.http.HttpStatus;
 import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -25,11 +25,11 @@ public class ThemoviedbController extends BaseController {
     public Result<Ani> getThemoviedbName(@RequestBody Ani ani) {
         String themoviedbName = TmdbUtils.getFinalName(ani);
         Result<Ani> result = new Result<Ani>()
-                .setCode(HttpStatus.HTTP_OK)
+                .setCode(ResultCode.HTTP_OK)
                 .setMessage("获取TMDB成功")
                 .setData(ani.setThemoviedbName(themoviedbName));
         if (StrUtil.isBlank(themoviedbName)) {
-            result.setCode(HttpStatus.HTTP_INTERNAL_ERROR)
+            result.setCode(ResultCode.HTTP_INTERNAL_ERROR)
                     .setMessage("获取TMDB失败");
         }
         return result;

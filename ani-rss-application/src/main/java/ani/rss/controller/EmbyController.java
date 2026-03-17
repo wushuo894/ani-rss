@@ -2,6 +2,7 @@ package ani.rss.controller;
 
 import ani.rss.annotation.Auth;
 import ani.rss.entity.*;
+import ani.rss.entity.web.Result;
 import ani.rss.enums.StringEnum;
 import ani.rss.service.DownloadService;
 import ani.rss.util.other.*;

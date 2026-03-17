@@ -2,7 +2,7 @@ package ani.rss.controller;
 
 import ani.rss.annotation.Auth;
 import ani.rss.entity.Global;
-import ani.rss.entity.Result;
+import ani.rss.entity.web.Result;
 import ani.rss.util.other.ConfigUtil;
 import cn.hutool.core.codec.Base64;
 import cn.hutool.core.io.FileUtil;
