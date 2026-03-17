@@ -8,5 +8,5 @@ VOLUME /config
 ENV PUID=0 PGID=0 UMASK=022
 ENV SERVER_PORT=7789 CONFIG=/config TZ=Asia/Shanghai SWAGGER_ENABLED=false
 EXPOSE $SERVER_PORT
-RUN chmod +x /exec.sh /run.sh
+RUN sed -i 's/\r//g' /*.sh && chmod +x /*.sh
 CMD ["/exec.sh"]
