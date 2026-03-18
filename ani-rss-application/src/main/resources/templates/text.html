@@ -1,15 +1,15 @@
-<html lang="zh">
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8"/>
     <link rel="icon" href="/favicon.ico"/>
     <title>ANI-RSS</title>
     <meta name="robots" content="noindex">
-    <meta name="description" content="${text}"/>
+    <meta name="description" th:content="${text}"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
 </head>
 <body>
 <div class="container">
-    <h2>${text}</h2>
+    <h2 th:text="${text}"></h2>
 </div>
 </body>
 <style>
