@@ -68,7 +68,7 @@ public class UpdateUtil {
                             return;
                         }
 
-                        String latest = release.getTagName();
+                        String latest = release.getTagName().replace("v","");
 
                         /*
                         禁止非跨小版本的更新
