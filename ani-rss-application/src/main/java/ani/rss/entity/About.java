@@ -45,6 +45,18 @@ public class About implements Serializable {
     private String downloadUrl;
 
     /**
+     * sha256
+     */
+    @Schema(description = "sha256")
+    private String sha256;
+
+    /**
+     * size
+     */
+    @Schema(description = "size")
+    private Long size;
+
+    /**
      * 更新内容
      */
     @Schema(description = "更新内容")
