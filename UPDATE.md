@@ -1,5 +1,4 @@
-- refactor: 优化响应状态码
-- docs: 更新爱发电地址
+- fix: 修复订阅导入页面
 
 [请不要将本项目在国内宣传](https://github.com/wushuo894/ani-rss/discussions/504)
 
