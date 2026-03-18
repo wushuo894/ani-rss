@@ -1,0 +1,92 @@
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>ANI-RSS</title>
+    <meta name="robots" content="noindex">
+    <meta name="description" th:content="${text}"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+</head>
+<body>
+<div class="container">
+    <div class="card">
+        <div class="cover-wrapper">
+            <img class="cover" alt="cover" th:src="${cover}"/>
+        </div>
+        <div class="content">
+            <p class="text" th:text="${text}"></p>
+        </div>
+    </div>
+</div>
+</body>
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        --card-background: rgba(255, 255, 255, 0.95);
+        --text-color: #000;
+    }
+
+    body {
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+        min-height: 100vh;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    }
+
+    .container {
+        width: 100%;
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+    }
+
+    .card {
+        background: var(--card-background) !important;
+        backdrop-filter: blur(10px);
+        border-radius: 20px;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+        max-width: 480px;
+        width: 100%;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+    }
+
+    .cover-wrapper {
+        padding: 24px 24px 0;
+        display: flex;
+        justify-content: center;
+    }
+
+    .cover {
+        max-width: 100%;
+        height: auto;
+        border-radius: 12px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .content {
+        padding: 20px 24px 24px;
+    }
+
+    .text {
+        white-space: pre-line;
+        color: var(--text-color) !important;
+        line-height: 1.7;
+        font-size: 15px;
+    }
+
+    @media (prefers-color-scheme: dark) {
+        * {
+            --card-background: #2D2E2F;
+            --text-color: #FFF;
+        }
+    }
+</style>
+</html>

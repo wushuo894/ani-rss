@@ -4,6 +4,7 @@ import ani.rss.commons.ExceptionUtils;
 import ani.rss.entity.Ani;
 import ani.rss.entity.NotificationConfig;
 import ani.rss.enums.NotificationStatusEnum;
+import ani.rss.util.other.TemplateUtil;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.text.StrFormatter;
 import cn.hutool.extra.mail.JakartaMailUtil;
@@ -11,6 +12,7 @@ import cn.hutool.extra.mail.MailAccount;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 邮箱
@@ -65,20 +67,23 @@ public class MailNotification implements BaseNotification {
                 .setStarttlsEnable(mailTLSEnable)
                 .setAuth(true);
 
-        String notificationTemplate = replaceNotificationTemplate(ani, notificationConfig, text, notificationStatusEnum);
-        notificationTemplate = notificationTemplate.replace("\n", "<br/>");
 
-        if (mailImage) {
-            String image = ani.getImage();
-            notificationTemplate += StrFormatter.format("<br/><img src=\"{}\"/>", image);
-        }
+        String image = ani.getImage();
+        String notificationTemplate = replaceNotificationTemplate(ani, notificationConfig, text, notificationStatusEnum);
 
         String title = ani.getTitle();
 
         title = text.length() > 200 ? title : text;
 
+        Map<String, String> map = Map.of(
+                "text", notificationTemplate,
+                "cover", image
+        );
+
+        String html = TemplateUtil.render("mail.html", map);
+
         try {
-            JakartaMailUtil.send(mailAccount, List.of(mailAddressee), title, notificationTemplate, true);
+            JakartaMailUtil.send(mailAccount, List.of(mailAddressee), title, html, true);
             return true;
         } catch (Exception e) {
             String message = ExceptionUtils.getMessage(e);

@@ -4,16 +4,18 @@ import ani.rss.entity.Global;
 import ani.rss.entity.web.ContentType;
 import ani.rss.entity.web.Header;
 import ani.rss.entity.web.ResultCode;
+import ani.rss.util.other.TemplateUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IoUtil;
-import cn.hutool.core.io.resource.ResourceUtil;
 import cn.hutool.core.util.StrUtil;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.Cleanup;
 
 import java.io.OutputStream;
+import java.util.Map;
 
 public class BaseController {
+
     /**
      * 根据文件扩展名获得ContentType
      *
@@ -60,9 +62,10 @@ public class BaseController {
 
     public static void writeHtml(Integer status, String text) {
         HttpServletResponse response = Global.RESPONSE.get();
-        String html = ResourceUtil.readUtf8Str("template.html");
-        html = html.replace("${text}", text);
         try {
+            Map<String, String> map = Map.of("text", text);
+            String html = TemplateUtil.render("text.html", map);
+
             response.setStatus(status);
             response.setContentType(ContentType.TEXT_HTML);
             response.setContentLength(html.length());
