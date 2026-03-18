@@ -9,6 +9,7 @@ import ani.rss.entity.Config;
 import ani.rss.entity.Global;
 import ani.rss.entity.Login;
 import ani.rss.entity.web.Result;
+import ani.rss.entity.web.ResultCode;
 import ani.rss.exception.ResultException;
 import cn.hutool.core.net.NetUtil;
 import cn.hutool.core.text.StrFormatter;
@@ -205,7 +206,7 @@ public class AuthUtil {
         log.debug("失败次数过多, 已限制登录 {}", ip);
         Result<Void> result = new Result<Void>()
                 .setMessage(StrFormatter.format("失败次数过多, 已限制登录 {}", ip))
-                .setCode(403);
+                .setCode(ResultCode.HTTP_FORBIDDEN);
         throw new ResultException(result);
     }
 
