@@ -7,9 +7,10 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class CacheUtils {
-    static final FIFOCache<Object, Object> CACHE = CacheUtil.newFIFOCache(1024 * 8);
+    private static final FIFOCache<Object, Object> CACHE = CacheUtil.newFIFOCache(1024 * 8);
 
     @Synchronized("CACHE")
+    @SuppressWarnings("unchecked")
     public static <V> V get(Object key) {
         log.debug("get key [{}]", key);
         return (V) CACHE.get(key);
