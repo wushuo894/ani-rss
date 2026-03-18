@@ -687,7 +687,7 @@ public class BgmUtil {
                 });
 
         ConfigUtil.sync();
-        log.info("BgmToken已自动刷新");
+        log.info("BgmToken 已自动刷新");
     }
 
     /**

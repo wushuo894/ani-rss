@@ -55,7 +55,7 @@ public class EmbyController extends BaseController {
         Config config = ConfigUtil.CONFIG;
         String bgmToken = config.getBgmToken();
         if (StrUtil.isBlank(bgmToken)) {
-            log.info("bgmToken 为空");
+            log.info("BgmToken 为空");
             return Result.success();
         }
 
