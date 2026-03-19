@@ -67,6 +67,9 @@ public class MavenUtils {
             if (Objects.nonNull(JAR_FILE)) {
                 String pomPath = "META-INF/maven/ani.rss/ani-rss-application/pom.xml";
                 JarEntry jarEntry = JAR_FILE.getJarEntry(pomPath);
+                if (Objects.isNull(jarEntry)) {
+                    return "None";
+                }
                 @Cleanup
                 InputStream inputStream = JAR_FILE.getInputStream(jarEntry);
                 String s = IoUtil.readUtf8(inputStream);

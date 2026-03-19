@@ -44,6 +44,11 @@
                 <version>${project.parent.version}</version>
             </dependency>
             <dependency>
+                <groupId>org.commonmark</groupId>
+                <artifactId>commonmark</artifactId>
+                <version>0.27.1</version>
+            </dependency>
+            <dependency>
                 <groupId>org.springdoc</groupId>
                 <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
                 <version>3.0.2</version>

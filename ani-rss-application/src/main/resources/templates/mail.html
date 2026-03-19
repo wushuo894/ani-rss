@@ -3,17 +3,15 @@
     <meta charset="UTF-8"/>
     <title>ANI-RSS</title>
     <meta name="robots" content="noindex">
-    <meta name="description" th:content="${text}"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
 </head>
 <body>
 <div class="container">
     <div class="card">
-        <div class="cover-wrapper">
-            <img class="cover" alt="cover" th:src="${cover}"/>
+        <div class="cover-wrapper" th:if="${mailImage}">
+            <img class="cover" alt="cover" th:src="${image}"/>
         </div>
-        <div class="content">
-            <p class="text" th:text="${text}"></p>
+        <div class="content" th:utext="${render}">
         </div>
     </div>
 </div>
@@ -73,20 +71,6 @@
 
     .content {
         padding: 20px 24px 24px;
-    }
-
-    .text {
-        white-space: pre-line;
-        color: var(--text-color) !important;
-        line-height: 1.7;
-        font-size: 15px;
-    }
-
-    @media (prefers-color-scheme: dark) {
-        * {
-            --card-background: #2D2E2F;
-            --text-color: #FFF;
-        }
     }
 </style>
 </html>
