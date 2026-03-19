@@ -10,6 +10,9 @@ import cn.hutool.core.text.StrFormatter;
 import cn.hutool.extra.mail.JakartaMailUtil;
 import cn.hutool.extra.mail.MailAccount;
 import lombok.extern.slf4j.Slf4j;
+import org.commonmark.node.Node;
+import org.commonmark.parser.Parser;
+import org.commonmark.renderer.html.HtmlRenderer;
 
 import java.util.List;
 import java.util.Map;
@@ -70,14 +73,21 @@ public class MailNotification implements BaseNotification {
 
         String image = ani.getImage();
         String notificationTemplate = replaceNotificationTemplate(ani, notificationConfig, text, notificationStatusEnum);
+        notificationTemplate = notificationTemplate.replace("\n", "\n\n");
 
         String title = ani.getTitle();
 
         title = text.length() > 200 ? title : text;
 
-        Map<String, String> map = Map.of(
-                "text", notificationTemplate,
-                "cover", image
+        Parser parser = Parser.builder().build();
+        Node document = parser.parse(notificationTemplate);
+        HtmlRenderer renderer = HtmlRenderer.builder().build();
+        String render = renderer.render(document);
+
+        Map<String, Object> map = Map.of(
+                "render", render,
+                "image", image,
+                "mailImage",notificationConfig.getMailImage()
         );
 
         String html = TemplateUtil.render("mail.html", map);
