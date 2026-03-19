@@ -329,7 +329,7 @@ public class TorrentUtil {
      * @param file
      * @return
      */
-    public static synchronized String getMagnet(File file) {
+    public static String getMagnet(File file) {
         String hexHash = FileUtil.mainName(file);
         if (file.length() < 1) {
             return StrFormatter.format("magnet:?xt=urn:btih:{}", hexHash);
