@@ -9,6 +9,7 @@ import org.springframework.http.converter.json.GsonHttpMessageConverter;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.config.annotation.PathMatchConfigurer;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import org.springframework.web.util.pattern.PathPatternParser;
 
 import java.io.Writer;
 import java.lang.reflect.Type;
@@ -18,7 +19,13 @@ import java.nio.charset.StandardCharsets;
 public class WebMvcConfig implements WebMvcConfigurer {
     @Override
     public void configurePathMatch(PathMatchConfigurer configurer) {
-        configurer.addPathPrefix("/api", c -> c.isAnnotationPresent(RestController.class));
+        PathPatternParser pathPatternParser = new PathPatternParser();
+
+        // 设置不区分大小写
+        pathPatternParser.setCaseSensitive(false);
+
+        configurer.setPatternParser(pathPatternParser)
+                .addPathPrefix("/api", c -> c.isAnnotationPresent(RestController.class));
     }
 
     @Override
