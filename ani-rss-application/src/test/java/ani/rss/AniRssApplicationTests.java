@@ -1,14 +1,12 @@
 package ani.rss;
 
 import ani.rss.util.other.TemplateUtil;
-import cn.hutool.core.io.FileUtil;
 import org.commonmark.node.Node;
 import org.commonmark.parser.Parser;
 import org.commonmark.renderer.html.HtmlRenderer;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import java.io.File;
 import java.util.Map;
 
 @SpringBootTest

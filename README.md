@@ -108,20 +108,4 @@ SharonNetworks 为您的业务起飞保驾护航！
 
 [![Powered by DartNode](https://dartnode.com/branding/DN-Open-Source-sm.png)](https://dartnode.com "Powered by DartNode - Free VPS for Open Source")
 
-## 依赖项目列表
-
-- [OpenList](https://github.com/OpenListTeam/OpenList)
-- [bittorrent](https://www.eclipse.org/)
-- [gson](https://github.com/google/gson)
-- [hutool](https://hutool.cn/)
-- [launch4j-maven-plugin](https://github.com/orphan-oss/launch4j-maven-plugin)
-- [Lombok](https://github.com/projectlombok/lombok)
-- [logback](https://github.com/qos-ch/logback)
-- [maven](https://github.com/apache/maven)
-- [maven-assembly-plugin](https://github.com/apache/maven-assembly-plugin)
-- [sqlite-jdbc](https://github.com/xerial/sqlite-jdbc)
-- [TinyPinyin](https://github.com/promeG/TinyPinyin)
-- [Vue.js](https://cn.vuejs.org/)
-- [VitePress](https://vitepress.dev/zh/)
-- [jsoup](https://github.com/jhy/jsoup)
 
