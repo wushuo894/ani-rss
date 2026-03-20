@@ -62,10 +62,6 @@
             <artifactId>jakarta.mail</artifactId>
         </dependency>
         <dependency>
-            <groupId>ch.qos.logback</groupId>
-            <artifactId>logback-classic</artifactId>
-        </dependency>
-        <dependency>
             <groupId>io.github.biezhi</groupId>
             <artifactId>TinyPinyin</artifactId>
         </dependency>
@@ -140,11 +136,6 @@
             <artifactId>hutool-http</artifactId>
             <version>${hutool.version}</version>
         </dependency>
-        <dependency>
-            <groupId>cn.hutool</groupId>
-            <artifactId>hutool-core</artifactId>
-            <version>${hutool.version}</version>
-        </dependency>
     </dependencies>
 
     <build>
@@ -153,6 +144,9 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <mainClass>ani.rss.AniRssApplication</mainClass>
+                </configuration>
             </plugin>
             <plugin>
                 <groupId>com.akathist.maven.plugins.launch4j</groupId>
