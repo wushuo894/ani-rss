@@ -87,7 +87,7 @@ public class MailNotification implements BaseNotification {
         Map<String, Object> map = Map.of(
                 "render", render,
                 "image", image,
-                "mailImage",notificationConfig.getMailImage()
+                "mailImage", notificationConfig.getMailImage()
         );
 
         String html = TemplateUtil.render("mail.html", map);
