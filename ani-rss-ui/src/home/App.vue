@@ -177,7 +177,9 @@ const selectChange = () => {
     if (!yearMonth.value) {
       return true
     }
-    return yearMonth.value === `${it.year}-${it.month < 10 ? '0' + it.month : it.month}`;
+
+    // 仅对比年月
+    return yearMonth.value === it.releaseDate.replace(/-\d{2}$/, '');
   }
 }
 

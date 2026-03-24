@@ -168,7 +168,7 @@ import * as http from "@/js/http.js";
 let yearMonth = (list) => {
   return new Set(
       list
-          .map(it => `${it['year']}-${it['month'] < 10 ? '0' + it['month'] : it['month']}`)
+          .map(it => it['releaseDate'].replace(/-\d{2}$/, ''))
           .sort((a, b) => a > b ? -1 : 1)
   );
 }
@@ -197,7 +197,13 @@ let searchList = ref([])
 
 let selectChange = () => {
   searchList.value = list.value
-      .filter(it => !yearMonthValue.value || yearMonthValue.value === `${it.year}-${it.month < 10 ? '0' + it.month : it.month}`)
+      .filter(it => {
+        if (!yearMonthValue.value) {
+          return true
+        }
+        // 仅对比年月
+        return yearMonthValue.value === it.releaseDate.replace(/-\d{2}$/, '');
+      })
       .filter(selectFilters.value.filter(item => selectFilter.value === item.label)[0].fun)
 }
 

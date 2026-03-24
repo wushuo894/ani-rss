@@ -129,31 +129,31 @@ import {config, listAni} from "@/js/http.js";
 
 const defaultWeekList = [
   {
-    i: 0,
+    i: 1,
     label: '星期日'
   },
   {
-    i: 6,
+    i: 7,
     label: '星期六'
   },
   {
-    i: 5,
+    i: 6,
     label: '星期五'
   },
   {
-    i: 4,
+    i: 5,
     label: '星期四'
   },
   {
-    i: 3,
+    i: 4,
     label: '星期三'
   },
   {
-    i: 2,
+    i: 3,
     label: '星期二'
   },
   {
-    i: 1,
+    i: 2,
     label: '星期一'
   },
 ]
@@ -199,8 +199,8 @@ const getList = () => {
         if (weekShow.value) {
           weekList.value = defaultWeekList;
 
-          // 0表示周日，1表示周一
-          let day = new Date().getDay()
+          // 1表示周日，2表示周一
+          let day = new Date().getDay() + 1
 
           let currentDay = weekList.value.find(it => it.i === day)
           let currentDayIndex = weekList.value.indexOf(currentDay)
@@ -245,7 +245,7 @@ onMounted(() => {
 
 let yearMonth = () => {
   return new Set(list.value
-      .map(it => `${it['year']}-${it['month'] < 10 ? '0' + it['month'] : it['month']}`)
+      .map(it => it['releaseDate'].replace(/-\d{2}$/, ''))
       .sort((a, b) => a > b ? -1 : 1)
   );
 }

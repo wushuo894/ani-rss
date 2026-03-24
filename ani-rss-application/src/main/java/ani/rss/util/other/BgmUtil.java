@@ -817,12 +817,8 @@ public class BgmUtil {
                 .setOva(ova)
                 // 评分
                 .setScore(score)
-                // 年
-                .setYear(DateUtil.year(date))
-                // 月
-                .setMonth(DateUtil.month(date) + 1)
-                // 日
-                .setDate(DateUtil.dayOfMonth(date))
+                // 发布日期"
+                .setReleaseDate(date)
                 // 图片http地址
                 .setImage(image)
                 // 本地图片地址

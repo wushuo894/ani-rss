@@ -10,6 +10,7 @@ import ani.rss.service.DownloadService;
 import ani.rss.util.other.ConfigUtil;
 import ani.rss.util.other.ItemsUtil;
 import ani.rss.util.other.RenameUtil;
+import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.lang.Opt;
 import cn.hutool.core.lang.func.Func1;
 import cn.hutool.core.text.StrFormatter;
@@ -18,6 +19,7 @@ import cn.hutool.core.util.StrUtil;
 import cn.hutool.extra.spring.SpringUtil;
 import wushuo.tmdb.api.entity.Tmdb;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -78,13 +80,20 @@ public interface BaseNotification {
         );
         notificationTemplate = notificationTemplate.replace("${episodeFormat}", episodeFormat);
 
+
+        Date releaseDate = ani.getReleaseDate();
+        int year = DateUtil.year(releaseDate);
+        int month = DateUtil.month(releaseDate) + 1;
+        int date = DateUtil.dayOfYear(releaseDate);
+
+        notificationTemplate = notificationTemplate.replace("${year}", String.valueOf(year));
+        notificationTemplate = notificationTemplate.replace("${month}", String.valueOf(month));
+        notificationTemplate = notificationTemplate.replace("${date}", String.valueOf(date));
+
         List<Func1<Ani, Object>> list = List.of(
                 Ani::getTitle,
                 Ani::getScore,
                 Ani::getSeason,
-                Ani::getYear,
-                Ani::getMonth,
-                Ani::getDate,
                 Ani::getThemoviedbName,
                 Ani::getBgmUrl,
                 Ani::getCurrentEpisodeNumber,

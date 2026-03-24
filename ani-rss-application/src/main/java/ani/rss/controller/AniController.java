@@ -18,13 +18,10 @@ import ani.rss.util.other.*;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.comparator.PinyinComparator;
-import cn.hutool.core.date.DatePattern;
-import cn.hutool.core.date.DateTime;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.lang.UUID;
-import cn.hutool.core.text.StrFormatter;
 import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.ReUtil;
@@ -281,21 +278,16 @@ public class AniController extends BaseController {
                     String pinyin = PinyinUtils.getPinyin(title, "");
                     String pinyinInitials = PinyinUtils.getFirstLetter(title, "");
 
-                    Integer year = ani.getYear();
-                    Integer month = ani.getMonth();
-                    Integer date = ani.getDate();
-
-                    String format = StrFormatter.format("{}-{}-{}", year, month, date);
-
+                    Date releaseDate = ani.getReleaseDate();
                     int week = 0;
                     try {
-                        DateTime dateTime = DateUtil.parse(format, DatePattern.NORM_DATE_PATTERN);
-                        week = DateUtil.dayOfWeek(dateTime) - 1;
+                        week = DateUtil.dayOfWeek(releaseDate);
                     } catch (Exception e) {
-                        log.error("日期存在问题 {} {}", title, format);
+                        log.error("日期存在问题 {} {}", title, releaseDate);
                     }
 
-                    ani.setPinyin(pinyin)
+                    ani
+                            .setPinyin(pinyin)
                             .setPinyinInitials(pinyinInitials)
                             .setWeek(week);
                 });
