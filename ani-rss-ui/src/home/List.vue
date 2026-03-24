@@ -245,7 +245,7 @@ onMounted(() => {
 
 let yearMonth = () => {
   return new Set(list.value
-      .map(it => `${it['year']}-${it['month'] < 10 ? '0' + it['month'] : it['month']}`)
+      .map(it => it['releaseDate'].replace(/-\d{2}$/, ''))
       .sort((a, b) => a > b ? -1 : 1)
   );
 }

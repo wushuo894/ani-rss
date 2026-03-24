@@ -5,11 +5,7 @@
   <TmdbGroup ref="tmdbGroupRef" :ani="props.ani"/>
   <div style="height: 500px;">
     <el-scrollbar style="padding: 0 12px;" height="500" ref="scrollbar">
-      <el-form label-width="auto"
-               @submit="(event)=>{
-                event.preventDefault()
-             }"
-      >
+      <el-form label-width="auto">
         <el-form-item label="标题">
           <div style="width: 100%;">
             <div>
@@ -77,8 +73,7 @@
           <div class="form-item-flex">
             <el-date-picker
                 style="max-width: 150px;"
-                v-model="date"
-                @change="dateChange"
+                v-model="props.ani.releaseDate"
             />
           </div>
         </el-form-item>
@@ -294,7 +289,6 @@ const mikanRef = ref()
 const tmdbGroupRef = ref()
 
 let standbyRss = ref()
-let date = ref()
 
 let preview = ref()
 let okLoading = ref(false)
@@ -328,23 +322,7 @@ onMounted(() => {
 let scrollbar = ref()
 
 let init = () => {
-  date.value = new Date(props.ani.year, props.ani.month - 1, props.ani.date);
   scrollbar.value?.setScrollTop(0)
-}
-
-let dateChange = () => {
-  if (!date.value) {
-    return
-  }
-  props.ani.year = date.value.getFullYear()
-  props.ani.month = date.value.getMonth() + 1
-  props.ani.date = date.value.getDate()
-  let minYear = 1970
-  if (props.ani.year < minYear) {
-    props.ani.year = minYear
-    init()
-    ElMessage.error(`最小年份为 ${minYear}`)
-  }
 }
 
 let refreshAni = () => {

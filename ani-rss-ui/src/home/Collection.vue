@@ -78,9 +78,8 @@
               <el-form-item label="日期">
                 <div class="form-item-flex">
                   <el-date-picker
-                      v-model="date"
+                      v-model="data.ani.releaseDate"
                       style="max-width: 150px;"
-                      @change="dateChange"
                   />
                 </div>
               </el-form-item>
@@ -230,27 +229,6 @@ let downloadPath = () => {
 let collectionPreviewRef = ref()
 
 let startLoading = ref(false);
-
-let date = ref()
-
-let dateChange = () => {
-  if (!date.value) {
-    return
-  }
-  data.value.ani.year = date.value.getFullYear()
-  data.value.ani.month = date.value.getMonth() + 1
-  data.value.ani.date = date.value.getDate()
-  let minYear = 1970
-  if (data.value.ani.year < minYear) {
-    data.value.ani.year = minYear
-    init()
-    ElMessage.error(`最小年份为 ${minYear}`)
-  }
-}
-
-let init = () => {
-  date.value = new Date(data.value.ani.year, data.value.ani.month - 1, data.value.ani.date);
-}
 
 let bgmRef = ref()
 
