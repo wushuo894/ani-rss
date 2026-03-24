@@ -8,6 +8,9 @@ import ani.rss.service.DownloadService;
 import ani.rss.util.basic.HttpReq;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.bean.copier.CopyOptions;
+import cn.hutool.core.date.DatePattern;
+import cn.hutool.core.date.DateTime;
+import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.resource.ResourceUtil;
 import cn.hutool.core.lang.Assert;
@@ -62,6 +65,20 @@ public class AniUtil {
 
         ANI_LIST.clear();
         for (Ani ani : anis) {
+            Date releaseDate = ani.getReleaseDate();
+            if (Objects.isNull(releaseDate)) {
+                // 处理旧的日期数据
+                try {
+                    Integer year = ani.getYear();
+                    Integer month = ani.getMonth();
+                    Integer date = ani.getDate();
+                    String format = StrUtil.format("{}-{}-{}", year, month, date);
+                    releaseDate = DateUtil.parse(format, DatePattern.NORM_DATE_PATTERN);
+                    ani.setReleaseDate(releaseDate);
+                } catch (Exception ignored) {
+                }
+            }
+
             Ani newAni = AniUtil.createAni();
             BeanUtil.copyProperties(newAni, ani, copyOptions);
             ANI_LIST.add(ani);
@@ -392,9 +409,7 @@ public class AniUtil {
                 .setMikanTitle("")
                 .setStandbyRssList(new ArrayList<>())
                 .setOffset(0)
-                .setYear(1970)
-                .setMonth(1)
-                .setDate(1)
+                .setReleaseDate(new DateTime())
                 .setEnable(true)
                 .setOva(false)
                 .setScore(0.0)

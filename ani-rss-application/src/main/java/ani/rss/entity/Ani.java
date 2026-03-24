@@ -1,5 +1,7 @@
 package ani.rss.entity;
 
+import ani.rss.commons.DateAdapter;
+import com.google.gson.annotations.JsonAdapter;
 import com.google.gson.annotations.SerializedName;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
@@ -7,6 +9,7 @@ import lombok.experimental.Accessors;
 import wushuo.tmdb.api.entity.Tmdb;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -61,21 +64,31 @@ public class Ani implements Serializable {
     private Integer offset;
 
     /**
+     * 发布日期
+     */
+    @Schema(description = "发布日期")
+    @JsonAdapter(DateAdapter.class)
+    private Date releaseDate;
+
+    /**
      * 年度
      */
     @Schema(description = "年度")
+    @Deprecated
     private Integer year;
 
     /**
      * 月
      */
     @Schema(description = "月")
+    @Deprecated
     private Integer month;
 
     /**
      * 日
      */
     @Schema(description = "日")
+    @Deprecated
     private Integer date;
 
     /**

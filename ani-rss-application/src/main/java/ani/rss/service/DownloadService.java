@@ -560,8 +560,10 @@ public class DownloadService {
 
         downloadPathTemplate = downloadPathTemplate.replace("${letter}", letter);
 
-        int year = ani.getYear();
-        int month = ani.getMonth();
+        Date releaseDate = ani.getReleaseDate();
+
+        int year = DateUtil.year(releaseDate);
+        int month = DateUtil.month(releaseDate) + 1;
         String monthFormat = String.format("%02d", month);
 
         // 季度
