@@ -199,8 +199,8 @@ const getList = () => {
         if (weekShow.value) {
           weekList.value = defaultWeekList;
 
-          // 0表示周日，1表示周一
-          let day = new Date().getDay()
+          // 1表示周日，2表示周一
+          let day = new Date().getDay() + 1
 
           let currentDay = weekList.value.find(it => it.i === day)
           let currentDayIndex = weekList.value.indexOf(currentDay)
