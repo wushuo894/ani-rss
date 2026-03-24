@@ -281,7 +281,7 @@ public class AniController extends BaseController {
                     Date releaseDate = ani.getReleaseDate();
                     int week = 0;
                     try {
-                        week = DateUtil.dayOfWeek(releaseDate) - 1;
+                        week = DateUtil.dayOfWeek(releaseDate);
                     } catch (Exception e) {
                         log.error("日期存在问题 {} {}", title, releaseDate);
                     }

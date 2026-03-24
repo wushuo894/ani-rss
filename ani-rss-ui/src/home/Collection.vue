@@ -289,7 +289,6 @@ let beforeAvatarUpload = (rawFile) => {
 let dialogVisible = ref(false)
 
 let show = () => {
-  init()
   data.value.show = false
   data.value.ani.title = ''
   data.value.torrent = ''

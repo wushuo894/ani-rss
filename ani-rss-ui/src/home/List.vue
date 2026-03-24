@@ -129,31 +129,31 @@ import {config, listAni} from "@/js/http.js";
 
 const defaultWeekList = [
   {
-    i: 0,
+    i: 1,
     label: '星期日'
   },
   {
-    i: 6,
+    i: 7,
     label: '星期六'
   },
   {
-    i: 5,
+    i: 6,
     label: '星期五'
   },
   {
-    i: 4,
+    i: 5,
     label: '星期四'
   },
   {
-    i: 3,
+    i: 4,
     label: '星期三'
   },
   {
-    i: 2,
+    i: 3,
     label: '星期二'
   },
   {
-    i: 1,
+    i: 2,
     label: '星期一'
   },
 ]
