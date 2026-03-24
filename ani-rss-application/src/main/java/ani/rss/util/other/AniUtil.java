@@ -67,6 +67,7 @@ public class AniUtil {
         for (Ani ani : anis) {
             Date releaseDate = ani.getReleaseDate();
             if (Objects.isNull(releaseDate)) {
+                releaseDate = new Date();
                 // 处理旧的日期数据
                 try {
                     Integer year = ani.getYear();
@@ -74,9 +75,9 @@ public class AniUtil {
                     Integer date = ani.getDate();
                     String format = StrUtil.format("{}-{}-{}", year, month, date);
                     releaseDate = DateUtil.parse(format, DatePattern.NORM_DATE_PATTERN);
-                    ani.setReleaseDate(releaseDate);
                 } catch (Exception ignored) {
                 }
+                ani.setReleaseDate(releaseDate);
             }
 
             Ani newAni = AniUtil.createAni();

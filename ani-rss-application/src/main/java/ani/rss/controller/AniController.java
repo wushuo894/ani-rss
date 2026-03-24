@@ -279,7 +279,7 @@ public class AniController extends BaseController {
                     String pinyinInitials = PinyinUtils.getFirstLetter(title, "");
 
                     Date releaseDate = ani.getReleaseDate();
-                    int week = 0;
+                    int week = 1;
                     try {
                         week = DateUtil.dayOfWeek(releaseDate);
                     } catch (Exception e) {
