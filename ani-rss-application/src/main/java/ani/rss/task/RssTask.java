@@ -73,7 +73,7 @@ public class RssTask implements BaseTask {
     }
 
     @Override
-    public void accept(String threadName, AtomicBoolean loop) {
+    public void accept(AtomicBoolean loop) {
         Config config = ConfigUtil.CONFIG;
         Integer sleep = config.getRssSleepMinutes();
 
