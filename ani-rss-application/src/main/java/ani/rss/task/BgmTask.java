@@ -28,7 +28,7 @@ public class BgmTask implements BaseTask {
     private AniService aniService;
 
     @Override
-    public void accept(String threadName, AtomicBoolean loop) {
+    public void accept(AtomicBoolean loop) {
         try {
             BgmUtil.refreshToken();
         } catch (Exception e) {

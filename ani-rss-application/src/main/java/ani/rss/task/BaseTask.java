@@ -3,10 +3,10 @@ package ani.rss.task;
 import cn.hutool.log.Log;
 
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 
 @FunctionalInterface
-public interface BaseTask extends BiConsumer<String, AtomicBoolean> {
+public interface BaseTask extends Consumer<AtomicBoolean> {
 
     Log log = Log.get();
 
@@ -15,15 +15,14 @@ public interface BaseTask extends BiConsumer<String, AtomicBoolean> {
 
         log.info("{} 任务正在运行", threadName);
         while (loop.get()) {
-            accept(threadName, loop);
+            accept(loop);
         }
         log.info("{} 任务已停止", threadName);
     }
 
     /**
-     * @param threadName 线程名
-     * @param loop       原子化布尔 用以控制循环
+     * @param loop 原子化布尔 用以控制循环
      */
     @Override
-    void accept(String threadName, AtomicBoolean loop);
+    void accept(AtomicBoolean loop);
 }

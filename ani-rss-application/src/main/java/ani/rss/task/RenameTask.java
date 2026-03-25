@@ -24,7 +24,7 @@ public class RenameTask implements BaseTask {
     private DownloadService downloadService;
 
     @Override
-    public void accept(String threadName, AtomicBoolean loop) {
+    public void accept(AtomicBoolean loop) {
         Config config = ConfigUtil.CONFIG;
         int renameSleepSeconds = config.getRenameSleepSeconds();
 
