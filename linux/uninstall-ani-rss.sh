@@ -122,34 +122,6 @@ verify_uninstall() {
     fi
 }
 
-remove_jdk() {
-    # 最终确认
-    read -p "是否卸载JDK?(y/N) " -n 1 -r
-    echo
-    if [[ ! $REPLY =~ ^[Yy]$ ]]; then
-        echo -e "${GREEN}已取消JDK卸载${NC}"
-        return
-    fi
-
-    # 执行卸载命令
-    echo -e "${YELLOW}正在卸载JDK...${NC}"
-    if command -v apt &>/dev/null; then
-        apt purge -y openjdk-17-jdk >/dev/null 2>&1
-    elif command -v yum &>/dev/null; then
-        yum remove -y java-17-openjdk-devel >/dev/null 2>&1
-    else
-      echo -e "${YELLOW}不支持的包管理器${NC}"
-      return
-    fi
-
-    if [ $? -eq 0 ]; then
-        echo -e "${GREEN}JDK卸载完成${NC}"
-    else
-        echo -e "${RED}JDK卸载过程中出现错误${NC}"
-        exit 1
-    fi
-}
-
 # 主流程
 main() {
     check_root
@@ -158,7 +130,6 @@ main() {
     remove_install_dir
     remove_service_user
     verify_uninstall
-    remove_jdk
     echo -e "\n${GREEN}===== 卸载完成 =====${NC}"
 }
 
