@@ -80,6 +80,10 @@ public class AniUtil {
                 ani.setReleaseDate(releaseDate);
             }
 
+            // 自动修补缺失的封面
+            String image = ani.getImage();
+            saveJpg(image);
+
             Ani newAni = AniUtil.createAni();
             BeanUtil.copyProperties(newAni, ani, copyOptions);
             ANI_LIST.add(ani);
