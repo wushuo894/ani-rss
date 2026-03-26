@@ -84,7 +84,7 @@ public interface BaseNotification {
         Date releaseDate = ani.getReleaseDate();
         int year = DateUtil.year(releaseDate);
         int month = DateUtil.month(releaseDate) + 1;
-        int date = DateUtil.dayOfYear(releaseDate);
+        int date = DateUtil.dayOfMonth(releaseDate);
 
         notificationTemplate = notificationTemplate.replace("${year}", String.valueOf(year));
         notificationTemplate = notificationTemplate.replace("${month}", String.valueOf(month));
