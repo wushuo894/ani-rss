@@ -1,4 +1,4 @@
-- refactor: 更新bgm缓存地址
+- feat: ed2k download support @Arjen10
 
 [请不要将本项目在国内宣传](https://github.com/wushuo894/ani-rss/discussions/504)
 
