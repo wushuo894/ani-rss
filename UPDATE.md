@@ -1,7 +1,4 @@
-- refactor: 自动修补缺失的封面
-- refactor: 更新前端依赖
-- refactor: 更新卸载脚本
-- refactor: 优化旧日期处理
+- refactor: 更新bgm缓存地址
 
 [请不要将本项目在国内宣传](https://github.com/wushuo894/ani-rss/discussions/504)
 
