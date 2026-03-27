@@ -23,6 +23,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.eclipse.bittorrent.TorrentFile;
 
 import java.io.File;
+import java.nio.file.Files;
 import java.util.List;
 import java.util.Objects;
 
@@ -89,7 +90,8 @@ public class TorrentUtil {
         String infoHash = item.getInfoHash();
         File torrents = getTorrentDir(ani);
         String torrent = item.getTorrent();
-        if (ReUtil.contains(StringEnum.MAGNET_REG, torrent)) {
+        if (ReUtil.contains(StringEnum.MAGNET_REG, torrent)
+                || ReUtil.contains(StringEnum.ED2K_REG, torrent)) {
             return new File(torrents + "/" + infoHash + ".txt");
         }
         return new File(torrents + "/" + infoHash + ".torrent");
@@ -112,6 +114,12 @@ public class TorrentUtil {
 
         try {
             if (ReUtil.contains(StringEnum.MAGNET_REG, torrent)) {
+                FileUtil.writeUtf8String(torrent, saveTorrentFile);
+                log.info("种子下载完成 {}", reName);
+                return saveTorrentFile;
+            }
+
+            if (ReUtil.contains(StringEnum.ED2K_REG, torrent)) {
                 FileUtil.writeUtf8String(torrent, saveTorrentFile);
                 log.info("种子下载完成 {}", reName);
                 return saveTorrentFile;
