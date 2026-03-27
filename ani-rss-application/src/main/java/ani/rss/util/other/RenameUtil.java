@@ -201,15 +201,15 @@ public class RenameUtil {
 
         String defaultEpisodeTitle = "第" + NumberFormatUtils.format(episode, 1, 0) + "集";
 
-        String episodeTitle = is5 ? defaultEpisodeTitle : episodeTitleMap
-                .getOrDefault(episode.intValue(), defaultEpisodeTitle);
+        String episodeTitle = is5 ? defaultEpisodeTitle :
+                episodeTitleMap.getOrDefault(episode.intValue(), defaultEpisodeTitle);
 
-        String bgmEpisodeTitle = is5 ? defaultEpisodeTitle : bgmEpisodeTitleMap
-                .getOrDefault(episode.intValue(), jp -> defaultEpisodeTitle)
+        String bgmEpisodeTitle = is5 ? defaultEpisodeTitle :
+                bgmEpisodeTitleMap.getOrDefault(episode.intValue(), jp -> defaultEpisodeTitle)
                 .apply(false);
 
-        String bgmJpEpisodeTitle = is5 ? defaultEpisodeTitle : bgmEpisodeTitleMap
-                .getOrDefault(episode.intValue(), jp -> defaultEpisodeTitle)
+        String bgmJpEpisodeTitle = is5 ? defaultEpisodeTitle :
+                bgmEpisodeTitleMap.getOrDefault(episode.intValue(), jp -> defaultEpisodeTitle)
                 .apply(true);
 
         template = template.replace("${episodeTitle}", episodeTitle);
