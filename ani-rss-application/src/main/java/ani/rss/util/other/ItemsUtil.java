@@ -142,6 +142,9 @@ public class ItemsUtil {
                     if (ReUtil.contains(StringEnum.MAGNET_REG, url)) {
                         torrent = url;
                         infoHash = ReUtil.get(StringEnum.MAGNET_REG, url, 1);
+                    } else if (ReUtil.contains(StringEnum.ED2K_REG, url)) {
+                        torrent = url;
+                        infoHash = ReUtil.get(StringEnum.ED2K_REG, url, 3);
                     } else {
                         torrent = url;
                         infoHash = FileUtil.mainName(torrent);

@@ -6,4 +6,5 @@ public class StringEnum {
     public static final String TMDB_ID_REG = " ?(\\[tmdbid=(\\d+)]|\\{tmdb-(\\d+)})";
     public static final String MAGNET_REG = "^magnet\\:\\?xt=urn:btih\\:(\\w+)";
     public static final String SUBGROUP_REG_STR = "^\\{\\{(.+)}}:(.+)$";
+    public static final String ED2K_REG = "^ed2k://\\|file\\|([^|]+)\\|(\\d+)\\|([A-Fa-f0-9]{32})\\|/$";
 }
