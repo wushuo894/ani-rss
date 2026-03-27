@@ -416,7 +416,7 @@ public class MikanUtil {
         JsonObject jsonObject = new JsonObject();
         try {
             String url = StrFormatter.format(
-                    "https://bgm-cache.wushuo.top/score/{}/score.json",
+                    "https://cache.wushuo.top/mikan/score/{}",
                     SecureUtil.sha256(outTradeNo)
             );
             jsonObject = HttpReq.get(url)
