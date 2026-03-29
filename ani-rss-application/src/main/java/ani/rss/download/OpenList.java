@@ -31,6 +31,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.File;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Stream;
 
 @Slf4j
@@ -134,6 +135,10 @@ public class OpenList implements BaseDownload {
             // 重试次数
             long retry = 0;
             while (true) {
+                // fix: 每次轮询前睡眠 3 秒，避免高频请求把 openlist 接口搞崩
+                // 特别是在软路由、低性能设备上非常容易出问题
+                // 建议后期优化成可在 UI 界面配置轮询间隔
+                TimeUnit.SECONDS.sleep(3);
                 Integer alistDownloadTimeout = config.getAlistDownloadTimeout();
                 Long alistDownloadRetryNumber = config.getAlistDownloadRetryNumber();
 
