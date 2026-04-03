@@ -1,5 +1,9 @@
 package ani.rss.service;
 
+import ani.rss.commons.FileUtils;
+import ani.rss.entity.Ani;
+import ani.rss.util.other.AniUtil;
+import ani.rss.util.other.ConfigUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.ReUtil;
@@ -9,6 +13,8 @@ import org.springframework.stereotype.Service;
 import java.io.File;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -52,4 +58,37 @@ public class ClearService {
         FileUtil.del(parentFile);
         clearParentFile(parentFile);
     }
+
+    public Long clearCover() {
+        File configDir = ConfigUtil.getConfigDir();
+        String configDirStr = FileUtils.getAbsolutePath(configDir);
+
+        FileUtil.mkdir(configDirStr + "/files");
+        FileUtil.mkdir(configDirStr + "/img");
+
+        Set<String> covers = AniUtil.ANI_LIST
+                .stream()
+                .map(Ani::getCover)
+                .map(s -> FileUtils.getAbsolutePath(new File(configDirStr + "/files/" + s)))
+                .collect(Collectors.toSet());
+
+        Set<File> files = FileUtil.loopFiles(configDirStr + "/files")
+                .stream()
+                .filter(file -> {
+                    String fileName = FileUtils.getAbsolutePath(file);
+                    return !covers.contains(fileName);
+                }).collect(Collectors.toSet());
+        long filesSize = files.stream()
+                .mapToLong(File::length)
+                .sum();
+        long imgSize = FileUtil.size(new File(configDirStr + "/img"));
+
+        for (File file : files) {
+            FileUtil.del(file);
+            clearParentFile(file);
+        }
+
+        return filesSize + imgSize;
+    }
+
 }

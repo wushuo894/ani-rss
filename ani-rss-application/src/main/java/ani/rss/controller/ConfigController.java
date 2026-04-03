@@ -5,7 +5,10 @@ import ani.rss.commons.FileUtils;
 import ani.rss.commons.MavenUtils;
 import ani.rss.config.CronConfig;
 import ani.rss.download.BaseDownload;
-import ani.rss.entity.*;
+import ani.rss.entity.Config;
+import ani.rss.entity.Global;
+import ani.rss.entity.Login;
+import ani.rss.entity.ProxyTest;
 import ani.rss.entity.web.ContentType;
 import ani.rss.entity.web.Header;
 import ani.rss.entity.web.Result;
@@ -46,8 +49,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.Objects;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 @Slf4j
 @RestController
@@ -159,40 +160,12 @@ public class ConfigController extends BaseController {
         File configDir = ConfigUtil.getConfigDir();
         String configDirStr = FileUtils.getAbsolutePath(configDir);
 
-        Set<String> covers = AniUtil.ANI_LIST
-                .stream()
-                .map(Ani::getCover)
-                .map(s -> FileUtils.getAbsolutePath(new File(configDirStr + "/files/" + s)))
-                .collect(Collectors.toSet());
+        Long size = clearService.clearCover();
 
-        FileUtil.mkdir(configDirStr + "/files");
-        FileUtil.mkdir(configDirStr + "/img");
-
-        Set<File> files = FileUtil.loopFiles(configDirStr + "/files")
-                .stream()
-                .filter(file -> {
-                    String fileName = FileUtils.getAbsolutePath(file);
-                    return !covers.contains(fileName);
-                }).collect(Collectors.toSet());
-        long filesSize = files.stream()
-                .mapToLong(File::length)
-                .sum();
-        long imgSize = FileUtil.size(new File(configDirStr + "/img"));
-
-        long sumSize = filesSize + imgSize;
-
-        if (sumSize < 1) {
-            return Result.success("清理完成, 共清理{}MB", 0);
-        }
-
-        for (File file : files) {
-            FileUtil.del(file);
-            clearService.clearParentFile(file);
-        }
-
+        // 清理 mikan 预览封面
         FileUtil.del(configDirStr + "/img");
 
-        String mb = NumberUtil.decimalFormat("0.00", sumSize / 1024.0 / 1024.0);
+        String mb = NumberUtil.decimalFormat("0.00", size / 1024.0 / 1024.0);
 
         return Result.success("清理完成, 共清理{}MB", mb);
     }
