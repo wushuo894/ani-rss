@@ -5,7 +5,7 @@
 
     <groupId>ani.rss</groupId>
     <artifactId>ani-rss</artifactId>
-    <version>3.0.20</version>
+    <version>3.0.21</version>
 
     <name>ani-rss</name>
     <inceptionYear>2025</inceptionYear>
@@ -52,7 +52,7 @@
             <dependency>
                 <groupId>wushuo.tmdb.api</groupId>
                 <artifactId>tmdb-api</artifactId>
-                <version>1.0.3</version>
+                <version>1.0.4</version>
             </dependency>
             <dependency>
                 <groupId>ebml.reader</groupId>
