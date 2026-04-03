@@ -1,6 +1,4 @@
-- refactor: 优化配置导出逻辑
-- refactor: 更新前端依赖
-- refactor: 更新至 springboot 4.0.5
+- refactor: 优化tmdb匹配逻辑
 
 [请不要将本项目在国内宣传](https://github.com/wushuo894/ani-rss/discussions/504)
 
