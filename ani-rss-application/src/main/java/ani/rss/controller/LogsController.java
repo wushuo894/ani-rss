@@ -14,6 +14,7 @@ import cn.hutool.core.util.ZipUtil;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.Cleanup;
+import lombok.Synchronized;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -23,6 +24,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
@@ -33,13 +35,16 @@ public class LogsController extends BaseController {
     @Auth
     @Operation(summary = "日志")
     @PostMapping("/logs")
+    @Synchronized("LOG_LIST")
     public Result<List<Log>> logs() {
-        return Result.success(LOG_LIST);
+        List<Log> logs = new ArrayList<>(LOG_LIST);
+        return Result.success(logs);
     }
 
     @Auth
     @Operation(summary = "清理日志")
     @PostMapping("/clearLogs")
+    @Synchronized("LOG_LIST")
     public Result<Void> clearLogs() {
         LOG_LIST.clear();
         log.info("清理日志");
