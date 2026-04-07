@@ -5,9 +5,7 @@ import ani.rss.entity.Config;
 import ani.rss.entity.TryOut;
 import ani.rss.entity.web.Result;
 import ani.rss.util.basic.HttpReq;
-import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.lang.Assert;
-import cn.hutool.core.util.StrUtil;
 import com.google.gson.JsonObject;
 import lombok.extern.slf4j.Slf4j;
 
@@ -66,44 +64,5 @@ public class AfdianUtil {
                     HttpReq.assertStatus(res);
                     return GsonStatic.fromJson(res.body(), TryOut.class);
                 });
-    }
-
-    /**
-     * 校验捐赠信息
-     * <p>
-     * 你可以修改后自用, 但请仅存放于 私人仓库、私人docker镜像
-     */
-    public static void verify() {
-        if (!verifyExpirationTime()) {
-            return;
-        }
-
-        Config config = ConfigUtil.CONFIG;
-        Long expirationTime = config.getExpirationTime();
-
-        if (config.getTryOut()) {
-            TryOut tryOut = getTryOut();
-            Integer day = tryOut.getDay();
-            long time = DateUtil.offsetDay(new Date(), day).getTime();
-            if (expirationTime > time) {
-                expirationTime = time;
-            }
-            config.setExpirationTime(expirationTime);
-            return;
-        }
-
-        String outTradeNo = config.getOutTradeNo();
-        if (StrUtil.isBlank(outTradeNo)) {
-            config.setExpirationTime(0L);
-            return;
-        }
-
-        Result<Void> result = verifyNo(outTradeNo);
-        Integer code = result.getCode();
-        String message = result.getMessage();
-        if (code != 200) {
-            config.setExpirationTime(0L);
-            log.error(message);
-        }
     }
 }

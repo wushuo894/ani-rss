@@ -20,7 +20,6 @@ import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.lang.func.Func1;
 import cn.hutool.core.lang.func.LambdaUtil;
 import cn.hutool.core.text.StrFormatter;
-import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.RandomUtil;
 import cn.hutool.core.util.ZipUtil;
@@ -292,13 +291,6 @@ public class ConfigUtil {
         LogUtil.loadLogback();
         log.debug("加载配置文件 {}", configFile);
         TorrentUtil.load();
-        ThreadUtil.execute(() -> {
-            try {
-                AfdianUtil.verify();
-            } catch (Exception e) {
-                log.error(e.getMessage(), e);
-            }
-        });
     }
 
     /**
