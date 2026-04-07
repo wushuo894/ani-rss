@@ -159,19 +159,20 @@ public class OpenList implements BaseDownload {
                 int state = taskInfo
                         .get("state").getAsInt();
                 /*
-                https://github.com/AlistGo/alist-web/blob/7b9089c15a75e8543225f1d750f6e44ecfd83d82/src/lang/en/tasks.json#L14-L25
+                https://github.com/OpenListTeam/OpenList-Frontend/blob/d94691c110bb046465e526323f46ead8ddd83c20/src/lang/en/tasks.json#L14-L25
+
                 "state": {
-                 "0": "Pending",
-                 "1": "Running",
-                 "2": "Succeeded",
-                 "3": "Canceling",
-                 "4": "Canceled",
-                 "5": "Errored",
-                 "6": "Failing",
-                 "7": "Failed",
-                 "8": "WaitingRetry",
-                 "9": "BeforeRetry"
-                 }
+                    "0": "Pending",
+                    "1": "Running",
+                    "2": "Succeeded",
+                    "3": "Canceling",
+                    "4": "Canceled",
+                    "5": "Error",
+                    "6": "Failing",
+                    "7": "Failed",
+                    "8": "Waiting for Retry",
+                    "9": "Preparing to Retry"
+                }
                  */
                 // errored 重试
                 if (state >= 5) {
