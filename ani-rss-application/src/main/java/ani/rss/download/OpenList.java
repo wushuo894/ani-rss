@@ -158,8 +158,24 @@ public class OpenList implements BaseDownload {
                 String error = taskInfo.get("error").getAsString();
                 int state = taskInfo
                         .get("state").getAsInt();
+                /*
+                https://github.com/OpenListTeam/OpenList-Frontend/blob/d94691c110bb046465e526323f46ead8ddd83c20/src/lang/en/tasks.json#L14-L25
+
+                "state": {
+                    "0": "Pending",
+                    "1": "Running",
+                    "2": "Succeeded",
+                    "3": "Canceling",
+                    "4": "Canceled",
+                    "5": "Error",
+                    "6": "Failing",
+                    "7": "Failed",
+                    "8": "Waiting for Retry",
+                    "9": "Preparing to Retry"
+                }
+                 */
                 // errored 重试
-                if (state > 5) {
+                if (state >= 5) {
                     // 已到达最大重试次数 5 次, -1 不限制
                     if (alistDownloadRetryNumber > -1) {
                         if (retry >= alistDownloadRetryNumber) {
