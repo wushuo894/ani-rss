@@ -8,6 +8,7 @@ import ani.rss.entity.Login;
 import ani.rss.entity.NotificationConfig;
 import ani.rss.enums.BgmTokenTypeEnum;
 import ani.rss.enums.SortTypeEnum;
+import ani.rss.service.ClearService;
 import ani.rss.util.basic.LogUtil;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.bean.DynaBean;
@@ -19,11 +20,11 @@ import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.lang.func.Func1;
 import cn.hutool.core.lang.func.LambdaUtil;
 import cn.hutool.core.text.StrFormatter;
-import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.RandomUtil;
 import cn.hutool.core.util.ZipUtil;
 import cn.hutool.crypto.SecureUtil;
+import cn.hutool.extra.spring.SpringUtil;
 import cn.hutool.system.OsInfo;
 import cn.hutool.system.SystemUtil;
 import lombok.Cleanup;
@@ -290,13 +291,6 @@ public class ConfigUtil {
         LogUtil.loadLogback();
         log.debug("加载配置文件 {}", configFile);
         TorrentUtil.load();
-        ThreadUtil.execute(() -> {
-            try {
-                AfdianUtil.verify();
-            } catch (Exception e) {
-                log.error(e.getMessage(), e);
-            }
-        });
     }
 
     /**
@@ -355,6 +349,10 @@ public class ConfigUtil {
     }
 
     public static synchronized void backup(OutputStream outputStream) {
+        // 清理残余封面
+        ClearService clearService = SpringUtil.getBean(ClearService.class);
+        clearService.clearCover();
+
         File configDir = getConfigDir();
         List<File> backupFiles = Stream.of(
                         "files", "torrents", "database.db",
