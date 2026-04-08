@@ -4,9 +4,9 @@
   <Cover ref="refCover"/>
   <Del ref="refDel"/>
   <BgmRate ref="bgmRateRef"/>
-  <div class="list-container">
+  <div class="list-container" v-loading="loading">
     <el-scrollbar class="hide-scrollbar">
-      <div class="list-content" v-loading="loading">
+      <div class="list-content">
         <template v-for="weekItem in weekList">
           <div v-show="searchList(weekItem.i).length">
             <h2 class="list-week-title" v-if="weekItem['label'].length">
@@ -190,7 +190,6 @@ const weekShow = ref(false)
 const getList = () => {
   loading.value = true
 
-  list.value = []
   config()
       .then(res => {
         showPlaylist.value = res.data.showPlaylist
@@ -296,7 +295,6 @@ let props = defineProps({
 
 .list-content {
   margin: 0 10px;
-  min-height: 500px;
 }
 
 .list-week-title {
