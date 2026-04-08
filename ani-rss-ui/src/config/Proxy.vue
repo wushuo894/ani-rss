@@ -75,7 +75,6 @@ let urls = ref([
   'https://github.com',
   'https://www.google.com',
   'https://bgm.tv',
-  'https://www.tmdb.org',
   'https://www.themoviedb.org'
 ])
 
