@@ -3,27 +3,27 @@
 export LANG=C.UTF-8
 export LC_ALL=C.UTF-8
 
-path="./"
-jar="ani-rss.jar"
-jar_path=$path$jar
+FOLDER="./"
+JAR_FILE_NAME="ani-rss.jar"
+JAR_FILE=$FOLDER$JAR_FILE_NAME
 
-if [ ! -f $jar_path ]; then
-    url="https://github.com/wushuo894/ani-rss/releases/latest/download/ani-rss.jar"
-    wget -O $jar_path $url
+if [ ! -f $JAR_FILE ]; then
+    URL="https://github.com/wushuo894/ani-rss/releases/latest/download/ani-rss.jar"
+    wget -O $JAR_FILE $URL
 
     if [ $? -eq 0 ]; then
-        echo "$jar_path 下载成功！"
+        echo "$JAR_FILE 下载成功！"
     else
-        echo "$jar_path 下载失败。"
+        echo "$JAR_FILE 下载失败。"
     fi
 fi
 
 stop() {
-  pid=$(pgrep -f "$jar")
-  if [ -n "$pid" ]; then
-      echo "Stopping process $pid - $jar"
-      kill "$pid"
-      wait "$pid"
+  PID=$(pgrep -f "$JAR_FILE_NAME")
+  if [ -n "$PID" ]; then
+      echo "Stopping process $PID - $JAR_FILE_NAME"
+      kill "$PID"
+      wait "$PID"
   fi
 }
 
@@ -51,7 +51,7 @@ do
       --enable-native-access=ALL-UNNAMED \
       --add-opens=java.base/java.net=ALL-UNNAMED \
       --add-opens=java.base/sun.net.www.protocol.https=ALL-UNNAMED \
-      -jar $jar_path&
+      -jar $JAR_FILE&
     wait $!
     if [ $? -ne 0 ]; then
       break
