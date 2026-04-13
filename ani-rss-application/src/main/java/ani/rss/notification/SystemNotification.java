@@ -3,7 +3,7 @@ package ani.rss.notification;
 import ani.rss.entity.Ani;
 import ani.rss.entity.NotificationConfig;
 import ani.rss.enums.NotificationStatusEnum;
-import ani.rss.util.other.MenuUtil;
+import ani.rss.util.other.SystemTrayUtil;
 import lombok.extern.slf4j.Slf4j;
 
 import java.awt.*;
@@ -44,7 +44,7 @@ public class SystemNotification implements BaseNotification {
             return false;
         }
 
-        TrayIcon trayIcon = MenuUtil.trayIcon;
+        TrayIcon trayIcon = SystemTrayUtil.TRAY_ICON;
         if (Objects.isNull(trayIcon)) {
             log.error("未开启系统托盘 添加--gui参数启动");
             return false;
