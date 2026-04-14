@@ -59,7 +59,7 @@ public class SystemTrayUtil {
         MenuItem exit = popupMenu.add(new MenuItem("Quit", new MenuShortcut(KeyEvent.VK_Q)));
         exit.addActionListener(e -> {
             log.info("使用系统托盘退出");
-            System.exit(0);
+            System.exit(1);
         });
 
         SystemTray tray = SystemTray.getSystemTray();
