@@ -98,6 +98,6 @@ public class SystemTrayUtil {
             RuntimeUtil.exec(command);
             return;
         }
-        Desktop.getDesktop().browseFileDirectory(ConfigUtil.getConfigDir());
+        Desktop.getDesktop().browseFileDirectory(file);
     }
 }
