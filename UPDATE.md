@@ -1,5 +1,5 @@
-- refactor: 优化列表加载
-- refactor: 优化代理测试
+- feat: 增加 macOS 构建
+- refactor: 优化系统托盘
 
 [请不要将本项目在国内宣传](https://github.com/wushuo894/ani-rss/discussions/504)
 
