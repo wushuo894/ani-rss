@@ -45,17 +45,27 @@ public class SystemTrayUtil {
         PopupMenu popupMenu = new PopupMenu();
 
         // 添加菜单选项
-        MenuItem webui = popupMenu.add(new MenuItem("WebUI"));
+        MenuItem webui = popupMenu.add(new MenuItem("WebUI", new MenuShortcut(KeyEvent.VK_W)));
         webui.addActionListener(e -> {
-            if (Desktop.isDesktopSupported()) {
-                try {
-                    String port = SpringUtil.getProperty("server.port");
-                    Desktop.getDesktop().browse(new URL("http://127.0.0.1:" + port).toURI());
-                } catch (Exception ex) {
-                    log.error("打开webui失败", ex);
-                }
+            if (!Desktop.isDesktopSupported()) {
+                return;
+            }
+            try {
+                String port = SpringUtil.getProperty("server.port");
+                Desktop.getDesktop().browse(new URL("http://127.0.0.1:" + port).toURI());
+            } catch (Exception ex) {
+                log.error("打开webui失败", ex);
             }
         });
+
+        MenuItem config = popupMenu.add(new MenuItem("Config", new MenuShortcut(KeyEvent.VK_C)));
+        config.addActionListener(e -> {
+            if (!Desktop.isDesktopSupported()) {
+                return;
+            }
+            Desktop.getDesktop().browseFileDirectory(ConfigUtil.getConfigFile());
+        });
+
         MenuItem exit = popupMenu.add(new MenuItem("Quit", new MenuShortcut(KeyEvent.VK_Q)));
         exit.addActionListener(e -> {
             log.info("使用系统托盘退出");
