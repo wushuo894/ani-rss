@@ -242,6 +242,22 @@
                             </systemProperties>
                         </configuration>
                     </execution>
+                    <execution>
+                        <id>package-macos</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>java</goal>
+                        </goals>
+                        <configuration>
+                            <mainClass>ani.rss.build.MacOS</mainClass>
+                            <systemProperties>
+                                <systemProperty>
+                                    <key>basedir</key>
+                                    <value>${project.basedir}</value>
+                                </systemProperty>
+                            </systemProperties>
+                        </configuration>
+                    </execution>
                 </executions>
             </plugin>
         </plugins>
