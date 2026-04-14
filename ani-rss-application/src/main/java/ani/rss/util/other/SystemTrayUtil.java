@@ -2,11 +2,16 @@ package ani.rss.util.other;
 
 import ani.rss.entity.Global;
 import cn.hutool.core.io.resource.ResourceUtil;
+import cn.hutool.core.text.StrFormatter;
+import cn.hutool.core.util.RuntimeUtil;
 import cn.hutool.extra.spring.SpringUtil;
+import cn.hutool.system.OsInfo;
+import cn.hutool.system.SystemUtil;
 import lombok.extern.slf4j.Slf4j;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
+import java.io.File;
 import java.net.URL;
 
 @Slf4j
@@ -54,7 +59,7 @@ public class SystemTrayUtil {
                 String port = SpringUtil.getProperty("server.port");
                 Desktop.getDesktop().browse(new URL("http://127.0.0.1:" + port).toURI());
             } catch (Exception ex) {
-                log.error("打开webui失败", ex);
+                log.error("打开WebUI失败", ex);
             }
         });
 
@@ -63,7 +68,11 @@ public class SystemTrayUtil {
             if (!Desktop.isDesktopSupported()) {
                 return;
             }
-            Desktop.getDesktop().browseFileDirectory(ConfigUtil.getConfigFile());
+            try {
+                browseFileDirectory(ConfigUtil.getConfigFile());
+            } catch (Exception ex) {
+                log.error("打开Config失败", ex);
+            }
         });
 
         MenuItem exit = popupMenu.add(new MenuItem("Quit", new MenuShortcut(KeyEvent.VK_Q)));
@@ -80,5 +89,15 @@ public class SystemTrayUtil {
         TRAY_ICON.setImageAutoSize(true);
 
         tray.add(TRAY_ICON);
+    }
+
+    private static void browseFileDirectory(File file) {
+        OsInfo osInfo = SystemUtil.getOsInfo();
+        if (osInfo.isWindows()) {
+            String command = StrFormatter.format("explorer.exe /SELECT,\"{}\"", file.getAbsolutePath());
+            RuntimeUtil.exec(command);
+            return;
+        }
+        Desktop.getDesktop().browseFileDirectory(file);
     }
 }
