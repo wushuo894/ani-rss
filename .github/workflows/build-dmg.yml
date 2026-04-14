@@ -16,7 +16,7 @@ jobs:
       - name: Build with Project
         run: |
           bash ./package.sh
-          version=$(sed -n 's/.*<version>\(.*\)<\/version>.*/\1/p' ani-rss-application/pom.xml | head -n 1)
+          version=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout -f pom.xml)
           echo "version=v$version" >> $GITHUB_ENV
       - name: Create DMG
         run: |
