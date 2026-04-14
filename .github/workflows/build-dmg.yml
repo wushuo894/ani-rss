@@ -1,0 +1,33 @@
+name: build-dmg
+
+on:
+  workflow_dispatch:
+jobs:
+  build:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up JDK 17
+        uses: actions/setup-java@v5
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: maven
+      - name: Build with Project
+        run: |
+          bash ./package.sh
+          version=$(sed -n 's/.*<version>\(.*\)<\/version>.*/\1/p' ani-rss-application/pom.xml | head -n 1)
+          echo "version=v$version" >> $GITHUB_ENV
+      - name: Create DMG
+        run: |
+          bash ./ani-rss-application/target/ani-rss-macos-main/create-dmg.sh
+      - name: Release
+        uses: softprops/action-gh-release@v2
+        with:
+          name: ${{ env.version }}
+          body_path: UPDATE.md
+          tag_name: ${{ env.version }}
+          append_body: false
+          token: ${{ secrets.GITHUB_TOKEN }}
+          files: |
+            ./ani-rss-application/target/ani-rss-macos-main/ani-rss.dmg

@@ -38,8 +38,7 @@ jobs:
             ./ani-rss-application/target/ani-rss.jar.md5
             ./ani-rss-application/target/ani-rss.exe
             ./ani-rss-application/target/ani-rss.exe.md5
-            ./ani-rss-application/target/ani-rss-macos.zip
-            ./ani-rss-application/target/ani-rss-macos.zip.md5
+            ./ani-rss-application/target/ani-rss-macos-main/ani-rss.dmg
             ./info.json
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3

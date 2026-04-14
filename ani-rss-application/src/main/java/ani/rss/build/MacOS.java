@@ -32,7 +32,5 @@ public class MacOS implements Runnable {
         Path path = Path.of(target.getPath(), "ani-rss-macos-main/ani-rss.app/Contents/MacOS/ani-rss.jar");
 
         FileUtil.copy(Paths.get(jarFile.getPath()), path, StandardCopyOption.REPLACE_EXISTING);
-
-        ZipUtil.zip(new File(target, "ani-rss-macos.zip"), true, new File(target, "ani-rss-macos-main/ani-rss.app"));
     }
 }
