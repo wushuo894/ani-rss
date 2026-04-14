@@ -1,4 +1,4 @@
-name: deploy
+name: build
 
 on:
   workflow_dispatch:
