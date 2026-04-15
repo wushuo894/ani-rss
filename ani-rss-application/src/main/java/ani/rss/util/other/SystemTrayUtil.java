@@ -50,7 +50,7 @@ public class SystemTrayUtil {
         PopupMenu popupMenu = new PopupMenu();
 
         // 添加菜单选项
-        MenuItem webui = popupMenu.add(new MenuItem("WebUI", new MenuShortcut(KeyEvent.VK_W)));
+        MenuItem webui = popupMenu.add(new MenuItem("WebUI"));
         webui.addActionListener(e -> {
             if (!Desktop.isDesktopSupported()) {
                 return;
@@ -63,7 +63,7 @@ public class SystemTrayUtil {
             }
         });
 
-        MenuItem config = popupMenu.add(new MenuItem("Config", new MenuShortcut(KeyEvent.VK_C)));
+        MenuItem config = popupMenu.add(new MenuItem("Config"));
         config.addActionListener(e -> {
             if (!Desktop.isDesktopSupported()) {
                 return;
@@ -74,6 +74,8 @@ public class SystemTrayUtil {
                 log.error("打开Config失败", ex);
             }
         });
+
+        popupMenu.addSeparator();
 
         MenuItem exit = popupMenu.add(new MenuItem("Quit", new MenuShortcut(KeyEvent.VK_Q)));
         exit.addActionListener(e -> {
