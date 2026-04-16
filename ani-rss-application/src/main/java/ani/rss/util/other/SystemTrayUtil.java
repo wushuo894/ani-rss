@@ -23,6 +23,7 @@ public class SystemTrayUtil {
         // 仅在添加--gui参数时启动托盘
         if (Global.ARGS.contains("--gui")) {
             try {
+                initIcon();
                 showSystemTray();
                 log.info("启动系统托盘已启动");
             } catch (Exception e) {
@@ -101,5 +102,24 @@ public class SystemTrayUtil {
             return;
         }
         Desktop.getDesktop().browseFileDirectory(file);
+    }
+
+    private static void initIcon() {
+        if (!Taskbar.isTaskbarSupported()) {
+            return;
+        }
+
+        OsInfo osInfo = SystemUtil.getOsInfo();
+        if (!osInfo.isMac()) {
+            return;
+        }
+
+        try {
+            Image image = Toolkit.getDefaultToolkit()
+                    .getImage(ResourceUtil.getResource("image/icon-mac.png"));
+            Taskbar.getTaskbar().setIconImage(image);
+        } catch (Throwable e) {
+            log.warn("Failed to set application icon", e);
+        }
     }
 }
