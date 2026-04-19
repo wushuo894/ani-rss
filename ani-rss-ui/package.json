@@ -16,13 +16,13 @@
     "artplayer-plugin-multiple-subtitles": "^1.2.0",
     "crypto-js": "^4.2.0",
     "dayjs": "^1.11.20",
-    "element-plus": "^2.13.6",
+    "element-plus": "^2.13.7",
     "markdown-it": "^14.1.1",
     "markdown-it-github-alerts": "^1.0.1",
     "vue": "^3.5.32"
   },
   "devDependencies": {
-    "@vitejs/plugin-vue": "^6.0.5",
+    "@vitejs/plugin-vue": "^6.0.6",
     "shiki": "^4.0.2",
     "terser": "^5.46.1",
     "unplugin-auto-import": "^21.0.0",
