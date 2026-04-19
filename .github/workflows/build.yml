@@ -16,14 +16,7 @@ jobs:
       - name: Build with Project
         run: |
           bash ./package.sh
-
-          time=$(date +%s%3N)
           version=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout -f pom.xml)
-          echo "{\"time\":$time,\"version\":\"$version\"}" > info.json
-          jq --arg content "$(cat UPDATE.md)" '. += {markdown: $content}' info.json > temp.json && mv temp.json info.json
-
-          echo "$(cat info.json)"
-
           echo "version=v$version" >> $GITHUB_ENV
       - name: Release
         uses: softprops/action-gh-release@v2
@@ -35,11 +28,8 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           files: |
             ./ani-rss-application/target/ani-rss.jar
-            ./ani-rss-application/target/ani-rss.jar.md5
             ./ani-rss-application/target/ani-rss.exe
-            ./ani-rss-application/target/ani-rss.exe.md5
             ./ani-rss-application/target/ani-rss-macos-main/ani-rss.dmg
-            ./info.json
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
       - name: Set up Docker Buildx
