@@ -53,5 +53,5 @@ logs
 *.log
 ani-rss-update.exe
 /info.json
-build_info
+build.info
 *.versionsBackup

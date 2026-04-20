@@ -69,7 +69,7 @@ public class ConfigController extends BaseController {
     public String buildInfo() {
         String buildInfo = "";
         try {
-            buildInfo = ResourceUtil.readUtf8Str("build_info");
+            buildInfo = ResourceUtil.readUtf8Str("build.info");
         } catch (Exception ignored) {
         }
         return buildInfo;
