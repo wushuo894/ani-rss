@@ -132,22 +132,18 @@ public class ItemsUtil {
 
                 if (itemChildNodeName.equals("enclosure")) {
                     NamedNodeMap attributes = itemChild.getAttributes();
-                    String url = attributes.getNamedItem("url").getNodeValue();
+                    torrent = attributes.getNamedItem("url").getNodeValue();
                     length = Optional.of(attributes)
                             .map(it -> it.getNamedItem("length"))
                             .map(Node::getNodeValue)
                             .filter(NumberUtil::isLong)
                             .orElse("1");
 
-                    if (ReUtil.contains(StringEnum.MAGNET_REG, url)) {
-                        torrent = url;
-                        infoHash = ReUtil.get(StringEnum.MAGNET_REG, url, 1);
-                    } else if (ReUtil.contains(StringEnum.ED2K_REG, url)) {
-                        torrent = url;
-                        infoHash = ReUtil.get(StringEnum.ED2K_REG, url, 3);
-                    } else {
-                        torrent = url;
-                        infoHash = FileUtil.mainName(torrent);
+                    if (ReUtil.contains(StringEnum.MAGNET_REG, torrent)) {
+                        infoHash = ReUtil.get(StringEnum.MAGNET_REG, torrent, 1);
+                    }
+                    if (ReUtil.contains(StringEnum.ED2K_REG, torrent)) {
+                        infoHash = ReUtil.get(StringEnum.ED2K_REG, torrent, 3);
                     }
                 }
 
@@ -173,10 +169,18 @@ public class ItemsUtil {
 
                 if (itemChildNodeName.equals("torrent")) {
                     try {
-                        String textContent = XmlUtil.getElement((Element) itemChild, "pubDate")
-                                .getTextContent();
-                        textContent = textContent.replaceAll("\\.\\d+$", "");
-                        pubDate = DateUtil.parse(textContent, DatePattern.UTC_SIMPLE_PATTERN);
+                        Element infoHashEl = XmlUtil.getElement((Element) itemChild, "infohash");
+                        if (Objects.nonNull(infoHashEl)) {
+                            infoHash = infoHashEl.getTextContent();
+                        }
+
+                        Element pubDateEl = XmlUtil.getElement((Element) itemChild, "pubDate");
+
+                        if (Objects.nonNull(pubDateEl)) {
+                            String pubDateStr = pubDateEl.getTextContent();
+                            pubDateStr = pubDateStr.replaceAll("\\.\\d+$", "");
+                            pubDate = DateUtil.parse(pubDateStr, DatePattern.UTC_SIMPLE_PATTERN);
+                        }
                     } catch (Exception ignored) {
                     }
                 }
@@ -195,6 +199,13 @@ public class ItemsUtil {
                 continue;
             }
 
+            if (StrUtil.isBlank(infoHash)) {
+                infoHash = FileUtil.mainName(torrent);
+            }
+
+            infoHash = infoHash.toLowerCase();
+            infoHash = URLUtil.decode(infoHash);
+
             try {
                 if (StrUtil.isNotBlank(length) && size.equals("0MB")) {
                     Double l = Long.parseLong(length) / 1024.0 / 1024;
@@ -202,11 +213,6 @@ public class ItemsUtil {
                 }
             } catch (Exception e) {
                 log.warn(e.getMessage());
-            }
-
-            if (StrUtil.isNotBlank(infoHash)) {
-                infoHash = infoHash.toLowerCase();
-                infoHash = URLUtil.decode(infoHash);
             }
 
             Item addNewItem = ObjectUtil.clone(newItem);

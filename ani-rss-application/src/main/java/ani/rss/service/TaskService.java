@@ -4,6 +4,7 @@ import ani.rss.task.BaseTask;
 import ani.rss.task.BgmTask;
 import ani.rss.task.RenameTask;
 import ani.rss.task.RssTask;
+import cn.hutool.core.text.NamingCase;
 import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.extra.spring.SpringUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -53,7 +54,8 @@ public class TaskService {
         for (Class<? extends BaseTask> aClass : classList) {
             BaseTask task = SpringUtil.getBean(aClass);
             String name = aClass.getSimpleName();
-            THREADS.add(new Thread(() -> task.run(name, LOOP)));
+            String threadName = NamingCase.toKebabCase(name);
+            THREADS.add(new Thread(() -> task.run(threadName, LOOP)));
         }
         for (Thread thread : THREADS) {
             thread.start();
