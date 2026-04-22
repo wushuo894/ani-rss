@@ -1,4 +1,5 @@
 <template>
+  <AniBT ref="aniBTRef" @callback="mikanCallback"/>
   <Mikan ref="mikanRef" @callback="mikanCallback"/>
   <el-dialog v-model="dialogVisible" center title="备用订阅">
     <el-alert v-if="!config.standbyRss" :closable="false"
@@ -16,8 +17,21 @@
       <div>
         <el-button
             @click="mikanShow"
-            text bg
-            icon="VideoCamera"/>
+            text bg>
+          <template #icon>
+            <img src="@/icon/icon-mikan.png" alt="mikan" class="icon"/>
+          </template>
+        </el-button>
+      </div>
+      <div class="standby-spacer"></div>
+      <div>
+        <el-button
+            @click="aniBTShow"
+            text bg>
+          <template #icon>
+            <img src="@/icon/icon-anibt.png" alt="anibt" class="icon"/>
+          </template>
+        </el-button>
       </div>
     </div>
     <div>
@@ -86,11 +100,14 @@
 <script setup>
 import {ref} from "vue";
 import Mikan from "./Mikan.vue";
+import AniBT from "@/home/AniBT.vue";
+import api from "@/js/api.js";
 
 const editIndex = ref(-1)
 
 const dialogVisible = ref(false)
 const standbyRss = ref()
+const aniBTRef = ref()
 const mikanRef = ref()
 const config = ref({
   standbyRss: true
@@ -101,7 +118,7 @@ let show = () => {
   dialogVisible.value = true
   standbyRss.value = JSON.parse(JSON.stringify(props.ani.standbyRssList))
 
-  config
+  api.config()
       .then(res => {
         config.value = res.data;
       })
@@ -162,6 +179,11 @@ let mikanCallback = v => {
   editIndex.value = -1
 }
 
+let aniBTShow = () => {
+  let bgmUrl = props.ani.bgmUrl;
+  aniBTRef.value?.show(bgmUrl)
+}
+
 let mikanShow = () => {
   let query = props.ani.mikanTitle ? props.ani.mikanTitle : props.ani.title;
 
@@ -203,5 +225,11 @@ let props = defineProps(['ani'])
   width: 100%;
   justify-content: end;
   margin-top: 10px;
+}
+
+.icon {
+  width: 24px;
+  height: 24px;
+  border-radius: 8px;
 }
 </style>

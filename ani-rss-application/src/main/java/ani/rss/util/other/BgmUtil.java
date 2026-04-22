@@ -200,6 +200,16 @@ public class BgmUtil {
             MikanUtil.getMikanInfo(ani, "");
             bgmUrl = ani.getUrl();
         }
+        return getSubjectId(bgmUrl);
+    }
+
+    /**
+     * 获取番剧id
+     *
+     * @param bgmUrl
+     * @return
+     */
+    public static String getSubjectId(String bgmUrl) {
         Assert.notBlank(bgmUrl, "bgmUrl 不能为空");
         String regStr = "^http(s)?://.+\\/(\\d+)(\\/)?$";
         Assert.isTrue(ReUtil.contains(regStr, bgmUrl));

@@ -72,6 +72,13 @@ export let mikan = (text, season) => api.post(`api/mikan?text=${text}`, season)
 export let mikanGroup = (url) => api.post(`api/mikanGroup?url=${url}`)
 
 /**
+ * 获取AniBT番剧的字幕组列表
+ * @param url 番剧url
+ * @returns {Promise<unknown>}
+ */
+export let aniBTGroup = (url) => api.post(`api/aniBTGroup?bgmId=${url}`)
+
+/**
  * 刷新全部订阅
  * @returns {Promise<unknown>}
  */
@@ -345,6 +352,14 @@ export let getCollectionSubgroup = (info) => api.post('api/getCollectionSubgroup
  * @returns {Promise<unknown>}
  */
 export let getAniBySubjectId = (id) => api.post(`api/getAniBySubjectId?id=${id}`)
+
+/**
+ * 获取AniBT番剧列表
+ * @param season 季度
+ * @param bgmUrl
+ * @returns {Promise<unknown>}
+ */
+export let aniBT = (season, bgmUrl) => api.post(`api/aniBT?season=${season}&bgmUrl=${bgmUrl}`)
 
 /**
  * 删除缓存的种子

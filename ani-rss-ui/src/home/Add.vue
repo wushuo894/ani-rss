@@ -1,4 +1,5 @@
 <template>
+  <AniBT ref="aniBT" @callback="aniBTCallback"/>
   <Mikan ref="mikan" @callback="mikanCallback"/>
   <Bgm ref="bgmRef" @callback="it => {
     ani.title = it['name_cn'] ? it['name_cn'] : it['name']
@@ -28,8 +29,12 @@
                 />
                 <br>
                 <div class="mikan-button">
-                  <el-button @click="mikan?.show()" text bg icon="VideoCamera" type="primary"
-                             :disabled="rssButtonLoading">Mikan
+                  <el-button @click="mikan?.show()" text bg type="primary"
+                             :disabled="rssButtonLoading">
+                    <template #icon>
+                      <img src="@/icon/icon-mikan.png" alt="mikan" class="icon el-icon--left"/>
+                    </template>
+                    Mikan
                   </el-button>
                 </div>
                 <div>
@@ -37,6 +42,42 @@
                     不支持聚合订阅，原因是如果一次过多更新会出现遗漏
                     <br>
                     不必在 mikan 网站添加订阅, 你可以通过上方👆 [Mikan] 按钮浏览字幕组订阅
+                  </el-text>
+                </div>
+              </div>
+            </el-form-item>
+          </el-form>
+        </el-tab-pane>
+        <el-tab-pane label="AniBT" name="anibt">
+          <el-form label-width="auto"
+                   style="height: 260px"
+                   @submit="(event)=>{
+                event.preventDefault()
+             }">
+            <el-form-item label="RSS 地址">
+              <div style="width: 100%">
+                <el-input
+                    :disabled="rssButtonLoading"
+                    type="textarea"
+                    :autosize="{ minRows: 2}"
+                    v-model:model-value="ani.url"
+                    placeholder="https://anibt.net/rss/anime.xml?bgmId=xxx&groupSlug=xxx"
+                />
+                <br>
+                <div class="mikan-button">
+                  <el-button @click="aniBT?.show()" text bg type="primary"
+                             :disabled="rssButtonLoading">
+                    <template #icon>
+                      <img src="@/icon/icon-anibt.png" alt="anibt" class="icon el-icon--left"/>
+                    </template>
+                    AniBT
+                  </el-button>
+                </div>
+                <div>
+                  <el-text class="mx-1" size="small">
+                    不支持聚合订阅，原因是如果一次过多更新会出现遗漏
+                    <br>
+                    不必在 AniBT 网站添加订阅, 你可以通过上方👆 [AniBT] 按钮浏览字幕组订阅
                   </el-text>
                 </div>
               </div>
@@ -101,8 +142,11 @@ import Ani from "./Ani.vue";
 import Bgm from "./Bgm.vue";
 import {aniData} from "@/js/ani.js";
 import * as http from "@/js/http.js";
+import AniBT from "@/home/AniBT.vue";
+import {useLocalStorage} from "@vueuse/core";
 
 const showRss = ref(true)
+const aniBT = ref()
 const mikan = ref()
 const bgmRef = ref()
 
@@ -143,14 +187,23 @@ const addAni = (fun) => {
       }).finally(fun)
 }
 
-const activeName = ref('mikan')
+const activeName = useLocalStorage('add-active-name', 'mikan')
 
 const show = () => {
   ani.value = JSON.parse(JSON.stringify(aniData))
-  activeName.value = 'mikan'
   showRss.value = true
   dialogVisible.value = true
   rssButtonLoading.value = false
+}
+
+let aniBTCallback = v => {
+  let {group, match, url, bgmUrl} = v
+  ani.value.bgmUrl = bgmUrl
+  ani.value.subgroup = group
+  ani.value.url = url
+  ani.value.match = JSON.parse(match)
+      .map(s => `{{${group}}}:${s}`)
+  getRss()
 }
 
 let mikanCallback = v => {
@@ -177,5 +230,11 @@ defineExpose({show})
   display: flex;
   justify-content: end;
   margin-top: 10px;
+}
+
+.icon {
+  width: 24px;
+  height: 24px;
+  border-radius: 8px;
 }
 </style>
