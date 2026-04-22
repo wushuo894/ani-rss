@@ -5,7 +5,10 @@ RED='\033[0;31m'
 GREEN='\033[0;32m'
 NC='\033[0m'
 
-mvn -B package -DskipTests --file pom.xml
+mvn -B package \
+    -DskipTests \
+    -P windows,macos \
+    --file pom.xml
 
 if [ $? -eq 1 ]; then
   echo -e "${RED}jar编译失败${NC}"
