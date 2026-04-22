@@ -1,0 +1,18 @@
+[package]
+name = "ani-rss-client"
+version = "0.1.0"
+edition.workspace = true
+license.workspace = true
+authors.workspace = true
+
+[dependencies]
+md5.workspace = true
+reqwest.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+thiserror.workspace = true
+
+[dev-dependencies]
+tempfile = "3.15"
+tokio.workspace = true
+wiremock = "0.6"

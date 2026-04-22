@@ -15,6 +15,7 @@
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <frontend.skip>false</frontend.skip>
     </properties>
 
     <build>
@@ -44,6 +45,7 @@
                 <artifactId>frontend-maven-plugin</artifactId>
                 <configuration>
                     <workingDirectory>${project.basedir}</workingDirectory>
+                    <skip>${frontend.skip}</skip>
                 </configuration>
                 <executions>
                     <execution>

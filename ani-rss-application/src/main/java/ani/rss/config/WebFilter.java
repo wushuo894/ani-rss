@@ -27,8 +27,8 @@ public class WebFilter implements Filter {
 
         String uri = request.getRequestURI();
 
-        // 非 api
-        if (!uri.startsWith("/api")) {
+        // 非 api/mcp
+        if (!uri.startsWith("/api") && !uri.startsWith("/mcp")) {
             String extName = FileUtil.extName(uri);
 
             if (StrUtil.isBlank(extName) && !uri.endsWith("/")) {

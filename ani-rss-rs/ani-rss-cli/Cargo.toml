@@ -1,0 +1,20 @@
+[package]
+name = "ani-rss-cli"
+version = "0.1.0"
+edition.workspace = true
+license.workspace = true
+authors.workspace = true
+
+[dependencies]
+ani-rss-client = { path = "../ani-rss-client" }
+anyhow.workspace = true
+clap.workspace = true
+serde_json.workspace = true
+tokio.workspace = true
+
+[dev-dependencies]
+assert_cmd = "2.0"
+md5.workspace = true
+predicates = "3.1"
+tempfile = "3.15"
+wiremock = "0.6"
