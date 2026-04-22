@@ -1,49 +1,71 @@
 <template>
   <div>
     <div class="art-app"></div>
-    <div>
-      <el-button bg text @click="openUrl(`potplayer://${playItem.src}`)">
-        <template #icon>
-          <img alt="PotPlayer" class="el-icon--left icon" src="../icon/icon-PotPlayer.webp"/>
+    <div class="flex" style="justify-content: end;">
+      <el-dropdown>
+        <el-button bg text icon="MoreFilled"/>
+        <template #dropdown>
+          <el-dropdown-menu>
+            <el-dropdown-item @click="openUrl(`potplayer://${playItem.src}`)">
+              <el-text>
+                <el-icon>
+                  <img alt="PotPlayer" class="el-icon--left icon" src="../icon/icon-PotPlayer.webp"/>
+                </el-icon>
+                Pot
+              </el-text>
+            </el-dropdown-item>
+            <el-dropdown-item @click="openUrl(`vlc://${playItem.src}`)">
+              <el-text>
+                <el-icon>
+                  <img alt="VLC" class="el-icon--left icon" src="../icon/icon-VLC.webp"/>
+                </el-icon>
+                VLC
+              </el-text>
+            </el-dropdown-item>
+            <el-dropdown-item @click="openUrl(`iina://weblink?url=${encodeUrl(playItem.src)}`)">
+              <el-text>
+                <el-icon>
+                  <img alt="IINA" class="el-icon--left icon" src="../icon/icon-IINA.webp"/>
+                </el-icon>
+                IINA
+              </el-text>
+            </el-dropdown-item>
+            <el-dropdown-item @click="openUrl(`mpvplay://${playItem.src}`)">
+              <el-text>
+                <el-icon>
+                  <img alt="MPV" class="el-icon--left icon" src="../icon/icon-MPV.webp"/>
+                </el-icon>
+                MPV
+              </el-text>
+            </el-dropdown-item>
+            <el-dropdown-item @click="openUrl(`ddplay:${encodeUrl(playItem.src)}|filePath=${playItem.name}`)">
+              <el-text>
+                <el-icon>
+                  <img alt="DandanPlay" class="el-icon--left icon" src="../icon/icon-DandanPlay.webp"/>
+                </el-icon>
+                弹弹Play
+              </el-text>
+            </el-dropdown-item>
+            <el-dropdown-item @click="openUrl(`anix://openVideo/${encodeUrl(playItem.src)}`)">
+              <el-text>
+                <el-icon>
+                  <img alt="AnimacX" class="el-icon--left icon" src="../icon/icon-AnimacX.webp"/>
+                </el-icon>
+                AnimacX
+              </el-text>
+            </el-dropdown-item>
+            <el-dropdown-item
+                @click="openUrl(`SenPlayer://x-callback-url/play?url=${playItem.src}&name=${playItem.name}`)">
+              <el-text>
+                <el-icon>
+                  <img alt="SenPlayer" class="el-icon--left icon" src="../icon/icon-SenPlayer.webp"/>
+                </el-icon>
+                SenPlayer
+              </el-text>
+            </el-dropdown-item>
+          </el-dropdown-menu>
         </template>
-        Pot
-      </el-button>
-      <el-button bg text @click="openUrl(`vlc://${playItem.src}`)">
-        <template #icon>
-          <img alt="VLC" class="el-icon--left icon" src="../icon/icon-VLC.webp"/>
-        </template>
-        VLC
-      </el-button>
-      <el-button bg text @click="openUrl(`iina://weblink?url=${encodeUrl(playItem.src)}`)">
-        <template #icon>
-          <img alt="IINA" class="el-icon--left icon" src="../icon/icon-IINA.webp"/>
-        </template>
-        IINA
-      </el-button>
-      <el-button bg text @click="openUrl(`intent:${playItem.src}`)">
-        <template #icon>
-          <img alt="MXPlayer" class="el-icon--left icon" src="../icon/icon-MXPlayer.webp"/>
-        </template>
-        MX
-      </el-button>
-      <el-button bg text @click="openUrl(`mpvplay://${playItem.src}`)">
-        <template #icon>
-          <img alt="MPV" class="el-icon--left icon" src="../icon/icon-MPV.webp"/>
-        </template>
-        MPV
-      </el-button>
-      <el-button bg text @click="openUrl(`ddplay:${encodeUrl(playItem.src)}`)">
-        <template #icon>
-          <img alt="DandanPlay" class="el-icon--left icon" src="../icon/icon-DandanPlay.webp"/>
-        </template>
-        弹弹Play
-      </el-button>
-      <el-button bg text @click="openUrl(`anix://openVideo/${encodeUrl(playItem.src)}`)">
-        <template #icon>
-          <img alt="AnimacX" class="el-icon--left icon" src="../icon/icon-AnimacX.webp"/>
-        </template>
-        AnimacX
-      </el-button>
+      </el-dropdown>
     </div>
   </div>
 </template>
@@ -56,6 +78,7 @@ import artplayerPluginMultipleSubtitles from 'artplayer-plugin-multiple-subtitle
 const props = defineProps(['playItem'])
 
 let openUrl = (url) => {
+  console.log(url);
   window.open(url)
 }
 
@@ -140,7 +163,7 @@ onBeforeUnmount(() => {
 }
 
 .icon {
-  height: 20px;
-  width: 20px;
+  height: 14px;
+  width: 14px;
 }
 </style>
