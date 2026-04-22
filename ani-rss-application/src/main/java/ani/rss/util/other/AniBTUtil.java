@@ -1,6 +1,7 @@
 package ani.rss.util.other;
 
 import ani.rss.commons.GsonStatic;
+import ani.rss.entity.Ani;
 import ani.rss.entity.AniBT;
 import ani.rss.util.basic.HttpReq;
 import cn.hutool.core.util.StrUtil;
@@ -13,13 +14,21 @@ public class AniBTUtil {
     private static final String HOST = "https://site.anibt.net";
 
     public static AniBT list(String season, String bgmUrl) {
+        List<String> bgmIdList = AniUtil.ANI_LIST
+                .stream()
+                .map(Ani::getBgmUrl)
+                .filter(StrUtil::isNotBlank)
+                .map(BgmUtil::getSubjectId)
+                .distinct()
+                .toList();
+
         String bgmId = "";
 
         if (StrUtil.isNotBlank(bgmUrl)) {
             bgmId = BgmUtil.getSubjectId(bgmUrl);
         }
 
-        return HttpReq.get(HOST + "/api/seasons/anime")
+        AniBT aniBT = HttpReq.get(HOST + "/api/seasons/anime")
                 .form("season", season)
                 .form("bgmId", bgmId)
                 .thenFunction(res -> {
@@ -28,6 +37,18 @@ public class AniBTUtil {
                     JsonObject data = jsonObject.getAsJsonObject("data");
                     return GsonStatic.fromJson(data, AniBT.class);
                 });
+
+        List<AniBT.ByWeekday> byWeekday = aniBT.getByWeekday();
+        for (AniBT.ByWeekday weekday : byWeekday) {
+            List<AniBT.Anime> animes = weekday.getAnimes();
+            for (AniBT.Anime anime : animes) {
+                boolean exists = bgmIdList.contains(anime.getBgmId());
+                anime.setExists(exists);
+            }
+        }
+
+
+        return aniBT;
     }
 
     public static List<AniBT.Group> getGroups(String bgmId) {
