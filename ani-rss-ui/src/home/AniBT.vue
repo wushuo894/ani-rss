@@ -178,13 +178,13 @@ let show = (bgmUrl = '') => {
   list(bgmUrl)
 }
 
-let list = async (bgmUrl) => {
+let list = async (bgmUrl = '') => {
   loading.value = true
   return http.aniBT(season.value, bgmUrl)
       .then(res => {
-        let {currentSeason, availableSeasons, byWeekday} = res.data;
+        let {requestedSeason, availableSeasons, byWeekday} = res.data;
 
-        season.value = currentSeason
+        season.value = requestedSeason
         data.value.seasons = availableSeasons
         data.value.items = byWeekday
         if (byWeekday.length) {
@@ -199,9 +199,8 @@ let list = async (bgmUrl) => {
 let change = (v) => {
   let body = data.value.seasons.filter(item => item === v)
   if (body.length) {
-    list(body[0])
+    list()
   }
-  return v
 }
 
 let selectName = ref('')
