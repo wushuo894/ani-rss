@@ -1,4 +1,4 @@
-- feat: 增加 AniBT 支持
+- feat: AniBT支持同步Mikan订阅状态
 
 [请不要将本项目在国内宣传](https://github.com/wushuo894/ani-rss/discussions/504)
 
