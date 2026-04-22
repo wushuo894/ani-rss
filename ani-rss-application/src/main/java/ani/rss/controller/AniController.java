@@ -24,8 +24,6 @@ import cn.hutool.core.lang.Assert;
 import cn.hutool.core.lang.UUID;
 import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.core.util.ObjectUtil;
-import cn.hutool.core.util.ReUtil;
-import cn.hutool.core.util.URLUtil;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
@@ -406,16 +404,8 @@ public class AniController extends BaseController {
     @Operation(summary = "将RSS转换为订阅")
     @PostMapping("/rssToAni")
     public Result<Ani> rssToAni(@RequestBody RssToAniDTO dto) {
-        String url = dto.getUrl();
-        String type = dto.getType();
-        String bgmUrl = dto.getBgmUrl();
-        Assert.notBlank(url, "RSS地址 不能为空");
-        if (!ReUtil.contains("http(s*)://", url)) {
-            url = "https://" + url;
-        }
-        url = URLUtil.decode(url, "utf-8");
         try {
-            Ani newAni = AniUtil.getAni(url, type, bgmUrl);
+            Ani newAni = AniUtil.getAni(dto);
             return Result.success(newAni);
         } catch (Exception e) {
             String message = ExceptionUtils.getMessage(e);

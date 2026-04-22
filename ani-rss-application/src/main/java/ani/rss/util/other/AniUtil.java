@@ -2,6 +2,7 @@ package ani.rss.util.other;
 
 import ani.rss.commons.FileUtils;
 import ani.rss.commons.GsonStatic;
+import ani.rss.dto.RssToAniDTO;
 import ani.rss.entity.*;
 import ani.rss.service.ClearService;
 import ani.rss.service.DownloadService;
@@ -113,10 +114,18 @@ public class AniUtil {
     /**
      * 获取动漫信息
      *
-     * @param url
+     * @param dto
      * @return
      */
-    public static Ani getAni(String url, String type, String bgmUrl) {
+    public static Ani getAni(RssToAniDTO dto) {
+        String url = dto.getUrl();
+        String type = dto.getType();
+        String bgmUrl = dto.getBgmUrl();
+        String subgroup = dto.getSubgroup();
+
+        Assert.notBlank(url, "RSS地址 不能为空");
+        url = URLUtil.decode(url, "utf-8");
+
         Config config = ConfigUtil.CONFIG;
         type = StrUtil.blankToDefault(type, "mikan");
         String subgroupId = MikanUtil.getSubgroupId(url);
@@ -130,6 +139,9 @@ public class AniUtil {
             } catch (Exception e) {
                 throw new RuntimeException("获取失败");
             }
+        } else if ("anibt".equals(type)) {
+            ani.setBgmUrl(bgmUrl)
+                    .setSubgroup(subgroup);
         } else {
             ani.setBgmUrl(bgmUrl)
                     .setSubgroup("未知字幕组");
