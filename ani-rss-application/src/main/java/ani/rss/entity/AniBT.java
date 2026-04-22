@@ -37,6 +37,7 @@ public class AniBT implements Serializable {
         private Double rating;
         private Title title;
         private String format;
+        private Boolean exists;
     }
 
     @Data
