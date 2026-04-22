@@ -34,26 +34,15 @@
       </el-button>
     </div>
   </el-dialog>
-  <el-dialog v-model="dialogVisible" center title="Mikan">
+  <el-dialog v-model="dialogVisible" center title="AniBT">
     <el-checkbox-group v-model="rssList">
       <div class="content-wrapper">
         <div class="search-section">
-          <div class="search-header">
-            <el-input v-model:model-value="text" clearable placeholder="请输入搜索标题"
-                      prefix-icon="Search"
-                      @clear="()=>{
-            text = ''
-            search()
-          }"
-                      @keyup.enter="search"></el-input>
-            <div class="spacer"></div>
-            <el-button :loading="searchLoading" bg icon="Search" text @click="search">搜索</el-button>
-          </div>
-          <div v-if="data.seasons.length" class="flex season-selector">
-            <el-select v-model:model-value="season" :disabled="text.length > 0 || loading" class="season-select"
+          <div class="flex season-selector">
+            <el-select v-model="season" class="season-select"
                        @change="change">
-              <el-option v-for="item in data.seasons" :key="item.year+' '+item.season"
-                         :label="item.year+' '+item.season" :value="item.year+' '+item.season">
+              <el-option v-for="itemSeason in data.seasons" :key="itemSeason"
+                         :label="itemSeason" :value="itemSeason">
               </el-option>
             </el-select>
             <el-button :disabled="rssList.length < 1" bg icon="Plus" text @click="batchAddition">批量添加</el-button>
@@ -62,44 +51,44 @@
         <div v-loading="loading" class="scroll-container">
           <el-scrollbar>
             <el-collapse v-model="activeName">
-              <el-collapse-item v-for="item in data.items" :name="item.label">
+              <el-collapse-item v-for="item in data.items" :name="item.weekdayLabel">
                 <template #title>
                   <span style="margin-left: 4px;font-weight: bold;">
-                    {{ item.label }}
+                    {{ item.weekdayLabel }}
                   </span>
                 </template>
                 <div class="collapse-content">
                   <el-collapse accordion @change="collapseChange">
-                    <el-collapse-item v-for="it in item.items" :name="it.url">
+                    <el-collapse-item v-for="anime in item.animes" :name="anime.bgmId">
                       <template #title>
                         <div class="flex collapse-title">
-                          <img :src="img(it)" class="cover" @click.stop="open(it.url)">
+                          <img :src="img(anime)" class="cover" @click.stop="open(anime.bgmId)">
                           <div class="flex collapse-title">
                             <el-text :truncated="false" line-clamp="1" size="small"
                                      class="title-text">
-                              {{ it.title }}
+                              {{ anime.title.primary }}
                             </el-text>
                           </div>
-                          <div v-if="it['score'] > 0" class="score-margin">
+                          <div v-if="anime['rating'] > 0" class="score-margin">
                             <h4 class="score-color">
-                              {{ it['score'].toFixed(1) }}
+                              {{ anime['rating'].toFixed(1) }}
                             </h4>
                           </div>
-                          <el-badge v-if="it['exists']" class="item badge-margin" type="primary"
+                          <el-badge v-if="anime['exists']" class="item badge-margin" type="primary"
                                     value="已订阅"/>
                         </div>
                       </template>
-                      <div v-if="selectName === it.url" v-loading="groupLoading"
+                      <div v-if="selectName === anime.bgmId" v-loading="groupLoading"
                            class="group-content">
                         <el-collapse accordion>
-                          <el-collapse-item v-for="group in groups[it.url]">
+                          <el-collapse-item v-for="group in groups[anime.bgmId]">
                             <template #title>
                               <div class="group-title-wrapper">
                                 <div class="group-checkbox-wrapper">
                                   <el-checkbox :value="JSON.stringify(group)" class="checkbox-margin" @click.stop/>
                                 </div>
                                 <div class="group-label">
-                                  <el-text style="max-width: 100px;" truncated>{{ group.label }}</el-text>
+                                  <el-text style="max-width: 100px;" truncated>{{ group.name }}</el-text>
                                   &nbsp;
                                   <el-text class="mx-1" size="small">{{ group['updateDay'] }}</el-text>
                                 </div>
@@ -111,8 +100,9 @@
                                 </div>
                                 <div class="group-action">
                                   <el-button bg @click.stop="callback({
-                                  title:it.title,
-                                  group:group.label,
+                                  bgmUrl:`https://bgm.tv/subject/${anime.bgmId}`,
+                                  title:anime.title.primary,
+                                  group:group.name,
                                   url:group['rss'],
                                   regexList:group['regexList']
                                 })" icon="Plus">
@@ -126,16 +116,15 @@
                                 <el-card shadow="never">
                                   <div>
                                     <h5>
-                                      {{ ti.name }}
+                                      {{ ti.title }}
                                     </h5>
                                     <div class="item-footer">
                                       <p>
-                                        {{ ti['sizeStr'] }}
-                                        {{ ti['dateStr'] }}
+                                        {{ formatTime(ti['publishedAt']) }}
+                                        {{ ti['resolution'] }}
                                       </p>
                                       <div>
-                                        <el-button :icon="DocumentCopy" bg text @click="copy(ti['magnet'])"/>
-                                        <el-button :icon="DownloadIcon" bg text @click="openUrl(ti['torrent'])"/>
+                                        <el-button :icon="DocumentCopy" bg text @click="copy(ti['magnet']  )"/>
                                       </div>
                                     </div>
                                   </div>
@@ -160,9 +149,10 @@
 <script setup>
 import {ref} from "vue";
 import {ElMessage, ElText} from "element-plus";
-import {DocumentCopy, Download as DownloadIcon} from "@element-plus/icons-vue";
+import {DocumentCopy} from "@element-plus/icons-vue";
 import {authorization} from "@/js/global.js";
 import * as http from "@/js/http.js";
+import formatTime from "../js/format-time.js";
 
 // 批量添加订阅
 let rssList = ref([]);
@@ -178,65 +168,27 @@ let data = ref({
 
 let season = ref('')
 
-let show = (name) => {
-  season.value = ''
+let show = (bgmUrl = '') => {
   dialogVisible.value = true
-  text.value = ''
   data.value = {
     'seasons': [],
     'items': []
   }
   rssList.value = []
-  if (name) {
-    name = name.replace(/ ?\((19|20)\d{2}\)/g, "").trim()
-    name = name.replace(/ ?\[tmdbid=(\d+)]/g, "").trim()
-    if (name.length > 2) {
-      text.value = name
-      search()
-      return
-    }
-  }
-  list({})
+  list(bgmUrl)
 }
 
-let text = ref('')
-
-let searchLoading = ref(false)
-let search = () => {
-  if (text.value.length === 1) {
-    ElMessage.error("搜索最少需要两个字符")
-    return
-  }
-  searchLoading.value = true
-  list({}, text.value).finally(() => {
-    searchLoading.value = false
-  })
-}
-
-let list = async (body, text) => {
+let list = async (bgmUrl) => {
   loading.value = true
-  text = text ? text : ''
-  body = body ? body : {}
-  return http.mikan(text, body)
+  return http.aniBT(season.value, bgmUrl)
       .then(res => {
-        let {seasons, items, totalItems} = res.data;
+        let {currentSeason, availableSeasons, byWeekday} = res.data;
 
-        if (totalItems < 1) {
-          ElMessage.warning("搜索结果为空")
-        }
-
-        if (seasons.length) {
-          data.value.seasons = seasons
-        }
-        data.value.items = items
-        if (items.length) {
-          activeName.value = items[0].label
-        }
-        for (let item of data.value.seasons) {
-          if (item['select'] && !season.value) {
-            season.value = item['year'] + ' ' + item['season']
-            return
-          }
+        season.value = currentSeason
+        data.value.seasons = availableSeasons
+        data.value.items = byWeekday
+        if (byWeekday.length) {
+          activeName.value = byWeekday[0].weekdayLabel
         }
       })
       .finally(() => {
@@ -245,10 +197,11 @@ let list = async (body, text) => {
 }
 
 let change = (v) => {
-  let body = data.value.seasons.filter(item => (item['year'] + ' ' + item['season']) === v)
+  let body = data.value.seasons.filter(item => item === v)
   if (body.length) {
     list(body[0])
   }
+  return v
 }
 
 let selectName = ref('')
@@ -263,7 +216,7 @@ let collapseChange = (v) => {
     return;
   }
   groupLoading.value = true
-  http.mikanGroup(v)
+  http.aniBTGroup(v)
       .then(res => {
         groups.value[v] = res.data
       })
@@ -276,6 +229,7 @@ let collapseChange = (v) => {
 let matchDialogVisible = ref(false)
 
 let addAni = ref({
+  'bgmUrl': '',
   'url': '',
   'match': '',
   'group': ''
@@ -284,9 +238,10 @@ let addAni = ref({
 let regexList = ref([])
 
 let callback = v => {
-  let {url, group} = v
+  let {url, group, bgmUrl} = v
   regexList.value = JSON.parse(JSON.stringify(v.regexList))
 
+  addAni.value.bgmUrl = bgmUrl
   addAni.value.url = url
   addAni.value.group = group
   addAni.value.match = '[]'
@@ -297,7 +252,7 @@ let callback = v => {
 
 
 let img = (it) => {
-  return `api/mikanCover?img=${btoa(it['cover'])}&s=${authorization.value}`;
+  return `api/aniBTCover?img=${btoa(it['cover'])}&s=${authorization.value}`;
 }
 
 let showTag = () => {
@@ -322,7 +277,7 @@ let batchAddition = async () => {
   batchAdditionDialogVisible.value = true
   let getBangumiId = (url) => {
     const parsedUrl = new URL(url);
-    return parsedUrl.searchParams.get('bangumiId');
+    return parsedUrl.searchParams.get('bgmId');
   };
 
   try {
@@ -344,7 +299,9 @@ let batchAddition = async () => {
         "exclude": [],
         "totalEpisodeNumber": 0,
         "match": [],
-        "type": "mikan"
+        "type": "anibt",
+        "bgmUrl": `https://bgm.tv/subject/${item[0].bgmId}`,
+        "subgroup": item[0].name
       }
 
       ani = (await http.rssToAni(ani)).data
@@ -352,7 +309,7 @@ let batchAddition = async () => {
         ani.standbyRssList = item.slice(1)
             .map(o => {
               return {
-                label: o.label,
+                label: o.name,
                 url: o['rss'],
                 offset: 0
               }
@@ -382,8 +339,6 @@ let copy = (v) => {
   document.body.removeChild(input);
   ElMessage.success('已复制')
 }
-
-let openUrl = (url) => window.open(url)
 
 </script>
 
@@ -423,6 +378,12 @@ let openUrl = (url) => window.open(url)
 .search-header {
   display: flex;
   justify-content: space-between;
+  align-items: center;
+}
+
+.source-select {
+  max-width: 100px;
+  margin-right: 8px;
 }
 
 .spacer {

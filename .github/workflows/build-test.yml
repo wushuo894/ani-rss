@@ -43,12 +43,3 @@ jobs:
           tags: |
             wushuo894/ani-rss:test
             ghcr.io/wushuo894/ani-rss:test
-      - name: Build and push Docker image (openj9)
-        uses: docker/build-push-action@v6
-        with:
-          context: ./
-          file: ./docker/Dockerfile-openj9
-          push: true
-          tags: |
-            wushuo894/ani-rss:test-openj9
-            ghcr.io/wushuo894/ani-rss:test-openj9

@@ -1,6 +1,7 @@
 <template>
   <Preview ref="preview" :ani="props.ani"/>
   <StandbyRss ref="standbyRss" :ani="props.ani"/>
+  <AniBT ref="aniBTRef" @callback="mikanCallback"/>
   <Mikan ref="mikanRef" @callback="mikanCallback"/>
   <TmdbGroup ref="tmdbGroupRef" :ani="props.ani"/>
   <div style="height: 500px;">
@@ -54,14 +55,26 @@
           <el-input v-model:model-value="props.ani.bgmUrl" placeholder="https://xxx.xxx"/>
         </el-form-item>
         <el-form-item label="主 RSS">
-          <div style="width: 100%;" class="flex">
-            <el-input v-model:model-value="props.ani.subgroup" style="width: 140px" placeholder="字幕组"/>
-            <div style="width: 6px;"></div>
-            <el-input v-model:model-value="props.ani.url" placeholder="https://xxx.xxx"/>
-            <div style="width: 6px;"></div>
-            <el-button bg text
-                       @click="mikanShow"
-                       icon="VideoCamera"/>
+          <div style="width: 100%;">
+            <div style="width: 100%;" class="flex">
+              <el-input v-model:model-value="props.ani.subgroup" style="width: 140px" placeholder="字幕组"/>
+              <div style="width: 6px;"></div>
+              <el-input v-model:model-value="props.ani.url" placeholder="https://xxx.xxx"/>
+            </div>
+            <div style="width: 100%;justify-content: end;margin-top: 4px;" class="flex">
+              <el-button bg text
+                         @click="mikanShow">
+                <template #icon>
+                  <img src="@/icon/icon-mikan.png" alt="mikan" class="icon"/>
+                </template>
+              </el-button>
+              <el-button bg text
+                         @click="aniBTShow">
+                <template #icon>
+                  <img src="@/icon/icon-anibt.png" alt="anibt" class="icon"/>
+                </template>
+              </el-button>
+            </div>
           </div>
         </el-form-item>
         <el-form-item label="备用 RSS">
@@ -284,7 +297,9 @@ import CustomTags from "@/config/CustomTags.vue";
 import {Refresh, RefreshRight} from "@element-plus/icons-vue";
 import * as http from "@/js/http.js";
 import {getBgmTitle} from "@/js/http.js";
+import AniBT from "@/home/AniBT.vue";
 
+const aniBTRef = ref()
 const mikanRef = ref()
 const tmdbGroupRef = ref()
 
@@ -394,6 +409,11 @@ let mikanShow = () => {
   mikanRef.value?.show(query)
 }
 
+let aniBTShow = () => {
+  let bgmUrl = props.ani.bgmUrl;
+  aniBTRef.value?.show(bgmUrl)
+}
+
 let props = defineProps(['ani'])
 const emit = defineEmits(['callback'])
 </script>
@@ -416,5 +436,11 @@ const emit = defineEmits(['callback'])
   width: 100%;
   display: flex;
   justify-content: end;
+}
+
+.icon {
+  width: 24px;
+  height: 24px;
+  border-radius: 8px;
 }
 </style>
