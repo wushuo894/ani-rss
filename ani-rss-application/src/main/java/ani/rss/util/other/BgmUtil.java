@@ -10,6 +10,7 @@ import ani.rss.entity.web.ContentType;
 import ani.rss.entity.web.Header;
 import ani.rss.enums.BgmTokenTypeEnum;
 import ani.rss.service.DownloadService;
+import ani.rss.service.MikanService;
 import ani.rss.util.basic.HttpReq;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.date.DateUtil;
@@ -197,7 +198,7 @@ public class BgmUtil {
         if (StrUtil.isBlank(bgmUrl) && "mikan".equals(ani.getType())) {
             String bangumiId = AniUtil.getBangumiId(ani);
             Assert.notBlank(bangumiId, "无法取得 bangumiId, {}", ani.getTitle());
-            MikanUtil.getMikanInfo(ani, "");
+            MikanService.getMikanInfo(ani, "");
             bgmUrl = ani.getUrl();
         }
         return getSubjectId(bgmUrl);

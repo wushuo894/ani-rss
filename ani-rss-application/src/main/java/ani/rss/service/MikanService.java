@@ -1,8 +1,11 @@
-package ani.rss.util.other;
+package ani.rss.service;
 
 import ani.rss.commons.GsonStatic;
 import ani.rss.entity.*;
 import ani.rss.util.basic.HttpReq;
+import ani.rss.util.other.AfdianUtil;
+import ani.rss.util.other.AniUtil;
+import ani.rss.util.other.ConfigUtil;
 import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.text.StrFormatter;
@@ -18,6 +21,7 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.springframework.stereotype.Service;
 
 import java.net.URI;
 import java.nio.charset.StandardCharsets;
@@ -28,7 +32,8 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Slf4j
-public class MikanUtil {
+@Service
+public class MikanService {
     public static String getMikanHost() {
         Config config = ConfigUtil.CONFIG;
         String mikanHost = config.getMikanHost();
@@ -43,7 +48,7 @@ public class MikanUtil {
      * @param season
      * @return
      */
-    public static Mikan list(String text, Mikan.Season season) {
+    public Mikan list(String text, Mikan.Season season) {
         AtomicReference<JsonObject> scoreAtomicReference = new AtomicReference<>();
         AtomicReference<Mikan> mikanAtomicReference = new AtomicReference<>();
 
@@ -80,7 +85,7 @@ public class MikanUtil {
         return mikan;
     }
 
-    public static Mikan search(String text, Mikan.Season season) {
+    public Mikan search(String text, Mikan.Season season) {
         Set<String> bangumiIdSet = AniUtil.ANI_LIST.stream()
                 .map(AniUtil::getBangumiId)
                 .filter(StrUtil::isNotBlank)
@@ -218,7 +223,7 @@ public class MikanUtil {
      * @param url
      * @return
      */
-    public static List<Mikan.Group> getGroups(String url) {
+    public List<Mikan.Group> getGroups(String url) {
         return HttpReq.get(url)
                 .thenFunction(res -> {
                     Document document = Jsoup.parse(res.body());
@@ -402,7 +407,7 @@ public class MikanUtil {
         return "";
     }
 
-    public static JsonObject getScore() {
+    public JsonObject getScore() {
         if (!AfdianUtil.verifyExpirationTime()) {
             return new JsonObject();
         }
