@@ -34,54 +34,42 @@
       </el-button>
     </div>
   </el-dialog>
-  <el-dialog v-model="dialogVisible" center title="AniBT">
+  <el-dialog v-model="dialogVisible" center title="AnimeGarden">
     <el-checkbox-group v-model="rssList">
       <div class="content-wrapper">
         <div class="search-section">
           <div class="flex season-selector">
-            <el-select v-model="season" class="season-select"
-                       @change="change">
-              <el-option v-for="itemSeason in data.seasons" :key="itemSeason"
-                         :label="itemSeason" :value="itemSeason">
-              </el-option>
-            </el-select>
             <el-button :disabled="rssList.length < 1" bg icon="Plus" text @click="batchAddition">批量添加</el-button>
           </div>
         </div>
         <div v-loading="loading" class="scroll-container">
           <el-scrollbar>
             <el-collapse v-model="activeName">
-              <el-collapse-item v-for="item in data.items" :name="item.weekdayLabel">
+              <el-collapse-item v-for="item in data.items" :name="item.weekLabel">
                 <template #title>
                   <span style="margin-left: 4px;font-weight: bold;">
-                    {{ item.weekdayLabel }}
+                    {{ item.weekLabel }}
                   </span>
                 </template>
                 <div class="collapse-content">
                   <el-collapse accordion @change="collapseChange">
-                    <el-collapse-item v-for="anime in item.animes" :name="anime.bgmId">
+                    <el-collapse-item v-for="anime in item.subjects" :name="anime.id">
                       <template #title>
                         <div class="flex collapse-title">
-                          <img :src="img(anime)" class="cover" @click.stop="open(anime.bgmId)">
                           <div class="flex collapse-title">
                             <el-text :truncated="false" line-clamp="1" size="small"
                                      class="title-text">
-                              {{ anime.title.primary }}
+                              {{ anime.name }}
                             </el-text>
-                          </div>
-                          <div v-if="anime['rating'] > 0" class="score-margin">
-                            <h4 class="score-color">
-                              {{ anime['rating'].toFixed(1) }}
-                            </h4>
                           </div>
                           <el-badge v-if="anime['exists']" class="item badge-margin" type="primary"
                                     value="已订阅"/>
                         </div>
                       </template>
-                      <div v-if="selectName === anime.bgmId" v-loading="groupLoading"
+                      <div v-if="selectName === anime.id" v-loading="groupLoading"
                            class="group-content">
                         <el-collapse accordion>
-                          <el-collapse-item v-for="group in groups[anime.bgmId]">
+                          <el-collapse-item v-for="group in groups[anime.id]">
                             <template #title>
                               <div class="group-title-wrapper">
                                 <div class="group-checkbox-wrapper">
@@ -89,8 +77,6 @@
                                 </div>
                                 <div class="group-label">
                                   <el-text style="max-width: 100px;" truncated>{{ group.name }}</el-text>
-                                  &nbsp;
-                                  <el-text class="mx-1" size="small">{{ group['updateDay'] }}</el-text>
                                 </div>
                                 <div v-if="showTag()">
                                   <el-tag v-for="tag in group['tags'].slice(0, 5)"
@@ -100,8 +86,8 @@
                                 </div>
                                 <div class="group-action">
                                   <el-button bg @click.stop="callback({
-                                  bgmUrl:`https://bgm.tv/subject/${anime.bgmId}`,
-                                  title:anime.title.primary,
+                                  bgmUrl:`https://bgm.tv/subject/${anime.id}`,
+                                  title:anime.name,
                                   group:group.name,
                                   url:group['rss'],
                                   regexList:group['regexList']
@@ -120,8 +106,7 @@
                                     </h5>
                                     <div class="item-footer">
                                       <p>
-                                        {{ formatTime(ti['publishedAt']) }}
-                                        {{ ti['resolution'] }}
+                                        {{ formatTime(ti['createdAt']) }}
                                       </p>
                                       <div>
                                         <el-button :icon="DocumentCopy" bg text @click="copy(ti['magnet']  )"/>
@@ -150,7 +135,6 @@
 import {ref} from "vue";
 import {ElMessage, ElText} from "element-plus";
 import {DocumentCopy} from "@element-plus/icons-vue";
-import {authorization} from "@/js/global.js";
 import * as http from "@/js/http.js";
 import formatTime from "../js/format-time.js";
 
@@ -162,16 +146,12 @@ let activeName = ref("")
 let dialogVisible = ref(false)
 let loading = ref(false)
 let data = ref({
-  'seasons': [],
   'items': []
 })
-
-let season = ref('')
 
 let show = (bgmUrl = '') => {
   dialogVisible.value = true
   data.value = {
-    'seasons': [],
     'items': []
   }
   rssList.value = []
@@ -180,27 +160,22 @@ let show = (bgmUrl = '') => {
 
 let list = async (bgmUrl = '') => {
   loading.value = true
-  return http.aniBT(season.value, bgmUrl)
+  return http.animeGardenList(bgmUrl)
       .then(res => {
-        let {requestedSeason, availableSeasons, byWeekday} = res.data;
+        let items = res.data;
 
-        season.value = requestedSeason
-        data.value.seasons = availableSeasons
-        data.value.items = byWeekday
-        if (byWeekday.length) {
-          activeName.value = byWeekday[0].weekdayLabel
+        if (!items || items.length < 1) {
+          ElMessage.warning("搜索结果为空")
+        }
+
+        data.value.items = items
+        if (items.length) {
+          activeName.value = items[0].weekLabel
         }
       })
       .finally(() => {
         loading.value = false
       });
-}
-
-let change = (v) => {
-  let body = data.value.seasons.filter(item => item === v)
-  if (body.length) {
-    list()
-  }
 }
 
 let selectName = ref('')
@@ -215,7 +190,7 @@ let collapseChange = (v) => {
     return;
   }
   groupLoading.value = true
-  http.aniBTGroup(v)
+  http.animeGardenGroup(v)
       .then(res => {
         groups.value[v] = res.data
       })
@@ -250,10 +225,6 @@ let callback = v => {
 }
 
 
-let img = (it) => {
-  return `api/aniBTCover?img=${btoa(it['cover'])}&s=${authorization.value}`;
-}
-
 let showTag = () => {
   return window.innerWidth > 900;
 }
@@ -274,19 +245,16 @@ let batchAdditionDialogVisible = ref(false)
 let batchAddition = async () => {
   batchAdditionNum.value = 0
   batchAdditionDialogVisible.value = true
-  let getBgmId = (url) => {
-    const parsedUrl = new URL(url);
-    return parsedUrl.searchParams.get('bgmId');
-  };
 
   try {
     ElMessage.success("添加中....")
     let map = rssList.value.reduce((acc, item) => {
-      let bangumiId = getBgmId(JSON.parse(item)['rss']);
-      if (!acc[bangumiId]) {
-        acc[bangumiId] = [];
+      let parsedItem = JSON.parse(item);
+      let bgmId = parsedItem['bgmId'];
+      if (!acc[bgmId]) {
+        acc[bgmId] = [];
       }
-      acc[bangumiId].push(JSON.parse(item));
+      acc[bgmId].push(parsedItem);
       return acc;
     }, {})
     for (let item of Object.values(map)) {
@@ -298,7 +266,7 @@ let batchAddition = async () => {
         "exclude": [],
         "totalEpisodeNumber": 0,
         "match": [],
-        "type": "anibt",
+        "type": "animegarden",
         "bgmUrl": `https://bgm.tv/subject/${item[0].bgmId}`,
         "subgroup": item[0].name
       }
@@ -392,7 +360,7 @@ let copy = (v) => {
 .season-selector {
   margin-top: 4px;
   width: 100%;
-  justify-content: space-between;
+  justify-content: flex-end;
 }
 
 .season-select {
