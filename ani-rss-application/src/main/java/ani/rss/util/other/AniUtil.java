@@ -139,7 +139,7 @@ public class AniUtil {
             } catch (Exception e) {
                 throw new RuntimeException("获取失败");
             }
-        } else if ("anibt".equals(type)) {
+        } else if (List.of("anibt", "animegarden").contains(type)) {
             ani.setBgmUrl(bgmUrl)
                     .setSubgroup(subgroup);
         } else {
