@@ -12,12 +12,12 @@ public class RssToAniDTO implements Serializable {
     @Schema(description = "RSS URL", defaultValue = "https://mikanani.me/RSS/Bangumi?bangumiId=3828&subgroupid=370")
     private String url;
 
-    @Schema(description = "类型 mikan/anibt/other", defaultValue = "mikan")
+    @Schema(description = "类型 mikan/ani-bt/other", defaultValue = "mikan")
     private String type;
 
     @Schema(description = "BGM 地址", defaultValue = "https://bgm.tv/subject/544109")
     private String bgmUrl;
 
-    @Schema(description = "字幕组名")
+    @Schema(description = "字幕组名", defaultValue = "未知字幕组")
     private String subgroup;
 }
