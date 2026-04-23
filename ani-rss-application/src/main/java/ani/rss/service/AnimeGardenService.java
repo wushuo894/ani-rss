@@ -1,24 +1,28 @@
-package ani.rss.util.other;
+package ani.rss.service;
 
 import ani.rss.commons.GsonStatic;
 import ani.rss.entity.Ani;
 import ani.rss.entity.AnimeGarden;
 import ani.rss.entity.BgmInfo;
 import ani.rss.util.basic.HttpReq;
+import ani.rss.util.other.AniUtil;
+import ani.rss.util.other.BgmUtil;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.ReUtil;
 import cn.hutool.core.util.StrUtil;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import org.springframework.stereotype.Service;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class AnimeGardenUtil {
+@Service
+public class AnimeGardenService {
     private static final String HOST = "https://api.animes.garden";
 
-    public static List<AnimeGarden.Week> list(String bgmUrl) {
+    public List<AnimeGarden.Week> list(String bgmUrl) {
         List<AnimeGarden.Week> weekList = new ArrayList<>();
 
         if (StrUtil.isNotBlank(bgmUrl)) {
@@ -86,7 +90,7 @@ public class AnimeGardenUtil {
         return weekList;
     }
 
-    public static List<AnimeGarden.Group> group(String bgmId) {
+    public List<AnimeGarden.Group> group(String bgmId) {
         List<AnimeGarden.Item> items = HttpReq.get(HOST + "/resources")
                 .form("subject", bgmId)
                 .form("pageSize", 200)

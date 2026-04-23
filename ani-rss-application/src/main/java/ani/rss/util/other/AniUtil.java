@@ -6,6 +6,7 @@ import ani.rss.dto.RssToAniDTO;
 import ani.rss.entity.*;
 import ani.rss.service.ClearService;
 import ani.rss.service.DownloadService;
+import ani.rss.service.MikanService;
 import ani.rss.util.basic.HttpReq;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.bean.copier.CopyOptions;
@@ -128,14 +129,14 @@ public class AniUtil {
 
         Config config = ConfigUtil.CONFIG;
         type = StrUtil.blankToDefault(type, "mikan");
-        String subgroupId = MikanUtil.getSubgroupId(url);
+        String subgroupId = MikanService.getSubgroupId(url);
 
         Ani ani = AniUtil.createAni();
         ani.setUrl(url.trim());
 
         if ("mikan".equals(type)) {
             try {
-                MikanUtil.getMikanInfo(ani, subgroupId);
+                MikanService.getMikanInfo(ani, subgroupId);
             } catch (Exception e) {
                 throw new RuntimeException("获取失败");
             }

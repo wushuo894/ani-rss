@@ -4,7 +4,7 @@ import ani.rss.annotation.Auth;
 import ani.rss.commons.GsonStatic;
 import ani.rss.entity.AniBT;
 import ani.rss.entity.web.Result;
-import ani.rss.util.other.AniBTUtil;
+import ani.rss.service.AniBTService;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.ReUtil;
 import io.swagger.v3.oas.annotations.Operation;
@@ -26,19 +26,22 @@ public class AniBTController {
     @Resource
     private MikanController mikanController;
 
+    @Resource
+    private AniBTService aniBTService;
+
     @Auth
     @Operation(summary = "AniBT 番剧列表")
     @PostMapping("/aniBT")
     public Result<AniBT> aniBT(HttpServletRequest request) {
         String season = request.getParameter("season");
         String bgmUrl = request.getParameter("bgmUrl");
-        return Result.success(AniBTUtil.list(season, bgmUrl));
+        return Result.success(aniBTService.list(season, bgmUrl));
     }
 
     @Auth
     @PostMapping("/aniBTGroup")
     public Result<List<AniBT.Group>> aniBTGroup(@RequestParam("bgmId") String bgmId) {
-        List<AniBT.Group> groups = AniBTUtil.getGroups(bgmId);
+        List<AniBT.Group> groups = aniBTService.getGroups(bgmId);
 
         List<String> regexItemList = List.of(
                 "1920[Xx]1080", "3840[Xx]2160", "1080[Pp]", "4[Kk]", "720[Pp]",

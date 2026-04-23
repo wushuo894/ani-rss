@@ -1,19 +1,23 @@
-package ani.rss.util.other;
+package ani.rss.service;
 
 import ani.rss.commons.GsonStatic;
 import ani.rss.entity.Ani;
 import ani.rss.entity.AniBT;
 import ani.rss.util.basic.HttpReq;
+import ani.rss.util.other.AniUtil;
+import ani.rss.util.other.BgmUtil;
 import cn.hutool.core.util.StrUtil;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-public class AniBTUtil {
+@Service
+public class AniBTService {
     private static final String HOST = "https://site.anibt.net";
 
-    public static AniBT list(String season, String bgmUrl) {
+    public AniBT list(String season, String bgmUrl) {
         List<String> bgmIdList = AniUtil.ANI_LIST
                 .stream()
                 .map(Ani::getBgmUrl)
@@ -51,7 +55,7 @@ public class AniBTUtil {
         return aniBT;
     }
 
-    public static List<AniBT.Group> getGroups(String bgmId) {
+    public List<AniBT.Group> getGroups(String bgmId) {
         return HttpReq.get(HOST + "/api/anime/groups")
                 .form("bgmId", bgmId)
                 .thenFunction(res -> {
