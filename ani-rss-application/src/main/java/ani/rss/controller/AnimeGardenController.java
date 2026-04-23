@@ -5,6 +5,7 @@ import ani.rss.entity.AnimeGarden;
 import ani.rss.entity.web.Result;
 import ani.rss.util.other.AnimeGardenUtil;
 import io.swagger.v3.oas.annotations.Operation;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -19,8 +20,9 @@ public class AnimeGardenController {
     @Auth
     @Operation(summary = "AnimeGarden 番剧列表")
     @PostMapping("/animeGardenList")
-    public Result<List<AnimeGarden.Week>> animeGardenList() {
-        return Result.success(AnimeGardenUtil.list());
+    public Result<List<AnimeGarden.Week>> animeGardenList(HttpServletRequest request) {
+        String bgmUrl = request.getParameter("bgmUrl");
+        return Result.success(AnimeGardenUtil.list(bgmUrl));
     }
 
     @Auth

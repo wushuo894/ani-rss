@@ -30,6 +30,7 @@ public class AnimeGarden implements Serializable {
         private Date activedAt;
         private String isArchived;
         private String weekLabel;
+        private Boolean exists;
     }
 
     @Data
@@ -40,6 +41,7 @@ public class AnimeGarden implements Serializable {
         private Date lastUpdatedAt;
         private List<Item> items;
         private String rss;
+        private String bgmId;
 
         /**
          * Regex

@@ -1,6 +1,7 @@
 <template>
   <AniBT ref="aniBTRef" @callback="mikanCallback"/>
   <Mikan ref="mikanRef" @callback="mikanCallback"/>
+  <AnimeGarden ref="animeGardenRef" @callback="mikanCallback"/>
   <el-dialog v-model="dialogVisible" center title="备用订阅">
     <el-alert v-if="!config.standbyRss" :closable="false"
               show-icon
@@ -30,6 +31,15 @@
             text bg>
           <template #icon>
             <img src="@/icon/icon-anibt.png" alt="anibt" class="icon"/>
+          </template>
+        </el-button>
+      </div>
+      <div class="standby-spacer"></div>
+      <div>
+        <el-button bg text
+                   @click="animeGardenShow">
+          <template #icon>
+            <img src="@/icon/icon-AnimeGarden.png" alt="animegarden" class="icon"/>
           </template>
         </el-button>
       </div>
@@ -101,7 +111,8 @@
 import {ref} from "vue";
 import Mikan from "./Mikan.vue";
 import AniBT from "@/home/AniBT.vue";
-import api from "@/js/api.js";
+import * as http from "@/js/http.js";
+import AnimeGarden from "@/home/AnimeGarden.vue";
 
 const editIndex = ref(-1)
 
@@ -109,6 +120,7 @@ const dialogVisible = ref(false)
 const standbyRss = ref()
 const aniBTRef = ref()
 const mikanRef = ref()
+const animeGardenRef = ref()
 const config = ref({
   standbyRss: true
 })
@@ -118,7 +130,7 @@ let show = () => {
   dialogVisible.value = true
   standbyRss.value = JSON.parse(JSON.stringify(props.ani.standbyRssList))
 
-  api.config()
+  http.config()
       .then(res => {
         config.value = res.data;
       })
@@ -177,6 +189,11 @@ let mikanCallback = v => {
   props.ani.match.push(...newMatch)
 
   editIndex.value = -1
+}
+
+let animeGardenShow = () => {
+  let bgmUrl = props.ani.bgmUrl;
+  animeGardenRef.value?.show(bgmUrl)
 }
 
 let aniBTShow = () => {

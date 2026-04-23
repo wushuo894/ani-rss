@@ -79,6 +79,19 @@ export let mikanGroup = (url) => api.post(`api/mikanGroup?url=${url}`)
 export let aniBTGroup = (url) => api.post(`api/aniBTGroup?bgmId=${url}`)
 
 /**
+ * 获取AnimeGarden番剧列表
+ * @returns {Promise<unknown>}
+ */
+export let animeGardenList = (bgmUrl) => api.post(`api/animeGardenList?bgmUrl=${bgmUrl}`)
+
+/**
+ * 获取AnimeGarden番剧的字幕组列表
+ * @param bgmId 番剧ID
+ * @returns {Promise<unknown>}
+ */
+export let animeGardenGroup = (bgmId) => api.post(`api/animeGardenGroup?bgmId=${bgmId}`)
+
+/**
  * 刷新全部订阅
  * @returns {Promise<unknown>}
  */
