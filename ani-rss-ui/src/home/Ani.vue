@@ -3,6 +3,7 @@
   <StandbyRss ref="standbyRss" :ani="props.ani"/>
   <AniBT ref="aniBTRef" @callback="mikanCallback"/>
   <Mikan ref="mikanRef" @callback="mikanCallback"/>
+  <AnimeGarden ref="animeGardenRef" @callback="mikanCallback"/>
   <TmdbGroup ref="tmdbGroupRef" :ani="props.ani"/>
   <div style="height: 500px;">
     <el-scrollbar style="padding: 0 12px;" height="500" ref="scrollbar">
@@ -72,6 +73,12 @@
                          @click="aniBTShow">
                 <template #icon>
                   <img src="@/icon/icon-anibt.png" alt="anibt" class="icon"/>
+                </template>
+              </el-button>
+              <el-button bg text
+                         @click="animeGardenShow">
+                <template #icon>
+                  <img src="@/icon/icon-AnimeGarden.png" alt="animegarden" class="icon"/>
                 </template>
               </el-button>
             </div>
@@ -298,9 +305,11 @@ import {Refresh, RefreshRight} from "@element-plus/icons-vue";
 import * as http from "@/js/http.js";
 import {getBgmTitle} from "@/js/http.js";
 import AniBT from "@/home/AniBT.vue";
+import AnimeGarden from "@/home/AnimeGarden.vue";
 
 const aniBTRef = ref()
 const mikanRef = ref()
+const animeGardenRef = ref()
 const tmdbGroupRef = ref()
 
 let standbyRss = ref()
@@ -407,6 +416,11 @@ let mikanShow = () => {
   }
 
   mikanRef.value?.show(query)
+}
+
+let animeGardenShow = () => {
+  let bgmUrl = props.ani.bgmUrl;
+  animeGardenRef.value?.show(bgmUrl)
 }
 
 let aniBTShow = () => {

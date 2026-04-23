@@ -1,7 +1,9 @@
 package ani.rss.util.other;
 
 import ani.rss.commons.GsonStatic;
+import ani.rss.entity.Ani;
 import ani.rss.entity.AnimeGarden;
+import ani.rss.entity.BgmInfo;
 import ani.rss.util.basic.HttpReq;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.date.DateUtil;
@@ -16,7 +18,27 @@ import java.util.stream.Collectors;
 public class AnimeGardenUtil {
     private static final String HOST = "https://api.animes.garden";
 
-    public static List<AnimeGarden.Week> list() {
+    public static List<AnimeGarden.Week> list(String bgmUrl) {
+        List<AnimeGarden.Week> weekList = new ArrayList<>();
+
+        if (StrUtil.isNotBlank(bgmUrl)) {
+            AnimeGarden.Week week = new AnimeGarden.Week();
+            weekList.add(week);
+
+            String bgmId = BgmUtil.getSubjectId(bgmUrl);
+            BgmInfo bgmInfo = BgmUtil.getBgmInfo(bgmId);
+            String name = BgmUtil.getFinalName(bgmInfo);
+
+            AnimeGarden.Subject subject = new AnimeGarden.Subject();
+            subject.setName(name)
+                    .setId(bgmId)
+                    .setExists(true);
+
+            week.setWeekLabel("搜索")
+                    .setSubjects(List.of(subject));
+            return weekList;
+        }
+
         List<AnimeGarden.Subject> subjectList = HttpReq.get(HOST + "/subjects")
                 .thenFunction(res -> {
                     HttpReq.assertStatus(res);
@@ -24,6 +46,20 @@ public class AnimeGardenUtil {
                     JsonArray subjects = jsonObject.getAsJsonArray("subjects");
                     return GsonStatic.fromJsonList(subjects, AnimeGarden.Subject.class);
                 });
+
+
+        List<String> bgmIdList = AniUtil.ANI_LIST
+                .stream()
+                .map(Ani::getBgmUrl)
+                .filter(StrUtil::isNotBlank)
+                .map(BgmUtil::getSubjectId)
+                .distinct()
+                .toList();
+
+        for (AnimeGarden.Subject subject : subjectList) {
+            boolean exists = bgmIdList.contains(subject.getId());
+            subject.setExists(exists);
+        }
 
         List<String> weeks = List.of("星期日", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六");
 
@@ -35,8 +71,6 @@ public class AnimeGardenUtil {
                     subject.setWeekLabel(weekLabel);
                 })
                 .collect(Collectors.groupingBy(AnimeGarden.Subject::getWeekLabel));
-
-        List<AnimeGarden.Week> weekList = new ArrayList<>();
 
         for (String weekLabel : weeks) {
             if (!map.containsKey(weekLabel)) {
@@ -90,7 +124,8 @@ public class AnimeGardenUtil {
                             .setId(id)
                             .setName(name)
                             .setLastUpdatedAt(createdAt)
-                            .setRss(rss);
+                            .setRss(rss)
+                            .setBgmId(bgmId);
                 })
                 .sorted(Comparator.comparing(AnimeGarden.Group::getLastUpdatedAt).reversed())
                 .toList();

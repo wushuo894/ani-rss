@@ -1,4 +1,5 @@
 <template>
+  <AnimeGarden ref="animeGarden" @callback="aniBTCallback"/>
   <AniBT ref="aniBT" @callback="aniBTCallback"/>
   <Mikan ref="mikan" @callback="mikanCallback"/>
   <Bgm ref="bgmRef" @callback="it => {
@@ -84,6 +85,42 @@
             </el-form-item>
           </el-form>
         </el-tab-pane>
+        <el-tab-pane label="AG" name="animegarden">
+          <el-form label-width="auto"
+                   style="height: 260px"
+                   @submit="(event)=>{
+                event.preventDefault()
+             }">
+            <el-form-item label="RSS 地址">
+              <div style="width: 100%">
+                <el-input
+                    :disabled="rssButtonLoading"
+                    type="textarea"
+                    :autosize="{ minRows: 2}"
+                    v-model:model-value="ani.url"
+                    placeholder="https://api.animes.garden/feed.xml?subject=xxx&fansub=xxx"
+                />
+                <br>
+                <div class="mikan-button">
+                  <el-button @click="animeGarden?.show()" text bg type="primary"
+                             :disabled="rssButtonLoading">
+                    <template #icon>
+                      <img src="@/icon/icon-AnimeGarden.png" alt="AnimeGarden" class="icon el-icon--left"/>
+                    </template>
+                    AnimeGarden
+                  </el-button>
+                </div>
+                <div>
+                  <el-text class="mx-1" size="small">
+                    不支持聚合订阅，原因是如果一次过多更新会出现遗漏
+                    <br>
+                    不必在 AniBT 网站添加订阅, 你可以通过上方👆 [AniBT] 按钮浏览字幕组订阅
+                  </el-text>
+                </div>
+              </div>
+            </el-form-item>
+          </el-form>
+        </el-tab-pane>
         <el-tab-pane label="Other" name="other">
           <el-form label-width="auto"
                    style="height: 200px"
@@ -144,10 +181,12 @@ import {aniData} from "@/js/ani.js";
 import * as http from "@/js/http.js";
 import AniBT from "@/home/AniBT.vue";
 import {useLocalStorage} from "@vueuse/core";
+import AnimeGarden from "@/home/AnimeGarden.vue";
 
 const showRss = ref(true)
 const aniBT = ref()
 const mikan = ref()
+const animeGarden = ref()
 const bgmRef = ref()
 
 const dialogVisible = ref(false)
