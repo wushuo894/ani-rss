@@ -1,4 +1,4 @@
-- feat: 增加 AnimeGarden 支持
+- fix: 修复AnimeGarden正则匹配
 
 [请不要将本项目在国内宣传](https://github.com/wushuo894/ani-rss/discussions/504)
 
