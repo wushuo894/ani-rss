@@ -299,7 +299,7 @@ let batchAddition = async () => {
         "exclude": [],
         "totalEpisodeNumber": 0,
         "match": [],
-        "type": "anibt",
+        "type": "ani-bt",
         "bgmUrl": `https://bgm.tv/subject/${item[0].bgmId}`,
         "subgroup": item[0].name
       }
