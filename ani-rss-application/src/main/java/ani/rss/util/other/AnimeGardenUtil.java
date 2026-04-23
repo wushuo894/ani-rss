@@ -150,7 +150,7 @@ public class AnimeGardenUtil {
 
             Set<String> tags = new HashSet<>();
             List<List<AnimeGarden.RegexItem>> regexList = new ArrayList<>();
-            for (AnimeGarden.Item item : items) {
+            for (AnimeGarden.Item item : itemList) {
                 String title = item.getTitle();
                 List<AnimeGarden.RegexItem> regexItems = new ArrayList<>();
                 for (String regex : regexItemList) {
