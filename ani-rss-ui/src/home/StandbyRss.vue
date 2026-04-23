@@ -30,7 +30,7 @@
             @click="aniBTShow"
             text bg>
           <template #icon>
-            <img src="@/icon/icon-anibt.png" alt="anibt" class="icon"/>
+            <img src="@/icon/icon-AniBT.png" alt="ani-bt" class="icon"/>
           </template>
         </el-button>
       </div>
@@ -39,7 +39,7 @@
         <el-button bg text
                    @click="animeGardenShow">
           <template #icon>
-            <img src="@/icon/icon-AnimeGarden.png" alt="animegarden" class="icon"/>
+            <img src="@/icon/icon-AnimeGarden.png" alt="anime-garden" class="icon"/>
           </template>
         </el-button>
       </div>

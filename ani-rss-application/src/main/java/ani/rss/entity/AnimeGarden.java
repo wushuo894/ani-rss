@@ -111,6 +111,8 @@ public class AnimeGarden implements Serializable {
         @Schema(description = "ID")
         private String id;
         @Schema(description = "名称")
+        private String name;
+        @Schema(description = "头像")
         private String avatar;
     }
 

@@ -10,7 +10,7 @@ export let aniData = {
     "season": 1,
     "cover": "",
     "image": "",
-    "subgroup": "LoliHouse",
+    "subgroup": "",
     "match": [],
     "exclude": [
         "720[Pp]",

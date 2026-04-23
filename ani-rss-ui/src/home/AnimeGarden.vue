@@ -266,7 +266,7 @@ let batchAddition = async () => {
         "exclude": [],
         "totalEpisodeNumber": 0,
         "match": [],
-        "type": "animegarden",
+        "type": "anime-garden",
         "bgmUrl": `https://bgm.tv/subject/${item[0].bgmId}`,
         "subgroup": item[0].name
       }

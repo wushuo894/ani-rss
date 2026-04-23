@@ -49,7 +49,7 @@
             </el-form-item>
           </el-form>
         </el-tab-pane>
-        <el-tab-pane label="AniBT" name="anibt">
+        <el-tab-pane label="AniBT" name="ani-bt">
           <el-form label-width="auto"
                    style="height: 260px"
                    @submit="(event)=>{
@@ -69,7 +69,7 @@
                   <el-button @click="aniBT?.show()" text bg type="primary"
                              :disabled="rssButtonLoading">
                     <template #icon>
-                      <img src="@/icon/icon-anibt.png" alt="anibt" class="icon el-icon--left"/>
+                      <img src="@/icon/icon-AniBT.png" alt="ani-bt" class="icon el-icon--left"/>
                     </template>
                     AniBT
                   </el-button>
@@ -85,7 +85,7 @@
             </el-form-item>
           </el-form>
         </el-tab-pane>
-        <el-tab-pane label="AG" name="animegarden">
+        <el-tab-pane label="AG" name="anime-garden">
           <el-form label-width="auto"
                    style="height: 260px"
                    @submit="(event)=>{
@@ -114,7 +114,7 @@
                   <el-text class="mx-1" size="small">
                     不支持聚合订阅，原因是如果一次过多更新会出现遗漏
                     <br>
-                    不必在 AniBT 网站添加订阅, 你可以通过上方👆 [AniBT] 按钮浏览字幕组订阅
+                    不必在 AnimeGarden 网站添加订阅, 你可以通过上方👆 [AnimeGarden] 按钮浏览字幕组订阅
                   </el-text>
                 </div>
               </div>

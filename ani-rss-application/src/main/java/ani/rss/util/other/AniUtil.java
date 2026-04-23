@@ -121,36 +121,65 @@ public class AniUtil {
     public static Ani getAni(RssToAniDTO dto) {
         String url = dto.getUrl();
         String type = dto.getType();
-        String bgmUrl = dto.getBgmUrl();
-        String subgroup = dto.getSubgroup();
 
         Assert.notBlank(url, "RSS地址 不能为空");
-        url = URLUtil.decode(url, "utf-8");
 
-        Config config = ConfigUtil.CONFIG;
         type = StrUtil.blankToDefault(type, "mikan");
-        String subgroupId = MikanService.getSubgroupId(url);
+        url = URLUtil.decode(url.trim(), StandardCharsets.UTF_8);
 
         Ani ani = AniUtil.createAni();
-        ani.setUrl(url.trim());
+        ani.setUrl(url);
 
-        if ("mikan".equals(type)) {
-            try {
-                MikanService.getMikanInfo(ani, subgroupId);
-            } catch (Exception e) {
-                throw new RuntimeException("获取失败");
-            }
-        } else if (List.of("anibt", "animegarden").contains(type)) {
-            ani.setBgmUrl(bgmUrl)
-                    .setSubgroup(subgroup);
-        } else {
-            ani.setBgmUrl(bgmUrl)
-                    .setSubgroup("未知字幕组");
+        Map<String, String> paramMap = HttpUtil.decodeParamMap(url, StandardCharsets.UTF_8);
+
+        switch (type) {
+            case "mikan":
+                try {
+                    String subgroupId = MikanService.getSubgroupId(url);
+                    MikanService.getMikanInfo(ani, subgroupId);
+                } catch (Exception e) {
+                    throw new RuntimeException("获取失败");
+                }
+                break;
+            case "ani-bt":
+                if (paramMap.containsKey("bgmId")) {
+                    String bgmUrl = "https://bgm.tv/subject/" + paramMap.get("bgmId");
+                    ani.setBgmUrl(bgmUrl);
+                }
+
+                String subgroup = dto.getSubgroup();
+                if (paramMap.containsKey("groupSlug") && StrUtil.isBlank(subgroup)) {
+                    subgroup = paramMap.get("groupSlug");
+                }
+                ani.setSubgroup(subgroup);
+                break;
+            case "anime-garden":
+                if (paramMap.containsKey("subject")) {
+                    String bgmUrl = "https://bgm.tv/subject/" + paramMap.get("subject");
+                    ani.setBgmUrl(bgmUrl);
+                }
+                if (paramMap.containsKey("fansub")) {
+                    ani.setSubgroup(paramMap.get("fansub"));
+                }
+                break;
+            default:
+                String bgmUrl = dto.getBgmUrl();
+                ani.setBgmUrl(bgmUrl);
         }
+
+        String bgmUrl = ani.getBgmUrl();
+        String subgroup = ani.getSubgroup();
+
+        Assert.notBlank(bgmUrl, "bgmUrl 不能为空");
+
+        subgroup = StrUtil.blankToDefault(subgroup, "未知字幕组");
+        ani.setSubgroup(subgroup);
 
         BgmInfo bgmInfo = BgmUtil.getBgmInfo(ani, true);
 
         BgmUtil.toAni(bgmInfo, ani);
+
+        Config config = ConfigUtil.CONFIG;
 
         // 只下载最新集
         Boolean downloadNew = config.getDownloadNew();
