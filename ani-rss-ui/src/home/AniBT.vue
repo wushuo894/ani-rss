@@ -62,7 +62,8 @@
                     <el-collapse-item v-for="anime in item.animes" :name="anime.bgmId">
                       <template #title>
                         <div class="flex collapse-title">
-                          <img :src="img(anime)" class="cover" @click.stop="open(anime.bgmId)">
+                          <img :src="img(anime)" class="cover"
+                               @click.stop="open('https://anibt.net/anime/'+anime.bgmId)">
                           <div class="flex collapse-title">
                             <el-text :truncated="false" line-clamp="1" size="small"
                                      class="title-text">
