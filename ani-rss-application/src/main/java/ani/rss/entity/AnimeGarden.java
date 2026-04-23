@@ -53,6 +53,8 @@ public class AnimeGarden implements Serializable {
         @Schema(description = "ID")
         private String id;
         @Schema(description = "名称")
+        private String name;
+        @Schema(description = "最近更新时间")
         private Date lastUpdatedAt;
         @Schema(description = "资源列表")
         private List<Item> items;
