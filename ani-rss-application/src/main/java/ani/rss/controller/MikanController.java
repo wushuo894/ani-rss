@@ -6,9 +6,9 @@ import ani.rss.entity.Global;
 import ani.rss.entity.Mikan;
 import ani.rss.entity.TorrentsInfo;
 import ani.rss.entity.web.Result;
+import ani.rss.service.MikanService;
 import ani.rss.util.basic.HttpReq;
 import ani.rss.util.other.ConfigUtil;
-import ani.rss.util.other.MikanUtil;
 import cn.hutool.core.codec.Base64;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.io.FileUtil;
@@ -18,6 +18,7 @@ import cn.hutool.core.util.ReflectUtil;
 import cn.hutool.core.util.URLUtil;
 import cn.hutool.http.HttpConnection;
 import io.swagger.v3.oas.annotations.Operation;
+import jakarta.annotation.Resource;
 import jakarta.servlet.ServletOutputStream;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.Cleanup;
@@ -37,11 +38,14 @@ import java.util.function.Consumer;
 @RestController
 public class MikanController extends BaseController {
 
+    @Resource
+    private MikanService mikanService;
+
     @Auth
     @Operation(summary = "获取Mikan番剧列表")
     @PostMapping("/mikan")
     public Result<Mikan> mikan(@RequestParam("text") String text, @RequestBody Mikan.Season season) {
-        Mikan list = MikanUtil.list(text, season);
+        Mikan list = mikanService.list(text, season);
         return Result.success(list);
     }
 
@@ -49,7 +53,7 @@ public class MikanController extends BaseController {
     @Operation(summary = "获取Mikan番剧的字幕组列表")
     @PostMapping("/mikanGroup")
     public Result<List<Mikan.Group>> mikanGroup(@RequestParam("url") String url) {
-        List<Mikan.Group> groups = MikanUtil.getGroups(url);
+        List<Mikan.Group> groups = mikanService.getGroups(url);
 
         List<String> regexItemList = List.of(
                 "1920[Xx]1080", "3840[Xx]2160", "1080[Pp]", "4[Kk]", "720[Pp]",
