@@ -1,4 +1,4 @@
-- fix: 修复AnimeGarden正则匹配
+- refactor: 优化AniBT与AnimeGarden的添加逻辑
 
 [请不要将本项目在国内宣传](https://github.com/wushuo894/ani-rss/discussions/504)
 
