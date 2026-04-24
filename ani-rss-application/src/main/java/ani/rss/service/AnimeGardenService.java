@@ -12,7 +12,9 @@ import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.ReUtil;
 import cn.hutool.core.util.StrUtil;
 import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -21,6 +23,9 @@ import java.util.stream.Collectors;
 @Service
 public class AnimeGardenService {
     private static final String HOST = "https://api.animes.garden";
+
+    @Resource
+    private ScoreSevice scoreSevice;
 
     public List<AnimeGarden.Week> list(String bgmUrl) {
         List<AnimeGarden.Week> weekList = new ArrayList<>();
@@ -43,6 +48,8 @@ public class AnimeGardenService {
             return weekList;
         }
 
+        JsonObject bgmScore = scoreSevice.getBgmScore();
+
         List<AnimeGarden.Subject> subjectList = HttpReq.get(HOST + "/subjects")
                 .thenFunction(res -> {
                     HttpReq.assertStatus(res);
@@ -50,7 +57,6 @@ public class AnimeGardenService {
                     JsonArray subjects = jsonObject.getAsJsonArray("subjects");
                     return GsonStatic.fromJsonList(subjects, AnimeGarden.Subject.class);
                 });
-
 
         List<String> bgmIdList = AniUtil.ANI_LIST
                 .stream()
@@ -61,8 +67,17 @@ public class AnimeGardenService {
                 .toList();
 
         for (AnimeGarden.Subject subject : subjectList) {
+            String id = subject.getId();
+
+            Double score = Optional.ofNullable(bgmScore.get(id))
+                    .map(JsonElement::getAsDouble)
+                    .orElse(0.0);
+
             boolean exists = bgmIdList.contains(subject.getId());
-            subject.setExists(exists);
+
+            subject
+                    .setScore(score)
+                    .setExists(exists);
         }
 
         List<String> weeks = List.of("星期日", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六");

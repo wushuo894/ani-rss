@@ -1,5 +1,4 @@
 <template>
-  <TryOut ref="tryOutRef" :config="props.config"/>
   <el-form>
     <el-form-item label="捐赠状态">
       <div v-if="props.config['tryOut']">
@@ -33,13 +32,13 @@
     </a>
     <div class="afdian-unlock">
       <h3>捐赠后解锁</h3>
-      <el-tag v-for="it in ['Emby媒体库刷新','订阅完结迁移','Mikan番剧列表显示评分']"
+      <el-tag v-for="it in ['Mikan/AnimeGarden 番剧列表显示评分']"
               class="afdian-tag">
         {{ it }}
       </el-tag>
     </div>
   </div>
-  <div class="afdian-section" v-if="!props.config['verifyExpirationTime'] || props.config['tryOut']">
+  <div class="afdian-section" v-if="!props.config['verifyExpirationTime']">
     <el-text class="mx-1" size="small">
       已经捐赠？在这里输入您的订单号以激活您的捐赠
     </el-text>
@@ -59,14 +58,6 @@
                    type="primary"
                    @click="verifyNo">
           验证
-        </el-button>
-      </div>
-      <div class="afdian-try-button">
-        <el-button :disabled="props.config['verifyExpirationTime']"
-                   bg
-                   text
-                   @click="tryOutRef?.show">
-          试用
         </el-button>
       </div>
     </div>
@@ -123,10 +114,6 @@
   width: 8px;
 }
 
-.afdian-try-button {
-  margin-left: 8px;
-}
-
 .afdian-link {
   margin-top: 8px;
 }
@@ -137,10 +124,7 @@ import {ref} from "vue";
 import support_aifadian from "@/icon/support_aifadian.svg";
 import {ElMessage} from "element-plus";
 import {EditPen, Mug} from "@element-plus/icons-vue";
-import TryOut from "./TryOut.vue";
 import * as http from "@/js/http.js";
-
-let tryOutRef = ref()
 
 let timestampToDate = (timestamp) => {
   const date = new Date(timestamp);

@@ -62,6 +62,11 @@
                               {{ anime.name }}
                             </el-text>
                           </div>
+                          <div v-if="anime['score'] > 0" class="score-margin">
+                            <h4 class="score-color">
+                              {{ anime['score'].toFixed(1) }}
+                            </h4>
+                          </div>
                           <el-badge v-if="anime['exists']" class="item badge-margin" type="primary"
                                     value="已订阅"/>
                         </div>

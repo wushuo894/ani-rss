@@ -1,21 +1,18 @@
 package ani.rss.service;
 
-import ani.rss.commons.GsonStatic;
 import ani.rss.entity.*;
 import ani.rss.util.basic.HttpReq;
-import ani.rss.util.other.AfdianUtil;
 import ani.rss.util.other.AniUtil;
 import ani.rss.util.other.ConfigUtil;
 import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.lang.Assert;
-import cn.hutool.core.text.StrFormatter;
 import cn.hutool.core.util.ReUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.core.util.URLUtil;
-import cn.hutool.crypto.SecureUtil;
 import cn.hutool.http.HttpUtil;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -34,6 +31,10 @@ import java.util.stream.Collectors;
 @Slf4j
 @Service
 public class MikanService {
+
+    @Resource
+    private ScoreSevice scoreSevice;
+
     public static String getMikanHost() {
         Config config = ConfigUtil.CONFIG;
         String mikanHost = config.getMikanHost();
@@ -55,7 +56,7 @@ public class MikanService {
         // 并行获取 mikan 番剧列表及其评分
         CompletableFuture.allOf(
                 CompletableFuture.runAsync(() -> {
-                    JsonObject score = getScore();
+                    JsonObject score = scoreSevice.getMikanScore();
                     scoreAtomicReference.set(score);
                 }),
                 CompletableFuture.runAsync(() -> {
@@ -405,39 +406,6 @@ public class MikanService {
             }
         }
         return "";
-    }
-
-    public JsonObject getScore() {
-        if (!AfdianUtil.verifyExpirationTime()) {
-            return new JsonObject();
-        }
-        Config config = ConfigUtil.CONFIG;
-        String outTradeNo = config.getOutTradeNo();
-        boolean tryOut = config.getTryOut();
-        if (StrUtil.isBlank(outTradeNo) || tryOut) {
-            return new JsonObject();
-        }
-
-        JsonObject jsonObject = new JsonObject();
-        try {
-            String url = StrFormatter.format(
-                    "https://cache.wushuo.top/mikan/score/{}",
-                    SecureUtil.sha256(outTradeNo)
-            );
-            jsonObject = HttpReq.get(url)
-                    .timeout(1000 * 5)
-                    .thenFunction(res -> {
-                        int status = res.getStatus();
-                        if (status == 404) {
-                            return new JsonObject();
-                        }
-                        HttpReq.assertStatus(res);
-                        return GsonStatic.fromJson(res.body(), JsonObject.class);
-                    });
-        } catch (Exception e) {
-            log.error(e.getMessage(), e);
-        }
-        return jsonObject;
     }
 
 }

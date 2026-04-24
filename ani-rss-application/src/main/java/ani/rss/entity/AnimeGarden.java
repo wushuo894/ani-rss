@@ -44,6 +44,8 @@ public class AnimeGarden implements Serializable {
         private String weekLabel;
         @Schema(description = "是否已订阅")
         private Boolean exists;
+        @Schema(description = "评分")
+        private Double score;
     }
 
     @Data
