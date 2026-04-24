@@ -94,6 +94,8 @@ public class ConfigUtil {
         String proxyList = """
                 mikanani.me
                 mikanime.tv
+                anibt.net
+                animes.garden
                 nyaa.si
                 acg.rip
                 google.com
