@@ -383,10 +383,11 @@ public class qBittorrent implements BaseDownload {
             files = files.stream()
                     .sorted(Comparator.comparingInt(file -> {
                         String fileName = file.getName();
+                        String mainName = FileUtil.mainName(fileName);
                         int minIndex = Integer.MAX_VALUE;
                         for (int i = 0; i < priorityKeywords.size(); i++) {
                             String priorityKeyword = priorityKeywords.get(i);
-                            if (!fileName.contains(priorityKeyword)) {
+                            if (!mainName.contains(priorityKeyword)) {
                                 continue;
                             }
                             minIndex = Math.min(minIndex, i);
