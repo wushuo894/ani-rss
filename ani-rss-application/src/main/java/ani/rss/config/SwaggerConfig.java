@@ -26,7 +26,7 @@ public class SwaggerConfig {
 
         info.title("ANI-RSS")
                 .contact(new Contact())
-                .description("基于RSS自动追番、订阅、下载、刮削")
+                .description("基于RSS自动追番、订阅、下载、刮削、洗版")
                 .version("v" + version)
                 .license(license);
 
