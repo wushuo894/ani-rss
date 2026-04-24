@@ -384,8 +384,6 @@ public class AniUtil {
             return;
         }
 
-        Assert.isTrue(AfdianUtil.verifyExpirationTime(), "未解锁捐赠, 无法使用订阅完结迁移");
-
         String completedPathTemplate = config.getCompletedPathTemplate();
 
         Boolean customCompleted = ani.getCustomCompleted();

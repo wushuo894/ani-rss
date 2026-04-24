@@ -194,13 +194,6 @@ export let torrentsInfos = () => api.post('api/torrentsInfos')
 export let verifyNo = (config) => api.post('api/verifyNo', config)
 
 /**
- * 试用
- * @param config 设置
- * @returns {Promise<unknown>}
- */
-export let tryOut = (config) => api.post('api/tryOut', config)
-
-/**
  * 更新总集数
  * @param force 强制
  * @param ids ids
