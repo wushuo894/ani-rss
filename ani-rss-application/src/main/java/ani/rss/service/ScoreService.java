@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
 
 @Slf4j
 @Service
-public class ScoreSevice {
+public class ScoreService {
     public JsonObject getBgmScore() {
         return getScore("bgm");
     }
