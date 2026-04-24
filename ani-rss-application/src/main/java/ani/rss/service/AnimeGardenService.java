@@ -25,7 +25,7 @@ public class AnimeGardenService {
     private static final String HOST = "https://api.animes.garden";
 
     @Resource
-    private ScoreSevice scoreSevice;
+    private ScoreService scoreService;
 
     public List<AnimeGarden.Week> list(String bgmUrl) {
         List<AnimeGarden.Week> weekList = new ArrayList<>();
@@ -48,7 +48,7 @@ public class AnimeGardenService {
             return weekList;
         }
 
-        JsonObject bgmScore = scoreSevice.getBgmScore();
+        JsonObject bgmScore = scoreService.getBgmScore();
 
         List<AnimeGarden.Subject> subjectList = HttpReq.get(HOST + "/subjects")
                 .thenFunction(res -> {

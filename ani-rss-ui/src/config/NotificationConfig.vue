@@ -6,7 +6,6 @@
           <el-select v-model="notificationConfig['notificationType']">
             <el-option v-for="it in notificationTypeList"
                        :key="it.name"
-                       :disabled="it.name === 'EMBY_REFRESH' && !props.config['verifyExpirationTime']"
                        :label="it.label"
                        :value="it.name"
             />
