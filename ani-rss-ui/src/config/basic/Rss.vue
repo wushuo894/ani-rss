@@ -48,14 +48,13 @@
         </el-text>
         <div>
           <el-checkbox v-model="props.config['completed']"
-                       :disabled="!props.config['verifyExpirationTime'] || !props.config.autoDisabled"
+                       :disabled="!props.config.autoDisabled"
                        label="订阅完结迁移"/>
         </div>
         <div>
           <el-input v-model="props.config['completedPathTemplate']"
                     :disabled="!props.config.autoDisabled || !props.config['completed']"/>
         </div>
-        <AfdianPrompt :config="props.config" name="订阅完结迁移"/>
       </div>
     </el-form-item>
     <el-form-item label="自动更新总集数">
@@ -133,7 +132,6 @@
 
 <script setup>
 import {ElText} from "element-plus";
-import AfdianPrompt from "@/other/AfdianPrompt.vue";
 
 let props = defineProps(['config'])
 </script>
