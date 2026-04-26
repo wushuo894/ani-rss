@@ -13,6 +13,19 @@
     <el-form-item label="TmdbApiKey">
       <el-input v-model:model-value="props.config['tmdbApiKey']" placeholder="请自备 API 密钥, 留空使用系统默认"/>
     </el-form-item>
+    <el-form-item label="GithubToken">
+      <div class="full-width">
+        <div>
+          <el-input v-model="props.config['githubToken']" clearable placeholder="在此处输入GithubToken"/>
+        </div>
+        <div style="justify-content: end;margin-top: 4px;" class="flex">
+          <el-button :icon="Github" bg
+                     @click="openUrl('https://github.com/login/oauth/authorize?client_id=Ov23li1dD89l7iGKhYa3&redirect_uri=https://github-app.wushuo.top/&scope=read:user')">
+            获取GithubToken
+          </el-button>
+        </div>
+      </div>
+    </el-form-item>
     <el-form-item label="最大日志条数">
       <div class="width-150">
         <el-select v-model:model-value="props.config.logsMax">
@@ -29,19 +42,6 @@
           <el-text class="mx-1" size="small">
             每天 06:00 自动更新程序
           </el-text>
-        </div>
-      </div>
-    </el-form-item>
-    <el-form-item label="Github Token">
-      <div class="full-width">
-        <div>
-          <el-input v-model="props.config['githubToken']" clearable placeholder="在此处输入GithubToken"/>
-        </div>
-        <div style="justify-content: end;margin-top: 4px;" class="flex">
-          <el-button :icon="Github" bg
-                     @click="openUrl('https://github.com/login/oauth/authorize?client_id=Ov23li1dD89l7iGKhYa3&redirect_uri=https://github-app.wushuo.top/&scope=read:user')">
-            获取GithubToken
-          </el-button>
         </div>
       </div>
     </el-form-item>
