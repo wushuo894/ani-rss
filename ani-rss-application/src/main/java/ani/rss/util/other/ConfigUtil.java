@@ -205,10 +205,7 @@ public class ConfigUtil {
                 .setVerifyExpirationTime(false)
                 .setProcrastinating(false)
                 .setProcrastinatingDay(14)
-                .setGithub("None")
                 .setGithubToken("")
-                .setCustomGithub(false)
-                .setCustomGithubUrl("")
                 .setAlistRefresh(false)
                 .setAlistRefreshDelayed(0L)
                 .setUpdateTotalEpisodeNumber(false)
@@ -458,8 +455,7 @@ public class ConfigUtil {
         List<Func1<Config, String>> func1List = List.of(
                 Config::getDownloadToolHost,
                 Config::getMikanHost,
-                Config::getTmdbApi,
-                Config::getCustomGithubUrl
+                Config::getTmdbApi
         );
 
         DynaBean dynaBean = DynaBean.create(config);

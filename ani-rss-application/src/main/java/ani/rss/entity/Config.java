@@ -589,24 +589,6 @@ public class Config implements Serializable {
     private Integer procrastinatingDay;
 
     /**
-     * github 加速
-     */
-    @Schema(description = "GitHub 加速")
-    private String github;
-
-    /**
-     * 自定义github加速
-     */
-    @Schema(description = "自定义 GitHub 加速")
-    private Boolean customGithub;
-
-    /**
-     * 自定义github加速网址
-     */
-    @Schema(description = "自定义 GitHub 加速地址")
-    private String customGithubUrl;
-
-    /**
      * github Token
      */
     @Schema(description = "GitHub Token")
