@@ -32,18 +32,16 @@
         </div>
       </div>
     </el-form-item>
-    <el-form-item label="GitHub加速">
-      <div>
+    <el-form-item label="Github Token">
+      <div class="full-width">
         <div>
-          <el-select v-model="props.config['github']" class="select-width-150">
-            <el-option v-for="it in githubList" :key="it" :label="it" :value="it"/>
-          </el-select>
+          <el-input v-model="props.config['githubToken']" clearable placeholder="在此处输入GithubToken"/>
         </div>
-        <div>
-          <el-checkbox v-model="props.config['customGithub']" label="自定义"/>
-        </div>
-        <div v-if="props.config['customGithub']">
-          <el-input v-model="props.config['customGithubUrl']" placeholder="https://xxxx.com"/>
+        <div style="justify-content: end;margin-top: 4px;" class="flex">
+          <el-button :icon="Github" bg
+                     @click="openUrl('https://github.com/login/oauth/authorize?client_id=Ov23li1dD89l7iGKhYa3&redirect_uri=https://github-app.wushuo.top/&scope=read:user')">
+            获取GithubToken
+          </el-button>
         </div>
       </div>
     </el-form-item>
@@ -80,46 +78,9 @@
 import {ElMessage, ElText} from "element-plus";
 import {ref} from "vue";
 import * as http from "@/js/http.js";
+import {Github} from "@vicons/fa";
 
-let githubList = new Set([
-  'None',
-  'gh-proxy.com',
-  'gh.h233.eu.org',
-  'ghproxy.1888866.xyz',
-  'slink.ltd',
-  'hub.gitmirror.com',
-  'github.boki.moe',
-  'github.moeyy.xyz',
-  'gh-proxy.net',
-  'ghfast.top',
-  'pd.zwc365.com',
-  'ghproxy.cfd',
-  'gh.jasonzeng.dev',
-  'gh.monlor.com',
-  'github.tbedu.top',
-  'gh-proxy.linioi.com',
-  'mirrors.chenby.cn',
-  'github.ednovas.xyz',
-  'ghp.keleyaa.com',
-  'github.wuzhij.com',
-  'gh.cache.cloudns.org',
-  'gh.chjina.com',
-  'ghpxy.hwinzniej.top',
-  'cdn.crashmc.com',
-  'gitproxy.mrhjx.cn',
-  'gh.xxooo.cf',
-  'gh.944446.xyz',
-  'api-gh.muran.eu.org',
-  'gh.zwnes.xyz',
-  'gh.llkk.cc',
-  'gh-proxy.ygxz.in',
-  'gh.nxnow.top',
-  'gh-proxy.ygxz.in',
-  'gh.zwy.one',
-  'ghproxy.monkeyray.net',
-  'gh.xx9527.cn',
-  'ghfast.top'
-])
+let openUrl = (url) => window.open(url)
 
 let clearCacheLoading = ref(false)
 let clearCache = () => {
