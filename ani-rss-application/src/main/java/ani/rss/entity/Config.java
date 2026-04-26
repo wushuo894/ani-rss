@@ -589,9 +589,9 @@ public class Config implements Serializable {
     private Integer procrastinatingDay;
 
     /**
-     * github Token
+     * GithubToken
      */
-    @Schema(description = "GitHub Token")
+    @Schema(description = "GitHubToken")
     private String githubToken;
 
     /**
