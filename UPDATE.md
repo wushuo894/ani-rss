@@ -1,4 +1,4 @@
-- refactor: 优化 优先保留
+- refactor: 增加GithubToken设置, 去除github加速
 
 [请不要将本项目在国内宣传](https://github.com/wushuo894/ani-rss/discussions/504)
 

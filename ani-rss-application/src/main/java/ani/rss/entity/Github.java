@@ -46,7 +46,7 @@ public class Github implements Serializable {
         private Boolean prerelease;
 
         @SerializedName(value = "createdAt", alternate = "created_at")
-        private String createdAt;
+        private Date createdAt;
 
         @SerializedName(value = "updatedAt", alternate = "updated_at")
         private Date updatedAt;
