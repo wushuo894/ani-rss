@@ -33,7 +33,7 @@ import java.util.stream.Collectors;
 public class MikanService {
 
     @Resource
-    private ScoreService scoreService;
+    private CacheService cacheService;
 
     public static String getMikanHost() {
         Config config = ConfigUtil.CONFIG;
@@ -56,7 +56,7 @@ public class MikanService {
         // 并行获取 mikan 番剧列表及其评分
         CompletableFuture.allOf(
                 CompletableFuture.runAsync(() -> {
-                    JsonObject score = scoreService.getMikanScore();
+                    JsonObject score = cacheService.getMikanScore();
                     scoreAtomicReference.set(score);
                 }),
                 CompletableFuture.runAsync(() -> {
