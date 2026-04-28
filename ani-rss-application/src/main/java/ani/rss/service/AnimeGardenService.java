@@ -25,7 +25,7 @@ public class AnimeGardenService {
     private static final String HOST = "https://api.animes.garden";
 
     @Resource
-    private ScoreService scoreService;
+    private CacheService cacheService;
 
     public List<AnimeGarden.Week> list(String bgmUrl) {
         List<AnimeGarden.Week> weekList = new ArrayList<>();
@@ -48,7 +48,8 @@ public class AnimeGardenService {
             return weekList;
         }
 
-        JsonObject bgmScore = scoreService.getBgmScore();
+        JsonObject bgmScore = cacheService.getBgmScore();
+        JsonObject bgmCover = cacheService.getBgmCover();
 
         List<AnimeGarden.Subject> subjectList = HttpReq.get(HOST + "/subjects")
                 .thenFunction(res -> {
@@ -73,10 +74,16 @@ public class AnimeGardenService {
                     .map(JsonElement::getAsDouble)
                     .orElse(0.0);
 
+            String cover = Optional.ofNullable(bgmCover.get(id))
+                    .map(it -> GsonStatic.fromJson(it, BgmInfo.Images.class))
+                    .map(BgmInfo.Images::getSmall)
+                    .orElse("");
+
             boolean exists = bgmIdList.contains(subject.getId());
 
             subject
                     .setScore(score)
+                    .setCover(cover)
                     .setExists(exists);
         }
 

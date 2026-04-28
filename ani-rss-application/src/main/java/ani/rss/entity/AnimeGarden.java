@@ -46,6 +46,8 @@ public class AnimeGarden implements Serializable {
         private Boolean exists;
         @Schema(description = "评分")
         private Double score;
+        @Schema(description = "封面")
+        private String cover;
     }
 
     @Data
