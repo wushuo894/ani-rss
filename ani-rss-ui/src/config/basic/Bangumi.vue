@@ -1,5 +1,5 @@
 <template>
-  <bangumi-me ref="bangumiMe"/>
+  <bangumi-me ref="bangumiMeRef"/>
   <el-form label-width="auto"
            class="form-full-width">
     <el-form-item label="获取方式">
@@ -78,7 +78,7 @@
           <el-button
               bg
               type="success"
-              @click="bangumiMe?.show">
+              @click="bangumiMeRef?.show">
             查看授权状态
           </el-button>
         </div>
@@ -100,7 +100,7 @@ import BangumiMe from "@/config/basic/BangumiMe.vue";
 import {onMounted, ref} from "vue";
 import {setConfig} from "@/js/http.js";
 
-let bangumiMe = ref()
+let bangumiMeRef = ref()
 
 let props = defineProps(['config'])
 

@@ -1,26 +1,26 @@
 <template>
-  <Edit ref="refEdit"/>
-  <PlayList ref="playList"/>
-  <Cover ref="refCover"/>
-  <Del ref="refDel"/>
+  <Edit ref="editRef"/>
+  <PlayList ref="playListRef"/>
+  <Cover ref="coverRef"/>
+  <Del ref="delRef"/>
   <BgmRate ref="bgmRateRef"/>
   <div class="list-container" v-loading="loading">
     <el-scrollbar class="hide-scrollbar">
       <div class="list-content">
-        <template v-for="weekItem in weekList">
-          <div v-show="searchList(weekItem.weekLabel).length">
-            <h2 class="list-week-title" v-if="weekItem.weekLabel.length">
+        <template v-for="weekItem in filterWeekList">
+          <div>
+            <h2 class="list-week-title">
               {{ weekItem.weekLabel }}
             </h2>
             <div class="grid-container">
-              <div v-for="item in searchList(weekItem.weekLabel)" v-if="searchList(weekItem.weekLabel).length">
+              <div v-for="item in weekItem.items">
                 <el-card shadow="never">
                   <div class="list-card-content">
                     <div class="list-card-image-container">
                       <img :src="`api/file?filename=${item['cover']}&s=${authorization}`" height="130" width="92"
                            :alt="item.title"
                            class="list-card-image"
-                           @click="refCover?.show(item)"/>
+                           @click="coverRef?.show(item)"/>
                     </div>
                     <div class="list-card-info">
                       <div class="list-card-info-inner">
@@ -84,19 +84,19 @@
                         </el-text>
                       </div>
                       <div class="list-card-actions">
-                        <el-button text @click="playList?.show(item)" bg v-if="showPlaylist">
+                        <el-button text @click="playListRef?.show(item)" bg v-if="showPlaylist">
                           <el-icon>
                             <Files/>
                           </el-icon>
                         </el-button>
                         <div class="list-card-spacer" v-if="showPlaylist"></div>
-                        <el-button bg text @click="refEdit?.show(item)">
+                        <el-button bg text @click="editRef?.show(item)">
                           <el-icon>
                             <EditIcon/>
                           </el-icon>
                         </el-button>
                         <div class="list-card-spacer"></div>
-                        <el-button type="danger" text @click="refDel?.show([item])" bg>
+                        <el-button type="danger" text @click="delRef?.show([item])" bg>
                           <el-icon>
                             <Delete/>
                           </el-icon>
@@ -128,33 +128,42 @@ import {authorization, isNotMobile} from "@/js/global.js";
 import {config, listAni} from "@/js/http.js";
 
 const weekList = ref([])
+const filterWeekList = ref([])
 const releaseDateList = ref([])
 
-const refEdit = ref()
-const refDel = ref()
-const loading = ref(true)
-const playList = ref()
-const scoreShow = ref(false)
-const showPlaylist = ref(false)
-const refCover = ref()
+const editRef = ref()
+const delRef = ref()
+const coverRef = ref()
 const bgmRateRef = ref()
 
-const searchList = (weekLabel) => {
-  const text = props.title.trim()
-  const weekItem = weekList.value.find(w => w.weekLabel === weekLabel)
-  const items = weekItem ? weekItem.items : []
+const loading = ref(true)
+const playListRef = ref()
+const scoreShow = ref(false)
+const showPlaylist = ref(false)
 
-  if (text.length < 1) {
-    return items.filter(props.filter)
-  }
-  return items
-      .filter(props.filter)
-      .filter(it => {
-        let {title, pinyin, pinyinInitials} = it
-        return title.indexOf(text) > -1 ||
-            pinyin.indexOf(text) > -1 ||
-            pinyinInitials.indexOf(text) > -1;
-      });
+const changeFilterList = (text = '') => {
+  const tempList = JSON.parse(JSON.stringify(weekList.value));
+
+  filterWeekList.value = tempList
+      .map(it => {
+        let items = it.items;
+        items = items
+            .filter(props.filter)
+            .filter(it => {
+              if (text.length < 1) {
+                return true
+              }
+              let {title, pinyin, pinyinInitials} = it
+              return title.indexOf(text) > -1 ||
+                  pinyin.indexOf(text) > -1 ||
+                  pinyinInitials.indexOf(text) > -1;
+            });
+        return {
+          weekLabel: it.weekLabel,
+          items
+        }
+      })
+      .filter(it => it.items.length)
 }
 
 const getList = () => {
@@ -164,22 +173,20 @@ const getList = () => {
       .then(res => {
         showPlaylist.value = res.data.showPlaylist
         scoreShow.value = res.data.scoreShow
-        let showLastDownloadTime = res.data['showLastDownloadTime']
         listAni()
             .then(res => {
               let data = res.data
-              weekList.value = data.weekList || []
-              releaseDateList.value = data.releaseDateList || []
+              weekList.value = data.weekList
+              releaseDateList.value = data.releaseDateList
 
               // 处理最后下载时间
-              if (showLastDownloadTime) {
-                weekList.value.forEach(week => {
-                  week.items = week.items.map(it => {
-                    return {...it, lastDownloadFormat: formatTime(it['lastDownloadTime'])}
-                  })
+              weekList.value.forEach(week => {
+                week.items = week.items.map(it => {
+                  return {...it, lastDownloadFormat: formatTime(it['lastDownloadTime'])}
                 })
-              }
+              })
               updateGridLayout()
+              changeFilterList(props.title)
             })
             .finally(() => {
               loading.value = false
@@ -218,7 +225,8 @@ let decodeURLComponentSafe = (str) => {
 }
 
 defineExpose({
-  releaseDateList
+  releaseDateList,
+  changeFilterList
 })
 
 let props = defineProps({
