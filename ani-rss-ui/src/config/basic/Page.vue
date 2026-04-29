@@ -67,7 +67,6 @@
     </el-form-item>
     <el-form-item label="其他">
       <el-checkbox v-model="props.config.scoreShow" label="显示评分"/>
-      <el-checkbox v-model="props.config.weekShow" label="按星期展示"/>
       <el-checkbox v-model="props.config.showPlaylist" label="显示视频列表"/>
       <el-checkbox v-model="props.config.showLastDownloadTime" label="显示更新时间"/>
     </el-form-item>

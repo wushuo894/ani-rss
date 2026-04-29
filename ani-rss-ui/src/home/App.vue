@@ -20,11 +20,11 @@
         <div style="min-width: 300px;display: flex">
           <div style="flex: 1;">
             <el-select
-                v-model:model-value="yearMonth"
+                v-model:model-value="releaseDate"
                 clearable
                 @change="selectChange"
             >
-              <el-option v-for="it in list?.yearMonth()"
+              <el-option v-for="it in list?.releaseDateList"
                          :key="it" :label="it" :value="it"
               />
             </el-select>
@@ -167,19 +167,19 @@ const enableSelect = ref([
   }
 ])
 const filter = ref(() => true)
-const yearMonth = ref('')
+const releaseDate = ref('')
 
 const selectChange = () => {
   filter.value = (it) => {
     if (!enableSelect.value.filter(it => it.label === enable.value)[0].fun(it)) {
       return false
     }
-    if (!yearMonth.value) {
+    if (!releaseDate.value) {
       return true
     }
 
     // 仅对比年月
-    return yearMonth.value === it.releaseDate.replace(/-\d{2}$/, '');
+    return releaseDate.value === it.releaseDate.replace(/-\d{2}$/, '');
   }
 }
 

@@ -8,12 +8,12 @@
     <el-scrollbar class="hide-scrollbar">
       <div class="list-content">
         <template v-for="weekItem in weekList">
-          <div v-show="searchList(weekItem.i).length">
-            <h2 class="list-week-title" v-if="weekItem['label'].length">
-              {{ weekItem['label'] }}
+          <div v-show="searchList(weekItem.weekLabel).length">
+            <h2 class="list-week-title" v-if="weekItem.weekLabel.length">
+              {{ weekItem.weekLabel }}
             </h2>
             <div class="grid-container">
-              <div v-for="item in searchList(weekItem['i'])" v-if="searchList(weekItem['i']).length">
+              <div v-for="item in searchList(weekItem.weekLabel)" v-if="searchList(weekItem.weekLabel).length">
                 <el-card shadow="never">
                   <div class="list-card-content">
                     <div class="list-card-image-container">
@@ -127,37 +127,8 @@ import formatTime from "@/js/format-time.js";
 import {authorization, isNotMobile} from "@/js/global.js";
 import {config, listAni} from "@/js/http.js";
 
-const defaultWeekList = [
-  {
-    i: 1,
-    label: '星期日'
-  },
-  {
-    i: 7,
-    label: '星期六'
-  },
-  {
-    i: 6,
-    label: '星期五'
-  },
-  {
-    i: 5,
-    label: '星期四'
-  },
-  {
-    i: 4,
-    label: '星期三'
-  },
-  {
-    i: 3,
-    label: '星期二'
-  },
-  {
-    i: 2,
-    label: '星期一'
-  },
-]
-const weekList = ref(defaultWeekList)
+const weekList = ref([])
+const releaseDateList = ref([])
 
 const refEdit = ref()
 const refDel = ref()
@@ -168,14 +139,16 @@ const showPlaylist = ref(false)
 const refCover = ref()
 const bgmRateRef = ref()
 
-const searchList = (week) => {
+const searchList = (weekLabel) => {
   const text = props.title.trim()
+  const weekItem = weekList.value.find(w => w.weekLabel === weekLabel)
+  const items = weekItem ? weekItem.items : []
+
   if (text.length < 1) {
-    return list.value.filter(props.filter).filter(it => !weekShow.value || week === it.week)
+    return items.filter(props.filter)
   }
-  return list.value
+  return items
       .filter(props.filter)
-      .filter(it => !weekShow.value || week === it.week)
       .filter(it => {
         let {title, pinyin, pinyinInitials} = it
         return title.indexOf(text) > -1 ||
@@ -184,41 +157,27 @@ const searchList = (week) => {
       });
 }
 
-const list = ref([])
-const weekShow = ref(false)
-
 const getList = () => {
   loading.value = true
 
   config()
       .then(res => {
         showPlaylist.value = res.data.showPlaylist
-        weekShow.value = res.data.weekShow
         scoreShow.value = res.data.scoreShow
-        if (weekShow.value) {
-          weekList.value = defaultWeekList;
-
-          // 1表示周日，2表示周一
-          let day = new Date().getDay() + 1
-
-          let currentDay = weekList.value.find(it => it.i === day)
-          let currentDayIndex = weekList.value.indexOf(currentDay)
-
-          weekList.value = weekList.value
-              .slice(currentDayIndex, weekList.value.length)
-              .concat(weekList.value.slice(0, currentDayIndex))
-        } else {
-          weekList.value = [{i: 1, label: ''}];
-        }
         let showLastDownloadTime = res.data['showLastDownloadTime']
         listAni()
             .then(res => {
+              let data = res.data
+              weekList.value = data.weekList || []
+              releaseDateList.value = data.releaseDateList || []
+
+              // 处理最后下载时间
               if (showLastDownloadTime) {
-                list.value = res.data.map(it => {
-                  return {...it, lastDownloadFormat: formatTime(it['lastDownloadTime'])}
+                weekList.value.forEach(week => {
+                  week.items = week.items.map(it => {
+                    return {...it, lastDownloadFormat: formatTime(it['lastDownloadTime'])}
+                  })
                 })
-              } else {
-                list.value = res.data
               }
               updateGridLayout()
             })
@@ -242,13 +201,6 @@ onMounted(() => {
   getList()
 })
 
-let yearMonth = () => {
-  return new Set(list.value
-      .map(it => it['releaseDate'].replace(/-\d{2}$/, ''))
-      .sort((a, b) => a > b ? -1 : 1)
-  );
-}
-
 let openBgmUrl = (it) => {
   if (it.bgmUrl.length) {
     window.open(it.bgmUrl)
@@ -266,7 +218,7 @@ let decodeURLComponentSafe = (str) => {
 }
 
 defineExpose({
-  yearMonth
+  releaseDateList
 })
 
 let props = defineProps({
