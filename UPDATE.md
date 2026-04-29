@@ -1,4 +1,4 @@
-- refactor: 优化前端代码
+- refactor: 按星期展示开关回归
 
 [请不要将本项目在国内宣传](https://github.com/wushuo894/ani-rss/discussions/504)
 
