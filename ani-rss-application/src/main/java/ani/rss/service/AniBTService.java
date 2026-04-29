@@ -1,6 +1,7 @@
 package ani.rss.service;
 
 import ani.rss.commons.GsonStatic;
+import ani.rss.commons.WeekComparator;
 import ani.rss.entity.Ani;
 import ani.rss.entity.AniBT;
 import ani.rss.util.basic.HttpReq;
@@ -43,6 +44,14 @@ public class AniBTService {
                 });
 
         List<AniBT.ByWeekday> byWeekday = aniBT.getByWeekday();
+
+        WeekComparator weekComparator = new WeekComparator();
+
+        byWeekday = byWeekday.stream().sorted((a, b) ->
+                weekComparator.compare(a.getWeekdayLabel(), b.getWeekdayLabel())
+        ).toList();
+        aniBT.setByWeekday(byWeekday);
+
         for (AniBT.ByWeekday weekday : byWeekday) {
             List<AniBT.Anime> animes = weekday.getAnimes();
             for (AniBT.Anime anime : animes) {
@@ -50,7 +59,6 @@ public class AniBTService {
                 anime.setExists(exists);
             }
         }
-
 
         return aniBT;
     }

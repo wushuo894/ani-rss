@@ -4,6 +4,7 @@ import ani.rss.annotation.Auth;
 import ani.rss.commons.ExceptionUtils;
 import ani.rss.commons.FileUtils;
 import ani.rss.commons.PinyinUtils;
+import ani.rss.commons.WeekComparator;
 import ani.rss.dto.IdDTO;
 import ani.rss.dto.ImportAniDataDTO;
 import ani.rss.dto.RssToAniDTO;
@@ -18,6 +19,7 @@ import ani.rss.util.other.*;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.comparator.PinyinComparator;
+import cn.hutool.core.date.DatePattern;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.lang.Assert;
@@ -261,46 +263,53 @@ public class AniController extends BaseController {
     @Auth
     @Operation(summary = "订阅列表")
     @PostMapping("/listAni")
-    public Result<List<Ani>> listAni() {
+    public Result<ListAni> listAni() {
         Config config = ConfigUtil.CONFIG;
 
         SortTypeEnum sortType = config.getSortType();
 
+        ListAni listAni = new ListAni();
+        List<ListAni.WeekAni> weekAniList = new ArrayList<>();
+
+        List<String> weeks = List.of("星期日", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六");
+        Map<String, List<Ani>> weekItemsMap = new HashMap<>();
+
+        for (String week : weeks) {
+            List<Ani> items = new ArrayList<>();
+            weekAniList.add(new ListAni.WeekAni(week, items));
+            weekItemsMap.put(week, items);
+        }
+
+        WeekComparator weekComparator = new WeekComparator();
+        weekAniList = weekAniList.stream()
+                .sorted((a, b) ->
+                        weekComparator.compare(a.getWeekLabel(), b.getWeekLabel())
+                ).toList();
+        listAni.setWeekList(weekAniList);
+
         // 按拼音排序
-        List<Ani> list = AniUtil.ANI_LIST;
+        List<Ani> aniList = AniUtil.ANI_LIST;
 
-        list
-                .parallelStream()
-                .forEach(ani -> {
-                    String title = ani.getTitle();
-                    String pinyin = PinyinUtils.getPinyin(title, "");
-                    String pinyinInitials = PinyinUtils.getFirstLetter(title, "");
-
-                    Date releaseDate = ani.getReleaseDate();
-                    int week = 1;
-                    try {
-                        week = DateUtil.dayOfWeek(releaseDate);
-                    } catch (Exception e) {
-                        log.error("日期存在问题 {} {}", title, releaseDate);
-                    }
-
-                    ani
-                            .setPinyin(pinyin)
-                            .setPinyinInitials(pinyinInitials)
-                            .setWeek(week);
-                });
+        List<String> releaseDateList = aniList.stream()
+                .map(Ani::getReleaseDate)
+                .map(DateUtil::beginOfMonth)
+                .sorted(Comparator.comparingLong(Date::getTime).reversed())
+                .map(it -> DateUtil.format(it, DatePattern.NORM_MONTH_PATTERN))
+                .distinct()
+                .toList();
+        listAni.setReleaseDateList(releaseDateList);
 
         if (sortType == SortTypeEnum.SCORE) {
-            list = CollUtil.sort(list, Comparator.comparingDouble(Ani::getScore).reversed());
+            aniList = CollUtil.sort(aniList, Comparator.comparingDouble(Ani::getScore).reversed());
         }
 
         if (sortType == SortTypeEnum.PINYIN) {
             PinyinComparator pinyinComparator = new PinyinComparator();
-            list = CollUtil.sort(list, (a, b) -> pinyinComparator.compare(a.getTitle(), b.getTitle()));
+            aniList = CollUtil.sort(aniList, (a, b) -> pinyinComparator.compare(a.getTitle(), b.getTitle()));
         }
 
         if (sortType == SortTypeEnum.DOWNLOAD_TIME) {
-            list = CollUtil.sort(list, Comparator.comparingLong((ToLongFunction<Ani>) ani -> {
+            aniList = CollUtil.sort(aniList, Comparator.comparingLong((ToLongFunction<Ani>) ani -> {
                 Long lastDownloadTime = ani.getLastDownloadTime();
                 if (lastDownloadTime == 0) {
                     return Long.MAX_VALUE;
@@ -309,7 +318,25 @@ public class AniController extends BaseController {
             }).reversed());
         }
 
-        return Result.success(list);
+        for (Ani ani : aniList) {
+            String title = ani.getTitle();
+            String pinyin = PinyinUtils.getPinyin(title, "");
+            String pinyinInitials = PinyinUtils.getFirstLetter(title, "");
+
+            Date releaseDate = ani.getReleaseDate();
+            int week = DateUtil.dayOfWeek(releaseDate) - 1;
+            String weekLabel = weeks.get(week);
+
+            ani
+                    .setPinyin(pinyin)
+                    .setPinyinInitials(pinyinInitials)
+                    .setWeekLabel(weekLabel);
+
+            List<Ani> anis = weekItemsMap.get(weekLabel);
+            anis.add(ani);
+        }
+
+        return Result.success(listAni);
     }
 
     @Auth
