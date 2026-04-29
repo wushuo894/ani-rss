@@ -1,16 +1,18 @@
 <template>
-  <Config ref="config"/>
-  <Add ref="add"/>
-  <Logs ref="logs"/>
-  <Manage ref="manage"/>
-  <Collection ref="collection"/>
+  <Config ref="configRef"/>
+  <Add ref="addRef"/>
+  <Logs ref="logsRef"/>
+  <Manage ref="manageRef"/>
+  <Collection ref="collectionRef"/>
   <TorrentsInfos ref="torrentsInfosRef"/>
   <div class="content">
     <div id="header">
       <div style="margin: 10px;" class="auto-flex">
         <div>
           <el-input
-              v-model:model-value="title"
+              v-model="title"
+              @input="listRef.changeFilterList(title)"
+              @clear="listRef.changeFilterList(title)"
               clearable
               placeholder="搜索"
               prefix-icon="Search"
@@ -20,11 +22,11 @@
         <div style="min-width: 300px;display: flex">
           <div style="flex: 1;">
             <el-select
-                v-model:model-value="releaseDate"
+                v-model="releaseDate"
                 clearable
                 @change="selectChange"
             >
-              <el-option v-for="it in list?.releaseDateList"
+              <el-option v-for="it in listRef?.releaseDateList"
                          :key="it" :label="it" :value="it"
               />
             </el-select>
@@ -56,10 +58,10 @@
             </el-button>
             <template #dropdown>
               <el-dropdown-menu>
-                <el-dropdown-item @click="add?.show">
+                <el-dropdown-item @click="addRef?.show">
                   添加订阅
                 </el-dropdown-item>
-                <el-dropdown-item @click="collection?.show">
+                <el-dropdown-item @click="collectionRef?.show">
                   添加合集
                 </el-dropdown-item>
               </el-dropdown-menu>
@@ -91,7 +93,7 @@
           </popconfirm>
         </div>
         <div style="margin: 0 4px;">
-          <el-button text bg @click="manage?.show">
+          <el-button text bg @click="manageRef?.show">
             <el-icon :class="elIconClass">
               <Fold/>
             </el-icon>
@@ -102,7 +104,7 @@
         </div>
         <div style="margin: 0 4px;">
           <el-badge :is-dot="about.update" class="item">
-            <el-button @click="config?.show(about.update)" text bg>
+            <el-button @click="configRef?.show(about.update)" text bg>
               <el-icon :class="elIconClass">
                 <Setting/>
               </el-icon>
@@ -113,7 +115,7 @@
           </el-badge>
         </div>
         <div style="margin-left: 4px;">
-          <el-button @click="logs?.show" text bg>
+          <el-button @click="logsRef?.show" text bg>
             <el-icon :class="elIconClass">
               <Tickets/>
             </el-icon>
@@ -125,7 +127,7 @@
       </div>
     </div>
     <div style="flex: 1;overflow: hidden;">
-      <List ref="list" v-model:title="title" v-model:current-page="currentPage" v-model:filter="filter"/>
+      <List ref="listRef" v-model:title="title" v-model:current-page="currentPage" v-model:filter="filter"/>
     </div>
   </div>
 </template>
@@ -146,8 +148,12 @@ import TorrentsInfos from "./TorrentsInfos.vue";
 import {elIconClass, initLayout, isNotMobile} from "@/js/global.js";
 import * as http from "@/js/http.js";
 
-const collection = ref()
-const manage = ref()
+const listRef = ref()
+const configRef = ref()
+const addRef = ref()
+const logsRef = ref()
+const manageRef = ref()
+const collectionRef = ref()
 const torrentsInfosRef = ref()
 
 const title = ref('')
@@ -181,15 +187,10 @@ const selectChange = () => {
     // 仅对比年月
     return releaseDate.value === it.releaseDate.replace(/-\d{2}$/, '');
   }
+  listRef.value.changeFilterList(title.value)
 }
 
-const config = ref()
-const add = ref()
-const logs = ref()
-const list = ref()
-
 const currentPage = ref(1)
-
 
 const about = ref({
   'version': '',
@@ -197,7 +198,6 @@ const about = ref({
   'update': false,
   'markdownBody': ''
 })
-
 
 let refreshAni = () => {
   http.refreshAll()

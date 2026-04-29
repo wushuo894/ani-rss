@@ -1,7 +1,7 @@
 <template>
-  <AnimeGarden ref="animeGarden" @callback="aniBTCallback"/>
-  <AniBT ref="aniBT" @callback="aniBTCallback"/>
-  <Mikan ref="mikan" @callback="mikanCallback"/>
+  <AnimeGarden ref="animeGardenRef" @callback="aniBTCallback"/>
+  <AniBT ref="aniBTRef" @callback="aniBTCallback"/>
+  <Mikan ref="mikanRef" @callback="mikanCallback"/>
   <Bgm ref="bgmRef" @callback="it => {
     ani.title = it['name_cn'] ? it['name_cn'] : it['name']
     ani.bgmUrl = it.url
@@ -30,7 +30,7 @@
                 />
                 <br>
                 <div class="mikan-button">
-                  <el-button @click="mikan?.show()" text bg type="primary"
+                  <el-button @click="mikanRef?.show()" text bg type="primary"
                              :disabled="rssButtonLoading">
                     <template #icon>
                       <img src="@/icon/icon-mikan.png" alt="mikan" class="icon el-icon--left"/>
@@ -66,7 +66,7 @@
                 />
                 <br>
                 <div class="mikan-button">
-                  <el-button @click="aniBT?.show()" text bg type="primary"
+                  <el-button @click="aniBTRef?.show()" text bg type="primary"
                              :disabled="rssButtonLoading">
                     <template #icon>
                       <img src="@/icon/icon-AniBT.png" alt="ani-bt" class="icon el-icon--left"/>
@@ -102,7 +102,7 @@
                 />
                 <br>
                 <div class="mikan-button">
-                  <el-button @click="animeGarden?.show()" text bg type="primary"
+                  <el-button @click="animeGardenRef?.show()" text bg type="primary"
                              :disabled="rssButtonLoading">
                     <template #icon>
                       <img src="@/icon/icon-AnimeGarden.png" alt="AnimeGarden" class="icon el-icon--left"/>
@@ -184,9 +184,9 @@ import {useLocalStorage} from "@vueuse/core";
 import AnimeGarden from "@/home/AnimeGarden.vue";
 
 const showRss = ref(true)
-const aniBT = ref()
-const mikan = ref()
-const animeGarden = ref()
+const aniBTRef = ref()
+const mikanRef = ref()
+const animeGardenRef = ref()
 const bgmRef = ref()
 
 const dialogVisible = ref(false)

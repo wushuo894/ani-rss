@@ -1,12 +1,12 @@
 <template>
-  <Preview ref="preview" :ani="props.ani"/>
-  <StandbyRss ref="standbyRss" :ani="props.ani"/>
+  <Preview ref="previewRef" :ani="props.ani"/>
+  <StandbyRss ref="standbyRssRef" :ani="props.ani"/>
   <AniBT ref="aniBTRef" @callback="mikanCallback"/>
   <Mikan ref="mikanRef" @callback="mikanCallback"/>
   <AnimeGarden ref="animeGardenRef" @callback="mikanCallback"/>
   <TmdbGroup ref="tmdbGroupRef" :ani="props.ani"/>
   <div style="height: 500px;">
-    <el-scrollbar style="padding: 0 12px;" height="500" ref="scrollbar">
+    <el-scrollbar style="padding: 0 12px;" height="500" ref="scrollbarRef">
       <el-form label-width="auto">
         <el-form-item label="标题">
           <div style="width: 100%;">
@@ -86,7 +86,7 @@
         </el-form-item>
         <el-form-item label="备用 RSS">
           <div class="form-item-flex">
-            <el-button bg icon="EditPen" text @click="standbyRss?.show">管理</el-button>
+            <el-button bg icon="EditPen" text @click="standbyRssRef?.show">管理</el-button>
           </div>
         </el-form-item>
         <el-form-item label="日期">
@@ -280,7 +280,7 @@
       </el-dropdown>
     </div>
     <div>
-      <el-button @click="preview.show()" bg text icon="Grid">预览</el-button>
+      <el-button @click="previewRef.show()" bg text icon="Grid">预览</el-button>
       <el-button icon="Check" type="primary" :loading="okLoading" @click="async ()=>{
         okLoading = true
         emit('callback',()=>okLoading = false)
@@ -312,9 +312,9 @@ const mikanRef = ref()
 const animeGardenRef = ref()
 const tmdbGroupRef = ref()
 
-let standbyRss = ref()
+let standbyRssRef = ref()
 
-let preview = ref()
+let previewRef = ref()
 let okLoading = ref(false)
 
 let getThemoviedbNameLoading = ref(false)
@@ -343,10 +343,10 @@ onMounted(() => {
   init()
 })
 
-let scrollbar = ref()
+let scrollbarRef = ref()
 
 let init = () => {
-  scrollbar.value?.setScrollTop(0)
+  scrollbarRef.value.setScrollTop(0)
 }
 
 let refreshAni = () => {
