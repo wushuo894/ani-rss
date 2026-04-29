@@ -1,5 +1,5 @@
 <template>
-  <play-start ref="playStart"/>
+  <play-start ref="playStartRef"/>
   <el-dialog v-model="dialogVisible" :title="ani.title" center>
     <div v-loading="listLoading" v-if="list.length || listLoading">
       <el-scrollbar style="height: 500px;">
@@ -55,10 +55,10 @@ const listLoading = ref(false)
 const list = ref([])
 
 let ani = ref({})
-let playStart = ref()
+let playStartRef = ref()
 
 let playStartShow = (it) => {
-  playStart.value?.show(JSON.parse(JSON.stringify(it)))
+  playStartRef.value?.show(JSON.parse(JSON.stringify(it)))
 }
 
 const show = (it) => {

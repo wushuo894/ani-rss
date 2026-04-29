@@ -1,6 +1,6 @@
 <template>
   <ImportAni ref="importAniRef" @callback="getList"/>
-  <Del ref="refDel" @callback="reLoadList"/>
+  <Del ref="delRef" @callback="reLoadList"/>
   <el-dialog v-model="dialogVisible" center title="管理">
     <div class="manage-content" v-loading="loading">
       <div class="manage-header">
@@ -79,7 +79,7 @@
                     禁用
                   </el-text>
                 </el-dropdown-item>
-                <el-dropdown-item divided @click="refDel?.show(selectList)">
+                <el-dropdown-item divided @click="delRef?.show(selectList)">
                   <el-text type="danger">
                     <el-icon>
                       <Remove/>
@@ -167,7 +167,7 @@ import * as http from "@/js/http.js";
 
 let releaseDateList = ref([])
 
-let refDel = ref()
+let delRef = ref()
 let importAniRef = ref()
 
 let selectFilter = ref('全部')
@@ -227,12 +227,8 @@ const getList = () => {
       .then(res => {
         // 新接口返回 ListAni 对象
         let data = res.data
-        releaseDateList.value = data.releaseDateList || []
-        if (data.weekList) {
-          list.value = data.weekList.flatMap(week => week.items)
-        } else {
-          list.value = res.data
-        }
+        releaseDateList.value = data.releaseDateList
+        list.value = data.weekList.flatMap(week => week.items)
         selectChange()
       })
       .finally(() => {
