@@ -318,7 +318,9 @@ public class AniController extends BaseController {
             }).reversed());
         }
 
+        int index = 0;
         for (Ani ani : aniList) {
+            ani.setSort(index++);
             String title = ani.getTitle();
             String pinyin = PinyinUtils.getPinyin(title, "");
             String pinyinInitials = PinyinUtils.getFirstLetter(title, "");

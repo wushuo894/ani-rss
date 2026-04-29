@@ -67,6 +67,7 @@
     </el-form-item>
     <el-form-item label="其他">
       <el-checkbox v-model="showScore" label="显示评分"/>
+      <el-checkbox v-model="showWeek" label="按星期展示"/>
       <el-checkbox v-model="showPlaylist" label="显示视频列表"/>
       <el-checkbox v-model="showLastDownloadTime" label="显示更新时间"/>
     </el-form-item>
@@ -97,6 +98,7 @@ import {
   showLastDownloadTime,
   showPlaylist,
   showScore,
+  showWeek,
   store
 } from "@/js/global.js";
 

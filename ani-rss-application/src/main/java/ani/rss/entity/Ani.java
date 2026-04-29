@@ -19,6 +19,8 @@ import java.util.List;
 @Accessors(chain = true)
 @Schema(description = "订阅")
 public class Ani implements Serializable {
+    private Integer sort;
+
     /**
      * id
      */
