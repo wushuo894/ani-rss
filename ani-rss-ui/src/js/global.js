@@ -26,6 +26,26 @@ const {store} = useColorMode()
 const maxContentWidth = useLocalStorage('max-content-width', 1600);
 
 /**
+ * 显示评分
+ */
+const showScore = useLocalStorage('show-score', true)
+
+/**
+ * 按星期展示
+ */
+const showWeek = useLocalStorage("show-week", true)
+
+/**
+ * 显示视频列表
+ */
+const showPlaylist = useLocalStorage('show-playlist', true)
+
+/**
+ * 显示更新时间
+ */
+const showLastDownloadTime = useLocalStorage("show-last-download-time", true);
+
+/**
  * 强调色
  */
 const color = useLocalStorage('--el-color-primary', '#409eff')
@@ -114,6 +134,10 @@ export {
     authorization,
     store,
     maxContentWidth,
+    showScore,
+    showWeek,
+    showPlaylist,
+    showLastDownloadTime,
     color,
     colorChange,
     isNotMobile,
