@@ -127,7 +127,7 @@
       </div>
     </div>
     <div style="flex: 1;overflow: hidden;">
-      <List ref="listRef" v-model:title="title" v-model:current-page="currentPage" v-model:filter="filter"/>
+      <List ref="listRef" v-model:title="title" v-model:filter="filter"/>
     </div>
   </div>
 </template>
@@ -189,8 +189,6 @@ const selectChange = () => {
   }
   listRef.value.changeFilterList(title.value)
 }
-
-const currentPage = ref(1)
 
 const about = ref({
   'version': '',

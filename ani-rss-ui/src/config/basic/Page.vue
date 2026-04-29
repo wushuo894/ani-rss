@@ -66,9 +66,9 @@
       </el-input-number>
     </el-form-item>
     <el-form-item label="其他">
-      <el-checkbox v-model="props.config.scoreShow" label="显示评分"/>
-      <el-checkbox v-model="props.config.showPlaylist" label="显示视频列表"/>
-      <el-checkbox v-model="props.config.showLastDownloadTime" label="显示更新时间"/>
+      <el-checkbox v-model="showScore" label="显示评分"/>
+      <el-checkbox v-model="showPlaylist" label="显示视频列表"/>
+      <el-checkbox v-model="showLastDownloadTime" label="显示更新时间"/>
     </el-form-item>
     <el-form-item label="自定义">
       <el-button bg @click="jsDialogVisible = true">
@@ -90,7 +90,15 @@
 <script setup>
 import {ref} from "vue";
 import {Adjust, Css3Alt, Js, Moon, Sun} from "@vicons/fa";
-import {color, colorChange, maxContentWidth, store} from "@/js/global.js";
+import {
+  color,
+  colorChange,
+  maxContentWidth,
+  showLastDownloadTime,
+  showPlaylist,
+  showScore,
+  store
+} from "@/js/global.js";
 
 let predefineColors = ref([
   '#409eff', '#109D58', '#BF3545', '#CB7574',
