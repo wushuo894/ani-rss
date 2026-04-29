@@ -17,10 +17,10 @@
           <div class="spacer"></div>
           <div class="select-width">
             <el-select
-                v-model:model-value="yearMonthValue"
+                v-model:model-value="releaseDate"
                 clearable
                 @change="selectChange">
-              <el-option v-for="it in yearMonth(list)"
+              <el-option v-for="it in releaseDateList"
                          :key="it" :label="it" :value="it"
               />
             </el-select>
@@ -165,13 +165,7 @@ import ImportAni from "@/home/ImportAni.vue";
 import {CircleCheck, CircleClose, Refresh, Remove, Upload} from "@element-plus/icons-vue";
 import * as http from "@/js/http.js";
 
-let yearMonth = (list) => {
-  return new Set(
-      list
-          .map(it => it['releaseDate'].replace(/-\d{2}$/, ''))
-          .sort((a, b) => a > b ? -1 : 1)
-  );
-}
+let releaseDateList = ref([])
 
 let refDel = ref()
 let importAniRef = ref()
@@ -198,11 +192,11 @@ let searchList = ref([])
 let selectChange = () => {
   searchList.value = list.value
       .filter(it => {
-        if (!yearMonthValue.value) {
+        if (!releaseDate.value) {
           return true
         }
         // 仅对比年月
-        return yearMonthValue.value === it.releaseDate.replace(/-\d{2}$/, '');
+        return releaseDate.value === it.releaseDate.replace(/-\d{2}$/, '');
       })
       .filter(selectFilters.value.filter(item => selectFilter.value === item.label)[0].fun)
 }
@@ -211,7 +205,7 @@ let dialogVisible = ref(false)
 let loading = ref(false)
 
 let show = () => {
-  yearMonthValue.value = ''
+  releaseDate.value = ''
   selectFilter.value = '全部'
   dialogVisible.value = true
   selectList.value = []
@@ -231,7 +225,14 @@ const getList = () => {
   loading.value = true
   return http.listAni()
       .then(res => {
-        list.value = res.data
+        // 新接口返回 ListAni 对象
+        let data = res.data
+        releaseDateList.value = data.releaseDateList || []
+        if (data.weekList) {
+          list.value = data.weekList.flatMap(week => week.items)
+        } else {
+          list.value = res.data
+        }
         selectChange()
       })
       .finally(() => {
@@ -276,7 +277,7 @@ let batchEnable = (value) => {
       })
 }
 
-let yearMonthValue = ref('')
+let releaseDate = ref('')
 
 let updateTotalEpisodeNumber = (force) => {
   let ids = selectList.value.map(it => it['id']);

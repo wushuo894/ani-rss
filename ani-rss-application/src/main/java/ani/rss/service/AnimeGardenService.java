@@ -1,6 +1,7 @@
 package ani.rss.service;
 
 import ani.rss.commons.GsonStatic;
+import ani.rss.commons.WeekComparator;
 import ani.rss.entity.Ani;
 import ani.rss.entity.AnimeGarden;
 import ani.rss.entity.BgmInfo;
@@ -108,6 +109,12 @@ public class AnimeGardenService {
                     .setSubjects(map.get(weekLabel));
             weekList.add(week);
         }
+
+        WeekComparator weekComparator = new WeekComparator();
+        weekList = weekList.stream()
+                .sorted((a, b) ->
+                        weekComparator.compare(a.getWeekLabel(), b.getWeekLabel())
+                ).toList();
 
         return weekList;
     }

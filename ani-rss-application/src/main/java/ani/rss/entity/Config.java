@@ -421,12 +421,6 @@ public class Config implements Serializable {
     private String apiKey;
 
     /**
-     * 按星期展示
-     */
-    @Schema(description = "按星期展示")
-    private Boolean weekShow;
-
-    /**
      * 只下载最新集
      */
     @Schema(description = "只下载最新集")

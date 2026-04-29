@@ -95,7 +95,7 @@ public class Ani implements Serializable {
      * 星期 1表示周日，2表示周一
      */
     @Schema(description = "星期 1表示周日，2表示周一")
-    private Integer week;
+    private String weekLabel;
 
     /**
      * 季度
@@ -335,6 +335,4 @@ public class Ani implements Serializable {
      */
     @Schema(description = "单个订阅自定义标签")
     private List<String> customTags;
-
-
 }
