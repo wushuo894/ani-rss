@@ -131,12 +131,6 @@ public class Config implements Serializable {
     private Integer delayedDownload;
 
     /**
-     * 显示评分
-     */
-    @Schema(description = "显示评分")
-    private Boolean scoreShow;
-
-    /**
      * RSS 间隔(分钟)
      */
     @Schema(description = "RSS 间隔(分钟)")
@@ -363,12 +357,6 @@ public class Config implements Serializable {
      */
     @Schema(description = "IP 白名单")
     private String ipWhitelistStr;
-
-    /**
-     * 显示已下载视频列表
-     */
-    @Schema(description = "显示已下载视频列表")
-    private Boolean showPlaylist;
 
     /**
      * 检测遗漏集数
@@ -635,12 +623,6 @@ public class Config implements Serializable {
      */
     @Schema(description = "备份天数")
     private Integer configBackupDay;
-
-    /**
-     * 展示最后更新时间
-     */
-    @Schema(description = "展示最后更新时间")
-    private Boolean showLastDownloadTime;
 
     /**
      * 番剧完结迁移
