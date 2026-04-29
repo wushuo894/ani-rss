@@ -388,13 +388,8 @@ let openUrl = (url) => window.open(url)
 </script>
 
 <style scoped>
-
 .el-collapse {
   --el-collapse-header-height: 55px;
-}
-
-.el-card {
-  --el-card-padding: 15px;
 }
 
 .match-item {
