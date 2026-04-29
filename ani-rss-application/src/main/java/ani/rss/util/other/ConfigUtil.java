@@ -175,7 +175,6 @@ public class ConfigUtil {
                 .setBgmRefreshToken("")
                 .setBgmRedirectUri("")
                 .setApiKey("")
-                .setWeekShow(true)
                 .setScoreShow(true)
                 .setDownloadNew(false)
                 .setInnerIP(false)
