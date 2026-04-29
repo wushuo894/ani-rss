@@ -343,13 +343,8 @@ let copy = (v) => {
 </script>
 
 <style scoped>
-
 .el-collapse {
   --el-collapse-header-height: 55px;
-}
-
-.el-card {
-  --el-card-padding: 15px;
 }
 
 .match-item {
@@ -373,21 +368,6 @@ let copy = (v) => {
 
 .search-section {
   margin: 4px;
-}
-
-.search-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.source-select {
-  max-width: 100px;
-  margin-right: 8px;
-}
-
-.spacer {
-  width: 4px;
 }
 
 .season-selector {
