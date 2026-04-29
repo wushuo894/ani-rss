@@ -7,8 +7,8 @@
   <div class="list-container" v-loading="loading">
     <el-scrollbar class="hide-scrollbar">
       <div class="list-content">
-        <template v-for="weekItem in filterList">
-          <div>
+        <template v-if="showWeek">
+          <div v-for="weekItem in filterList">
             <h2 class="list-week-title">
               {{ weekItem.weekLabel }}
             </h2>
@@ -16,6 +16,13 @@
               <div v-for="item in weekItem.items" :key="item.id">
                 <AniCard :item="item"/>
               </div>
+            </div>
+          </div>
+        </template>
+        <template v-else>
+          <div class="grid-container">
+            <div v-for="item in flatFilterList">
+              <AniCard :item="item"/>
             </div>
           </div>
         </template>
@@ -35,9 +42,11 @@ import BgmRate from "./BgmRate.vue";
 import formatTime from "@/js/format-time.js";
 import {listAni} from "@/js/http.js";
 import AniCard from "@/home/AniCard.vue";
+import {showWeek} from "@/js/global.js";
 
 const weekList = ref([])
 const filterList = ref([])
+const flatFilterList = ref([])
 const releaseDateList = ref([])
 
 const loading = ref(true)
@@ -68,6 +77,11 @@ const changeFilterList = (text = '') => {
         }
       })
       .filter(it => it.items.length)
+
+  // 当不按星期展示时，展平并排序
+  flatFilterList.value = Array.from(filterList.value)
+      .flatMap(it => it.items)
+      .sort((a, b) => a.sort > b.sort)
 }
 
 const getList = () => {
@@ -139,6 +153,10 @@ let props = defineProps({
 
 .list-week-title {
   margin: 16px 0 8px 4px;
+}
+
+.list-bottom-spacer {
+  height: 8px;
 }
 </style>
 
