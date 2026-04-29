@@ -1,16 +1,11 @@
 <template>
-  <Edit ref="editRef"/>
-  <PlayList ref="playListRef"/>
-  <Cover ref="coverRef"/>
-  <Del ref="delRef"/>
-  <BgmRate ref="bgmRateRef"/>
   <el-card shadow="never">
     <div class="list-card-content">
       <div class="list-card-image-container">
         <img :src="`api/file?filename=${item['cover']}&s=${authorization}`" height="130" width="92"
              :alt="item.title"
              class="list-card-image"
-             @click="coverRef?.show(item)"/>
+             @click="emit('cover', item)"/>
       </div>
       <div class="list-card-info">
         <div class="list-card-info-inner">
@@ -25,7 +20,7 @@
             </el-tooltip>
           </div>
           <div class="list-card-score-container" v-if="showScore">
-            <h4 class="list-card-score" @click="bgmRateRef?.show(item)">
+            <h4 class="list-card-score" @click="emit('rate', item)">
               {{ item['score'].toFixed(1) }}
             </h4>
           </div>
@@ -74,19 +69,19 @@
           </el-text>
         </div>
         <div class="list-card-actions">
-          <el-button text @click="playListRef?.show(item)" bg v-if="showPlaylist">
+          <el-button text @click="emit('playlist', item)" bg v-if="showPlaylist">
             <el-icon>
               <Files/>
             </el-icon>
           </el-button>
           <div class="list-card-spacer" v-if="showPlaylist"></div>
-          <el-button bg text @click="editRef?.show(item)">
+          <el-button bg text @click="emit('edit', item)">
             <el-icon>
               <EditIcon/>
             </el-icon>
           </el-button>
           <div class="list-card-spacer"></div>
-          <el-button type="danger" text @click="delRef?.show([item])" bg>
+          <el-button type="danger" text @click="emit('del', [item])" bg>
             <el-icon>
               <Delete/>
             </el-icon>
@@ -100,18 +95,6 @@
 <script setup>
 import {authorization, isNotMobile, showLastDownloadTime, showPlaylist, showScore} from "@/js/global.js";
 import {Delete, Edit as EditIcon, Files} from "@element-plus/icons-vue";
-import Cover from "@/home/Cover.vue";
-import BgmRate from "@/home/BgmRate.vue";
-import Edit from "@/home/Edit.vue";
-import PlayList from "@/play/PlayList.vue";
-import Del from "@/home/Del.vue";
-import {ref} from "vue";
-
-const editRef = ref()
-const delRef = ref()
-const coverRef = ref()
-const playListRef = ref()
-const bgmRateRef = ref()
 
 let openBgmUrl = (it) => {
   if (it.bgmUrl.length) {
@@ -129,6 +112,7 @@ let decodeURLComponentSafe = (str) => {
   return decodeURIComponent(str.replace('+', ' '));
 }
 
+const emit = defineEmits(['edit', 'playlist', 'cover', 'del', 'rate'])
 let props = defineProps(["item"])
 </script>
 

@@ -14,7 +14,14 @@
             </h2>
             <div class="grid-container">
               <div v-for="item in weekItem.items" :key="item.id">
-                <AniCard :item="item"/>
+                <AniCard
+                    :item="item"
+                    @edit="editRef?.show"
+                    @playlist="playListRef?.show"
+                    @cover="coverRef?.show"
+                    @del="delRef?.show"
+                    @rate="bgmRateRef?.show"
+                />
               </div>
             </div>
           </div>
@@ -22,7 +29,14 @@
         <template v-else>
           <div class="grid-container">
             <div v-for="item in flatFilterList">
-              <AniCard :item="item"/>
+              <AniCard
+                  :item="item"
+                  @edit="editRef?.show"
+                  @playlist="playListRef?.show"
+                  @cover="coverRef?.show"
+                  @del="delRef?.show"
+                  @rate="bgmRateRef?.show"
+              />
             </div>
           </div>
         </template>
@@ -43,6 +57,12 @@ import formatTime from "@/js/format-time.js";
 import {listAni} from "@/js/http.js";
 import AniCard from "@/home/AniCard.vue";
 import {showWeek} from "@/js/global.js";
+
+const editRef = ref()
+const delRef = ref()
+const coverRef = ref()
+const playListRef = ref()
+const bgmRateRef = ref()
 
 const weekList = ref([])
 const filterList = ref([])
