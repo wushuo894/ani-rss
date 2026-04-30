@@ -1,9 +1,6 @@
 <template>
   <el-form label-width="auto"
-           class="form-full-width"
-           @submit="(event)=>{
-                    event.preventDefault()
-                   }">
+           class="full-width">
     <el-form-item label="Mikan">
       <el-input v-model:model-value="props.config.mikanHost" placeholder="https://mikanime.tv"/>
     </el-form-item>
@@ -49,7 +46,7 @@
       <el-switch v-model:model-value="props.config.debug"/>
     </el-form-item>
     <el-form-item label="缓存">
-      <div style="width: 100%;">
+      <div class="full-width">
         <div>
           <el-button :loading="clearCacheLoading" bg icon="Delete" @click="clearCache">清理</el-button>
         </div>
@@ -97,20 +94,3 @@ let clearCache = () => {
 let props = defineProps(['config'])
 </script>
 
-<style scoped>
-.form-full-width {
-  width: 100%;
-}
-
-.width-150 {
-  width: 150px;
-}
-
-.full-width {
-  width: 100%;
-}
-
-.select-width-150 {
-  width: 150px;
-}
-</style>

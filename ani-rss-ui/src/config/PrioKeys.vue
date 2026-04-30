@@ -11,7 +11,7 @@
       <el-button bg text @click="addKeyword" icon="Plus">添加</el-button>
     </div>
   </el-dialog>
-  <div class="prio-keys-container">
+  <div class="full-width">
     <div class="gap-2">
       <el-tag v-if="!props.keywords.length" type="info" class="prio-keys-tag">
         无
@@ -97,7 +97,11 @@ let importGlobalKeywords = () => {
       })
 }
 
-let props = defineProps(['keywords', 'importGlobal', 'showText'])
+let props = defineProps({
+  keywords: [],
+  importGlobal: [],
+  showText: Boolean
+})
 </script>
 
 <style scoped>
@@ -105,10 +109,6 @@ let props = defineProps(['keywords', 'importGlobal', 'showText'])
   width: 100%;
   justify-content: end;
   margin-top: 8px;
-}
-
-.prio-keys-container {
-  width: 100%;
 }
 
 .prio-keys-tag {

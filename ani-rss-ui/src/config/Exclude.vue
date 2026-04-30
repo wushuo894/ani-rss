@@ -13,7 +13,7 @@
       <el-button bg text @click="addExclude" icon="Plus">添加</el-button>
     </div>
   </el-dialog>
-  <div class="exclude-container">
+  <div class="full-width">
     <div class="gap-2">
       <el-tag v-if="!props.exclude.length"
               type="info"
@@ -123,7 +123,11 @@ let addExclude = () => {
   add.value = false
 }
 
-let props = defineProps(['exclude', 'importExclude', 'showText'])
+let props = defineProps({
+  exclude: [],
+  importExclude: [],
+  showText: Boolean
+})
 </script>
 
 <style scoped>
@@ -135,10 +139,6 @@ let props = defineProps(['exclude', 'importExclude', 'showText'])
   width: 100%;
   justify-content: end;
   margin-top: 8px;
-}
-
-.exclude-container {
-  width: 100%;
 }
 
 .exclude-tag {

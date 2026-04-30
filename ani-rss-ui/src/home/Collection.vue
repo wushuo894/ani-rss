@@ -7,13 +7,10 @@
     <div v-loading="loading" style="height: 500px;">
       <el-scrollbar style="padding: 0 12px;">
         <div>
-          <el-form label-width="auto"
-                   @submit="(event)=>{
-                event.preventDefault()
-             }">
+          <el-form label-width="auto">
             <el-form-item label="番剧名称">
-              <div style="width: 100%;">
-                <div class="flex" style="width: 100%;">
+              <div class="full-width">
+                <div class="flex full-width">
                   <el-input
                       v-model:model-value="data.ani.title"
                       :disabled="rssButtonLoading"
@@ -42,7 +39,7 @@
             </el-form-item>
             <template v-if="data.show">
               <el-form-item label="TMDB">
-                <div class="flex" style="width: 100%;justify-content: space-between;">
+                <div class="flex full-width" style="justify-content: space-between;">
                   <div class="el-input is-disabled">
                     <div class="el-input__wrapper"
                          style="pointer-events: auto;cursor: auto;justify-content: left;padding: 0 11px;"
@@ -62,12 +59,12 @@
               </el-form-item>
               <el-form-item label="字幕组">
                 <div class="form-item-flex">
-                  <el-input v-model:model-value="data.ani.subgroup" placeholder="字幕组" style="width: 150px"/>
+                  <el-input v-model:model-value="data.ani.subgroup" placeholder="字幕组" class="width-150"/>
                 </div>
               </el-form-item>
               <el-form-item label="季">
                 <div class="form-item-flex">
-                  <el-input-number v-model:model-value="data.ani.season" :min="0" style="max-width: 200px"/>
+                  <el-input-number v-model:model-value="data.ani.season" :min="0" class="width-150"/>
                 </div>
               </el-form-item>
               <el-form-item label="集数偏移">
@@ -96,17 +93,17 @@
                 <el-switch v-model:model-value="data.ani.ova"/>
               </el-form-item>
               <el-form-item label="自定义集数规则">
-                <div style="display: flex;width: 100%;">
+                <div class="flex full-width">
                   <el-input v-model:model-value="data.ani.customEpisodeStr"
-                            style="width: 100%"/>
+                            class="full-width"/>
                   <div style="width: 4px;"></div>
                   <el-input-number v-model:model-value="data.ani.customEpisodeGroupIndex"/>
                 </div>
               </el-form-item>
               <el-form-item label="下载位置">
-                <div style="width: 100%;">
+                <div class="full-width">
                   <el-input v-model:model-value="data.ani.downloadPath" :autosize="{ minRows: 2}"
-                            style="width: 100%"
+                            class="full-width"
                             type="textarea"/>
                 </div>
                 <div style="margin-top: 6px;">
@@ -136,10 +133,9 @@
                     :before-upload="beforeAvatarUpload"
                     :on-success="onSuccess"
                     :show-file-list="false"
-                    class="upload-demo"
+                    class="upload-demo full-width"
                     drag
                     multiple
-                    style="width: 100%"
                 >
                   <el-icon class="el-icon--upload">
                     <upload-filled/>

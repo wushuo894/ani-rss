@@ -1,7 +1,7 @@
 <template>
   <bangumi-me ref="bangumiMeRef"/>
   <el-form label-width="auto"
-           class="form-full-width">
+           class="full-width">
     <el-form-item label="获取方式">
       <el-radio-group v-model="props.config['bgmTokenType']">
         <el-radio label="手动输入" value="INPUT"/>
@@ -138,14 +138,6 @@ let start = () => {
 </script>
 
 <style scoped>
-.form-full-width {
-  width: 100%;
-}
-
-.full-width {
-  width: 100%;
-}
-
 .text-extra-small {
   font-size: var(--el-font-size-extra-small);
 }
