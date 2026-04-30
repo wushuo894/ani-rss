@@ -1,4 +1,4 @@
-- refactor: 更新至 springboot 4.0.6
+- fix: 修复订阅在chrome下的排序问题
 
 [请不要将本项目在国内宣传](https://github.com/wushuo894/ani-rss/discussions/504)
 
