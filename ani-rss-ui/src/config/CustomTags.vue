@@ -1,5 +1,5 @@
 <template>
-  <div style="width: 100%;">
+  <div class="full-width">
     <el-tag
         v-if="!props.config.customTags.length"
         type="info"

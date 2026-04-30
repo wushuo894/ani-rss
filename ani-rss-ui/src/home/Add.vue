@@ -2,10 +2,7 @@
   <AnimeGarden ref="animeGardenRef" @callback="aniBTCallback"/>
   <AniBT ref="aniBTRef" @callback="aniBTCallback"/>
   <Mikan ref="mikanRef" @callback="mikanCallback"/>
-  <Bgm ref="bgmRef" @callback="it => {
-    ani.title = it['name_cn'] ? it['name_cn'] : it['name']
-    ani.bgmUrl = it.url
-  }"/>
+  <Bgm ref="bgmRef" @callback="bgmCallback"/>
   <el-dialog v-model="dialogVisible" center title="添加订阅"
              :close-on-click-modal="!rssButtonLoading"
              :close-on-press-escape="!rssButtonLoading"
@@ -15,12 +12,9 @@
       <el-tabs tab-position="left" v-model="activeName">
         <el-tab-pane label="Mikan" name="mikan">
           <el-form label-width="auto"
-                   style="height: 260px"
-                   @submit="(event)=>{
-                event.preventDefault()
-             }">
+                   style="height: 260px">
             <el-form-item label="RSS 地址">
-              <div style="width: 100%">
+              <div class="full-width">
                 <el-input
                     :disabled="rssButtonLoading"
                     type="textarea"
@@ -51,12 +45,9 @@
         </el-tab-pane>
         <el-tab-pane label="AniBT" name="ani-bt">
           <el-form label-width="auto"
-                   style="height: 260px"
-                   @submit="(event)=>{
-                event.preventDefault()
-             }">
+                   style="height: 260px">
             <el-form-item label="RSS 地址">
-              <div style="width: 100%">
+              <div class="full-width">
                 <el-input
                     :disabled="rssButtonLoading"
                     type="textarea"
@@ -87,12 +78,9 @@
         </el-tab-pane>
         <el-tab-pane label="AG" name="anime-garden">
           <el-form label-width="auto"
-                   style="height: 260px"
-                   @submit="(event)=>{
-                event.preventDefault()
-             }">
+                   style="height: 260px">
             <el-form-item label="RSS 地址">
-              <div style="width: 100%">
+              <div class="full-width">
                 <el-input
                     :disabled="rssButtonLoading"
                     type="textarea"
@@ -123,12 +111,9 @@
         </el-tab-pane>
         <el-tab-pane label="Other" name="other">
           <el-form label-width="auto"
-                   style="height: 200px"
-                   @submit="(event)=>{
-                event.preventDefault()
-             }">
+                   style="height: 200px">
             <el-form-item label="番剧名称">
-              <div class="flex" style="width: 100%;">
+              <div class="flex full-width">
                 <el-input
                     v-model:model-value="ani.title"
                     :disabled="rssButtonLoading"
@@ -233,6 +218,11 @@ const show = () => {
   showRss.value = true
   dialogVisible.value = true
   rssButtonLoading.value = false
+}
+
+let bgmCallback = it => {
+  ani.title = it['name_cn'] ? it['name_cn'] : it['name']
+  ani.bgmUrl = it.url
 }
 
 let aniBTCallback = v => {

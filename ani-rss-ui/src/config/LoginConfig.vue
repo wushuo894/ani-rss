@@ -1,7 +1,5 @@
 <template>
-  <el-form label-width="auto" @submit="(event)=>{
-                      event.preventDefault()
-                   }">
+  <el-form label-width="auto">
     <el-form-item label="用户名">
       <el-input v-model:model-value="props.config.login.username" autocomplete="new-password">
         <template #prefix>
@@ -34,12 +32,12 @@
       <el-checkbox v-model="props.config.limitLoginAttempts" label="限制尝试次数"/>
     </el-form-item>
     <el-form-item label="IP白名单">
-      <div class="login-whitelist-container">
+      <div class="full-width">
         <div>
           <el-switch v-model:model-value="config['ipWhitelist']"/>
         </div>
-        <div class="login-whitelist-input-container">
-          <el-input class="login-whitelist-input" type="textarea"
+        <div class="full-width">
+          <el-input class="full-width" type="textarea"
                     :autosize="{ minRows: 2}"
                     :disabled="!config['ipWhitelist']"
                     :placeholder="'127.0.0.1\n192.168.1.0/24'" v-model:model-value="config['ipWhitelistStr']"/>
@@ -51,14 +49,14 @@
       </div>
     </el-form-item>
     <el-form-item label="信任的反代IP">
-      <div style="width: 100%;">
+      <div class="full-width">
         <el-checkbox label="启用" v-model="config.reverseProxyTrustIpListEnabled"/>
         <br>
         <el-input-tag v-model="config.reverseProxyTrustIpList"/>
       </div>
     </el-form-item>
     <el-form-item label="Api Key">
-      <div class="flex login-api-key-container">
+      <div class="flex full-width">
         <el-input v-model:model-value="props.config.apiKey" readonly/>
         <div class="login-api-key-buttons flex">
           <el-button bg text @click="createApiKey">生成</el-button>
@@ -101,22 +99,6 @@ let props = defineProps(['config'])
 </script>
 
 <style scoped>
-.login-whitelist-container {
-  width: 100%;
-}
-
-.login-whitelist-input-container {
-  width: 100%;
-}
-
-.login-whitelist-input {
-  width: 100%;
-}
-
-.login-api-key-container {
-  width: 100%;
-}
-
 .login-api-key-buttons {
   margin-left: 12px;
 }

@@ -1,9 +1,6 @@
 <template>
   <el-form label-width="auto"
-           class="form-full-width"
-           @submit="(event)=>{
-                    event.preventDefault()
-                   }">
+           class="full-width">
     <el-form-item label="只下载最新集">
       <el-switch v-model:model-value="props.config.downloadNew"/>
     </el-form-item>
@@ -45,7 +42,7 @@
     <el-form-item label="TMDB语言">
       <div>
         <div>
-          <el-select v-model:model-value="props.config['tmdbLanguage']" class="select-width-150">
+          <el-select v-model:model-value="props.config['tmdbLanguage']" class="width-150">
             <el-option v-for="item in tmdb_i18n" :value="item.i18n_tag"
                        :label="`${item.native_name} (${item.i18n_tag})`"
                        :key="item.i18n_tag">
@@ -71,7 +68,7 @@
       <el-switch v-model:model-value="props.config.importExclude" :disabled="props.config.enabledExclude"/>
     </el-form-item>
     <el-form-item label="封面质量">
-      <el-select v-model="props.config['bgmImage']" class="select-width-150">
+      <el-select v-model="props.config['bgmImage']" class="width-150">
         <el-option v-for="item in ['small','grid','large','medium','common']" :key="item"
                    :value="item"></el-option>
       </el-select>
@@ -81,7 +78,7 @@
         <div>
           <el-switch v-model="props.config.customEpisode"/>
         </div>
-        <div class="flex-row-full">
+        <div class="flex full-width">
           <el-input v-model="props.config.customEpisodeStr"
                     class="full-width"/>
           <div class="spacer-4"></div>
@@ -113,29 +110,12 @@ let props = defineProps(['config'])
 </script>
 
 <style scoped>
-.form-full-width {
-  width: 100%;
-}
-
-.select-width-150 {
-  width: 150px;
-}
-
 .float-left {
   float: left;
 }
 
 .float-right {
   float: right;
-}
-
-.full-width {
-  width: 100%;
-}
-
-.flex-row-full {
-  display: flex;
-  width: 100%;
 }
 
 .spacer-4 {

@@ -90,7 +90,10 @@ const changeFilterList = (text = '') => {
         let items = it.items;
         items = items
             .filter(props.filter)
-            .filter(filter);
+            .filter(filter)
+            .map(it => {
+              return {...it, lastDownloadFormat: formatTime(it['lastDownloadTime'])}
+            });
         return {
           weekLabel: it.weekLabel,
           items
@@ -113,12 +116,6 @@ const getList = () => {
         weekList.value = data.weekList
         releaseDateList.value = data.releaseDateList
 
-        // 处理最后下载时间
-        weekList.value.forEach(week => {
-          week.items = week.items.map(it => {
-            return {...it, lastDownloadFormat: formatTime(it['lastDownloadTime'])}
-          })
-        })
         updateGridLayout()
         changeFilterList(props.title)
       })
@@ -138,7 +135,6 @@ let updateGridLayout = () => {
 onMounted(() => {
   window.addEventListener('resize', updateGridLayout);
   window.$reLoadList = getList
-  window.$changeFilterList = changeFilterList
   getList()
 })
 

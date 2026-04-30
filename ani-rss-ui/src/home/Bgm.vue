@@ -26,7 +26,7 @@
         <el-table-column label="url" prop="url" width="240"/>
         <el-table-column>
           <template #default="it">
-            <div class="flex flex-center bgm-table-button-wrapper">
+            <div class="flex flex-center full-width">
               <el-button bg text @click="ok(list[it.$index])">选择</el-button>
             </div>
           </template>
@@ -98,9 +98,5 @@ const emit = defineEmits(['callback'])
 
 .bgm-search-spacer {
   width: 4px;
-}
-
-.bgm-table-button-wrapper {
-  width: 100%;
 }
 </style>
