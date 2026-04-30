@@ -104,7 +104,7 @@ const changeFilterList = (text = '') => {
   // 当不按星期展示时，展平并排序
   flatFilterList.value = Array.from(filterList.value)
       .flatMap(it => it.items)
-      .sort((a, b) => a.sort > b.sort)
+      .sort((a, b) => a.sort - b.sort)
 }
 
 const getList = () => {
