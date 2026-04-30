@@ -243,7 +243,6 @@ let open = url => {
 
 defineExpose({show})
 
-let props = defineProps(['match'])
 let emit = defineEmits(['callback'])
 
 

@@ -19,10 +19,7 @@
     </div>
   </el-dialog>
   <el-form label-width="auto"
-           class="form-full-width"
-           @submit="(event)=>{
-                    event.preventDefault()
-                   }">
+           class="full-width">
     <el-form-item label="外观">
       <el-radio-group v-model="store">
         <el-radio-button label="自动" value="auto">
@@ -51,7 +48,7 @@
                        @active-change="colorChange"/>
     </el-form-item>
     <el-form-item label="排序">
-      <el-select v-model="props.config['sortType']" class="select-width-150">
+      <el-select v-model="props.config['sortType']" class="width-150">
         <el-option value="SCORE" label="评分"/>
         <el-option value="PINYIN" label="拼音"/>
         <el-option value="DOWNLOAD_TIME" label="更新时间"/>
@@ -122,19 +119,7 @@ let props = defineProps(['config'])
   justify-content: end;
 }
 
-.full-width {
-  width: 100%;
-}
-
 .mt-8 {
   margin-top: 8px;
-}
-
-.form-full-width {
-  width: 100%;
-}
-
-.select-width-150 {
-  width: 150px;
 }
 </style>

@@ -1,9 +1,6 @@
 <template>
   <el-form label-width="auto"
-           class="download-form"
-           @submit="(event)=>{
-                    event.preventDefault()
-                   }">
+           class="full-width">
     <el-form-item label="下载工具">
       <el-select v-model:model-value="props.config.downloadToolType">
         <el-option v-for="item in downloadSelect"
@@ -41,7 +38,7 @@
         </el-text>
       </el-form-item>
       <el-form-item label="Driver">
-        <el-select v-model="props.config['provider']" class="download-provider-select">
+        <el-select v-model="props.config['provider']" class="width-150">
           <el-option v-for="it in offlineList" :key="it.label" :label="it.label" :value="it.value"/>
         </el-select>
       </el-form-item>
@@ -91,7 +88,7 @@
       </div>
     </el-form-item>
     <el-form-item label="保存位置">
-      <div class="download-path-container">
+      <div class="full-width">
         <el-input v-model:model-value="props.config['downloadPathTemplate']"/>
         <el-alert
             v-if="!testPathTemplate(props.config['downloadPathTemplate'])"
@@ -107,7 +104,7 @@
       </div>
     </el-form-item>
     <el-form-item label="剧场版保存位置">
-      <div class="download-path-container">
+      <div class="full-width">
         <el-input v-model:model-value="props.config['ovaDownloadPathTemplate']"/>
         <el-alert
             v-if="!testPathTemplate(props.config['ovaDownloadPathTemplate'])"
@@ -164,7 +161,7 @@
       </el-input-number>
     </el-form-item>
     <el-form-item label="优先保留">
-      <div class="download-priority-container">
+      <div class="full-width">
         <el-switch v-model:model-value="props.config.priorityKeywordsEnable"/>
         <div>
           <el-text class="mx-1" size="small">
@@ -256,22 +253,10 @@ let props = defineProps(['config'])
 </script>
 
 <style scoped>
-.download-form {
-  width: 100%;
-}
-
-.download-provider-select {
-  width: 150px;
-}
-
 .download-test-button {
   display: flex;
   width: 100%;
   justify-content: end;
-}
-
-.download-path-container {
-  width: 100%;
 }
 
 .download-alert {
@@ -280,9 +265,5 @@ let props = defineProps(['config'])
 
 .download-danger-text {
   color: red;
-}
-
-.download-priority-container {
-  width: 100%;
 }
 </style>

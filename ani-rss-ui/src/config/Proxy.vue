@@ -1,8 +1,5 @@
 <template>
-  <el-form label-width="auto"
-           @submit="(event)=>{
-                      event.preventDefault()
-                   }">
+  <el-form label-width="auto">
     <el-form-item label="IP">
       <el-input v-model:model-value="props.config.proxyHost" :disabled="!props.config.proxy"
                 placeholder="192.168.0.x"/>
@@ -33,7 +30,7 @@
     </el-form-item>
     <el-form-item label="代理列表">
       <el-input
-          class="proxy-list-input"
+          class="full-width"
           type="textarea"
           :autosize="{ minRows: 3, maxRows: 3}"
           v-model="props.config.proxyList"
@@ -108,10 +105,6 @@ let props = defineProps(['config'])
 </script>
 
 <style scoped>
-.proxy-list-input {
-  width: 100%;
-}
-
 .proxy-test-container {
   justify-content: space-between;
   width: 100%;

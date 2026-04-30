@@ -1,9 +1,6 @@
 <template>
   <el-form label-width="auto"
-           class="form-full-width"
-           @submit="(event)=>{
-                    event.preventDefault()
-                   }">
+           class="full-width">
     <el-form-item label="自动重命名">
       <el-switch v-model:model-value="props.config.rename"/>
     </el-form-item>
@@ -100,14 +97,6 @@ let props = defineProps(['config'])
 </script>
 
 <style scoped>
-.form-full-width {
-  width: 100%;
-}
-
-.full-width {
-  width: 100%;
-}
-
 .mt-8 {
   margin-top: 8px;
 }

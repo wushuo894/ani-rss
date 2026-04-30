@@ -13,8 +13,8 @@
       <div style="flex: 1">
         <el-form label-width="auto">
           <el-form-item label="URL">
-            <div style="width: 100%">
-              <div style="width: 100%;" class="flex">
+            <div class="full-width">
+              <div class="flex full-width">
                 <el-input v-model:model-value="ani.image" placeholder="https://lain.bgm.tv/pic/cover/1234.jpg"/>
                 <div style="width: 8px;"/>
                 <el-button :disabled="!ani.image" :loading="reLoadIng" bg icon="Refresh" text @click="reLoad"/>

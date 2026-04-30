@@ -25,7 +25,9 @@
 </template>
 
 <script setup>
-let props = defineProps(['title'])
+let props = defineProps({
+  title: String
+})
 const emit = defineEmits(['confirm'])
 </script>
 

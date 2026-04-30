@@ -265,9 +265,7 @@ let open = url => {
 
 defineExpose({show})
 
-let props = defineProps(['match'])
 let emit = defineEmits(['callback'])
-
 
 let batchAdditionNum = ref(0)
 let batchAdditionDialogVisible = ref(false)

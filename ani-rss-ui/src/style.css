@@ -285,3 +285,15 @@ html, body, #app {
 .el-link {
     vertical-align: baseline;
 }
+
+.full-width {
+    width: 100%;
+}
+
+.width-150 {
+    width: 150px;
+}
+
+.width-200 {
+    width: 200px;
+}

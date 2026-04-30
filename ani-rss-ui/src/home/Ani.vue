@@ -9,9 +9,9 @@
     <el-scrollbar style="padding: 0 12px;" height="500" ref="scrollbarRef">
       <el-form label-width="auto">
         <el-form-item label="标题">
-          <div style="width: 100%;">
+          <div class="full-width">
             <div>
-              <el-input v-model:model-value="props.ani.title" style="width: 100%"/>
+              <el-input v-model:model-value="props.ani.title" class="full-width"/>
             </div>
             <div class="change-title-button">
               <el-button :loading="getBgmNameLoading"
@@ -28,7 +28,7 @@
           </div>
         </el-form-item>
         <el-form-item label="TMDB">
-          <div style="display: flex;width: 100%;justify-content: space-between;">
+          <div class="flex full-width" style="justify-content: space-between;">
             <div class="el-input is-disabled">
               <div class="el-input__wrapper" tabindex="-1"
                    style="pointer-events: auto;cursor: auto;justify-content: left;padding: 0 11px;">
@@ -56,13 +56,13 @@
           <el-input v-model:model-value="props.ani.bgmUrl" placeholder="https://xxx.xxx"/>
         </el-form-item>
         <el-form-item label="主 RSS">
-          <div style="width: 100%;">
-            <div style="width: 100%;" class="flex">
+          <div class="full-width">
+            <div class="flex full-width">
               <el-input v-model:model-value="props.ani.subgroup" style="width: 140px" placeholder="字幕组"/>
               <div style="width: 6px;"></div>
               <el-input v-model:model-value="props.ani.url" placeholder="https://xxx.xxx"/>
             </div>
-            <div style="width: 100%;justify-content: end;margin-top: 4px;" class="flex">
+            <div style="justify-content: end;margin-top: 4px;" class="flex full-width">
               <el-button bg text
                          @click="mikanShow">
                 <template #icon>
@@ -128,12 +128,12 @@
           <el-switch v-model:model-value="props.ani.ova"/>
         </el-form-item>
         <el-form-item label="自定义集数规则">
-          <div style="width: 100%;">
+          <div class="full-width">
             <div>
               <el-switch v-model:model-value="props.ani.customEpisode"/>
             </div>
-            <div style="display: flex;width: 100%;">
-              <el-input style="width: 100%"
+            <div class="flex full-width">
+              <el-input class="full-width"
                         :disabled="!props.ani.customEpisode"
                         v-model:model-value="props.ani.customEpisodeStr"/>
               <div style="width: 4px;"></div>
@@ -143,12 +143,12 @@
           </div>
         </el-form-item>
         <el-form-item label="自定义路径">
-          <div style="width: 100%;">
+          <div class="full-width">
             <div>
               <el-switch v-model:model-value="props.ani.customDownloadPath"/>
             </div>
             <div>
-              <el-input type="textarea" style="width: 100%" :disabled="!props.ani.customDownloadPath"
+              <el-input type="textarea" class="full-width" :disabled="!props.ani.customDownloadPath"
                         :autosize="{ minRows: 2}"
                         v-model:model-value="props.ani.downloadPath"/>
             </div>
@@ -163,7 +163,7 @@
           </div>
         </el-form-item>
         <el-form-item label="自定义上传">
-          <div style="width: 100%;">
+          <div class="full-width">
             <div>
               <el-switch v-model="props.ani.customUploadEnable"/>
             </div>
@@ -172,25 +172,25 @@
                   v-model="props.ani.customUploadPathTarget"
                   :autosize="{ minRows: 2}"
                   :disabled="!props.ani.customUploadEnable"
-                  style="width: 100%"
+                  class="full-width"
                   type="textarea"/>
             </div>
           </div>
         </el-form-item>
         <el-form-item label="自定义完结迁移">
-          <div style="width: 100%;">
+          <div class="full-width">
             <div>
               <el-switch v-model="props.ani.customCompleted"/>
             </div>
             <div>
-              <el-input type="textarea" style="width: 100%" :disabled="!props.ani.customCompleted"
+              <el-input type="textarea" class="full-width" :disabled="!props.ani.customCompleted"
                         :autosize="{ minRows: 2}"
                         v-model:model-value="props.ani.customCompletedPathTemplate"/>
             </div>
           </div>
         </el-form-item>
         <el-form-item label="重命名模版">
-          <div style="width: 100%">
+          <div class="full-width">
             <el-switch v-model="props.ani['customRenameTemplateEnable']"/>
             <br>
             <el-input v-model:model-value="props.ani['customRenameTemplate']"
@@ -216,7 +216,7 @@
           </div>
         </el-form-item>
         <el-form-item label="优先保留">
-          <div style="width: 100%">
+          <div class="full-width">
             <el-switch v-model="props.ani['customPriorityKeywordsEnable']"/>
             <br>
             <div
@@ -243,7 +243,7 @@
       </el-form>
     </el-scrollbar>
   </div>
-  <div style="display: flex;justify-content: space-between;width: 100%;margin-top: 10px;">
+  <div class="flex full-width" style="justify-content: space-between;margin-top: 10px;">
     <div>
       <el-dropdown trigger="click">
         <el-button bg text icon="MoreFilled">
