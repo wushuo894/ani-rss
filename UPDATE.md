@@ -1,4 +1,5 @@
-- fix: 修复订阅在chrome下的排序问题
+- feat: 添加other订阅支持自动识别字幕组了
+- fix: 修复添加 other 订阅时无法代入 BgmUrl 的问题
 
 [请不要将本项目在国内宣传](https://github.com/wushuo894/ani-rss/discussions/504)
 
