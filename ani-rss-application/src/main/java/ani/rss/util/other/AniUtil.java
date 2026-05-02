@@ -172,9 +172,6 @@ public class AniUtil {
 
         Assert.notBlank(bgmUrl, "bgmUrl 不能为空");
 
-        subgroup = StrUtil.blankToDefault(subgroup, "未知字幕组");
-        ani.setSubgroup(subgroup);
-
         BgmInfo bgmInfo = BgmUtil.getBgmInfo(ani, true);
 
         BgmUtil.toAni(bgmInfo, ani);
@@ -206,6 +203,14 @@ public class AniUtil {
                 // type mikan or other
                 .setType(type);
 
+        subgroup = StrUtil.blankToDefault(subgroup, "未知字幕组");
+
+        if (subgroup.equals("未知字幕组")) {
+            List<Item> items = ItemsUtil.getItems(ani, url, subgroup);
+            subgroup = ItemsUtil.getSubgroup(items);
+        }
+
+        ani.setSubgroup(subgroup);
 
         List<StandbyRss> standbyRssList = ani.getStandbyRssList();
 
@@ -226,13 +231,7 @@ public class AniUtil {
 
         // 自动推断剧集偏移
         if (config.getOffset()) {
-            String s = HttpReq.get(url)
-                    .timeout(config.getRssTimeout() * 1000)
-                    .thenFunction(res -> {
-                        HttpReq.assertStatus(res);
-                        return res.body();
-                    });
-            List<Item> items = ItemsUtil.getItems(ani, s, new Item());
+            List<Item> items = ItemsUtil.getItems(ani, url, subgroup);
             if (items.isEmpty()) {
                 return ani;
             }

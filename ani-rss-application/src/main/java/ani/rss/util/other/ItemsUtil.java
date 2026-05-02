@@ -8,6 +8,8 @@ import ani.rss.entity.StandbyRss;
 import ani.rss.enums.NotificationStatusEnum;
 import ani.rss.enums.StringEnum;
 import ani.rss.util.basic.HttpReq;
+import cn.hutool.cache.CacheUtil;
+import cn.hutool.cache.impl.FIFOCache;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.date.DatePattern;
 import cn.hutool.core.date.DateTime;
@@ -18,10 +20,10 @@ import cn.hutool.core.lang.Assert;
 import cn.hutool.core.text.StrFormatter;
 import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.core.util.*;
-import cn.hutool.http.HttpResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.w3c.dom.*;
 
+import java.io.File;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
@@ -30,6 +32,8 @@ import java.util.function.Function;
 @Slf4j
 public class ItemsUtil {
 
+    private static final FIFOCache<String, String> CACHE = CacheUtil.newFIFOCache(64);
+
     /**
      * 获取视频列表
      *
@@ -37,18 +41,10 @@ public class ItemsUtil {
      * @return
      */
     public static synchronized List<Item> getItems(Ani ani) {
-        String url = ani.getUrl();
-
         Config config = ConfigUtil.CONFIG;
-
-        String s = HttpReq.get(url)
-                .timeout(config.getRssTimeout() * 1000)
-                .thenFunction(res -> {
-                    HttpReq.assertStatus(res);
-                    return res.body();
-                });
+        String url = ani.getUrl();
         String subgroup = StrUtil.blankToDefault(ani.getSubgroup(), "未知字幕组");
-        List<Item> items = new ArrayList<>(ItemsUtil.getItems(ani, s, new Item().setSubgroup(subgroup))
+        List<Item> items = new ArrayList<>(ItemsUtil.getItems(ani, url, subgroup)
                 .stream()
                 .peek(item -> item.setMaster(true))
                 .toList());
@@ -61,13 +57,10 @@ public class ItemsUtil {
         List<StandbyRss> standbyRssList = ani.getStandbyRssList();
         for (StandbyRss rss : standbyRssList) {
             ThreadUtil.sleep(1000);
-            s = HttpReq.get(rss.getUrl())
-                    .timeout(config.getRssTimeout() * 1000)
-                    .thenFunction(HttpResponse::body);
             subgroup = StrUtil.blankToDefault(rss.getLabel(), "未知字幕组");
             Ani clone = ObjUtil.clone(ani);
             clone.setOffset(rss.getOffset());
-            items.addAll(ItemsUtil.getItems(clone, s, new Item().setSubgroup(subgroup))
+            items.addAll(ItemsUtil.getItems(clone, rss.getUrl(), subgroup)
                     .stream()
                     .peek(item -> item.setMaster(false))
                     .toList());
@@ -87,23 +80,23 @@ public class ItemsUtil {
      * 获取视频列表
      *
      * @param ani
-     * @param xml
+     * @param rssUrl
+     * @param subgroupName
      * @return
      */
-    public static List<Item> getItems(Ani ani, String xml, Item newItem) {
+    public static List<Item> getItems(Ani ani, String rssUrl, String subgroupName) {
+        Config config = ConfigUtil.CONFIG;
+
+        String xml = getRss(rssUrl);
+
         List<String> exclude = ani.getExclude();
         List<String> match = ani.getMatch();
 
         List<Item> items = new ArrayList<>();
 
-        Assert.notBlank(xml, "xml is blank");
-        boolean isXml = StrUtil.startWith(xml, '<');
-        Assert.isTrue(isXml, "xml error");
-
         Document document = XmlUtil.readXML(xml);
         Node channel = document.getElementsByTagName("channel").item(0);
         NodeList childNodes = channel.getChildNodes();
-        Config config = ConfigUtil.CONFIG;
         List<String> globalExcludeList = config.getExclude();
         Boolean globalExclude = ani.getGlobalExclude();
 
@@ -215,9 +208,10 @@ public class ItemsUtil {
                 log.warn(e.getMessage());
             }
 
-            Item addNewItem = ObjectUtil.clone(newItem);
+            Item addNewItem = new Item();
 
             addNewItem
+                    .setSubgroup(subgroupName)
                     .setEpisode(1.0)
                     .setTitle(itemTitle)
                     .setReName(itemTitle)
@@ -231,7 +225,7 @@ public class ItemsUtil {
                 if (StrUtil.isBlank(subgroup)) {
                     return s;
                 }
-                if (subgroup.equals(newItem.getSubgroup())) {
+                if (subgroup.equals(subgroupName)) {
                     return ReUtil.get(StringEnum.SUBGROUP_REG_STR, s, 2);
                 }
                 return "";
@@ -271,6 +265,37 @@ public class ItemsUtil {
                     return false;
                 }).toList();
         return CollUtil.distinct(items, item -> item.getEpisode().toString(), true);
+    }
+
+    /**
+     * 对RSS进行缓存
+     *
+     * @param url RSS链接
+     * @return XML
+     */
+    public static String getRss(String url) {
+        String cacheKey = "rss-cache:" + url;
+        String cacheXml = CACHE.get(cacheKey);
+        if (StrUtil.isNotBlank(cacheXml)) {
+            return cacheXml;
+        }
+
+        Config config = ConfigUtil.CONFIG;
+
+        String xml = HttpReq.get(url)
+                .timeout(config.getRssTimeout() * 1000)
+                .thenFunction(res -> {
+                    HttpReq.assertStatus(res);
+                    return res.body();
+                });
+
+        Assert.notBlank(xml, "xml is blank");
+        boolean isXml = StrUtil.startWith(xml, '<');
+        Assert.isTrue(isXml, "xml error");
+
+        CACHE.put(cacheKey, xml, TimeUnit.MINUTES.toMillis(5));
+
+        return xml;
     }
 
     public static synchronized List<Integer> omitList(Ani ani, List<Item> items) {
@@ -454,6 +479,18 @@ public class ItemsUtil {
                     CacheUtils.put(key, text, TimeUnit.DAYS.toMillis(1));
                     NotificationUtil.send(config, ani, text, NotificationStatusEnum.PROCRASTINATING);
                 });
+    }
+
+    public static String getSubgroup(List<Item> items) {
+        String reg = "^\\[(.+?)]";
+        for (Item item : items) {
+            String name = new File(item.getTitle()).getName();
+            if (!ReUtil.contains(reg, name)) {
+                continue;
+            }
+            return ReUtil.get(reg, name, 1);
+        }
+        return "未知字幕组";
     }
 
     /**
