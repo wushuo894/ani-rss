@@ -221,8 +221,8 @@ const show = () => {
 }
 
 let bgmCallback = it => {
-  ani.title = it['name_cn'] ? it['name_cn'] : it['name']
-  ani.bgmUrl = it.url
+  ani.value.title = it['name_cn'] ? it['name_cn'] : it['name']
+  ani.value.bgmUrl = it.url
 }
 
 let aniBTCallback = v => {
