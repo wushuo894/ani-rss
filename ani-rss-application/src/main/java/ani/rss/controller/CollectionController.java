@@ -8,6 +8,7 @@ import ani.rss.entity.web.Result;
 import ani.rss.enums.StringEnum;
 import ani.rss.util.basic.HttpReq;
 import ani.rss.util.other.ConfigUtil;
+import ani.rss.util.other.ItemsUtil;
 import ani.rss.util.other.RenameUtil;
 import ani.rss.util.other.TorrentUtil;
 import cn.hutool.core.codec.Base64;
@@ -157,16 +158,7 @@ public class CollectionController extends BaseController {
             Double episode = it.getEpisode();
             return ObjectUtil.defaultIfNull(episode, 0.0);
         }));
-        String subgroup = "未知字幕组";
-        String reg = "^\\[(.+?)]";
-        for (Item item : preview) {
-            String name = new File(item.getTitle()).getName();
-            if (!ReUtil.contains(reg, name)) {
-                continue;
-            }
-            subgroup = ReUtil.get(reg, name, 1);
-            break;
-        }
+        String subgroup = ItemsUtil.getSubgroup(preview);
 
         Result<String> result = Result.success();
         result.setData(subgroup);
