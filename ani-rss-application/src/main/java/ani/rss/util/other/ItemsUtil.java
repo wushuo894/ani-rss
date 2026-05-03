@@ -8,8 +8,6 @@ import ani.rss.entity.StandbyRss;
 import ani.rss.enums.NotificationStatusEnum;
 import ani.rss.enums.StringEnum;
 import ani.rss.util.basic.HttpReq;
-import cn.hutool.cache.CacheUtil;
-import cn.hutool.cache.impl.FIFOCache;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.date.DatePattern;
 import cn.hutool.core.date.DateTime;
@@ -23,7 +21,6 @@ import cn.hutool.core.util.*;
 import lombok.extern.slf4j.Slf4j;
 import org.w3c.dom.*;
 
-import java.io.File;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
@@ -31,8 +28,6 @@ import java.util.function.Function;
 
 @Slf4j
 public class ItemsUtil {
-
-    private static final FIFOCache<String, String> CACHE = CacheUtil.newFIFOCache(64);
 
     /**
      * 获取视频列表
@@ -274,12 +269,6 @@ public class ItemsUtil {
      * @return XML
      */
     public static String getRss(String url) {
-        String cacheKey = "rss-cache:" + url;
-        String cacheXml = CACHE.get(cacheKey);
-        if (StrUtil.isNotBlank(cacheXml)) {
-            return cacheXml;
-        }
-
         Config config = ConfigUtil.CONFIG;
 
         String xml = HttpReq.get(url)
@@ -292,8 +281,6 @@ public class ItemsUtil {
         Assert.notBlank(xml, "xml is blank");
         boolean isXml = StrUtil.startWith(xml, '<');
         Assert.isTrue(isXml, "xml error");
-
-        CACHE.put(cacheKey, xml, TimeUnit.MINUTES.toMillis(5));
 
         return xml;
     }
@@ -484,11 +471,13 @@ public class ItemsUtil {
     public static String getSubgroup(List<Item> items) {
         String reg = "^\\[(.+?)]";
         for (Item item : items) {
-            String name = new File(item.getTitle()).getName();
-            if (!ReUtil.contains(reg, name)) {
-                continue;
+            String title = item.getTitle();
+            if (!ReUtil.contains(reg, title)) {
+                title = FileUtil.getName(title);
             }
-            return ReUtil.get(reg, name, 1);
+            if (ReUtil.contains(reg, title)) {
+                return ReUtil.get(reg, title, 1);
+            }
         }
         return "未知字幕组";
     }

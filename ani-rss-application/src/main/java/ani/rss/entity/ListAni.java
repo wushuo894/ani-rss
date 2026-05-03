@@ -16,6 +16,8 @@ public class ListAni implements Serializable {
 
     private List<WeekAni> weekList;
 
+    private Integer total;
+
     @Data
     @Accessors(chain = true)
     @AllArgsConstructor

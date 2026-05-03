@@ -297,7 +297,8 @@ public class AniController extends BaseController {
                 .map(it -> DateUtil.format(it, DatePattern.NORM_MONTH_PATTERN))
                 .distinct()
                 .toList();
-        listAni.setReleaseDateList(releaseDateList);
+        listAni.setReleaseDateList(releaseDateList)
+                .setTotal(aniList.size());
 
         if (sortType == SortTypeEnum.SCORE) {
             aniList = CollUtil.sort(aniList, Comparator.comparingDouble(Ani::getScore).reversed());
