@@ -175,16 +175,16 @@ let move = (index, offset) => {
 }
 
 let mikanCallback = v => {
-  let {group, match, url} = v
+  let {subgroup, match, url} = v
 
   let later = plus()
   later.url = url
-  later.label = group
+  later.label = subgroup
 
-  let newMatch = JSON.parse(match).map(s => `{{${group}}}:${s}`)
+  let newMatch = JSON.parse(match).map(s => `{{${subgroup}}}:${s}`)
 
   // 剔除旧的同字幕组规则
-  props.ani.match = props.ani.match.filter(it => it.indexOf(`{{${group}}}:`) !== 0)
+  props.ani.match = props.ani.match.filter(it => it.indexOf(`{{${subgroup}}}:`) !== 0)
 
   props.ani.match.push(...newMatch)
 
