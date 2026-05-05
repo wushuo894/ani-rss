@@ -1,4 +1,4 @@
-- refactor: 优化接口 /api/listAni close #666
+- refactor: 优化订阅添加逻辑
 
 [请不要将本项目在国内宣传](https://github.com/wushuo894/ani-rss/discussions/504)
 
