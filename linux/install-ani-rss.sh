@@ -27,11 +27,11 @@ install_jdk() {
         return
     fi
 
-    echo -e "${YELLOW}正在安装OpenJDK 17...${NC}"
+    echo -e "${YELLOW}正在安装OpenJDK 25...${NC}"
     if command -v apt >/dev/null 2>&1; then
-        apt update -qq && apt install -y openjdk-17-jdk
+        apt update -qq && apt install -y openjdk-25-jdk
     elif command -v yum >/dev/null 2>&1; then
-        yum install -y java-17-openjdk-devel
+        yum install -y java-25-openjdk-devel
     else
         echo -e "${RED}不支持的Linux发行版${NC}"
         exit 1
@@ -116,7 +116,7 @@ setup_service() {
     echo -e "${YELLOW}正在配置系统服务...${NC}"
     tee /etc/systemd/system/"$SERVICE_NAME" > /dev/null <<EOF
 [Unit]
-Description=ANI-RSS Anime RSS Service
+Description=ANI-RSS Service
 After=network.target
 
 [Service]
@@ -128,6 +128,7 @@ ExecStart=/bin/bash $INSTALL_DIR/run.sh
 Restart=on-failure
 RestartSec=30
 LimitNOFILE=65535
+Environment="TZ=Asia/Shanghai"
 Environment="SERVER_ADDRESS=0.0.0.0"
 Environment="SERVER_PORT=$SERVER_PORT"
 Environment="SWAGGER_ENABLED=false"
