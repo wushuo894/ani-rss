@@ -92,13 +92,7 @@
                                   </el-tag>
                                 </div>
                                 <div class="group-action">
-                                  <el-button bg @click.stop="callback({
-                                  bgmUrl:`https://bgm.tv/subject/${anime.id}`,
-                                  title:anime.name,
-                                  group:group.name,
-                                  url:group['rss'],
-                                  regexList:group['regexList']
-                                })" icon="Plus">
+                                  <el-button bg @click.stop="callback(group)" icon="Plus">
                                     添加
                                   </el-button>
                                 </div>
@@ -220,12 +214,12 @@ let addAni = ref({
 let regexList = ref([])
 
 let callback = v => {
-  let {url, group, bgmUrl} = v
+  let {bgmId, rss, name} = v
   regexList.value = JSON.parse(JSON.stringify(v.regexList))
 
-  addAni.value.bgmUrl = bgmUrl
-  addAni.value.url = url
-  addAni.value.group = group
+  addAni.value.bgmUrl = `https://bgm.tv/subject/${bgmId}`
+  addAni.value.url = rss
+  addAni.value.subgroup = name
   addAni.value.match = '[]'
 
   regexList.value.push([])

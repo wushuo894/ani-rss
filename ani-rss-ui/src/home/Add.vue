@@ -1,7 +1,7 @@
 <template>
-  <AnimeGarden ref="animeGardenRef" @callback="aniBTCallback"/>
-  <AniBT ref="aniBTRef" @callback="aniBTCallback"/>
-  <Mikan ref="mikanRef" @callback="mikanCallback"/>
+  <AnimeGarden ref="animeGardenRef" @callback="rssCallback"/>
+  <AniBT ref="aniBTRef" @callback="rssCallback"/>
+  <Mikan ref="mikanRef" @callback="rssCallback"/>
   <Bgm ref="bgmRef" @callback="bgmCallback"/>
   <el-dialog v-model="dialogVisible" center title="添加订阅"
              :close-on-click-modal="!rssButtonLoading"
@@ -225,21 +225,13 @@ let bgmCallback = it => {
   ani.value.bgmUrl = it.url
 }
 
-let aniBTCallback = v => {
-  let {group, match, url, bgmUrl} = v
+let rssCallback = v => {
+  let {subgroup, match, url, bgmUrl} = v
+  ani.value.url = url
   ani.value.bgmUrl = bgmUrl
-  ani.value.subgroup = group
-  ani.value.url = url
+  ani.value.subgroup = subgroup
   ani.value.match = JSON.parse(match)
-      .map(s => `{{${group}}}:${s}`)
-  getRss()
-}
-
-let mikanCallback = v => {
-  let {group, match, url} = v
-  ani.value.url = url
-  ani.value.match = JSON.parse(match)
-      .map(s => `{{${group}}}:${s}`)
+      .map(s => `{{${subgroup}}}:${s}`)
   getRss()
 }
 

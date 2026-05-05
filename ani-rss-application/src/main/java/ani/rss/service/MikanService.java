@@ -230,13 +230,23 @@ public class MikanService {
                     Document document = Jsoup.parse(res.body());
                     List<Mikan.Group> groups = new ArrayList<>();
 
+                    String bgmUrl = "";
+                    Elements bangumiInfos = document.select(".bangumi-info");
+                    for (Element bangumiInfo : bangumiInfos) {
+                        String string = bangumiInfo.ownText();
+                        if (string.equals("Bangumi番组计划链接：")) {
+                            bgmUrl = bangumiInfo.selectFirst("a")
+                                    .attr("href");
+                        }
+                    }
+
                     Elements subgroupTitles = document.select(".leftbar-item");
 
                     for (Element subgroupText : subgroupTitles) {
                         Mikan.Group group = new Mikan.Group();
-
                         List<TorrentsInfo> torrentsInfos = new ArrayList<>();
-                        group.setItems(torrentsInfos);
+                        group.setItems(torrentsInfos)
+                                .setBgmUrl(bgmUrl);
                         String label = subgroupText.select("a.subgroup-name").text().trim();
                         // id锚点，例如 #213
                         String id = subgroupText.select("a.subgroup-name").attr("data-anchor");

@@ -83,6 +83,10 @@ public class Mikan implements Serializable {
          */
         private String rss;
         /**
+         * BgmUrl
+         */
+        private String bgmUrl;
+        /**
          * 更新日
          */
         private String updateDay;

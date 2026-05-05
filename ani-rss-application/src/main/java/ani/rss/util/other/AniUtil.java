@@ -135,8 +135,15 @@ public class AniUtil {
         switch (type) {
             case "mikan":
                 try {
-                    String subgroupId = MikanService.getSubgroupId(url);
-                    MikanService.getMikanInfo(ani, subgroupId);
+                    String subgroup = dto.getSubgroup();
+                    String bgmUrl = dto.getBgmUrl();
+                    if (StrUtil.isAllBlank(subgroup, bgmUrl)) {
+                        String subgroupId = MikanService.getSubgroupId(url);
+                        MikanService.getMikanInfo(ani, subgroupId);
+                    } else {
+                        ani.setBgmUrl(bgmUrl)
+                                .setSubgroup(subgroup);
+                    }
                 } catch (Exception e) {
                     throw new RuntimeException("获取失败");
                 }
