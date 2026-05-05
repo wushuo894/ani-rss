@@ -151,7 +151,12 @@ public class AnimeGardenService {
                     String name = fansub.getName();
                     Date createdAt = it.getCreatedAt();
 
-                    String rss = StrUtil.format("{}/feed.xml?subject={}&fansub={}", HOST, bgmId, name);
+                    String rss = StrUtil.format(
+                            "{}/feed.xml?subject={}&fansub={}",
+                            HOST,
+                            bgmId,
+                            name.replace("&", "%26")
+                    );
 
                     return new AnimeGarden.Group()
                             .setId(id)

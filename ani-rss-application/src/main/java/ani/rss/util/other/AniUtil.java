@@ -125,7 +125,6 @@ public class AniUtil {
         Assert.notBlank(url, "RSS地址 不能为空");
 
         type = StrUtil.blankToDefault(type, "mikan");
-        url = URLUtil.decode(url.trim(), StandardCharsets.UTF_8);
 
         Ani ani = AniUtil.createAni();
         ani.setUrl(url);
