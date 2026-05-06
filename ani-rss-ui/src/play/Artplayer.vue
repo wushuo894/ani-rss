@@ -63,6 +63,15 @@
                 SenPlayer
               </el-text>
             </el-dropdown-item>
+            <el-dropdown-item
+                @click="openUrl(`infuse://x-callback-url/play?url=${playItem.src}&filename=${playItem.name}`)">
+              <el-text>
+                <el-icon>
+                  <img alt="Infuse" class="el-icon--left icon" src="../icon/icon-Infuse.webp"/>
+                </el-icon>
+                Infuse
+              </el-text>
+            </el-dropdown-item>
           </el-dropdown-menu>
         </template>
       </el-dropdown>

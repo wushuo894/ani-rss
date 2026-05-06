@@ -27,7 +27,7 @@
                   <el-button @click="mikanRef?.show()" text bg type="primary"
                              :disabled="rssButtonLoading">
                     <template #icon>
-                      <img src="@/icon/icon-mikan.png" alt="mikan" class="icon el-icon--left"/>
+                      <img src="@/icon/icon-Mikan.png" alt="mikan" class="icon el-icon--left"/>
                     </template>
                     Mikan
                   </el-button>
