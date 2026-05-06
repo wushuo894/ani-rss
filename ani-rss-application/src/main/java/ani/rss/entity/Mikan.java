@@ -1,14 +1,11 @@
 package ani.rss.entity;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
 import java.io.Serializable;
 import java.util.List;
-import java.util.Set;
 
 /**
  * mikan
@@ -94,19 +91,7 @@ public class Mikan implements Serializable {
          * 下载项
          */
         private List<TorrentsInfo> items;
-        /**
-         * Regex
-         */
-        private List<List<RegexItem>> regexList;
-        private Set<String> tags;
-    }
 
-    @Data
-    @Accessors(chain = true)
-    @AllArgsConstructor
-    @NoArgsConstructor
-    public static class RegexItem implements Serializable {
-        private String label;
-        private String regex;
+        private GroupRegex groupRegex;
     }
 }

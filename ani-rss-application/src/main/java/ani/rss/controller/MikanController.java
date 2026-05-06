@@ -1,8 +1,9 @@
 package ani.rss.controller;
 
 import ani.rss.annotation.Auth;
-import ani.rss.commons.GsonStatic;
+import ani.rss.commons.GroupRegexUtils;
 import ani.rss.entity.Global;
+import ani.rss.entity.GroupRegex;
 import ani.rss.entity.Mikan;
 import ani.rss.entity.TorrentsInfo;
 import ani.rss.entity.web.Result;
@@ -10,10 +11,8 @@ import ani.rss.service.MikanService;
 import ani.rss.util.basic.HttpReq;
 import ani.rss.util.other.ConfigUtil;
 import cn.hutool.core.codec.Base64;
-import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IoUtil;
-import cn.hutool.core.util.ReUtil;
 import cn.hutool.core.util.ReflectUtil;
 import cn.hutool.core.util.URLUtil;
 import cn.hutool.http.HttpConnection;
@@ -29,10 +28,7 @@ import java.io.File;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URI;
-import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.function.Consumer;
 
 @RestController
@@ -55,39 +51,11 @@ public class MikanController extends BaseController {
     public Result<List<Mikan.Group>> mikanGroup(@RequestParam("url") String url) {
         List<Mikan.Group> groups = mikanService.getGroups(url);
 
-        List<String> regexItemList = List.of(
-                "1920[Xx]1080", "3840[Xx]2160", "1080[Pp]", "4[Kk]", "720[Pp]",
-                "繁", "简", "日",
-                "cht|Cht|CHT", "chs|Chs|CHS", "hevc|Hevc|HEVC",
-                "10bit|10Bit|10BIT", "h265|H265", "h264|H264",
-                "内嵌", "内封", "外挂",
-                "mp4|MP4", "mkv|MKV"
-        );
-
         for (Mikan.Group group : groups) {
-            Set<String> tags = new HashSet<>();
-            List<List<Mikan.RegexItem>> regexList = new ArrayList<>();
             List<TorrentsInfo> items = group.getItems();
-            for (TorrentsInfo item : items) {
-                String name = item.getName();
-                List<Mikan.RegexItem> regexItems = new ArrayList<>();
-                for (String regex : regexItemList) {
-                    if (!ReUtil.contains(regex, name)) {
-                        continue;
-                    }
-                    String label = ReUtil.get(regex, name, 0);
-                    label = label.toUpperCase();
-                    Mikan.RegexItem regexItem = new Mikan.RegexItem(label, regex);
-                    regexItems.add(regexItem);
-                    tags.add(label);
-                }
-                regexItems = CollUtil.distinct(regexItems, GsonStatic::toJson, true);
-                regexList.add(regexItems);
-            }
+            GroupRegex groupRegx = GroupRegexUtils.toGroupRegx(items, TorrentsInfo::getName);
 
-            regexList = CollUtil.distinct(regexList, GsonStatic::toJson, true);
-            group.setRegexList(regexList)
-                    .setTags(tags);
+            group.setGroupRegex(groupRegx);
         }
         return Result.success(groups);
     }

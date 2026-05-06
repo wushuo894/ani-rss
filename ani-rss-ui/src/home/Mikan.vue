@@ -104,7 +104,7 @@
                                   <el-text class="mx-1" size="small">{{ group['updateDay'] }}</el-text>
                                 </div>
                                 <div v-if="showTag()">
-                                  <el-tag v-for="tag in group['tags'].slice(0, 5)"
+                                  <el-tag v-for="tag in group['groupRegex']['tags']"
                                           class="tag-margin">
                                     {{ tag }}
                                   </el-tag>
@@ -280,7 +280,7 @@ let regexList = ref([])
 
 let callback = v => {
   let {rss, bgmUrl, label} = v
-  regexList.value = JSON.parse(JSON.stringify(v.regexList))
+  regexList.value = JSON.parse(JSON.stringify(v.groupRegex.regexList))
 
   addAni.value.url = rss
   addAni.value.bgmUrl = bgmUrl
