@@ -20,7 +20,7 @@
             @click="mikanShow"
             text bg>
           <template #icon>
-            <img src="@/icon/icon-mikan.png" alt="mikan" class="icon"/>
+            <img src="@/icon/icon-Mikan.png" alt="mikan" class="icon"/>
           </template>
         </el-button>
       </div>
