@@ -13,11 +13,14 @@ import java.util.function.Function;
 public class GroupRegexUtils {
 
     private final static List<String> REGEX_LIST = List.of(
-            "1920[Xx]1080", "3840[Xx]2160", "1080[Pp]", "4[Kk]", "720[Pp]",
+            "1920[Xx]1080", "3840[Xx]2160",
+            "1080[Pp]", "720[Pp]", "4[Kk]",
             "繁", "简", "日",
-            "cht|Cht|CHT", "chs|Chs|CHS", "hevc|Hevc|HEVC",
-            "10bit|10Bit|10BIT", "h265|H265", "h264|H264",
             "内嵌", "内封", "外挂",
+            "cht|Cht|CHT", "chs|Chs|CHS",
+            "avc|Avc|AVC", "hevc|Hevc|HEVC",
+            "h264|H264", "h265|H265",
+            "10bit|10Bit|10BIT",
             "mp4|MP4", "mkv|MKV"
     );
 
