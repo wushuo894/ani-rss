@@ -125,6 +125,12 @@ public class Config implements Serializable {
     private List<String> priorityKeywords;
 
     /**
+     * 添加订阅时的源筛选规则
+     */
+    @Schema(description = "源筛选规则")
+    private List<String> sourceSelectorPatterns;
+
+    /**
      * 延迟下载
      */
     @Schema(description = "延迟下载(分钟)")

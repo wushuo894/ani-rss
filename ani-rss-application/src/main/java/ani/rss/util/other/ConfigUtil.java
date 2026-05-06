@@ -181,6 +181,14 @@ public class ConfigUtil {
                 .setRenameDelTmdbId(false)
                 .setPriorityKeywordsEnable(false)
                 .setPriorityKeywords(new ArrayList<>())
+                .setSourceSelectorPatterns(List.of(
+                        "1920[Xx]1080", "3840[Xx]2160", "1080[Pp]", "4[Kk]", "720[Pp]",
+                        "繁", "简", "日",
+                        "cht|Cht|CHT", "chs|Chs|CHS", "hevc|Hevc|HEVC",
+                        "10bit|10Bit|10BIT", "h265|H265", "h264|H264",
+                        "内嵌", "内封", "外挂",
+                        "mp4|MP4", "mkv|MKV"
+                ))
                 .setVerifyLoginIp(false)
                 .setAutoTrackersUpdate(false)
                 .setTrackersUpdateUrls("https://cf.trackerslist.com/best.txt")

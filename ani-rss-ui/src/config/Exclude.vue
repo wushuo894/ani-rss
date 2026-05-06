@@ -1,12 +1,12 @@
 <template>
   <el-dialog title="添加正则" v-if="add" v-model:model-value="add" center align-center width="300">
     <el-form label-width="auto">
-      <el-form-item label="字幕组">
+      <el-form-item label="字幕组" v-if="props.showSubgroup">
         <el-input placeholder="留空匹配所有字幕组" v-model="subgroup"></el-input>
       </el-form-item>
-      <div class="exclude-spacer"></div>
-      <el-form-item label="正则">
-        <el-input placeholder="如 720、简、\d-\d" v-model="exclude"></el-input>
+      <div class="exclude-spacer" v-if="props.showSubgroup"></div>
+      <el-form-item :label="props.ruleLabel || '正则'">
+        <el-input :placeholder="props.placeholder || '如 720、简、\\d-\\d'" v-model="exclude"></el-input>
       </el-form-item>
     </el-form>
     <div class="flex exclude-dialog-footer">
@@ -61,7 +61,7 @@
         导入全局排除
       </el-button>
       <el-text class="mx-1" size="small" v-if="props.showText">
-        支持&nbsp;
+        {{ props.helpTextPrefix || '支持' }}&nbsp;
         <el-link
             class="exclude-link"
             type="primary"
@@ -114,7 +114,7 @@ let addExclude = () => {
     ElMessage.error('正则为空')
     return
   }
-  if (subgroup.value) {
+  if (props.showSubgroup && subgroup.value) {
     exclude.value = `{{${subgroup.value}}}:${exclude.value}`
   }
   props.exclude.push(exclude.value)
@@ -126,7 +126,14 @@ let addExclude = () => {
 let props = defineProps({
   exclude: [],
   importExclude: [],
-  showText: Boolean
+  showText: Boolean,
+  showSubgroup: {
+    type: Boolean,
+    default: true
+  },
+  ruleLabel: String,
+  placeholder: String,
+  helpTextPrefix: String
 })
 </script>
 

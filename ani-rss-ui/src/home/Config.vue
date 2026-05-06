@@ -19,6 +19,16 @@
         <el-tab-pane label="全局排除" :lazy="true">
           <Exclude v-model:exclude="config.exclude" :show-text="true"/>
         </el-tab-pane>
+        <el-tab-pane label="源筛选规则" :lazy="true">
+          <Exclude
+              v-model:exclude="config.sourceSelectorPatterns"
+              :show-text="true"
+              :show-subgroup="false"
+              rule-label="规则"
+              placeholder="如 1080[Pp]、CHS、MP4、MKV"
+              help-text-prefix="添加订阅首个筛选菜单支持"
+          />
+        </el-tab-pane>
         <el-tab-pane label="代理设置" :lazy="true">
           <Proxy v-model:config="config"/>
         </el-tab-pane>

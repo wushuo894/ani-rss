@@ -8,9 +8,9 @@ import ani.rss.entity.BgmInfo;
 import ani.rss.util.basic.HttpReq;
 import ani.rss.util.other.AniUtil;
 import ani.rss.util.other.BgmUtil;
+import ani.rss.util.other.SourceSelectorUtil;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.date.DateUtil;
-import cn.hutool.core.util.ReUtil;
 import cn.hutool.core.util.StrUtil;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -170,44 +170,17 @@ public class AnimeGardenService {
 
         list = CollUtil.distinct(list, AnimeGarden.Group::getId, false);
 
-
-        List<String> regexItemList = List.of(
-                "1920[Xx]1080", "3840[Xx]2160", "1080[Pp]", "4[Kk]", "720[Pp]",
-                "繁", "简", "日",
-                "cht|Cht|CHT", "chs|Chs|CHS", "hevc|Hevc|HEVC",
-                "10bit|10Bit|10BIT", "h265|H265", "h264|H264",
-                "内嵌", "内封", "外挂",
-                "mp4|MP4", "mkv|MKV"
-        );
-
         for (AnimeGarden.Group group : list) {
             String id = group.getId();
             List<AnimeGarden.Item> itemList = groupIdMap.get(id);
             group.setItems(itemList);
 
-
-            Set<String> tags = new HashSet<>();
-            List<List<AnimeGarden.RegexItem>> regexList = new ArrayList<>();
-            for (AnimeGarden.Item item : itemList) {
-                String title = item.getTitle();
-                List<AnimeGarden.RegexItem> regexItems = new ArrayList<>();
-                for (String regex : regexItemList) {
-                    if (!ReUtil.contains(regex, title)) {
-                        continue;
-                    }
-                    String label = ReUtil.get(regex, title, 0);
-                    label = label.toUpperCase();
-                    AnimeGarden.RegexItem regexItem = new AnimeGarden.RegexItem(label, regex);
-                    regexItems.add(regexItem);
-                    tags.add(label);
-                }
-                regexItems = CollUtil.distinct(regexItems, GsonStatic::toJson, true);
-                regexList.add(regexItems);
-            }
-
-            regexList = CollUtil.distinct(regexList, GsonStatic::toJson, true);
-            group.setRegexList(regexList)
-                    .setTags(tags);
+            SourceSelectorUtil.SelectorData<AnimeGarden.RegexItem> selectorData = SourceSelectorUtil.build(
+                    itemList.stream().map(AnimeGarden.Item::getTitle).toList(),
+                    AnimeGarden.RegexItem::new
+            );
+            group.setRegexList(selectorData.regexList())
+                    .setTags(selectorData.tags());
 
         }
 
