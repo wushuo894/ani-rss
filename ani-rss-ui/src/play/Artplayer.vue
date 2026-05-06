@@ -22,7 +22,8 @@
                 VLC
               </el-text>
             </el-dropdown-item>
-            <el-dropdown-item @click="openUrl(`iina://weblink?url=${encodeUrl(playItem.src)}`)">
+            <el-dropdown-item
+                @click="openUrl(`iina://weblink?url=${encodeUrl(playItem.src)}&mpv_force-media-title=${playItem.name}`)">
               <el-text>
                 <el-icon>
                   <img alt="IINA" class="el-icon--left icon" src="../icon/icon-IINA.webp"/>
@@ -30,7 +31,7 @@
                 IINA
               </el-text>
             </el-dropdown-item>
-            <el-dropdown-item @click="openUrl(`mpvplay://${playItem.src}`)">
+            <el-dropdown-item @click="openUrl(`mpvplay://${playItem.src}&mpv_force-media-title=${playItem.name}`)">
               <el-text>
                 <el-icon>
                   <img alt="MPV" class="el-icon--left icon" src="../icon/icon-MPV.webp"/>
