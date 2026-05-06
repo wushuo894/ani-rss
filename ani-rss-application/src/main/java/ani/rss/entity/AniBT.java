@@ -1,14 +1,11 @@
 package ani.rss.entity;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
 import java.io.Serializable;
 import java.util.List;
-import java.util.Set;
 
 @Data
 @Accessors(chain = true)
@@ -93,13 +90,7 @@ public class AniBT implements Serializable {
         @Schema(description = "RSS地址")
         private String rss;
 
-        /**
-         * Regex
-         */
-        @Schema(description = "正则表达式列表")
-        private List<List<AniBT.RegexItem>> regexList;
-        @Schema(description = "标签集合")
-        private Set<String> tags;
+        private GroupRegex groupRegex;
     }
 
     @Data
@@ -122,17 +113,5 @@ public class AniBT implements Serializable {
         private String subtitle;
         @Schema(description = "标题")
         private String title;
-    }
-
-    @Data
-    @Accessors(chain = true)
-    @AllArgsConstructor
-    @NoArgsConstructor
-    @Schema(description = "正则表达式项")
-    public static class RegexItem implements Serializable {
-        @Schema(description = "标签")
-        private String label;
-        @Schema(description = "正则表达式")
-        private String regex;
     }
 }
