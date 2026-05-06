@@ -1,4 +1,5 @@
-- fix: 修复更换订阅链接无法更新字幕组信息
+- feat: 增加调用Infuse播放器
+- refactor: 优化调用IINA播放标题
 
 [请不要将本项目在国内宣传](https://github.com/wushuo894/ani-rss/discussions/504)
 
