@@ -1,5 +1,5 @@
-- refactor: 优化字幕组正则匹配
-- fix: 修复不存在的封面错误
+- refactor: 更新Infuse的图标
+- refactor: 更新至 jdk26
 
 [请不要将本项目在国内宣传](https://github.com/wushuo894/ani-rss/discussions/504)
 
