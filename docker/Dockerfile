@@ -1,4 +1,4 @@
-FROM wushuo894/eclipse-temurin:25-jre-alpine
+FROM wushuo894/eclipse-temurin:26-jre-alpine
 
 COPY docker/run.sh /run.sh
 COPY docker/exec.sh /exec.sh
