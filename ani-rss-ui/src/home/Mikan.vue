@@ -513,6 +513,7 @@ let openUrl = (url) => window.open(url)
   cursor: pointer;
   width: 45px;
   height: 45px;
+  object-fit: cover;
 }
 
 .match-content {
