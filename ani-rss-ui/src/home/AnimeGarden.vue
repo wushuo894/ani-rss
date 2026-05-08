@@ -436,6 +436,7 @@ let copy = (v) => {
   cursor: pointer;
   width: 45px;
   height: 45px;
+  object-fit: cover;
 }
 
 .match-content {
