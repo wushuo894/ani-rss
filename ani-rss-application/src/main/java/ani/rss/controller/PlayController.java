@@ -160,7 +160,7 @@ public class PlayController extends BaseController {
 
         PlayItem playItem = new PlayItem();
         playItems.add(playItem);
-        playItem.setFilename(Base64.encode(absolutePath))
+        playItem.setFilename(absolutePath)
                 .setName(videoFileName)
                 .setTitle(videoFileName)
                 .setLastModify(lastModified)
@@ -219,7 +219,7 @@ public class PlayController extends BaseController {
                     return new PlayItem.Subtitles()
                             .setName(subMainName)
                             .setHtml(subMainName.toUpperCase())
-                            .setUrl(Base64.encode(absolutePath))
+                            .setUrl(absolutePath)
                             .setType(FileUtil.extName(sub));
                 }).toList();
         // 去重复

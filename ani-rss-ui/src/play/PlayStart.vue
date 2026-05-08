@@ -10,7 +10,7 @@
 
 import {ref} from "vue";
 import Artplayer from "./Artplayer.vue";
-import {authorization} from "@/js/global.js";
+import {toApiFile} from "@/js/global.js";
 import * as http from "@/js/http.js";
 
 let loading = ref(false);
@@ -19,9 +19,9 @@ let playItem = ref({})
 
 let show = (pi) => {
   playItem.value = {...pi};
-  playItem.value.src = `${location.href}api/file?filename=${playItem.value.filename}&s=${authorization.value}`
+  playItem.value.src = toApiFile(playItem.value.filename)
   for (let subtitle of playItem.value.subtitles) {
-    subtitle.url = `${location.href}api/file?filename=${subtitle.url}&s=${authorization.value}`
+    subtitle.url = toApiFile(subtitle.url)
   }
 
   loading.value = true;

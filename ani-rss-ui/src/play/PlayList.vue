@@ -44,7 +44,6 @@
 </template>
 
 <script setup>
-
 import {ref} from "vue";
 import PlayStart from "./PlayStart.vue";
 import formatTime from "@/js/format-time.js";

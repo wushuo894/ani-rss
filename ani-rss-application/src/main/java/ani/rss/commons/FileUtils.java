@@ -26,12 +26,39 @@ public class FileUtils {
      */
     private static final Set<String> SUBTITLE_FORMAT = Set.of("ass", "ssa", "sub", "srt", "lyc");
 
+    /**
+     * 图片格式
+     */
+    private static final Set<String> IMAGE_FORMAT = Set.of("png", "jpg", "jpeg", "webp", "svg");
+
+    /**
+     * 判断文件名是否为视频
+     *
+     * @param filename 文件名
+     * @return 是/否
+     */
     public static Boolean isVideoFormat(String filename) {
         return isFormat(filename, VIDEO_FORMAT);
     }
 
+    /**
+     * 判断文件名是否为字幕
+     *
+     * @param filename 文件名
+     * @return 是/否
+     */
     public static Boolean isSubtitleFormat(String filename) {
         return isFormat(filename, SUBTITLE_FORMAT);
+    }
+
+    /**
+     * 判断文件名是否为图片
+     *
+     * @param filename 文件名
+     * @return 是/否
+     */
+    public static Boolean isImageFormat(String filename) {
+        return isFormat(filename, IMAGE_FORMAT);
     }
 
     public static Boolean isFormat(String filename, Set<String> extNames) {

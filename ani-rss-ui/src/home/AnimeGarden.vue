@@ -56,7 +56,7 @@
                     <el-collapse-item v-for="anime in item.subjects" :name="anime.id">
                       <template #title>
                         <div class="flex collapse-title">
-                          <img :src="img(anime)" class="cover" v-if="anime.cover"
+                          <img :src="proxyImage(anime['cover'])" class="cover" v-if="anime.cover"
                                @click.stop="open(`https://animes.garden/subject/${anime.id}`)">
                           <div class="flex collapse-title">
                             <el-text :truncated="false" line-clamp="1" size="small"
@@ -138,7 +138,7 @@ import {ElMessage, ElText} from "element-plus";
 import {DocumentCopy} from "@element-plus/icons-vue";
 import * as http from "@/js/http.js";
 import formatTime from "../js/format-time.js";
-import {authorization} from "@/js/global.js";
+import {proxyImage} from "@/js/global.js";
 
 // 批量添加订阅
 let rssList = ref([]);
@@ -242,10 +242,6 @@ let emit = defineEmits(['callback'])
 
 let batchAdditionNum = ref(0)
 let batchAdditionDialogVisible = ref(false)
-
-let img = (it) => {
-  return `api/aniBTCover?img=${btoa(it['cover'])}&s=${authorization.value}`;
-}
 
 let batchAddition = async () => {
   batchAdditionNum.value = 0
