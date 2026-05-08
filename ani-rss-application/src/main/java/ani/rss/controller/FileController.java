@@ -2,12 +2,14 @@ package ani.rss.controller;
 
 import ani.rss.annotation.Auth;
 import ani.rss.commons.ExceptionUtils;
+import ani.rss.commons.FileUtils;
 import ani.rss.entity.Global;
 import ani.rss.entity.web.Header;
 import ani.rss.util.other.ConfigUtil;
 import cn.hutool.core.codec.Base64;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IoUtil;
+import cn.hutool.core.lang.Assert;
 import cn.hutool.core.text.StrFormatter;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.core.util.URLUtil;
@@ -35,12 +37,28 @@ public class FileController extends BaseController {
     @Operation(summary = "获取文件")
     @GetMapping("/file")
     public void file(@RequestParam("filename") String filename) {
-        if (Base64.isBase64(filename)) {
-            filename = filename.replace(" ", "+");
-            filename = Base64.decodeStr(filename);
-        }
+        filename = filename.replace(" ", "+");
+        filename = Base64.decodeStr(filename);
 
+        verifyFileFormat(filename);
         doFile(filename);
+    }
+
+    /**
+     * 校验文件格式
+     */
+    private void verifyFileFormat(String filename) {
+        Assert.notBlank(filename, "不允许访问");
+
+        String extName = FileUtil.extName(filename);
+
+        Assert.notBlank(extName, "不允许访问");
+
+        boolean b = FileUtils.isImageFormat(filename) ||
+                FileUtils.isSubtitleFormat(filename) ||
+                FileUtils.isVideoFormat(filename);
+
+        Assert.isTrue(b, "不允许访问");
     }
 
     /**

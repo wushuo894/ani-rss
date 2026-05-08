@@ -14,7 +14,7 @@
         <el-table-column prop="id" label="id" width="80"/>
         <el-table-column label="封面" width="120">
           <template #default="it">
-            <img :alt="list[it.$index]['name']" :src="img(list[it.$index]['images']['large'])" height="100px"
+            <img :alt="list[it.$index]['name']" :src="proxyImage(list[it.$index]['images']['large'])" height="100px"
                  width="78px">
           </template>
         </el-table-column>
@@ -37,7 +37,7 @@
 </template>
 <script setup>
 import {ref} from "vue";
-import {authorization} from "@/js/global.js";
+import {proxyImage} from "@/js/global.js";
 import * as http from "@/js/http.js";
 
 let dialogVisible = ref(false)
@@ -66,10 +66,6 @@ let show = (s) => {
   }
   list.value = []
   dialogVisible.value = true
-}
-
-let img = (url) => {
-  return `api/mikanCover?img=${btoa(url)}&s=${authorization.value}`;
 }
 
 let ok = (it) => {

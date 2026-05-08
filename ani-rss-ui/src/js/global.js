@@ -129,6 +129,20 @@ const init = () => {
  */
 useEventListener(window, 'resize', useDebounceFn(initLayout, 500))
 
+const base64Encode = s => {
+    const encoder = new TextEncoder();
+    const data = encoder.encode(s);
+    return window.btoa(String.fromCharCode(...data));
+}
+
+const proxyImage = imgUrl => {
+    return `${location.href}api/proxyImage?imgUrl=${base64Encode(imgUrl)}&s=${authorization.value}`
+}
+
+const toApiFile = filename => {
+    return `${location.href}api/file?filename=${base64Encode(filename)}&s=${authorization.value}`
+}
+
 export {
     rememberThePassword,
     authorization,
@@ -144,5 +158,8 @@ export {
     elIconClass,
     init,
     initTheme,
-    initLayout
+    initLayout,
+    base64Encode,
+    proxyImage,
+    toApiFile
 };

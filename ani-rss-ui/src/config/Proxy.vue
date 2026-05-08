@@ -63,6 +63,7 @@ import {onMounted, ref} from "vue";
 import {ElMessage} from "element-plus";
 import {Key, User} from "@element-plus/icons-vue";
 import {testProxy} from "@/js/http.js";
+import {base64Encode} from "@/js/global.js";
 
 let urls = ref([
   'https://mikanani.me',
@@ -89,7 +90,7 @@ let test = () => {
   testLoading.value = true
   status.value = ''
   time.value = ''
-  testProxy(btoa(url.value), props.config)
+  testProxy(base64Encode(url.value), props.config)
       .then(res => {
         status.value = res.data.status
         time.value = res.data.time

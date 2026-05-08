@@ -2,7 +2,7 @@
   <el-card shadow="never">
     <div class="list-card-content">
       <div class="list-card-image-container">
-        <img :src="`api/file?filename=${item['cover']}&s=${authorization}`" height="130" width="92"
+        <img :src="toApiFile(item['cover'])" height="130" width="92"
              :alt="item.title"
              class="list-card-image"
              @click="emit('cover', item)"/>
@@ -93,7 +93,7 @@
 </template>
 
 <script setup>
-import {authorization, isNotMobile, showLastDownloadTime, showPlaylist, showScore} from "@/js/global.js";
+import {isNotMobile, showLastDownloadTime, showPlaylist, showScore, toApiFile} from "@/js/global.js";
 import {Delete, Edit as EditIcon, Files} from "@element-plus/icons-vue";
 
 let openBgmUrl = (it) => {

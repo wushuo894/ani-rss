@@ -3,7 +3,7 @@
     <div class="content">
       <div>
         <el-image :alt="ani.title"
-                  :src="`api/file?filename=${ani['cover']}&s=${authorization}&t=${time}`"
+                  :src="`${toApiFile(ani['cover'])}&t=${time}`"
                   fit="cover"
                   class="cover"
         />
@@ -59,7 +59,7 @@
 import {ref} from "vue";
 import {ElMessage} from "element-plus";
 import {UploadFilled} from "@element-plus/icons-vue";
-import {authorization} from "@/js/global.js";
+import {authorization, toApiFile} from "@/js/global.js";
 import * as http from "@/js/http.js";
 
 let reLoadIng = ref(false)

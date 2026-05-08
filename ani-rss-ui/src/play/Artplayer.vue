@@ -91,11 +91,6 @@ let openUrl = (url) => {
   window.open(url)
 }
 
-// 加密为 Base64
-let encodeToBase64 = (str) => {
-  return btoa(str);
-}
-
 let encodeUrl = (str) => {
   return encodeURIComponent(str);
 }

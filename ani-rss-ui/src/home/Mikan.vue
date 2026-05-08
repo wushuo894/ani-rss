@@ -73,7 +73,7 @@
                     <el-collapse-item v-for="it in item.items" :name="it.url">
                       <template #title>
                         <div class="flex collapse-title">
-                          <img :src="img(it)" class="cover" @click.stop="open(it.url)">
+                          <img :src="proxyImage(it['cover'])" class="cover" @click.stop="open(it.url)">
                           <div class="flex collapse-title">
                             <el-text :truncated="false" line-clamp="1" size="small"
                                      class="title-text">
@@ -156,7 +156,7 @@
 import {ref} from "vue";
 import {ElMessage, ElText} from "element-plus";
 import {DocumentCopy, Download as DownloadIcon} from "@element-plus/icons-vue";
-import {authorization} from "@/js/global.js";
+import {proxyImage} from "@/js/global.js";
 import * as http from "@/js/http.js";
 
 // 批量添加订阅
@@ -289,11 +289,6 @@ let callback = v => {
 
   regexList.value.push([])
   matchDialogVisible.value = true
-}
-
-
-let img = (it) => {
-  return `api/mikanCover?img=${btoa(it['cover'])}&s=${authorization.value}`;
 }
 
 let showTag = () => {
