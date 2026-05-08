@@ -1,5 +1,6 @@
-- refactor: 更新Infuse的图标
-- refactor: 更新至 jdk26
+- fix: 修复AnimeGarden封面不存在的问题
+- fix: 修复类型错误
+- refactor: 优化封面对齐方式
 
 [请不要将本项目在国内宣传](https://github.com/wushuo894/ani-rss/discussions/504)
 
