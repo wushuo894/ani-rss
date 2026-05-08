@@ -124,8 +124,8 @@ let addExclude = () => {
 }
 
 let props = defineProps({
-  exclude: [],
-  importExclude: [],
+  exclude: Array,
+  importExclude: Boolean,
   showText: Boolean
 })
 </script>
