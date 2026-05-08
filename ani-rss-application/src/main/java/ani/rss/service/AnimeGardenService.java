@@ -39,10 +39,12 @@ public class AnimeGardenService {
             String bgmId = BgmUtil.getSubjectId(bgmUrl);
             BgmInfo bgmInfo = BgmUtil.getBgmInfo(bgmId);
             String name = BgmUtil.getFinalName(bgmInfo);
+            BgmInfo.Images images = bgmInfo.getImages();
 
             AnimeGarden.Subject subject = new AnimeGarden.Subject();
             subject.setName(name)
                     .setId(bgmId)
+                    .setCover(images.getSmall())
                     .setExists(true);
 
             week.setWeekLabel("搜索")
