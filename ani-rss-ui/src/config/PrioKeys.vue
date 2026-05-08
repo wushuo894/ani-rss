@@ -98,8 +98,8 @@ let importGlobalKeywords = () => {
 }
 
 let props = defineProps({
-  keywords: [],
-  importGlobal: [],
+  keywords: Array,
+  importGlobal: Boolean,
   showText: Boolean
 })
 </script>
