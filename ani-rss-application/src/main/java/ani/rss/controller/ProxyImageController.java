@@ -34,10 +34,8 @@ public class ProxyImageController extends BaseController {
     @Operation(summary = "下载并缓存图片")
     @GetMapping("/proxyImage")
     public void proxyImage(@RequestParam("imgUrl") String imgUrl) {
-        if (Base64.isBase64(imgUrl)) {
-            imgUrl = imgUrl.replace(" ", "+");
-            imgUrl = Base64.decodeStr(imgUrl);
-        }
+        imgUrl = imgUrl.replace(" ", "+");
+        imgUrl = Base64.decodeStr(imgUrl);
         HttpServletResponse response = Global.RESPONSE.get();
 
         // 30 天
