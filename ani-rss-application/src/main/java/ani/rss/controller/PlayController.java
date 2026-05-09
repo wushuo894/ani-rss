@@ -21,6 +21,7 @@ import jakarta.annotation.Resource;
 import lombok.Cleanup;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.File;
@@ -36,17 +37,13 @@ public class PlayController extends BaseController {
     @Auth
     @Operation(summary = "获取内封字幕")
     @PostMapping("/getSubtitles")
-    public Result<List<PlayItem.Subtitles>> getSubtitles(@RequestBody Map<String, String> map) throws IOException {
-        String file = map.get("file");
-        Assert.notBlank(file);
-
-        if (Base64.isBase64(file)) {
-            file = Base64.decodeStr(file);
-        }
+    public Result<List<PlayItem.Subtitles>> getSubtitles(@RequestParam("filename") String filename) throws IOException {
+        filename = filename.replace(" ", "+");
+        filename = Base64.decodeStr(filename);
 
         List<PlayItem.Subtitles> subtitlesList = new ArrayList<>();
 
-        String extName = FileUtil.extName(file);
+        String extName = FileUtil.extName(filename);
         if (StrUtil.isBlank(extName)) {
             return Result.success(subtitlesList);
         }
@@ -55,10 +52,10 @@ public class PlayController extends BaseController {
             return Result.success(subtitlesList);
         }
 
-        Assert.isTrue(FileUtil.exist(file), "视频文件不存在");
+        Assert.isTrue(FileUtil.exist(filename), "视频文件不存在");
 
         @Cleanup
-        EBMLReader reader = new EBMLReader(file);
+        EBMLReader reader = new EBMLReader(filename);
         if (!reader.readHeader()) {
             return Result.success(subtitlesList);
         }

@@ -1,6 +1,6 @@
 import api from "@/js/api.js";
 import CryptoJS from "crypto-js";
-import {authorization} from "./global.js";
+import {authorization, base64Encode} from "./global.js";
 
 /**
  * 获取设置
@@ -326,10 +326,12 @@ export let playList = (ani) => api.post('api/playList', ani)
 
 /**
  * 获取内封字幕
- * @param file 视频文件路径
+ * @param filename 视频文件路径
  * @returns {Promise<unknown>}
  */
-export let getSubtitles = (file) => api.post('api/getSubtitles', {file})
+export let getSubtitles = (filename) => {
+    return api.post(`api/getSubtitles?filename=${base64Encode(filename)}`);
+}
 
 /**
  * 开始下载合集
