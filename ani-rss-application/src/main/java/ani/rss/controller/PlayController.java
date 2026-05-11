@@ -152,7 +152,7 @@ public class PlayController extends BaseController {
 
         String videoFileName = file.getName();
         long lastModified = file.lastModified();
-        String size = videoFileLength / (1024 * 1024) + "M";
+        String formatSize = FileUtils.formatSize(file);
         String absolutePath = FileUtils.getAbsolutePath(file);
 
         PlayItem playItem = new PlayItem();
@@ -162,7 +162,7 @@ public class PlayController extends BaseController {
                 .setTitle(videoFileName)
                 .setLastModify(lastModified)
                 .setEpisode(1.0)
-                .setSize(size)
+                .setFormatSize(formatSize)
                 .setExtName(extName)
                 .setSubtitles(subtitles);
 

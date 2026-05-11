@@ -17,7 +17,10 @@ import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.text.StrFormatter;
 import cn.hutool.core.thread.ThreadUtil;
-import cn.hutool.core.util.*;
+import cn.hutool.core.util.CharsetUtil;
+import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.core.util.ReUtil;
+import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.HttpResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.extern.slf4j.Slf4j;
@@ -237,12 +240,10 @@ public class CollectionController extends BaseController {
                 .map(item -> {
                     long length = item.getLength();
 
-                    Double l = length / 1024.0 / 1024;
-
-                    String size = NumberUtil.decimalFormat("0.00", l) + "MB";
+                    String formatSize = FileUtils.formatSize(length, true);
 
                     item
-                            .setSize(size)
+                            .setFormatSize(formatSize)
                             .setSubgroup(ani.getSubgroup());
 
                     RenameUtil.rename(ani, item);

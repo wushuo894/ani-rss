@@ -29,7 +29,10 @@ import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.io.resource.ResourceUtil;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.text.StrFormatter;
-import cn.hutool.core.util.*;
+import cn.hutool.core.util.ClassUtil;
+import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.util.ZipUtil;
 import cn.hutool.extra.spring.SpringUtil;
 import cn.hutool.http.HttpRequest;
 import io.swagger.v3.oas.annotations.Operation;
@@ -165,9 +168,9 @@ public class ConfigController extends BaseController {
         // 清理 mikan 预览封面
         FileUtil.del(configDirStr + "/img");
 
-        String mb = NumberUtil.decimalFormat("0.00", size / 1024.0 / 1024.0);
+        String formatSize = FileUtils.formatSize(size, true);
 
-        return Result.success("清理完成, 共清理{}MB", mb);
+        return Result.success("清理完成, 共清理 {}", formatSize);
     }
 
     @Auth

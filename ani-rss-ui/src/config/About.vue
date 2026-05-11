@@ -63,6 +63,9 @@
         <el-form-item label="发布时间">
           {{ about.date }}
         </el-form-item>
+        <el-form-item label="大小">
+          {{ about['formatSize'] }}
+        </el-form-item>
         <el-form-item label="更新内容">
           <el-scrollbar class="about-scrollbar" :always="true">
             <div class="markdown-body about-markdown" v-html="md.render(about.markdownBody)"></div>

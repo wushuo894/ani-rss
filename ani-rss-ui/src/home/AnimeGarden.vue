@@ -107,7 +107,8 @@
                                     </h5>
                                     <div class="item-footer">
                                       <p>
-                                        {{ formatTime(ti['createdAt']) }}
+                                        {{ ti['formatSize'] }}
+                                        {{ ti['createdAt'] }}
                                       </p>
                                       <div>
                                         <el-button :icon="DocumentCopy" bg text @click="copy(ti['magnet']  )"/>
@@ -137,7 +138,6 @@ import {ref} from "vue";
 import {ElMessage, ElText} from "element-plus";
 import {DocumentCopy} from "@element-plus/icons-vue";
 import * as http from "@/js/http.js";
-import formatTime from "../js/format-time.js";
 import {proxyImage} from "@/js/global.js";
 
 // 批量添加订阅

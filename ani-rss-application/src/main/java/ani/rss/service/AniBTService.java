@@ -1,5 +1,6 @@
 package ani.rss.service;
 
+import ani.rss.commons.FileUtils;
 import ani.rss.commons.GsonStatic;
 import ani.rss.commons.WeekComparator;
 import ani.rss.entity.Ani;
@@ -77,6 +78,14 @@ public class AniBTService {
                         String rss = "https://anibt.net/rss/anime.xml?bgmId={}&groupSlug={}";
                         rss = StrUtil.format(rss, bgmId, slug);
                         group.setRss(rss);
+
+                        List<AniBT.Item> items = group.getItems();
+                        for (AniBT.Item item : items) {
+                            Long size = item.getSize();
+                            String formatSize = FileUtils.formatSize(size, true);
+                            item.setFormatSize(formatSize);
+                        }
+
                     }
                     return groupList;
                 });

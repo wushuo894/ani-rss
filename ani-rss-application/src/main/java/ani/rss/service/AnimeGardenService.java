@@ -1,5 +1,6 @@
 package ani.rss.service;
 
+import ani.rss.commons.FileUtils;
 import ani.rss.commons.GroupRegexUtils;
 import ani.rss.commons.GsonStatic;
 import ani.rss.commons.WeekComparator;
@@ -139,6 +140,11 @@ public class AnimeGardenService {
                 .filter(it -> {
                     AnimeGarden.Fansub fansub = it.getFansub();
                     return Objects.nonNull(fansub);
+                })
+                .peek(it -> {
+                    Long size = it.getSize();
+                    String formatSize = FileUtils.formatSize(size, true);
+                    it.setFormatSize(formatSize);
                 })
                 .toList();
 

@@ -50,11 +50,10 @@
             <el-button :loading="searchLoading" bg icon="Search" text @click="search">搜索</el-button>
           </div>
           <div v-if="data.seasons.length" class="flex season-selector">
-            <el-select v-model:model-value="season" :disabled="text.length > 0 || loading" class="season-select"
+            <el-select v-model:model-value="seasonSelect" :disabled="text.length > 0 || loading" class="season-select"
                        @change="change">
-              <el-option v-for="item in data.seasons" :key="item.year+' '+item.season"
-                         :label="item.year+' '+item.season" :value="item.year+' '+item.season">
-              </el-option>
+              <el-option v-for="season in data.seasons" :key="season['seasonLabel']"
+                         :label="season['seasonLabel']" :value="season['seasonLabel']"/>
             </el-select>
             <el-button :disabled="rssList.length < 1" bg icon="Plus" text @click="batchAddition">批量添加</el-button>
           </div>
@@ -62,15 +61,15 @@
         <div v-loading="loading" class="scroll-container">
           <el-scrollbar>
             <el-collapse v-model="activeName">
-              <el-collapse-item v-for="item in data.items" :name="item.label">
+              <el-collapse-item v-for="week in data.weeks" :name="week.weekLabel">
                 <template #title>
                   <span style="margin-left: 4px;font-weight: bold;">
-                    {{ item.label }}
+                    {{ week.weekLabel }}
                   </span>
                 </template>
                 <div class="collapse-content">
                   <el-collapse accordion @change="collapseChange">
-                    <el-collapse-item v-for="it in item.items" :name="it.url">
+                    <el-collapse-item v-for="it in week.items" :name="it.url">
                       <template #title>
                         <div class="flex collapse-title">
                           <img :src="proxyImage(it['cover'])" class="cover" @click.stop="open(it.url)">
@@ -121,12 +120,12 @@
                                 <el-card shadow="never">
                                   <div>
                                     <h5>
-                                      {{ ti.name }}
+                                      {{ ti.title }}
                                     </h5>
                                     <div class="item-footer">
                                       <p>
-                                        {{ ti['sizeStr'] }}
-                                        {{ ti['dateStr'] }}
+                                        {{ ti['formatSize'] }}
+                                        {{ ti['createdAt'] }}
                                       </p>
                                       <div>
                                         <el-button :icon="DocumentCopy" bg text @click="copy(ti['magnet'])"/>
@@ -171,10 +170,10 @@ let data = ref({
   'items': []
 })
 
-let season = ref('')
+let seasonSelect = ref('')
 
 let show = (name) => {
-  season.value = ''
+  seasonSelect.value = ''
   dialogVisible.value = true
   text.value = ''
   data.value = {
@@ -214,7 +213,7 @@ let list = async (body, text) => {
   body = body ? body : {}
   return http.mikan(text, body)
       .then(res => {
-        let {seasons, items, totalItems} = res.data;
+        let {seasons, weeks, totalItems} = res.data;
 
         if (totalItems < 1) {
           ElMessage.warning("搜索结果为空")
@@ -223,13 +222,13 @@ let list = async (body, text) => {
         if (seasons.length) {
           data.value.seasons = seasons
         }
-        data.value.items = items
-        if (items.length) {
-          activeName.value = items[0].label
+        data.value.weeks = weeks
+        if (weeks.length) {
+          activeName.value = weeks[0].weekLabel
         }
-        for (let item of data.value.seasons) {
-          if (item['select'] && !season.value) {
-            season.value = item['year'] + ' ' + item['season']
+        for (let season of data.value.seasons) {
+          if (season['select'] && !seasonSelect.value) {
+            seasonSelect.value = season['seasonLabel']
             return
           }
         }
@@ -240,7 +239,7 @@ let list = async (body, text) => {
 }
 
 let change = (v) => {
-  let body = data.value.seasons.filter(item => (item['year'] + ' ' + item['season']) === v)
+  let body = data.value.seasons.filter(item => item['seasonLabel'] === v)
   if (body.length) {
     list(body[0])
   }

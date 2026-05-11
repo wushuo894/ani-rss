@@ -115,8 +115,8 @@
                                     </h5>
                                     <div class="item-footer">
                                       <p>
+                                        {{ ti['formatSize'] }}
                                         {{ formatTime(ti['publishedAt']) }}
-                                        {{ ti['resolution'] }}
                                       </p>
                                       <div>
                                         <el-button :icon="DocumentCopy" bg text @click="copy(ti['magnet']  )"/>

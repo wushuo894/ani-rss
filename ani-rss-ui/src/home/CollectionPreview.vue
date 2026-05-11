@@ -11,7 +11,7 @@
         <el-table-column label="标题" min-width="400" prop="title"/>
         <el-table-column label="重命名" min-width="280" prop="reName"/>
         <el-table-column label="集数" prop="episode"/>
-        <el-table-column label="大小" min-width="100" prop="size"/>
+        <el-table-column label="大小" min-width="100" prop="formatSize"/>
       </el-table>
     </div>
     <div v-if="subgroup !== props.data.ani.subgroup && subgroup" style="margin-top:12px;">

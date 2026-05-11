@@ -101,12 +101,16 @@ public class UpdateUtil {
                         continue;
                     }
 
+                    Long size = asset.getSize();
+                    String formatSize = FileUtils.formatSize(size, true);
+
                     String sha256 = asset.getDigest()
                             .replace("sha256:", "");
 
                     about.setDownloadUrl(asset.getBrowserDownloadUrl())
                             .setSha256(sha256)
-                            .setSize(asset.getSize());
+                            .setSize(size)
+                            .setFormatSize(formatSize);
                 }
             });
         } catch (Exception e) {

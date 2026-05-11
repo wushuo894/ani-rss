@@ -87,6 +87,7 @@ public class AnimeGarden implements Serializable {
         private String magnet;
         @Schema(description = "大小")
         private Long size;
+        private String formatSize;
         @Schema(description = "创建时间")
         private Date createdAt;
         @Schema(description = "获取时间")
