@@ -22,7 +22,7 @@
               </div>
               <div>
                 <el-tag class="torrents-tag-right" type="success">
-                  {{ torrentsInfo['sizeStr'] }}&nbsp;MB
+                  {{ torrentsInfo['formatSize'] }}
                 </el-tag>
                 <el-tag type="primary">
                   {{ torrentsInfo['state'] }}

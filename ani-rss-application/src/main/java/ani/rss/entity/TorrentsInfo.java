@@ -1,5 +1,6 @@
 package ani.rss.entity;
 
+import ani.rss.commons.FileUtils;
 import cn.hutool.core.util.NumberUtil;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
@@ -71,7 +72,7 @@ public class TorrentsInfo implements Serializable {
      * 大小
      */
     @Schema(description = "大小(字符串)")
-    private String sizeStr;
+    private String formatSize;
 
     /**
      * 时间
@@ -107,9 +108,11 @@ public class TorrentsInfo implements Serializable {
             );
         }
 
+        String formatSize = FileUtils.formatSize(size, true);
+
         this.setCompleted(completed);
         this.setSize(size);
-        this.setSizeStr(NumberUtil.roundStr((size * 1.0) / 1024 / 1024, 2));
+        this.setFormatSize(formatSize);
         return this;
     }
 

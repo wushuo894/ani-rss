@@ -15,7 +15,7 @@
                   </el-tooltip>
                   <br/>
                   <el-text size="small" type="info">
-                    {{ it.size }}&nbsp;|&nbsp;{{ it.lastModifyFormat }}
+                    {{ it.formatSize }}&nbsp;|&nbsp;{{ it.lastModifyFormat }}
                   </el-text>
                 </div>
                 <el-button circle

@@ -46,10 +46,10 @@ public class PlayItem implements Serializable {
     private Double episode;
 
     /**
-     * 文件大小 MB
+     * 文件大小
      */
-    @Schema(description = "文件大小 MB")
-    private String size;
+    @Schema(description = "文件大小")
+    private String formatSize;
 
     /**
      * 扩展名

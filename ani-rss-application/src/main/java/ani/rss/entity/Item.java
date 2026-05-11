@@ -48,7 +48,7 @@ public class Item implements Serializable {
      * 大小
      */
     @Schema(description = "大小")
-    private String size;
+    private String formatSize;
 
     /**
      * 大小

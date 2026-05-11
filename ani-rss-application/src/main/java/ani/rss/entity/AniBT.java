@@ -113,5 +113,8 @@ public class AniBT implements Serializable {
         private String subtitle;
         @Schema(description = "标题")
         private String title;
+        @Schema(description = "大小")
+        private Long size;
+        private String formatSize;
     }
 }

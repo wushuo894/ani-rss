@@ -1,10 +1,14 @@
 package ani.rss.service;
 
-import ani.rss.entity.*;
+import ani.rss.entity.Ani;
+import ani.rss.entity.Config;
+import ani.rss.entity.Mikan;
+import ani.rss.entity.MikanInfo;
 import ani.rss.util.basic.HttpReq;
 import ani.rss.util.other.AniUtil;
 import ani.rss.util.other.ConfigUtil;
 import cn.hutool.core.collection.ListUtil;
+import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.ReUtil;
 import cn.hutool.core.util.StrUtil;
@@ -68,9 +72,9 @@ public class MikanService {
         JsonObject jsonObject = scoreAtomicReference.get();
         Mikan mikan = mikanAtomicReference.get();
 
-        List<Mikan.Item> items = mikan.getItems();
-        for (Mikan.Item item : items) {
-            List<MikanInfo> mikanInfos = item.getItems();
+        List<Mikan.Week> weeks = mikan.getWeeks();
+        for (Mikan.Week week : weeks) {
+            List<MikanInfo> mikanInfos = week.getItems();
             for (MikanInfo mikanInfo : mikanInfos) {
                 String url = mikanInfo.getUrl();
                 String id = ReUtil.get("\\d+(/)?$", url, 0);
@@ -93,7 +97,7 @@ public class MikanService {
                 .collect(Collectors.toSet());
 
         Mikan mikan = new Mikan();
-        List<Mikan.Item> items = new ArrayList<>();
+        List<Mikan.Week> weeks = new ArrayList<>();
         List<Mikan.Season> seasons = new ArrayList<>();
 
         String regex = "^bangumiId: (\\d+)$";
@@ -103,15 +107,15 @@ public class MikanService {
 
             MikanInfo mikanInfo = getMikanInfo(bangumiId);
 
-            items.add(
-                    new Mikan.Item()
-                            .setLabel("Search")
+            weeks.add(
+                    new Mikan.Week()
+                            .setWeekLabel("Search")
                             .setItems(Collections.singletonList(mikanInfo))
             );
 
             return mikan
                     .setTotalItem(1)
-                    .setItems(items)
+                    .setWeeks(weeks)
                     .setSeasons(seasons);
         }
 
@@ -140,10 +144,14 @@ public class MikanService {
                                 Element a = seasonItem.selectFirst("a");
                                 String dataYear = a.attr("data-year");
                                 String dataSeason = a.attr("data-season");
-                                seasons.add(new Mikan.Season()
-                                        .setYear(Integer.parseInt(dataYear))
-                                        .setSeason(dataSeason)
-                                        .setSelect(dateText.equals(dataYear + " " + a.text())));
+                                String selectLabel = StrUtil.format("{} {}", dataYear, dataSeason);
+                                seasons.add(
+                                        new Mikan.Season()
+                                                .setYear(Integer.parseInt(dataYear))
+                                                .setSeason(dataSeason)
+                                                .setSeasonLabel(selectLabel)
+                                                .setSelect(dateText.startsWith(selectLabel))
+                                );
                             }
                         }
                     }
@@ -183,11 +191,11 @@ public class MikanService {
                     if (skBangumis.isEmpty()) {
                         List<MikanInfo> mikanInfos = get.apply(document.selectFirst(".an-ul"));
 
-                        Mikan.Item item = new Mikan.Item();
+                        Mikan.Week item = new Mikan.Week();
                         item.setItems(mikanInfos)
-                                .setLabel("Search");
+                                .setWeekLabel("Search");
 
-                        items.add(item);
+                        weeks.add(item);
                     } else {
                         for (Element skBangumi : skBangumis) {
                             List<MikanInfo> mikanInfos = get.apply(skBangumi);
@@ -199,21 +207,21 @@ public class MikanService {
                             // 星期
                             String label = skBangumi.children().get(0).text().trim();
 
-                            Mikan.Item item = new Mikan.Item();
-                            item.setLabel(label)
+                            Mikan.Week week = new Mikan.Week();
+                            week.setWeekLabel(label)
                                     .setItems(mikanInfos);
-                            items.add(item);
+                            weeks.add(week);
                         }
                     }
                 });
 
-        int totalItems = items
+        int totalItems = weeks
                 .stream()
                 .mapToInt(it -> it.getItems().size())
                 .sum();
 
         return mikan
-                .setItems(items)
+                .setWeeks(weeks)
                 .setTotalItem(totalItems)
                 .setSeasons(seasons);
     }
@@ -244,8 +252,8 @@ public class MikanService {
 
                     for (Element subgroupText : subgroupTitles) {
                         Mikan.Group group = new Mikan.Group();
-                        List<TorrentsInfo> torrentsInfos = new ArrayList<>();
-                        group.setItems(torrentsInfos)
+                        List<Mikan.Item> items = new ArrayList<>();
+                        group.setItems(items)
                                 .setBgmUrl(bgmUrl);
                         String label = subgroupText.select("a.subgroup-name").text().trim();
                         // id锚点，例如 #213
@@ -261,21 +269,21 @@ public class MikanService {
                         Element table = document.selectFirst(id).nextElementSibling();
                         Element tbody = table.selectFirst("tbody");
                         for (Element tr : tbody.children()) {
-                            String s = tr.select("a").get(0).ownText();
+                            String title = tr.select("a").get(0).ownText();
                             String magnet = tr.select("a").get(1).attr("data-clipboard-text");
-                            String sizeStr = tr.select("td").get(2).text().trim();
+                            String formatSize = tr.select("td").get(2).text().trim();
                             String dateStr = tr.select("td").get(3).text().trim();
 
                             String torrent = tr.select("a").get(2).attr("href");
 
                             String mikanHost = getMikanHost();
 
-                            torrentsInfos.add(
-                                    new TorrentsInfo()
-                                            .setName(s)
+                            items.add(
+                                    new Mikan.Item()
+                                            .setTitle(title)
                                             .setMagnet(magnet)
-                                            .setSizeStr(sizeStr)
-                                            .setDateStr(dateStr)
+                                            .setFormatSize(formatSize)
+                                            .setCreatedAt(DateUtil.parse(dateStr))
                                             .setTorrent(mikanHost + torrent)
                             );
                         }
@@ -325,8 +333,8 @@ public class MikanService {
                         Mikan.Group group = new Mikan.Group();
                         groups.add(group);
 
-                        List<TorrentsInfo> torrentsInfos = new ArrayList<>();
-                        group.setItems(torrentsInfos);
+                        List<Mikan.Item> items = new ArrayList<>();
+                        group.setItems(items);
 
                         String label = subgroupText.select("a.subgroup-name").text().trim();
 
@@ -349,21 +357,21 @@ public class MikanService {
                         Element table = html.selectFirst(id).nextElementSibling();
                         Element tbody = table.selectFirst("tbody");
                         for (Element tr : tbody.children()) {
-                            String s = tr.select("a").get(0).ownText();
+                            String title = tr.select("a").get(0).ownText();
                             String magnet = tr.select("a").get(1).attr("data-clipboard-text");
-                            String sizeStr = tr.select("td").get(2).text().trim();
+                            String formatSize = tr.select("td").get(2).text().trim();
                             String dateStr = tr.select("td").get(3).text().trim();
 
                             String torrent = tr.select("a").get(2).attr("href");
 
                             String mikanHost = getMikanHost();
 
-                            torrentsInfos.add(
-                                    new TorrentsInfo()
-                                            .setName(s)
+                            items.add(
+                                    new Mikan.Item()
+                                            .setTitle(title)
                                             .setMagnet(magnet)
-                                            .setSizeStr(sizeStr)
-                                            .setDateStr(dateStr)
+                                            .setFormatSize(formatSize)
+                                            .setCreatedAt(DateUtil.parse(dateStr))
                                             .setTorrent(mikanHost + torrent)
                             );
                         }

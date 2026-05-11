@@ -56,6 +56,8 @@ public class About implements Serializable {
     @Schema(description = "size")
     private Long size;
 
+    private String formatSize;
+
     /**
      * 更新内容
      */

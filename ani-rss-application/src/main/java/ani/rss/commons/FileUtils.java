@@ -1,6 +1,7 @@
 package ani.rss.commons;
 
 import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.ReUtil;
 import cn.hutool.core.util.StrUtil;
@@ -179,5 +180,36 @@ public class FileUtils {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public static String formatSize(File file) {
+        return formatSize(file.length(), true);
+    }
+
+    public static String formatSize(File file, boolean use1024) {
+        Assert.isTrue(file.exists(), "文件不存在 {}", file);
+        return formatSize(file.length(), use1024);
+    }
+
+    public static String formatSize(long size, boolean use1024) {
+        if (size < 0) {
+            throw new IllegalArgumentException("size must be non-negative");
+        }
+
+        int base = use1024 ? 1024 : 1000;
+        double value = size;
+
+        String[] units = use1024
+                ? new String[]{"B", "KiB", "MiB", "GiB", "TiB"}
+                : new String[]{"B", "KB", "MB", "GB", "TB"};
+
+        int index = 0;
+        while (value >= base && index < units.length - 1) {
+            value /= base;
+            index++;
+        }
+
+        // 保留最多两位小数
+        return String.format("%.2f %s", value, units[index]);
     }
 }

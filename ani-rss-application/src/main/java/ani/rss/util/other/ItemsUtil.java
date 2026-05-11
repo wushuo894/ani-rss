@@ -1,6 +1,7 @@
 package ani.rss.util.other;
 
 import ani.rss.commons.CacheUtils;
+import ani.rss.commons.FileUtils;
 import ani.rss.entity.Ani;
 import ani.rss.entity.Config;
 import ani.rss.entity.Item;
@@ -106,7 +107,7 @@ public class ItemsUtil {
             String length = "";
             String infoHash = "";
 
-            String size = "0MB";
+            String formatSize = "0MiB";
 
             DateTime pubDate = null;
 
@@ -145,7 +146,7 @@ public class ItemsUtil {
                     infoHash = itemChild.getTextContent();
                 }
                 if (itemChildNodeName.equals("nyaa:size")) {
-                    size = itemChild.getTextContent();
+                    formatSize = itemChild.getTextContent();
                 }
 
                 if (itemChildNodeName.equals("pubDate")) {
@@ -195,9 +196,9 @@ public class ItemsUtil {
             infoHash = URLUtil.decode(infoHash);
 
             try {
-                if (StrUtil.isNotBlank(length) && size.equals("0MB")) {
-                    Double l = Long.parseLong(length) / 1024.0 / 1024;
-                    size = NumberUtil.decimalFormat("0.00", l) + "MB";
+                length = StrUtil.nullToDefault(length, "0");
+                if (formatSize.equals("0MiB")) {
+                    formatSize = FileUtils.formatSize(Long.parseLong(length), true);
                 }
             } catch (Exception e) {
                 log.warn(e.getMessage());
@@ -212,7 +213,7 @@ public class ItemsUtil {
                     .setReName(itemTitle)
                     .setTorrent(torrent)
                     .setInfoHash(infoHash)
-                    .setSize(size)
+                    .setFormatSize(formatSize)
                     .setPubDate(pubDate);
 
             Function<String, String> map = s -> {

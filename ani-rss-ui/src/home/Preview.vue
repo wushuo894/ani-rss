@@ -84,7 +84,7 @@
               </el-text>
             </template>
           </el-table-column>
-          <el-table-column prop="size" label="大小" width="120"/>
+          <el-table-column prop="formatSize" label="大小" width="120"/>
           <el-table-column label="种子" width="90">
             <template #default="it">
               <el-button size="small" bg text @click="copy(showItems[it.$index]['torrent'])">复制</el-button>
