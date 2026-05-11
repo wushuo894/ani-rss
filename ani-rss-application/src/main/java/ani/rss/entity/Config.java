@@ -666,6 +666,9 @@ public class Config implements Serializable {
     @Schema(description = "刮削开关")
     private Boolean scrape;
 
+    @Schema(description = "追更天数")
+    private Integer followDay;
+
     /**
      * 重名的订阅将允许被替换
      */

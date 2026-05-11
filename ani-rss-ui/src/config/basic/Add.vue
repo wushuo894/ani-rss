@@ -58,9 +58,6 @@
         </div>
       </div>
     </el-form-item>
-    <el-form-item label="自动刮削">
-      <el-switch v-model:model-value="props.config['scrape']"/>
-    </el-form-item>
     <el-form-item label="开启全局排除">
       <el-switch v-model:model-value="props.config.enabledExclude" :disabled="props.config.importExclude"/>
     </el-form-item>

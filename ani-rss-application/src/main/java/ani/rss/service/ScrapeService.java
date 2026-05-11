@@ -2,9 +2,12 @@ package ani.rss.service;
 
 import ani.rss.commons.FileUtils;
 import ani.rss.entity.Ani;
+import ani.rss.entity.Config;
 import ani.rss.enums.StringEnum;
 import ani.rss.util.basic.HttpReq;
+import ani.rss.util.other.ConfigUtil;
 import ani.rss.util.other.TmdbUtils;
+import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.ReUtil;
@@ -39,10 +42,10 @@ public class ScrapeService {
     /**
      * 刮削
      *
-     * @param ani   订阅
-     * @param force 强制
+     * @param ani         订阅
+     * @param forceScrape 强制刮削
      */
-    public void scrape(Ani ani, Boolean force) {
+    public void scrape(Ani ani, Boolean forceScrape) {
         String title = ani.getTitle();
 
         Tmdb tmdb = ani.getTmdb();
@@ -51,14 +54,13 @@ public class ScrapeService {
             return;
         }
 
-        boolean isForce = Boolean.TRUE.equals(force);
-        boolean isOva = Boolean.TRUE.equals(ani.getOva());
+        boolean isOva = ani.getOva();
         try {
             log.info("正在刮削 ... {}", title);
             if (isOva) {
-                scrapeMovie(ani, isForce);
+                scrapeMovie(ani, forceScrape);
             } else {
-                scrapeTv(ani, isForce);
+                scrapeTv(ani, forceScrape);
             }
             log.info("刮削完成 {}", title);
         } catch (Exception e) {
@@ -229,6 +231,10 @@ public class ScrapeService {
                 .stream()
                 .collect(Collectors.toMap(TmdbEpisode::getEpisodeNumber, it -> it));
 
+        Config config = ConfigUtil.CONFIG;
+        // 追更天数
+        Integer followDay = config.getFollowDay();
+
         // 以下开始保存集的 thumb、nfo
         for (File file : files) {
             String extName = FileUtil.extName(file);
@@ -262,17 +268,31 @@ public class ScrapeService {
 
             TmdbEpisode tmdbEpisode = episodeMap.get(episodeNumber);
 
+            // 该集的播出日期
+            Date airDate = Optional.of(tmdbEpisode)
+                    .map(TmdbEpisode::getAirDate)
+                    .orElse(new Date());
+
+            // 最晚追更时间
+            Date date = DateUtil.offsetDay(new Date(), -followDay);
+
+            // 播出日期 >= 最晚追更时间 强制刷新元数据
+            boolean isFollow = airDate.getTime() >= date.getTime();
+
             // thumb
             String thumbPath = tmdbEpisode.getStillPath();
             if (StrUtil.isNotBlank(thumbPath)) {
                 String thumbExtName = FileUtil.extName(thumbPath);
                 File thumbFile = new File(downloadPath + "/" + mainName + "-thumb." + thumbExtName);
-                saveImages(thumbPath, thumbFile, force);
+
+                // 判断条件: 追更 or 强制
+                saveImages(thumbPath, thumbFile, isFollow || force);
             }
 
-            // 集图片
+            // nfo
             String episodeFile = downloadPath + "/" + mainName + ".nfo";
-            if (force || !FileUtil.exist(episodeFile)) {
+            // 判断条件: 追更 or 强制 or 元数据不存在
+            if (isFollow || force || !FileUtil.exist(episodeFile)) {
                 nfoGenerator.generateEpisodeNfo(tmdbEpisode, episodeFile);
             }
         }

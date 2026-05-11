@@ -221,6 +221,7 @@ public class ConfigUtil {
                 .setTmdbIdPlexMode(false)
                 .setProxyList(proxyList)
                 .setScrape(false)
+                .setFollowDay(14)
                 .setReplace(false)
                 .setMaxFileNameLength(0)
                 .setLimitLoginAttempts(true)
