@@ -34,7 +34,7 @@
                 <el-dropdown-item @click="updateTotalEpisodeNumber(false)">
                   <el-text>
                     <el-icon>
-                      <Refresh/>
+                      <RefreshRight/>
                     </el-icon>
                     更新总集数
                   </el-text>

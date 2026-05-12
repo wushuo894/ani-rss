@@ -531,6 +531,7 @@ public class BgmUtil {
         List<BgmInfo.Tag> tags = bgmInfo.getTags();
         tags = ObjectUtil.defaultIfNull(tags, new ArrayList<>());
         List<JsonObject> infobox = bgmInfo.getInfobox();
+        infobox = ObjectUtil.defaultIfNull(infobox, new ArrayList<>());
 
         // 从标签获取季
         for (BgmInfo.Tag tag : tags) {
