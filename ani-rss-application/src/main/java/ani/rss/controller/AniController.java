@@ -378,6 +378,7 @@ public class AniController extends BaseController {
     @PostMapping("/batchEnable")
     public Result<Void> batchEnable(@RequestParam("value") Boolean value, @RequestBody List<String> ids) {
         Assert.notEmpty(ids, "未选择订阅");
+
         for (Ani ani : AniUtil.ANI_LIST) {
             String id = ani.getId();
             if (!ids.contains(id)) {
