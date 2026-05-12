@@ -53,7 +53,7 @@
   <el-dialog v-if="dialogVisible" v-model="dialogVisible" align-center center title="版本更新"
              class="about-dialog">
     <div v-if="about.update">
-      <el-form label-width="auto">
+      <el-form @submit.prevent label-width="auto">
         <el-form-item label="版本号">
           <el-link type="default" :href="`https://github.com/wushuo894/ani-rss/releases/tag/v${about.latest}`"
                    target="_blank">

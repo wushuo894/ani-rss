@@ -7,9 +7,8 @@
           <img src="../public/icon.svg" height="80" width="80" alt="icon.svg"/>
         </div>
         <h2 class="title-h2">ANI-RSS</h2>
-        <el-form
-            @keyup.enter="login"
-            @submit="login">
+        <el-form @submit.prevent
+                 @keyup.enter="login">
           <el-form-item>
             <el-input v-model.trim="user.username"
                       placeholder="用户名" autocomplete="username">

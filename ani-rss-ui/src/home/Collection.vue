@@ -7,7 +7,7 @@
     <div v-loading="loading" style="height: 500px;">
       <el-scrollbar style="padding: 0 12px;">
         <div>
-          <el-form label-width="auto">
+          <el-form @submit.prevent label-width="auto">
             <el-form-item label="番剧名称">
               <div class="full-width">
                 <div class="flex full-width">

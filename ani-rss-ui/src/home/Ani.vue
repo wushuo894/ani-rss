@@ -7,7 +7,7 @@
   <TmdbGroup ref="tmdbGroupRef" :ani="props.ani"/>
   <div style="height: 500px;">
     <el-scrollbar style="padding: 0 12px;" height="500" ref="scrollbarRef">
-      <el-form label-width="auto">
+      <el-form @submit.prevent label-width="auto">
         <el-form-item label="标题">
           <div class="full-width">
             <div>

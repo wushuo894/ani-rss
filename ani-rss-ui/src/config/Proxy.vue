@@ -1,5 +1,5 @@
 <template>
-  <el-form label-width="auto">
+  <el-form @submit.prevent label-width="auto">
     <el-form-item label="IP">
       <el-input v-model:model-value="props.config.proxyHost" :disabled="!props.config.proxy"
                 placeholder="192.168.0.x"/>

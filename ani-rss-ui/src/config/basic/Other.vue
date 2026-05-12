@@ -1,5 +1,5 @@
 <template>
-  <el-form label-width="auto"
+  <el-form @submit.prevent label-width="auto"
            class="full-width">
     <el-form-item label="Mikan">
       <el-input v-model:model-value="props.config.mikanHost" placeholder="https://mikanime.tv"/>

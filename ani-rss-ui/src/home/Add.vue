@@ -11,7 +11,7 @@
     <div v-show="showRss">
       <el-tabs tab-position="left" v-model="activeName">
         <el-tab-pane label="Mikan" name="mikan">
-          <el-form label-width="auto"
+          <el-form @submit.prevent label-width="auto"
                    style="height: 260px">
             <el-form-item label="RSS 地址">
               <div class="full-width">
@@ -44,7 +44,7 @@
           </el-form>
         </el-tab-pane>
         <el-tab-pane label="AniBT" name="ani-bt">
-          <el-form label-width="auto"
+          <el-form @submit.prevent label-width="auto"
                    style="height: 260px">
             <el-form-item label="RSS 地址">
               <div class="full-width">
@@ -77,7 +77,7 @@
           </el-form>
         </el-tab-pane>
         <el-tab-pane label="AG" name="anime-garden">
-          <el-form label-width="auto"
+          <el-form @submit.prevent label-width="auto"
                    style="height: 260px">
             <el-form-item label="RSS 地址">
               <div class="full-width">
@@ -110,7 +110,7 @@
           </el-form>
         </el-tab-pane>
         <el-tab-pane label="Other" name="other">
-          <el-form label-width="auto"
+          <el-form @submit.prevent label-width="auto"
                    style="height: 200px">
             <el-form-item label="番剧名称">
               <div class="flex full-width">
