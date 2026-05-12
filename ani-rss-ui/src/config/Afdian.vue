@@ -1,5 +1,5 @@
 <template>
-  <el-form>
+  <el-form @submit.prevent>
     <el-form-item label="捐赠状态">
       <div v-if="props.config['tryOut']">
         <el-tag v-if="props.config['verifyExpirationTime']" type="primary">

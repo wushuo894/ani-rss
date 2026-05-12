@@ -1,5 +1,5 @@
 <template>
-  <el-form label-width="auto"
+  <el-form @submit.prevent label-width="auto"
            class="full-width">
     <el-form-item label="自动重命名">
       <el-switch v-model:model-value="props.config.rename"/>

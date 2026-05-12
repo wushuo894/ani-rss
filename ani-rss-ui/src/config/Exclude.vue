@@ -1,6 +1,6 @@
 <template>
   <el-dialog title="添加正则" v-if="add" v-model:model-value="add" center align-center width="300">
-    <el-form label-width="auto">
+    <el-form @submit.prevent label-width="auto">
       <el-form-item label="字幕组">
         <el-input placeholder="留空匹配所有字幕组" v-model="subgroup"></el-input>
       </el-form-item>

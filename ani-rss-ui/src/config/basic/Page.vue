@@ -18,7 +18,7 @@
       <el-button bg icon="Close" text @click="cssDialogVisible = false">关闭</el-button>
     </div>
   </el-dialog>
-  <el-form label-width="auto"
+  <el-form @submit.prevent label-width="auto"
            class="full-width">
     <el-form-item label="外观">
       <el-radio-group v-model="store">

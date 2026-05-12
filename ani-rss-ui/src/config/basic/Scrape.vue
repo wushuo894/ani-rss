@@ -1,5 +1,5 @@
 <template>
-  <el-form label-width="auto"
+  <el-form @submit.prevent label-width="auto"
            class="full-width">
     <el-form-item label="自动刮削">
       <el-switch v-model="props.config['scrape']"/>

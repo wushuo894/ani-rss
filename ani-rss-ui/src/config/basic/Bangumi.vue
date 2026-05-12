@@ -1,6 +1,6 @@
 <template>
   <bangumi-me ref="bangumiMeRef"/>
-  <el-form label-width="auto"
+  <el-form @submit.prevent label-width="auto"
            class="full-width">
     <el-form-item label="获取方式">
       <el-radio-group v-model="props.config['bgmTokenType']">

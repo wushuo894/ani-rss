@@ -1,5 +1,5 @@
 <template>
-  <el-form label-width="auto">
+  <el-form @submit.prevent label-width="auto">
     <el-form-item label="用户名">
       <el-input v-model:model-value="props.config.login.username" autocomplete="new-password">
         <template #prefix>

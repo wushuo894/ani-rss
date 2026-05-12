@@ -11,7 +11,7 @@
       <div style="width: 12px;">
       </div>
       <div style="flex: 1">
-        <el-form label-width="auto">
+        <el-form @submit.prevent label-width="auto">
           <el-form-item label="URL">
             <div class="full-width">
               <div class="flex full-width">
