@@ -1,4 +1,5 @@
-- feat: 增加刮削追更设置 close #669
+- feat: 增加批量刮削
+- refactor: 优化季数识别
 
 [请不要将本项目在国内宣传](https://github.com/wushuo894/ani-rss/discussions/504)
 
