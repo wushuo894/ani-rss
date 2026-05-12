@@ -1,5 +1,8 @@
 package ani.rss;
 
+import ani.rss.entity.BgmInfo;
+import ani.rss.util.other.BgmUtil;
+import ani.rss.util.other.ConfigUtil;
 import ani.rss.util.other.TemplateUtil;
 import org.commonmark.node.Node;
 import org.commonmark.parser.Parser;
@@ -34,6 +37,13 @@ class AniRssApplicationTests {
         String html = TemplateUtil.render("mail.html", map);
 
         System.out.println(html);
+    }
+
+    @Test
+    void bgmTest() {
+        ConfigUtil.load();
+        BgmInfo bgmInfo = BgmUtil.getBgmInfo("510710");
+        System.out.println(bgmInfo);
     }
 
 }

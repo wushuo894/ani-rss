@@ -530,6 +530,7 @@ public class BgmUtil {
         String nameCn = bgmInfo.getNameCn();
         List<BgmInfo.Tag> tags = bgmInfo.getTags();
         tags = ObjectUtil.defaultIfNull(tags, new ArrayList<>());
+        List<JsonObject> infobox = bgmInfo.getInfobox();
 
         // 从标签获取季
         for (BgmInfo.Tag tag : tags) {
@@ -553,6 +554,23 @@ public class BgmUtil {
             int season = getSeasonByName(name);
             if (season > 1) {
                 return season;
+            }
+        }
+
+        // 从别名获取
+        for (JsonObject jsonObject : infobox) {
+            String key = jsonObject.get("key").getAsString();
+            if (!key.equals("别名")) {
+                continue;
+            }
+            JsonArray value = jsonObject.getAsJsonArray("value");
+            for (JsonElement jsonElement : value.asList()) {
+                JsonObject item = jsonElement.getAsJsonObject();
+                String v = item.get("v").getAsString();
+                int season = getSeasonByName(v);
+                if (season > 1) {
+                    return season;
+                }
             }
         }
 

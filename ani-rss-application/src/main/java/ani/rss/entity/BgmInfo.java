@@ -1,5 +1,6 @@
 package ani.rss.entity;
 
+import com.google.gson.JsonObject;
 import com.google.gson.annotations.SerializedName;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
@@ -65,6 +66,8 @@ public class BgmInfo implements Serializable {
     private String platform;
 
     private List<Tag> tags;
+
+    private List<JsonObject> infobox;
 
     private Rating rating;
 
