@@ -32,13 +32,13 @@ public class Result<T> implements Serializable {
         this.data = data;
     }
 
-    @Schema(description = "状态码", defaultValue = "200")
+    @Schema(description = "状态码", example = "200")
     private Integer code;
     @Schema(description = "响应消息")
     private String message;
-    @Schema(description = "数据", defaultValue = "null")
+    @Schema(description = "数据")
     private T data;
-    @Schema(description = "时间戳", defaultValue = "current time")
+    @Schema(description = "时间戳", example = "1715600000000")
     private Long t = System.currentTimeMillis();
 
     public static <Void> Result<Void> success() {
