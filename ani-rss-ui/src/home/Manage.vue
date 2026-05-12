@@ -47,20 +47,20 @@
                     更新总集数 [F]
                   </el-text>
                 </el-dropdown-item>
-                <el-dropdown-item divided @click="importAniRef?.show">
+                <el-dropdown-item divided @click="batchScrape(false)">
                   <el-text>
                     <el-icon>
-                      <Download/>
+                      <RefreshRight/>
                     </el-icon>
-                    导入
+                    刮削
                   </el-text>
                 </el-dropdown-item>
-                <el-dropdown-item @click="exportData">
-                  <el-text>
+                <el-dropdown-item @click="batchScrape(true)">
+                  <el-text type="warning">
                     <el-icon>
-                      <Upload/>
+                      <Refresh/>
                     </el-icon>
-                    导出
+                    刮削 [F]
                   </el-text>
                 </el-dropdown-item>
                 <el-dropdown-item divided @click="batchEnable(true)">
@@ -77,6 +77,22 @@
                       <CircleClose/>
                     </el-icon>
                     禁用
+                  </el-text>
+                </el-dropdown-item>
+                <el-dropdown-item divided @click="importAniRef?.show">
+                  <el-text>
+                    <el-icon>
+                      <Download/>
+                    </el-icon>
+                    导入
+                  </el-text>
+                </el-dropdown-item>
+                <el-dropdown-item @click="exportData">
+                  <el-text>
+                    <el-icon>
+                      <Upload/>
+                    </el-icon>
+                    导出
                   </el-text>
                 </el-dropdown-item>
                 <el-dropdown-item divided @click="delRef?.show(selectList)">
@@ -159,10 +175,10 @@
 </template>
 <script setup>
 import {ref} from "vue";
-import {ElMessage} from "element-plus";
+import {ElMessage, ElText} from "element-plus";
 import Del from "./Del.vue";
 import ImportAni from "@/home/ImportAni.vue";
-import {CircleCheck, CircleClose, Refresh, Remove, Upload} from "@element-plus/icons-vue";
+import {CircleCheck, CircleClose, Refresh, RefreshRight, Remove, Upload} from "@element-plus/icons-vue";
 import * as http from "@/js/http.js";
 
 let releaseDateList = ref([])
@@ -281,6 +297,14 @@ let updateTotalEpisodeNumber = (force) => {
       .then(res => {
         ElMessage.success(res.message)
         reLoadList()
+      })
+}
+
+let batchScrape = (force) => {
+  let ids = selectList.value.map(it => it['id']);
+  http.batchScrape(force, ids)
+      .then(res => {
+        ElMessage.success(res.message)
       })
 }
 

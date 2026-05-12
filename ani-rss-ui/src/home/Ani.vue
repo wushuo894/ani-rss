@@ -272,7 +272,7 @@
                 <el-icon>
                   <Refresh/>
                 </el-icon>
-                强制刮削
+                刮削 [F]
               </el-text>
             </el-dropdown-item>
           </el-dropdown-menu>

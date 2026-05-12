@@ -202,6 +202,14 @@ export let verifyNo = (config) => api.post('api/verifyNo', config)
 export let updateTotalEpisodeNumber = (force, ids) => api.post(`api/updateTotalEpisodeNumber?force=${force}`, ids)
 
 /**
+ * 批量刮削
+ * @param force 强制
+ * @param ids ids
+ * @returns {Promise<unknown>}
+ */
+export let batchScrape = (force, ids) => api.post(`api/batchScrape?force=${force}`, ids)
+
+/**
  * 批量 启用/禁用 订阅
  * @param value true/false
  * @param ids ids
