@@ -1,9 +1,7 @@
 package ani.rss.controller;
 
 import ani.rss.annotation.Auth;
-import ani.rss.commons.GroupRegexUtils;
 import ani.rss.entity.AniBT;
-import ani.rss.entity.GroupRegex;
 import ani.rss.entity.web.Result;
 import ani.rss.service.AniBTService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -34,14 +32,6 @@ public class AniBTController {
     @PostMapping("/aniBTGroup")
     public Result<List<AniBT.Group>> aniBTGroup(@RequestParam("bgmId") String bgmId) {
         List<AniBT.Group> groups = aniBTService.getGroups(bgmId);
-
-        for (AniBT.Group group : groups) {
-            List<AniBT.Item> items = group.getItems();
-            GroupRegex groupRegx = GroupRegexUtils.toGroupRegx(items, AniBT.Item::getTitle);
-
-            group.setBgmId(bgmId)
-                    .setGroupRegex(groupRegx);
-        }
         return Result.success(groups);
     }
 }

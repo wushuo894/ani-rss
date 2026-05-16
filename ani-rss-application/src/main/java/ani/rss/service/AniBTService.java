@@ -1,10 +1,12 @@
 package ani.rss.service;
 
 import ani.rss.commons.FileUtils;
+import ani.rss.commons.GroupRegexUtils;
 import ani.rss.commons.GsonStatic;
 import ani.rss.commons.WeekComparator;
 import ani.rss.entity.Ani;
 import ani.rss.entity.AniBT;
+import ani.rss.entity.GroupRegex;
 import ani.rss.util.basic.HttpReq;
 import ani.rss.util.other.AniUtil;
 import ani.rss.util.other.BgmUtil;
@@ -80,12 +82,16 @@ public class AniBTService {
                         group.setRss(rss);
 
                         List<AniBT.Item> items = group.getItems();
+                        GroupRegex groupRegx = GroupRegexUtils.toGroupRegx(items, AniBT.Item::getTitle);
+
                         for (AniBT.Item item : items) {
                             Long size = item.getSize();
                             String formatSize = FileUtils.formatSize(size, true);
                             item.setFormatSize(formatSize);
                         }
 
+                        group.setBgmId(bgmId)
+                                .setGroupRegex(groupRegx);
                     }
                     return groupList;
                 });

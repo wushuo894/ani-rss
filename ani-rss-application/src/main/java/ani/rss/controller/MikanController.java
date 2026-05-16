@@ -1,8 +1,6 @@
 package ani.rss.controller;
 
 import ani.rss.annotation.Auth;
-import ani.rss.commons.GroupRegexUtils;
-import ani.rss.entity.GroupRegex;
 import ani.rss.entity.Mikan;
 import ani.rss.entity.web.Result;
 import ani.rss.service.MikanService;
@@ -34,13 +32,6 @@ public class MikanController extends BaseController {
     @PostMapping("/mikanGroup")
     public Result<List<Mikan.Group>> mikanGroup(@RequestParam("url") String url) {
         List<Mikan.Group> groups = mikanService.getGroups(url);
-
-        for (Mikan.Group group : groups) {
-            List<Mikan.Item> items = group.getItems();
-            GroupRegex groupRegx = GroupRegexUtils.toGroupRegx(items, Mikan.Item::getTitle);
-
-            group.setGroupRegex(groupRegx);
-        }
         return Result.success(groups);
     }
 }
