@@ -206,11 +206,11 @@ public class RenameUtil {
 
         String bgmEpisodeTitle = is5 ? defaultEpisodeTitle :
                 bgmEpisodeTitleMap.getOrDefault(episode.intValue(), jp -> defaultEpisodeTitle)
-                .apply(false);
+                        .apply(false);
 
         String bgmJpEpisodeTitle = is5 ? defaultEpisodeTitle :
                 bgmEpisodeTitleMap.getOrDefault(episode.intValue(), jp -> defaultEpisodeTitle)
-                .apply(true);
+                        .apply(true);
 
         template = template.replace("${episodeTitle}", episodeTitle);
         template = template.replace("${bgmEpisodeTitle}", bgmEpisodeTitle);

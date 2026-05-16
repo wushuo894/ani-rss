@@ -67,7 +67,7 @@ public class AniController extends BaseController {
                 .findFirst();
 
         if (first.isPresent()) {
-            return Result.error("此订阅已存在");
+            throw new IllegalArgumentException("此订阅已存在");
         }
 
         first = AniUtil.ANI_LIST.stream()
@@ -84,7 +84,7 @@ public class AniController extends BaseController {
                 AniUtil.ANI_LIST.remove(first.get());
                 log.info("自动替换 {} 第{}季", title, season);
             } else {
-                return Result.error("订阅标题重复");
+                throw new IllegalArgumentException("订阅标题重复");
             }
         }
 
