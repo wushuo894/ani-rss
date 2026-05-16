@@ -3,6 +3,7 @@ package ani.rss.entity;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.experimental.Accessors;
+import org.springframework.ai.mcp.annotation.McpToolParam;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -34,14 +35,16 @@ public class Mikan implements Serializable {
         /**
          * 年
          */
-        @Schema(description = "年")
+        @Schema(description = "年 如：2024、2025、2026")
         private Integer year;
         /**
          * 季度
          */
-        @Schema(description = "季度")
+        @Schema(description = "季度 如：春、夏、秋、冬")
         private String season;
+        @McpToolParam(required = false)
         private String seasonLabel;
+        @McpToolParam(required = false)
         private Boolean select;
     }
 

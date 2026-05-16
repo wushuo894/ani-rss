@@ -68,31 +68,31 @@ public class WebMvcConfig implements WebMvcConfigurer {
                     }
                     super.writeInternal(object, type, writer);
                 }
-
-                private boolean isMcpType(@Nullable Type type) {
-                    if (type instanceof Class<?> clazz) {
-                        return isMcpClass(clazz);
-                    }
-                    if (type instanceof ParameterizedType parameterizedType) {
-                        if (isMcpType(parameterizedType.getRawType())) {
-                            return true;
-                        }
-                        for (Type actualTypeArgument : parameterizedType.getActualTypeArguments()) {
-                            if (isMcpType(actualTypeArgument)) {
-                                return true;
-                            }
-                        }
-                    }
-                    return false;
-                }
-
-                private boolean isMcpClass(@Nullable Class<?> clazz) {
-                    return clazz != null && clazz.getName().startsWith("io.modelcontextprotocol.");
-                }
             };
             converter.setGson(GsonStatic.GSON);
             converter.setDefaultCharset(StandardCharsets.UTF_8);
             converters.add(0, converter);
         });
+    }
+
+    private boolean isMcpType(@Nullable Type type) {
+        if (type instanceof Class<?> clazz) {
+            return isMcpClass(clazz);
+        }
+        if (type instanceof ParameterizedType parameterizedType) {
+            if (isMcpType(parameterizedType.getRawType())) {
+                return true;
+            }
+            for (Type actualTypeArgument : parameterizedType.getActualTypeArguments()) {
+                if (isMcpType(actualTypeArgument)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    private boolean isMcpClass(@Nullable Class<?> clazz) {
+        return clazz != null && clazz.getName().startsWith("io.modelcontextprotocol.");
     }
 }

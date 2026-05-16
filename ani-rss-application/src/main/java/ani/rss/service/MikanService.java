@@ -1,9 +1,7 @@
 package ani.rss.service;
 
-import ani.rss.entity.Ani;
-import ani.rss.entity.Config;
-import ani.rss.entity.Mikan;
-import ani.rss.entity.MikanInfo;
+import ani.rss.commons.GroupRegexUtils;
+import ani.rss.entity.*;
 import ani.rss.util.basic.HttpReq;
 import ani.rss.util.other.AniUtil;
 import ani.rss.util.other.ConfigUtil;
@@ -126,7 +124,10 @@ public class MikanService {
             Integer year = season.getYear();
             String seasonStr = season.getSeason();
             if (Objects.nonNull(year) && StrUtil.isNotBlank(seasonStr)) {
-                url = url + "/Home/BangumiCoverFlowByDayOfWeek?year=" + year + "&seasonStr=" + seasonStr;
+                url = StrUtil.format(
+                        "{}/Home/BangumiCoverFlowByDayOfWeek?year={}&seasonStr={}",
+                        url, year, seasonStr
+                );
             }
         }
 
@@ -233,7 +234,7 @@ public class MikanService {
      * @return
      */
     public List<Mikan.Group> getGroups(String url) {
-        return HttpReq.get(url)
+        List<Mikan.Group> groupList = HttpReq.get(url)
                 .thenFunction(res -> {
                     Document document = Jsoup.parse(res.body());
                     List<Mikan.Group> groups = new ArrayList<>();
@@ -291,6 +292,16 @@ public class MikanService {
 
                     return groups;
                 });
+
+
+        for (Mikan.Group group : groupList) {
+            List<Mikan.Item> items = group.getItems();
+            GroupRegex groupRegx = GroupRegexUtils.toGroupRegx(items, Mikan.Item::getTitle);
+
+            group.setGroupRegex(groupRegx);
+        }
+
+        return groupList;
     }
 
     public static MikanInfo getMikanInfo(String bangumiId) {

@@ -121,6 +121,8 @@ public class AniUtil {
     public static Ani getAni(RssToAniDTO dto) {
         String url = dto.getUrl();
         String type = dto.getType();
+        Boolean enable = dto.getEnable();
+        enable = ObjectUtil.defaultIfNull(enable, true);
 
         Assert.notBlank(url, "RSS地址 不能为空");
 
@@ -207,7 +209,8 @@ public class AniUtil {
                 // 是否启用全局排除
                 .setGlobalExclude(enabledExclude)
                 // type mikan or other
-                .setType(type);
+                .setType(type)
+                .setEnable(enable);
 
         subgroup = StrUtil.blankToDefault(subgroup, "未知字幕组");
 
