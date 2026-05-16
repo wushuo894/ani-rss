@@ -6,7 +6,7 @@ COPY ani-rss-application/target/ani-rss.jar /usr/app/ani-rss.jar
 WORKDIR /usr/app
 VOLUME /config
 ENV PUID=0 PGID=0 UMASK=022
-ENV SERVER_PORT=7789 CONFIG=/config TZ=Asia/Shanghai SWAGGER_ENABLED=false
+ENV SERVER_PORT=7789 CONFIG=/config TZ=Asia/Shanghai SWAGGER_ENABLED=false MCP_ENABLED=false
 EXPOSE $SERVER_PORT
 RUN sed -i 's/\r//g' /*.sh && chmod +x /*.sh
 CMD ["/exec.sh"]

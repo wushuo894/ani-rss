@@ -1,6 +1,13 @@
 spring:
   application:
     name: ani-rss-application
+  ai:
+    mcp:
+      server:
+        enabled: ${MCP_ENABLED:false}
+        protocol: streamable
+        streamable-http:
+          mcp-endpoint: /api/mcp
   web:
     resources:
       static-locations: classpath:/META-INF/dist
