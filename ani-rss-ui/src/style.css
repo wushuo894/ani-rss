@@ -294,3 +294,8 @@ html, body, #app {
 .width-200 {
     width: 200px;
 }
+
+.spacer {
+    height: 8px;
+    width: 8px;
+}

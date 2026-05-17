@@ -7,7 +7,7 @@
         <div class="auto-flex">
           <div class="select-width">
             <el-select v-model:model-value="selectFilter"
-                       @change="selectChange">
+                       @change="changeFilterList">
               <el-option v-for="filter in selectFilters"
                          :key="filter.label"
                          :label="filter.label"
@@ -19,11 +19,23 @@
             <el-select
                 v-model:model-value="releaseDate"
                 clearable
-                @change="selectChange">
+                @change="changeFilterList">
               <el-option v-for="it in releaseDateList"
                          :key="it" :label="it" :value="it"
               />
             </el-select>
+          </div>
+          <div class="spacer"></div>
+          <div>
+            <el-input
+                v-model="text"
+                @input="changeFilterList"
+                @clear="changeFilterList"
+                clearable
+                placeholder="搜索"
+                prefix-icon="Search"
+                style="width: 180px;"
+            />
           </div>
         </div>
         <div>
@@ -205,8 +217,21 @@ let selectFilters = ref([
 
 let searchList = ref([])
 
-let selectChange = () => {
+let text = ref('')
+
+let changeFilterList = () => {
+  const filter = item => {
+    if (text.value.length < 1) {
+      return true
+    }
+    let {title, pinyin, pinyinInitials} = item
+    return title.indexOf(text.value) > -1 ||
+        pinyin.indexOf(text.value) > -1 ||
+        pinyinInitials.indexOf(text.value) > -1;
+  }
+
   searchList.value = list.value
+      .filter(filter)
       .filter(it => {
         if (!releaseDate.value) {
           return true
@@ -245,7 +270,7 @@ const getList = () => {
         let data = res.data
         releaseDateList.value = data.releaseDateList
         list.value = data.weekList.flatMap(week => week.items)
-        selectChange()
+        changeFilterList()
       })
       .finally(() => {
         loading.value = false
@@ -324,11 +349,6 @@ defineExpose({show})
 
 .select-width {
   width: 120px;
-}
-
-.spacer {
-  height: 8px;
-  width: 8px;
 }
 
 .manage-count {
