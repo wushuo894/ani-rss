@@ -9,6 +9,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 
 import java.security.Security;
 import java.util.List;
+import java.util.Map;
 
 @EnableScheduling
 @SpringBootApplication
@@ -32,6 +33,26 @@ public class AniRssApplication {
         Security.setProperty("networkaddress.cache.ttl", "30");
         // DNS解析失败过期时间
         Security.setProperty("networkaddress.cache.negative.ttl", "5");
+
+        // 处理命令行参数
+        Map<String, String> mapping = Map.of(
+                "--mcp-enabled", "MCP_ENABLED",
+                "--swagger-enabled", "SWAGGER_ENABLED"
+        );
+
+        mapping.forEach((k, v) -> {
+            for (String arg : Global.ARGS) {
+                if (arg.equals(k)) {
+                    System.setProperty(v, "true");
+                    return;
+                }
+                if (arg.startsWith(k + "=")) {
+                    String value = arg.substring((k + "=").length());
+                    System.setProperty(v, value);
+                    return;
+                }
+            }
+        });
     }
 
 }
