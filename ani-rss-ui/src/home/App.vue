@@ -18,7 +18,7 @@
               prefix-icon="Search"
               style="min-width: 210px"/>
         </div>
-        <div style="height: 8px;width: 8px;"></div>
+        <div class="spacer"></div>
         <div style="min-width: 300px;display: flex">
           <div style="flex: 1;">
             <el-select
@@ -31,7 +31,7 @@
               />
             </el-select>
           </div>
-          <div style="height: 8px;width: 8px;"></div>
+          <div class="spacer"></div>
           <div style="flex: 1;">
             <el-select v-model:model-value="enable"
                        @change="selectChange">

@@ -52,7 +52,7 @@
             </el-icon>
           </template>
         </el-input>
-        <div class="afdian-spacer"></div>
+        <div class="spacer"></div>
         <el-button :loading="verifyNoLoading"
                    bg text
                    type="primary"
@@ -108,10 +108,6 @@
 
 .afdian-input {
   max-width: 200px;
-}
-
-.afdian-spacer {
-  width: 8px;
 }
 
 .afdian-link {
