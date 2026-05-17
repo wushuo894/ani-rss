@@ -132,6 +132,7 @@ Environment="TZ=Asia/Shanghai"
 Environment="SERVER_ADDRESS=0.0.0.0"
 Environment="SERVER_PORT=$SERVER_PORT"
 Environment="SWAGGER_ENABLED=false"
+Environment="MCP_ENABLED=false"
 
 [Install]
 WantedBy=multi-user.target
