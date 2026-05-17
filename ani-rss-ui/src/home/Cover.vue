@@ -16,7 +16,7 @@
             <div class="full-width">
               <div class="flex full-width">
                 <el-input v-model:model-value="ani.image" placeholder="https://lain.bgm.tv/pic/cover/1234.jpg"/>
-                <div style="width: 8px;"/>
+                <div class="spacer"/>
                 <el-button :disabled="!ani.image" :loading="reLoadIng" bg icon="Refresh" text @click="reLoad"/>
               </div>
               <div style="margin-top: 8px;">
