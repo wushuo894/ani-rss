@@ -5,14 +5,16 @@
     <div class="manage-content" v-loading="loading">
       <div class="manage-header">
         <div class="auto-flex">
-          <div class="select-width">
-            <el-select v-model:model-value="selectFilter"
-                       @change="changeFilterList">
-              <el-option v-for="filter in selectFilters"
-                         :key="filter.label"
-                         :label="filter.label"
-                         :value="filter.label"/>
-            </el-select>
+          <div>
+            <el-input
+                v-model="text"
+                @input="changeFilterList"
+                @clear="changeFilterList"
+                clearable
+                placeholder="搜索"
+                prefix-icon="Search"
+                style="width: 180px;"
+            />
           </div>
           <div class="spacer"></div>
           <div class="select-width">
@@ -26,16 +28,14 @@
             </el-select>
           </div>
           <div class="spacer"></div>
-          <div>
-            <el-input
-                v-model="text"
-                @input="changeFilterList"
-                @clear="changeFilterList"
-                clearable
-                placeholder="搜索"
-                prefix-icon="Search"
-                style="width: 180px;"
-            />
+          <div class="select-width">
+            <el-select v-model:model-value="selectFilter"
+                       @change="changeFilterList">
+              <el-option v-for="filter in selectFilters"
+                         :key="filter.label"
+                         :label="filter.label"
+                         :value="filter.label"/>
+            </el-select>
           </div>
         </div>
         <div>
