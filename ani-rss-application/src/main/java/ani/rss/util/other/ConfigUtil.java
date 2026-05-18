@@ -22,6 +22,7 @@ import cn.hutool.core.lang.func.LambdaUtil;
 import cn.hutool.core.text.StrFormatter;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.RandomUtil;
+import cn.hutool.core.util.StrUtil;
 import cn.hutool.core.util.ZipUtil;
 import cn.hutool.crypto.SecureUtil;
 import cn.hutool.extra.spring.SpringUtil;
@@ -33,7 +34,10 @@ import lombok.extern.slf4j.Slf4j;
 import java.io.File;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.UUID;
 import java.util.stream.Stream;
 
 @Slf4j
@@ -84,12 +88,10 @@ public class ConfigUtil {
 
         String apiKey = RandomUtil.randomString(64).toLowerCase();
 
-        Map<String, String> env = System.getenv();
-
-        String downloadToolType = env.getOrDefault("DOWNLOAD_TOOL_TYPE", "qBittorrent");
-        String downloadToolHost = env.getOrDefault("DOWNLOAD_TOOL_HOST", "");
-        String downloadToolUsername = env.getOrDefault("DOWNLOAD_TOOL_USERNAME", "");
-        String downloadToolPassword = env.getOrDefault("DOWNLOAD_TOOL_PASSWORD", "");
+        String downloadToolType = SystemUtil.get("DOWNLOAD_TOOL_TYPE", "qBittorrent");
+        String downloadToolHost = SystemUtil.get("DOWNLOAD_TOOL_HOST", "");
+        String downloadToolUsername = SystemUtil.get("DOWNLOAD_TOOL_USERNAME", "");
+        String downloadToolPassword = SystemUtil.get("DOWNLOAD_TOOL_PASSWORD", "");
 
         String proxyList = """
                 mikanani.me
@@ -238,19 +240,19 @@ public class ConfigUtil {
      * @return
      */
     public static File getConfigDir() {
-        Map<String, String> env = System.getenv();
-        if (env.containsKey("CONFIG")) {
-            return new File(env.get("CONFIG"));
+        String configDir = SystemUtil.get("CONFIG");
+        if (StrUtil.isNotBlank(configDir)) {
+            return new File(configDir);
         }
 
+        // 若当前目录存在 config 则优先使用
         File file = new File("config").getAbsoluteFile();
-
         if (file.exists()) {
             return file;
         }
 
+        // macOS / Windows 默认为 用户目录/ani-rss
         OsInfo osInfo = SystemUtil.getOsInfo();
-
         if (osInfo.isWindows() || osInfo.isMac()) {
             file = new File(FileUtil.getUserHomePath() + "/ani-rss");
         }
