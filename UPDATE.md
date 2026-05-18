@@ -1,1 +1,2 @@
-- feat: swagger 与 mcp 增加启动参数支持 `--mcp-enabled`、`--swagger-enabled`
+- feat: 支持启动参数 `--config`
+- feat: 管理页面支持标题搜索
