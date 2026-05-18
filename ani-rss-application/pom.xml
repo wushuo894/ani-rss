@@ -94,6 +94,12 @@
             <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
         </dependency>
 
+        <!-- Spring AI -->
+        <dependency>
+            <groupId>org.springframework.ai</groupId>
+            <artifactId>spring-ai-starter-mcp-server-webmvc</artifactId>
+        </dependency>
+
         <!-- SpringBoot -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -149,10 +155,6 @@
             <groupId>cn.hutool</groupId>
             <artifactId>hutool-http</artifactId>
             <version>${hutool.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.ai</groupId>
-            <artifactId>spring-ai-starter-mcp-server-webmvc</artifactId>
         </dependency>
     </dependencies>
 
