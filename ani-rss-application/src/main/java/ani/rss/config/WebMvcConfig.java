@@ -1,6 +1,7 @@
 package ani.rss.config;
 
 import ani.rss.commons.GsonStatic;
+import cn.hutool.core.util.ClassUtil;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 import org.springframework.context.annotation.Configuration;
@@ -12,9 +13,6 @@ import org.springframework.web.servlet.config.annotation.PathMatchConfigurer;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.util.pattern.PathPatternParser;
 
-import java.io.Writer;
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
 import java.nio.charset.StandardCharsets;
 
 @Configuration
@@ -36,37 +34,31 @@ public class WebMvcConfig implements WebMvcConfigurer {
             GsonHttpMessageConverter converter = new GsonHttpMessageConverter() {
                 @Override
                 public boolean canRead(@NonNull Class<?> clazz, @Nullable MediaType mediaType) {
-                    return clazz != String.class && !isMcpClass(clazz) && super.canRead(clazz, mediaType);
-                }
+                    if (ClassUtil.isSimpleTypeOrArray(clazz)) {
+                        // 简单值类型或简单值类型的数组
+                        return false;
+                    }
 
-                @Override
-                public boolean canRead(@Nullable Type type, @Nullable Class<?> contextClass, @Nullable MediaType mediaType) {
-                    return type != String.class
-                            && !isMcpType(type)
-                            && !isMcpClass(contextClass)
-                            && super.canRead(type, contextClass, mediaType);
+                    if (isMcp(clazz)) {
+                        // mcp 不使用 gson
+                        return false;
+                    }
+
+                    return super.canRead(clazz, mediaType);
                 }
 
                 @Override
                 public boolean canWrite(@NonNull Class<?> clazz, @Nullable MediaType mediaType) {
-                    return !isMcpClass(clazz) && super.canWrite(clazz, mediaType);
-                }
-
-                @Override
-                public boolean canWrite(@Nullable Type type, @Nullable Class<?> clazz, @Nullable MediaType mediaType) {
-                    return !isMcpType(type) && !isMcpClass(clazz) && super.canWrite(type, clazz, mediaType);
-                }
-
-                @Override
-                protected void writeInternal(@NonNull Object object, @Nullable Type type, @NonNull Writer writer) throws Exception {
-                    if (object instanceof byte[]) {
-                        try (writer) {
-                            writer.write(new String((byte[]) object, StandardCharsets.UTF_8));
-                            writer.flush();
-                        }
-                        return;
+                    if (ClassUtil.isSimpleTypeOrArray(clazz)) {
+                        // 简单值类型或简单值类型的数组
+                        return false;
                     }
-                    super.writeInternal(object, type, writer);
+
+                    if (isMcp(clazz)) {
+                        // mcp 不使用 gson
+                        return false;
+                    }
+                    return super.canWrite(clazz, mediaType);
                 }
             };
             converter.setGson(GsonStatic.GSON);
@@ -75,24 +67,14 @@ public class WebMvcConfig implements WebMvcConfigurer {
         });
     }
 
-    private boolean isMcpType(@Nullable Type type) {
-        if (type instanceof Class<?> clazz) {
-            return isMcpClass(clazz);
-        }
-        if (type instanceof ParameterizedType parameterizedType) {
-            if (isMcpType(parameterizedType.getRawType())) {
-                return true;
-            }
-            for (Type actualTypeArgument : parameterizedType.getActualTypeArguments()) {
-                if (isMcpType(actualTypeArgument)) {
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
-
-    private boolean isMcpClass(@Nullable Class<?> clazz) {
-        return clazz != null && clazz.getName().startsWith("io.modelcontextprotocol.");
+    /**
+     * 判断是否为MCP的类
+     *
+     * @param clazz class
+     * @return true/false
+     */
+    private boolean isMcp(Class<?> clazz) {
+        String name = clazz.getName();
+        return name.startsWith("io.modelcontextprotocol.");
     }
 }
