@@ -3,6 +3,7 @@ package ani.rss;
 import ani.rss.entity.Global;
 import ani.rss.util.other.SystemTrayUtil;
 import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.core.util.StrUtil;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.scheduling.annotation.EnableScheduling;
@@ -43,8 +44,9 @@ public class AniRssApplication {
 
         mapping.forEach((k, v) -> {
             for (String arg : Global.ARGS) {
-                if (arg.startsWith(k + "=")) {
-                    String value = arg.substring((k + "=").length());
+                String separator = k + "=";
+                if (arg.startsWith(separator)) {
+                    String value = StrUtil.subAfter(arg, separator, false);
                     System.setProperty(v, value);
                     return;
                 }

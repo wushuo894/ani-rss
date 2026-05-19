@@ -1,6 +1,5 @@
 package ani.rss.mcp;
 
-import ani.rss.commons.ExceptionUtils;
 import ani.rss.controller.AniController;
 import ani.rss.dto.RssToAniDTO;
 import ani.rss.entity.*;
@@ -202,11 +201,8 @@ public class AniMcpTools {
         }
     }
 
-    private RuntimeException mcpException(String action, Exception e) {
-        String message = e instanceof ResultException resultException
-                ? resultException.getResult().getMessage()
-                : ExceptionUtils.getMessage(e);
-        log.error("{}: {}", action, message, e);
-        return new IllegalArgumentException(action + ": " + message, e);
+    private ResultException mcpException(String action, Exception e) {
+        log.error(e.getMessage(), e);
+        return ResultException.exception(action);
     }
 }
