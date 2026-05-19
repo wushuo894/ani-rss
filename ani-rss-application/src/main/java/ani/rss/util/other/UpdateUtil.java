@@ -6,6 +6,7 @@ import ani.rss.entity.Config;
 import ani.rss.entity.Github;
 import ani.rss.entity.Global;
 import ani.rss.util.basic.HttpReq;
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.comparator.VersionComparator;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.resource.ResourceUtil;
@@ -157,12 +158,21 @@ public class UpdateUtil {
             String filename = "ani-rss-update.exe";
             File updateExe = new File(file.getParent() + "/" + filename);
             FileUtil.del(updateExe);
+
             try (InputStream stream = ResourceUtil.getStream(filename)) {
+                String exe = updateExe.toString();
+                String source = FileUtils.getAbsolutePath(file);
+                String target = FileUtils.getAbsolutePath(jar);
+                String args = CollUtil.join(Global.ARGS, " ");
+
                 FileUtil.writeFromStream(stream, updateExe, true);
                 List<String> strings = new ArrayList<>();
-                strings.add(updateExe.toString());
-                strings.add(FileUtils.getAbsolutePath(jar));
-                strings.addAll(Global.ARGS);
+                strings.add(exe);
+                strings.add("--source=" + source);
+                strings.add("--target=" + target);
+                if (StrUtil.isNotBlank(args)) {
+                    strings.add("--args=" + args);
+                }
                 String[] array = ArrayUtil.toArray(strings, String.class);
                 RuntimeUtil.exec(array);
                 System.exit(0);
