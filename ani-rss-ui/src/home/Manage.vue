@@ -250,6 +250,7 @@ let show = () => {
   selectFilter.value = '全部'
   dialogVisible.value = true
   selectList.value = []
+  text.value = ''
   getList()
 }
 
