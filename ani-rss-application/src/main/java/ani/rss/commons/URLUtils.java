@@ -1,8 +1,15 @@
 package ani.rss.commons;
 
+import cn.hutool.core.lang.Assert;
+import cn.hutool.core.lang.PatternPool;
+import cn.hutool.core.net.Ipv4Util;
 import cn.hutool.core.text.StrFormatter;
 import cn.hutool.core.util.ReUtil;
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.util.URLUtil;
+
+import java.net.URL;
+import java.util.List;
 
 public class URLUtils {
     /**
@@ -16,7 +23,7 @@ public class URLUtils {
             return "";
         }
 
-        if (!ReUtil.contains("http(s*)://", urlStr)) {
+        if (!ReUtil.contains("^https?://", urlStr)) {
             urlStr = StrFormatter.format("http://{}", urlStr);
         }
 
@@ -25,5 +32,29 @@ public class URLUtils {
         }
 
         return urlStr;
+    }
+
+    /**
+     * 校验url安全性
+     */
+    public static void verify(String s) {
+        Assert.notBlank(s, "URL 为空");
+
+        String regex = "^https?://";
+
+        Assert.isTrue(ReUtil.contains(regex, s), "错误的链接");
+
+        URL url = URLUtil.url(s);
+
+        String host = url.getHost();
+
+        Assert.isFalse(
+                List.of("127.0.0.1", "localhost").contains(host),
+                "禁止访问回环网络"
+        );
+
+        if (PatternPool.IPV4.matcher(host).matches()) {
+            Assert.isFalse(Ipv4Util.isInnerIP(host), "禁止访问内部网络");
+        }
     }
 }

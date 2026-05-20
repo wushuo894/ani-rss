@@ -1,6 +1,7 @@
 package ani.rss.controller;
 
 import ani.rss.annotation.Auth;
+import ani.rss.commons.URLUtils;
 import ani.rss.entity.Global;
 import ani.rss.util.basic.HttpReq;
 import ani.rss.util.other.ConfigUtil;
@@ -36,6 +37,7 @@ public class ProxyImageController extends BaseController {
     public void proxyImage(@RequestParam("imgUrl") String imgUrl) {
         imgUrl = imgUrl.replace(" ", "+");
         imgUrl = Base64.decodeStr(imgUrl);
+        URLUtils.verify(imgUrl);
         HttpServletResponse response = Global.RESPONSE.get();
 
         // 30 天
