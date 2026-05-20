@@ -6,7 +6,6 @@ import ani.rss.entity.Config;
 import ani.rss.entity.Github;
 import ani.rss.entity.Global;
 import ani.rss.util.basic.HttpReq;
-import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.comparator.VersionComparator;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.resource.ResourceUtil;
@@ -26,6 +25,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Slf4j
 public class UpdateUtil {
@@ -160,12 +160,17 @@ public class UpdateUtil {
             FileUtil.del(updateExe);
 
             try (InputStream stream = ResourceUtil.getStream(filename)) {
+                FileUtil.writeFromStream(stream, updateExe, true);
+
                 String exe = updateExe.toString();
                 String source = FileUtils.getAbsolutePath(file);
                 String target = FileUtils.getAbsolutePath(jar);
-                String args = CollUtil.join(Global.ARGS, " ");
 
-                FileUtil.writeFromStream(stream, updateExe, true);
+                // 过滤掉 --gui, 因为 exe 本身会自动添加此参数
+                String args = Global.ARGS.stream()
+                        .filter(s -> !"--gui".equals(s))
+                        .collect(Collectors.joining(" "));
+
                 List<String> strings = new ArrayList<>();
                 strings.add(exe);
                 strings.add("--source=" + source);
