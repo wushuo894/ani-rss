@@ -224,6 +224,7 @@ public class ConfigUtil {
                 .setProxyList(proxyList)
                 .setScrape(false)
                 .setFollowDay(14)
+                .setBangumiIniEnabled(false)
                 .setReplace(false)
                 .setMaxFileNameLength(0)
                 .setLimitLoginAttempts(true)

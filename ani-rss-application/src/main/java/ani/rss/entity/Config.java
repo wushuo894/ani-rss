@@ -464,6 +464,7 @@ public class Config implements Serializable {
 
     /**
      * 自动更新
+     * 自动更新
      */
     @Schema(description = "自动更新")
     private Boolean autoUpdate;
@@ -668,6 +669,9 @@ public class Config implements Serializable {
 
     @Schema(description = "追更天数")
     private Integer followDay;
+
+    @Schema(description = "bangumi.ini")
+    private Boolean bangumiIniEnabled;
 
     /**
      * 重名的订阅将允许被替换
