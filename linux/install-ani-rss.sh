@@ -133,6 +133,7 @@ Environment="SERVER_ADDRESS=0.0.0.0"
 Environment="SERVER_PORT=$SERVER_PORT"
 Environment="SWAGGER_ENABLED=false"
 Environment="MCP_ENABLED=false"
+Environment="JAVA_OPTS=-Xms64m -Xmx512m -Xss256k -XX:+UseG1GC"
 
 [Install]
 WantedBy=multi-user.target

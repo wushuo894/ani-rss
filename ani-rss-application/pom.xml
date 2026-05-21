@@ -256,12 +256,15 @@
                                         <path>%JAVA_HOME%/bin;%PATH%</path>
                                         <minVersion>17</minVersion>
                                         <opts>
-                                            <opt>-Xms60m -Xmx1g -Xss256k</opt>
-                                            <opt>--enable-native-access=ALL-UNNAMED</opt>
+                                            <opt>-Xms64m -Xmx512m -Xss256k -XX:+UseG1GC</opt>
+                                            <opt>-XX:+UseStringDeduplication</opt>
                                             <opt>-XX:+UseCompactObjectHeaders</opt>
+                                            <opt>-XX:TieredStopAtLevel=1</opt>
                                             <opt>-XX:+IgnoreUnrecognizedVMOptions</opt>
+                                            <opt>--enable-native-access=ALL-UNNAMED</opt>
                                             <opt>--add-opens=java.base/java.net=ALL-UNNAMED</opt>
                                             <opt>--add-opens=java.base/sun.net.www.protocol.https=ALL-UNNAMED</opt>
+                                            <opt>-Dfile.encoding=UTF-8</opt>
                                         </opts>
                                     </jre>
                                     <versionInfo>

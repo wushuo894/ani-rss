@@ -37,7 +37,8 @@ public class OpenListUploadNotification implements BaseNotification {
      * 上传配置
      */
     private final HttpConfig httpConfig = new HttpConfig()
-            .setBlockSize(1024 * 1024 * 50);
+            .setBlockSize(8192);
+
     private NotificationConfig notificationConfig;
 
     /**
