@@ -142,6 +142,13 @@ public class HttpReq {
         Assert.isTrue(ok, "url: {}, status: {}", url, status);
     }
 
+    public static void assertXml(HttpResponse response) {
+        String url = getUrl(response);
+        String contentType = response.header(Header.CONTENT_TYPE);
+        Assert.notBlank(contentType, "ContentType 为空, {}", url);
+        Assert.isTrue(contentType.startsWith("application/xml"), "非 XML 链接, {} {}", url, contentType);
+    }
+
     /**
      * 是否代理
      *
