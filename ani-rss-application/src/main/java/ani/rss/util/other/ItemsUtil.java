@@ -264,7 +264,7 @@ public class ItemsUtil {
     }
 
     /**
-     * 对RSS进行缓存
+     * 获取rss内容
      *
      * @param url RSS链接
      * @return XML
@@ -276,6 +276,7 @@ public class ItemsUtil {
                 .timeout(config.getRssTimeout() * 1000)
                 .thenFunction(res -> {
                     HttpReq.assertStatus(res);
+                    HttpReq.assertXml(res);
                     return res.body();
                 });
 
