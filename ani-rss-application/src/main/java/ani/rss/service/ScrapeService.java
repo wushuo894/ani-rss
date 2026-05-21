@@ -5,6 +5,7 @@ import ani.rss.entity.Ani;
 import ani.rss.entity.Config;
 import ani.rss.enums.StringEnum;
 import ani.rss.util.basic.HttpReq;
+import ani.rss.util.other.BgmUtil;
 import ani.rss.util.other.ConfigUtil;
 import ani.rss.util.other.TmdbUtils;
 import cn.hutool.core.date.DateUtil;
@@ -57,6 +58,7 @@ public class ScrapeService {
         boolean isOva = ani.getOva();
         try {
             log.info("正在刮削 ... {}", title);
+            saveBangumiIni(ani, forceScrape);
             if (isOva) {
                 scrapeMovie(ani, forceScrape);
             } else {
@@ -328,6 +330,45 @@ public class ScrapeService {
                 });
 
         log.info("已保存图片 {}", saveFile);
+    }
+
+    /**
+     * 保存 bangumi.ini
+     * @param ani 订阅
+     * @param force 强制
+     */
+    public void saveBangumiIni(Ani ani, Boolean force) throws Exception {
+        Config config = ConfigUtil.CONFIG;
+        Boolean bangumiIniEnabled = config.getBangumiIniEnabled();
+        if (!bangumiIniEnabled) {
+            // 未开启 bangumi.ini
+            return;
+        }
+
+        String downloadPath = downloadService.getDownloadPath(ani);
+
+        File file = new File(downloadPath, "bangumi.ini");
+        if (!force) {
+            if (file.exists()) {
+                // 非强制模式
+                return;
+            }
+        }
+
+        String subjectId = BgmUtil.getSubjectId(ani);
+        Integer offset = ani.getOffset();
+
+        String s = """
+                [Bangumi]
+                id={}
+                offset={}
+                """;
+
+        s = StrUtil.format(s, subjectId, offset);
+
+        FileUtil.writeUtf8String(s, file);
+
+        log.info("已保存 {}", file);
     }
 
 }

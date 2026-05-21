@@ -17,6 +17,9 @@
         </el-text>
       </div>
     </el-form-item>
+    <el-form-item label="更多">
+      <el-checkbox label="bangumi.ini" v-model="props.config['bangumiIniEnabled']"/>
+    </el-form-item>
   </el-form>
 </template>
 
