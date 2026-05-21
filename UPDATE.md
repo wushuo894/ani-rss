@@ -1,3 +1,1 @@
-- refactor: 优化管理页面
-- refactor: 优化链接校验
-- refactor: 优化更新程序
+- feat: 支持刮削创建 bangumi.ini close #665
