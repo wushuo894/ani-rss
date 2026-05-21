@@ -1,1 +1,1 @@
-- feat: 支持刮削创建 bangumi.ini close #665
+- feat: 支持通过环境变量设置JVM参数

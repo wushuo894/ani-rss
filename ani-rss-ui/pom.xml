@@ -6,7 +6,7 @@
     <parent>
         <groupId>ani.rss</groupId>
         <artifactId>ani-rss</artifactId>
-        <version>3.1.36</version>
+        <version>3.1.37</version>
     </parent>
 
     <artifactId>ani-rss-ui</artifactId>
