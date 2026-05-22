@@ -146,7 +146,11 @@ public class HttpReq {
         String url = getUrl(response);
         String contentType = response.header(Header.CONTENT_TYPE);
         Assert.notBlank(contentType, "ContentType 为空, {}", url);
-        Assert.isTrue(contentType.startsWith("application/xml"), "非 XML 链接, {} {}", url, contentType);
+
+        boolean isXML = contentType.startsWith("application/xml") ||
+                contentType.startsWith("text/xml");
+
+        Assert.isTrue(isXML, "非 XML 链接, {} {}", url, contentType);
     }
 
     /**
