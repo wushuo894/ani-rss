@@ -1,1 +1,1 @@
-- feat: 支持通过环境变量设置JVM参数
+- fix: 修复部分RSS的非XML错误 close #675
