@@ -236,6 +236,7 @@
                                     <goal>launch4j</goal>
                                 </goals>
                                 <configuration>
+                                    <requireAdminRights>true</requireAdminRights>
                                     <headerType>gui</headerType>
                                     <outfile>target/ani-rss.exe</outfile>
                                     <jar>target/ani-rss.jar</jar>
