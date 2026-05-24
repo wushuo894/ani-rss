@@ -112,7 +112,11 @@ html.dark .el-card {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: "PingFang SC", "Noto Sans SC", "Helvetica Neue", Helvetica, "Hiragino Sans GB", Arial, sans-serif;
+    font-family: "PingFang SC", "Noto Sans SC", "Microsoft YaHei", "Helvetica Neue", Helvetica, "Hiragino Sans GB", Arial, sans-serif;
+}
+
+.el-input__inner {
+    font-family: "PingFang SC", "Microsoft YaHei", "Helvetica Neue", Helvetica, "Hiragino Sans GB", Arial, sans-serif;
 }
 
 html, body, #app {
