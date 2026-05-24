@@ -4,28 +4,21 @@ import ani.rss.commons.*;
 import ani.rss.entity.About;
 import ani.rss.entity.Config;
 import ani.rss.entity.Github;
-import ani.rss.entity.Global;
+import ani.rss.update.BaseUpdate;
 import ani.rss.util.basic.HttpReq;
 import cn.hutool.core.comparator.VersionComparator;
 import cn.hutool.core.io.FileUtil;
-import cn.hutool.core.io.resource.ResourceUtil;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.thread.ThreadUtil;
-import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.ReUtil;
-import cn.hutool.core.util.RuntimeUtil;
 import cn.hutool.core.util.StrUtil;
-import cn.hutool.crypto.SecureUtil;
 import cn.hutool.http.Header;
 import cn.hutool.http.HttpRequest;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.File;
-import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 @Slf4j
 public class UpdateUtil {
@@ -90,8 +83,8 @@ public class UpdateUtil {
                         .setMarkdownBody(release.getBody());
 
                 String filename = "ani-rss.jar";
-                File jar = MavenUtils.getJar();
-                if ("exe".equals(FileUtil.extName(jar))) {
+                File currentFile = MavenUtils.getCurrentFile();
+                if ("exe".equals(FileUtil.extName(currentFile))) {
                     filename = "ani-rss.exe";
                 }
 
@@ -132,57 +125,15 @@ public class UpdateUtil {
 
         Assert.isTrue(MavenUtils.isJar(), "不支持更新");
 
-        File jar = MavenUtils.getJar();
-        String extName = StrUtil.blankToDefault(FileUtil.extName(jar), "");
-        File file = new File(jar + ".tmp");
+        BaseUpdate baseUpdate = BaseUpdate.getInstance();
 
-        FileUtil.del(file);
-        String downloadUrl = about.getDownloadUrl();
-        String sha256 = about.getSha256();
-        long size = about.getSize();
-
-        HttpReq.get(downloadUrl)
-                .then(res -> {
-                    HttpReq.assertStatus(res);
-                    FileUtil.writeFromStream(res.bodyStream(), file, true);
-                    Assert.isTrue(file.length() == size, "下载出现问题");
-                    Assert.isTrue(SecureUtil.sha256(file).equals(sha256), "更新文件的 sha256 不匹配");
-                });
+        File updateFile = baseUpdate.downloadUpdateFile(about);
 
         ThreadUtil.execute(() -> {
-            if ("jar".equals(extName)) {
-                FileUtil.rename(file, jar.getName(), true);
-                System.exit(0);
-                return;
-            }
-            String filename = "ani-rss-update.exe";
-            File updateExe = new File(file.getParent() + "/" + filename);
-            FileUtil.del(updateExe);
-
-            try (InputStream stream = ResourceUtil.getStream(filename)) {
-                FileUtil.writeFromStream(stream, updateExe, true);
-
-                String exe = updateExe.toString();
-                String source = FileUtils.getAbsolutePath(file);
-                String target = FileUtils.getAbsolutePath(jar);
-
-                // 过滤掉 --gui, 因为 exe 本身会自动添加此参数
-                String args = Global.ARGS.stream()
-                        .filter(s -> !"--gui".equals(s))
-                        .collect(Collectors.joining(" "));
-
-                List<String> strings = new ArrayList<>();
-                strings.add(exe);
-                strings.add("--source=" + source);
-                strings.add("--target=" + target);
-                if (StrUtil.isNotBlank(args)) {
-                    strings.add("--args=" + args);
-                }
-                String[] array = ArrayUtil.toArray(strings, String.class);
-                RuntimeUtil.exec(array);
-                System.exit(0);
+            try {
+                baseUpdate.update(updateFile);
             } catch (Exception e) {
-                log.error(e.getMessage(), e);
+                log.error("更新时遇到错误: {}", e.getMessage(), e);
             }
         });
     }

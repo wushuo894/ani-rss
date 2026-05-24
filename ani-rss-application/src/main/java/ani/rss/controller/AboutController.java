@@ -40,11 +40,11 @@ public class AboutController extends BaseController {
         log.info("正在{}", s);
         ThreadUtil.execute(() -> {
             ThreadUtil.sleep(3000);
-            File jar = MavenUtils.getJar();
-            String extName = FileUtil.extName(jar);
+            File currentFile = MavenUtils.getCurrentFile();
+            String extName = FileUtil.extName(currentFile);
             if ("exe".equals(extName) && status == 0) {
-                log.info("正在重启 {}", jar.getName());
-                RuntimeUtil.exec(jar.getName());
+                log.info("正在重启 {}", currentFile.getName());
+                RuntimeUtil.exec(currentFile.getName());
                 System.exit(status);
                 return;
             }

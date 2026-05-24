@@ -26,17 +26,17 @@ public class MavenUtils {
     public static JarFile JAR_FILE = null;
 
     static {
-        File jar = getJar();
+        File currentFile = getCurrentFile();
         try {
             if (isJar()) {
-                JAR_FILE = new JarFile(jar);
+                JAR_FILE = new JarFile(currentFile);
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
 
-    public static File getJar() {
+    public static File getCurrentFile() {
         OsInfo osInfo = SystemUtil.getOsInfo();
         String splitStr = osInfo.isWindows() ? ";" : ":";
         String s = System.getProperty("java.class.path")
@@ -45,13 +45,13 @@ public class MavenUtils {
     }
 
     public static Boolean isJar() {
-        File jar = getJar();
+        File currentFile = getCurrentFile();
 
-        if (jar.isDirectory()) {
+        if (currentFile.isDirectory()) {
             return false;
         }
 
-        String extName = FileUtil.extName(jar);
+        String extName = FileUtil.extName(currentFile);
         if (StrUtil.isBlank(extName)) {
             return false;
         }
