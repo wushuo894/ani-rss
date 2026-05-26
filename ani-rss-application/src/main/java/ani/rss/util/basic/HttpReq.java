@@ -148,6 +148,7 @@ public class HttpReq {
         Assert.notBlank(contentType, "ContentType 为空, {}", url);
 
         boolean isXML = contentType.startsWith("application/xml") ||
+                contentType.startsWith("application/rss+xml") ||
                 contentType.startsWith("text/xml");
 
         Assert.isTrue(isXML, "非 XML 链接, {} {}", url, contentType);
