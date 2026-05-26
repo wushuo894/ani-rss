@@ -1,2 +1,2 @@
-- refactor: 优化 windows 下的输入框字体
-- refactor: exe 改为管理员启动, 以解决权限问题
+- refactor: 优化更新逻辑
+- fix: 修复部分RSS的非XML错误 close #677
