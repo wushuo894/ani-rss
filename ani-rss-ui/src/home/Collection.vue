@@ -113,6 +113,22 @@
                              @click="downloadPath"/>
                 </div>
               </el-form-item>
+              <el-form-item label="重命名模版">
+                <div class="full-width">
+                  <el-input v-model:model-value="data.ani.customRenameTemplate"
+                            :autosize="{ minRows: 2}"
+                            class="full-width"
+                            placeholder="${title} S${seasonFormat}E${episodeFormat}"
+                            type="textarea"/>
+                  <el-link
+                      class="text-extra-small"
+                      type="primary"
+                      href="https://docs.wushuo.top/config/basic/rename#rename-template"
+                      target="_blank">
+                    详细说明
+                  </el-link>
+                </div>
+              </el-form-item>
               <el-form-item label="自定义标签">
                 <custom-tags :config="data.ani"/>
               </el-form-item>
@@ -244,6 +260,7 @@ let bgmAdd = (bgm) => {
         data.value.show = true
         data.value.ani.match = []
         data.value.ani.exclude = ['^(SPs?|CDs|Scans|PV|menu)/', 'Fonts|NCED|NCOP|迷你动画']
+        loadRenameTemplate()
       })
       .finally(() => {
         loading.value = false
@@ -284,11 +301,21 @@ let beforeAvatarUpload = (rawFile) => {
 
 let dialogVisible = ref(false)
 
+let loadRenameTemplate = () => {
+  http.config()
+      .then(res => {
+        data.value.ani.customRenameTemplateEnable = true
+        data.value.ani.customRenameTemplate = res.data.renameTemplate || '[${subgroup}] ${title} S${seasonFormat}E${episodeFormat}'
+      })
+}
+
 let show = () => {
   data.value.show = false
   data.value.ani.title = ''
   data.value.torrent = ''
   data.value.filename = ''
+  data.value.ani.customRenameTemplateEnable = true
+  loadRenameTemplate()
   dialogVisible.value = true
 }
 
@@ -353,5 +380,9 @@ defineExpose({show})
   display: flex;
   justify-content: space-between;
   margin-top: 10px;
+}
+
+.text-extra-small {
+  font-size: var(--el-font-size-extra-small);
 }
 </style>
