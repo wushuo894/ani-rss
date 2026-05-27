@@ -151,7 +151,7 @@ public class RenameUtil {
         Boolean customRenameTemplateEnable = ani.getCustomRenameTemplateEnable();
         String customRenameTemplate = ani.getCustomRenameTemplate();
 
-        if (customRenameTemplateEnable) {
+        if (Boolean.TRUE.equals(customRenameTemplateEnable) && StrUtil.isNotBlank(customRenameTemplate)) {
             renameTemplate = customRenameTemplate;
         }
 
