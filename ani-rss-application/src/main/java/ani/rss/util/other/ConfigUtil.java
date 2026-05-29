@@ -234,6 +234,7 @@ public class ConfigUtil {
                 .setReverseProxyTrustIpListEnabled(false)
                 .setSubtitleIndependentFolderEnabled(false)
                 .setSubtitleIndependentFolderName("Subs")
+                .setBgmApi("https://api.bgm.tv")
                 .setUuid(UUID.randomUUID().toString());
     }
 

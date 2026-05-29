@@ -41,7 +41,7 @@ import java.util.function.Function;
  */
 @Slf4j
 public class BgmUtil {
-    private static final String host = "https://api.bgm.tv";
+    private static final Config config = ConfigUtil.CONFIG;
 
     /**
      * 获取bgm名称
@@ -50,8 +50,6 @@ public class BgmUtil {
      * @return
      */
     public static synchronized String getFinalName(BgmInfo bgmInfo) {
-        Config config = ConfigUtil.CONFIG;
-
         Boolean bgmJpName = config.getBgmJpName();
 
         String name = bgmInfo.getName();
@@ -77,7 +75,6 @@ public class BgmUtil {
      * @return
      */
     public static synchronized String getFinalName(BgmInfo bgmInfo, Tmdb tmdb) {
-        Config config = ConfigUtil.CONFIG;
         Boolean titleYear = config.getTitleYear();
 
         String title = getFinalName(bgmInfo);
@@ -104,7 +101,9 @@ public class BgmUtil {
 
         name = name.replace("1/2", "½");
 
-        String url = UrlBuilder.of(host + "/search/subject/" + name)
+        String bgmApi = config.getBgmApi();
+
+        String url = UrlBuilder.of(bgmApi + "/search/subject/" + name)
                 .addQuery("type", 2)
                 .addQuery("max_results", 25)
                 .addQuery("responseGroup", "small")
@@ -227,7 +226,8 @@ public class BgmUtil {
     public static List<JsonObject> getEpisodes(String subjectId, Integer type) {
         ThreadUtil.sleep(500);
         Objects.requireNonNull(subjectId);
-        HttpRequest httpRequest = HttpReq.get(host + "/v0/episodes");
+        String bgmApi = config.getBgmApi();
+        HttpRequest httpRequest = HttpReq.get(bgmApi + "/v0/episodes");
         setToken(httpRequest);
 
         return httpRequest
@@ -262,7 +262,6 @@ public class BgmUtil {
     }
 
     public static BgmMe me() {
-        Config config = ConfigUtil.CONFIG;
         String bgmToken = config.getBgmToken();
         Assert.notBlank(bgmToken, "BgmToken 未填写");
 
@@ -273,7 +272,8 @@ public class BgmUtil {
             return GsonStatic.fromJson(me, BgmMe.class);
         }
 
-        BgmMe bgmMe = setToken(HttpReq.get(host + "/v0/me"))
+        String bgmApi = config.getBgmApi();
+        BgmMe bgmMe = setToken(HttpReq.get(bgmApi + "/v0/me"))
                 .thenFunction(res -> {
                     HttpReq.assertStatus(res);
                     return GsonStatic.fromJson(res.body(), BgmMe.class);
@@ -304,7 +304,8 @@ public class BgmUtil {
         if (Objects.isNull(rate)) {
             // 获取评分
             String username = username();
-            return setToken(HttpReq.get(host + "/v0/users/" + username + "/collections/" + subjectId))
+            String bgmApi = config.getBgmApi();
+            return setToken(HttpReq.get(bgmApi + "/v0/users/" + username + "/collections/" + subjectId))
                     .thenFunction(res -> {
                         if (res.getStatus() == 404) {
                             return 0;
@@ -315,7 +316,8 @@ public class BgmUtil {
                     });
         }
 
-        setToken(HttpReq.post(host + "/v0/users/-/collections/" + subjectId))
+        String bgmApi = config.getBgmApi();
+        setToken(HttpReq.post(bgmApi + "/v0/users/-/collections/" + subjectId))
                 .contentType(ContentType.JSON)
                 .body(GsonStatic.toJson(Map.of(
                         "type", 3,
@@ -342,7 +344,8 @@ public class BgmUtil {
         String username = username();
 
         // 如果已经订阅，则不再订阅
-        Boolean ok = setToken(HttpReq.get(host + "/v0/users/" + username + "/collections/" + subjectId))
+        String bgmApi = config.getBgmApi();
+        Boolean ok = setToken(HttpReq.get(bgmApi + "/v0/users/" + username + "/collections/" + subjectId))
                 .thenFunction(HttpResponse::isOk);
 
         if (ok) {
@@ -351,7 +354,7 @@ public class BgmUtil {
             return;
         }
 
-        setToken(HttpReq.post(host + "/v0/users/-/collections/" + subjectId))
+        setToken(HttpReq.post(bgmApi + "/v0/users/-/collections/" + subjectId))
                 .contentType(ContentType.JSON)
                 .body(GsonStatic.toJson(Map.of("type", 3)))
                 .thenFunction(HttpResponse::isOk);
@@ -402,7 +405,8 @@ public class BgmUtil {
         Objects.requireNonNull(episodeId);
 
         // bgm点格子前先判断状态，防止刷屏 #142
-        JsonObject jsonObject = setToken(HttpReq.get(host + "/v0/users/-/collections/-/episodes/" + episodeId))
+        String bgmApi = config.getBgmApi();
+        JsonObject jsonObject = setToken(HttpReq.get(bgmApi + "/v0/users/-/collections/-/episodes/" + episodeId))
                 .contentType(ContentType.JSON)
                 .thenFunction(res -> GsonStatic.fromJson(res.body(), JsonObject.class));
 
@@ -414,7 +418,7 @@ public class BgmUtil {
         // 间隔 500 毫秒, 防止流控
         ThreadUtil.sleep(500);
 
-        setToken(HttpReq.put(host + "/v0/users/-/collections/-/episodes/" + episodeId))
+        setToken(HttpReq.put(bgmApi + "/v0/users/-/collections/-/episodes/" + episodeId))
                 .contentType(ContentType.JSON)
                 .body(GsonStatic.toJson(Map.of("type", type)))
                 .thenFunction(HttpResponse::isOk);
@@ -462,6 +466,8 @@ public class BgmUtil {
      * @return
      */
     public static BgmInfo getBgmInfo(String subjectId, Boolean isCache) {
+        String bgmApi = config.getBgmApi();
+
         Function<HttpResponse, BgmInfo> fun = res -> {
             HttpReq.assertStatus(res);
             String body = res.body();
@@ -484,7 +490,7 @@ public class BgmUtil {
 
         if (!isCache) {
             // 不使用缓存
-            HttpRequest httpRequest = HttpReq.get(host + "/v0/subjects/" + subjectId);
+            HttpRequest httpRequest = HttpReq.get(bgmApi + "/v0/subjects/" + subjectId);
             return setToken(httpRequest).thenFunction(fun);
         }
 
@@ -495,7 +501,7 @@ public class BgmUtil {
         CompletableFuture.allOf(
                 CompletableFuture.runAsync(() -> {
                     // 不使用缓存
-                    HttpRequest httpRequest = HttpReq.get(host + "/v0/subjects/" + subjectId);
+                    HttpRequest httpRequest = HttpReq.get(bgmApi + "/v0/subjects/" + subjectId);
                     try {
                         BgmInfo bgmInfo = setToken(httpRequest)
                                 .thenFunction(fun);
@@ -618,8 +624,6 @@ public class BgmUtil {
      * @return
      */
     public static synchronized HttpRequest setToken(HttpRequest httpRequest) {
-        Config config = ConfigUtil.CONFIG;
-
         String bgmToken = config.getBgmToken();
 
         if (StrUtil.isNotBlank(bgmToken)) {
@@ -636,7 +640,6 @@ public class BgmUtil {
      * @return
      */
     public static Integer getExpiresDays() {
-        Config config = ConfigUtil.CONFIG;
         String bgmToken = config.getBgmToken();
         if (StrUtil.isBlank(bgmToken)) {
             return 0;
@@ -663,8 +666,6 @@ public class BgmUtil {
      * 刷新token
      */
     public static synchronized void refreshToken() {
-        Config config = ConfigUtil.CONFIG;
-
         BgmTokenTypeEnum bgmTokenType = config.getBgmTokenType();
         if (bgmTokenType != BgmTokenTypeEnum.AUTO) {
             return;
@@ -811,7 +812,6 @@ public class BgmUtil {
      * @return
      */
     public static Ani toAni(BgmInfo bgmInfo, Ani ani) {
-        Config config = ConfigUtil.CONFIG;
         String bgmImage = config.getBgmImage();
         // 使用tmdb标题
         Boolean tmdb = config.getTmdb();

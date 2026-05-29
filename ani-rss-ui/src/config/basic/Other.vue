@@ -4,12 +4,6 @@
     <el-form-item label="Mikan">
       <el-input v-model:model-value="props.config.mikanHost" placeholder="https://mikanime.tv"/>
     </el-form-item>
-    <el-form-item label="TmdbApi">
-      <el-input v-model:model-value="props.config['tmdbApi']" placeholder="https://api.themoviedb.org"/>
-    </el-form-item>
-    <el-form-item label="TmdbApiKey">
-      <el-input v-model:model-value="props.config['tmdbApiKey']" placeholder="请自备 API 密钥, 留空使用系统默认"/>
-    </el-form-item>
     <el-form-item label="GithubToken">
       <div class="full-width">
         <div>

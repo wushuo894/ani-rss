@@ -2,6 +2,9 @@
   <bangumi-me ref="bangumiMeRef"/>
   <el-form @submit.prevent label-width="auto"
            class="full-width">
+    <el-form-item label="BgmApi">
+      <el-input v-model:model-value="props.config['bgmApi']" placeholder="https://api.bgm.tv"/>
+    </el-form-item>
     <el-form-item label="获取方式">
       <el-radio-group v-model="props.config['bgmTokenType']">
         <el-radio label="手动输入" value="INPUT"/>
