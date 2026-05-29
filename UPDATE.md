@@ -1,2 +1,1 @@
-- refactor: 优化更新逻辑
-- fix: 修复部分RSS的非XML错误 close #677
+- refactor: 合集下载支持自定义重命名格式
