@@ -113,6 +113,23 @@
                              @click="downloadPath"/>
                 </div>
               </el-form-item>
+              <el-form-item label="重命名模版">
+                <div class="full-width">
+                  <el-switch v-model="data.ani['customRenameTemplateEnable']"/>
+                  <br>
+                  <el-input v-model:model-value="data.ani['customRenameTemplate']"
+                            :disabled="!data.ani['customRenameTemplateEnable']"
+                            placeholder="${title} S${seasonFormat}E${episodeFormat}"/>
+                  <br>
+                  <el-link
+                      style="font-size: var(--el-font-size-extra-small)"
+                      type="primary"
+                      href="https://docs.wushuo.top/config/basic/rename#rename-template"
+                      target="_blank">
+                    详细说明
+                  </el-link>
+                </div>
+              </el-form-item>
               <el-form-item label="自定义标签">
                 <custom-tags :config="data.ani"/>
               </el-form-item>

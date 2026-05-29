@@ -106,8 +106,10 @@ public class ConfigUtil {
                 anilist.co
                 wushuo.top
                 bgm.tv
-                raw.githubusercontent.com
+                bangumi.tv
+                chii.in
                 github.com
+                raw.githubusercontent.com
                 telegram.org
                 """;
 

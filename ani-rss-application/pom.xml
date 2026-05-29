@@ -11,7 +11,7 @@
     <artifactId>ani-rss-application</artifactId>
 
     <properties>
-        <hutool.version>5.8.44</hutool.version>
+        <hutool.version>5.8.46</hutool.version>
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
