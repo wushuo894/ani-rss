@@ -1,1 +1,1 @@
-- refactor: 合集下载支持自定义重命名格式
+- feat: 增加 BgmApi 自定义设置
