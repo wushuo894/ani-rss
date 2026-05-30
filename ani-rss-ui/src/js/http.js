@@ -396,3 +396,5 @@ export let importConfig = (file) => {
         }
     }).then(res => res.json())
 }
+
+export let ping = () => api.get("api/ping")

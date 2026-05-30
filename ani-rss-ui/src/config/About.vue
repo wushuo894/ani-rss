@@ -145,15 +145,28 @@ const stop = (status) => {
       })
 }
 
-const update = () => {
+const update = async () => {
+  let sleep = ms => {
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }
+
   actionLoading.value = true
   http.update()
-      .then(res => {
+      .then(async res => {
         ElMessage.success(res.message)
-        setTimeout(() => {
-          authorization.value = ''
-          location.reload()
-        }, 5000)
+        for (let i = 0; i < 24; i++) {
+          await sleep(5000)
+          try {
+            let pingRes = await http.ping()
+            if (pingRes.code === 200) {
+              authorization.value = ''
+              location.reload()
+              return
+            }
+          } catch (e) {
+          }
+        }
+        ElMessage.error("重启时遇到错误")
       })
       .finally(() => {
         actionLoading.value = false

@@ -308,4 +308,10 @@ public class ConfigController extends BaseController {
 
         return Result.success("导入成功");
     }
+
+    @Operation(summary = "存活测试")
+    @RequestMapping("/ping")
+    public Result<Void> ping() {
+        return Result.success();
+    }
 }
