@@ -29,7 +29,6 @@ jobs:
           files: |
             ./ani-rss-application/target/ani-rss.jar
             ./ani-rss-application/target/ani-rss.exe
-            ./ani-rss-application/target/ani-rss-macos-main/ani-rss.dmg
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v4
       - name: Set up Docker Buildx

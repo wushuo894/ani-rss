@@ -1,1 +1,1 @@
-- feat: 增加 TmdbImage 自定义设置
+- refactor: 优化更新逻辑

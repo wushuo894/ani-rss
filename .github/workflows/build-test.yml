@@ -15,14 +15,22 @@ jobs:
           cache: maven
       - name: Build with Project
         run: |
-          bash ./package.sh
+          mvn -B package \
+              -DskipTests \
+              --file pom.xml
           version=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout -f pom.xml)
           echo "version=v$version" >> $GITHUB_ENV
-      - name: Upload to Artifacts
-        uses: actions/upload-artifact@v7
+      - name: Release
+        uses: softprops/action-gh-release@v3
         with:
-          name: Artifacts
-          path: ./ani-rss-application/target/ani-rss.jar
+          name: ${{ env.version }}
+          prerelease: true
+          body_path: UPDATE.md
+          tag_name: test
+          append_body: false
+          token: ${{ secrets.GITHUB_TOKEN }}
+          files: |
+            ./ani-rss-application/target/ani-rss.jar
       - name: Login to Docker Hub
         uses: docker/login-action@v4
         with:
