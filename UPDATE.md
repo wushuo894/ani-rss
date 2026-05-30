@@ -1,1 +1,1 @@
-- feat: 增加 BgmApi 自定义设置
+- feat: 增加 TmdbImage 自定义设置
