@@ -26,6 +26,9 @@
     <el-form-item label="TmdbApiKey">
       <el-input v-model:model-value="props.config['tmdbApiKey']" placeholder="请自备 API 密钥, 留空使用系统默认"/>
     </el-form-item>
+    <el-form-item label="TmdbImage">
+      <el-input v-model:model-value="props.config['tmdbImage']" placeholder="https://image.tmdb.org"/>
+    </el-form-item>
   </el-form>
 </template>
 

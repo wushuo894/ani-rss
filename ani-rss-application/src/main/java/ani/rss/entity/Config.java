@@ -34,6 +34,9 @@ public class Config implements Serializable {
     @Schema(description = "TMDB API Key")
     private String tmdbApiKey;
 
+    @Schema(description = "TMDB IMAGE")
+    private String tmdbImage;
+
     /**
      * 仅获取动漫
      */

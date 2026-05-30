@@ -306,9 +306,8 @@ public class ScrapeService {
      * @param tmdbPath tmdb路径
      * @param saveFile 保存位置
      * @param force    强制
-     * @throws Exception
      */
-    public void saveImages(String tmdbPath, File saveFile, Boolean force) throws Exception {
+    public void saveImages(String tmdbPath, File saveFile, Boolean force) {
         if (StrUtil.isBlank(tmdbPath)) {
             return;
         }
@@ -321,7 +320,10 @@ public class ScrapeService {
 
         FileUtil.del(saveFile);
 
-        HttpReq.get("https://image.tmdb.org/t/p/original" + tmdbPath)
+        Config config = ConfigUtil.CONFIG;
+        String tmdbImage = config.getTmdbImage();
+
+        HttpReq.get(tmdbImage + "/t/p/original" + tmdbPath)
                 .then(res -> {
                     try (InputStream inputStream = res.bodyStream()) {
                         FileUtil.writeFromStream(inputStream, saveFile, true);
@@ -334,10 +336,11 @@ public class ScrapeService {
 
     /**
      * 保存 bangumi.ini
-     * @param ani 订阅
+     *
+     * @param ani   订阅
      * @param force 强制
      */
-    public void saveBangumiIni(Ani ani, Boolean force) throws Exception {
+    public void saveBangumiIni(Ani ani, Boolean force) {
         Config config = ConfigUtil.CONFIG;
         Boolean bangumiIniEnabled = config.getBangumiIniEnabled();
         if (!bangumiIniEnabled) {
