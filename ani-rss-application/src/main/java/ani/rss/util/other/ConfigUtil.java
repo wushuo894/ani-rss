@@ -236,6 +236,7 @@ public class ConfigUtil {
                 .setSubtitleIndependentFolderEnabled(false)
                 .setSubtitleIndependentFolderName("Subs")
                 .setBgmApi("https://api.bgm.tv")
+                .setAutoStart(false)
                 .setUuid(UUID.randomUUID().toString());
     }
 

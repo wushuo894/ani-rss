@@ -62,6 +62,9 @@
         </el-input-number>
       </div>
     </el-form-item>
+    <el-form-item label="开机自启">
+      <el-switch v-model="props.config['autoStart']"/>
+    </el-form-item>
   </el-form>
 </template>
 

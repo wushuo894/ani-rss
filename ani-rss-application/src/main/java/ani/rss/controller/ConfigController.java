@@ -15,6 +15,7 @@ import ani.rss.entity.web.Result;
 import ani.rss.entity.web.ResultCode;
 import ani.rss.service.ClearService;
 import ani.rss.service.TaskService;
+import ani.rss.start.BaseStart;
 import ani.rss.util.basic.HttpReq;
 import ani.rss.util.other.AfdianUtil;
 import ani.rss.util.other.AniUtil;
@@ -103,6 +104,7 @@ public class ConfigController extends BaseController {
         Integer renameSleepSeconds = config.getRenameSleepSeconds();
         Integer sleep = config.getRssSleepMinutes();
         String download = config.getDownloadToolType();
+        Boolean autoStart = config.getAutoStart();
 
         newConfig.setExpirationTime(null)
                 .setOutTradeNo(null)
@@ -140,6 +142,7 @@ public class ConfigController extends BaseController {
         ConfigUtil.sync();
         Integer newRenameSleepSeconds = config.getRenameSleepSeconds();
         Integer newSleep = config.getRssSleepMinutes();
+        Boolean newAutoStart = config.getAutoStart();
 
         // 时间间隔发生改变，重启任务
         if (
@@ -151,6 +154,13 @@ public class ConfigController extends BaseController {
         // 下载工具发生改变
         if (!download.equals(config.getDownloadToolType())) {
             TorrentUtil.load();
+        }
+        // 开机自启发生改变
+        if (!newAutoStart.equals(autoStart)) {
+            if (BaseStart.isSupported()) {
+                BaseStart instance = BaseStart.getInstance();
+                instance.sync();
+            }
         }
 
         return Result.success("修改成功");
