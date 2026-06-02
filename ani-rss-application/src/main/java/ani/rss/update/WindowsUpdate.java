@@ -8,10 +8,10 @@ import cn.hutool.core.io.resource.ResourceUtil;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.RuntimeUtil;
 import cn.hutool.core.util.StrUtil;
+import lombok.Cleanup;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.File;
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
@@ -22,12 +22,19 @@ public class WindowsUpdate implements BaseUpdate {
     @Override
     public void update(File updateFile) {
         File currentFile = MavenUtils.getCurrentFile();
-        String filename = "ani-rss-update.exe";
-        File updateExe = new File(updateFile.getParent(), filename);
+        File updateExe = new File(updateFile.getParent(), "ani-rss-update.exe");
+        File updateManifest = new File(updateFile.getParent(), "ani-rss-update.exe.manifest");
         FileUtil.del(updateExe);
+        FileUtil.del(updateManifest);
 
-        try (InputStream stream = ResourceUtil.getStream(filename)) {
-            FileUtil.writeFromStream(stream, updateExe, true);
+        try {
+            @Cleanup
+            InputStream updateExeStream = ResourceUtil.getStream("ani-rss-update.exe");
+            FileUtil.writeFromStream(updateExeStream, updateExe, true);
+
+            @Cleanup
+            InputStream updateManifestStream = ResourceUtil.getStream("ani-rss-update.exe.manifest");
+            FileUtil.writeFromStream(updateManifestStream, updateManifest, true);
 
             String exe = updateExe.toString();
             String source = FileUtils.getAbsolutePath(updateFile);
@@ -48,7 +55,7 @@ public class WindowsUpdate implements BaseUpdate {
             String[] array = ArrayUtil.toArray(strings, String.class);
             RuntimeUtil.exec(array);
             System.exit(0);
-        } catch (IOException e) {
+        } catch (Exception e) {
             log.error(e.getMessage(), e);
         }
     }

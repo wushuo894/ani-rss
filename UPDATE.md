@@ -1,1 +1,1 @@
-- refactor: 优化更新逻辑
+- feat: 支持自动设置 macOS / Windows 开机自启

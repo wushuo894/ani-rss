@@ -3,13 +3,15 @@ package ani.rss.start;
 import ani.rss.commons.MavenUtils;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.RuntimeUtil;
+import cn.hutool.core.util.StrUtil;
+import cn.hutool.system.SystemUtil;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.File;
 
 @Slf4j
 public class WindowsStart implements BaseStart {
-    private static final String START_UP = "C:/ProgramData/Microsoft/Windows/Start Menu/Programs/StartUp";
+    private static final String SHORTCUT_NAME = "ani-rss.lnk";
 
     /**
      * 启用
@@ -67,8 +69,12 @@ public class WindowsStart implements BaseStart {
         }
     }
 
-    private File getWindowsShortcut() {
-        return new File(START_UP, "ani-rss.lnk");
+    private static File getWindowsShortcut() {
+        String appData = SystemUtil.get("APPDATA");
+        if (StrUtil.isBlank(appData)) {
+            appData = FileUtil.getUserHomePath() + "/AppData/Roaming";
+        }
+        return new File(appData + "/Microsoft/Windows/Start Menu/Programs/Startup/" + SHORTCUT_NAME);
     }
 
     private static String escapeVbs(String value) {
