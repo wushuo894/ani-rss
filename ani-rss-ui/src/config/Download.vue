@@ -36,6 +36,14 @@
           请在 OpenList -> 设置-> 其他 -> 配置临时目录<br/>
           支持离线下载到 115、PikPak、迅雷云盘
         </el-text>
+        <template v-if="props.config.delayedDownload < 1">
+          <br/>
+          <el-alert show-icon type="warning" :closable="false">
+            <template #title>
+              未设置 <strong>延迟下载</strong>
+            </template>
+          </el-alert>
+        </template>
       </el-form-item>
       <el-form-item label="Driver">
         <el-select v-model="props.config['provider']" class="width-150">
