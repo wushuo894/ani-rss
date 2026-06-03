@@ -23,6 +23,7 @@ import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpResponse;
 import cn.hutool.http.Method;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import lombok.RequiredArgsConstructor;
@@ -93,6 +94,9 @@ public class OpenList implements BaseDownload {
         Boolean delete = config.getDelete();
         Boolean coexist = config.getCoexist();
         try {
+            // 删除残留任务
+            deleteResidualTasks(magnet);
+
             // 洗版，删除备 用RSS 所下载的视频
             if (standbyRss && delete && !coexist) {
                 String s = ReUtil.get(StringEnum.SEASON_REG, reName, 0);
@@ -146,36 +150,24 @@ public class OpenList implements BaseDownload {
                 }
 
                 // https://github.com/AlistGo/alist/blob/main/pkg/task/task.go
-                JsonObject taskInfo;
+                Optional<OpenListTaskInfo> taskInfoOpt = taskInfo(tid);
 
-                try {
-                    taskInfo = taskInfo(tid);
-                } catch (Exception e) {
-                    log.error(e.getMessage(), e);
+                if (taskInfoOpt.isEmpty()) {
                     continue;
                 }
 
-                String error = taskInfo.get("error").getAsString();
-                int state = taskInfo
-                        .get("state").getAsInt();
-                /*
-                https://github.com/OpenListTeam/OpenList-Frontend/blob/d94691c110bb046465e526323f46ead8ddd83c20/src/lang/en/tasks.json#L14-L25
+                OpenListTaskInfo taskInfo = taskInfoOpt.get();
+                OpenListTaskInfo.State state = taskInfo.getState();
+                String error = taskInfo.getError();
 
-                "state": {
-                    "0": "Pending",
-                    "1": "Running",
-                    "2": "Succeeded",
-                    "3": "Canceling",
-                    "4": "Canceled",
-                    "5": "Error",
-                    "6": "Failing",
-                    "7": "Failed",
-                    "8": "Waiting for Retry",
-                    "9": "Preparing to Retry"
-                }
-                 */
                 // errored 重试
-                if (state >= 5) {
+                if (
+                        List.of(
+                                OpenListTaskInfo.State.Error,
+                                OpenListTaskInfo.State.Failing,
+                                OpenListTaskInfo.State.Failed
+                        ).contains(state)
+                ) {
                     // 已到达最大重试次数 5 次, -1 不限制
                     if (alistDownloadRetryNumber > -1) {
                         if (retry >= alistDownloadRetryNumber) {
@@ -198,13 +190,18 @@ public class OpenList implements BaseDownload {
                     continue;
                 }
 
-                if (List.of(3, 4).contains(state)) {
+                if (
+                        List.of(
+                                OpenListTaskInfo.State.Canceling,
+                                OpenListTaskInfo.State.Canceled
+                        ).contains(state)
+                ) {
                     log.error("离线任务已被取消 {}", reName);
                     return false;
                 }
 
                 // 成功
-                if (state == 2) {
+                if (state == OpenListTaskInfo.State.Succeeded) {
                     break;
                 }
             }
@@ -323,8 +320,8 @@ public class OpenList implements BaseDownload {
     /**
      * 文件列表
      *
-     * @param path
-     * @return
+     * @param path 目录
+     * @return 文件列表
      */
     public List<OpenListFileInfo> ls(String path) {
         try {
@@ -368,21 +365,79 @@ public class OpenList implements BaseDownload {
     /**
      * 查看任务
      *
-     * @param tid
-     * @return
+     * @param tid 任务id
+     * @return 任务信息
      */
-    public JsonObject taskInfo(String tid) {
-        return postApi("task/offline_download/info?tid=" + tid)
+    public Optional<OpenListTaskInfo> taskInfo(String tid) {
+        try {
+            OpenListTaskInfo taskInfo = postApi("task/offline_download/info?tid=" + tid)
+                    .thenFunction(res -> {
+                        JsonObject jsonObject = GsonStatic.fromJson(res.body(), JsonObject.class);
+                        JsonObject data = jsonObject.get("data").getAsJsonObject();
+                        return GsonStatic.fromJson(data, OpenListTaskInfo.class);
+                    });
+            return Optional.of(taskInfo);
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+        }
+        return Optional.empty();
+    }
+
+    /**
+     * 删除残留任务
+     *
+     * @param magnet 磁力
+     */
+    public void deleteResidualTasks(String magnet) {
+        List<OpenListTaskInfo> taskDoneList = taskDoneList();
+        List<OpenListTaskInfo> taskUnDoneList = taskUnDoneList();
+
+        List<OpenListTaskInfo> tasks = new ArrayList<>();
+        tasks.addAll(taskDoneList);
+        tasks.addAll(taskUnDoneList);
+
+        for (OpenListTaskInfo task : tasks) {
+            String id = task.getId();
+            String name = task.getName();
+            if (name.contains(magnet)) {
+                log.info("删除残留任务: {} {}", id, name);
+                taskDelete(id);
+            }
+        }
+    }
+
+    /**
+     * 未完成的离线任务
+     *
+     * @return 任务列表
+     */
+    public List<OpenListTaskInfo> taskUnDoneList() {
+        return getApi("task/offline_download/undone")
                 .thenFunction(res -> {
                     JsonObject jsonObject = GsonStatic.fromJson(res.body(), JsonObject.class);
-                    return jsonObject.get("data").getAsJsonObject();
+                    JsonArray jsonArray = jsonObject.get("data").getAsJsonArray();
+                    return GsonStatic.fromJsonList(jsonArray, OpenListTaskInfo.class);
+                });
+    }
+
+    /**
+     * 已完成的离线任务
+     *
+     * @return 任务列表
+     */
+    public List<OpenListTaskInfo> taskDoneList() {
+        return getApi("task/offline_download/done")
+                .thenFunction(res -> {
+                    JsonObject jsonObject = GsonStatic.fromJson(res.body(), JsonObject.class);
+                    JsonArray jsonArray = jsonObject.get("data").getAsJsonArray();
+                    return GsonStatic.fromJsonList(jsonArray, OpenListTaskInfo.class);
                 });
     }
 
     /**
      * 重试任务
      *
-     * @param tid
+     * @param tid 任务id
      */
     public void taskRetry(String tid) {
         postApi("task/offline_download/retry")
@@ -393,7 +448,7 @@ public class OpenList implements BaseDownload {
     /**
      * 删除任务
      *
-     * @param tid
+     * @param tid 任务id
      */
     public void taskDelete(String tid) {
         postApi("task/offline_download/delete_some")
@@ -404,8 +459,8 @@ public class OpenList implements BaseDownload {
     /**
      * 获取目录下及子目录的文件
      *
-     * @param path
-     * @return
+     * @param path 目录
+     * @return 文件列表
      */
     public synchronized List<OpenListFileInfo> findFiles(String path) {
         List<OpenListFileInfo> openListFileInfos = ls(path);
@@ -421,6 +476,20 @@ public class OpenList implements BaseDownload {
             Long size = fileInfo.getSize();
             return Long.MAX_VALUE - ObjectUtil.defaultIfNull(size, 0L);
         }));
+    }
+
+    /**
+     * get api
+     *
+     * @param action
+     * @return
+     */
+    public synchronized HttpRequest getApi(String action) {
+        ThreadUtil.sleep(2000);
+        String host = config.getDownloadToolHost();
+        String password = config.getDownloadToolPassword();
+        return HttpReq.get(host + "/api/" + action)
+                .header(Header.AUTHORIZATION, password);
     }
 
     /**

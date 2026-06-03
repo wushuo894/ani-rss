@@ -1,5 +1,6 @@
 package ani.rss.commons;
 
+import ani.rss.entity.IntEnum;
 import cn.hutool.core.date.DatePattern;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -19,6 +20,7 @@ public class GsonStatic {
             .setPrettyPrinting()
             .setDateFormat(DatePattern.NORM_DATETIME_PATTERN)
             .registerTypeAdapter(TimeZone.class, new TimeZoneSerializer())
+            .registerTypeHierarchyAdapter(IntEnum.class, new IntEnumDeserializer())
             .create();
 
     public static <T> T fromJson(JsonElement jsonElement, Class<T> clazz) {
