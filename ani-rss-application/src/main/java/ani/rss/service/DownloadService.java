@@ -385,7 +385,6 @@ public class DownloadService {
         ani = ObjectUtil.clone(ani);
 
         String name = item.getReName();
-        Boolean ova = ani.getOva();
         Boolean master = item.getMaster();
         String subgroup = item.getSubgroup();
         subgroup = StrUtil.blankToDefault(subgroup, "未知字幕组");
@@ -411,7 +410,7 @@ public class DownloadService {
         Integer downloadRetry = config.getDownloadRetry();
         for (int i = 1; i <= downloadRetry; i++) {
             try {
-                if (TorrentUtil.DOWNLOAD.download(ani, item, savePath, torrentFile, ova)) {
+                if (TorrentUtil.DOWNLOAD.download(ani, item, savePath, torrentFile)) {
                     return;
                 }
             } catch (Exception e) {

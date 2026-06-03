@@ -83,7 +83,9 @@ public class MavenUtils {
         if (file.exists()) {
             Document document = XmlUtil.readXML(file);
             Element element = XmlUtil.getElement(document.getDocumentElement(), "version");
-            version = element.getTextContent();
+            if (Objects.nonNull(element)) {
+                version = element.getTextContent();
+            }
         }
         return version;
     }

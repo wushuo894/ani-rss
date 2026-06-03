@@ -50,10 +50,9 @@ public interface BaseDownload {
      * @param item        下载项
      * @param savePath    保存位置
      * @param torrentFile 种子文件
-     * @param ova         是否剧场版/OVA
      * @return 下载状态
      */
-    Boolean download(Ani ani, Item item, String savePath, File torrentFile, Boolean ova);
+    Boolean download(Ani ani, Item item, String savePath, File torrentFile);
 
     /**
      * 删除已完成任务

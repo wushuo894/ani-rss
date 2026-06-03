@@ -138,7 +138,7 @@ public class Transmission implements BaseDownload {
     }
 
     @Override
-    public Boolean download(Ani ani, Item item, String savePath, File torrentFile, Boolean ova) {
+    public Boolean download(Ani ani, Item item, String savePath, File torrentFile) {
         String name = item.getReName();
         String body = ResourceUtil.readUtf8Str("transmission/torrent-add.json");
         String extName = FileUtil.extName(torrentFile);
@@ -176,6 +176,7 @@ public class Transmission implements BaseDownload {
 
         log.info("tr 添加下载 => name: {} id: {}", name, id);
 
+        Boolean ova = ani.getOva();
         if (!ova) {
             RenameCacheUtil.put(id, name);
         }

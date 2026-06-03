@@ -1,1 +1,1 @@
-- feat: 支持自动设置 macOS / Windows 开机自启
+- refactor: 优化 OpenList 离线下载逻辑

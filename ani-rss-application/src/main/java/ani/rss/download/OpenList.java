@@ -83,7 +83,7 @@ public class OpenList implements BaseDownload {
     }
 
     @Override
-    public synchronized Boolean download(Ani ani, Item item, String savePath, File torrentFile, Boolean ova) {
+    public synchronized Boolean download(Ani ani, Item item, String savePath, File torrentFile) {
         // windows 真该死啊
         savePath = ReUtil.replaceAll(savePath, "^[A-z]:", "");
 

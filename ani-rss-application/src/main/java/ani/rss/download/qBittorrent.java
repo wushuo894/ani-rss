@@ -127,7 +127,7 @@ public class qBittorrent implements BaseDownload {
     }
 
     @Override
-    public Boolean download(Ani ani, Item item, String savePath, File torrentFile, Boolean ova) {
+    public Boolean download(Ani ani, Item item, String savePath, File torrentFile) {
         String name = item.getReName();
         String host = config.getDownloadToolHost();
         Boolean qbUseDownloadPath = config.getQbUseDownloadPath();
