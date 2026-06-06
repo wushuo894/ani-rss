@@ -52,7 +52,7 @@
             <dependency>
                 <groupId>wushuo.tmdb.api</groupId>
                 <artifactId>tmdb-api</artifactId>
-                <version>1.0.4</version>
+                <version>1.0.5</version>
             </dependency>
             <dependency>
                 <groupId>ebml.reader</groupId>

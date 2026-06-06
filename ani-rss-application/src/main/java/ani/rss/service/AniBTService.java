@@ -19,7 +19,7 @@ import java.util.List;
 
 @Service
 public class AniBTService {
-    private static final String HOST = "https://site.anibt.net";
+    private static final String HOST = "https://anibt.net";
 
     public AniBT list(String season, String bgmUrl) {
         List<String> bgmIdList = AniUtil.ANI_LIST
