@@ -178,13 +178,13 @@ public class AniUtil {
         String bgmUrl = ani.getBgmUrl();
         String subgroup = ani.getSubgroup();
 
-        Assert.notBlank(bgmUrl, "bgmUrl 不能为空");
-
-        BgmInfo bgmInfo = BgmUtil.getBgmInfo(ani, true);
-
-        BgmUtil.toAni(bgmInfo, ani);
-
         Config config = ConfigUtil.CONFIG;
+
+        if (Boolean.TRUE.equals(config.getBgmEnabled())) {
+            Assert.notBlank(bgmUrl, "bgmUrl 不能为空");
+            BgmInfo bgmInfo = BgmUtil.getBgmInfo(ani, true);
+            BgmUtil.toAni(bgmInfo, ani);
+        }
 
         // 只下载最新集
         Boolean downloadNew = config.getDownloadNew();
