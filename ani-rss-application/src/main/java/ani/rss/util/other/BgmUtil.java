@@ -30,6 +30,8 @@ import com.google.gson.JsonObject;
 import lombok.extern.slf4j.Slf4j;
 import wushuo.tmdb.api.entity.Tmdb;
 
+import java.net.ConnectException;
+import java.net.SocketTimeoutException;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
@@ -491,11 +493,19 @@ public class BgmUtil {
         if (!isCache) {
             // 不使用缓存
             HttpRequest httpRequest = HttpReq.get(bgmApi + "/v0/subjects/" + subjectId);
-            return setToken(httpRequest).thenFunction(fun);
+            try {
+                return setToken(httpRequest).thenFunction(fun);
+            } catch (Exception e) {
+                if (isNetworkException(e)) {
+                    throw new IllegalArgumentException("Bangumi 网络连接超时, 请检查网络或代理设置");
+                }
+                throw e;
+            }
         }
 
         AtomicReference<BgmInfo> bgmInfoAR = new AtomicReference<>();
         AtomicReference<BgmInfo> bgmInfoCacheAR = new AtomicReference<>();
+        AtomicReference<Boolean> networkTimeout = new AtomicReference<>(false);
 
         // 并行获取bgm信息
         CompletableFuture.allOf(
@@ -507,6 +517,9 @@ public class BgmUtil {
                                 .thenFunction(fun);
                         bgmInfoAR.set(bgmInfo);
                     } catch (Exception e) {
+                        if (isNetworkException(e)) {
+                            networkTimeout.set(true);
+                        }
                         log.error(e.getMessage(), e);
                     }
                 }),
@@ -526,6 +539,9 @@ public class BgmUtil {
 
         bgmInfo = ObjectUtil.defaultIfNull(bgmInfo, bgmInfoCacheAR.get());
 
+        if (Objects.isNull(bgmInfo) && Boolean.TRUE.equals(networkTimeout.get())) {
+            throw new IllegalArgumentException("Bangumi 网络连接超时, 请检查网络或代理设置");
+        }
         Assert.notNull(bgmInfo, "获取 bgmInfo 失败!");
 
         return bgmInfo;
@@ -883,5 +899,15 @@ public class BgmUtil {
                 .setCustomCompletedPathTemplate(completedPathTemplate);
     }
 
+    private static boolean isNetworkException(Throwable e) {
+        Throwable cause = e;
+        while (cause != null) {
+            if (cause instanceof SocketTimeoutException || cause instanceof ConnectException) {
+                return true;
+            }
+            cause = cause.getCause();
+        }
+        return false;
+    }
 
 }
