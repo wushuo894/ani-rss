@@ -29,6 +29,11 @@ public class BgmTask implements BaseTask {
 
     @Override
     public void accept(AtomicBoolean loop) {
+        if (!Boolean.TRUE.equals(ConfigUtil.CONFIG.getBgmEnabled())) {
+            ThreadUtil.sleep(12, TimeUnit.HOURS);
+            return;
+        }
+
         try {
             BgmUtil.refreshToken();
         } catch (Exception e) {

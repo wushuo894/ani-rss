@@ -164,6 +164,8 @@ public class ConfigUtil {
                 .setExclude(List.of("720[Pp]", "\\d-\\d", "合集", "特别篇"))
                 .setImportExclude(false)
                 .setEnabledExclude(false)
+                .setBgmEnabled(true)
+                .setTmdbEnabled(true)
                 .setTmdb(false)
                 .setBgmJpName(false)
                 .setTmdbId(false)

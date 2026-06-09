@@ -30,6 +30,9 @@ public class BgmController extends BaseController {
     @Operation(summary = "搜索BGM条目")
     @PostMapping("/searchBgm")
     public Result<List<BgmInfo>> searchBgm(@RequestParam("name") String name) {
+        if (!Boolean.TRUE.equals(ConfigUtil.CONFIG.getBgmEnabled())) {
+            return Result.success(List.of());
+        }
         List<BgmInfo> search = BgmUtil.search(name);
         return Result.success(search);
     }
@@ -38,6 +41,9 @@ public class BgmController extends BaseController {
     @Operation(summary = "将指定id的BGM番剧转换为订阅")
     @PostMapping("/getAniBySubjectId")
     public Result<Ani> getAniBySubjectId(@RequestParam("id") String id) {
+        if (!Boolean.TRUE.equals(ConfigUtil.CONFIG.getBgmEnabled())) {
+            return Result.error("Bangumi 已禁用");
+        }
         BgmInfo bgmInfo = BgmUtil.getBgmInfo(id, true);
         Ani ani = BgmUtil.toAni(bgmInfo, AniUtil.createAni());
         ani
@@ -49,6 +55,9 @@ public class BgmController extends BaseController {
     @Operation(summary = "获取BGM标题")
     @PostMapping("/getBgmTitle")
     public Result<String> getBgmTitle(@RequestBody Ani ani) {
+        if (!Boolean.TRUE.equals(ConfigUtil.CONFIG.getBgmEnabled())) {
+            return Result.success(r -> r.setData(""));
+        }
         Tmdb tmdb = ani.getTmdb();
         BgmInfo bgmInfo = BgmUtil.getBgmInfo(ani);
         String finalName = BgmUtil.getFinalName(bgmInfo, tmdb);
@@ -59,6 +68,9 @@ public class BgmController extends BaseController {
     @Operation(summary = "获取评分")
     @PostMapping("/rate")
     public Result<Integer> rate(@RequestBody Ani ani) {
+        if (!Boolean.TRUE.equals(ConfigUtil.CONFIG.getBgmEnabled())) {
+            return Result.success(r -> r.setData(null));
+        }
         String subjectId = BgmUtil.getSubjectId(ani);
         Integer rate = BgmUtil.rate(subjectId, null);
         return Result.success(rate);
@@ -68,6 +80,9 @@ public class BgmController extends BaseController {
     @Operation(summary = "进行评分")
     @PostMapping("/setRate")
     public Result<Integer> setRate(@RequestBody Ani ani) {
+        if (!Boolean.TRUE.equals(ConfigUtil.CONFIG.getBgmEnabled())) {
+            return Result.error("Bangumi 已禁用");
+        }
         String subjectId = BgmUtil.getSubjectId(ani);
         Integer score = Opt.ofNullable(ani.getScore())
                 .map(Double::intValue)
@@ -81,6 +96,9 @@ public class BgmController extends BaseController {
     @Operation(summary = "获取当前BGM账号信息")
     @PostMapping("/meBgm")
     public Result<BgmMe> meBgm() {
+        if (!Boolean.TRUE.equals(ConfigUtil.CONFIG.getBgmEnabled())) {
+            return Result.error("Bangumi 已禁用");
+        }
         int expiresDays = BgmUtil.getExpiresDays();
         BgmMe me = BgmUtil.me();
         me.setExpiresDays(expiresDays);
@@ -91,6 +109,9 @@ public class BgmController extends BaseController {
     @Operation(summary = "BGM授权回调")
     @PostMapping("/bgm/oauth/callback")
     public Result<Void> callback(@RequestParam("code") String code) {
+        if (!Boolean.TRUE.equals(ConfigUtil.CONFIG.getBgmEnabled())) {
+            return Result.error("Bangumi 已禁用");
+        }
         Config config = ConfigUtil.CONFIG;
         String bgmAppID = config.getBgmAppID();
         String bgmAppSecret = config.getBgmAppSecret();

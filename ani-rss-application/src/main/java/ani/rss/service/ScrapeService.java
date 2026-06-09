@@ -79,6 +79,9 @@ public class ScrapeService {
      * @throws Exception
      */
     public void scrapeMovie(Ani ani, Boolean force) throws Exception {
+        if (!Boolean.TRUE.equals(ConfigUtil.CONFIG.getTmdbEnabled())) {
+            return;
+        }
         Tmdb tmdb = ani.getTmdb();
 
         // 更新tmdb信息
@@ -156,6 +159,9 @@ public class ScrapeService {
      * @throws Exception
      */
     public void scrapeTv(Ani ani, Boolean force) throws Exception {
+        if (!Boolean.TRUE.equals(ConfigUtil.CONFIG.getTmdbEnabled())) {
+            return;
+        }
         Tmdb tmdb = ani.getTmdb();
 
         // 更新tmdb信息
@@ -342,6 +348,9 @@ public class ScrapeService {
      */
     public void saveBangumiIni(Ani ani, Boolean force) {
         Config config = ConfigUtil.CONFIG;
+        if (!Boolean.TRUE.equals(config.getBgmEnabled())) {
+            return;
+        }
         Boolean bangumiIniEnabled = config.getBangumiIniEnabled();
         if (!bangumiIniEnabled) {
             // 未开启 bangumi.ini

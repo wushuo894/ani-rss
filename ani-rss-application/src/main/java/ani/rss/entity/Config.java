@@ -314,6 +314,18 @@ public class Config implements Serializable {
     private Boolean enabledExclude;
 
     /**
+     * BGM 总开关
+     */
+    @Schema(description = "BGM 总开关")
+    private Boolean bgmEnabled;
+
+    /**
+     * TMDB 总开关
+     */
+    @Schema(description = "TMDB 总开关")
+    private Boolean tmdbEnabled;
+
+    /**
      * BGM日语标题
      */
     @Schema(description = "BGM日语标题")

@@ -5,6 +5,7 @@ import ani.rss.entity.Ani;
 import ani.rss.entity.web.Result;
 import ani.rss.entity.web.ResultCode;
 import ani.rss.util.other.TmdbUtils;
+import ani.rss.util.other.ConfigUtil;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.StrUtil;
 import io.swagger.v3.oas.annotations.Operation;
@@ -23,6 +24,12 @@ public class ThemoviedbController extends BaseController {
     @Operation(summary = "获取TMDB标题")
     @PostMapping("/getThemoviedbName")
     public Result<Ani> getThemoviedbName(@RequestBody Ani ani) {
+        if (!Boolean.TRUE.equals(ConfigUtil.CONFIG.getTmdbEnabled())) {
+            return new Result<Ani>()
+                    .setCode(ResultCode.HTTP_INTERNAL_ERROR)
+                    .setMessage("TMDB 已禁用")
+                    .setData(ani.setThemoviedbName(""));
+        }
         String themoviedbName = TmdbUtils.getFinalName(ani);
         Result<Ani> result = new Result<Ani>()
                 .setCode(ResultCode.HTTP_OK)
@@ -39,6 +46,9 @@ public class ThemoviedbController extends BaseController {
     @Operation(summary = "获取TMDB剧集组")
     @PostMapping("/getThemoviedbGroup")
     public Result<List<TmdbGroup>> getThemoviedbGroup(@RequestBody Ani ani) {
+        if (!Boolean.TRUE.equals(ConfigUtil.CONFIG.getTmdbEnabled())) {
+            return Result.success(List.of());
+        }
         Tmdb tmdb = ani.getTmdb();
         Assert.notNull(tmdb, "tmdb is null");
         Assert.notBlank(tmdb.getId(), "tmdb is null");
