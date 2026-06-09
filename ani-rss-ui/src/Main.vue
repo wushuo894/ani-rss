@@ -1,5 +1,8 @@
 <template>
-  <el-config-provider :locale="zhCn" :link="linkConfig" :dialog="dialogConfig">
+  <el-config-provider
+      :locale="zhCn"
+      :link="linkConfig"
+      :dialog="dialogConfig">
     <Login v-if="!authorization"/>
     <App v-else/>
   </el-config-provider>

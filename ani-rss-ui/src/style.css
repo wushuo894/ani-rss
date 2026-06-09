@@ -303,3 +303,10 @@ html, body, #app {
     height: 8px;
     width: 8px;
 }
+
+.tabs-center {
+    .el-tabs__nav-scroll {
+        display: flex;
+        justify-content: center;
+    }
+}

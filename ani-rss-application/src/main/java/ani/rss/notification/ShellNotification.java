@@ -3,7 +3,6 @@ package ani.rss.notification;
 import ani.rss.entity.Ani;
 import ani.rss.entity.NotificationConfig;
 import ani.rss.enums.NotificationStatusEnum;
-import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.system.SystemUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -13,6 +12,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
+import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionException;
 import java.util.concurrent.TimeUnit;
@@ -57,11 +57,11 @@ public class ShellNotification implements BaseNotification {
 
         log.debug(shell);
 
-        try (
-                Process process = new ProcessBuilder(getShellCommand(shell))
-                        .redirectErrorStream(true)
-                        .start()
-        ) {
+        Process process = null;
+        try {
+            process = new ProcessBuilder(getShellCommand(shell))
+                    .redirectErrorStream(true)
+                    .start();
             long pid = process.pid();
             log.info("pid: {}", pid);
 
@@ -92,7 +92,11 @@ public class ShellNotification implements BaseNotification {
             }
             return process.exitValue() == 0;
         } catch (Exception e) {
-            throw new IORuntimeException(e);
+            throw new RuntimeException(e);
+        } finally {
+            if (Objects.nonNull(process)) {
+                process.destroy();
+            }
         }
     }
 
