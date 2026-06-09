@@ -1,14 +1,22 @@
 <template>
   <el-form @submit.prevent label-width="auto"
            class="full-width">
+    <el-alert v-if="!props.config['bgmEnabled'] && !props.config['tmdbEnabled']"
+              type="error"
+              show-icon
+              :closable="false"
+              class="scrape-alert">
+      所有数据源已关闭，将不会执行刮削，仅按规则进行重命名和下载
+    </el-alert>
     <el-form-item label="自动刮削">
-      <el-switch v-model="props.config['scrape']"/>
+      <el-switch v-model="props.config['scrape']"
+                 :disabled="!props.config['bgmEnabled'] && !props.config['tmdbEnabled']"/>
     </el-form-item>
     <el-form-item label="Bangumi">
-      <el-switch v-model="props.config['bgmEnabled']"/>
+      <el-switch v-model="props.config['bgmEnabled']" @change="onDataSourceChange"/>
     </el-form-item>
     <el-form-item label="TMDB">
-      <el-switch v-model="props.config['tmdbEnabled']"/>
+      <el-switch v-model="props.config['tmdbEnabled']" @change="onDataSourceChange"/>
     </el-form-item>
     <el-form-item label="追更天数">
       <div>
@@ -45,4 +53,18 @@
 import {ElText} from "element-plus";
 
 let props = defineProps(['config'])
+
+let onDataSourceChange = () => {
+  if (!props.config['bgmEnabled'] && !props.config['tmdbEnabled']) {
+    props.config['scrape'] = false
+  } else {
+    props.config['scrape'] = true
+  }
+}
 </script>
+
+<style scoped>
+.scrape-alert {
+  margin-bottom: 16px;
+}
+</style>
