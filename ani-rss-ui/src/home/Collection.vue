@@ -22,12 +22,14 @@
                              @click="bgmRef?.show(data.ani.title)"/>
                 </div>
                 <div v-if="data.show" class="change-title-button">
-                  <el-button :loading="getBgmNameLoading"
+                  <el-button v-if="globalConfig['bgmEnabled']"
+                             :loading="getBgmNameLoading"
                              bg
                              icon="DocumentAdd" text @click="getBgmName">
                     使用Bangumi
                   </el-button>
-                  <el-button :disabled="data.ani.title === data.ani.themoviedbName || !data.ani.themoviedbName.length"
+                  <el-button v-if="globalConfig['tmdbEnabled']"
+                             :disabled="data.ani.title === data.ani.themoviedbName || !data.ani.themoviedbName.length"
                              bg
                              icon="DocumentAdd"
                              text
@@ -38,7 +40,7 @@
               </div>
             </el-form-item>
             <template v-if="data.show">
-              <el-form-item label="TMDB">
+              <el-form-item v-if="globalConfig['tmdbEnabled']" label="TMDB">
                 <div class="flex full-width" style="justify-content: space-between;">
                   <div class="el-input is-disabled">
                     <div class="el-input__wrapper"
@@ -192,7 +194,7 @@
 </template>
 
 <script setup>
-import {ref} from "vue";
+import {onMounted, ref} from "vue";
 import {UploadFilled} from "@element-plus/icons-vue";
 import {ElMessage, ElMessageBox} from "element-plus";
 import Bgm from "./Bgm.vue";
@@ -203,6 +205,15 @@ import {aniData} from "@/js/ani.js";
 import {authorization} from "@/js/global.js";
 import * as http from "@/js/http.js";
 import {getBgmTitle} from "@/js/http.js";
+import {configData} from "@/js/config.js";
+
+const globalConfig = ref(configData)
+
+onMounted(() => {
+  http.config().then(res => {
+    globalConfig.value = res.data
+  })
+})
 
 let start = () => {
   startLoading.value = true

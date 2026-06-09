@@ -18,7 +18,7 @@
     <el-collapse-item name="trackers" title="Trackers">
       <trackers :config="props.config"/>
     </el-collapse-item>
-    <el-collapse-item name="bangumi" title="Bangumi">
+    <el-collapse-item v-if="props.config['bgmEnabled']" name="bangumi" title="Bangumi">
       <bangumi :config="props.config"/>
     </el-collapse-item>
     <el-collapse-item name="other" title="其他">

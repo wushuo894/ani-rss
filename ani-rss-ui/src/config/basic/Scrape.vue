@@ -4,6 +4,12 @@
     <el-form-item label="自动刮削">
       <el-switch v-model="props.config['scrape']"/>
     </el-form-item>
+    <el-form-item label="Bangumi">
+      <el-switch v-model="props.config['bgmEnabled']"/>
+    </el-form-item>
+    <el-form-item label="TMDB">
+      <el-switch v-model="props.config['tmdbEnabled']"/>
+    </el-form-item>
     <el-form-item label="追更天数">
       <div>
         <el-input-number v-model="props.config['followDay']" :min="1">
@@ -17,18 +23,20 @@
         </el-text>
       </div>
     </el-form-item>
-    <el-form-item label="更多">
+    <el-form-item v-if="props.config['bgmEnabled']" label="更多">
       <el-checkbox label="bangumi.ini" v-model="props.config['bangumiIniEnabled']"/>
     </el-form-item>
-    <el-form-item label="TmdbApi">
-      <el-input v-model:model-value="props.config['tmdbApi']" placeholder="https://api.themoviedb.org"/>
-    </el-form-item>
-    <el-form-item label="TmdbApiKey">
-      <el-input v-model:model-value="props.config['tmdbApiKey']" placeholder="请自备 API 密钥, 留空使用系统默认"/>
-    </el-form-item>
-    <el-form-item label="TmdbImage">
-      <el-input v-model:model-value="props.config['tmdbImage']" placeholder="https://image.tmdb.org"/>
-    </el-form-item>
+    <template v-if="props.config['tmdbEnabled']">
+      <el-form-item label="TmdbApi">
+        <el-input v-model:model-value="props.config['tmdbApi']" placeholder="https://api.themoviedb.org"/>
+      </el-form-item>
+      <el-form-item label="TmdbApiKey">
+        <el-input v-model:model-value="props.config['tmdbApiKey']" placeholder="请自备 API 密钥, 留空使用系统默认"/>
+      </el-form-item>
+      <el-form-item label="TmdbImage">
+        <el-input v-model:model-value="props.config['tmdbImage']" placeholder="https://image.tmdb.org"/>
+      </el-form-item>
+    </template>
   </el-form>
 </template>
 
