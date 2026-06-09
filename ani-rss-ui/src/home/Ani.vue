@@ -14,12 +14,14 @@
               <el-input v-model:model-value="props.ani.title" class="full-width"/>
             </div>
             <div class="change-title-button">
-              <el-button :loading="getBgmNameLoading"
+              <el-button v-if="globalConfig['bgmEnabled']"
+                         :loading="getBgmNameLoading"
                          bg
                          icon="DocumentAdd" text @click="getBgmName">
                 使用Bangumi
               </el-button>
-              <el-button @click="props.ani.title = ani.themoviedbName"
+              <el-button v-if="globalConfig['tmdbEnabled']"
+                         @click="props.ani.title = ani.themoviedbName"
                          icon="DocumentAdd"
                          :disabled="props.ani.title === ani.themoviedbName || !ani.themoviedbName.length" bg text>
                 使用TMDB
@@ -27,7 +29,7 @@
             </div>
           </div>
         </el-form-item>
-        <el-form-item label="TMDB">
+        <el-form-item v-if="globalConfig['tmdbEnabled']" label="TMDB">
           <div class="flex full-width" style="justify-content: space-between;">
             <div class="el-input is-disabled">
               <div class="el-input__wrapper" tabindex="-1"
@@ -45,7 +47,7 @@
             <el-button icon="Refresh" bg text @click="getThemoviedbName" :loading="getThemoviedbNameLoading"/>
           </div>
         </el-form-item>
-        <el-form-item v-if="!props.ani.ova && props.ani.tmdb" label="剧集组">
+        <el-form-item v-if="globalConfig['tmdbEnabled'] && !props.ani.ova && props.ani.tmdb" label="剧集组">
           <div class="tmdb-group">
             <el-input v-model="props.ani.tmdb['tmdbGroupId']" placeholder="留空不使用剧集组"/>
             <div style="width: 4px;"/>
@@ -306,6 +308,9 @@ import * as http from "@/js/http.js";
 import {getBgmTitle} from "@/js/http.js";
 import AniBT from "@/home/AniBT.vue";
 import AnimeGarden from "@/home/AnimeGarden.vue";
+import {configData} from "@/js/config.js";
+
+const globalConfig = ref(configData)
 
 const aniBTRef = ref()
 const mikanRef = ref()
@@ -341,6 +346,9 @@ let match = ref()
 
 onMounted(() => {
   init()
+  http.config().then(res => {
+    globalConfig.value = res.data
+  })
 })
 
 let scrollbarRef = ref()

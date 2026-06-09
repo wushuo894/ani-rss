@@ -57,6 +57,8 @@ export let configData = {
     "importExclude": false,
     "enabledExclude": false,
     "bgmJpName": false,
+    "bgmEnabled": true,
+    "tmdbEnabled": true,
     "tmdb": false,
     "tmdbId": false,
     "tmdbIdPlexMode": false,
