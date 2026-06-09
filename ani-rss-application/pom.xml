@@ -24,11 +24,11 @@
         </repository>
         <repository>
             <id>ebml-reader</id>
-            <url>https://raw.github.com/wushuo894/EBMLReader/mvn-repo</url>
+            <url>https://raw.githubusercontent.com/wushuo894/EBMLReader/mvn-repo</url>
         </repository>
         <repository>
             <id>tmdb-api</id>
-            <url>https://raw.github.com/wushuo894/tmdb-api/mvn-repo</url>
+            <url>https://raw.githubusercontent.com/wushuo894/tmdb-api/mvn-repo</url>
         </repository>
     </repositories>
 
