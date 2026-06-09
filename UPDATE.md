@@ -1,1 +1,3 @@
-- fix: 修复 AniBT
+- fix: 修复 bgm 数据导致的订阅异常
+- refactor: 优化订阅编辑页面
+- refactor: 优化开机自启
