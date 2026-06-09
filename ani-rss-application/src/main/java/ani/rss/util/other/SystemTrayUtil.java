@@ -98,7 +98,7 @@ public class SystemTrayUtil {
         OsInfo osInfo = SystemUtil.getOsInfo();
         if (osInfo.isWindows()) {
             String command = StrFormatter.format("explorer.exe /SELECT,\"{}\"", file.getAbsolutePath());
-            RuntimeUtil.exec(command);
+            RuntimeUtil.execForStr(command);
             return;
         }
         Desktop.getDesktop().browseFileDirectory(file);

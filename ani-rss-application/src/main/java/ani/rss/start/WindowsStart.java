@@ -2,6 +2,7 @@ package ani.rss.start;
 
 import ani.rss.commons.MavenUtils;
 import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.RuntimeUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.system.SystemUtil;
@@ -20,14 +21,14 @@ public class WindowsStart implements BaseStart {
     public void enable() {
         File shortcut = getWindowsShortcut();
 
-        File currentFile = MavenUtils.getCurrentFile().getAbsoluteFile();
-        String extName = FileUtil.extName(currentFile);
-        if (!"exe".equalsIgnoreCase(extName)) {
-            throw new IllegalStateException("Windows 仅支持以 exe 方式运行时设置开机自启动");
-        }
+        MavenUtils.CurrentFile currentFile = MavenUtils.getCurrentFile();
 
-        File workingDirectory = currentFile.getParentFile();
-        String targetPath = currentFile.getAbsolutePath();
+        Assert.isTrue(currentFile.isExe(), "Windows 仅支持以 exe 方式运行时设置开机自启动");
+
+        File file = currentFile.getFile();
+
+        File workingDirectory = file.getParentFile();
+        String targetPath = file.getAbsolutePath();
         FileUtil.mkdir(shortcut.getParentFile());
 
         File vbs = null;

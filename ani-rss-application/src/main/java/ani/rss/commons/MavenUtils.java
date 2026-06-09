@@ -8,6 +8,8 @@ import cn.hutool.core.util.XmlUtil;
 import cn.hutool.system.OsInfo;
 import cn.hutool.system.SystemUtil;
 import lombok.Cleanup;
+import lombok.Data;
+import lombok.experimental.Accessors;
 import lombok.extern.slf4j.Slf4j;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -15,7 +17,7 @@ import org.w3c.dom.Element;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.List;
+import java.io.Serializable;
 import java.util.Objects;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
@@ -26,37 +28,23 @@ public class MavenUtils {
     public static JarFile JAR_FILE = null;
 
     static {
-        File currentFile = getCurrentFile();
+        CurrentFile currentFile = getCurrentFile();
         try {
-            if (isJar()) {
-                JAR_FILE = new JarFile(currentFile);
+            if (currentFile.isFile()) {
+                JAR_FILE = new JarFile(currentFile.getFile());
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
 
-    public static File getCurrentFile() {
+    public static CurrentFile getCurrentFile() {
         OsInfo osInfo = SystemUtil.getOsInfo();
         String splitStr = osInfo.isWindows() ? ";" : ":";
         String s = System.getProperty("java.class.path")
                 .split(splitStr)[0];
-        return new File(s);
-    }
-
-    public static Boolean isJar() {
-        File currentFile = getCurrentFile();
-
-        if (currentFile.isDirectory()) {
-            return false;
-        }
-
-        String extName = FileUtil.extName(currentFile);
-        if (StrUtil.isBlank(extName)) {
-            return false;
-        }
-
-        return List.of("exe", "jar").contains(extName);
+        return new CurrentFile()
+                .setFile(new File(s));
     }
 
     public static synchronized String getVersion() {
@@ -89,4 +77,49 @@ public class MavenUtils {
         }
         return version;
     }
+
+    @Data
+    @Accessors(chain = true)
+    public static class CurrentFile implements Serializable {
+        private File file;
+
+        public String getName() {
+            return file.getName();
+        }
+
+        public Boolean isDirectory() {
+            return file.isDirectory();
+        }
+
+        public Boolean isFile() {
+            return file.isFile();
+        }
+
+        public Boolean isExe() {
+            if (isDirectory()) {
+                return false;
+            }
+
+            String extName = FileUtil.extName(file);
+            if (StrUtil.isBlank(extName)) {
+                return false;
+            }
+
+            return "exe".equalsIgnoreCase(extName);
+        }
+
+        public Boolean isJar() {
+            if (isDirectory()) {
+                return false;
+            }
+
+            String extName = FileUtil.extName(file);
+            if (StrUtil.isBlank(extName)) {
+                return false;
+            }
+
+            return "jar".equalsIgnoreCase(extName);
+        }
+    }
+
 }

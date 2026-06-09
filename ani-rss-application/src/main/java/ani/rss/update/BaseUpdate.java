@@ -31,8 +31,8 @@ public interface BaseUpdate {
     void update(File updateFile);
 
     default File downloadUpdateFile(About about) {
-        File currentFile = MavenUtils.getCurrentFile();
-        File file = new File(currentFile + ".tmp");
+        MavenUtils.CurrentFile currentFile = MavenUtils.getCurrentFile();
+        File file = new File(currentFile.getFile() + ".tmp");
 
         String downloadUrl = about.getDownloadUrl();
         String sha256 = about.getSha256();

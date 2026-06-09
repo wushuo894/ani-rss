@@ -31,7 +31,7 @@ public class MacStart implements BaseStart {
                     make login item at end with properties {path:"%s", hidden:false}
                 end tell
                 """.formatted(path);
-        RuntimeUtil.exec("/usr/bin/osascript", "-e", createScript);
+        RuntimeUtil.execForStr("/usr/bin/osascript", "-e", createScript);
 
         log.info("已添加 macOS 登录项 {}", app);
     }
@@ -57,13 +57,14 @@ public class MacStart implements BaseStart {
                     end try
                 end tell
                 """.formatted(path);
-        RuntimeUtil.exec("/usr/bin/osascript", "-e", deleteScript);
+        RuntimeUtil.execForStr("/usr/bin/osascript", "-e", deleteScript);
 
         log.info("已删除 macOS 登录项 {}", app);
     }
 
     private static Optional<File> getMacApp() {
-        File file = MavenUtils.getCurrentFile().getAbsoluteFile();
+        MavenUtils.CurrentFile currentFile = MavenUtils.getCurrentFile();
+        File file = currentFile.getFile();
         while (Objects.nonNull(file)) {
             if (file.getName().endsWith(".app")) {
                 return Optional.of(file);

@@ -1,5 +1,6 @@
 package ani.rss.start;
 
+import ani.rss.commons.MavenUtils;
 import ani.rss.entity.Config;
 import ani.rss.util.other.ConfigUtil;
 import cn.hutool.system.OsInfo;
@@ -7,6 +8,11 @@ import cn.hutool.system.SystemUtil;
 
 public interface BaseStart {
     static Boolean isSupported() {
+        MavenUtils.CurrentFile currentFile = MavenUtils.getCurrentFile();
+        if (currentFile.isDirectory()) {
+            return false;
+        }
+
         OsInfo osInfo = SystemUtil.getOsInfo();
         return osInfo.isMac() || osInfo.isWindows();
     }

@@ -57,43 +57,43 @@ public class ShellNotification implements BaseNotification {
 
         log.debug(shell);
 
-        Process process;
-        try {
-            process = new ProcessBuilder(getShellCommand(shell))
-                    .redirectErrorStream(true)
-                    .start();
-        } catch (IOException e) {
-            throw new IORuntimeException(e);
-        }
+        try (
+                Process process = new ProcessBuilder(getShellCommand(shell))
+                        .redirectErrorStream(true)
+                        .start()
+        ) {
+            long pid = process.pid();
+            log.info("pid: {}", pid);
 
-        long pid = process.pid();
-        log.info("pid: {}", pid);
+            CompletableFuture<String> outputFuture = readStreamAsync(process.getInputStream());
 
-        CompletableFuture<String> outputFuture = readStreamAsync(process.getInputStream());
+            process.onExit()
+                    .thenAccept(result -> {
+                        try {
+                            String output = outputFuture.get(5, TimeUnit.SECONDS);
+                            log.debug(output);
+                        } catch (Exception ignored) {
+                        }
 
-        process.onExit()
-                .thenAccept(result -> {
-                    try {
-                        String output = outputFuture.get(5, TimeUnit.SECONDS);
-                        log.debug(output);
-                    } catch (Exception ignored) {
-                    }
+                        int exitValue = result.exitValue();
+                        log.info("已退出 pid: {}, exit: {}", pid, exitValue);
+                    });
 
-                    int exitValue = result.exitValue();
-                    log.info("已退出 pid: {}, exit: {}", pid, exitValue);
-                });
-        try {
-            boolean b = process.waitFor(aliveLimit, TimeUnit.SECONDS);
-            if (!b) {
-                log.info("存活超时已强制停止 pid: {}", pid);
-                process.destroyForcibly();
+            try {
+                boolean b = process.waitFor(aliveLimit, TimeUnit.SECONDS);
+                if (!b) {
+                    log.info("存活超时已强制停止 pid: {}", pid);
+                    process.destroy();
+                    return false;
+                }
+            } catch (InterruptedException e) {
+                log.error(e.getMessage(), e);
                 return false;
             }
-        } catch (InterruptedException e) {
-            log.error(e.getMessage(), e);
-            return false;
+            return process.exitValue() == 0;
+        } catch (Exception e) {
+            throw new IORuntimeException(e);
         }
-        return process.exitValue() == 0;
     }
 
     private static String[] getShellCommand(String fullCommand) {

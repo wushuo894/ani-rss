@@ -7,7 +7,6 @@ import ani.rss.entity.Github;
 import ani.rss.update.BaseUpdate;
 import ani.rss.util.basic.HttpReq;
 import cn.hutool.core.comparator.VersionComparator;
-import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.core.util.ReUtil;
@@ -82,11 +81,9 @@ public class UpdateUtil {
                         .setLatest(latest)
                         .setMarkdownBody(release.getBody());
 
-                String filename = "ani-rss.jar";
-                File currentFile = MavenUtils.getCurrentFile();
-                if ("exe".equals(FileUtil.extName(currentFile))) {
-                    filename = "ani-rss.exe";
-                }
+                MavenUtils.CurrentFile currentFile = MavenUtils.getCurrentFile();
+
+                String filename = currentFile.isJar() ? "ani-rss.jar" : "ani-rss.exe";
 
                 List<Github.Assets> assets = release.getAssets();
                 for (Github.Assets asset : assets) {
@@ -123,7 +120,9 @@ public class UpdateUtil {
             return;
         }
 
-        Assert.isTrue(MavenUtils.isJar(), "不支持更新");
+        MavenUtils.CurrentFile currentFile = MavenUtils.getCurrentFile();
+
+        Assert.isTrue(currentFile.isFile(), "不支持更新");
 
         BaseUpdate baseUpdate = BaseUpdate.getInstance();
 

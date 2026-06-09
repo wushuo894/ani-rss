@@ -2,14 +2,19 @@ package ani.rss.build;
 
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.lang.Assert;
+import cn.hutool.core.util.RuntimeUtil;
 import cn.hutool.core.util.ZipUtil;
 import cn.hutool.http.HttpUtil;
+import cn.hutool.system.OsInfo;
+import cn.hutool.system.SystemUtil;
+import lombok.extern.slf4j.Slf4j;
 
 import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 
+@Slf4j
 public class MacOS implements Runnable {
     @Override
     public void run() {
@@ -32,5 +37,15 @@ public class MacOS implements Runnable {
         Path path = Path.of(target.getPath(), "ani-rss-macos-main/ani-rss.app/Contents/MacOS/ani-rss.jar");
 
         FileUtil.copy(Paths.get(jarFile.getPath()), path, StandardCopyOption.REPLACE_EXISTING);
+
+
+        OsInfo osInfo = SystemUtil.getOsInfo();
+
+        if (osInfo.isMac()) {
+            String appDir = Path.of(target.getPath(), "ani-rss-macos-main/ani-rss.app").toString();
+
+            RuntimeUtil.execForStr("chmod", "-R", "755", appDir);
+            RuntimeUtil.execForStr("xattr", "-cr", appDir);
+        }
     }
 }

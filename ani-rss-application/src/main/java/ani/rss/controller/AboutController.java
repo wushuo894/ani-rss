@@ -8,9 +8,7 @@ import ani.rss.entity.About;
 import ani.rss.entity.Global;
 import ani.rss.entity.web.Result;
 import ani.rss.util.other.UpdateUtil;
-import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.thread.ThreadUtil;
-import cn.hutool.core.util.RuntimeUtil;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
@@ -18,7 +16,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.io.File;
 import java.util.List;
 
 @Slf4j
@@ -37,17 +34,16 @@ public class AboutController extends BaseController {
     @PostMapping("/stop")
     public Result<Void> stop(@RequestParam("status") Integer status) {
         String s = List.of("重启", "关闭").get(status);
+
+        MavenUtils.CurrentFile currentFile = MavenUtils.getCurrentFile();
+        if (currentFile.isExe() && s.equals("重启")) {
+            log.error("Windows 端不支持重启");
+            return Result.error("Windows 端不支持重启");
+        }
+
         log.info("正在{}", s);
         ThreadUtil.execute(() -> {
             ThreadUtil.sleep(3000);
-            File currentFile = MavenUtils.getCurrentFile();
-            String extName = FileUtil.extName(currentFile);
-            if ("exe".equals(extName) && status == 0) {
-                log.info("正在重启 {}", currentFile.getName());
-                RuntimeUtil.exec(currentFile.getName());
-                System.exit(status);
-                return;
-            }
             System.exit(status);
         });
         return Result.success("正在{}", s);
