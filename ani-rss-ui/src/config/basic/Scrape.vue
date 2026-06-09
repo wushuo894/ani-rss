@@ -18,6 +18,12 @@
     <el-form-item label="TMDB">
       <el-switch v-model="props.config['tmdbEnabled']" @change="onDataSourceChange"/>
     </el-form-item>
+    <el-form-item label="Bangumi">
+      <el-switch v-model="props.config['bgmEnabled']"/>
+    </el-form-item>
+    <el-form-item label="TMDB">
+      <el-switch v-model="props.config['tmdbEnabled']"/>
+    </el-form-item>
     <el-form-item label="追更天数">
       <div>
         <el-input-number v-model="props.config['followDay']" :min="1">
