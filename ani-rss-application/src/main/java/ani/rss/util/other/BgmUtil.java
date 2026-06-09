@@ -482,10 +482,14 @@ public class BgmUtil {
 
             int season = getSeasonByBgmInfo(bgmInfo);
 
+            Date date = bgmInfo.getDate();
+            date = ObjectUtil.defaultIfNull(date, new Date());
+
             return bgmInfo
                     .setName(name)
                     .setNameCn(nameCn)
-                    .setSeason(season);
+                    .setSeason(season)
+                    .setDate(date);
         };
 
         if (!isCache) {
