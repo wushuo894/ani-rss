@@ -1,3 +1,1 @@
-- fix: 修复 bgm 数据导致的订阅异常
-- refactor: 优化订阅编辑页面
-- refactor: 优化开机自启
+- feat: 增加允许跨域开关
