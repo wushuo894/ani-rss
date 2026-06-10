@@ -122,5 +122,6 @@ export let configData = {
     "reverseProxyTrustIpList": [],
     "reverseProxyTrustIpListEnabled": false,
     "subtitleIndependentFolderEnabled": false,
-    "subtitleIndependentFolderName": "Subs"
+    "subtitleIndependentFolderName": "Subs",
+    "allowCors": false,
 }

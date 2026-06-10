@@ -28,6 +28,8 @@
 
 ## 其他
 
+[关于不接受“纯 AI 生成”的 Pull Request 的说明](https://github.com/wushuo894/ani-rss/discussions/685)
+
 ### 推广须知
 
 请不要在 **B站** 或 **中国大陆社交平台** 发布 视频/文章 宣传本项目

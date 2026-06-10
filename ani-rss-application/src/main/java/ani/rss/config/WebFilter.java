@@ -1,6 +1,8 @@
 package ani.rss.config;
 
+import ani.rss.entity.Config;
 import ani.rss.entity.Global;
+import ani.rss.util.other.ConfigUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.StrUtil;
 import jakarta.servlet.*;
@@ -47,10 +49,24 @@ public class WebFilter implements Filter {
         Global.REQUEST.set(request);
         Global.RESPONSE.set(response);
         try {
+            cors(response);
             filterChain.doFilter(req, res);
         } finally {
             Global.REQUEST.remove();
             Global.RESPONSE.remove();
         }
+    }
+
+    private void cors(HttpServletResponse response) {
+        Config config = ConfigUtil.CONFIG;
+        Boolean allowCors = config.getAllowCors();
+        if (!allowCors) {
+            return;
+        }
+
+        response.addHeader("Access-Control-Allow-Origin", "*");
+        response.addHeader("Access-Control-Allow-Methods", "*");
+        response.addHeader("Access-Control-Allow-Headers", "*");
+        response.addHeader("Access-Control-Max-Age", "0");
     }
 }

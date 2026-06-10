@@ -30,6 +30,7 @@
       <el-checkbox v-model="props.config.innerIP" label="禁止公网访问"/>
       <el-checkbox v-model="props.config.verifyLoginIp" label="如果IP发生改变登录将失效"/>
       <el-checkbox v-model="props.config.limitLoginAttempts" label="限制尝试次数"/>
+      <el-checkbox v-model="props.config.allowCors" label="允许跨域"/>
     </el-form-item>
     <el-form-item label="IP白名单">
       <div class="full-width">
