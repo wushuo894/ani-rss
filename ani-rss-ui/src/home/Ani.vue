@@ -7,7 +7,7 @@
   <TmdbGroup ref="tmdbGroupRef" :ani="props.ani"/>
   <div style="padding: 0 12px;">
     <el-tabs v-model="activeName" class="tabs-center">
-      <el-tab-pane label="基本" name="base">
+      <el-tab-pane label="基本" name="base" :lazy="true">
         <el-scrollbar height="500" ref="scrollbarRef">
           <el-form @submit.prevent label-width="auto">
             <el-form-item label="标题">
@@ -135,7 +135,7 @@
           </el-form>
         </el-scrollbar>
       </el-tab-pane>
-      <el-tab-pane label="自定义" name="custom">
+      <el-tab-pane label="自定义" name="custom" :lazy="true">
         <el-scrollbar height="500">
           <el-form @submit.prevent label-width="auto">
             <el-form-item label="自定义集数规则">
