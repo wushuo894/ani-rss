@@ -1,1 +1,1 @@
-- feat: 增加允许跨域开关
+- build: 更新至 SpingBoot 4.1.0
