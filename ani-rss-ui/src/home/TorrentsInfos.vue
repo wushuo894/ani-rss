@@ -2,12 +2,21 @@
   <el-dialog v-model="dialogVisible" center title="下载">
     <div class="torrents-container">
       <div class="torrents-header">
-        <el-radio-group v-model="sortType" @change="changeSort">
-          <el-radio-button v-for="item in sortTypeList" :value="item.value">
-            {{ item.label }}
-            <span v-if="sortType === item.value" class="sort-arrow">
-              {{ sortOrder === 'asc' ? '↑' : '↓' }}
-            </span>
+        <el-radio-group v-model="sortType">
+          <el-radio-button
+              v-for="item in sortTypeList"
+              :value="item.value"
+              @click="changeSort(item.value)">
+            <div class="flex-center">
+              {{ item.label }}
+              <el-icon
+                  v-if="sortType === item.value"
+                  class="el-icon--right"
+              >
+                <Top v-if="sortOrder === 'asc'"/>
+                <Bottom v-else/>
+              </el-icon>
+            </div>
           </el-radio-button>
         </el-radio-group>
       </div>
@@ -44,6 +53,7 @@
 <script setup>
 import {ref} from "vue";
 import * as http from "@/js/http.js";
+import {Bottom, Top} from "@element-plus/icons-vue";
 
 // 记录排序方式
 let sortType = ref('name')
@@ -94,7 +104,7 @@ let sortInfos = (infos) => {
       continue
     }
     let sorted = fun(infos)
-    return sortOrder.value === 'desc' ? sorted.reverse() : sorted
+    return sortOrder.value === 'asc' ? sorted : sorted.reverse()
   }
   return infos;
 }
