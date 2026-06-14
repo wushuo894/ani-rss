@@ -3,7 +3,12 @@
     <div class="torrents-container">
       <div class="torrents-header">
         <el-radio-group v-model="sortType" @change="changeSort">
-          <el-radio-button v-for="sortType in sortTypeList" :value="sortType.value" :label="sortType.label"/>
+          <el-radio-button v-for="item in sortTypeList" :value="item.value">
+            {{ item.label }}
+            <span v-if="sortType === item.value" class="sort-arrow">
+              {{ sortOrder === 'asc' ? '↑' : '↓' }}
+            </span>
+          </el-radio-button>
         </el-radio-group>
       </div>
       <el-empty v-if="!torrentsInfos.length" description="当前无下载任务" class="torrents-empty"/>
@@ -42,6 +47,8 @@ import * as http from "@/js/http.js";
 
 // 记录排序方式
 let sortType = ref('name')
+// 记录排序顺序 asc=正序, desc=倒序
+let sortOrder = ref('asc')
 
 let sortTypeList = [
   {
@@ -70,7 +77,13 @@ let show = () => {
 let torrentsInfos = ref([])
 
 let changeSort = (type) => {
-  sortType.value = type
+  if (sortType.value === type) {
+    // 相同排序方式，切换正序/倒序
+    sortOrder.value = sortOrder.value === 'asc' ? 'desc' : 'asc'
+  } else {
+    sortType.value = type
+    sortOrder.value = 'asc'
+  }
   torrentsInfos.value = sortInfos(torrentsInfos.value)
 }
 
@@ -80,7 +93,8 @@ let sortInfos = (infos) => {
     if (value !== sortType.value) {
       continue
     }
-    return fun(infos)
+    let sorted = fun(infos)
+    return sortOrder.value === 'desc' ? sorted.reverse() : sorted
   }
   return infos;
 }
