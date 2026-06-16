@@ -33,6 +33,7 @@
         <ShellNotification v-model:notification-config="notificationConfig" v-model:config="props.config"/>
         <FileMoveNotification v-model:notification-config="notificationConfig" v-model:config="props.config"/>
         <OpenListUploadNotification v-model:config="props.config" v-model:notification-config="notificationConfig"/>
+        <OneBotNotification v-model:notification-config="notificationConfig" v-model:config="props.config"/>
         <el-form-item label="顺序">
           <div>
             <el-input-number
@@ -76,6 +77,7 @@ import {notificationTypeList} from "@/js/notification-type.js";
 import {ElMessage} from "element-plus";
 import FileMoveNotification from "@/config/notification/FileMoveNotification.vue";
 import OpenListUploadNotification from "@/config/notification/OpenListUploadNotification.vue";
+import OneBotNotification from "@/config/notification/OneBotNotification.vue";
 import {testNotification} from "@/js/http.js";
 
 
@@ -108,6 +110,12 @@ let notificationConfig = ref({
   "embyApiKey": "",
   "embyRefreshViewIds": [],
   "embyDelayed": 0,
+  "oneBotUrl": "http://127.0.0.1:5700",
+  "oneBotMessageType": "PRIVATE",
+  "oneBotUserId": "",
+  "oneBotGroupId": "",
+  "oneBotAccessToken": "",
+  "oneBotImage": false,
   "statusList": [
     "DOWNLOAD_START",
     "OMIT",

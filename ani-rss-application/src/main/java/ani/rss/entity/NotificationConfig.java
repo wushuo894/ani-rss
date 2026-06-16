@@ -266,6 +266,42 @@ public class NotificationConfig implements Serializable {
     private Boolean openListUploadDeleteOldEpisode;
 
     /**
+     * OneBot HTTP/WS 地址
+     */
+    @Schema(description = "OneBot HTTP/WS 地址")
+    private String oneBotUrl;
+
+    /**
+     * OneBot 消息类型: PRIVATE / GROUP
+     */
+    @Schema(description = "OneBot 消息类型")
+    private String oneBotMessageType;
+
+    /**
+     * OneBot 私聊用户ID
+     */
+    @Schema(description = "OneBot 私聊用户ID")
+    private String oneBotUserId;
+
+    /**
+     * OneBot 群聊群号
+     */
+    @Schema(description = "OneBot 群聊群号")
+    private String oneBotGroupId;
+
+    /**
+     * OneBot Access Token
+     */
+    @Schema(description = "OneBot Access Token")
+    private String oneBotAccessToken;
+
+    /**
+     * OneBot 发送图片
+     */
+    @Schema(description = "OneBot 发送图片")
+    private Boolean oneBotImage;
+
+    /**
      * 通知 状态
      */
     @Schema(description = "通知状态")
@@ -353,6 +389,15 @@ public class NotificationConfig implements Serializable {
                 .setOpenListUploadOvaPath("/115/Media/剧场版/${title}")
                 .setOpenListUploadDeleteLocalFile(false)
                 .setOpenListUploadDeleteOldEpisode(false);
+
+        // OneBot
+        notificationConfig
+                .setOneBotUrl("http://127.0.0.1:5700")
+                .setOneBotMessageType("PRIVATE")
+                .setOneBotUserId("")
+                .setOneBotGroupId("")
+                .setOneBotAccessToken("")
+                .setOneBotImage(false);
 
         return notificationConfig;
     }

@@ -34,6 +34,10 @@ export let notificationTypeList = [
     {
         name: 'OPEN_LIST_UPLOAD',
         label: 'OpenList上传'
+    },
+    {
+        name: 'ONEBOT',
+        label: 'OneBot通知'
     }
 ]
 

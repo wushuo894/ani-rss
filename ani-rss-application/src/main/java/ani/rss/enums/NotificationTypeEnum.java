@@ -12,5 +12,6 @@ public enum NotificationTypeEnum {
     WEB_HOOK,
     SHELL,
     FILE_MOVE,
-    OPEN_LIST_UPLOAD
+    OPEN_LIST_UPLOAD,
+    ONEBOT
 }
