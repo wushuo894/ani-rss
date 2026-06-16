@@ -2,7 +2,7 @@
   <el-form @submit.prevent label-width="auto"
            class="full-width">
     <el-form-item label="Mikan">
-      <el-input v-model:model-value="props.config.mikanHost" placeholder="https://mikanime.tv"/>
+      <el-input v-model:model-value="props.config.mikanHost" placeholder="https://mikanani.me"/>
     </el-form-item>
     <el-form-item label="GithubToken">
       <div class="full-width">
