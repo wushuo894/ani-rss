@@ -40,7 +40,7 @@ public class MikanService {
     public static String getMikanHost() {
         Config config = ConfigUtil.CONFIG;
         String mikanHost = config.getMikanHost();
-        mikanHost = StrUtil.blankToDefault(mikanHost, "https://mikanime.tv");
+        mikanHost = StrUtil.blankToDefault(mikanHost, "https://mikanani.me");
         return mikanHost;
     }
 
