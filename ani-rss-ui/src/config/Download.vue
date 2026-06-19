@@ -214,20 +214,20 @@ const downloadSelect = ref([
 
 const offlineList = ref([
   {
-    label: '115 网盘',
-    value: '115 Cloud'
-  },
-  {
     label: '115 开放平台',
     value: '115 Open'
   },
   {
-    label: '123 网盘',
-    value: '123Pan'
+    label: '115 网盘',
+    value: '115 Cloud'
   },
   {
     label: '123 开放平台',
     value: '123 Open'
+  },
+  {
+    label: '123 网盘',
+    value: '123Pan'
   },
   {
     label: '迅雷',
