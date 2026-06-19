@@ -131,6 +131,7 @@ LimitNOFILE=65535
 Environment="TZ=Asia/Shanghai"
 Environment="SERVER_ADDRESS=0.0.0.0"
 Environment="SERVER_PORT=$SERVER_PORT"
+Environment="CONFIG=$INSTALL_DIR/config"
 Environment="SWAGGER_ENABLED=false"
 Environment="MCP_ENABLED=false"
 Environment="JAVA_OPTS=-Xms64m -Xmx512m -Xss256k -XX:+UseG1GC"

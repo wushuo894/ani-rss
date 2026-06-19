@@ -2,14 +2,14 @@
   <el-form-item label="下载速度限制">
     <el-input-number v-model:model-value="props.config['dlLimit']" :min="0">
       <template #suffix>
-        <span>kiB/s</span>
+        <span>KiB/s</span>
       </template>
     </el-input-number>
   </el-form-item>
   <el-form-item label="上传速度限制">
     <el-input-number v-model:model-value="props.config['upLimit']" :min="0">
       <template #suffix>
-        <span>kiB/s</span>
+        <span>KiB/s</span>
       </template>
     </el-input-number>
   </el-form-item>

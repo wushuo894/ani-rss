@@ -92,7 +92,7 @@ export let configData = {
     "customEpisode": false,
     "customEpisodeStr": "",
     "customEpisodeGroupIndex": 0,
-    "provider": "115 Cloud",
+    "provider": "115 Open",
     "upload": true,
     "upLimit": 0,
     "dlLimit": 0,
