@@ -1,3 +1,1 @@
-- feat: 下载列表增加 正序/倒序
-- refactor: 一些细节的优化
-- build: 更新至 SpringAI 2.0.0
+- feat: 增加 日历ics 支持 close #688
