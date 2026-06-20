@@ -63,7 +63,7 @@
               备用RSS
             </el-tag>
           </div>
-          <el-text v-if="showLastDownloadTime && item.lastDownloadFormat" size="small"
+          <el-text v-if="showLastDownloadTime && item.lastDownloadTime > 0" size="small"
                    type="info">
             {{ item.lastDownloadFormat }}
           </el-text>

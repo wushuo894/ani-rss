@@ -41,4 +41,7 @@ public class ContentType implements Serializable {
 
     @Schema(description = "video/x-matroska")
     public static String VIDEO_X_MATROSKA = "video/x-matroska";
+
+    @Schema(description = "text/calendar")
+    public static String TEXT_CALENDAR = "text/calendar; charset=UTF-8";
 }

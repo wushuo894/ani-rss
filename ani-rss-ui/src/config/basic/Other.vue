@@ -1,6 +1,10 @@
 <template>
   <el-form @submit.prevent label-width="auto"
            class="full-width">
+    <el-form-item label="Api">
+      <el-button icon="DocumentCopy" @click="copyEmbyApi">复制 emby 自动点格子 api</el-button>
+      <el-button icon="DocumentCopy" @click="copyIcs">复制 ics</el-button>
+    </el-form-item>
     <el-form-item label="Mikan">
       <el-input v-model:model-value="props.config.mikanHost" placeholder="https://mikanani.me"/>
     </el-form-item>
@@ -86,6 +90,34 @@ let clearCache = () => {
       .finally(() => {
         clearCacheLoading.value = false
       })
+}
+
+let copyEmbyApi = () => {
+  let url = `${apiHref()}/embyWebHook?api-key=${props.config.apiKey}`;
+  copy(url)
+}
+
+let copyIcs = () => {
+  let url = `${apiHref()}/calendar.ics?api-key=${props.config.apiKey}`;
+  copy(url)
+}
+
+let apiHref = () => {
+  let redirectUri = location.href
+  if (!redirectUri.endsWith("/")) {
+    redirectUri += '/';
+  }
+  return redirectUri + "api"
+}
+
+let copy = (v) => {
+  const input = document.createElement('input');
+  input.value = v
+  document.body.appendChild(input);
+  input.select();
+  document.execCommand('copy');
+  document.body.removeChild(input);
+  ElMessage.success('已复制')
 }
 
 let props = defineProps(['config'])
