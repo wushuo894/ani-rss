@@ -3,161 +3,223 @@ package ani.rss.service;
 import ani.rss.entity.Ani;
 import ani.rss.util.other.AniUtil;
 import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.date.Week;
 import cn.hutool.core.util.StrUtil;
 import lombok.extern.slf4j.Slf4j;
+import net.fortuna.ical4j.model.Calendar;
+import net.fortuna.ical4j.model.ComponentList;
+import net.fortuna.ical4j.model.PropertyList;
+import net.fortuna.ical4j.model.component.VEvent;
+import net.fortuna.ical4j.model.property.*;
 import org.springframework.stereotype.Service;
 
+import java.net.URI;
 import java.text.SimpleDateFormat;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.temporal.Temporal;
 import java.util.Date;
 import java.util.List;
-import java.util.TimeZone;
 
 @Slf4j
 @Service
 public class IcsService {
 
-    private static final String LINE_SEPARATOR = "\r\n";
+    private static final ZoneId CALENDAR_ZONE = ZoneId.of("Asia/Shanghai");
 
-    private static final SimpleDateFormat ICS_DATE_FORMAT = new SimpleDateFormat("yyyyMMdd'T'HHmmss'Z'");
-    private static final SimpleDateFormat ICS_DATE_FORMAT_ALL_DAY = new SimpleDateFormat("yyyyMMdd");
-
-    static {
-        ICS_DATE_FORMAT.setTimeZone(TimeZone.getTimeZone("UTC"));
-    }
-
+    /**
+     * 生成 ICS 内容
+     *
+     * @return ics 内容
+     */
     public String generateIcs() {
-        StringBuilder ics = new StringBuilder();
+        PropertyList propertyList = new PropertyList()
+                .add(createVersion())
+                .add(new ProdId("-//ani-rss//CN"))
+                .add(new CalScale(CalScale.VALUE_GREGORIAN))
+                .add(new Method(Method.VALUE_PUBLISH))
+                .add(new XProperty("X-WR-CALNAME", "ani-rss"))
+                .add(new XProperty("X-WR-TIMEZONE", CALENDAR_ZONE.getId()))
+                .add(new XProperty("X-WR-CALDESC", "ani-rss 动漫订阅日历"));
 
-        ics.append("BEGIN:VCALENDAR").append(LINE_SEPARATOR);
-        ics.append("VERSION:2.0").append(LINE_SEPARATOR);
-        ics.append("PRODID:-//ani-rss//CN").append(LINE_SEPARATOR);
-        ics.append("CALSCALE:GREGORIAN").append(LINE_SEPARATOR);
-        ics.append("METHOD:PUBLISH").append(LINE_SEPARATOR);
-        ics.append("X-WR-CALNAME:ani-rss").append(LINE_SEPARATOR);
-        ics.append("X-WR-TIMEZONE:Asia/Shanghai").append(LINE_SEPARATOR);
-        ics.append("X-WR-CALDESC:ani-rss 动漫订阅日历").append(LINE_SEPARATOR);
-
-        List<Ani> enabledAnis = AniUtil.ANI_LIST.stream()
+        List<VEvent> list = AniUtil.ANI_LIST.stream()
                 .filter(Ani::getEnable)
+                .map(this::generateEvent)
                 .toList();
 
-        for (Ani ani : enabledAnis) {
-            ics.append(generateEvent(ani)).append(LINE_SEPARATOR);
-        }
+        ComponentList<VEvent> componentList = new ComponentList<>(list);
 
-        ics.append("END:VCALENDAR").append(LINE_SEPARATOR);
-
-        return ics.toString();
-    }
-
-    private String generateEvent(Ani ani) {
-        StringBuilder event = new StringBuilder();
-
-        event.append("BEGIN:VEVENT").append(LINE_SEPARATOR);
-
-        String summary = buildSummary(ani);
-        event.append("SUMMARY:").append(escapeIcsText(summary)).append(LINE_SEPARATOR);
-
-        Boolean ova = ani.getOva();
-        String bgmUrl = ani.getBgmUrl();
-        Date releaseDate = ani.getReleaseDate();
-        String dateStr = ICS_DATE_FORMAT_ALL_DAY.format(releaseDate);
-        event.append("DTSTART;VALUE=DATE:").append(dateStr).append(LINE_SEPARATOR);
-
-        Date endDate = DateUtil.offsetDay(releaseDate, 1);
-        String endDateStr = ICS_DATE_FORMAT_ALL_DAY.format(endDate);
-        event.append("DTEND;VALUE=DATE:").append(endDateStr).append(LINE_SEPARATOR);
-
-        // 如果是剧场版/OVA，不添加重复规则
-        if (!ova) {
-            // 添加每周重复规则
-            String rrule = buildRRule(ani);
-            event.append("RRULE:").append(rrule).append(LINE_SEPARATOR);
-        }
-
-        String uid = generateUid(ani);
-        event.append("UID:").append(uid).append(LINE_SEPARATOR);
-
-        String dtStamp = ICS_DATE_FORMAT.format(new Date());
-        event.append("DTSTAMP:").append(dtStamp).append(LINE_SEPARATOR);
-
-        event.append("URL:").append(bgmUrl).append(LINE_SEPARATOR);
-
-        String categories = buildCategories(ani);
-        event.append("CATEGORIES:").append(categories).append(LINE_SEPARATOR);
-
-        event.append("TRANSP:TRANSPARENT").append(LINE_SEPARATOR);
-
-        event.append("END:VEVENT");
-
-        return event.toString();
-    }
-
-    private String buildSummary(Ani ani) {
-        String title = ani.getTitle();
-        Integer season = ani.getSeason();
-        return StrUtil.format("{} 第{}季", title, season);
-    }
-
-    private String buildCategories(Ani ani) {
-        Boolean ova = ani.getOva();
-        Integer season = ani.getSeason();
-
-        return StrUtil.format("动漫,第{}季,{}", season, ova ? "剧场版/OVA" : "TV");
+        return new Calendar(propertyList, componentList).toString();
     }
 
     /**
-     * 根据番剧的星期信息构建重复规则
+     * 生成事件
      *
-     * @param ani 番剧信息
-     * @return RRULE字符串
+     * @param ani 订阅
+     * @return 事件
      */
-    private String buildRRule(Ani ani) {
+    private VEvent generateEvent(Ani ani) {
+        boolean ova = ani.getOva();
+        String bgmUrl = ani.getBgmUrl();
+        Instant now = Instant.now();
         Date releaseDate = ani.getReleaseDate();
 
-        // DateUtil.dayOfWeek返回1表示周日，7表示周六
-        int dayOfWeek = DateUtil.dayOfWeek(releaseDate);
+        String summary = buildSummary(ani);
+        LocalDate startDate = toLocalDate(releaseDate);
+        VEvent event = new VEvent(startDate, startDate.plusDays(1), summary);
 
-        String[] weekDays = {"SU", "MO", "TU", "WE", "TH", "FR", "SA"};
+        event
+                .add(generateUid(ani))
+                .add(new Url(URI.create(bgmUrl)))
+                .add(new DtStamp(now))
+                .add(new LastModified(now))
+                .add(new Status(Status.VALUE_CONFIRMED))
+                .add(new Transp(Transp.VALUE_TRANSPARENT))
+                .add(buildCategories(ani))
+                .add(buildDescription(ani));
 
-        // 获取ICS格式的星期
-        String icsDay = weekDays[dayOfWeek - 1];
+        if (!ova) {
+            event.add(buildRRule(ani));
+        }
+        return event;
+    }
 
-        // 构建RRULE：每周重复，直到番剧完结
+    /**
+     * 构建事件摘要，格式为 "标题 第X季"
+     *
+     * @param ani 订阅
+     * @return 摘要
+     */
+    private String buildSummary(Ani ani) {
+        String title = ani.getTitle();
+        Integer season = ani.getSeason();
+
+        return StrUtil.format("{} 第{}季", title, season);
+    }
+
+    /**
+     * 构建分类，包含 "动漫"、季度和类型（TV 或剧场版/OVA）
+     *
+     * @param ani 订阅
+     * @return 分类
+     */
+    private Categories buildCategories(Ani ani) {
+        boolean ova = ani.getOva();
+        Integer season = ani.getSeason();
+        String seasonLabel = StrUtil.format("第{}季", season);
+        String type = ova ? "剧场版/OVA" : "TV";
+
+        Categories categories = new Categories();
+        categories.addCategory("动漫");
+        categories.addCategory(seasonLabel);
+        categories.addCategory(type);
+
+        return categories;
+    }
+
+    /**
+     * 构建事件描述，包含标题、类型、季度和 Bangumi 链接
+     *
+     * @param ani 订阅
+     * @return 描述
+     */
+    private Description buildDescription(Ani ani) {
+        String title = ani.getTitle();
+        Boolean ova = ani.getOva();
+        String type = ova ? "剧场版/OVA" : "TV";
+        Integer season = ani.getSeason();
+        String bgmUrl = ani.getBgmUrl();
+
+        String s = """
+                标题: {}
+                类型: {}
+                季度: {}
+                Bangumi: {}
+                """;
+
+        s = StrUtil.format(s, title, type, season, bgmUrl);
+
+        return new Description(s);
+    }
+
+    private Version createVersion() {
+        Version version = new Version();
+        version.setValue(Version.VALUE_2_0);
+        return version;
+    }
+
+    private LocalDate toLocalDate(Date date) {
+        return date.toInstant().atZone(CALENDAR_ZONE).toLocalDate();
+    }
+
+    /**
+     * 构建 RRule，表示每周在指定日期重复，直到结束日期
+     *
+     * @param ani 订阅
+     * @return RRule
+     */
+    private RRule<Temporal> buildRRule(Ani ani) {
+        Date releaseDate = ani.getReleaseDate();
+        String icsDay = toIcsDay(releaseDate);
+
         StringBuilder rrule = new StringBuilder();
-        rrule.append("FREQ=WEEKLY");
-        rrule.append(";BYDAY=").append(icsDay);
 
+        // 开始时间
+        rrule.append("FREQ=WEEKLY;BYDAY=").append(icsDay);
+
+        // 结束时间
+        Date untilDate = getEndDate(ani);
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
+        rrule.append(";UNTIL=").append(dateFormat.format(untilDate));
+
+        return new RRule<>(rrule.toString());
+    }
+
+    /**
+     * 获取结束日期
+     *
+     * @param ani 订阅
+     * @return 结束日期
+     */
+    private Date getEndDate(Ani ani) {
+        Date releaseDate = ani.getReleaseDate();
         Integer totalEpisodeNumber = ani.getTotalEpisodeNumber();
+
         if (totalEpisodeNumber > 0) {
-            // 如果有总集数，计算结束日期（假设每周更新一集）
-            Date untilDate = DateUtil.offsetWeek(releaseDate, totalEpisodeNumber - 1);
-            String untilStr = ICS_DATE_FORMAT_ALL_DAY.format(untilDate);
-            rrule.append(";UNTIL=").append(untilStr);
-        } else {
-            // 没有总集数则结束日期为一个月后
-            Date untilDate = DateUtil.offsetMonth(DateUtil.beginOfDay(new Date()), 1);
-            String untilStr = ICS_DATE_FORMAT_ALL_DAY.format(untilDate);
-            rrule.append(";UNTIL=").append(untilStr);
+            // 一周一集, 计算结束时间
+            return DateUtil.offsetWeek(releaseDate, totalEpisodeNumber - 1);
         }
-
-        return rrule.toString();
+        // 如果没有总集数，默认持续一个月
+        return DateUtil.offsetMonth(DateUtil.beginOfDay(new Date()), 1);
     }
 
-    private String generateUid(ani.rss.entity.Ani ani) {
-        return "ani-rss-" + ani.getId() + "@ani-rss";
+    /**
+     * 将日期转换为 ICS 中的星期表示
+     *
+     * @param date 日期
+     * @return 星期表示（MO, TU, WE, TH, FR, SA, SU）
+     */
+    private String toIcsDay(Date date) {
+        Week week = DateUtil.dayOfWeekEnum(date);
+        return switch (week) {
+            case MONDAY -> "MO";
+            case TUESDAY -> "TU";
+            case WEDNESDAY -> "WE";
+            case THURSDAY -> "TH";
+            case FRIDAY -> "FR";
+            case SATURDAY -> "SA";
+            case SUNDAY -> "SU";
+        };
     }
 
-    private String escapeIcsText(String text) {
-        if (StrUtil.isBlank(text)) {
-            return "";
-        }
-
-        return text.replace("\\", "\\\\")
-                .replace(";", "\\;")
-                .replace(",", "\\,")
-                .replace("\n", "\\n")
-                .replace("\r", "")
-                .trim();
+    /**
+     * 生成 UID，确保每个事件都有唯一标识
+     *
+     * @param ani 订阅
+     * @return UID
+     */
+    private Uid generateUid(Ani ani) {
+        return new Uid("ani-rss-" + ani.getId() + "@ani-rss");
     }
 }
