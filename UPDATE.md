@@ -1,1 +1,1 @@
-- feat: 增加 日历ics 支持 close #688
+- feat: 优化ICS日历功能
