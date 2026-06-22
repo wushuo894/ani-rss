@@ -508,6 +508,7 @@ let openUrl = (url) => window.open(url)
   width: 45px;
   height: 45px;
   object-fit: cover;
+  flex-shrink: 0;
 }
 
 .match-content {

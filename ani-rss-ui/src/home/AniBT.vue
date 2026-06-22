@@ -452,6 +452,7 @@ let copy = (v) => {
   width: 45px;
   height: 45px;
   object-fit: cover;
+  flex-shrink: 0;
 }
 
 .match-content {
