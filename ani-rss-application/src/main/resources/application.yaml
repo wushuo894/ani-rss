@@ -28,8 +28,8 @@ server:
   address: 0.0.0.0
   tomcat:
     threads:
-      max: 8
-      min-spare: 4
+      max: 100
+      min-spare: 5
 
 springdoc:
   swagger-ui:
