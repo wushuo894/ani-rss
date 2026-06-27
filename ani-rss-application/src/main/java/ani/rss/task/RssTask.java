@@ -66,7 +66,7 @@ public class RssTask implements BaseTask {
     public static void sync() {
         synchronized (download) {
             if (download.get()) {
-                throw new RuntimeException("存在未完成任务，请等待...");
+                throw new IllegalStateException("存在未完成任务，请等待...");
             }
             download.set(true);
         }

@@ -4,6 +4,7 @@ import ani.rss.commons.FileUtils;
 import ani.rss.commons.GsonStatic;
 import ani.rss.dto.RssToAniDTO;
 import ani.rss.entity.*;
+import ani.rss.exception.ResultException;
 import ani.rss.service.ClearService;
 import ani.rss.service.DownloadService;
 import ani.rss.service.MikanService;
@@ -146,7 +147,7 @@ public class AniUtil {
                                 .setSubgroup(subgroup);
                     }
                 } catch (Exception e) {
-                    throw new RuntimeException("获取失败");
+                    throw ResultException.exception("获取失败");
                 }
                 break;
             case "ani-bt":

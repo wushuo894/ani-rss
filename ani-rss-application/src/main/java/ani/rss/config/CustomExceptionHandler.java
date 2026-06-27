@@ -13,8 +13,11 @@ import org.springframework.web.servlet.resource.NoResourceFoundException;
 @RestControllerAdvice
 public class CustomExceptionHandler {
 
-    @ExceptionHandler(IllegalArgumentException.class)
-    public Result<Void> illegalArgumentException(IllegalArgumentException e) {
+    @ExceptionHandler({
+            IllegalArgumentException.class,
+            IllegalStateException.class
+    })
+    public Result<Void> exception(Exception e) {
         return Result.error(e.getMessage());
     }
 
@@ -23,7 +26,11 @@ public class CustomExceptionHandler {
         return e.getResult();
     }
 
-    @ExceptionHandler({NoResourceFoundException.class, NoHandlerFoundException.class, HttpRequestMethodNotSupportedException.class})
+    @ExceptionHandler({
+            NoResourceFoundException.class,
+            NoHandlerFoundException.class,
+            HttpRequestMethodNotSupportedException.class
+    })
     public Result<Void> notFoundException() {
         return new Result<>(404, "404 Not Found !");
     }
