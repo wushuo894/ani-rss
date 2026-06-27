@@ -12,8 +12,8 @@
 
     <properties>
         <hutool.version>5.8.46</hutool.version>
-        <maven.compiler.source>17</maven.compiler.source>
-        <maven.compiler.target>17</maven.compiler.target>
+        <maven.compiler.source>${java.version}</maven.compiler.source>
+        <maven.compiler.target>${java.version}</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
@@ -34,9 +34,8 @@
 
     <dependencies>
         <dependency>
-            <groupId>io.swagger.core.v3</groupId>
-            <artifactId>swagger-core-jakarta</artifactId>
-            <version>2.2.49</version>
+            <groupId>org.mnode.ical4j</groupId>
+            <artifactId>ical4j</artifactId>
         </dependency>
         <dependency>
             <groupId>org.commonmark</groupId>
@@ -79,10 +78,6 @@
             <artifactId>tmdb-api</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.mnode.ical4j</groupId>
-            <artifactId>ical4j</artifactId>
-        </dependency>
-        <dependency>
             <groupId>ani.rss</groupId>
             <artifactId>ani-rss-ui</artifactId>
         </dependency>
@@ -96,6 +91,10 @@
         <dependency>
             <groupId>org.springdoc</groupId>
             <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.swagger.core.v3</groupId>
+            <artifactId>swagger-core-jakarta</artifactId>
         </dependency>
 
         <!-- Spring AI -->
@@ -258,7 +257,7 @@
                                     </singleInstance>
                                     <jre>
                                         <path>%JAVA_HOME%/bin;%PATH%</path>
-                                        <minVersion>17</minVersion>
+                                        <minVersion>${java.version}</minVersion>
                                         <opts>
                                             <opt>-Xms64m -Xmx512m -Xss256k -XX:+UseG1GC</opt>
                                             <opt>-XX:+UseStringDeduplication</opt>
