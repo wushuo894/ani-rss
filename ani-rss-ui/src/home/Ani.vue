@@ -220,24 +220,22 @@
             <el-form-item label="自定义标签">
               <div>
                 <el-switch v-model="props.ani.customTagsEnable"/>
-                <div
-                    :style="{ opacity: props.ani.customTagsEnable ? 1 : 0.4, 'pointer-events': props.ani.customTagsEnable ? 'auto' : 'none' }">
+                <Disable v-model="props.ani.customTagsEnable">
                   <custom-tags :config="props.ani"/>
-                </div>
+                </Disable>
               </div>
             </el-form-item>
             <el-form-item label="优先保留">
               <div class="full-width">
-                <el-switch v-model="props.ani['customPriorityKeywordsEnable']"/>
+                <el-switch v-model="props.ani.customPriorityKeywordsEnable"/>
                 <br>
-                <div
-                    :style="{ opacity: props.ani['customPriorityKeywordsEnable'] ? 1 : 0.4, 'pointer-events': props.ani['customPriorityKeywordsEnable'] ? 'auto' : 'none' }">
+                <Disable v-model="props.ani.customPriorityKeywordsEnable">
                   <PrioKeys
-                      v-model:keywords="props.ani['customPriorityKeywords']"
+                      v-model:keywords="props.ani.customPriorityKeywords"
                       :import-global="true"
                       :show-text="true"
                   />
-                </div>
+                </Disable>
               </div>
             </el-form-item>
             <el-form-item label="其它">
@@ -316,6 +314,7 @@ import * as http from "@/js/http.js";
 import {getBgmTitle} from "@/js/http.js";
 import AniBT from "@/home/AniBT.vue";
 import AnimeGarden from "@/home/AnimeGarden.vue";
+import Disable from "@/other/Disable.vue";
 
 const activeName = ref('base')
 
