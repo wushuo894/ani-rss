@@ -3,6 +3,7 @@ package ani.rss.service;
 import cn.hutool.core.date.DatePattern;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.lang.Opt;
 import cn.hutool.core.util.StrUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -17,6 +18,7 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
@@ -151,7 +153,10 @@ public class NfoGenerator {
         }
 
         // 演职人员
-        List<TmdbCreditsCast> cast = tmdb.getCredits().getCast();
+        TmdbCredits credits = tmdb.getCredits();
+        List<TmdbCreditsCast> cast = Opt.ofNullable(credits)
+                .map(TmdbCredits::getCast)
+                .orElse(new ArrayList<>());
         for (TmdbCreditsCast item : cast) {
             Element actor = doc.createElement("actor");
             rootElement.appendChild(actor);

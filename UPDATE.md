@@ -1,3 +1,1 @@
-- refactor: 修改tomcat最大线程数
-- refactor: 优化异常提示
-- build: 更新依赖
+- fix: 修复刮削错误
