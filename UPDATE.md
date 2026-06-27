@@ -1,1 +1,3 @@
-- fix: 修复封面变形问题
+- refactor: 修改tomcat最大线程数
+- refactor: 优化异常提示
+- build: 更新依赖
