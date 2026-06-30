@@ -135,12 +135,24 @@ const base64Encode = s => {
     return window.btoa(String.fromCharCode(...data));
 }
 
+const toApiUrl = (path, params) => {
+    const searchParams = new URLSearchParams(params);
+    const query = searchParams.toString();
+    return query ? `${path}?${query}` : path;
+}
+
 const proxyImage = imgUrl => {
-    return `${location.href}api/proxyImage?imgUrl=${base64Encode(imgUrl)}&s=${authorization.value}`
+    return toApiUrl('api/proxyImage', {
+        imgUrl: base64Encode(imgUrl),
+        s: authorization.value
+    })
 }
 
 const toApiFile = filename => {
-    return `${location.href}api/file?filename=${base64Encode(filename)}&s=${authorization.value}`
+    return toApiUrl('api/file', {
+        filename: base64Encode(filename),
+        s: authorization.value
+    })
 }
 
 export {
@@ -160,6 +172,7 @@ export {
     initTheme,
     initLayout,
     base64Encode,
+    toApiUrl,
     proxyImage,
     toApiFile
 };
