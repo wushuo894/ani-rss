@@ -102,17 +102,14 @@ import {ElText} from "element-plus";
 import BangumiMe from "@/config/basic/BangumiMe.vue";
 import {onMounted, ref} from "vue";
 import {setConfig} from "@/js/http.js";
+import {getBaseUrl} from "@/js/global.js";
 
 let bangumiMeRef = ref()
 
 let props = defineProps(['config'])
 
 let setRedirectUri = () => {
-  let redirectUri = location.href
-  if (!redirectUri.endsWith("/")) {
-    redirectUri += '/';
-  }
-  props.config['bgmRedirectUri'] = redirectUri + 'bgm-oauth-callback'
+  props.config['bgmRedirectUri'] = `${getBaseUrl()}bgm-oauth-callback`
 }
 
 onMounted(() => {

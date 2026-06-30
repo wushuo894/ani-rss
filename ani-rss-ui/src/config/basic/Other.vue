@@ -77,6 +77,7 @@ import {ElMessage, ElText} from "element-plus";
 import {ref} from "vue";
 import * as http from "@/js/http.js";
 import {Github} from "@vicons/fa";
+import {getBaseUrl} from "@/js/global.js";
 
 let openUrl = (url) => window.open(url)
 
@@ -93,21 +94,13 @@ let clearCache = () => {
 }
 
 let copyEmbyApi = () => {
-  let url = `${apiHref()}/embyWebHook?api-key=${props.config.apiKey}`;
+  let url = `${getBaseUrl()}api/embyWebHook?api-key=${props.config.apiKey}`;
   copy(url)
 }
 
 let copyIcs = () => {
-  let url = `${apiHref()}/calendar.ics?api-key=${props.config.apiKey}`;
+  let url = `${getBaseUrl()}api/calendar.ics?api-key=${props.config.apiKey}`;
   copy(url)
-}
-
-let apiHref = () => {
-  let redirectUri = location.href
-  if (!redirectUri.endsWith("/")) {
-    redirectUri += '/';
-  }
-  return redirectUri + "api"
 }
 
 let copy = (v) => {

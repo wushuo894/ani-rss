@@ -135,10 +135,16 @@ const base64Encode = s => {
     return window.btoa(String.fromCharCode(...data));
 }
 
+const getBaseUrl = () => {
+    const {protocol, host, pathname} = location
+    return `${protocol}//${host}${pathname}`
+}
+
 const toApiUrl = (path, params) => {
-    const searchParams = new URLSearchParams(params);
-    const query = searchParams.toString();
-    return query ? `${path}?${query}` : path;
+    const url = new URL(getBaseUrl())
+    url.pathname += path
+    url.search = new URLSearchParams(params).toString()
+    return url.toString();
 }
 
 const proxyImage = imgUrl => {
@@ -174,5 +180,6 @@ export {
     base64Encode,
     toApiUrl,
     proxyImage,
-    toApiFile
+    toApiFile,
+    getBaseUrl
 };
