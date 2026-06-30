@@ -38,7 +38,7 @@ public class CustomExceptionHandler {
     @ExceptionHandler(Exception.class)
     public Result<Void> handleException(Exception e) {
         log.error(e.getMessage(), e);
-        return Result.error();
+        return Result.error(e.getMessage());
     }
 
 }
