@@ -25,7 +25,7 @@ public class FileUtils {
     /**
      * 字幕格式
      */
-    private static final Set<String> SUBTITLE_FORMAT = Set.of("ass", "ssa", "sub", "srt", "lyc");
+    private static final Set<String> SUBTITLE_FORMAT = Set.of("ass", "ssa", "sub", "srt", "lyc", "sup", "pgs", "mks");
 
     /**
      * 图片格式
