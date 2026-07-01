@@ -149,7 +149,10 @@ public class OpenListUploadNotification implements BaseNotification {
 
     public void deleteOldEpisode(String localFilePath, String cloudFilePath) {
         // 本地文件列表
-        List<File> localFileList = FileUtils.listFileList(localFilePath);
+        List<File> localFileList = FileUtils.listFileList(localFilePath)
+                .stream()
+                .filter(FileUtil::isFile)
+                .toList();
 
         // 存储为MAP便于根据文件名寻找
         Map<String, File> localFileMap = localFileList.stream()
@@ -158,7 +161,6 @@ public class OpenListUploadNotification implements BaseNotification {
         // 本地集数列表
         Set<String> localEpisodeSet = localFileList
                 .stream()
-                .filter(FileUtil::isFile)
                 .map(File::getName)
                 .filter(name -> FileUtils.isVideoFormat(name) || FileUtils.isSubtitleFormat(name))
                 .filter(name -> ReUtil.contains(StringEnum.SEASON_REG, name))

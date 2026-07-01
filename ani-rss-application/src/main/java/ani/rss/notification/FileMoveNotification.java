@@ -15,6 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.io.File;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -114,6 +115,12 @@ public class FileMoveNotification implements BaseNotification {
     public void startMove(String src, String target) {
         Boolean copyModel = notificationConfig.getFileMoveCopyModel();
 
+        // 目标位置文件列表 存储为MAP便于根据文件名寻找
+        Map<String, File> targetFileMap = FileUtils.listFileList(target)
+                .stream()
+                .filter(File::isFile)
+                .collect(Collectors.toMap(File::getName, i -> i));
+
         for (File file : FileUtils.listFileList(src)) {
             if (!file.isFile()) {
                 // 过滤掉文件夹
@@ -129,6 +136,16 @@ public class FileMoveNotification implements BaseNotification {
                 // 确保命名
                 continue;
             }
+
+            if (targetFileMap.containsKey(name)) {
+                long targetFileLength = targetFileMap.get(name).length();
+                long srcFileLength = file.length();
+                if (targetFileLength == srcFileLength) {
+                    // 文件名与大小一致 跳过移动
+                    continue;
+                }
+            }
+
             log.info("文件移动: {} => {}", file, target);
             FileUtil.copy(file, new File(target), true);
 
@@ -148,9 +165,19 @@ public class FileMoveNotification implements BaseNotification {
      * @param target 新位置
      */
     public void deleteOldEpisode(String src, String target) {
-        Set<String> episodeSet = FileUtils.listFileList(src)
+        // 原位置文件列表
+        List<File> srcFileList = FileUtils.listFileList(src)
                 .stream()
                 .filter(FileUtil::isFile)
+                .toList();
+
+        // 存储为MAP便于根据文件名寻找
+        Map<String, File> srcFileMap = srcFileList.stream()
+                .collect(Collectors.toMap(File::getName, i -> i));
+
+        // 集数列表: S01E01, S01E02 ~
+        Set<String> episodeSet = srcFileList
+                .stream()
                 .map(File::getName)
                 .filter(name -> FileUtils.isVideoFormat(name) || FileUtils.isSubtitleFormat(name))
                 .filter(name -> ReUtil.contains(StringEnum.SEASON_REG, name))
@@ -168,6 +195,15 @@ public class FileMoveNotification implements BaseNotification {
             if (!ReUtil.contains(StringEnum.SEASON_REG, name)) {
                 // 确保命名
                 continue;
+            }
+
+            if (srcFileMap.containsKey(name)) {
+                long targetFileLength = file.length();
+                long srcFileLength = srcFileMap.get(name).length();
+                if (targetFileLength == srcFileLength) {
+                    // 文件名与大小一致 跳过删除
+                    continue;
+                }
             }
 
             String episode = ReUtil.get(StringEnum.SEASON_REG, name, 0);
