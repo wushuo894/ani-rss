@@ -31,6 +31,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
+import java.nio.file.Path;
 import java.util.*;
 import java.util.stream.Stream;
 
@@ -94,6 +95,8 @@ public class OpenList implements BaseDownload {
         Boolean delete = config.getDelete();
         Boolean coexist = config.getCoexist();
         try {
+            mkdir(path);
+
             // 删除残留任务
             deleteResidualTasks(magnet);
 
@@ -101,36 +104,23 @@ public class OpenList implements BaseDownload {
             if (standbyRss && delete && !coexist) {
                 String s = ReUtil.get(StringEnum.SEASON_REG, reName, 0);
                 String finalSavePath = savePath;
-                ls(savePath)
+                fsList(savePath, true)
                         .stream()
                         .map(OpenListFileInfo::getName)
                         .filter(name -> name.contains(s))
                         .forEach(name -> {
-                            postApi("fs/remove")
-                                    .body(GsonStatic.toJson(Map.of(
-                                            "dir", finalSavePath,
-                                            "names", List.of(name)
-                                    ))).then(HttpResponse::isOk);
+                            fsRemove(finalSavePath, List.of(name));
                             log.info("已开启备用RSS, 自动删除 {}/{}", finalSavePath, name);
                         });
             }
-            String tid = postApi("fs/add_offline_download")
-                    .body(GsonStatic.toJson(Map.of(
-                            "path", path,
-                            "urls", List.of(magnet),
-                            "tool", config.getProvider(),
-                            "delete_policy", "delete_on_upload_succeed"
-                    )))
-                    .thenFunction(res -> {
-                        HttpReq.assertStatus(res);
-                        JsonObject jsonObject = GsonStatic.fromJson(res.body(), JsonObject.class);
-                        Assert.isTrue(jsonObject.get("code").getAsInt() == 200, "添加离线下载失败 {}", reName);
-                        log.info("添加离线下载成功 {}", reName);
-                        return jsonObject.getAsJsonObject("data")
-                                .getAsJsonArray("tasks")
-                                .get(0).getAsJsonObject()
-                                .get("id").getAsString();
-                    });
+            String tid;
+            try {
+                tid = fsAddOfflineDownload(magnet, path);
+                log.info("添加离线下载成功 {}", reName);
+            } catch (Exception e) {
+                log.error("添加离线下载失败 {}", reName);
+                throw new IllegalStateException("添加离线下载失败 " + reName);
+            }
 
             // 记录开始时间
             DateTime startTime = DateTime.now();
@@ -245,7 +235,7 @@ public class OpenList implements BaseDownload {
 
             if (rename) {
                 // 重命名
-                List<Map<String, String>> rename_objects = renameMap.entrySet().stream()
+                List<Map<String, String>> renameObjects = renameMap.entrySet().stream()
                         .map(map -> {
                             String srcName = map.getKey();
                             String newName = map.getValue();
@@ -255,11 +245,7 @@ public class OpenList implements BaseDownload {
                                     "new_name", newName
                             );
                         }).toList();
-                postApi("fs/batch_rename")
-                        .body(GsonStatic.toJson(Map.of(
-                                "src_dir", videoFile.getPath(),
-                                "rename_objects", rename_objects
-                        ))).then(res -> log.info(res.body()));
+                fsBatchRename(renameObjects, videoFile.getPath());
             }
 
             // 移动
@@ -267,19 +253,10 @@ public class OpenList implements BaseDownload {
                     .stream()
                     .map(m -> rename ? m.getValue() : m.getKey())
                     .toList();
-            postApi("fs/move")
-                    .body(GsonStatic.toJson(Map.of(
-                            "src_dir", videoFile.getPath(),
-                            "dst_dir", savePath,
-                            "names", names
-                    ))).then(res -> log.info(res.body()));
+            fsMove(videoFile.getPath(), savePath, names);
 
             // 删除残留文件夹
-            postApi("fs/remove")
-                    .body(GsonStatic.toJson(Map.of(
-                            "dir", savePath,
-                            "names", List.of(reName)
-                    ))).then(HttpResponse::isOk);
+            fsRemove(savePath, List.of(reName));
 
             NotificationUtil.send(config, ani,
                     StrFormatter.format("{} 下载完成", item.getReName()),
@@ -318,19 +295,123 @@ public class OpenList implements BaseDownload {
     }
 
     /**
+     * 创建文件夹
+     * @param path 路径
+     */
+    public void mkdir(String path) {
+        postApi("fs/mkdir")
+                .body(GsonStatic.toJson(Map.of(
+                        "path", path
+                )))
+                .then(res -> {
+                    JsonObject jsonObject = GsonStatic.fromJson(res.body(), JsonObject.class);
+                    int code = jsonObject.get("code").getAsInt();
+                    String message = jsonObject.get("message").getAsString();
+                    if (code == 200) {
+                        log.info("创建文件夹: {}", path);
+                        return;
+                    }
+
+                    if (!message.startsWith("failed to check if dir exists")) {
+                        return;
+                    }
+
+                    Path pathObj = Path.of(path);
+
+                    if (pathObj.getNameCount() <= 1) {
+                        return;
+                    }
+
+                    String parentPath = pathObj
+                            .getParent()
+                            .toString()
+                            .replace('\\', '/');
+                    mkdir(parentPath);
+                    mkdir(path);
+                });
+    }
+
+    /**
+     * 移动文件
+     * @param srcDir 原目录
+     * @param dstDir 目标目录
+     * @param names 文件名
+     */
+    public void fsMove(String srcDir, String dstDir, List<String> names) {
+        postApi("fs/move")
+                .body(GsonStatic.toJson(Map.of(
+                        "src_dir", srcDir,
+                        "dst_dir", dstDir,
+                        "names", names
+                ))).then(res -> log.info(res.body()));
+    }
+
+    /**
+     * 删除文件
+     * @param dir 目录
+     * @param names 文件名
+     */
+    public void fsRemove(String dir, List<String> names) {
+        postApi("fs/remove")
+                .body(GsonStatic.toJson(Map.of(
+                        "dir", dir,
+                        "names", names
+                ))).then(HttpResponse::isOk);
+    }
+
+    /**
+     * 批量重命名
+     * @param mapList 重命名列表
+     * @param srcDir 目录
+     */
+    public void fsBatchRename(List<Map<String, String>> mapList, String srcDir) {
+        postApi("fs/batch_rename")
+                .body(GsonStatic.toJson(Map.of(
+                        "src_dir", srcDir,
+                        "rename_objects", mapList
+                ))).then(res -> log.info(res.body()));
+    }
+
+    /**
+     * 添加离线下载
+     * @param magnet 磁力链接
+     * @param path 离线位置
+     * @return tid
+     */
+    public String fsAddOfflineDownload(String magnet, String path) {
+        return postApi("fs/add_offline_download")
+                .body(GsonStatic.toJson(Map.of(
+                        "path", path,
+                        "urls", List.of(magnet),
+                        "tool", config.getProvider(),
+                        "delete_policy", "delete_on_upload_succeed"
+                )))
+                .thenFunction(res -> {
+                    HttpReq.assertStatus(res);
+                    JsonObject jsonObject = GsonStatic.fromJson(res.body(), JsonObject.class);
+                    log.debug(jsonObject.toString());
+                    Assert.isTrue(jsonObject.get("code").getAsInt() == 200);
+                    return jsonObject.getAsJsonObject("data")
+                            .getAsJsonArray("tasks")
+                            .get(0).getAsJsonObject()
+                            .get("id").getAsString();
+                });
+    }
+
+    /**
      * 文件列表
      *
      * @param path 目录
      * @return 文件列表
      */
-    public List<OpenListFileInfo> ls(String path) {
+    public List<OpenListFileInfo> fsList(String path, Boolean refresh) {
         try {
             return postApi("fs/list")
                     .body(GsonStatic.toJson(Map.of(
                             "path", path,
                             "page", 1,
                             "per_page", 0,
-                            "refresh", false
+                            "refresh", refresh
                     )))
                     .thenFunction(res -> {
                         JsonObject jsonObject = GsonStatic.fromJson(res.body(), JsonObject.class);
@@ -463,7 +544,7 @@ public class OpenList implements BaseDownload {
      * @return 文件列表
      */
     public synchronized List<OpenListFileInfo> findFiles(String path) {
-        List<OpenListFileInfo> openListFileInfos = ls(path);
+        List<OpenListFileInfo> openListFileInfos = fsList(path, true);
         List<OpenListFileInfo> list = openListFileInfos.stream()
                 .flatMap(openListFileInfo -> {
                     if (openListFileInfo.getIsDir()) {
