@@ -1,1 +1,1 @@
-- refactor: 支持更多字幕格式
+- refactor: 优化OpenList离线
