@@ -421,9 +421,9 @@ let mikanShow = () => {
   if (props.ani.url) {
     let url = new URL(props.ani.url);
     let searchParams = url.searchParams;
-    let bangumiId = searchParams.get("bangumiId");
-    if (bangumiId) {
-      query = `bangumiId: ${bangumiId}`
+    let mikanId = searchParams.get("bangumiId");
+    if (mikanId) {
+      query = `mikanId: ${mikanId}`
     }
   }
 

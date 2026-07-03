@@ -4,6 +4,7 @@ import ani.rss.commons.GroupRegexUtils;
 import ani.rss.entity.*;
 import ani.rss.util.basic.HttpReq;
 import ani.rss.util.other.AniUtil;
+import ani.rss.util.other.BgmUtil;
 import ani.rss.util.other.ConfigUtil;
 import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.date.DateUtil;
@@ -12,8 +13,6 @@ import cn.hutool.core.util.ReUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.core.util.URLUtil;
 import cn.hutool.http.HttpUtil;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.jsoup.Jsoup;
@@ -52,14 +51,14 @@ public class MikanService {
      * @return
      */
     public Mikan list(String text, Mikan.Season season) {
-        AtomicReference<JsonObject> scoreAtomicReference = new AtomicReference<>();
+        AtomicReference<Map<String, MikanBgm>> mikanBgmAtomicReference = new AtomicReference<>(new HashMap<>());
         AtomicReference<Mikan> mikanAtomicReference = new AtomicReference<>();
 
         // 并行获取 mikan 番剧列表及其评分
         CompletableFuture.allOf(
                 CompletableFuture.runAsync(() -> {
-                    JsonObject score = cacheService.getMikanScore();
-                    scoreAtomicReference.set(score);
+                    Map<String, MikanBgm> mikanBgm = cacheService.getMikanBgm();
+                    mikanBgmAtomicReference.set(mikanBgm);
                 }),
                 CompletableFuture.runAsync(() -> {
                     Mikan mikan = search(text, season);
@@ -67,20 +66,39 @@ public class MikanService {
                 })
         ).join();
 
-        JsonObject jsonObject = scoreAtomicReference.get();
+        Map<String, MikanBgm> mikanBgmMap = mikanBgmAtomicReference.get();
         Mikan mikan = mikanAtomicReference.get();
+
+        List<String> bgmIdList = AniUtil.ANI_LIST
+                .stream()
+                .map(Ani::getBgmUrl)
+                .filter(StrUtil::isNotBlank)
+                .map(BgmUtil::getSubjectId)
+                .distinct()
+                .toList();
 
         List<Mikan.Week> weeks = mikan.getWeeks();
         for (Mikan.Week week : weeks) {
             List<MikanInfo> mikanInfos = week.getItems();
             for (MikanInfo mikanInfo : mikanInfos) {
                 String url = mikanInfo.getUrl();
-                String id = ReUtil.get("\\d+(/)?$", url, 0);
-                id = StrUtil.blankToDefault(id, "");
-                Double score = Optional.ofNullable(jsonObject.get(id))
-                        .map(JsonElement::getAsDouble)
-                        .orElse(0.0);
-                mikanInfo.setScore(score);
+                String mikanId = ReUtil.get("\\d+(/)?$", url, 0);
+                if (StrUtil.isBlank(mikanId)) {
+                    continue;
+                }
+                if (!mikanBgmMap.containsKey(mikanId)) {
+                    continue;
+                }
+
+                MikanBgm mikanBgm = mikanBgmMap.get(mikanId);
+                Double score = mikanBgm.getScore();
+                String bgmId = mikanBgm.getBgmId();
+                mikanInfo.setScore(score)
+                        .setBgmId(bgmId);
+
+                if (bgmIdList.contains(bgmId)) {
+                    mikanInfo.setExists(true);
+                }
             }
             ListUtil.sort(mikanInfos, Comparator.comparingDouble(MikanInfo::getScore).reversed());
         }
@@ -98,12 +116,12 @@ public class MikanService {
         List<Mikan.Week> weeks = new ArrayList<>();
         List<Mikan.Season> seasons = new ArrayList<>();
 
-        String regex = "^bangumiId: (\\d+)$";
+        String regex = "^mikanId: (\\d+)$";
 
         if (ReUtil.contains(regex, text)) {
-            String bangumiId = ReUtil.get(regex, text, 1);
+            String mikanId = ReUtil.get(regex, text, 1);
 
-            MikanInfo mikanInfo = getMikanInfo(bangumiId);
+            MikanInfo mikanInfo = getMikanInfo(mikanId);
 
             weeks.add(
                     new Mikan.Week()

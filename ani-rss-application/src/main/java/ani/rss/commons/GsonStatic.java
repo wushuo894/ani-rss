@@ -8,6 +8,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import lombok.extern.slf4j.Slf4j;
 
+import java.lang.reflect.Type;
 import java.util.List;
 import java.util.TimeZone;
 
@@ -37,6 +38,10 @@ public class GsonStatic {
     public static <T> List<T> fromJsonList(String body, Class<T> clazz) {
         JsonArray array = GSON.fromJson(body, JsonArray.class);
         return fromJsonList(array, clazz);
+    }
+
+    public static <T> T fromJson(String body, Type type) {
+        return GSON.fromJson(body, type);
     }
 
     public static <T> T fromJson(String body, Class<T> tClass) {
