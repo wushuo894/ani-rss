@@ -1,4 +1,4 @@
-package ani.rss.dto;
+package ani.rss.entity.dto;
 
 import ani.rss.entity.Ani;
 import lombok.Data;

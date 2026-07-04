@@ -2,8 +2,8 @@ package ani.rss.util.other;
 
 import ani.rss.commons.FileUtils;
 import ani.rss.commons.GsonStatic;
-import ani.rss.dto.RssToAniDTO;
 import ani.rss.entity.*;
+import ani.rss.entity.dto.RssToAniDTO;
 import ani.rss.exception.ResultException;
 import ani.rss.service.ClearService;
 import ani.rss.service.DownloadService;

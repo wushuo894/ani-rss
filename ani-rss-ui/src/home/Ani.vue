@@ -44,6 +44,8 @@
                   </div>
                 </div>
                 <div style="width: 4px;"></div>
+                <el-button icon="Search" bg text @click="searchThemoviedb"/>
+                <div style="width: 4px;"></div>
                 <el-button icon="Refresh" bg text @click="getThemoviedbName" :loading="getThemoviedbNameLoading"/>
               </div>
             </el-form-item>
@@ -304,7 +306,7 @@ import Exclude from "@/config/Exclude.vue";
 import PrioKeys from "@/config/PrioKeys.vue";
 import Preview from "./Preview.vue";
 import {onMounted, ref} from "vue";
-import {ElMessage, ElText} from "element-plus";
+import {ElMessage, ElMessageBox, ElText} from "element-plus";
 import StandbyRss from "./StandbyRss.vue";
 import Mikan from "./Mikan.vue";
 import TmdbGroup from "./TmdbGroup.vue";
@@ -336,7 +338,10 @@ let getThemoviedbName = () => {
   }
 
   getThemoviedbNameLoading.value = true
-  http.getThemoviedbName(props.ani)
+  http.getThemoviedbName({
+    title: props.ani.title,
+    ova: props.ani.ova
+  })
       .then(res => {
         ElMessage.success(res.message)
         props.ani['themoviedbName'] = res.data['themoviedbName']
@@ -344,6 +349,26 @@ let getThemoviedbName = () => {
       })
       .finally(() => {
         getThemoviedbNameLoading.value = false
+      })
+}
+
+let searchThemoviedb = () => {
+  ElMessageBox.prompt('输入 TmdbId', {
+    confirmButtonText: 'OK',
+    confirmButtonClass: 'is-text is-has-bg el-button--primary',
+    cancelButtonText: 'Cancel',
+    cancelButtonClass: 'is-text is-has-bg',
+  })
+      .then(value => {
+        http.getThemoviedbName({
+          tmdbId: value.value,
+          ova: props.ani.ova
+        })
+            .then(res => {
+              ElMessage.success(res.message)
+              props.ani['themoviedbName'] = res.data['themoviedbName']
+              props.ani['tmdb'] = res.data['tmdb']
+            })
       })
 }
 

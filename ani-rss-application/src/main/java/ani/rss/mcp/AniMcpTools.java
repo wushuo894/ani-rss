@@ -1,8 +1,8 @@
 package ani.rss.mcp;
 
 import ani.rss.controller.AniController;
-import ani.rss.dto.RssToAniDTO;
 import ani.rss.entity.*;
+import ani.rss.entity.dto.RssToAniDTO;
 import ani.rss.exception.ResultException;
 import ani.rss.mcp.dto.ListSubscriptionDTO;
 import ani.rss.mcp.dto.SearchMikanDTO;

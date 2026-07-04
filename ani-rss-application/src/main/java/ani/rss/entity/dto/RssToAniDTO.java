@@ -1,4 +1,4 @@
-package ani.rss.dto;
+package ani.rss.entity.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
