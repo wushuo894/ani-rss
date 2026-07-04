@@ -56,14 +56,6 @@ public class AnimeGardenService {
         JsonObject bgmScore = cacheService.getBgmScore();
         JsonObject bgmCover = cacheService.getBgmCover();
 
-        List<AnimeGarden.Subject> subjectList = HttpReq.get(HOST + "/subjects")
-                .thenFunction(res -> {
-                    HttpReq.assertStatus(res);
-                    JsonObject jsonObject = GsonStatic.fromJson(res.body(), JsonObject.class);
-                    JsonArray subjects = jsonObject.getAsJsonArray("subjects");
-                    return GsonStatic.fromJsonList(subjects, AnimeGarden.Subject.class);
-                });
-
         List<String> bgmIdList = AniUtil.ANI_LIST
                 .stream()
                 .map(Ani::getBgmUrl)
@@ -72,25 +64,36 @@ public class AnimeGardenService {
                 .distinct()
                 .toList();
 
-        for (AnimeGarden.Subject subject : subjectList) {
-            String id = subject.getId();
+        List<AnimeGarden.Subject> subjectList = HttpReq.get(HOST + "/subjects")
+                .thenFunction(res -> {
+                    HttpReq.assertStatus(res);
+                    JsonObject jsonObject = GsonStatic.fromJson(res.body(), JsonObject.class);
+                    JsonArray subjects = jsonObject.getAsJsonArray("subjects");
+                    return GsonStatic.fromJsonList(subjects, AnimeGarden.Subject.class);
+                });
 
-            Double score = Optional.ofNullable(bgmScore.get(id))
-                    .map(JsonElement::getAsDouble)
-                    .orElse(0.0);
+        subjectList = subjectList.stream()
+                .peek(subject -> {
+                    String id = subject.getId();
 
-            String cover = Optional.ofNullable(bgmCover.get(id))
-                    .map(it -> GsonStatic.fromJson(it, BgmInfo.Images.class))
-                    .map(BgmInfo.Images::getSmall)
-                    .orElse("");
+                    Double score = Optional.ofNullable(bgmScore.get(id))
+                            .map(JsonElement::getAsDouble)
+                            .orElse(0.0);
 
-            boolean exists = bgmIdList.contains(subject.getId());
+                    String cover = Optional.ofNullable(bgmCover.get(id))
+                            .map(it -> GsonStatic.fromJson(it, BgmInfo.Images.class))
+                            .map(BgmInfo.Images::getSmall)
+                            .orElse("");
 
-            subject
-                    .setScore(score)
-                    .setCover(cover)
-                    .setExists(exists);
-        }
+                    boolean exists = bgmIdList.contains(subject.getId());
+
+                    subject
+                            .setScore(score)
+                            .setCover(cover)
+                            .setExists(exists);
+                })
+                .sorted(Comparator.comparingDouble(AnimeGarden.Subject::getScore).reversed())
+                .toList();
 
         List<String> weeks = List.of("星期日", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六");
 

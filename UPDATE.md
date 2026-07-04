@@ -1,1 +1,2 @@
 - refactor: 优化 AniBT 列表
+- refactor: 优化 AnimeGarden 列表
