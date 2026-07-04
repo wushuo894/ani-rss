@@ -1,1 +1,1 @@
-- refactor: 优化mikan
+- fix: 修复备用rss中mikan跳转问题
