@@ -116,7 +116,7 @@ public class MikanService {
         List<Mikan.Week> weeks = new ArrayList<>();
         List<Mikan.Season> seasons = new ArrayList<>();
 
-        String regex = "^mikanId: (\\d+)$";
+        String regex = "^MikanId: (\\d+)$";
 
         if (ReUtil.contains(regex, text)) {
             String mikanId = ReUtil.get(regex, text, 1);
