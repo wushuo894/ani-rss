@@ -40,7 +40,7 @@ public class NotificationController extends BaseController {
         String image = ani.getImage();
         String title = ani.getTitle();
 
-        ani.setCover(AniUtil.saveJpg(image))
+        ani.setCover(AniUtil.saveCover(image))
                 .setCurrentEpisodeNumber(6)
                 .setTotalEpisodeNumber(12)
                 .setSubgroup("未知字幕组");

@@ -29,7 +29,9 @@ import lombok.extern.slf4j.Slf4j;
 import wushuo.tmdb.api.entity.Tmdb;
 
 import java.io.File;
+import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Path;
 import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -85,7 +87,7 @@ public class AniUtil {
 
             // 自动修补缺失的封面
             String image = ani.getImage();
-            saveJpg(image);
+            saveCover(image);
 
             Ani newAni = AniUtil.createAni();
             BeanUtil.copyProperties(newAni, ani, copyOptions);
@@ -260,8 +262,8 @@ public class AniUtil {
     }
 
 
-    public static String saveJpg(String coverUrl) {
-        return saveJpg(coverUrl, false);
+    public static String saveCover(String coverUrl) {
+        return saveCover(coverUrl, false);
     }
 
     /**
@@ -271,31 +273,41 @@ public class AniUtil {
      * @param isOverride 是否覆盖
      * @return
      */
-    public static String saveJpg(String coverUrl, Boolean isOverride) {
+    public static String saveCover(String coverUrl, Boolean isOverride) {
         File configDir = ConfigUtil.getConfigDir();
-        FileUtil.mkdir(configDir + "/files/");
+        File filesDir = new File(configDir, "files");
+        FileUtil.mkdir(filesDir);
 
         // 默认空图片
         String cover = "cover.png";
-        if (!FileUtil.exist(configDir + "/files/" + cover)) {
-            byte[] bytes = ResourceUtil.readBytes("image/cover.png");
-            FileUtil.writeBytes(bytes, configDir + "/files/" + cover);
+        File defaultFile = Path.of(filesDir.toString(), cover).toFile();
+        if (!defaultFile.exists()) {
+            try (InputStream inputStream = ResourceUtil.getStream("image/cover.png")) {
+                FileUtil.writeFromStream(inputStream, defaultFile);
+            } catch (Exception e) {
+                log.error(e.getMessage(), e);
+            }
         }
         if (StrUtil.isBlank(coverUrl)) {
             return cover;
         }
-        String filename = SecureUtil.md5(coverUrl);
-        filename = filename.charAt(0) + "/" + filename + "." + FileUtil.extName(URLUtil.getPath(coverUrl));
-        FileUtil.mkdir(configDir + "/files/" + filename.charAt(0));
-        File file = new File(configDir + "/files/" + filename);
+
+        String extName = FileUtil.extName(URLUtil.getPath(coverUrl));
+        // 取url的md5作为文件名, 避免重复下载
+        String filename = SecureUtil.md5(coverUrl) + "." + extName;
+
+        File dir = new File(filesDir.toString(), String.valueOf(filename.charAt(0)));
+
+        FileUtil.mkdir(dir);
+        File file = new File(dir, filename);
         if (file.exists() && !isOverride) {
-            return filename;
+            return filename.charAt(0) + "/" + filename;
         }
         FileUtil.del(file);
         try {
             HttpReq.get(coverUrl)
                     .then(res -> FileUtil.writeFromStream(res.bodyStream(), file));
-            return filename;
+            return filename.charAt(0) + "/" + filename;
         } catch (Exception e) {
             log.error(e.getMessage(), e);
             return cover;

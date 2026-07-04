@@ -127,8 +127,8 @@ public class ScrapeService {
         String posterExtName = FileUtil.extName(posterPath);
         String fanartExtName = FileUtil.extName(fanartPath);
 
-        File posterFile = new File(downloadPath + "/poster." + posterExtName);
-        File fanartFile = new File(downloadPath + "/fanart." + fanartExtName);
+        File posterFile = new File(downloadPath, "poster." + posterExtName);
+        File fanartFile = new File(downloadPath, "fanart." + fanartExtName);
 
         // 封面、背景图
         saveImages(posterPath, posterFile, force);
@@ -144,7 +144,7 @@ public class ScrapeService {
         TmdbImage tmdbImage = logos.get(0);
         String logoPath = tmdbImage.getFilePath();
         String extName = FileUtil.extName(logoPath);
-        File logoFile = new File(downloadPath + "/clearlogo." + extName);
+        File logoFile = new File(downloadPath, "clearlogo." + extName);
         saveImages(logoPath, logoFile, force);
     }
 
@@ -173,9 +173,9 @@ public class ScrapeService {
         }
 
         // tvshow.nfo
-        String tvShowNfoFile = downloadPath.getParent() + "/tvshow.nfo";
+        File tvShowNfoFile = new File(downloadPath.getParent(), "tvshow.nfo");
         if (force || !FileUtil.exist(tvShowNfoFile)) {
-            nfoGenerator.generateTvShowNfo(tmdb, tvShowNfoFile);
+            nfoGenerator.generateTvShowNfo(tmdb, tvShowNfoFile.toString());
         }
 
         String posterPath = tmdb.getPosterPath();
@@ -184,8 +184,8 @@ public class ScrapeService {
         String posterExtName = FileUtil.extName(posterPath);
         String fanartExtName = FileUtil.extName(fanartPath);
 
-        File posterFile = new File(downloadPath.getParent() + "/poster." + posterExtName);
-        File fanartFile = new File(downloadPath.getParent() + "/fanart." + fanartExtName);
+        File posterFile = new File(downloadPath.getParent(), "poster." + posterExtName);
+        File fanartFile = new File(downloadPath.getParent(), "fanart." + fanartExtName);
 
         // 封面、背景图
         saveImages(posterPath, posterFile, force);
@@ -198,7 +198,7 @@ public class ScrapeService {
             TmdbImage tmdbImage = logos.get(0);
             String logoPath = tmdbImage.getFilePath();
             String extName = FileUtil.extName(logoPath);
-            File logoFile = new File(downloadPath.getParent() + "/clearlogo." + extName);
+            File logoFile = new File(downloadPath.getParent(), "clearlogo." + extName);
             saveImages(logoPath, logoFile, force);
         }
 
@@ -217,13 +217,13 @@ public class ScrapeService {
         String seasonPosterPath = tmdbSeason.getPosterPath();
         seasonPosterPath = StrUtil.blankToDefault(seasonPosterPath, posterPath);
         String seasonPosterExtName = FileUtil.extName(seasonPosterPath);
-        File seasonPosterFile = new File(downloadPath.getParent() + "/season" + seasonFormat + "-poster." + seasonPosterExtName);
+        File seasonPosterFile = new File(downloadPath.getParent(), "season" + seasonFormat + "-poster." + seasonPosterExtName);
         saveImages(seasonPosterPath, seasonPosterFile, force);
 
         // 季nfo
-        String seasonNfoFile = downloadPath + "/season.nfo";
-        if (force || !FileUtil.exist(seasonNfoFile)) {
-            nfoGenerator.generateSeasonNfo(tmdbSeason, seasonNfoFile);
+        File seasonNfoFile = new File(downloadPath, "season.nfo");
+        if (force || !seasonNfoFile.exists()) {
+            nfoGenerator.generateSeasonNfo(tmdbSeason, seasonNfoFile.toString());
         }
 
         File[] files = FileUtils.listFiles(downloadPath);
@@ -285,7 +285,7 @@ public class ScrapeService {
             String thumbPath = tmdbEpisode.getStillPath();
             if (StrUtil.isNotBlank(thumbPath)) {
                 String thumbExtName = FileUtil.extName(thumbPath);
-                File thumbFile = new File(downloadPath + "/" + mainName + "-thumb." + thumbExtName);
+                File thumbFile = new File(downloadPath, mainName + "-thumb." + thumbExtName);
 
                 // 判断条件: 追更 or 强制
                 saveImages(thumbPath, thumbFile, isFollow || force);

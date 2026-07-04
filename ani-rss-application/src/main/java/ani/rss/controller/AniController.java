@@ -522,7 +522,7 @@ public class AniController extends BaseController {
 
             if (first.isEmpty()) {
                 String image = ani.getImage();
-                String cover = AniUtil.saveJpg(image);
+                String cover = AniUtil.saveCover(image);
                 ani.setCover(cover)
                         .setId(UUID.fastUUID().toString());
                 AniUtil.ANI_LIST.add(ani);
@@ -536,7 +536,7 @@ public class AniController extends BaseController {
 
             log.info("存在冲突，已替换 {} 第{}季", title, season);
             String image = ani.getImage();
-            String cover = AniUtil.saveJpg(image);
+            String cover = AniUtil.saveCover(image);
             ani.setCover(cover);
 
             String[] ignoreProperties = new String[]{"id", "currentEpisodeNumber", "lastDownloadTime"};
@@ -551,7 +551,7 @@ public class AniController extends BaseController {
     @Operation(summary = "刷新封面")
     @PostMapping("/refreshCover")
     public Result<String> refreshCover(@RequestBody Ani ani) {
-        String s = AniUtil.saveJpg(ani.getImage(), true);
+        String s = AniUtil.saveCover(ani.getImage(), true);
         return Result.success(r -> r.setData(s));
     }
 

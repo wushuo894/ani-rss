@@ -20,7 +20,7 @@ public class MacOS implements Runnable {
     public void run() {
         String basedir = System.getProperty("basedir");
 
-        File target = new File(basedir + "/target");
+        File target = new File(basedir, "target");
         Assert.isTrue(target.exists(), "target not exists");
 
         File macosZip = new File(target, "ani-rss-macos-main.zip");

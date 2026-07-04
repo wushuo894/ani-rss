@@ -91,9 +91,9 @@ public class TorrentUtil {
         String torrent = item.getTorrent();
         if (ReUtil.contains(StringEnum.MAGNET_REG, torrent)
                 || ReUtil.contains(StringEnum.ED2K_REG, torrent)) {
-            return new File(torrents + "/" + infoHash + ".txt");
+            return new File(torrents, infoHash + ".txt");
         }
-        return new File(torrents + "/" + infoHash + ".torrent");
+        return new File(torrents, infoHash + ".torrent");
     }
 
     /**
@@ -237,7 +237,8 @@ public class TorrentUtil {
             return true;
         }
         // 清理空文件夹
-        SpringUtil.getBean(ClearService.class).clearParentFile(new File(torrentsInfo.getDownloadDir() + "/" + name));
+        SpringUtil.getBean(ClearService.class)
+                .clearParentFile(new File(torrentsInfo.getDownloadDir(), name));
         return true;
     }
 

@@ -28,6 +28,7 @@ import java.io.OutputStream;
 import java.io.RandomAccessFile;
 import java.nio.channels.Channels;
 import java.nio.channels.FileChannel;
+import java.nio.file.Path;
 
 @Slf4j
 @RestController
@@ -73,7 +74,7 @@ public class FileController extends BaseController {
         File file = new File(filename);
         if (!file.exists()) {
             File configDir = ConfigUtil.getConfigDir();
-            file = new File(configDir + "/files/" + filename);
+            file = Path.of(configDir.toString(), "files", filename).toFile();
             if (!file.exists()) {
                 writeNotFound();
                 return;

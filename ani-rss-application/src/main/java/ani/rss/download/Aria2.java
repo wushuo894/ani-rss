@@ -231,7 +231,7 @@ public class Aria2 implements BaseDownload {
         for (File src : files) {
             String name = src.getName();
             String fileReName = getFileReName(name, reName);
-            File newPath = new File(downloadDir + "/" + fileReName);
+            File newPath = new File(downloadDir, fileReName);
             if (FileUtil.equals(src, newPath)) {
                 continue;
             }

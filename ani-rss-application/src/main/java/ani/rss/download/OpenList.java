@@ -296,6 +296,7 @@ public class OpenList implements BaseDownload {
 
     /**
      * 创建文件夹
+     *
      * @param path 路径
      */
     public void mkdir(String path) {
@@ -333,9 +334,10 @@ public class OpenList implements BaseDownload {
 
     /**
      * 移动文件
+     *
      * @param srcDir 原目录
      * @param dstDir 目标目录
-     * @param names 文件名
+     * @param names  文件名
      */
     public void fsMove(String srcDir, String dstDir, List<String> names) {
         postApi("fs/move")
@@ -348,7 +350,8 @@ public class OpenList implements BaseDownload {
 
     /**
      * 删除文件
-     * @param dir 目录
+     *
+     * @param dir   目录
      * @param names 文件名
      */
     public void fsRemove(String dir, List<String> names) {
@@ -361,8 +364,9 @@ public class OpenList implements BaseDownload {
 
     /**
      * 批量重命名
+     *
      * @param mapList 重命名列表
-     * @param srcDir 目录
+     * @param srcDir  目录
      */
     public void fsBatchRename(List<Map<String, String>> mapList, String srcDir) {
         postApi("fs/batch_rename")
@@ -374,8 +378,9 @@ public class OpenList implements BaseDownload {
 
     /**
      * 添加离线下载
+     *
      * @param magnet 磁力链接
-     * @param path 离线位置
+     * @param path   离线位置
      * @return tid
      */
     public String fsAddOfflineDownload(String magnet, String path) {

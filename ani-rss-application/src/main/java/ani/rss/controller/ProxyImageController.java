@@ -25,6 +25,7 @@ import java.io.File;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URI;
+import java.nio.file.Path;
 import java.util.function.Consumer;
 
 @Slf4j
@@ -49,7 +50,7 @@ public class ProxyImageController extends BaseController {
         File configDir = ConfigUtil.getConfigDir();
 
         File file = new File(URLUtil.getPath(imgUrl));
-        configDir = new File(configDir + "/img/" + file.getParentFile().getName());
+        configDir = Path.of(configDir.toString(), "img", file.getParentFile().getName()).toFile();
         FileUtil.mkdir(configDir);
 
         File imgFile = new File(configDir, file.getName());

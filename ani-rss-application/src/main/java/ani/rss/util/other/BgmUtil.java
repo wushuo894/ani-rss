@@ -856,7 +856,7 @@ public class BgmUtil {
                 // 图片http地址
                 .setImage(image)
                 // 本地图片地址
-                .setCover(AniUtil.saveJpg(image));
+                .setCover(AniUtil.saveCover(image));
 
         // 获取tmdb标题
         String themoviedbName = TmdbUtils.getFinalName(ani);

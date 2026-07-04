@@ -57,9 +57,9 @@ public class ConfigUtil {
             rootPath = FileUtil.getUserHomePath() + "/Movies";
         }
 
-        String downloadPath = FileUtils.getAbsolutePath(new File(rootPath + "/番剧"));
-        String ovaDownloadPath = FileUtils.getAbsolutePath(new File(rootPath + "/剧场版"));
-        String completedPath = FileUtils.getAbsolutePath(new File(rootPath + "/已完结番剧"));
+        String downloadPath = FileUtils.getAbsolutePath(new File(rootPath, "番剧"));
+        String ovaDownloadPath = FileUtils.getAbsolutePath(new File(rootPath, "剧场版"));
+        String completedPath = FileUtils.getAbsolutePath(new File(rootPath, "已完结番剧"));
 
         String downloadPathTemplate = StrFormatter.format("{}/${title}/Season ${season}", downloadPath);
         String ovaDownloadPathTemplate = StrFormatter.format("{}/${title}", ovaDownloadPath);
@@ -261,7 +261,7 @@ public class ConfigUtil {
         // macOS / Windows 默认为 用户目录/ani-rss
         OsInfo osInfo = SystemUtil.getOsInfo();
         if (osInfo.isWindows() || osInfo.isMac()) {
-            file = new File(FileUtil.getUserHomePath() + "/ani-rss");
+            file = new File(FileUtil.getUserHomePath(), "ani-rss");
         }
 
         return file;
@@ -331,10 +331,10 @@ public class ConfigUtil {
         clearBackup();
 
         File configDir = getConfigDir();
-        File backupDir = new File(configDir + "/backup");
+        File backupDir = new File(configDir, "backup");
 
         String date = DateUtil.format(new Date(), DatePattern.NORM_DATE_PATTERN);
-        File backupFile = new File(backupDir + "/" + date + ".zip");
+        File backupFile = new File(backupDir, date + ".zip");
 
         if (backupFile.exists()) {
             return;
@@ -393,7 +393,7 @@ public class ConfigUtil {
         long expirationTime = DateUtil.offsetDay(new Date(), -configBackupDay).getTime();
 
         File configDir = getConfigDir();
-        File backupDir = new File(configDir + "/backup");
+        File backupDir = new File(configDir, "backup");
         if (!backupDir.exists()) {
             return;
         }
