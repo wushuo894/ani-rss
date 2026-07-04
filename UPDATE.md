@@ -1,1 +1,1 @@
-- fix: 修复备用rss中mikan跳转问题
+- refactor: 优化 AniBT 列表
