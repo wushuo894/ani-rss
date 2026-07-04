@@ -51,6 +51,8 @@ public class AniBT implements Serializable {
         private String format;
         @Schema(description = "是否已订阅")
         private Boolean exists;
+        @Schema(description = "RSS发布数量")
+        private Integer rssReleaseCount;
     }
 
     @Data
