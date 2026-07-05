@@ -14,6 +14,7 @@ import java.io.File;
 import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -39,6 +40,11 @@ public class ClearService {
             return;
         }
         File parentFile = file.getParentFile();
+
+        if (Objects.isNull(parentFile)) {
+            return;
+        }
+
         List<String> list = Arrays.asList(ObjectUtil.defaultIfNull(parentFile.list(), new String[]{}));
         list = list.stream()
                 .filter(f -> !f.endsWith(".nfo"))
