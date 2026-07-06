@@ -1,1 +1,1 @@
-- feat: AniBT 支持搜索
+- fix: 修复 TMDB 错误
