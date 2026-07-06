@@ -38,6 +38,17 @@
     <el-checkbox-group v-model="rssList">
       <div class="content-wrapper">
         <div class="search-section">
+          <div class="search-header">
+            <el-input v-model:model-value="title" clearable placeholder="请输入搜索标题"
+                      prefix-icon="Search"
+                      @clear="()=>{
+            title = ''
+            search()
+          }"
+                      @keyup.enter="search()"></el-input>
+            <div class="spacer"></div>
+            <el-button :loading="searchLoading" bg icon="Search" text @click="search()">搜索</el-button>
+          </div>
           <div class="flex season-selector">
             <el-select v-model="season" class="season-select"
                        @change="change">
@@ -170,12 +181,16 @@ let show = (bgmUrl = '') => {
     'items': []
   }
   rssList.value = []
-  list(bgmUrl)
+  search(bgmUrl)
 }
 
-let list = async (bgmUrl = '') => {
+let title = ref('')
+let searchLoading = ref(false)
+
+let search = async (bgmUrl = '') => {
   loading.value = true
-  return http.aniBT(season.value, bgmUrl)
+  searchLoading.value = true
+  return http.aniBT(season.value, bgmUrl, title.value)
       .then(res => {
         let {requestedSeason, availableSeasons, byWeekday} = res.data;
 
@@ -188,13 +203,14 @@ let list = async (bgmUrl = '') => {
       })
       .finally(() => {
         loading.value = false
+        searchLoading.value = false
       });
 }
 
 let change = (v) => {
   let body = data.value.seasons.filter(item => item === v)
   if (body.length) {
-    list()
+    search()
   }
 }
 
@@ -355,6 +371,11 @@ let copy = (v) => {
 
 .search-section {
   margin: 4px;
+}
+
+.search-header {
+  display: flex;
+  justify-content: space-between;
 }
 
 .season-selector {

@@ -7,6 +7,7 @@ import ani.rss.commons.WeekComparator;
 import ani.rss.entity.Ani;
 import ani.rss.entity.AniBT;
 import ani.rss.entity.GroupRegex;
+import ani.rss.entity.dto.AniBTQueryDTO;
 import ani.rss.util.basic.HttpReq;
 import ani.rss.util.other.AniUtil;
 import ani.rss.util.other.BgmUtil;
@@ -23,7 +24,9 @@ import java.util.List;
 public class AniBTService {
     private static final String HOST = "https://anibt.net";
 
-    public AniBT list(String season, String bgmUrl) {
+    public AniBT list(AniBTQueryDTO dto) {
+        String title = dto.getTitle();
+
         List<String> bgmIdList = AniUtil.ANI_LIST
                 .stream()
                 .map(Ani::getBgmUrl)
@@ -32,15 +35,23 @@ public class AniBTService {
                 .distinct()
                 .toList();
 
-        String bgmId = "";
+        String bgmUrl = dto.getBgmUrl();
+        String season = dto.getSeason();
 
+        String bgmId = "";
         if (StrUtil.isNotBlank(bgmUrl)) {
             bgmId = BgmUtil.getSubjectId(bgmUrl);
+        }
+
+        if (StrUtil.isNotBlank(title)) {
+            season = "";
+            bgmId = "";
         }
 
         AniBT aniBT = HttpReq.get(HOST + "/api/seasons/anime")
                 .form("season", season)
                 .form("bgmId", bgmId)
+                .form("query", title)
                 .thenFunction(res -> {
                     HttpReq.assertStatus(res);
                     JsonObject jsonObject = GsonStatic.fromJson(res.body(), JsonObject.class);
@@ -53,7 +64,12 @@ public class AniBTService {
         for (AniBT.ByWeekday weekday : byWeekday) {
             List<AniBT.Anime> animeList = weekday.getAnimes();
             animeList = animeList.stream()
-                    .filter(anime -> anime.getRssReleaseCount() > 0)
+                    .filter(anime -> {
+                        if (StrUtil.isBlank(title)) {
+                            return anime.getRssReleaseCount() > 0;
+                        }
+                        return true;
+                    })
                     .sorted(Comparator.comparingDouble(AniBT.Anime::getRating).reversed())
                     .peek(anime -> {
                         boolean exists = bgmIdList.contains(anime.getBgmId());

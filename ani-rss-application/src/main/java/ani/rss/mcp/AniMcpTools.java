@@ -2,6 +2,7 @@ package ani.rss.mcp;
 
 import ani.rss.controller.AniController;
 import ani.rss.entity.*;
+import ani.rss.entity.dto.AniBTQueryDTO;
 import ani.rss.entity.dto.RssToAniDTO;
 import ani.rss.exception.ResultException;
 import ani.rss.mcp.dto.ListSubscriptionDTO;
@@ -87,7 +88,7 @@ public class AniMcpTools {
             )
     )
     public AniBT searchAniBT() {
-        return aniBTService.list("", "");
+        return aniBTService.list(new AniBTQueryDTO());
     }
 
     @McpTool(

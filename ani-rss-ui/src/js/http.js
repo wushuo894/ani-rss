@@ -373,9 +373,14 @@ export let getAniBySubjectId = (id) => api.post(`api/getAniBySubjectId?id=${id}`
  * 获取AniBT番剧列表
  * @param season 季度
  * @param bgmUrl
+ * @param text
  * @returns {Promise<unknown>}
  */
-export let aniBT = (season, bgmUrl) => api.post(`api/aniBT?season=${season}&bgmUrl=${bgmUrl}`)
+export let aniBT = (season, bgmUrl, text) => api.post('api/aniBT', {
+    season,
+    bgmUrl,
+    title: text
+})
 
 /**
  * 删除缓存的种子
