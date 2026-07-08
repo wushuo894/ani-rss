@@ -128,17 +128,7 @@
           stripe
       >
         <el-table-column type="selection" width="55" fixed/>
-        <el-table-column label="状态" width="80">
-          <template #default="it">
-            <el-tag v-if="searchList[it.$index].enable">
-              已启用
-            </el-tag>
-            <el-tag v-else type="info">
-              未启用
-            </el-tag>
-          </template>
-        </el-table-column>
-        <el-table-column label="标题" width="200">
+        <el-table-column label="标题" width="200" fixed>
           <template #default="it">
             <el-text :line-clamp="2" size="small">
               {{ searchList[it.$index].title }}
@@ -151,6 +141,16 @@
             <el-text size="small" truncated>
               {{ searchList[it.$index].subgroup }}
             </el-text>
+          </template>
+        </el-table-column>
+        <el-table-column label="状态" width="80">
+          <template #default="it">
+            <el-tag v-if="searchList[it.$index].enable">
+              已启用
+            </el-tag>
+            <el-tag v-else type="info">
+              未启用
+            </el-tag>
           </template>
         </el-table-column>
         <el-table-column label="进度" width="100">
@@ -171,9 +171,9 @@
             </el-tag>
           </template>
         </el-table-column>
-        <el-table-column label="URL" width="600">
+        <el-table-column label="URL" width="300">
           <template #default="it">
-            <el-text :line-clamp="1" size="small" truncated>
+            <el-text :line-clamp="2" size="small">
               {{ searchList[it.$index].url }}
             </el-text>
           </template>
