@@ -2,10 +2,10 @@
   <el-dialog v-model="dialogVisible" center title="封面">
     <div class="content">
       <div>
-        <el-image :alt="ani.title"
-                  :src="`${toApiFile(ani['cover'])}&t=${time}`"
-                  fit="cover"
-                  class="cover"
+        <img
+            :src="`${toApiFile(ani['cover'])}&t=${time}`"
+            :alt="ani.title"
+            class="cover"
         />
       </div>
       <div style="width: 12px;">
@@ -125,6 +125,7 @@ defineExpose({show})
 }
 
 .cover {
+  border: 1px solid var(--el-border-color-light);
   border-radius: var(--el-border-radius-base);
   cursor: pointer;
   height: 260px;

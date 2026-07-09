@@ -2,7 +2,7 @@
   <el-card shadow="never">
     <div class="list-card-content">
       <div class="list-card-image-container">
-        <img :src="toApiFile(item['cover'])" height="130" width="92"
+        <img :src="toApiFile(item['cover'])"
              :alt="item.title"
              class="list-card-image"
              @click="emit('cover', item)"/>
@@ -128,8 +128,11 @@ let props = defineProps(["item"])
 }
 
 .list-card-image {
+  border: 1px solid var(--el-border-color-light);
   border-radius: var(--el-border-radius-base);
   cursor: pointer;
+  height: 130px;
+  width: 92px;
 }
 
 .list-card-info {
