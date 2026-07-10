@@ -128,18 +128,17 @@ public class OpenList implements BaseDownload {
             // 重试次数
             long retry = 0;
             while (true) {
-                Integer alistDownloadTimeout = config.getAlistDownloadTimeout();
-                Long alistDownloadRetryNumber = config.getAlistDownloadRetryNumber();
+                Integer openListDownloadTimeout = config.getOpenListDownloadTimeout();
+                Long openListDownloadRetryNumber = config.getOpenListDownloadRetryNumber();
 
-                DateTime endTime = DateUtil.offsetMinute(startTime, alistDownloadTimeout);
+                DateTime endTime = DateUtil.offsetMinute(startTime, openListDownloadTimeout);
                 DateTime currentTime = DateTime.now();
                 if (currentTime.getTime() >= endTime.getTime()) {
                     // 超过下载超时限制
-                    log.error("{} {} 分钟还未下载完成, 停止检测下载", reName, alistDownloadTimeout);
+                    log.error("{} {} 分钟还未下载完成, 停止检测下载", reName, openListDownloadTimeout);
                     return false;
                 }
 
-                // https://github.com/AlistGo/alist/blob/main/pkg/task/task.go
                 Optional<OpenListTaskInfo> taskInfoOpt = taskInfo(tid);
 
                 if (taskInfoOpt.isEmpty()) {
@@ -159,8 +158,8 @@ public class OpenList implements BaseDownload {
                         ).contains(state)
                 ) {
                     // 已到达最大重试次数 5 次, -1 不限制
-                    if (alistDownloadRetryNumber > -1) {
-                        if (retry >= alistDownloadRetryNumber) {
+                    if (openListDownloadRetryNumber > -1) {
+                        if (retry >= openListDownloadRetryNumber) {
                             // bug fix: 新资源下载完成后，OpenList 状态可能未及时刷新
                             // 此处通过检查文件是否存在来兜底，存在则直接继续后续逻辑
                             Optional<OpenListFileInfo> first = findFiles(path).stream()
@@ -174,7 +173,7 @@ public class OpenList implements BaseDownload {
                             return false;
                         }
                         retry++;
-                        log.info("离线任务正在进行重试 {}, 当前重试次数 {}, 最大重试次数 {}", tid, retry, alistDownloadRetryNumber);
+                        log.info("离线任务正在进行重试 {}, 当前重试次数 {}, 最大重试次数 {}", tid, retry, openListDownloadRetryNumber);
                     }
                     taskRetry(tid);
                     continue;

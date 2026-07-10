@@ -2,6 +2,7 @@ package ani.rss.entity;
 
 import ani.rss.enums.BgmTokenTypeEnum;
 import ani.rss.enums.SortTypeEnum;
+import com.google.gson.annotations.SerializedName;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.experimental.Accessors;
@@ -581,18 +582,6 @@ public class Config implements Serializable {
     private String githubToken;
 
     /**
-     * 开启 OpenList 列表刷新
-     */
-    @Schema(description = "开启 OpenList 列表刷新")
-    private Boolean alistRefresh;
-
-    /**
-     * OpenList 刷新延迟
-     */
-    @Schema(description = "OpenList 刷新延迟")
-    private Long alistRefreshDelayed;
-
-    /**
      * 自动更新总集数信息
      */
     @Schema(description = "自动更新总集数信息")
@@ -608,13 +597,15 @@ public class Config implements Serializable {
      * OpenList 离线超时 分钟
      */
     @Schema(description = "OpenList 离线超时(分钟)")
-    private Integer alistDownloadTimeout;
+    @SerializedName(value = "openListDownloadTimeout", alternate = "alistDownloadTimeout")
+    private Integer openListDownloadTimeout;
 
     /**
      * OpenList 下载重试次数
      */
     @Schema(description = "OpenList 下载重试次数")
-    private Long alistDownloadRetryNumber;
+    @SerializedName(value = "openListDownloadRetryNumber", alternate = "alistDownloadRetryNumber")
+    private Long openListDownloadRetryNumber;
 
     /**
      * 设置备份

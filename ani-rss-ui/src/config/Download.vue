@@ -52,7 +52,7 @@
       </el-form-item>
       <el-form-item label="重试次数">
         <div>
-          <el-input-number v-model="props.config['alistDownloadRetryNumber']" :min="-1"/>
+          <el-input-number v-model="props.config['openListDownloadRetryNumber']" :min="-1"/>
           <br>
           <el-text class="mx-1" size="small">
             设置为 -1 将一直进行重试
@@ -60,7 +60,7 @@
         </div>
       </el-form-item>
       <el-form-item label="离线超时">
-        <el-input-number v-model:model-value="props.config['alistDownloadTimeout']" :min="1">
+        <el-input-number v-model:model-value="props.config['openListDownloadTimeout']" :min="1">
           <template #suffix>
             <span>分钟</span>
           </template>
