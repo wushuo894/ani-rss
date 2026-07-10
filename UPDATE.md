@@ -1,1 +1,3 @@
-- fix: 修复 TMDB 错误
+- refactor: 优化管理页面
+- refactor: 优化封面边框
+- build: 更新 hutool
