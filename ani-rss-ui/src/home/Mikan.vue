@@ -50,7 +50,8 @@
             <el-button :loading="searchLoading" bg icon="Search" text @click="search">搜索</el-button>
           </div>
           <div v-if="data.seasons.length" class="flex season-selector">
-            <el-select v-model:model-value="seasonSelect" :disabled="text.length > 0 || loading" class="season-select"
+            <el-select v-model:model-value="seasonSelect" class="season-select"
+                       :disabled="text.length > 0 || loading"
                        @change="change">
               <el-option v-for="season in data.seasons" :key="season['seasonLabel']"
                          :label="season['seasonLabel']" :value="season['seasonLabel']"/>

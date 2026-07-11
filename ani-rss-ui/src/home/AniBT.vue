@@ -51,6 +51,7 @@
           </div>
           <div class="flex season-selector">
             <el-select v-model="season" class="season-select"
+                       :disabled="title.length > 0 || loading"
                        @change="change">
               <el-option v-for="itemSeason in data.seasons" :key="itemSeason"
                          :label="itemSeason" :value="itemSeason">
