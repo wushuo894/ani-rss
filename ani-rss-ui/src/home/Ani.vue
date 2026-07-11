@@ -98,6 +98,8 @@
                 <el-date-picker
                     style="max-width: 150px;"
                     v-model="props.ani.releaseDate"
+                    format="YYYY-MM-DD"
+                    value-format="YYYY-MM-DD"
                 />
               </div>
             </el-form-item>
