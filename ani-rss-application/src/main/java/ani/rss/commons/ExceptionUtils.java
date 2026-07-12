@@ -11,7 +11,7 @@ public class ExceptionUtils {
             "SSLHandshakeException", "SSL握手异常"
     );
 
-    public static synchronized String getMessage(Exception e) {
+    public static String getMessage(Exception e) {
         String message = e.getMessage();
         if (StrUtil.isBlank(message)) {
             return "";

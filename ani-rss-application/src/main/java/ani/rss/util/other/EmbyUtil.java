@@ -19,7 +19,7 @@ public class EmbyUtil {
     /**
      * 扫描媒体库
      */
-    public static synchronized void refresh(NotificationConfig notificationConfig) {
+    public static void refresh(NotificationConfig notificationConfig) {
         List<String> viewIds = notificationConfig.getEmbyRefreshViewIds();
         List<EmbyViews> views = getViews(notificationConfig);
 
@@ -38,7 +38,7 @@ public class EmbyUtil {
      *
      * @param embyViews 媒体库
      */
-    public static synchronized void refresh(EmbyViews embyViews, NotificationConfig notificationConfig) {
+    public static void refresh(EmbyViews embyViews, NotificationConfig notificationConfig) {
         String embyHost = notificationConfig.getEmbyHost();
         String embyApiKey = notificationConfig.getEmbyApiKey();
 
@@ -65,7 +65,7 @@ public class EmbyUtil {
      *
      * @return 媒体库列表
      */
-    public static synchronized List<EmbyViews> getViews(NotificationConfig notificationConfig) {
+    public static List<EmbyViews> getViews(NotificationConfig notificationConfig) {
         String embyHost = notificationConfig.getEmbyHost();
         String embyApiKey = notificationConfig.getEmbyApiKey();
 

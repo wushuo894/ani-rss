@@ -38,7 +38,7 @@ public class TorrentUtil {
      *
      * @return
      */
-    public static synchronized List<TorrentsInfo> getTorrentsInfos() {
+    public static List<TorrentsInfo> getTorrentsInfos() {
         ThreadUtil.sleep(1000);
         return DOWNLOAD.getTorrentsInfos();
     }
@@ -153,7 +153,7 @@ public class TorrentUtil {
      *
      * @return
      */
-    public static synchronized Boolean login() {
+    public static Boolean login() {
         ThreadUtil.sleep(1000);
         Config config = ConfigUtil.CONFIG;
         String downloadPath = config.getDownloadPathTemplate();
@@ -209,7 +209,7 @@ public class TorrentUtil {
      * @param forcedDelete 强制删除
      * @param deleteFiles  删除本地文件
      */
-    public static synchronized Boolean delete(TorrentsInfo torrentsInfo, Boolean forcedDelete, Boolean deleteFiles) {
+    public static Boolean delete(TorrentsInfo torrentsInfo, Boolean forcedDelete, Boolean deleteFiles) {
         Config config = ConfigUtil.CONFIG;
         Boolean delete = config.getDelete();
 
@@ -248,7 +248,7 @@ public class TorrentUtil {
      *
      * @param torrentsInfo
      */
-    public static synchronized Boolean delete(TorrentsInfo torrentsInfo) {
+    public static Boolean delete(TorrentsInfo torrentsInfo) {
         return delete(torrentsInfo, false, false);
     }
 
@@ -257,7 +257,7 @@ public class TorrentUtil {
      *
      * @param torrentsInfo
      */
-    public static synchronized void rename(TorrentsInfo torrentsInfo) {
+    public static void rename(TorrentsInfo torrentsInfo) {
         Config config = ConfigUtil.CONFIG;
         Boolean rename = config.getRename();
         if (!rename) {
@@ -317,7 +317,10 @@ public class TorrentUtil {
         }
     }
 
-    public static synchronized void load() {
+    /**
+     * 初始化下载工具
+     */
+    public static void loadDownloadTool() {
         Config config = ConfigUtil.CONFIG;
         String download = config.getDownloadToolType();
 

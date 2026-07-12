@@ -43,12 +43,12 @@ public class NotificationUtil {
     /**
      * 发送通知
      *
-     * @param config
-     * @param ani
-     * @param text
-     * @param notificationStatusEnum
+     * @param config                 设置
+     * @param ani                    订阅
+     * @param text                   通知内容
+     * @param notificationStatusEnum 通知状态
      */
-    public static synchronized void send(Config config, Ani ani, String text, NotificationStatusEnum notificationStatusEnum) {
+    public static void send(Config config, Ani ani, String text, NotificationStatusEnum notificationStatusEnum) {
         Boolean isMessage = ani.getMessage();
 
         if (!isMessage) {

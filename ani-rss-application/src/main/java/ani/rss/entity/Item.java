@@ -8,11 +8,11 @@ import java.io.Serializable;
 import java.util.Date;
 
 /**
- * 下载项
+ * 资源项
  */
 @Data
 @Accessors(chain = true)
-@Schema(description = "下载项")
+@Schema(description = "资源项")
 public class Item implements Serializable {
     /**
      * 标题

@@ -153,7 +153,7 @@ public class ConfigController extends BaseController {
         }
         // 下载工具发生改变
         if (!download.equals(config.getDownloadToolType())) {
-            TorrentUtil.load();
+            TorrentUtil.loadDownloadTool();
         }
         // 开机自启发生改变
         if (!newAutoStart.equals(autoStart)) {

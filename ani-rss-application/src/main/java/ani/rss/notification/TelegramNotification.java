@@ -42,7 +42,7 @@ public class TelegramNotification implements BaseNotification {
         send(notificationConfig, ani, text, notificationStatusEnum);
     }
 
-    public static synchronized Map<String, String> getUpdates(NotificationConfig notificationConfig) {
+    public static Map<String, String> getUpdates(NotificationConfig notificationConfig) {
         String telegramBotToken = notificationConfig.getTelegramBotToken();
         if (StrUtil.isBlank(telegramBotToken)) {
             return Map.of();

@@ -293,7 +293,7 @@ public class ConfigUtil {
         format(CONFIG);
         LogUtil.loadLogback();
         log.debug("加载配置文件 {}", configFile);
-        TorrentUtil.load();
+        TorrentUtil.loadDownloadTool();
     }
 
     /**

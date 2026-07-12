@@ -30,7 +30,7 @@ public class TmdbUtils {
      * @param ani 订阅
      * @return
      */
-    public synchronized static String getFinalName(Ani ani) {
+    public static String getFinalName(Ani ani) {
         Boolean ova = ani.getOva();
         String name = ani.getTitle();
         name = RenameUtil.renameDel(name, false);
@@ -203,7 +203,7 @@ public class TmdbUtils {
      * @param ani 订阅
      * @return
      */
-    public static synchronized Map<Integer, String> getEpisodeTitleMap(Ani ani) {
+    public static Map<Integer, String> getEpisodeTitleMap(Ani ani) {
         Map<Integer, String> episodeTitleMap = new HashMap<>();
 
         if (Objects.isNull(ani)) {

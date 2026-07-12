@@ -49,7 +49,7 @@ public class BgmUtil {
      * @param bgmInfo
      * @return
      */
-    public static synchronized String getFinalName(BgmInfo bgmInfo) {
+    public static String getFinalName(BgmInfo bgmInfo) {
         Boolean bgmJpName = config.getBgmJpName();
 
         String name = bgmInfo.getName();
@@ -74,7 +74,7 @@ public class BgmUtil {
      * @param tmdb
      * @return
      */
-    public static synchronized String getFinalName(BgmInfo bgmInfo, Tmdb tmdb) {
+    public static String getFinalName(BgmInfo bgmInfo, Tmdb tmdb) {
         Boolean titleYear = config.getTitleYear();
 
         String title = getFinalName(bgmInfo);
@@ -145,7 +145,7 @@ public class BgmUtil {
      * @param s       季度
      * @return 番剧id
      */
-    public static synchronized String getSubjectId(String bgmName, Integer s) {
+    public static String getSubjectId(String bgmName, Integer s) {
         if (StrUtil.isBlank(bgmName)) {
             return "";
         }
@@ -627,7 +627,7 @@ public class BgmUtil {
      * @param httpRequest
      * @return
      */
-    public static synchronized HttpRequest setToken(HttpRequest httpRequest) {
+    public static HttpRequest setToken(HttpRequest httpRequest) {
         String bgmToken = config.getBgmToken();
 
         if (StrUtil.isNotBlank(bgmToken)) {
@@ -669,7 +669,7 @@ public class BgmUtil {
     /**
      * 刷新token
      */
-    public static synchronized void refreshToken() {
+    public static void refreshToken() {
         BgmTokenTypeEnum bgmTokenType = config.getBgmTokenType();
         if (bgmTokenType != BgmTokenTypeEnum.AUTO) {
             return;
@@ -731,7 +731,7 @@ public class BgmUtil {
      * @param ani
      * @return
      */
-    public static synchronized Map<Integer, Function<Boolean, String>> getEpisodeTitleMap(Ani ani) {
+    public static Map<Integer, Function<Boolean, String>> getEpisodeTitleMap(Ani ani) {
         Map<Integer, Function<Boolean, String>> episodeTitleMap = new HashMap<>();
 
         if (Objects.isNull(ani)) {

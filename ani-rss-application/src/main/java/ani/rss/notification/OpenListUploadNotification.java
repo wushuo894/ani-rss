@@ -348,7 +348,7 @@ public class OpenListUploadNotification implements BaseNotification {
      * @param action 操作
      * @return HttpReq
      */
-    public synchronized HttpRequest postApi(String action) {
+    public HttpRequest postApi(String action) {
         ThreadUtil.sleep(2000);
         String openListUploadHost = notificationConfig.getOpenListUploadHost();
         String openListUploadApiKey = notificationConfig.getOpenListUploadApiKey();

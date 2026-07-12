@@ -37,14 +37,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.io.File;
 import java.util.*;
-import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.ToLongFunction;
 
 @Slf4j
 @RestController
 public class AniController extends BaseController {
-    public static final AtomicBoolean DOWNLOAD = new AtomicBoolean(false);
-
     @Resource
     private AniService aniService;
 
@@ -394,9 +391,16 @@ public class AniController extends BaseController {
     @Operation(summary = "刷新全部订阅")
     @PostMapping("/refreshAll")
     public Result<Void> refreshAll() {
+        RssTask.syncLock();
         // 未传Body, 刷新所有订阅
-        RssTask.sync();
-        ThreadUtil.execute(() -> RssTask.download(new AtomicBoolean(true)));
+        ThreadUtil.execute(() -> {
+            try {
+                RssTask.syncDownload();
+            } catch (Exception e) {
+                String message = ExceptionUtils.getMessage(e);
+                log.error(message, e);
+            }
+        });
         return Result.success("已开始刷新RSS");
     }
 
@@ -410,23 +414,15 @@ public class AniController extends BaseController {
         if (first.isEmpty()) {
             return Result.error("修改失败");
         }
-        synchronized (DOWNLOAD) {
-            if (DOWNLOAD.get()) {
-                return Result.error("存在未完成任务，请等待...");
-            }
-            DOWNLOAD.set(true);
-        }
         Ani downloadAni = first.get();
+        RssTask.syncLock();
         ThreadUtil.execute(() -> {
             try {
-                if (TorrentUtil.login()) {
-                    downloadService.downloadAni(downloadAni);
-                }
+                RssTask.syncDownload(List.of(downloadAni));
             } catch (Exception e) {
                 String message = ExceptionUtils.getMessage(e);
                 log.error(message, e);
             }
-            DOWNLOAD.set(false);
         });
         return Result.success("已开始刷新RSS {}", downloadAni.getTitle());
     }

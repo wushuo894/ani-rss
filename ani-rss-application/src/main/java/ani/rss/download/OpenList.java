@@ -84,7 +84,7 @@ public class OpenList implements BaseDownload {
     }
 
     @Override
-    public synchronized Boolean download(Ani ani, Item item, String savePath, File torrentFile) {
+    public Boolean download(Ani ani, Item item, String savePath, File torrentFile) {
         // windows 真该死啊
         savePath = ReUtil.replaceAll(savePath, "^[A-z]:", "");
 
@@ -547,7 +547,7 @@ public class OpenList implements BaseDownload {
      * @param path 目录
      * @return 文件列表
      */
-    public synchronized List<OpenListFileInfo> findFiles(String path) {
+    public List<OpenListFileInfo> findFiles(String path) {
         List<OpenListFileInfo> openListFileInfos = fsList(path, true);
         List<OpenListFileInfo> list = openListFileInfos.stream()
                 .flatMap(openListFileInfo -> {
@@ -569,7 +569,7 @@ public class OpenList implements BaseDownload {
      * @param action
      * @return
      */
-    public synchronized HttpRequest getApi(String action) {
+    public HttpRequest getApi(String action) {
         ThreadUtil.sleep(2000);
         String host = config.getDownloadToolHost();
         String password = config.getDownloadToolPassword();
@@ -583,7 +583,7 @@ public class OpenList implements BaseDownload {
      * @param action
      * @return
      */
-    public synchronized HttpRequest postApi(String action) {
+    public HttpRequest postApi(String action) {
         ThreadUtil.sleep(2000);
         String host = config.getDownloadToolHost();
         String password = config.getDownloadToolPassword();

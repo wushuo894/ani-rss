@@ -169,7 +169,7 @@ public class CollectionController extends BaseController {
     }
 
 
-    public static synchronized List<Item> preview(CollectionInfo collectionInfo) {
+    public static List<Item> preview(CollectionInfo collectionInfo) {
         String torrent = collectionInfo.getTorrent();
         File tempFile = FileUtil.createTempFile();
         Base64.decodeToFile(torrent, tempFile);
@@ -274,7 +274,7 @@ public class CollectionController extends BaseController {
                 .toList();
     }
 
-    public static synchronized void download(String name, File torrentFile, String savePath, List<String> tags) {
+    public static void download(String name, File torrentFile, String savePath, List<String> tags) {
         Config config = ConfigUtil.CONFIG;
         String host = config.getDownloadToolHost();
         String download = config.getDownloadToolType();

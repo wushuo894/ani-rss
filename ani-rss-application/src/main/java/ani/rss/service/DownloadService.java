@@ -44,7 +44,7 @@ public class DownloadService {
     /**
      * 下载动漫
      *
-     * @param ani
+     * @param ani 订阅
      */
     @Synchronized("LOCK")
     public void downloadAni(Ani ani) {
@@ -274,8 +274,8 @@ public class DownloadService {
     /**
      * 删除备用rss
      *
-     * @param ani
-     * @param item
+     * @param ani  订阅
+     * @param item 资源项
      */
     public void deleteStandbyRss(Ani ani, Item item) {
         Config config = ConfigUtil.CONFIG;
@@ -376,12 +376,12 @@ public class DownloadService {
     /**
      * 下载
      *
-     * @param ani
-     * @param item
-     * @param savePath
-     * @param torrentFile
+     * @param ani         订阅
+     * @param item        资源项
+     * @param savePath    保存位置
+     * @param torrentFile 种子文件
      */
-    public synchronized void download(Ani ani, Item item, String savePath, File torrentFile) {
+    public void download(Ani ani, Item item, String savePath, File torrentFile) {
         ani = ObjectUtil.clone(ani);
 
         String name = item.getReName();
@@ -432,9 +432,9 @@ public class DownloadService {
     /**
      * 下载完成通知
      *
-     * @param torrentsInfo
+     * @param torrentsInfo 种子信息
      */
-    public synchronized void notification(TorrentsInfo torrentsInfo) {
+    public void notification(TorrentsInfo torrentsInfo) {
         TorrentsInfo.State state = torrentsInfo.getState();
         String name = torrentsInfo.getName();
 
@@ -513,8 +513,8 @@ public class DownloadService {
     /**
      * 获取下载位置
      *
-     * @param ani
-     * @return
+     * @param ani 订阅
+     * @return 下载位置
      */
     public String getDownloadPath(Ani ani) {
         return getDownloadPath(ani, ConfigUtil.CONFIG);
@@ -523,8 +523,8 @@ public class DownloadService {
     /**
      * 获取下载位置
      *
-     * @param ani
-     * @return
+     * @param ani 订阅
+     * @return 下载位置
      */
     public String getDownloadPath(Ani ani, Config config) {
         Boolean customDownloadPath = ani.getCustomDownloadPath();
@@ -640,10 +640,10 @@ public class DownloadService {
     /**
      * 判断是否已经下载过
      *
-     * @param ani
-     * @param item
-     * @param downloadList
-     * @return
+     * @param ani          订阅
+     * @param item         资源项
+     * @param downloadList 下载列表
+     * @return 是否已下载
      */
     public Boolean itemDownloaded(Ani ani, Item item, Boolean downloadList) {
         Config config = ConfigUtil.CONFIG;
@@ -734,10 +734,10 @@ public class DownloadService {
     /**
      * 根据任务反查订阅
      *
-     * @param torrentsInfo
-     * @return
+     * @param torrentsInfo 种子信息
+     * @return 订阅
      */
-    public synchronized Optional<Ani> findAniByDownloadPath(TorrentsInfo torrentsInfo) {
+    public Optional<Ani> findAniByDownloadPath(TorrentsInfo torrentsInfo) {
         String downloadDir = torrentsInfo.getDownloadDir();
         return AniUtil.ANI_LIST
                 .stream()

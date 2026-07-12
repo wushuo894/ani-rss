@@ -36,7 +36,7 @@ public class ItemsUtil {
      * @param ani
      * @return
      */
-    public static synchronized List<Item> getItems(Ani ani) {
+    public static List<Item> getItems(Ani ani) {
         Config config = ConfigUtil.CONFIG;
         String url = ani.getUrl();
         String subgroup = StrUtil.blankToDefault(ani.getSubgroup(), "未知字幕组");
@@ -287,7 +287,7 @@ public class ItemsUtil {
         return xml;
     }
 
-    public static synchronized List<Integer> omitList(Ani ani, List<Item> items) {
+    public static List<Integer> omitList(Ani ani, List<Item> items) {
         ArrayList<Integer> list = new ArrayList<>();
         Config config = ConfigUtil.CONFIG;
         Boolean omit = config.getOmit();
@@ -334,7 +334,7 @@ public class ItemsUtil {
      * @param ani
      * @param items
      */
-    public static synchronized void omit(Ani ani, List<Item> items) {
+    public static void omit(Ani ani, List<Item> items) {
         Config config = ConfigUtil.CONFIG;
         List<Integer> list = omitList(ani, items);
 
