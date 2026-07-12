@@ -242,7 +242,7 @@ public class ConfigUtil {
     /**
      * 获取设置文件夹
      *
-     * @return
+     * @return 文件夹
      */
     public static File getConfigDir() {
         String configDir = SystemUtil.get("CONFIG");
@@ -268,7 +268,7 @@ public class ConfigUtil {
     /**
      * 获取设置文件
      *
-     * @return
+     * @return 设置文件
      */
     public static File getConfigFile() {
         File configDir = getConfigDir();
@@ -426,7 +426,7 @@ public class ConfigUtil {
     /**
      * 处理设置内的url与文件路径标准
      *
-     * @param config
+     * @param config 设置
      */
     public static void format(Config config) {
         formatPath(config);
@@ -453,7 +453,7 @@ public class ConfigUtil {
     /**
      * 处理url
      *
-     * @param config
+     * @param config 设置
      */
     public static void formatUrl(Config config) {
         List<Func1<Config, String>> func1List = List.of(
@@ -475,7 +475,7 @@ public class ConfigUtil {
     /**
      * 处理文件路径
      *
-     * @param config
+     * @param config 设置
      */
     public static void formatPath(Config config) {
         List<Func1<Config, String>> func1List = List.of(

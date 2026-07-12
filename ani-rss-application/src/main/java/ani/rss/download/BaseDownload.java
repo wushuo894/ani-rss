@@ -128,9 +128,9 @@ public interface BaseDownload {
     /**
      * 获取新任务的tag
      *
-     * @param ani
-     * @param item
-     * @return
+     * @param ani  订阅
+     * @param item 资源项
+     * @return tags
      */
     default List<String> newTags(Ani ani, Item item) {
         Boolean master = item.getMaster();

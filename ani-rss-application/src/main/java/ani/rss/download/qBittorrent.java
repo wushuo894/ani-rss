@@ -47,10 +47,10 @@ public class qBittorrent implements BaseDownload {
     /**
      * 获取对应任务的文件列表
      *
-     * @param torrentsInfo
+     * @param torrentsInfo 种子信息
      * @param filter       过滤出视频与字幕
-     * @param config
-     * @return
+     * @param config       设置
+     * @return 文件列表
      */
     public static List<FileEntity> files(TorrentsInfo torrentsInfo, Boolean filter, Config config) {
         String hash = torrentsInfo.getHash();
@@ -204,8 +204,9 @@ public class qBittorrent implements BaseDownload {
     /**
      * 开始下载
      *
-     * @param torrentsInfo
-     * @return
+     * @param torrentsInfo 种子信息
+     * @param config       设置
+     * @return 下载是否成功
      */
     public static Boolean start(TorrentsInfo torrentsInfo, Config config) {
         String host = config.getDownloadToolHost();

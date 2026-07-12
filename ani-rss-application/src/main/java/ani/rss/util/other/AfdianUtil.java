@@ -21,7 +21,7 @@ public class AfdianUtil {
      * 你可以修改后自用, 但请仅存放于 私人仓库、私人docker镜像
      *
      * @param no 订单号
-     * @return
+     * @return 结果
      */
     public static Result<Void> verifyNo(String no) {
         Assert.notBlank(no, "订单号为空");
@@ -42,7 +42,7 @@ public class AfdianUtil {
      * <p>
      * 你可以修改后自用, 但请仅存放于 私人仓库、私人docker镜像
      *
-     * @return
+     * @return 是否有效
      */
     public static Boolean verifyExpirationTime() {
         Config config = ConfigUtil.CONFIG;

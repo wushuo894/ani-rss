@@ -14,7 +14,7 @@ public class AniService {
      * 更新订阅总集数
      *
      * @param ani     订阅
-     * @param bgmInfo BGM
+     * @param bgmInfo bgm信息
      * @param force   强制
      * @return 是否已发生更新
      */

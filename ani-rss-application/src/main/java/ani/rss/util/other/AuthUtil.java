@@ -92,7 +92,7 @@ public class AuthUtil {
     /**
      * 获取ip地址
      *
-     * @return
+     * @return IP地址
      */
     public static String getIp() {
         try {
@@ -130,9 +130,9 @@ public class AuthUtil {
     /**
      * 鉴权检测
      *
-     * @param request
-     * @param auth
-     * @return
+     * @param request HttpServletRequest
+     * @param auth    鉴权注解
+     * @return 是否通过鉴权
      */
     public static Boolean test(HttpServletRequest request, Auth auth) {
         limitLoginAttempts(false);
@@ -153,9 +153,9 @@ public class AuthUtil {
     /**
      * 鉴权检测
      *
-     * @param request
-     * @param authType
-     * @return
+     * @param request  HttpServletRequest
+     * @param authType 鉴权类型
+     * @return 是否通过鉴权
      */
     public static Boolean test(HttpServletRequest request, AuthType authType) {
         Class<? extends Function<HttpServletRequest, Boolean>> clazz = authType.getClazz();

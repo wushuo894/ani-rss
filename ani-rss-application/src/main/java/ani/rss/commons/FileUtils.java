@@ -79,8 +79,8 @@ public class FileUtils {
     /**
      * 获取绝对路径 并把 windows 狗日的 \ 转换为 /
      *
-     * @param file
-     * @return
+     * @param file 文件
+     * @return 绝对路径
      */
     public static String getAbsolutePath(File file) {
         String absolutePath = file.getPath();
@@ -101,8 +101,8 @@ public class FileUtils {
     /**
      * 获取绝对路径 并把 windows 狗日的 \ 转换为 /
      *
-     * @param absolutePath
-     * @return
+     * @param absolutePath 路径
+     * @return 绝对路径
      */
     public static String getAbsolutePath(String absolutePath) {
         if (absolutePath.startsWith("/")) {

@@ -15,8 +15,8 @@ public class URLUtils {
     /**
      * 自动添加http协议
      *
-     * @param urlStr
-     * @return
+     * @param urlStr 链接
+     * @return 处理后的链接
      */
     public static String getUrlStr(String urlStr) {
         if (StrUtil.isBlank(urlStr)) {

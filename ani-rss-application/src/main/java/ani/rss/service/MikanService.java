@@ -46,9 +46,9 @@ public class MikanService {
     /**
      * 搜索mikan番剧列表
      *
-     * @param text
-     * @param season
-     * @return
+     * @param text   关键字
+     * @param season 集度
+     * @return Mikan
      */
     public Mikan list(String text, Mikan.Season season) {
         AtomicReference<Map<String, MikanBgm>> mikanBgmAtomicReference = new AtomicReference<>(new HashMap<>());
@@ -248,8 +248,8 @@ public class MikanService {
     /**
      * 获取番剧字幕组
      *
-     * @param url
-     * @return
+     * @param url 链接
+     * @return 字幕组列表
      */
     public List<Mikan.Group> getGroups(String url) {
         List<Mikan.Group> groupList = HttpReq.get(url)
@@ -440,8 +440,8 @@ public class MikanService {
     /**
      * 从rss中获得字幕组id
      *
-     * @param url
-     * @return
+     * @param url 链接
+     * @return 字幕组id
      */
     public static String getSubgroupId(String url) {
         Map<String, String> decodeParamMap = HttpUtil.decodeParamMap(url, StandardCharsets.UTF_8);

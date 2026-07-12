@@ -28,7 +28,7 @@ public class TmdbUtils {
      * 获取番剧在tmdb的名称
      *
      * @param ani 订阅
-     * @return
+     * @return 名称
      */
     public static String getFinalName(Ani ani) {
         Boolean ova = ani.getOva();
@@ -66,7 +66,7 @@ public class TmdbUtils {
      *
      * @param title 标题
      * @param tmdb  tmdb
-     * @return
+     * @return 名称
      */
     public static String getFinalName(String title, Tmdb tmdb) {
         if (Objects.isNull(tmdb)) {
@@ -97,7 +97,7 @@ public class TmdbUtils {
      *
      * @param tmdb     tmdb
      * @param tmdbType 类型
-     * @return
+     * @return 标题列表
      */
     public static List<TmdbTitle> getTitles(Tmdb tmdb, TmdbTypeEnum tmdbType) {
         return TMDB_UTIL.getTitles(tmdb, tmdbType);
@@ -155,7 +155,7 @@ public class TmdbUtils {
      * 根据标题获得tmdb
      *
      * @param titleName 标题名
-     * @return
+     * @return tmdb
      */
     public static Optional<Tmdb> getTmdbMovie(String titleName) {
         Optional<Tmdb> tmdb = getTmdb(titleName, TmdbTypeEnum.MOVIE);
@@ -167,7 +167,7 @@ public class TmdbUtils {
      * 根据标题获得tmdb
      *
      * @param titleName 标题名
-     * @return
+     * @return tmdb
      */
     public static Optional<Tmdb> getTmdbTv(String titleName) {
         Optional<Tmdb> tmdb = getTmdb(titleName, TmdbTypeEnum.TV);
@@ -180,7 +180,7 @@ public class TmdbUtils {
      *
      * @param titleName 标题名
      * @param tmdbType  类型
-     * @return
+     * @return tmdb
      */
     public static Optional<Tmdb> getTmdb(String titleName, TmdbTypeEnum tmdbType) {
         return TMDB_UTIL.getTmdb(titleName, tmdbType);
@@ -191,7 +191,7 @@ public class TmdbUtils {
      *
      * @param tmdb   tmdb
      * @param season 季
-     * @return
+     * @return tmdb
      */
     public static Optional<TmdbSeason> getTmdbSeason(Tmdb tmdb, Integer season) {
         return TMDB_UTIL.getTmdbSeason(tmdb, season);
@@ -201,7 +201,7 @@ public class TmdbUtils {
      * 获取每集的标题
      *
      * @param ani 订阅
-     * @return
+     * @return 每集的标题
      */
     public static Map<Integer, String> getEpisodeTitleMap(Ani ani) {
         Map<Integer, String> episodeTitleMap = new HashMap<>();
@@ -246,7 +246,7 @@ public class TmdbUtils {
      *
      * @param tmdb   tmdb
      * @param season 季
-     * @return
+     * @return 每集的标题
      */
     public static Map<Integer, String> getEpisodeTitleMap(Tmdb tmdb, Integer season) {
         return TMDB_UTIL.getEpisodeTitleMap(tmdb, season);
@@ -256,7 +256,7 @@ public class TmdbUtils {
      * 获取剧集组
      *
      * @param tmdb tmdb
-     * @return
+     * @return 剧集组列表
      */
     public static List<TmdbGroup> getTmdbGroup(Tmdb tmdb) {
         return TMDB_UTIL.getTmdbGroup(tmdb);
@@ -267,7 +267,7 @@ public class TmdbUtils {
      *
      * @param tmdb     tmdb
      * @param tmdbType 类型
-     * @return
+     * @return 图片信息
      */
     public static TmdbImages getTmdbImages(Tmdb tmdb, TmdbTypeEnum tmdbType) {
         return TMDB_UTIL.getTmdbImages(tmdb, tmdbType);

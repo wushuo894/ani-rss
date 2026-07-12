@@ -16,7 +16,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class AuthAspect {
     @Before("@annotation(auth)")
-    public void before(JoinPoint joinPoint, Auth auth) throws Exception {
+    public void before(JoinPoint joinPoint, Auth auth) {
         HttpServletRequest request = Global.REQUEST.get();
         if (AuthUtil.test(request, auth)) {
             // 鉴权通过

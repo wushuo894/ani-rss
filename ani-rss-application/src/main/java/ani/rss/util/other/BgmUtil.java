@@ -46,8 +46,8 @@ public class BgmUtil {
     /**
      * 获取bgm名称
      *
-     * @param bgmInfo
-     * @return
+     * @param bgmInfo bgm信息
+     * @return 名称
      */
     public static String getFinalName(BgmInfo bgmInfo) {
         Boolean bgmJpName = config.getBgmJpName();
@@ -70,9 +70,9 @@ public class BgmUtil {
     /**
      * 获取bgm名称
      *
-     * @param bgmInfo
-     * @param tmdb
-     * @return
+     * @param bgmInfo bgm信息
+     * @param tmdb    tmdb信息
+     * @return 名称
      */
     public static String getFinalName(BgmInfo bgmInfo, Tmdb tmdb) {
         Boolean titleYear = config.getTitleYear();
@@ -91,8 +91,8 @@ public class BgmUtil {
     /**
      * 搜索番剧
      *
-     * @param name
-     * @return
+     * @param name 名称
+     * @return 番剧列表
      */
     public static List<BgmInfo> search(String name) {
         if (StrUtil.isBlank(name)) {
@@ -189,8 +189,8 @@ public class BgmUtil {
     /**
      * 获取番剧id
      *
-     * @param ani
-     * @return
+     * @param ani 订阅
+     * @return 番剧id
      */
     public static String getSubjectId(Ani ani) {
         String bgmUrl = ani.getBgmUrl();
@@ -206,8 +206,8 @@ public class BgmUtil {
     /**
      * 获取番剧id
      *
-     * @param bgmUrl
-     * @return
+     * @param bgmUrl bangmui链接
+     * @return 番剧id
      */
     public static String getSubjectId(String bgmUrl) {
         Assert.notBlank(bgmUrl, "bgmUrl 不能为空");
@@ -221,7 +221,7 @@ public class BgmUtil {
      *
      * @param subjectId 番剧id
      * @param type      0正常 1番外
-     * @return
+     * @return 视频列表
      */
     public static List<JsonObject> getEpisodes(String subjectId, Integer type) {
         ThreadUtil.sleep(500);
@@ -286,7 +286,7 @@ public class BgmUtil {
     /**
      * 获取用户名
      *
-     * @return
+     * @return 用户名
      */
     public static String username() {
         BgmMe me = me();
@@ -427,9 +427,9 @@ public class BgmUtil {
     /**
      * 获取对应的bgm信息
      *
-     * @param ani
-     * @param isCache
-     * @return
+     * @param ani     订阅
+     * @param isCache 是否使用缓存
+     * @return bgm信息
      */
     public static BgmInfo getBgmInfo(Ani ani, Boolean isCache) {
         String subjectId = getSubjectId(ani);
@@ -440,8 +440,8 @@ public class BgmUtil {
     /**
      * 获取对应的bgm信息
      *
-     * @param ani
-     * @return
+     * @param ani 订阅
+     * @return bgm信息
      */
     public static BgmInfo getBgmInfo(Ani ani) {
         String subjectId = getSubjectId(ani);
@@ -451,8 +451,8 @@ public class BgmUtil {
     /**
      * 获取对应的bgm信息
      *
-     * @param subjectId
-     * @return
+     * @param subjectId 番剧id
+     * @return bgm信息
      */
     public static BgmInfo getBgmInfo(String subjectId) {
         return getBgmInfo(subjectId, false);
@@ -461,9 +461,9 @@ public class BgmUtil {
     /**
      * 获取对应的bgm信息
      *
-     * @param subjectId
-     * @param isCache
-     * @return
+     * @param subjectId 番剧id
+     * @param isCache   是否使用缓存
+     * @return bgm信息
      */
     public static BgmInfo getBgmInfo(String subjectId, Boolean isCache) {
         String bgmApi = config.getBgmApi();
@@ -624,8 +624,8 @@ public class BgmUtil {
     /**
      * 设置token
      *
-     * @param httpRequest
-     * @return
+     * @param httpRequest HttpRequest
+     * @return HttpRequest
      */
     public static HttpRequest setToken(HttpRequest httpRequest) {
         String bgmToken = config.getBgmToken();
@@ -641,7 +641,7 @@ public class BgmUtil {
     /**
      * 获取剩余过期时间 单位: 天
      *
-     * @return
+     * @return 天数
      */
     public static Integer getExpiresDays() {
         String bgmToken = config.getBgmToken();
@@ -728,8 +728,8 @@ public class BgmUtil {
     /**
      * 获取每集的标题
      *
-     * @param ani
-     * @return
+     * @param ani 订阅
+     * @return 每集标题
      */
     public static Map<Integer, Function<Boolean, String>> getEpisodeTitleMap(Ani ani) {
         Map<Integer, Function<Boolean, String>> episodeTitleMap = new HashMap<>();
@@ -787,8 +787,8 @@ public class BgmUtil {
     /**
      * 获取集数 排除ova
      *
-     * @param bgmInfo
-     * @return
+     * @param bgmInfo bgm信息
+     * @return 集数
      */
     public static Integer getEps(BgmInfo bgmInfo) {
         int eps = bgmInfo.getEps();
@@ -811,9 +811,9 @@ public class BgmUtil {
     /**
      * bgm转ani
      *
-     * @param bgmInfo
-     * @param ani
-     * @return
+     * @param bgmInfo bgm信息
+     * @param ani     订阅
+     * @return 订阅
      */
     public static Ani toAni(BgmInfo bgmInfo, Ani ani) {
         String bgmImage = config.getBgmImage();

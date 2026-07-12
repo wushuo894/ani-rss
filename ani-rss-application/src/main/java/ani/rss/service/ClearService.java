@@ -24,7 +24,7 @@ public class ClearService {
     /**
      * 清理父级空文件夹
      *
-     * @param path
+     * @param path 路径
      */
     public void clearParentFile(String path) {
         clearParentFile(new File(path));
@@ -33,7 +33,7 @@ public class ClearService {
     /**
      * 清理父级空文件夹
      *
-     * @param file
+     * @param file 文件
      */
     public void clearParentFile(File file) {
         if (file.exists()) {

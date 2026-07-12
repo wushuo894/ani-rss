@@ -30,7 +30,7 @@ import java.util.List;
 @Slf4j
 @RestController
 public class LogsController extends BaseController {
-    List<Log> LOG_LIST = LogUtil.LOG_LIST;
+    public static final List<Log> LOG_LIST = LogUtil.LOG_LIST;
 
     @Auth
     @Operation(summary = "日志")

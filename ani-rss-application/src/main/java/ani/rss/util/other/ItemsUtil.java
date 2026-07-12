@@ -33,8 +33,8 @@ public class ItemsUtil {
     /**
      * 获取视频列表
      *
-     * @param ani
-     * @return
+     * @param ani 订阅
+     * @return 视频列表
      */
     public static List<Item> getItems(Ani ani) {
         Config config = ConfigUtil.CONFIG;
@@ -75,10 +75,10 @@ public class ItemsUtil {
     /**
      * 获取视频列表
      *
-     * @param ani
-     * @param rssUrl
-     * @param subgroupName
-     * @return
+     * @param ani          订阅
+     * @param rssUrl       RSS链接
+     * @param subgroupName 字幕组名
+     * @return 视频列表
      */
     public static List<Item> getItems(Ani ani, String rssUrl, String subgroupName) {
         Config config = ConfigUtil.CONFIG;
@@ -331,8 +331,8 @@ public class ItemsUtil {
     /**
      * 检测是否缺集
      *
-     * @param ani
-     * @param items
+     * @param ani   订阅
+     * @param items 资源列表
      */
     public static void omit(Ani ani, List<Item> items) {
         Config config = ConfigUtil.CONFIG;
@@ -408,8 +408,8 @@ public class ItemsUtil {
     /**
      * 摸鱼检测
      *
-     * @param ani
-     * @param items
+     * @param ani   订阅
+     * @param items 资源列表
      */
     public static void procrastinating(Ani ani, List<Item> items) {
         Config config = ConfigUtil.CONFIG;

@@ -140,8 +140,8 @@ public class EmbyController extends BaseController {
     /**
      * 是否匹配到订阅
      *
-     * @param ani
-     * @return
+     * @param ani 订阅
+     * @return 是否匹配
      */
     public Boolean embyEqualsAni(EmbyWebHook embyWebHook, Ani ani) {
         EmbyWebHook.Item item = embyWebHook.getItem();
@@ -203,8 +203,8 @@ public class EmbyController extends BaseController {
     /**
      * 获取播放状态
      *
-     * @param embyWebHook
-     * @return
+     * @param embyWebHook EmbyWebHook
+     * @return 播放状态
      */
     private static Integer getType(EmbyWebHook embyWebHook) {
         String event = embyWebHook.getEvent();

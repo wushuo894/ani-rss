@@ -566,8 +566,8 @@ public class OpenList implements BaseDownload {
     /**
      * get api
      *
-     * @param action
-     * @return
+     * @param action Action
+     * @return HttpRequest
      */
     public HttpRequest getApi(String action) {
         ThreadUtil.sleep(2000);
@@ -580,8 +580,8 @@ public class OpenList implements BaseDownload {
     /**
      * post api
      *
-     * @param action
-     * @return
+     * @param action Action
+     * @return HttpRequest
      */
     public HttpRequest postApi(String action) {
         ThreadUtil.sleep(2000);

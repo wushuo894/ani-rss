@@ -54,11 +54,9 @@ public class ServerChanNotification implements BaseNotification {
             return false;
         }
 
-        String title = "";
         String image = ani.getImage();
 
-
-        title = truncateMessage(ani.getTitle(), serverChanTitleAction ? 10 : 15);
+        String title = truncateMessage(ani.getTitle(), serverChanTitleAction ? 10 : 15);
         if (serverChanTitleAction) {
             String action = notificationStatusEnum.getAction();
             title = StrFormatter.format("{}#{}", action, ani.getTitle());

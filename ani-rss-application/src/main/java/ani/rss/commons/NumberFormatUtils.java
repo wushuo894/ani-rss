@@ -11,7 +11,7 @@ public class NumberFormatUtils {
      * @param number                数字
      * @param maximumFractionDigits 最大小数位
      * @param minimumFractionDigits 最小小数位
-     * @return
+     * @return 格式化后的字符串
      */
     public static String format(Number number, Integer maximumFractionDigits, Integer minimumFractionDigits) {
         NumberFormat numberInstance = NumberFormat.getNumberInstance();

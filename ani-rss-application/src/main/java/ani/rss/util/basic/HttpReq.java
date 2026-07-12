@@ -74,8 +74,7 @@ public class HttpReq {
     /**
      * 设置代理
      *
-     * @param req
-     * @return
+     * @param req HttpRequest
      */
     public static void setProxy(HttpRequest req) {
         setProxy(req, ConfigUtil.CONFIG);
@@ -84,9 +83,8 @@ public class HttpReq {
     /**
      * 设置代理
      *
-     * @param req
-     * @param config
-     * @return
+     * @param req    HttpRequest
+     * @param config 设置
      */
     public static void setProxy(HttpRequest req, Config config) {
         String url = req.getUrl();
@@ -157,8 +155,8 @@ public class HttpReq {
     /**
      * 是否代理
      *
-     * @param url
-     * @return
+     * @param url 链接
+     * @return 是否使用代理
      */
     public static Boolean isProxy(String url) {
         String host = URLUtil.url(url).getHost();

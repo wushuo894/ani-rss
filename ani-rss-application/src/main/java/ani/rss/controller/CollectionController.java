@@ -30,7 +30,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
@@ -43,7 +42,7 @@ public class CollectionController extends BaseController {
     @Auth
     @Operation(summary = "开始下载合集")
     @PostMapping("/startCollection")
-    public Result<Void> startCollection(@RequestBody CollectionInfo collectionInfo) throws IOException {
+    public Result<Void> startCollection(@RequestBody CollectionInfo collectionInfo) {
         String torrent = collectionInfo.getTorrent();
         File tempFile = FileUtil.createTempFile();
         Base64.decodeToFile(torrent, tempFile);

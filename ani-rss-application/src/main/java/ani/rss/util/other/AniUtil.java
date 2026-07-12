@@ -44,7 +44,7 @@ public class AniUtil {
     /**
      * 获取订阅配置文件
      *
-     * @return
+     * @return 配置文件
      */
     public static File getAniFile() {
         File configDir = ConfigUtil.getConfigDir();
@@ -118,8 +118,8 @@ public class AniUtil {
     /**
      * 获取动漫信息
      *
-     * @param dto
-     * @return
+     * @param dto DTO
+     * @return 订阅
      */
     public static Ani getAni(RssToAniDTO dto) {
         String url = dto.getUrl();
@@ -269,9 +269,9 @@ public class AniUtil {
     /**
      * 保存图片
      *
-     * @param coverUrl
+     * @param coverUrl   图片链接
      * @param isOverride 是否覆盖
-     * @return
+     * @return 相对位置
      */
     public static String saveCover(String coverUrl, Boolean isOverride) {
         File configDir = ConfigUtil.getConfigDir();
@@ -317,7 +317,7 @@ public class AniUtil {
     /**
      * 校验参数
      *
-     * @param ani
+     * @param ani 订阅
      */
     public static void verify(Ani ani) {
         String url = ani.getUrl();
@@ -338,8 +338,8 @@ public class AniUtil {
     /**
      * 获取蜜柑的bangumiId
      *
-     * @param ani
-     * @return
+     * @param ani 订阅
+     * @return bangumiId
      */
     public static String getBangumiId(Ani ani) {
         String url = ani.getUrl();
@@ -354,7 +354,7 @@ public class AniUtil {
     /**
      * 订阅完结迁移
      *
-     * @param ani
+     * @param ani 订阅
      */
     public static void completed(Ani ani) {
         ani = ObjectUtil.clone(ani);

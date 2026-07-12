@@ -141,8 +141,8 @@ public class RenameUtil {
     /**
      * 获取重命名模板
      *
-     * @param ani
-     * @return
+     * @param ani 订阅
+     * @return 重命名模版
      */
     public static String getRenameTemplate(Ani ani) {
         Config config = ConfigUtil.CONFIG;
@@ -295,8 +295,8 @@ public class RenameUtil {
     /**
      * 重命名剔除tmdbid与年份
      *
-     * @param title
-     * @return
+     * @param title 标题
+     * @return 重命名后的标题
      */
     public static String renameDel(String title) {
         return renameDel(title, true);
@@ -305,9 +305,9 @@ public class RenameUtil {
     /**
      * 重命名剔除tmdbid与年份
      *
-     * @param title
+     * @param title    标题
      * @param isConfig 遵守设置
-     * @return
+     * @return 重命名后的标题
      */
     public static String renameDel(String title, Boolean isConfig) {
         if (StrUtil.isBlank(title)) {

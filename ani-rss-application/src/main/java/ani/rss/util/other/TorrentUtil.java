@@ -36,7 +36,7 @@ public class TorrentUtil {
     /**
      * 获取任务列表
      *
-     * @return
+     * @return 种子列表
      */
     public static List<TorrentsInfo> getTorrentsInfos() {
         ThreadUtil.sleep(1000);
@@ -46,8 +46,8 @@ public class TorrentUtil {
     /**
      * 获取种子存放文件夹
      *
-     * @param ani
-     * @return
+     * @param ani 订阅
+     * @return 文件夹
      */
     public static File getTorrentDir(Ani ani) {
         String title = ani.getTitle();
@@ -81,9 +81,9 @@ public class TorrentUtil {
     /**
      * 获取种子
      *
-     * @param ani
-     * @param item
-     * @return
+     * @param ani  订阅
+     * @param item 资源项
+     * @return 种子文件
      */
     public static File getTorrent(Ani ani, Item item) {
         String infoHash = item.getInfoHash();
@@ -99,7 +99,9 @@ public class TorrentUtil {
     /**
      * 下载种子文件
      *
-     * @param item
+     * @param ani  订阅
+     * @param item 资源项
+     * @return 种子文件
      */
     public static File saveTorrent(Ani ani, Item item) {
         String torrent = item.getTorrent();
@@ -151,7 +153,7 @@ public class TorrentUtil {
     /**
      * 登录 qBittorrent
      *
-     * @return
+     * @return 是否登录成功
      */
     public static Boolean login() {
         ThreadUtil.sleep(1000);
@@ -171,8 +173,8 @@ public class TorrentUtil {
     /**
      * 判断种子是否可以删除
      *
-     * @param torrentsInfo
-     * @return
+     * @param torrentsInfo 种子信息
+     * @return 是否可以删除
      */
     public static Boolean isDelete(TorrentsInfo torrentsInfo) {
         Config config = ConfigUtil.CONFIG;
@@ -246,7 +248,8 @@ public class TorrentUtil {
     /**
      * 删除已完成任务
      *
-     * @param torrentsInfo
+     * @param torrentsInfo 种子信息
+     * @return 是否删除成功
      */
     public static Boolean delete(TorrentsInfo torrentsInfo) {
         return delete(torrentsInfo, false, false);
@@ -255,7 +258,7 @@ public class TorrentUtil {
     /**
      * 重命名
      *
-     * @param torrentsInfo
+     * @param torrentsInfo 种子信息
      */
     public static void rename(TorrentsInfo torrentsInfo) {
         Config config = ConfigUtil.CONFIG;
@@ -279,9 +282,9 @@ public class TorrentUtil {
     /**
      * 添加标签
      *
-     * @param torrentsInfo
-     * @param tags
-     * @return
+     * @param torrentsInfo 种子信息
+     * @param tags         标签
+     * @return 是否添加成功
      */
     public static Boolean addTags(TorrentsInfo torrentsInfo, String tags) {
         if (StrUtil.isBlank(tags)) {
@@ -302,8 +305,8 @@ public class TorrentUtil {
     /**
      * 修改保存位置
      *
-     * @param torrentsInfo
-     * @param path
+     * @param torrentsInfo 种子信息
+     * @param path         保存路径
      */
     public static void setSavePath(TorrentsInfo torrentsInfo, String path) {
         if (StrUtil.isBlank(path)) {
@@ -337,8 +340,8 @@ public class TorrentUtil {
     /**
      * 通过种子获取到磁力链接
      *
-     * @param file
-     * @return
+     * @param file 文件
+     * @return 磁力链接
      */
     public static String getMagnet(File file) {
         String hexHash = FileUtil.mainName(file);

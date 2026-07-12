@@ -76,7 +76,7 @@ public class ScrapeService {
      *
      * @param ani   订阅
      * @param force 强制
-     * @throws Exception
+     * @throws Exception 异常
      */
     public void scrapeMovie(Ani ani, Boolean force) throws Exception {
         Tmdb tmdb = ani.getTmdb();
@@ -153,7 +153,7 @@ public class ScrapeService {
      *
      * @param ani   订阅
      * @param force 强制
-     * @throws Exception
+     * @throws Exception 异常
      */
     public void scrapeTv(Ani ani, Boolean force) throws Exception {
         Tmdb tmdb = ani.getTmdb();

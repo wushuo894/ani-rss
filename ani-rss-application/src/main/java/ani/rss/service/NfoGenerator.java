@@ -35,7 +35,7 @@ public class NfoGenerator {
      *
      * @param tmdbEpisode tmdb集
      * @param outputPath  输出位置
-     * @throws Exception
+     * @throws Exception 异常
      */
     public void generateEpisodeNfo(TmdbEpisode tmdbEpisode, String outputPath) throws Exception {
         DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
@@ -60,9 +60,9 @@ public class NfoGenerator {
     /**
      * season.nfo
      *
-     * @param tmdbSeason
-     * @param outputPath
-     * @throws Exception
+     * @param tmdbSeason tmdb季
+     * @param outputPath 输出位置
+     * @throws Exception 异常
      */
     public void generateSeasonNfo(TmdbSeason tmdbSeason, String outputPath) throws Exception {
         DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
@@ -92,7 +92,7 @@ public class NfoGenerator {
      *
      * @param tmdb       tmdb
      * @param outputPath 输出位置
-     * @throws Exception
+     * @throws Exception 异常
      */
     public void generateTvShowNfo(Tmdb tmdb, String outputPath) throws Exception {
         generateNfo(tmdb, outputPath, "tvshow");
@@ -103,7 +103,7 @@ public class NfoGenerator {
      *
      * @param tmdb       tmdb
      * @param outputPath 输出位置
-     * @throws Exception
+     * @throws Exception 异常
      */
     public void generateMovieNfo(Tmdb tmdb, String outputPath) throws Exception {
         generateNfo(tmdb, outputPath, "movie");
@@ -115,7 +115,7 @@ public class NfoGenerator {
      * @param tmdb       tmdb
      * @param outputPath 输出位置
      * @param rootTag    根标签
-     * @throws Exception
+     * @throws Exception 异常
      */
     public void generateNfo(Tmdb tmdb, String outputPath, String rootTag) throws Exception {
         // 创建 XML 文档
@@ -219,7 +219,7 @@ public class NfoGenerator {
      *
      * @param doc      Document
      * @param savePath 保存位置
-     * @throws Exception
+     * @throws Exception 异常
      */
     private void saveXmlDocument(Document doc, String savePath) throws Exception {
         FileUtil.mkdir(new File(savePath).getParentFile());

@@ -25,7 +25,7 @@ public class CacheService {
     /**
      * k: Bgm Id, v: Bgm Score
      *
-     * @return
+     * @return JsonObject
      */
     public JsonObject getBgmScore() {
         return getScore("bgm");
@@ -34,7 +34,7 @@ public class CacheService {
     /**
      * k: Mikan Id, v: Bgm Score
      *
-     * @return
+     * @return JsonObject
      */
     public JsonObject getMikanScore() {
         return getScore("mikan");
