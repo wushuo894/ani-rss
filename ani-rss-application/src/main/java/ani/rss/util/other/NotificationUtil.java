@@ -37,7 +37,8 @@ public class NotificationUtil {
                     NotificationTypeEnum.WEB_HOOK, WebHookNotification.class,
                     NotificationTypeEnum.SHELL, ShellNotification.class,
                     NotificationTypeEnum.FILE_MOVE, FileMoveNotification.class,
-                    NotificationTypeEnum.OPEN_LIST_UPLOAD, OpenListUploadNotification.class
+                    NotificationTypeEnum.OPEN_LIST_UPLOAD, OpenListUploadNotification.class,
+                    NotificationTypeEnum.BARK, BarkNotification.class
             );
 
     /**

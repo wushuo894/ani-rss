@@ -46,6 +46,15 @@ public interface BaseNotification {
      */
     Boolean send(NotificationConfig notificationConfig, Ani ani, String text, NotificationStatusEnum notificationStatusEnum);
 
+    /**
+     * 替换通知模版
+     *
+     * @param ani                    订阅
+     * @param notificationConfig     通知设置
+     * @param text                   通知内容
+     * @param notificationStatusEnum 通知状态
+     * @return 替换后的通知模版
+     */
     default String replaceNotificationTemplate(Ani ani, NotificationConfig notificationConfig, String text, NotificationStatusEnum notificationStatusEnum) {
         String notificationTemplate = notificationConfig.getNotificationTemplate();
 
@@ -59,6 +68,15 @@ public interface BaseNotification {
         return replaceNotificationTemplate(ani, notificationTemplate, text, notificationStatusEnum);
     }
 
+    /**
+     * 替换通知模版
+     *
+     * @param ani                    订阅
+     * @param notificationTemplate   通知模版
+     * @param text                   通知内容
+     * @param notificationStatusEnum 通知状态
+     * @return 替换后的通知模版
+     */
     default String replaceNotificationTemplate(Ani ani, String notificationTemplate, String text, NotificationStatusEnum notificationStatusEnum) {
         notificationTemplate = notificationTemplate.replace("${text}", text);
 

@@ -1,14 +1,14 @@
 <template>
-  <template v-if="props.notificationConfig['notificationType'] === 'EMBY_REFRESH'">
+  <template v-if="notificationConfig['notificationType'] === 'EMBY_REFRESH'">
     <el-form-item label="EmbyHost">
-      <el-input v-model="props.notificationConfig['embyHost']" placeholder="http://x.x.x.x:8096"/>
+      <el-input v-model="notificationConfig['embyHost']" placeholder="http://x.x.x.x:8096"/>
     </el-form-item>
     <el-form-item label="Emby密钥">
-      <el-input v-model="props.notificationConfig['embyApiKey']"/>
+      <el-input v-model="notificationConfig['embyApiKey']"/>
     </el-form-item>
     <el-form-item label="媒体库">
       <div>
-        <el-checkbox-group v-model="props.notificationConfig['embyRefreshViewIds']">
+        <el-checkbox-group v-model="notificationConfig['embyRefreshViewIds']">
           <el-checkbox
               v-for="view in views"
               :key="view.id"
@@ -21,7 +21,7 @@
       </div>
     </el-form-item>
     <el-form-item label="延迟">
-      <el-input-number v-model="props.notificationConfig['embyDelayed']"
+      <el-input-number v-model="notificationConfig['embyDelayed']"
                        class="notification-input-width"
                        :min="0">
         <template #suffix>

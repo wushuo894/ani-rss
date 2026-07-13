@@ -254,16 +254,28 @@ public class NotificationConfig implements Serializable {
     private String openListUploadOvaPath;
 
     /**
-     * 上传完成后删除本地文件
+     * OpenList 上传完成后删除本地文件
      */
-    @Schema(description = "上传完成后删除本地文件")
+    @Schema(description = "OpenList 上传完成后删除本地文件")
     private Boolean openListUploadDeleteLocalFile;
 
     /**
-     * 删除同及文件
+     * OpenList 删除同及文件
      */
-    @Schema(description = "删除同集文件")
+    @Schema(description = "OpenList 删除同集文件")
     private Boolean openListUploadDeleteOldEpisode;
+
+    @Schema(description = "Bark Server URL")
+    private String barkServerUrl;
+
+    @Schema(description = "Bark DeviceKeys")
+    private List<String> barkDeviceKeys;
+
+    @Schema(description = "Bark Group")
+    private String barkGroup;
+
+    @Schema(description = "Bark Use Markdown")
+    private Boolean barkUseMarkdown;
 
     /**
      * 通知 状态
@@ -353,6 +365,13 @@ public class NotificationConfig implements Serializable {
                 .setOpenListUploadOvaPath("/115/Media/剧场版/${title}")
                 .setOpenListUploadDeleteLocalFile(false)
                 .setOpenListUploadDeleteOldEpisode(false);
+
+        // Bark
+        notificationConfig
+                .setBarkServerUrl("https://api.day.app")
+                .setBarkDeviceKeys(new ArrayList<>())
+                .setBarkGroup("ani-rss")
+                .setBarkUseMarkdown(false);
 
         return notificationConfig;
     }

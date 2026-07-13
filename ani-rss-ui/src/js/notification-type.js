@@ -12,6 +12,10 @@ export let notificationTypeList = [
         label: 'Server酱'
     },
     {
+        name: "BARK",
+        label: "Bark通知"
+    },
+    {
         name: 'SYSTEM',
         label: '系统通知'
     },

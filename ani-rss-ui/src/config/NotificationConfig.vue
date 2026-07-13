@@ -27,6 +27,7 @@
         <EmbyRefreshNotification v-model:notification-config="notificationConfig" v-model:config="props.config"/>
         <MailNotification v-model:notification-config="notificationConfig" v-model:config="props.config"/>
         <ServerChanNotification v-model:notification-config="notificationConfig" v-model:config="props.config"/>
+        <BarkNotification v-model:config="props.config" v-model:notification-config="notificationConfig"/>
         <TelegramNotification v-model:notification-config="notificationConfig" v-model:config="props.config"/>
         <WebhookNotification v-model:notification-config="notificationConfig" v-model:config="props.config"/>
         <SystemNotification v-model:notification-config="notificationConfig" v-model:config="props.config"/>
@@ -77,6 +78,7 @@ import {ElMessage} from "element-plus";
 import FileMoveNotification from "@/config/notification/FileMoveNotification.vue";
 import OpenListUploadNotification from "@/config/notification/OpenListUploadNotification.vue";
 import {testNotification} from "@/js/http.js";
+import BarkNotification from "@/config/notification/BarkNotification.vue";
 
 
 let notificationConfig = ref({
