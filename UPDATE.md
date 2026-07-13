@@ -1,1 +1,1 @@
-- refactor: 优化手动刷新订阅
+- feat: 增加 Bark 通知
