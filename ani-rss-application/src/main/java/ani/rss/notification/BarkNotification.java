@@ -64,6 +64,8 @@ public class BarkNotification implements BaseNotification {
     public BarkPushBody toBarkPushBody(NotificationConfig notificationConfig, Ani ani, String text, NotificationStatusEnum notificationStatusEnum) {
         String barkGroup = notificationConfig.getBarkGroup();
         List<String> barkDeviceKeys = notificationConfig.getBarkDeviceKeys();
+        String barkLevel = notificationConfig.getBarkLevel();
+        Integer barkVolume = notificationConfig.getBarkVolume();
         Boolean barkUseMarkdown = notificationConfig.getBarkUseMarkdown();
         String image = ani.getImage();
 
@@ -85,7 +87,9 @@ public class BarkNotification implements BaseNotification {
                 .setIcon("https://docs.wushuo.top/favicon.ico")
                 .setImage(image)
                 .setDeviceKeys(barkDeviceKeys)
-                .setGroup(barkGroup);
+                .setGroup(barkGroup)
+                .setLevel(barkLevel)
+                .setVolume(barkVolume);
     }
 
     @Data
@@ -109,5 +113,9 @@ public class BarkNotification implements BaseNotification {
         private String image;
         @Schema(description = "分组")
         private String group;
+        @Schema(description = "中断级别")
+        private String level;
+        @Schema(description = "音量")
+        private Integer volume;
     }
 }

@@ -277,6 +277,12 @@ public class NotificationConfig implements Serializable {
     @Schema(description = "Bark Use Markdown")
     private Boolean barkUseMarkdown;
 
+    @Schema(description = "Bark Level")
+    private String barkLevel;
+
+    @Schema(description = "Bark Volume")
+    private Integer barkVolume;
+
     /**
      * 通知 状态
      */
@@ -371,7 +377,9 @@ public class NotificationConfig implements Serializable {
                 .setBarkServerUrl("https://api.day.app")
                 .setBarkDeviceKeys(new ArrayList<>())
                 .setBarkGroup("ani-rss")
-                .setBarkUseMarkdown(false);
+                .setBarkUseMarkdown(false)
+                .setBarkLevel("active")
+                .setBarkVolume(5);
 
         return notificationConfig;
     }

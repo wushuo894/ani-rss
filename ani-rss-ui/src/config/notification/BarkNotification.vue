@@ -13,6 +13,17 @@
     <el-form-item label="Group">
       <el-input v-model="notificationConfig['barkGroup']"/>
     </el-form-item>
+    <el-form-item label="Level">
+      <el-select v-model="notificationConfig['barkLevel']" placeholder="Select Level">
+        <el-option label="Critical" value="critical"/>
+        <el-option label="Active" value="active"/>
+        <el-option label="TimeSensitive" value="timeSensitive"/>
+        <el-option label="Passive" value="passive"/>
+      </el-select>
+    </el-form-item>
+    <el-form-item label="Volume">
+      <el-input-number v-model="notificationConfig['barkVolume']" :min="1" :max="10"/>
+    </el-form-item>
     <el-form-item label="Other">
       <el-checkbox v-model="notificationConfig['barkUseMarkdown']">
         Use Markdown
