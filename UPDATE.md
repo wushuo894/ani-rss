@@ -1,1 +1,1 @@
-- feat: 增加 Bark 通知
+- feat: Bark 通知支持设置 Level、Volume
