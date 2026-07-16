@@ -2,6 +2,7 @@ package ani.rss.config;
 
 import ani.rss.commons.ExceptionUtils;
 import ani.rss.commons.MavenUtils;
+import ani.rss.service.BackupService;
 import ani.rss.service.TaskService;
 import ani.rss.util.other.AniUtil;
 import ani.rss.util.other.ConfigUtil;
@@ -22,6 +23,9 @@ import java.net.InetSocketAddress;
 public class Runner implements ApplicationRunner {
 
     @Resource
+    private BackupService backupService;
+
+    @Resource
     private TaskService taskService;
 
     @Value("${server.port}")
@@ -31,7 +35,7 @@ public class Runner implements ApplicationRunner {
     public void run(@NonNull ApplicationArguments args) {
         try {
             ConfigUtil.load();
-            ConfigUtil.backup();
+            backupService.backup();
 
             AniUtil.load();
             taskService.start();

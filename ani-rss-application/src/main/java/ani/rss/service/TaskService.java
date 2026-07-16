@@ -20,7 +20,7 @@ public class TaskService {
     public static final AtomicBoolean LOOP = new AtomicBoolean(false);
     public static final List<Thread> THREADS = new Vector<>();
 
-    public synchronized void stop() {
+    public void stop() {
         LOOP.set(false);
         for (Thread thread : THREADS) {
             try {
@@ -37,12 +37,12 @@ public class TaskService {
         THREADS.clear();
     }
 
-    public synchronized void restart() {
+    public void restart() {
         stop();
         start();
     }
 
-    public synchronized void start() {
+    public void start() {
         if (LOOP.get() && !THREADS.isEmpty()) {
             log.warn("任务已经在运行中");
             return;

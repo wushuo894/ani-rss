@@ -4,6 +4,7 @@ import ani.rss.commons.FileUtils;
 import ani.rss.commons.GsonStatic;
 import ani.rss.entity.*;
 import ani.rss.entity.dto.RssToAniDTO;
+import ani.rss.entity.torrent.TorrentsInfo;
 import ani.rss.exception.ResultException;
 import ani.rss.service.ClearService;
 import ani.rss.service.DownloadService;
@@ -419,14 +420,15 @@ public class AniUtil {
         }
 
         // 旧文件路径
-        String oldPath = SpringUtil.getBean(DownloadService.class).getDownloadPath(ani, config);
+        DownloadService downloadService = SpringUtil.getBean(DownloadService.class);
+        String oldPath = downloadService.getDownloadPath(ani, config);
 
         config.setDownloadPathTemplate(completedPathTemplate);
         // 因为临时修改下载位置模版以获取对应下载位置, 要关闭自定义下载位置
         ani.setCustomDownloadPath(false);
 
         // 新文件路径
-        String newPath = SpringUtil.getBean(DownloadService.class).getDownloadPath(ani, config);
+        String newPath = downloadService.getDownloadPath(ani, config);
 
         if (!FileUtil.exist(oldPath)) {
             // 旧文件不存在
@@ -438,8 +440,8 @@ public class AniUtil {
         List<TorrentsInfo> torrentsInfos = TorrentUtil.getTorrentsInfos();
 
         for (TorrentsInfo torrentsInfo : torrentsInfos) {
-            String downloadDir = torrentsInfo.getDownloadDir();
-            if (!downloadDir.equals(oldPath)) {
+            String savePath = torrentsInfo.getSavePath();
+            if (!savePath.equals(oldPath)) {
                 // 旧位置不相同
                 continue;
             }
@@ -463,7 +465,8 @@ public class AniUtil {
             log.info("移动 {} ==> {}", file, newPath);
             FileUtil.move(file, new File(newPath), true);
             // 清理残留文件夹
-            SpringUtil.getBean(ClearService.class).clearParentFile(file);
+            ClearService clearService = SpringUtil.getBean(ClearService.class);
+            clearService.clearParentFile(file);
         }
     }
 

@@ -1,13 +1,13 @@
 package ani.rss.download;
 
-import ani.rss.commons.FileUtils;
 import ani.rss.commons.GsonStatic;
 import ani.rss.entity.Ani;
 import ani.rss.entity.Config;
 import ani.rss.entity.Item;
-import ani.rss.entity.TorrentsInfo;
+import ani.rss.entity.torrent.TorrentsInfo;
+import ani.rss.entity.torrent.TransmissionTorrentsInfo;
 import ani.rss.entity.web.Header;
-import ani.rss.enums.TorrentsTags;
+import ani.rss.enums.TorrentsTagEnum;
 import ani.rss.util.basic.HttpReq;
 import ani.rss.util.basic.RenameCacheUtil;
 import cn.hutool.core.codec.Base64;
@@ -19,8 +19,6 @@ import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.core.util.ReUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.HttpResponse;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -81,55 +79,20 @@ public class Transmission implements BaseDownload {
                             sessionId = id;
                             return getTorrentsInfos();
                         }
-                        List<TorrentsInfo> torrentsInfos = new ArrayList<>();
-                        JsonObject jsonObject = GsonStatic.fromJson(res.body(), JsonObject.class);
-                        JsonArray torrents = jsonObject.get("arguments")
-                                .getAsJsonObject()
-                                .get("torrents")
-                                .getAsJsonArray();
-                        for (JsonElement jsonElement : torrents.asList()) {
-                            JsonObject item = jsonElement.getAsJsonObject();
-                            List<String> tags = item.get("labels").getAsJsonArray()
-                                    .asList().stream().map(JsonElement::getAsString)
-                                    .toList();
-                            if (!tags.contains(TorrentsTags.ANI_RSS.getValue())) {
-                                continue;
-                            }
-                            List<String> files = item.get("files").getAsJsonArray().asList()
-                                    .stream().map(JsonElement::getAsJsonObject)
-                                    .map(o -> o.get("name").getAsString())
-                                    .toList();
 
-                            // 状态： https://github.com/jayzcoder/TrguiNG/blob/zh/src/rpc/transmission.ts
+                        TransmissionTorrentsInfo transmissionTorrentsInfo = GsonStatic.fromJson(res.body(), TransmissionTorrentsInfo.class);
 
-                            TorrentsInfo.State state = TorrentsInfo.State.downloading;
-
-                            // 做种中
-                            if (item.get("status").getAsInt() == 6) {
-                                state = TorrentsInfo.State.stalledUP;
-                            }
-
-                            // 已完成
-                            if (item.get("isFinished").getAsBoolean()) {
-                                state = TorrentsInfo.State.pausedUP;
-                            }
-
-                            String downloadDir = item.get("downloadDir").getAsString();
-                            long size = item.get("totalSize").getAsLong();
-                            long completed = item.get("haveValid").getAsLong();
-
-                            TorrentsInfo torrentsInfo = new TorrentsInfo();
-                            torrentsInfo.progress(completed, size)
-                                    .setName(item.get("name").getAsString())
-                                    .setTags(tags)
-                                    .setHash(item.get("hashString").getAsString())
-                                    .setState(state)
-                                    .setId(item.get("id").getAsString())
-                                    .setDownloadDir(FileUtils.getAbsolutePath(downloadDir))
-                                    .setFiles(() -> files);
-                            torrentsInfos.add(torrentsInfo);
-                        }
-                        return torrentsInfos;
+                        List<TransmissionTorrentsInfo.Torrent> torrentsInfoList = transmissionTorrentsInfo
+                                .getArguments()
+                                .getTorrents();
+                        return torrentsInfoList
+                                .stream()
+                                .map(TransmissionTorrentsInfo.Torrent::toTorrentsInfo)
+                                .filter(torrentsInfo -> {
+                                    List<String> tagList = torrentsInfo.getTagList();
+                                    return tagList.contains(TorrentsTagEnum.ANI_RSS.getValue());
+                                })
+                                .toList();
                     });
         } catch (Exception e) {
             log.error(e.getMessage(), e);
@@ -267,7 +230,7 @@ public class Transmission implements BaseDownload {
     @Override
     public Boolean addTags(TorrentsInfo torrentsInfo, String tag) {
         String id = torrentsInfo.getId();
-        List<String> tags = torrentsInfo.getTags();
+        List<String> tags = torrentsInfo.getTagList();
         List<String> strings = new ArrayList<>(tags);
         strings.add(tag);
 

@@ -148,7 +148,8 @@ public interface BaseNotification {
         notificationTemplate = notificationTemplate.replace("${emoji}", emoji);
         notificationTemplate = notificationTemplate.replace("${action}", action);
 
-        String downloadPath = SpringUtil.getBean(DownloadService.class).getDownloadPath(ani);
+        DownloadService downloadService = SpringUtil.getBean(DownloadService.class);
+        String downloadPath = downloadService.getDownloadPath(ani);
         notificationTemplate = notificationTemplate.replace("${downloadPath}", downloadPath);
 
         if (notificationTemplate.contains("${jpTitle}")) {

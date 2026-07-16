@@ -2,7 +2,7 @@ package ani.rss.task;
 
 import ani.rss.commons.ExceptionUtils;
 import ani.rss.entity.Config;
-import ani.rss.entity.TorrentsInfo;
+import ani.rss.entity.torrent.TorrentsInfo;
 import ani.rss.service.DownloadService;
 import ani.rss.util.other.ConfigUtil;
 import ani.rss.util.other.TorrentUtil;

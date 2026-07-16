@@ -52,7 +52,7 @@ public class SystemNotification implements BaseNotification {
 
         TrayIcon.MessageType type = TrayIcon.MessageType.INFO;
         if (Objects.nonNull(notificationStatusEnum)) {
-            if (notificationStatusEnum.name().equals(NotificationStatusEnum.ERROR.name())) {
+            if (notificationStatusEnum == NotificationStatusEnum.ERROR) {
                 type = TrayIcon.MessageType.ERROR;
             }
         }

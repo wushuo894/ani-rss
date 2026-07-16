@@ -66,6 +66,11 @@ public class ClearService {
         clearParentFile(parentFile);
     }
 
+    /**
+     * 清理残余封面
+     *
+     * @return 清理大小 bytes
+     */
     public Long clearCover() {
         File configDir = ConfigUtil.getConfigDir();
         String configDirStr = FileUtils.getAbsolutePath(configDir);

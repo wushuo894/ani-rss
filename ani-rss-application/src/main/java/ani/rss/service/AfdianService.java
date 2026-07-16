@@ -1,29 +1,27 @@
-package ani.rss.util.other;
+package ani.rss.service;
 
 import ani.rss.commons.GsonStatic;
 import ani.rss.entity.Config;
 import ani.rss.entity.web.Result;
 import ani.rss.util.basic.HttpReq;
+import ani.rss.util.other.ConfigUtil;
 import cn.hutool.core.lang.Assert;
 import com.google.gson.JsonObject;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
 
 import java.util.Date;
 
-/**
- * 你可以修改后自用, 但请仅存放于 私人仓库、私人docker镜像
- */
 @Slf4j
-public class AfdianUtil {
+@Service
+public class AfdianService {
     /**
      * 检测爱发电订单
-     * <p>
-     * 你可以修改后自用, 但请仅存放于 私人仓库、私人docker镜像
      *
      * @param no 订单号
      * @return 结果
      */
-    public static Result<Void> verifyNo(String no) {
+    public Result<Void> verifyNo(String no) {
         Assert.notBlank(no, "订单号为空");
         return HttpReq.post("https://afdian.wushuo.top?out_trade_no=" + no)
                 .timeout(1000 * 5)
@@ -39,12 +37,10 @@ public class AfdianUtil {
 
     /**
      * 捐赠是否有效
-     * <p>
-     * 你可以修改后自用, 但请仅存放于 私人仓库、私人docker镜像
      *
      * @return 是否有效
      */
-    public static Boolean verifyExpirationTime() {
+    public Boolean verifyExpirationTime() {
         Config config = ConfigUtil.CONFIG;
         Long expirationTime = config.getExpirationTime();
 

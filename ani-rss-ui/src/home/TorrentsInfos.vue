@@ -30,7 +30,7 @@
           <template #footer>
             <div class="flex torrents-footer">
               <div>
-                <el-tag v-for="tag in torrentsInfo['tags']" class="torrents-tag-spacer" type="info">
+                <el-tag v-for="tag in torrentsInfo['tagList']" class="torrents-tag-spacer" type="info">
                   {{ tag }}
                 </el-tag>
               </div>

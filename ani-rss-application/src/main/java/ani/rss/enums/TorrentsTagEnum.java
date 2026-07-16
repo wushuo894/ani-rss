@@ -5,10 +5,10 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public enum TorrentsTags {
+public enum TorrentsTagEnum {
     ANI_RSS("ani-rss"),
     RENAME("RENAME"),
-    BACK_RSS("备用RSS"),
+    STANDBY_RSS("备用RSS"),
     DOWNLOAD_COMPLETE("下载完成");
 
     private final String value;

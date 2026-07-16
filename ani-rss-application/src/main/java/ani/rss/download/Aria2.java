@@ -5,7 +5,9 @@ import ani.rss.commons.GsonStatic;
 import ani.rss.entity.Ani;
 import ani.rss.entity.Config;
 import ani.rss.entity.Item;
-import ani.rss.entity.TorrentsInfo;
+import ani.rss.entity.torrent.Aria2TorrentsInfo;
+import ani.rss.entity.torrent.TorrentsInfo;
+import ani.rss.enums.TorrentsStateEnum;
 import ani.rss.util.basic.HttpReq;
 import ani.rss.util.basic.RenameCacheUtil;
 import cn.hutool.core.codec.Base64;
@@ -17,7 +19,6 @@ import cn.hutool.core.text.StrFormatter;
 import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.HttpResponse;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -76,52 +77,26 @@ public class Aria2 implements BaseDownload {
                 .body(body)
                 .thenFunction(res -> {
                     HttpReq.assertStatus(res);
-                    JsonObject jsonObject = GsonStatic.fromJson(res.body(), JsonObject.class);
-                    List<JsonElement> result = jsonObject.get("result").getAsJsonArray().asList();
-                    List<TorrentsInfo> torrentsInfos = new ArrayList<>();
-                    for (JsonElement jsonElement : result) {
-                        JsonObject asJsonObject = jsonElement.getAsJsonObject();
-                        JsonElement bittorrent = asJsonObject.get("bittorrent");
-                        if (Objects.isNull(bittorrent) || bittorrent.isJsonNull()) {
-                            continue;
-                        }
-                        JsonElement info = bittorrent.getAsJsonObject()
-                                .get("info");
-                        if (Objects.isNull(info)) {
-                            continue;
-                        }
-                        String name = info.getAsJsonObject()
-                                .get("name").getAsString();
-                        String infoHash = asJsonObject.get("infoHash").getAsString();
-                        String status = asJsonObject.get("status").getAsString();
-                        TorrentsInfo.State state = "complete".equals(status) ?
-                                TorrentsInfo.State.pausedUP : TorrentsInfo.State.downloading;
-                        String dir = asJsonObject.get("dir").getAsString();
-                        String gid = asJsonObject.get("gid").getAsString();
+                    Aria2TorrentsInfo aria2TorrentsInfo = GsonStatic.fromJson(res.body(), Aria2TorrentsInfo.class);
 
-                        List<String> files = asJsonObject.get("files")
-                                .getAsJsonArray()
-                                .asList()
-                                .stream().map(JsonElement::getAsJsonObject)
-                                .map(o -> o.get("path").getAsString())
-                                .toList();
+                    List<Aria2TorrentsInfo.Torrent> result = aria2TorrentsInfo.getResult();
 
-                        long size = asJsonObject.get("totalLength").getAsLong();
-                        long completed = asJsonObject.get("completedLength").getAsLong();
-
-                        TorrentsInfo torrentsInfo = new TorrentsInfo();
-                        torrentsInfo
-                                .progress(completed, size)
-                                .setTags(List.of())
-                                .setId(gid)
-                                .setName(name)
-                                .setHash(infoHash)
-                                .setState(state)
-                                .setDownloadDir(FileUtils.getAbsolutePath(dir))
-                                .setFiles(() -> files);
-                        torrentsInfos.add(torrentsInfo);
-                    }
-                    return torrentsInfos;
+                    return result
+                            .stream()
+                            .filter(torrent -> {
+                                Aria2TorrentsInfo.Bittorrent bittorrent = torrent.getBittorrent();
+                                if (Objects.isNull(bittorrent)) {
+                                    return false;
+                                }
+                                Aria2TorrentsInfo.Bittorrent.Info info = bittorrent.getInfo();
+                                if (Objects.isNull(info)) {
+                                    return false;
+                                }
+                                String name = info.getName();
+                                return StrUtil.isNotBlank(name);
+                            })
+                            .map(Aria2TorrentsInfo.Torrent::toTorrentsInfo)
+                            .toList();
                 });
     }
 
@@ -191,15 +166,11 @@ public class Aria2 implements BaseDownload {
     @Override
     public Boolean rename(TorrentsInfo torrentsInfo) {
         String id = torrentsInfo.getId();
-        String downloadDir = torrentsInfo.getDownloadDir();
-        TorrentsInfo.State state = torrentsInfo.getState();
-
-        if (Objects.isNull(state)) {
-            return false;
-        }
+        String savePath = torrentsInfo.getSavePath();
+        TorrentsStateEnum torrentsState = torrentsInfo.getState();
 
         // 仅支持下载完成后重命名
-        if (!state.name().equals(TorrentsInfo.State.pausedUP.name())) {
+        if (torrentsState != TorrentsStateEnum.stoppedUP) {
             return false;
         }
 
@@ -209,7 +180,7 @@ public class Aria2 implements BaseDownload {
             return false;
         }
 
-        List<File> files = torrentsInfo.getFiles().get()
+        List<File> files = torrentsInfo.getFilesSupplier().get()
                 .stream()
                 .map(File::new)
                 .filter(File::exists)
@@ -231,7 +202,7 @@ public class Aria2 implements BaseDownload {
         for (File src : files) {
             String name = src.getName();
             String fileReName = getFileReName(name, reName);
-            File newPath = new File(downloadDir, fileReName);
+            File newPath = new File(savePath, fileReName);
             if (FileUtil.equals(src, newPath)) {
                 continue;
             }

@@ -4,13 +4,13 @@ import ani.rss.commons.GsonStatic;
 import ani.rss.entity.Config;
 import ani.rss.entity.MikanBgm;
 import ani.rss.util.basic.HttpReq;
-import ani.rss.util.other.AfdianUtil;
 import ani.rss.util.other.ConfigUtil;
 import cn.hutool.core.text.StrFormatter;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.crypto.SecureUtil;
 import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
+import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -21,6 +21,9 @@ import java.util.Map;
 @Slf4j
 @Service
 public class CacheService {
+
+    @Resource
+    private AfdianService afdianService;
 
     /**
      * k: Bgm Id, v: Bgm Score
@@ -41,7 +44,7 @@ public class CacheService {
     }
 
     public JsonObject getScore(String source) {
-        if (!AfdianUtil.verifyExpirationTime()) {
+        if (!afdianService.verifyExpirationTime()) {
             return new JsonObject();
         }
         Config config = ConfigUtil.CONFIG;
@@ -75,7 +78,7 @@ public class CacheService {
     }
 
     public Map<String, MikanBgm> getMikanBgm() {
-        if (!AfdianUtil.verifyExpirationTime()) {
+        if (!afdianService.verifyExpirationTime()) {
             return new HashMap<>();
         }
         Config config = ConfigUtil.CONFIG;

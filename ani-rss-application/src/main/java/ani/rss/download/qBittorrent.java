@@ -6,26 +6,22 @@ import ani.rss.commons.GsonStatic;
 import ani.rss.entity.Ani;
 import ani.rss.entity.Config;
 import ani.rss.entity.Item;
-import ani.rss.entity.TorrentsInfo;
+import ani.rss.entity.torrent.TorrentsInfo;
+import ani.rss.entity.torrent.qBittorrentTorrentsInfo;
 import ani.rss.enums.StringEnum;
-import ani.rss.enums.TorrentsTags;
+import ani.rss.enums.TorrentsTagEnum;
 import ani.rss.service.DownloadService;
 import ani.rss.util.basic.HttpReq;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.thread.ThreadUtil;
-import cn.hutool.core.util.EnumUtil;
 import cn.hutool.core.util.ReUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpResponse;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import lombok.Data;
 import lombok.RequiredArgsConstructor;
-import lombok.experimental.Accessors;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -52,7 +48,7 @@ public class qBittorrent implements BaseDownload {
      * @param config       设置
      * @return 文件列表
      */
-    public static List<FileEntity> files(TorrentsInfo torrentsInfo, Boolean filter, Config config) {
+    public static List<qBittorrentTorrentsInfo.FileEntity> files(TorrentsInfo torrentsInfo, Boolean filter, Config config) {
         String hash = torrentsInfo.getHash();
         String host = config.getDownloadToolHost();
 
@@ -60,7 +56,7 @@ public class qBittorrent implements BaseDownload {
                 .form("hash", hash)
                 .thenFunction(res -> {
                     HttpReq.assertStatus(res);
-                    return GsonStatic.fromJsonList(res.body(), FileEntity.class).stream()
+                    return GsonStatic.fromJsonList(res.body(), qBittorrentTorrentsInfo.FileEntity.class).stream()
                             .filter(fileEntity -> {
                                 if (!filter) {
                                     return true;
@@ -145,7 +141,7 @@ public class qBittorrent implements BaseDownload {
         HttpRequest httpRequest = HttpReq.post(host + "/api/v2/torrents/add")
                 .form("addToTopOfQueue", false)
                 .form("autoTMM", false)
-                .form("category", TorrentsTags.ANI_RSS.getValue())
+                .form("category", TorrentsTagEnum.ANI_RSS.getValue())
                 .form("contentLayout", "Original")
                 .form("dlLimit", dlLimit)
                 .form("firstLastPiecePrio", false)
@@ -228,58 +224,20 @@ public class qBittorrent implements BaseDownload {
         try {
             return HttpReq.get(host + "/api/v2/torrents/info")
                     .thenFunction(res -> {
-                        List<TorrentsInfo> torrentsInfoList = new ArrayList<>();
-                        JsonArray jsonElements = GsonStatic.fromJson(res.body(), JsonArray.class);
-                        for (JsonElement jsonElement : jsonElements) {
-                            JsonObject jsonObject = jsonElement.getAsJsonObject();
-                            String tags = jsonObject.get("tags").getAsString();
+                        List<qBittorrentTorrentsInfo> torrentsInfos = GsonStatic.fromJsonList(res.body(), qBittorrentTorrentsInfo.class);
+                        return torrentsInfos.stream()
+                                .map(qBittorrentTorrentsInfo::toTorrentsInfo)
+                                .filter(torrentsInfo -> {
+                                    // 过滤出 ani-rss 标签或分类
+                                    String category = torrentsInfo.getCategory();
+                                    if (category.equals(TorrentsTagEnum.ANI_RSS.getValue())) {
+                                        return true;
+                                    }
 
-                            if (StrUtil.isBlank(tags)) {
-                                continue;
-                            }
-
-                            String hash = jsonObject.get("hash").getAsString();
-                            String name = jsonObject.get("name").getAsString();
-                            String savePath = jsonObject.get("save_path").getAsString();
-                            long completed = jsonObject.get("completed").getAsLong();
-                            long size = jsonObject.get("size").getAsLong();
-                            JsonElement state = jsonObject.get("state");
-
-                            List<String> tagList = StrUtil.split(tags, ",", true, true);
-
-                            TorrentsInfo torrentsInfo = new TorrentsInfo();
-
-                            torrentsInfo.setState(Objects.isNull(state) ?
-                                    TorrentsInfo.State.downloading : EnumUtil.fromString(TorrentsInfo.State.class, state.getAsString(), TorrentsInfo.State.downloading)
-                            );
-
-                            torrentsInfo
-                                    .progress(completed, size)
-                                    .setName(name)
-                                    .setHash(hash)
-                                    .setDownloadDir(FileUtils.getAbsolutePath(savePath))
-                                    .setTags(tagList)
-                                    .setFiles(() ->
-                                            files(torrentsInfo, true, config)
-                                                    .stream()
-                                                    .filter(fileEntity -> fileEntity.getPriority() > 0)
-                                                    .map(FileEntity::getName)
-                                                    .toList());
-                            // 包含标签
-                            if (tagList.contains(TorrentsTags.ANI_RSS.getValue())) {
-                                torrentsInfoList.add(torrentsInfo);
-                                continue;
-                            }
-
-                            JsonElement category = jsonObject.get("category");
-                            if (Objects.isNull(category)) {
-                                continue;
-                            }
-                            if (category.getAsString().equals(TorrentsTags.ANI_RSS.getValue())) {
-                                torrentsInfoList.add(torrentsInfo);
-                            }
-                        }
-                        return torrentsInfoList;
+                                    List<String> tagList = torrentsInfo.getTagList();
+                                    return tagList.contains(TorrentsTagEnum.ANI_RSS.getValue());
+                                })
+                                .toList();
                     });
         } catch (Exception e) {
             log.error(e.getMessage(), e);
@@ -293,7 +251,7 @@ public class qBittorrent implements BaseDownload {
         String name = torrentsInfo.getName();
         String hash = torrentsInfo.getHash();
         try {
-            List<FileEntity> files = files(torrentsInfo, false, config);
+            List<qBittorrentTorrentsInfo.FileEntity> files = files(torrentsInfo, false, config);
             boolean b = HttpReq.post(host + "/api/v2/torrents/delete")
                     .form("hashes", hash)
                     .form("deleteFiles", deleteFiles)
@@ -307,10 +265,10 @@ public class qBittorrent implements BaseDownload {
                 return true;
             }
 
-            String downloadDir = torrentsInfo.getDownloadDir();
+            String downloadDir = torrentsInfo.getSavePath();
 
             List<File> dirList = files.stream()
-                    .map(FileEntity::getName)
+                    .map(qBittorrentTorrentsInfo.FileEntity::getName)
                     .map(File::new)
                     .map(File::getParent)
                     .filter(StrUtil::isNotBlank)
@@ -378,7 +336,7 @@ public class qBittorrent implements BaseDownload {
 
         List<String> priorityKeywords = getPriorityKeywords(config, ani);
 
-        List<FileEntity> files = files(torrentsInfo, true, config);
+        List<qBittorrentTorrentsInfo.FileEntity> files = files(torrentsInfo, true, config);
 
         if (!priorityKeywords.isEmpty()) {
             files = files.stream()
@@ -399,7 +357,7 @@ public class qBittorrent implements BaseDownload {
         }
 
         List<String> names = files.stream()
-                .map(FileEntity::getName)
+                .map(qBittorrentTorrentsInfo.FileEntity::getName)
                 .toList();
 
         if (files.isEmpty()) {
@@ -412,7 +370,7 @@ public class qBittorrent implements BaseDownload {
 
         List<String> newNames = new ArrayList<>();
 
-        for (FileEntity fileEntity : files) {
+        for (qBittorrentTorrentsInfo.FileEntity fileEntity : files) {
             String name = fileEntity.getName();
             String newPath = getFileReName(name, reName);
 
@@ -465,7 +423,7 @@ public class qBittorrent implements BaseDownload {
         // qb重命名具有延迟，等待重命名完成
         for (int i = 0; i < 10; i++) {
             ThreadUtil.sleep(1000);
-            names = torrentsInfo.getFiles().get();
+            names = torrentsInfo.getFilesSupplier().get();
             if (new HashSet<>(names).containsAll(newNames)) {
                 return true;
             }
@@ -533,19 +491,6 @@ public class qBittorrent implements BaseDownload {
                         log.error(req.body());
                     }
                 });
-    }
-
-
-    @Data
-    @Accessors(chain = true)
-    public static class FileEntity {
-        private Integer index;
-        private String name;
-        private Long size;
-        /**
-         * 1 允许下载。2 禁止下载
-         */
-        private Integer priority;
     }
 
     private static List<String> getPriorityKeywords(Config config, Ani ani) {

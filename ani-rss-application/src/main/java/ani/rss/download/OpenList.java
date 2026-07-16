@@ -4,6 +4,7 @@ import ani.rss.commons.ExceptionUtils;
 import ani.rss.commons.FileUtils;
 import ani.rss.commons.GsonStatic;
 import ani.rss.entity.*;
+import ani.rss.entity.torrent.TorrentsInfo;
 import ani.rss.entity.web.Header;
 import ani.rss.enums.NotificationStatusEnum;
 import ani.rss.enums.StringEnum;

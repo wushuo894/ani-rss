@@ -93,7 +93,8 @@ public class OpenListUploadNotification implements BaseNotification {
         Boolean deleteOldEpisode = notificationConfig.getOpenListUploadDeleteOldEpisode();
 
         // 本地位置
-        String localPath = SpringUtil.getBean(DownloadService.class).getDownloadPath(ani);
+        DownloadService downloadService = SpringUtil.getBean(DownloadService.class);
+        String localPath = downloadService.getDownloadPath(ani);
 
         // 新的位置; 设置自定义下载位置同时启用, 用以获取新的位置
         Boolean ova = ani.getOva();
@@ -111,7 +112,7 @@ public class OpenListUploadNotification implements BaseNotification {
 
         ani.setCustomDownloadPath(true);
 
-        String target = SpringUtil.getBean(DownloadService.class).getDownloadPath(ani);
+        String target = downloadService.getDownloadPath(ani);
         target = ReUtil.replaceAll(target, "^[A-z]:", "");
 
         if (ova) {

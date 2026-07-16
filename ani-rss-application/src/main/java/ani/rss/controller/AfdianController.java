@@ -3,10 +3,11 @@ package ani.rss.controller;
 import ani.rss.annotation.Auth;
 import ani.rss.entity.Config;
 import ani.rss.entity.web.Result;
-import ani.rss.util.other.AfdianUtil;
+import ani.rss.service.AfdianService;
 import ani.rss.util.other.ConfigUtil;
 import cn.hutool.core.date.DateUtil;
 import io.swagger.v3.oas.annotations.Hidden;
+import jakarta.annotation.Resource;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -17,16 +18,20 @@ import java.util.Date;
 @RestController
 public class AfdianController extends BaseController {
 
+    @Resource
+    private AfdianService afdianService;
+
     @Auth
     @PostMapping("/verifyNo")
     public Result<Void> verifyNo(@RequestBody Config config) {
         String outTradeNo = config.getOutTradeNo();
-        Result<Void> result = AfdianUtil.verifyNo(outTradeNo);
+        Result<Void> result = afdianService.verifyNo(outTradeNo);
 
         int code = result.getCode();
         if (code == 200) {
             Long time = DateUtil.offsetYear(new Date(), 999).getTime();
-            ConfigUtil.CONFIG.setOutTradeNo(outTradeNo)
+            ConfigUtil.CONFIG
+                    .setOutTradeNo(outTradeNo)
                     .setExpirationTime(time)
                     .setTryOut(false);
             ConfigUtil.sync();

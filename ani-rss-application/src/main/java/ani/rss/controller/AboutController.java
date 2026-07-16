@@ -7,9 +7,10 @@ import ani.rss.commons.MavenUtils;
 import ani.rss.entity.About;
 import ani.rss.entity.Global;
 import ani.rss.entity.web.Result;
-import ani.rss.util.other.UpdateUtil;
+import ani.rss.service.UpdateService;
 import cn.hutool.core.thread.ThreadUtil;
 import io.swagger.v3.oas.annotations.Operation;
+import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -22,11 +23,14 @@ import java.util.List;
 @RestController
 public class AboutController extends BaseController {
 
+    @Resource
+    private UpdateService updateService;
+
     @Auth
     @Operation(summary = "查看关于信息")
     @PostMapping("/about")
     public Result<About> about() {
-        return Result.success(UpdateUtil.about());
+        return Result.success(updateService.about());
     }
 
     @Auth
@@ -53,9 +57,9 @@ public class AboutController extends BaseController {
     @Operation(summary = "更新")
     @PostMapping("/update")
     public Result<Void> update() {
-        About about = UpdateUtil.about();
+        About about = updateService.about();
         try {
-            UpdateUtil.update(about);
+            updateService.update(about);
             return Result.success("更新成功, 正在重启...");
         } catch (Exception e) {
             String message = ExceptionUtils.getMessage(e);

@@ -4,10 +4,15 @@ import ani.rss.commons.ExceptionUtils;
 import ani.rss.commons.FileUtils;
 import ani.rss.commons.GsonStatic;
 import ani.rss.commons.PinyinUtils;
-import ani.rss.entity.*;
+import ani.rss.entity.Ani;
+import ani.rss.entity.Config;
+import ani.rss.entity.Item;
+import ani.rss.entity.StandbyRss;
+import ani.rss.entity.torrent.TorrentsInfo;
 import ani.rss.enums.NotificationStatusEnum;
 import ani.rss.enums.StringEnum;
-import ani.rss.enums.TorrentsTags;
+import ani.rss.enums.TorrentsStateEnum;
+import ani.rss.enums.TorrentsTagEnum;
 import ani.rss.util.other.*;
 import cn.hutool.core.date.DateField;
 import cn.hutool.core.date.DateUtil;
@@ -71,18 +76,14 @@ public class DownloadService {
         long count = torrentsInfos
                 .stream()
                 .filter(it -> {
-                    TorrentsInfo.State state = it.getState();
-                    if (Objects.isNull(state)) {
-                        return true;
-                    }
+                    TorrentsStateEnum torrentsState = it.getState();
                     // 未下载完成
                     return !List.of(
-                            TorrentsInfo.State.queuedUP.name(),
-                            TorrentsInfo.State.uploading.name(),
-                            TorrentsInfo.State.stalledUP.name(),
-                            TorrentsInfo.State.pausedUP.name(),
-                            TorrentsInfo.State.stoppedUP.name()
-                    ).contains(state.name());
+                            TorrentsStateEnum.queuedUP,
+                            TorrentsStateEnum.uploading,
+                            TorrentsStateEnum.stalledUP,
+                            TorrentsStateEnum.stoppedUP
+                    ).contains(torrentsState);
                 })
                 .count();
 
@@ -161,7 +162,7 @@ public class DownloadService {
                 TorrentsInfo standbyRSS = torrentsInfos
                         .stream()
                         .filter(torrentsInfo -> {
-                            if (!torrentsInfo.getDownloadDir().equals(savePath)) {
+                            if (!torrentsInfo.getSavePath().equals(savePath)) {
                                 return false;
                             }
                             if (!ReUtil.contains(StringEnum.SEASON_REG, torrentsInfo.getName())) {
@@ -171,17 +172,17 @@ public class DownloadService {
                             if (!s.equals(ReUtil.get(StringEnum.SEASON_REG, reName, 0))) {
                                 return false;
                             }
-                            List<String> tags = torrentsInfo.getTags();
+                            List<String> tags = torrentsInfo.getTagList();
                             // 包含 备用RSS 标签或者 无主RSS字幕组信息
-                            return tags.contains(TorrentsTags.BACK_RSS.getValue()) ||
+                            return tags.contains(TorrentsTagEnum.STANDBY_RSS.getValue()) ||
                                     !tags.contains(ani.getSubgroup());
                         })
                         .findFirst()
                         .orElse(null);
 
                 if (Objects.nonNull(standbyRSS)) {
-                    List<String> tags = standbyRSS.getTags();
-                    if (!tags.contains(TorrentsTags.RENAME.getValue())) {
+                    List<String> tags = standbyRSS.getTagList();
+                    if (!tags.contains(TorrentsTagEnum.RENAME.getValue())) {
                         // 未完成重命名
                         continue;
                     }
@@ -311,7 +312,7 @@ public class DownloadService {
                 .stream()
                 .filter(torrentsInfo -> {
                     String name = torrentsInfo.getName();
-                    String downloadDir = torrentsInfo.getDownloadDir();
+                    String downloadDir = torrentsInfo.getSavePath();
                     if (!downloadDir.equals(downloadPath)) {
                         return false;
                     }
@@ -435,27 +436,23 @@ public class DownloadService {
      * @param torrentsInfo 种子信息
      */
     public void notification(TorrentsInfo torrentsInfo) {
-        TorrentsInfo.State state = torrentsInfo.getState();
+        TorrentsStateEnum torrentsState = torrentsInfo.getState();
         String name = torrentsInfo.getName();
 
-        if (Objects.isNull(state)) {
-            return;
-        }
         if (!List.of(
-                TorrentsInfo.State.queuedUP.name(),
-                TorrentsInfo.State.uploading.name(),
-                TorrentsInfo.State.stalledUP.name(),
-                TorrentsInfo.State.pausedUP.name(),
-                TorrentsInfo.State.stoppedUP.name()
-        ).contains(state.name())) {
+                TorrentsStateEnum.queuedUP,
+                TorrentsStateEnum.uploading,
+                TorrentsStateEnum.stalledUP,
+                TorrentsStateEnum.stoppedUP
+        ).contains(torrentsState)) {
             return;
         }
         // 添加下载完成标签，防止重复通知
-        List<String> tags = torrentsInfo.getTags();
-        if (tags.contains(TorrentsTags.DOWNLOAD_COMPLETE.getValue())) {
+        List<String> tags = torrentsInfo.getTagList();
+        if (tags.contains(TorrentsTagEnum.DOWNLOAD_COMPLETE.getValue())) {
             return;
         }
-        Boolean b = TorrentUtil.addTags(torrentsInfo, TorrentsTags.DOWNLOAD_COMPLETE.getValue());
+        Boolean b = TorrentUtil.addTags(torrentsInfo, TorrentsTagEnum.DOWNLOAD_COMPLETE.getValue());
         if (!b) {
             return;
         }
@@ -495,7 +492,7 @@ public class DownloadService {
             }
         }
         String text = StrFormatter.format("{} 下载完成", name);
-        if (tags.contains(TorrentsTags.BACK_RSS.getValue())) {
+        if (tags.contains(TorrentsTagEnum.STANDBY_RSS.getValue())) {
             text = StrFormatter.format("(备用RSS) {}", text);
         }
         NotificationUtil.send(ConfigUtil.CONFIG, ani, text, NotificationStatusEnum.DOWNLOAD_END);
@@ -549,13 +546,7 @@ public class DownloadService {
 
         String title = ani.getTitle().trim();
 
-        String pinyin = PinyinUtils.getPinyin(title);
-        String letter = pinyin.substring(0, 1).toUpperCase();
-        if (ReUtil.isMatch("^\\d$", letter)) {
-            letter = "0";
-        } else if (!ReUtil.isMatch("^[a-zA-Z]$", letter)) {
-            letter = "#";
-        }
+        String letter = PinyinUtils.getPinyinInitialLetters(title);
 
         downloadPathTemplate = downloadPathTemplate.replace("${letter}", letter);
 
@@ -677,7 +668,7 @@ public class DownloadService {
                 if (!name.equalsIgnoreCase(reName)) {
                     continue;
                 }
-                String downloadDir = torrentsInfo.getDownloadDir();
+                String downloadDir = torrentsInfo.getSavePath();
                 if (!downloadDir.equals(downloadPath)) {
                     continue;
                 }
@@ -738,7 +729,7 @@ public class DownloadService {
      * @return 订阅
      */
     public Optional<Ani> findAniByDownloadPath(TorrentsInfo torrentsInfo) {
-        String downloadDir = torrentsInfo.getDownloadDir();
+        String downloadDir = torrentsInfo.getSavePath();
         return AniUtil.ANI_LIST
                 .stream()
                 .filter(ani -> {

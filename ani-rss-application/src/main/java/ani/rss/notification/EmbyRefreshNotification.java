@@ -3,8 +3,9 @@ package ani.rss.notification;
 import ani.rss.entity.Ani;
 import ani.rss.entity.NotificationConfig;
 import ani.rss.enums.NotificationStatusEnum;
-import ani.rss.util.other.EmbyUtil;
+import ani.rss.service.EmbyRefreshService;
 import cn.hutool.core.thread.ThreadUtil;
+import cn.hutool.extra.spring.SpringUtil;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.concurrent.TimeUnit;
@@ -41,7 +42,8 @@ public class EmbyRefreshNotification implements BaseNotification {
             ThreadUtil.sleep(embyDelayed, TimeUnit.SECONDS);
         }
         try {
-            EmbyUtil.refresh(notificationConfig);
+            EmbyRefreshService embyRefreshService = SpringUtil.getBean(EmbyRefreshService.class);
+            embyRefreshService.refresh(notificationConfig);
             return true;
         } catch (Exception e) {
             log.error(e.getMessage(), e);

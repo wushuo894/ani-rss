@@ -7,9 +7,10 @@ import ani.rss.download.BaseDownload;
 import ani.rss.entity.Ani;
 import ani.rss.entity.Config;
 import ani.rss.entity.Item;
-import ani.rss.entity.TorrentsInfo;
+import ani.rss.entity.torrent.TorrentsInfo;
 import ani.rss.enums.StringEnum;
-import ani.rss.enums.TorrentsTags;
+import ani.rss.enums.TorrentsStateEnum;
+import ani.rss.enums.TorrentsTagEnum;
 import ani.rss.service.ClearService;
 import ani.rss.util.basic.HttpReq;
 import cn.hutool.core.io.FileUtil;
@@ -24,7 +25,6 @@ import org.eclipse.bittorrent.TorrentFile;
 
 import java.io.File;
 import java.util.List;
-import java.util.Objects;
 
 /**
  * 管理下载器的调用与种子存取
@@ -56,13 +56,7 @@ public class TorrentUtil {
 
         File configDir = ConfigUtil.getConfigDir();
 
-        String pinyin = PinyinUtils.getPinyin(title);
-        String s = pinyin.toUpperCase().substring(0, 1);
-        if (ReUtil.isMatch("^\\d$", s)) {
-            s = "0";
-        } else if (!ReUtil.isMatch("^[a-zA-Z]$", s)) {
-            s = "#";
-        }
+        String s = PinyinUtils.getPinyinInitialLetters(title);
 
         File torrents = new File(StrFormatter.format("{}/torrents/{}/Season {}", configDir, title, season));
         if (!torrents.exists()) {
@@ -180,27 +174,19 @@ public class TorrentUtil {
         Config config = ConfigUtil.CONFIG;
         Boolean awaitStalledUP = config.getAwaitStalledUP();
 
-        TorrentsInfo.State state = torrentsInfo.getState();
-
-        if (Objects.isNull(state)) {
-            return false;
-        }
+        TorrentsStateEnum torrentsState = torrentsInfo.getState();
 
         // 是否等待做种完毕
         if (awaitStalledUP) {
-            return List.of(
-                    TorrentsInfo.State.pausedUP.name(),
-                    TorrentsInfo.State.stoppedUP.name()
-            ).contains(state.name());
+            return torrentsState == TorrentsStateEnum.stoppedUP;
         }
 
         return List.of(
-                TorrentsInfo.State.queuedUP.name(),
-                TorrentsInfo.State.uploading.name(),
-                TorrentsInfo.State.stalledUP.name(),
-                TorrentsInfo.State.pausedUP.name(),
-                TorrentsInfo.State.stoppedUP.name()
-        ).contains(state.name());
+                TorrentsStateEnum.queuedUP,
+                TorrentsStateEnum.uploading,
+                TorrentsStateEnum.stalledUP,
+                TorrentsStateEnum.stoppedUP
+        ).contains(torrentsState);
     }
 
 
@@ -240,8 +226,8 @@ public class TorrentUtil {
             return true;
         }
         // 清理空文件夹
-        SpringUtil.getBean(ClearService.class)
-                .clearParentFile(new File(torrentsInfo.getDownloadDir(), name));
+        ClearService clearService = SpringUtil.getBean(ClearService.class);
+        clearService.clearParentFile(new File(torrentsInfo.getSavePath(), name));
         return true;
     }
 
@@ -268,15 +254,15 @@ public class TorrentUtil {
             return;
         }
 
-        List<String> tags = torrentsInfo.getTags();
-        if (tags.contains(TorrentsTags.RENAME.getValue())) {
+        List<String> tags = torrentsInfo.getTagList();
+        if (tags.contains(TorrentsTagEnum.RENAME.getValue())) {
             return;
         }
 
         ThreadUtil.sleep(1000);
         Boolean renamed = DOWNLOAD.rename(torrentsInfo);
         if (renamed) {
-            addTags(torrentsInfo, TorrentsTags.RENAME.getValue());
+            addTags(torrentsInfo, TorrentsTagEnum.RENAME.getValue());
         }
     }
 

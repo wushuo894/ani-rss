@@ -1,4 +1,4 @@
-package ani.rss.util.other;
+package ani.rss.service;
 
 import ani.rss.commons.GsonStatic;
 import ani.rss.entity.EmbyViews;
@@ -9,17 +9,18 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
-public class EmbyUtil {
-
+@Service
+public class EmbyRefreshService {
     /**
      * 扫描媒体库
      */
-    public static void refresh(NotificationConfig notificationConfig) {
+    public void refresh(NotificationConfig notificationConfig) {
         List<String> viewIds = notificationConfig.getEmbyRefreshViewIds();
         List<EmbyViews> views = getViews(notificationConfig);
 
@@ -38,7 +39,7 @@ public class EmbyUtil {
      *
      * @param embyViews 媒体库
      */
-    public static void refresh(EmbyViews embyViews, NotificationConfig notificationConfig) {
+    public void refresh(EmbyViews embyViews, NotificationConfig notificationConfig) {
         String embyHost = notificationConfig.getEmbyHost();
         String embyApiKey = notificationConfig.getEmbyApiKey();
 
@@ -65,7 +66,7 @@ public class EmbyUtil {
      *
      * @return 媒体库列表
      */
-    public static List<EmbyViews> getViews(NotificationConfig notificationConfig) {
+    public List<EmbyViews> getViews(NotificationConfig notificationConfig) {
         String embyHost = notificationConfig.getEmbyHost();
         String embyApiKey = notificationConfig.getEmbyApiKey();
 
@@ -95,5 +96,4 @@ public class EmbyUtil {
 
         return viewsList;
     }
-
 }

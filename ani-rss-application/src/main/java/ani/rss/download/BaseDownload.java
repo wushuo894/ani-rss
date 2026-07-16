@@ -4,8 +4,8 @@ import ani.rss.commons.FileUtils;
 import ani.rss.entity.Ani;
 import ani.rss.entity.Config;
 import ani.rss.entity.Item;
-import ani.rss.entity.TorrentsInfo;
-import ani.rss.enums.TorrentsTags;
+import ani.rss.entity.torrent.TorrentsInfo;
+import ani.rss.enums.TorrentsTagEnum;
 import ani.rss.util.other.ConfigUtil;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.io.FileUtil;
@@ -141,10 +141,10 @@ public interface BaseDownload {
 
         List<String> tags = new ArrayList<>();
 
-        tags.add(TorrentsTags.ANI_RSS.getValue());
+        tags.add(TorrentsTagEnum.ANI_RSS.getValue());
         tags.add(subgroup);
         if (!master) {
-            tags.add(TorrentsTags.BACK_RSS.getValue());
+            tags.add(TorrentsTagEnum.STANDBY_RSS.getValue());
         }
 
         Boolean customTagsEnable = ani.getCustomTagsEnable();

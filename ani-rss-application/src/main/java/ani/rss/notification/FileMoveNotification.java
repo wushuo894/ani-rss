@@ -60,7 +60,8 @@ public class FileMoveNotification implements BaseNotification {
         ani = ObjectUtil.clone(ani);
 
         // 旧的位置
-        String src = SpringUtil.getBean(DownloadService.class).getDownloadPath(ani);
+        DownloadService downloadService = SpringUtil.getBean(DownloadService.class);
+        String src = downloadService.getDownloadPath(ani);
 
         // 新的位置; 设置自定义下载位置同时启用, 用以获取新的位置
         Boolean ova = ani.getOva();
@@ -74,7 +75,7 @@ public class FileMoveNotification implements BaseNotification {
         }
         ani.setCustomDownloadPath(true);
 
-        String target = SpringUtil.getBean(DownloadService.class).getDownloadPath(ani);
+        String target = downloadService.getDownloadPath(ani);
 
         // 进行移动
         FileUtil.mkdir(target);

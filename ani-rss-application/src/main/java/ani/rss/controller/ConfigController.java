@@ -13,11 +13,12 @@ import ani.rss.entity.web.ContentType;
 import ani.rss.entity.web.Header;
 import ani.rss.entity.web.Result;
 import ani.rss.entity.web.ResultCode;
+import ani.rss.service.AfdianService;
+import ani.rss.service.BackupService;
 import ani.rss.service.ClearService;
 import ani.rss.service.TaskService;
 import ani.rss.start.BaseStart;
 import ani.rss.util.basic.HttpReq;
-import ani.rss.util.other.AfdianUtil;
 import ani.rss.util.other.AniUtil;
 import ani.rss.util.other.ConfigUtil;
 import ani.rss.util.other.TorrentUtil;
@@ -62,6 +63,12 @@ public class ConfigController extends BaseController {
     private final CronConfig cronConfig;
 
     @Resource
+    private BackupService backupService;
+
+    @Resource
+    private AfdianService afdianService;
+
+    @Resource
     private TaskService taskService;
 
     @Resource
@@ -89,7 +96,7 @@ public class ConfigController extends BaseController {
         config.getLogin().setPassword("");
         config.setVersion(version)
                 .setBuildInfo(buildInfo)
-                .setVerifyExpirationTime(AfdianUtil.verifyExpirationTime());
+                .setVerifyExpirationTime(afdianService.verifyExpirationTime());
         return Result.success(config);
     }
 
@@ -290,7 +297,7 @@ public class ConfigController extends BaseController {
         @Cleanup
         OutputStream outputStream = response.getOutputStream();
 
-        ConfigUtil.backup(outputStream);
+        backupService.backup(outputStream);
     }
 
     @Auth

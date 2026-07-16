@@ -1,4 +1,4 @@
-package ani.rss.util.other;
+package ani.rss.service;
 
 import ani.rss.commons.*;
 import ani.rss.entity.About;
@@ -6,6 +6,7 @@ import ani.rss.entity.Config;
 import ani.rss.entity.Github;
 import ani.rss.update.BaseUpdate;
 import ani.rss.util.basic.HttpReq;
+import ani.rss.util.other.ConfigUtil;
 import cn.hutool.core.comparator.VersionComparator;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.thread.ThreadUtil;
@@ -14,15 +15,22 @@ import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.Header;
 import cn.hutool.http.HttpRequest;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
 
 import java.io.File;
 import java.util.List;
 import java.util.Objects;
 
 @Slf4j
-public class UpdateUtil {
+@Service
+public class UpdateService {
 
-    public static synchronized About about() {
+    /**
+     * 关于
+     *
+     * @return 关于信息
+     */
+    public synchronized About about() {
         Config config = ConfigUtil.CONFIG;
         String key = "github#releases-latest";
 
@@ -114,7 +122,12 @@ public class UpdateUtil {
         return about;
     }
 
-    public static synchronized void update(About about) {
+    /**
+     * 更新程序
+     *
+     * @param about 关于信息
+     */
+    public synchronized void update(About about) {
         Boolean update = about.getUpdate();
         if (!update) {
             return;
@@ -136,5 +149,4 @@ public class UpdateUtil {
             }
         });
     }
-
 }

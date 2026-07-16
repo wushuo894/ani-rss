@@ -29,7 +29,7 @@ public class IcsController extends BaseController {
         String icsContent = icsService.generateIcs();
 
         response.setContentType(ContentType.TEXT_CALENDAR);
-        response.setCharacterEncoding(StandardCharsets.UTF_8.name());
+        response.setCharacterEncoding(StandardCharsets.UTF_8);
         response.setHeader("Content-Disposition", "attachment; filename=ani-rss-calendar.ics");
         setCacheControl(response, 3600);
 

@@ -5,13 +5,15 @@ import ani.rss.entity.About;
 import ani.rss.entity.Config;
 import ani.rss.entity.web.ContentType;
 import ani.rss.entity.web.Header;
+import ani.rss.service.BackupService;
+import ani.rss.service.UpdateService;
 import ani.rss.util.basic.HttpReq;
 import ani.rss.util.other.ConfigUtil;
-import ani.rss.util.other.UpdateUtil;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.ClassUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.extra.spring.SpringUtil;
+import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -24,9 +26,16 @@ import java.util.stream.Collectors;
 @Slf4j
 @Component
 public class CronConfig {
+
+    @Resource
+    private BackupService backupService;
+
+    @Resource
+    private UpdateService updateService;
+
     @Scheduled(cron = "0 0 0 * * *")
     public void backupConfig() {
-        ConfigUtil.backup();
+        backupService.backup();
     }
 
     @Scheduled(cron = "0 0 1 * * *")
@@ -55,7 +64,7 @@ public class CronConfig {
         }
         log.info("定时任务 自动更新");
         try {
-            About about = UpdateUtil.about();
+            About about = updateService.about();
             Boolean update = about.getUpdate();
             autoUpdate = about.getAutoUpdate();
             if (!autoUpdate) {
@@ -65,7 +74,7 @@ public class CronConfig {
             if (update) {
                 log.info("检测到可更新版本 v{}", about.getLatest());
             }
-            UpdateUtil.update(about);
+            updateService.update(about);
         } catch (Exception e) {
             log.error(e.getMessage(), e);
         }

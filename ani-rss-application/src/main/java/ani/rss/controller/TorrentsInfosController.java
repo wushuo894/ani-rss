@@ -1,7 +1,7 @@
 package ani.rss.controller;
 
 import ani.rss.annotation.Auth;
-import ani.rss.entity.TorrentsInfo;
+import ani.rss.entity.torrent.TorrentsInfo;
 import ani.rss.entity.web.Result;
 import ani.rss.util.other.TorrentUtil;
 import io.swagger.v3.oas.annotations.Operation;

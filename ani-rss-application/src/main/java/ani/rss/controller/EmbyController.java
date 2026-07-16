@@ -5,6 +5,7 @@ import ani.rss.entity.*;
 import ani.rss.entity.web.Result;
 import ani.rss.enums.StringEnum;
 import ani.rss.service.DownloadService;
+import ani.rss.service.EmbyRefreshService;
 import ani.rss.util.other.*;
 import cn.hutool.core.thread.ExecutorBuilder;
 import cn.hutool.core.util.ReUtil;
@@ -32,11 +33,14 @@ public class EmbyController extends BaseController {
     @Resource
     private DownloadService downloadService;
 
+    @Resource
+    private EmbyRefreshService embyRefreshService;
+
     @Auth
     @Operation(summary = "获取媒体库")
     @PostMapping("/getEmbyViews")
     public Result<List<EmbyViews>> getEmbyViews(@RequestBody NotificationConfig notificationConfig) {
-        List<EmbyViews> views = EmbyUtil.getViews(notificationConfig);
+        List<EmbyViews> views = embyRefreshService.getViews(notificationConfig);
         return Result.success(views);
     }
 

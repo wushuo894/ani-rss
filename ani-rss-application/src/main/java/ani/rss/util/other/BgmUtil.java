@@ -871,7 +871,8 @@ public class BgmUtil {
         }
 
         // 下载位置
-        String downloadPath = SpringUtil.getBean(DownloadService.class).getDownloadPath(ani);
+        DownloadService downloadService = SpringUtil.getBean(DownloadService.class);
+        String downloadPath = downloadService.getDownloadPath(ani);
 
         String completedPathTemplate = config.getCompletedPathTemplate();
 

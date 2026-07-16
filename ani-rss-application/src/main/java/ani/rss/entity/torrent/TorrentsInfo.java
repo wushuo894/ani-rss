@@ -1,7 +1,9 @@
-package ani.rss.entity;
+package ani.rss.entity.torrent;
 
 import ani.rss.commons.FileUtils;
+import ani.rss.enums.TorrentsStateEnum;
 import cn.hutool.core.util.NumberUtil;
+import com.google.gson.annotations.SerializedName;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.experimental.Accessors;
@@ -36,30 +38,30 @@ public class TorrentsInfo implements Serializable {
      * 状态
      */
     @Schema(description = "状态")
-    private State state;
+    private TorrentsStateEnum state;
+
+    /**
+     * 分类
+     */
+    @Schema(description = "分类")
+    private String category;
 
     /**
      * 标签
      */
     @Schema(description = "标签")
-    private List<String> tags;
-
-    /**
-     * 磁链
-     */
-    @Schema(description = "磁链")
-    private String magnet;
+    private List<String> tagList;
 
     /**
      * 已下载的大小
      */
-    @Schema(description = "已下载的大小")
+    @Schema(description = "已完成的传输数据量（bytes）")
     private Long completed;
 
     /**
      * 大小
      */
-    @Schema(description = "大小")
+    @Schema(description = "所选文件的总大小（bytes）")
     private Long size;
 
     /**
@@ -75,28 +77,17 @@ public class TorrentsInfo implements Serializable {
     private String formatSize;
 
     /**
-     * 时间
-     */
-    @Schema(description = "时间")
-    private String dateStr;
-
-    /**
      * 下载位置
      */
     @Schema(description = "下载位置")
-    private String downloadDir;
-
-    /**
-     * 种子地址
-     */
-    @Schema(description = "种子地址")
-    private String torrent;
+    @SerializedName(value = "savePath", alternate = "save_path")
+    private String savePath;
 
     /**
      * 文件列表
      */
     @Schema(description = "文件列表")
-    private Supplier<List<String>> files;
+    private Supplier<List<String>> filesSupplier;
 
     public TorrentsInfo progress(long completed, long size) {
         if (size < 1) {
@@ -116,74 +107,6 @@ public class TorrentsInfo implements Serializable {
         return this;
     }
 
-    public enum State {
-        /**
-         * 校验恢复数据
-         */
-        checkingResumeData,
-        /**
-         * 正在检验磁盘文件
-         */
-        checkingDisk,
-        /**
-         * [F] 下载中
-         */
-        forcedDL,
-        /**
-         * 停滞中
-         */
-        stalledDL,
-        /**
-         * 已暂停
-         */
-        stoppedDL,
-        pausedDL,
-        /**
-         * 队列中
-         */
-        queuedDL,
-        /**
-         * 下载中
-         */
-        downloading,
-        /**
-         * 做种中
-         */
-        stalledUP,
-        /**
-         * 错误
-         */
-        error,
-        /**
-         * 上传中
-         */
-        uploading,
-        /**
-         * 排队中(上传)
-         */
-        queuedUP,
-        /**
-         * 已完成
-         */
-        pausedUP,
-        stoppedUP,
-        /**
-         * [F]元数据
-         */
-        forcedMetaDownload,
-        /**
-         * 元数据
-         */
-        metaDownload,
-        /**
-         * 缺失文件
-         */
-        missingFiles,
-        /**
-         * 未知
-         */
-        unknown
-    }
 }
 
 

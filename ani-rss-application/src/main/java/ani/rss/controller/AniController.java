@@ -9,6 +9,7 @@ import ani.rss.entity.*;
 import ani.rss.entity.dto.IdDTO;
 import ani.rss.entity.dto.ImportAniDataDTO;
 import ani.rss.entity.dto.RssToAniDTO;
+import ani.rss.entity.torrent.TorrentsInfo;
 import ani.rss.entity.web.Result;
 import ani.rss.enums.SortTypeEnum;
 import ani.rss.service.AniService;
@@ -152,8 +153,8 @@ public class AniController extends BaseController {
                 File downloadPathFile = new File(downloadPath);
 
                 for (TorrentsInfo torrentsInfo : torrentsInfos) {
-                    String downloadDir = torrentsInfo.getDownloadDir();
-                    if (!downloadDir.equals(downloadPath)) {
+                    String savePath = torrentsInfo.getSavePath();
+                    if (!savePath.equals(downloadPath)) {
                         // 旧位置不相同
                         continue;
                     }
@@ -240,8 +241,8 @@ public class AniController extends BaseController {
             for (File file : files) {
                 String path = FileUtils.getAbsolutePath(file);
                 for (TorrentsInfo torrentsInfo : torrentsInfos) {
-                    String downloadDir = torrentsInfo.getDownloadDir();
-                    if (downloadDir.equals(path)) {
+                    String savePath = torrentsInfo.getSavePath();
+                    if (savePath.equals(path)) {
                         TorrentUtil.delete(torrentsInfo, true, true);
                     }
                 }
