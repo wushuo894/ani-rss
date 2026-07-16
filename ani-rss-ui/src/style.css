@@ -287,6 +287,10 @@ html, body, #app {
     vertical-align: baseline;
 }
 
+html.dark .el-progress-bar__outer {
+    border: 1px solid var(--el-border-color-light);
+}
+
 .full-width {
     width: 100%;
 }
