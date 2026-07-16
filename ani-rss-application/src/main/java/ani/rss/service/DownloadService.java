@@ -300,31 +300,31 @@ public class DownloadService {
         if (!ReUtil.contains(StringEnum.SEASON_REG, reName)) {
             return;
         }
-        reName = ReUtil.get(StringEnum.SEASON_REG, reName, 0);
+
+        String episode = ReUtil.get(StringEnum.SEASON_REG, reName, 0);
 
         String downloadPath = getDownloadPath(ani);
 
         List<TorrentsInfo> torrentsInfos = TorrentUtil.getTorrentsInfos();
 
-        String finalReName = reName;
-        TorrentsInfo standbyRSS = torrentsInfos
+        torrentsInfos
                 .stream()
                 .filter(torrentsInfo -> {
+                    String name = torrentsInfo.getName();
                     String downloadDir = torrentsInfo.getDownloadDir();
                     if (!downloadDir.equals(downloadPath)) {
                         return false;
                     }
-                    if (!ReUtil.contains(StringEnum.SEASON_REG, torrentsInfo.getName())) {
+                    if (!ReUtil.contains(StringEnum.SEASON_REG, name)) {
                         return false;
                     }
-                    String s = ReUtil.get(StringEnum.SEASON_REG, torrentsInfo.getName(), 0);
-                    return s.equals(finalReName);
+                    String s = ReUtil.get(StringEnum.SEASON_REG, name, 0);
+                    return s.equalsIgnoreCase(episode);
                 })
                 .findFirst()
-                .orElse(null);
-        if (Objects.nonNull(standbyRSS)) {
-            TorrentUtil.delete(standbyRSS, true, true);
-        }
+                .ifPresent(standbyRSS ->
+                        TorrentUtil.delete(standbyRSS, true, true)
+                );
 
         File[] files = FileUtils.listFiles(downloadPath);
         for (File file : files) {
@@ -336,7 +336,7 @@ public class DownloadService {
                 continue;
             }
             fileMainName = ReUtil.get(StringEnum.SEASON_REG, fileMainName, 0);
-            if (!fileMainName.equals(reName)) {
+            if (!fileMainName.equalsIgnoreCase(episode)) {
                 continue;
             }
             boolean isDel = false;

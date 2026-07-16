@@ -176,7 +176,7 @@ public class TorrentUtil {
      * @param torrentsInfo 种子信息
      * @return 是否可以删除
      */
-    public static Boolean isDelete(TorrentsInfo torrentsInfo) {
+    public static Boolean allowDelete(TorrentsInfo torrentsInfo) {
         Config config = ConfigUtil.CONFIG;
         Boolean awaitStalledUP = config.getAwaitStalledUP();
 
@@ -215,19 +215,20 @@ public class TorrentUtil {
         Config config = ConfigUtil.CONFIG;
         Boolean delete = config.getDelete();
 
+        if (!delete) {
+            return false;
+        }
+
         String name = torrentsInfo.getName();
 
-        if (forcedDelete) {
-            log.info("删除任务 {}", name);
-        } else {
-            if (!isDelete(torrentsInfo)) {
+        if (!forcedDelete) {
+            if (!allowDelete(torrentsInfo)) {
                 return false;
             }
-            if (!delete) {
-                return false;
-            }
-            log.info("删除已完成任务 {}", name);
         }
+
+        log.info("删除任务 title:{} forcedDelete:{} deleteFiles:{}", name, forcedDelete, deleteFiles);
+
         ThreadUtil.sleep(500);
         Boolean b = DOWNLOAD.delete(torrentsInfo, deleteFiles);
         if (!b) {
