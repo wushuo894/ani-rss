@@ -1,1 +1,2 @@
-- feat: Bark 通知支持设置 Level、Volume
+- refactor: 优化进度条
+- refactor: 优化删除备用RSS逻辑
