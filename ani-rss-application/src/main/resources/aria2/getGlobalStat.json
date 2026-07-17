@@ -1,8 +1,0 @@
-{
-  "jsonrpc": "2.0",
-  "method": "aria2.getGlobalStat",
-  "id": "qwer",
-  "params": [
-    "token:{}"
-  ]
-}

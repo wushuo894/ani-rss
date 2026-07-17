@@ -5,19 +5,21 @@ import ani.rss.entity.Ani;
 import ani.rss.entity.Config;
 import ani.rss.entity.Item;
 import ani.rss.entity.torrent.TorrentsInfo;
+import ani.rss.entity.torrent.TransmissionRpcBody;
 import ani.rss.entity.torrent.TransmissionTorrentsInfo;
 import ani.rss.entity.web.Header;
 import ani.rss.enums.TorrentsTagEnum;
 import ani.rss.util.basic.HttpReq;
 import ani.rss.util.basic.RenameCacheUtil;
+import ani.rss.util.other.ConfigUtil;
 import cn.hutool.core.codec.Base64;
 import cn.hutool.core.io.FileUtil;
-import cn.hutool.core.io.resource.ResourceUtil;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.text.StrFormatter;
 import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.core.util.ReUtil;
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpResponse;
 import com.google.gson.JsonObject;
 import lombok.RequiredArgsConstructor;
@@ -37,24 +39,24 @@ import java.util.Set;
 @Service
 @RequiredArgsConstructor
 public class Transmission implements BaseDownload {
-    private String host = "";
-    private String authorization = "";
-    private String sessionId = "";
+    private static String SESSION_ID = "";
 
     @Override
     public Boolean login(Boolean test, Config config) {
         String username = config.getDownloadToolUsername();
         String password = config.getDownloadToolPassword();
-        host = config.getDownloadToolHost();
+        String downloadToolHost = config.getDownloadToolHost();
 
-        if (StrUtil.isBlank(host) || StrUtil.isBlank(username)
-                || StrUtil.isBlank(password)) {
+        if (StrUtil.isBlank(downloadToolHost) ||
+                StrUtil.isBlank(username) ||
+                StrUtil.isBlank(password)
+        ) {
             log.warn("Transmission 未配置完成");
             return false;
         }
 
-        authorization = StrFormatter.format("Basic {}", Base64.encode(username + ":" + password));
-        Boolean isOk = HttpReq.get(host)
+        String authorization = StrFormatter.format("Basic {}", Base64.encode(username + ":" + password));
+        Boolean isOk = HttpReq.get(downloadToolHost)
                 .header(Header.AUTHORIZATION, authorization)
                 .thenFunction(HttpResponse::isOk);
         if (!isOk) {
@@ -67,19 +69,15 @@ public class Transmission implements BaseDownload {
 
     @Override
     public List<TorrentsInfo> getTorrentsInfos() {
-        String body = ResourceUtil.readUtf8Str("transmission/torrent-get.json");
         try {
-            return HttpReq.post(host + "/transmission/rpc")
-                    .header(Header.AUTHORIZATION, authorization)
-                    .header("X-Transmission-Session-Id", sessionId)
-                    .body(body)
+            TransmissionRpcBody transmissionRpcBody = TransmissionRpcBody.torrentGet();
+            return rpc(transmissionRpcBody)
                     .thenFunction(res -> {
-                        String id = res.header("X-Transmission-Session-Id");
-                        if (StrUtil.isNotBlank(id)) {
-                            sessionId = id;
+                        String sessionId = res.header("X-Transmission-Session-Id");
+                        if (StrUtil.isNotBlank(sessionId)) {
+                            SESSION_ID = sessionId;
                             return getTorrentsInfos();
                         }
-
                         TransmissionTorrentsInfo transmissionTorrentsInfo = GsonStatic.fromJson(res.body(), TransmissionTorrentsInfo.class);
 
                         List<TransmissionTorrentsInfo.Torrent> torrentsInfoList = transmissionTorrentsInfo
@@ -100,36 +98,28 @@ public class Transmission implements BaseDownload {
         return new ArrayList<>();
     }
 
+    public TransmissionRpcBody getTorrentAddBody(Ani ani, Item item, String savePath, File torrentFile) {
+        String extName = FileUtil.extName(torrentFile);
+        List<String> tags = newTags(ani, item);
+
+        if ("txt".equals(extName)) {
+            String magnet = FileUtil.readUtf8String(torrentFile);
+            return TransmissionRpcBody.torrentAdd(tags, magnet, savePath);
+        }
+        if (torrentFile.length() > 0) {
+            return TransmissionRpcBody.torrentAdd(tags, torrentFile, savePath);
+        }
+        String magnet = "magnet:?xt=urn:btih:" + FileUtil.mainName(torrentFile);
+        return TransmissionRpcBody.torrentAdd(tags, magnet, savePath);
+    }
+
     @Override
     public Boolean download(Ani ani, Item item, String savePath, File torrentFile) {
         String name = item.getReName();
-        String body = ResourceUtil.readUtf8Str("transmission/torrent-add.json");
-        String extName = FileUtil.extName(torrentFile);
-        if (StrUtil.isBlank(extName)) {
-            return false;
-        }
 
-        List<String> tags = newTags(ani, item);
+        TransmissionRpcBody transmissionRpcBody = getTorrentAddBody(ani, item, savePath, torrentFile);
 
-        String torrent;
-        if ("txt".equals(extName)) {
-            torrent = FileUtil.readUtf8String(torrentFile);
-            body = StrFormatter.format(body, GsonStatic.toJson(tags), savePath, "", torrent);
-        } else {
-            if (torrentFile.length() > 0) {
-                torrent = Base64.encode(torrentFile);
-                body = StrFormatter.format(body, GsonStatic.toJson(tags), savePath, torrent, "");
-            } else {
-                torrent = "magnet:?xt=urn:btih:" + FileUtil.mainName(torrentFile);
-                body = StrFormatter.format(body, GsonStatic.toJson(tags), savePath, "", torrent);
-            }
-        }
-
-        String id = HttpReq.post(host + "/transmission/rpc")
-                .timeout(1000 * 60)
-                .header(Header.AUTHORIZATION, authorization)
-                .header("X-Transmission-Session-Id", sessionId)
-                .body(body)
+        String id = rpc(transmissionRpcBody)
                 .thenFunction(res -> {
                     JsonObject jsonObject = GsonStatic.fromJson(res.body(), JsonObject.class);
                     return jsonObject.getAsJsonObject("arguments")
@@ -162,13 +152,10 @@ public class Transmission implements BaseDownload {
 
     @Override
     public Boolean delete(TorrentsInfo torrentsInfo, Boolean deleteFiles) {
-        String body = ResourceUtil.readUtf8Str("transmission/torrent-remove.json");
-        body = StrFormatter.format(body, torrentsInfo.getId(), deleteFiles);
+        String id = torrentsInfo.getId();
+        TransmissionRpcBody transmissionRpcBody = TransmissionRpcBody.torrentRemove(id, deleteFiles);
         try {
-            return HttpReq.post(host + "/transmission/rpc")
-                    .header(Header.AUTHORIZATION, authorization)
-                    .header("X-Transmission-Session-Id", sessionId)
-                    .body(body)
+            return rpc(transmissionRpcBody)
                     .thenFunction(HttpResponse::isOk);
         } catch (Exception e) {
             log.error(e.getMessage(), e);
@@ -197,22 +184,19 @@ public class Transmission implements BaseDownload {
             reName = reName + "." + extName;
         }
 
-        String body = ResourceUtil.readUtf8Str("transmission/torrent-rename-path.json");
-        body = StrFormatter.format(body, id, name, reName);
+        TransmissionRpcBody transmissionRpcBody = TransmissionRpcBody.torrentRenamePath(id, name, reName);
 
         log.info("重命名 {} ==> {}", name, reName);
 
-        Boolean ok = HttpReq.post(host + "/transmission/rpc")
-                .header(Header.AUTHORIZATION, authorization)
-                .header("X-Transmission-Session-Id", sessionId)
-                .body(body)
+        Boolean ok = rpc(transmissionRpcBody)
                 .thenFunction(HttpResponse::isOk);
         Assert.isTrue(ok, "重命名失败 {} ==> {}", name, reName);
         RenameCacheUtil.remove(id);
 
         for (int i = 0; i < 10; i++) {
             ThreadUtil.sleep(1000);
-            Optional<TorrentsInfo> first = getTorrentsInfos().stream()
+            Optional<TorrentsInfo> first = getTorrentsInfos()
+                    .stream()
                     .filter(info -> info.getId().equals(id))
                     .findFirst();
             if (first.isEmpty()) {
@@ -230,16 +214,11 @@ public class Transmission implements BaseDownload {
     @Override
     public Boolean addTags(TorrentsInfo torrentsInfo, String tag) {
         String id = torrentsInfo.getId();
-        List<String> tags = torrentsInfo.getTagList();
-        List<String> strings = new ArrayList<>(tags);
-        strings.add(tag);
+        List<String> tags = new ArrayList<>(torrentsInfo.getTagList());
+        tags.add(tag);
 
-        String body = ResourceUtil.readUtf8Str("transmission/torrent-set.json");
-        body = StrFormatter.format(body, GsonStatic.toJson(strings), id);
-        return HttpReq.post(host + "/transmission/rpc")
-                .header(Header.AUTHORIZATION, authorization)
-                .header("X-Transmission-Session-Id", sessionId)
-                .body(body)
+        TransmissionRpcBody transmissionRpcBody = TransmissionRpcBody.torrentSet(id, tags);
+        return rpc(transmissionRpcBody)
                 .thenFunction(HttpResponse::isOk);
     }
 
@@ -251,12 +230,27 @@ public class Transmission implements BaseDownload {
     @Override
     public void setSavePath(TorrentsInfo torrentsInfo, String path) {
         String id = torrentsInfo.getId();
-        String body = ResourceUtil.readUtf8Str("transmission/torrent-set-location.json");
-        body = StrFormatter.format(body, id, path);
-        HttpReq.post(host + "/transmission/rpc")
-                .header(Header.AUTHORIZATION, authorization)
-                .header("X-Transmission-Session-Id", sessionId)
-                .body(body)
+        TransmissionRpcBody transmissionRpcBody = TransmissionRpcBody.torrentSetLocation(id, path);
+        rpc(transmissionRpcBody)
                 .thenFunction(HttpResponse::isOk);
+    }
+
+    /**
+     * rpc请求
+     *
+     * @param transmissionRpcBody 请求体
+     * @return HttpRequest
+     */
+    private HttpRequest rpc(TransmissionRpcBody transmissionRpcBody) {
+        Config config = ConfigUtil.CONFIG;
+        String downloadToolHost = config.getDownloadToolHost();
+        String username = config.getDownloadToolUsername();
+        String password = config.getDownloadToolPassword();
+        String authorization = StrFormatter.format("Basic {}", Base64.encode(username + ":" + password));
+
+        return HttpReq.post(downloadToolHost + "/transmission/rpc")
+                .header(Header.AUTHORIZATION, authorization)
+                .header("X-Transmission-Session-Id", SESSION_ID)
+                .body(GsonStatic.toJson(transmissionRpcBody));
     }
 }

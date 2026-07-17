@@ -1,9 +1,0 @@
-{
-  "method": "torrent-set",
-  "arguments": {
-    "labels": {},
-    "ids": [
-      {}
-    ]
-  }
-}
