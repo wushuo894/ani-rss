@@ -4,14 +4,14 @@ import ani.rss.annotation.Auth;
 import ani.rss.commons.ExceptionUtils;
 import ani.rss.commons.FileUtils;
 import ani.rss.commons.PinyinUtils;
-import ani.rss.commons.WeekComparator;
+import ani.rss.comparator.WeekComparator;
 import ani.rss.entity.*;
 import ani.rss.entity.dto.IdDTO;
 import ani.rss.entity.dto.ImportAniDataDTO;
 import ani.rss.entity.dto.RssToAniDTO;
 import ani.rss.entity.torrent.TorrentsInfo;
 import ani.rss.entity.web.Result;
-import ani.rss.enums.SortTypeEnum;
+import ani.rss.enums.AniSortTypeEnum;
 import ani.rss.service.AniService;
 import ani.rss.service.ClearService;
 import ani.rss.service.DownloadService;
@@ -19,7 +19,6 @@ import ani.rss.task.RssTask;
 import ani.rss.util.other.*;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.comparator.PinyinComparator;
 import cn.hutool.core.date.DatePattern;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.io.FileUtil;
@@ -38,7 +37,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.io.File;
 import java.util.*;
-import java.util.function.ToLongFunction;
 
 @Slf4j
 @RestController
@@ -263,8 +261,7 @@ public class AniController extends BaseController {
     @PostMapping("/listAni")
     public Result<ListAni> listAni() {
         Config config = ConfigUtil.CONFIG;
-
-        SortTypeEnum sortType = config.getSortType();
+        AniSortTypeEnum sortType = config.getSortType();
 
         ListAni listAni = new ListAni();
         List<ListAni.WeekAni> weekAniList = new ArrayList<>();
@@ -298,24 +295,7 @@ public class AniController extends BaseController {
         listAni.setReleaseDateList(releaseDateList)
                 .setTotal(aniList.size());
 
-        if (sortType == SortTypeEnum.SCORE) {
-            aniList = CollUtil.sort(aniList, Comparator.comparingDouble(Ani::getScore).reversed());
-        }
-
-        if (sortType == SortTypeEnum.PINYIN) {
-            PinyinComparator pinyinComparator = new PinyinComparator();
-            aniList = CollUtil.sort(aniList, (a, b) -> pinyinComparator.compare(a.getTitle(), b.getTitle()));
-        }
-
-        if (sortType == SortTypeEnum.DOWNLOAD_TIME) {
-            aniList = CollUtil.sort(aniList, Comparator.comparingLong((ToLongFunction<Ani>) ani -> {
-                Long lastDownloadTime = ani.getLastDownloadTime();
-                if (lastDownloadTime == 0) {
-                    return Long.MAX_VALUE;
-                }
-                return lastDownloadTime;
-            }).reversed());
-        }
+        aniList = CollUtil.sort(aniList, sortType.comparator);
 
         int index = 0;
         for (Ani ani : aniList) {

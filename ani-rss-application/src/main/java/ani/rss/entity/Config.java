@@ -1,7 +1,7 @@
 package ani.rss.entity;
 
+import ani.rss.enums.AniSortTypeEnum;
 import ani.rss.enums.BgmTokenTypeEnum;
-import ani.rss.enums.SortTypeEnum;
 import com.google.gson.annotations.SerializedName;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
@@ -647,7 +647,7 @@ public class Config implements Serializable {
      * 排序方式
      */
     @Schema(description = "排序方式")
-    private SortTypeEnum sortType;
+    private AniSortTypeEnum sortType;
 
     /**
      * 代理列表
@@ -688,7 +688,7 @@ public class Config implements Serializable {
     /**
      * 构建信息
      */
-    @Schema(description = "git信息")
+    @Schema(description = "Git信息")
     private GitInfo gitInfo;
 
     @Schema(description = "启用 受信任的反向代理IP")

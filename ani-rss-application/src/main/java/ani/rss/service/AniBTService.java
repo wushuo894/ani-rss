@@ -3,7 +3,7 @@ package ani.rss.service;
 import ani.rss.commons.FileUtils;
 import ani.rss.commons.GroupRegexUtils;
 import ani.rss.commons.GsonStatic;
-import ani.rss.commons.WeekComparator;
+import ani.rss.comparator.WeekComparator;
 import ani.rss.entity.Ani;
 import ani.rss.entity.AniBT;
 import ani.rss.entity.GroupRegex;

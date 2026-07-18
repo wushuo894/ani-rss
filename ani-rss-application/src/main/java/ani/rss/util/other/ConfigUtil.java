@@ -6,8 +6,8 @@ import ani.rss.commons.URLUtils;
 import ani.rss.entity.Config;
 import ani.rss.entity.Login;
 import ani.rss.entity.NotificationConfig;
+import ani.rss.enums.AniSortTypeEnum;
 import ani.rss.enums.BgmTokenTypeEnum;
-import ani.rss.enums.SortTypeEnum;
 import ani.rss.util.basic.LogUtil;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.bean.DynaBean;
@@ -208,7 +208,7 @@ public class ConfigUtil {
                 .setNotificationConfigList(new ArrayList<>())
                 .setApiKey(apiKey)
                 .setCopyMasterToStandby(false)
-                .setSortType(SortTypeEnum.SCORE)
+                .setSortType(AniSortTypeEnum.SCORE)
                 .setTmdbIdPlexMode(false)
                 .setProxyList(proxyList)
                 .setScrape(false)

@@ -1,4 +1,4 @@
-package ani.rss.commons;
+package ani.rss.comparator;
 
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.ReUtil;
