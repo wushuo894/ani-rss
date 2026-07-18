@@ -1,6 +1,7 @@
 package ani.rss.util.basic;
 
 import ani.rss.commons.CacheUtils;
+import ani.rss.commons.MavenUtils;
 import ani.rss.entity.Config;
 import ani.rss.entity.web.Header;
 import ani.rss.util.other.ConfigUtil;
@@ -38,7 +39,8 @@ public class HttpReq {
         req.timeout(1000 * 20)
                 .setFollowRedirects(true);
 
-        String ua = "wushuo894/ani-rss (https://github.com/wushuo894/ani-rss)";
+        String ua = "ani-rss/{} (https://github.com/wushuo894/ani-rss)";
+        ua = StrUtil.format(ua, MavenUtils.getVersion());
 
         req.header(Header.USER_AGENT, ua);
     }

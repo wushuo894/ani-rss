@@ -52,7 +52,5 @@ logs
 
 *.log
 ani-rss-update.exe
-/info.json
-build.info
 *.versionsBackup
 .pnpm-store

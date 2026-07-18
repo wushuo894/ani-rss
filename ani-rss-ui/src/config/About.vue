@@ -5,8 +5,7 @@
       <div>
         <h1>ANI-RSS</h1>
         <el-tooltip
-            :disabled="!props.config.buildInfo"
-            :content="props.config.buildInfo"
+            :content="`${props.config.gitInfo.branch} ${props.config.gitInfo.shortCommitId}`"
             placement="right">
           <el-text class="mx-1 cursor-pointer" size="small">
             &nbsp;v{{ props.config.version }}

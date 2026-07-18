@@ -688,8 +688,8 @@ public class Config implements Serializable {
     /**
      * 构建信息
      */
-    @Schema(description = "构建信息")
-    private String buildInfo;
+    @Schema(description = "git信息")
+    private GitInfo gitInfo;
 
     @Schema(description = "启用 受信任的反向代理IP")
     private Boolean reverseProxyTrustIpListEnabled;

@@ -170,6 +170,13 @@
                 <configuration>
                     <mainClass>ani.rss.AniRssApplication</mainClass>
                 </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>build-info</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
@@ -190,6 +197,21 @@
                         </configuration>
                     </execution>
                 </executions>
+            </plugin>
+            <plugin>
+                <groupId>io.github.git-commit-id</groupId>
+                <artifactId>git-commit-id-maven-plugin</artifactId>
+                <configuration>
+                    <generateGitPropertiesFile>true</generateGitPropertiesFile>
+                    <generateGitPropertiesFilename>
+                        ${project.build.outputDirectory}/git.properties
+                    </generateGitPropertiesFilename>
+                    <includeOnlyProperties>
+                        <includeOnlyProperty>^git.branch$</includeOnlyProperty>
+                        <includeOnlyProperty>^git.commit.id$</includeOnlyProperty>
+                        <includeOnlyProperty>^git.commit.id.abbrev$</includeOnlyProperty>
+                    </includeOnlyProperties>
+                </configuration>
             </plugin>
         </plugins>
     </build>

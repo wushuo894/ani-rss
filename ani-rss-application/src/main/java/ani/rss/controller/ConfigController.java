@@ -1,49 +1,30 @@
 package ani.rss.controller;
 
 import ani.rss.annotation.Auth;
-import ani.rss.commons.FileUtils;
 import ani.rss.commons.MavenUtils;
 import ani.rss.config.CronConfig;
-import ani.rss.download.BaseDownload;
 import ani.rss.entity.Config;
 import ani.rss.entity.Global;
-import ani.rss.entity.Login;
 import ani.rss.entity.ProxyTest;
 import ani.rss.entity.web.ContentType;
 import ani.rss.entity.web.Header;
 import ani.rss.entity.web.Result;
-import ani.rss.entity.web.ResultCode;
-import ani.rss.service.AfdianService;
 import ani.rss.service.BackupService;
-import ani.rss.service.ClearService;
+import ani.rss.service.ConfigService;
 import ani.rss.service.TaskService;
-import ani.rss.start.BaseStart;
-import ani.rss.util.basic.HttpReq;
 import ani.rss.util.other.AniUtil;
 import ani.rss.util.other.ConfigUtil;
-import ani.rss.util.other.TorrentUtil;
-import cn.hutool.core.bean.BeanUtil;
-import cn.hutool.core.bean.copier.CopyOptions;
-import cn.hutool.core.codec.Base64;
-import cn.hutool.core.date.LocalDateTimeUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IoUtil;
-import cn.hutool.core.io.resource.ResourceUtil;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.text.StrFormatter;
-import cn.hutool.core.util.ClassUtil;
-import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.core.util.ZipUtil;
-import cn.hutool.extra.spring.SpringUtil;
-import cn.hutool.http.HttpRequest;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.Cleanup;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.jsoup.Jsoup;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -53,50 +34,28 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
-import java.util.Objects;
 
 @Slf4j
 @RestController
-@RequiredArgsConstructor
 public class ConfigController extends BaseController {
 
-    private final CronConfig cronConfig;
+    @Resource
+    private CronConfig cronConfig;
 
     @Resource
     private BackupService backupService;
 
     @Resource
-    private AfdianService afdianService;
-
-    @Resource
     private TaskService taskService;
 
     @Resource
-    private ClearService clearService;
-
-    /**
-     * 构建信息
-     */
-    public String buildInfo() {
-        String buildInfo = "";
-        try {
-            buildInfo = ResourceUtil.readUtf8Str("build.info");
-        } catch (Exception ignored) {
-        }
-        return buildInfo;
-    }
+    private ConfigService configService;
 
     @Auth
     @Operation(summary = "获取设置")
     @PostMapping("/config")
     public Result<Config> config() {
-        String version = MavenUtils.getVersion();
-        String buildInfo = buildInfo();
-        Config config = ObjectUtil.clone(ConfigUtil.CONFIG);
-        config.getLogin().setPassword("");
-        config.setVersion(version)
-                .setBuildInfo(buildInfo)
-                .setVerifyExpirationTime(afdianService.verifyExpirationTime());
+        Config config = configService.config();
         return Result.success(config);
     }
 
@@ -104,72 +63,7 @@ public class ConfigController extends BaseController {
     @Operation(summary = "修改设置")
     @PostMapping("/setConfig")
     public Result<Void> setConfig(@RequestBody Config newConfig) {
-        Config config = ConfigUtil.CONFIG;
-        Login login = config.getLogin();
-        String username = login.getUsername();
-        String password = login.getPassword();
-        Integer renameSleepSeconds = config.getRenameSleepSeconds();
-        Integer sleep = config.getRssSleepMinutes();
-        String download = config.getDownloadToolType();
-        Boolean autoStart = config.getAutoStart();
-
-        newConfig.setExpirationTime(null)
-                .setOutTradeNo(null)
-                .setTryOut(null);
-
-        CopyOptions copyOptions = CopyOptions
-                .create()
-                .setIgnoreNullValue(true);
-
-        BeanUtil.copyProperties(
-                newConfig,
-                config,
-                copyOptions
-        );
-
-        String loginPassword = config.getLogin().getPassword();
-        // 密码未发生修改
-        if (StrUtil.isBlank(loginPassword)) {
-            config.getLogin().setPassword(password);
-        }
-        String loginUsername = config.getLogin().getUsername();
-        if (StrUtil.isBlank(loginUsername)) {
-            config.getLogin().setUsername(username);
-        }
-
-        Boolean proxy = config.getProxy();
-        if (proxy) {
-            String proxyHost = config.getProxyHost();
-            Integer proxyPort = config.getProxyPort();
-            if (StrUtil.isBlank(proxyHost) || Objects.isNull(proxyPort)) {
-                return Result.error("代理参数不完整");
-            }
-        }
-
-        ConfigUtil.sync();
-        Integer newRenameSleepSeconds = config.getRenameSleepSeconds();
-        Integer newSleep = config.getRssSleepMinutes();
-        Boolean newAutoStart = config.getAutoStart();
-
-        // 时间间隔发生改变，重启任务
-        if (
-                !Objects.equals(newSleep, sleep) ||
-                        !Objects.equals(newRenameSleepSeconds, renameSleepSeconds)
-        ) {
-            taskService.restart();
-        }
-        // 下载工具发生改变
-        if (!download.equals(config.getDownloadToolType())) {
-            TorrentUtil.loadDownloadTool();
-        }
-        // 开机自启发生改变
-        if (!newAutoStart.equals(autoStart)) {
-            if (BaseStart.isSupported()) {
-                BaseStart instance = BaseStart.getInstance();
-                instance.sync();
-            }
-        }
-
+        configService.setConfig(newConfig);
         return Result.success("修改成功");
     }
 
@@ -177,16 +71,7 @@ public class ConfigController extends BaseController {
     @Operation(summary = "清理缓存")
     @PostMapping("/clearCache")
     public Result<Void> clearCache() {
-        File configDir = ConfigUtil.getConfigDir();
-        String configDirStr = FileUtils.getAbsolutePath(configDir);
-
-        Long size = clearService.clearCover();
-
-        // 清理 mikan 预览封面
-        FileUtil.del(configDirStr + "/img");
-
-        String formatSize = FileUtils.formatSize(size, true);
-
+        String formatSize = configService.clearCache();
         return Result.success("清理完成, 共清理 {}", formatSize);
     }
 
@@ -202,50 +87,24 @@ public class ConfigController extends BaseController {
     @Operation(summary = "代理测试")
     @PostMapping("/testProxy")
     public Result<ProxyTest> testProxy(@RequestParam("url") String url, @RequestBody Config config) {
-        url = Base64.decodeStr(url);
-
-        log.info(url);
-
-        HttpRequest httpRequest = HttpReq.get(url);
-        HttpReq.setProxy(httpRequest, config);
-
-        ProxyTest proxyTest = new ProxyTest();
-        Result<ProxyTest> result = Result.success(proxyTest);
-
-        long start = LocalDateTimeUtil.toEpochMilli(LocalDateTimeUtil.now());
-        try {
-            httpRequest
-                    .then(res -> {
-                        int status = res.getStatus();
-                        proxyTest.setStatus(status);
-
-                        String title = Jsoup.parse(res.body())
-                                .title();
-                        result.setMessage(StrFormatter.format("测试成功 {}", title));
-                    });
-        } catch (Exception e) {
-            result.setMessage(e.getMessage())
-                    .setCode(ResultCode.HTTP_INTERNAL_ERROR);
-        }
-
-        long end = LocalDateTimeUtil.toEpochMilli(LocalDateTimeUtil.now());
-        proxyTest.setTime(end - start);
-        return result;
+        return Result.success(configService.testProxy(url, config));
     }
 
     @Auth
     @Operation(summary = "下载器测试")
     @PostMapping("/downloadLoginTest")
     public Result<Void> downloadLoginTest(@RequestBody Config config) {
-        ConfigUtil.format(config);
-        String download = config.getDownloadToolType();
-        Class<BaseDownload> loadClass = ClassUtil.loadClass("ani.rss.download." + download);
-        BaseDownload baseDownload = SpringUtil.getBean(loadClass);
-        Boolean login = baseDownload.login(true, config);
+        Boolean login = configService.downloadLoginTest(config);
         if (login) {
             return Result.success("登录成功");
         }
         return Result.error("登录失败");
+    }
+
+    @Operation(summary = "存活测试")
+    @RequestMapping("/ping")
+    public Result<Void> ping() {
+        return Result.success();
     }
 
     @Operation(summary = "自定义JS")
@@ -324,11 +183,5 @@ public class ConfigController extends BaseController {
         taskService.restart();
 
         return Result.success("导入成功");
-    }
-
-    @Operation(summary = "存活测试")
-    @RequestMapping("/ping")
-    public Result<Void> ping() {
-        return Result.success();
     }
 }

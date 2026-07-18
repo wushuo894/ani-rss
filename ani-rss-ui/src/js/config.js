@@ -119,7 +119,11 @@ export let configData = {
     "replace": false,
     "maxFileNameLength": 0,
     "limitLoginAttempts": true,
-    "buildInfo": "",
+    "gitInfo": {
+        "branch": "",
+        "shortCommitId": "",
+        "commitId": ""
+    },
     "reverseProxyTrustIpListEnabled": false,
     "reverseProxyTrustIpList": [
         "127.0.0.1"

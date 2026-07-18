@@ -1,30 +1,24 @@
 package ani.rss.commons;
 
 import cn.hutool.core.io.FileUtil;
-import cn.hutool.core.io.IoUtil;
-import cn.hutool.core.util.ReUtil;
 import cn.hutool.core.util.StrUtil;
-import cn.hutool.core.util.XmlUtil;
+import cn.hutool.extra.spring.SpringUtil;
 import cn.hutool.system.OsInfo;
 import cn.hutool.system.SystemUtil;
-import lombok.Cleanup;
 import lombok.Data;
 import lombok.experimental.Accessors;
 import lombok.extern.slf4j.Slf4j;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
+import org.springframework.boot.info.BuildProperties;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.Serializable;
 import java.util.Objects;
-import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
 @Slf4j
 public class MavenUtils {
-    private static String version = "None";
+    private static String version;
     public static JarFile JAR_FILE = null;
 
     static {
@@ -48,33 +42,11 @@ public class MavenUtils {
     }
 
     public static synchronized String getVersion() {
-        if (!"None".equalsIgnoreCase(version)) {
+        if (Objects.nonNull(version)) {
             return version;
         }
-        try {
-            if (Objects.nonNull(JAR_FILE)) {
-                String pomPath = "META-INF/maven/ani.rss/ani-rss-application/pom.xml";
-                JarEntry jarEntry = JAR_FILE.getJarEntry(pomPath);
-                if (Objects.isNull(jarEntry)) {
-                    return "None";
-                }
-                @Cleanup
-                InputStream inputStream = JAR_FILE.getInputStream(jarEntry);
-                String s = IoUtil.readUtf8(inputStream);
-                version = ReUtil.get("<version>(.*?)</version>", s, 1);
-                return version;
-            }
-        } catch (Exception e) {
-            log.error(e.getMessage(), e);
-        }
-        File file = new File("pom.xml");
-        if (file.exists()) {
-            Document document = XmlUtil.readXML(file);
-            Element element = XmlUtil.getElement(document.getDocumentElement(), "version");
-            if (Objects.nonNull(element)) {
-                version = element.getTextContent();
-            }
-        }
+        BuildProperties buildProperties = SpringUtil.getBean(BuildProperties.class);
+        version = buildProperties.getVersion();
         return version;
     }
 

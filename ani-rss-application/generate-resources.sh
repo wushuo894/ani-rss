@@ -8,15 +8,6 @@ NC='\033[0m'
 
 cd $(dirname $0)/src/main/resources
 
-# build.info
-BUILD_INFO_FILE="build.info"
-
-rm -rf ${BUILD_INFO_FILE}
-git rev-parse --short HEAD >> ${BUILD_INFO_FILE}
-git branch --show-current >> ${BUILD_INFO_FILE}
-
-echo "$(cat ${BUILD_INFO_FILE})"
-
 # 更新程序
 UPDATE_EXE_FILE="ani-rss-update.exe"
 
