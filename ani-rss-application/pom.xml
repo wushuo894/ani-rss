@@ -183,17 +183,19 @@
                 <artifactId>exec-maven-plugin</artifactId>
                 <executions>
                     <execution>
-                        <id>generate-resources</id>
-                        <phase>generate-resources</phase>
+                        <id>package-update-exe</id>
+                        <phase>package</phase>
                         <goals>
-                            <goal>exec</goal>
+                            <goal>java</goal>
                         </goals>
                         <configuration>
-                            <executable>bash</executable>
-                            <arguments>
-                                <argument>./generate-resources.sh</argument>
-                            </arguments>
-                            <workingDirectory>${project.basedir}</workingDirectory>
+                            <mainClass>ani.rss.build.UpdateExe</mainClass>
+                            <systemProperties>
+                                <systemProperty>
+                                    <key>basedir</key>
+                                    <value>${project.basedir}</value>
+                                </systemProperty>
+                            </systemProperties>
                         </configuration>
                     </execution>
                 </executions>

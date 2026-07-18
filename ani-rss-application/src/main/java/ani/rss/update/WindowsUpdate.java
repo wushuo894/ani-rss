@@ -32,9 +32,21 @@ public class WindowsUpdate implements BaseUpdate {
             InputStream updateExeStream = ResourceUtil.getStream("ani-rss-update.exe");
             FileUtil.writeFromStream(updateExeStream, updateExe, true);
 
-            @Cleanup
-            InputStream updateManifestStream = ResourceUtil.getStream("ani-rss-update.exe.manifest");
-            FileUtil.writeFromStream(updateManifestStream, updateManifest, true);
+            String manifest = """
+                    <?xml version="1.0" encoding="UTF-8"?>
+                    <assembly xmlns="urn:schemas-microsoft-com:asm.v1" manifestVersion="1.0">
+                    
+                      <trustInfo xmlns="urn:schemas-microsoft-com:asm.v3">
+                        <security>
+                          <requestedPrivileges>
+                            <requestedExecutionLevel level="asInvoker" uiAccess="false"/>
+                          </requestedPrivileges>
+                        </security>
+                      </trustInfo>
+                    
+                    </assembly>
+                    """;
+            FileUtil.writeUtf8String(manifest, updateManifest);
 
             String exe = updateExe.toString();
             String source = FileUtils.getAbsolutePath(updateFile);

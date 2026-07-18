@@ -38,7 +38,6 @@ public class MacOS implements Runnable {
 
         FileUtil.copy(Paths.get(jarFile.getPath()), path, StandardCopyOption.REPLACE_EXISTING);
 
-
         OsInfo osInfo = SystemUtil.getOsInfo();
 
         if (osInfo.isMac()) {
