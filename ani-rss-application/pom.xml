@@ -5,7 +5,7 @@
     <parent>
         <groupId>ani.rss</groupId>
         <artifactId>ani-rss</artifactId>
-        <version>3.1.74</version>
+        <version>3.1.75</version>
     </parent>
 
     <artifactId>ani-rss-application</artifactId>
@@ -179,28 +179,6 @@
                 </executions>
             </plugin>
             <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>exec-maven-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>package-update-exe</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>java</goal>
-                        </goals>
-                        <configuration>
-                            <mainClass>ani.rss.build.UpdateExe</mainClass>
-                            <systemProperties>
-                                <systemProperty>
-                                    <key>basedir</key>
-                                    <value>${project.basedir}</value>
-                                </systemProperty>
-                            </systemProperties>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
                 <groupId>io.github.git-commit-id</groupId>
                 <artifactId>git-commit-id-maven-plugin</artifactId>
                 <configuration>
@@ -252,6 +230,26 @@
             <id>windows</id>
             <build>
                 <plugins>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>exec-maven-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>generate-resources</id>
+                                <phase>generate-resources</phase>
+                                <goals>
+                                    <goal>exec</goal>
+                                </goals>
+                                <configuration>
+                                    <executable>bash</executable>
+                                    <arguments>
+                                        <argument>./generate-resources.sh</argument>
+                                    </arguments>
+                                    <workingDirectory>${project.basedir}</workingDirectory>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
                     <plugin>
                         <groupId>com.akathist.maven.plugins.launch4j</groupId>
                         <artifactId>launch4j-maven-plugin</artifactId>
