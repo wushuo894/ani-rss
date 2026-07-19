@@ -157,8 +157,12 @@ public class FileUtils {
         return new File[0];
     }
 
+    public static List<File> listFileList(File file) {
+        return List.of(listFiles(file));
+    }
+
     public static List<File> listFileList(String path) {
-        return List.of(listFiles(path));
+        return listFileList(new File(path));
     }
 
     /**

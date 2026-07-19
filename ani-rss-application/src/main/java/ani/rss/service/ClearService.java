@@ -5,14 +5,12 @@ import ani.rss.entity.Ani;
 import ani.rss.util.other.AniUtil;
 import ani.rss.util.other.ConfigUtil;
 import cn.hutool.core.io.FileUtil;
-import cn.hutool.core.util.ObjectUtil;
-import cn.hutool.core.util.ReUtil;
+import cn.hutool.core.util.StrUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
 import java.nio.file.Path;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
@@ -21,49 +19,99 @@ import java.util.stream.Collectors;
 @Slf4j
 @Service
 public class ClearService {
+
     /**
-     * 清理父级空文件夹
-     *
-     * @param path 路径
+     * 排除文件
      */
-    public void clearParentFile(String path) {
-        clearParentFile(new File(path));
+    private final List<String> excludeFileNames = List.of(
+            ".DS_Store",
+            "Thumbs.db"
+    );
+
+    /**
+     * 清理文件夹
+     *
+     * @param dir 文件夹
+     */
+    public void clearDir(String dir) {
+        clearDir(new File(dir));
     }
 
     /**
-     * 清理父级空文件夹
+     * 清理文件夹
      *
-     * @param file 文件
+     * @param dir 文件夹
      */
-    public void clearParentFile(File file) {
-        if (file.exists()) {
-            return;
-        }
-        File parentFile = file.getParentFile();
+    public void clearDir(File dir) {
+        clearDir(dir, true, true, 2);
+    }
 
-        if (Objects.isNull(parentFile)) {
-            return;
+    /**
+     * 清理文件夹
+     *
+     * @param dir   文件夹
+     * @param image 排除图片
+     * @param nfo   排除nfo
+     * @param max   向上删除深度
+     */
+    public void clearDir(File dir, boolean image, boolean nfo, int max) {
+        File parentFile = dir;
+        for (int i = 0; i < max; i++) {
+            if (Objects.isNull(parentFile)) {
+                return;
+            }
+            if (!isEmpty(parentFile, image, nfo)) {
+                // 不为空则不进行清理
+                return;
+            }
+            log.info("清理空文件夹 {}", parentFile);
+            FileUtil.del(parentFile);
+            parentFile = parentFile.getParentFile();
         }
+    }
 
-        List<String> list = Arrays.asList(ObjectUtil.defaultIfNull(parentFile.list(), new String[]{}));
-        list = list.stream()
-                .filter(f -> !f.endsWith(".nfo"))
-                .filter(f -> !f.endsWith("-thumb.jpg"))
-                .filter(f -> !f.equals("poster.jpg"))
-                .filter(f -> !f.equals("clearlogo.png"))
-                .filter(f -> !f.equals(".DS_Store"))
-                .filter(f -> !f.equals("banner.jpg"))
-                .filter(f -> !f.equals("season-specials-poster.jpg"))
-                .filter(f -> !ReUtil.contains("^season\\d+-poster.jpg$", f))
-                .filter(f -> !ReUtil.contains("^fanart\\d*.jpg$", f))
-                .toList();
-        if (!list.isEmpty()) {
-            // 不为空则不进行清理
-            return;
-        }
-        log.info("清理空文件夹 {}", parentFile);
-        FileUtil.del(parentFile);
-        clearParentFile(parentFile);
+    /**
+     * 文件夹是否为空
+     *
+     * @param image 排除图片
+     * @param nfo   排除nfo
+     * @param dir   文件夹
+     * @return 是否为空
+     */
+    public Boolean isEmpty(File dir, boolean image, boolean nfo) {
+        List<File> list = FileUtils.listFileList(dir);
+
+        long count = list.stream()
+                .filter(f -> {
+                    if (f.isDirectory()) {
+                        return true;
+                    }
+
+                    if (image && FileUtils.isImageFormat(f.getName())) {
+                        return false;
+                    }
+
+                    String extName = FileUtil.extName(f);
+                    if (StrUtil.isBlank(extName)) {
+                        return true;
+                    }
+                    if (nfo && extName.equalsIgnoreCase("nfo")) {
+                        return false;
+                    }
+                    return true;
+                })
+                .filter(f -> {
+                    String name = f.getName();
+                    for (String excludeFileName : excludeFileNames) {
+                        if (excludeFileName.equalsIgnoreCase(name)) {
+                            return false;
+                        }
+                    }
+                    return true;
+                })
+                .count();
+
+        return count < 1;
     }
 
     /**
@@ -99,7 +147,7 @@ public class ClearService {
 
         for (File file : files) {
             FileUtil.del(file);
-            clearParentFile(file);
+            clearDir(file, false, true, 2);
         }
 
         return filesSize + imgSize;

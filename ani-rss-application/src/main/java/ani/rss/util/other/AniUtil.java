@@ -464,10 +464,11 @@ public class AniUtil {
             // 移动文件
             log.info("移动 {} ==> {}", file, newPath);
             FileUtil.move(file, new File(newPath), true);
-            // 清理残留文件夹
-            ClearService clearService = SpringUtil.getBean(ClearService.class);
-            clearService.clearParentFile(file);
         }
+
+        // 清理残留文件夹
+        ClearService clearService = SpringUtil.getBean(ClearService.class);
+        clearService.clearDir(oldPath);
     }
 
     public static Ani createAni() {

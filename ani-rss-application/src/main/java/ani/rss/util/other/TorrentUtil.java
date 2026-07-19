@@ -68,7 +68,6 @@ public class TorrentUtil {
                 torrents = new File(StrFormatter.format("{}/torrents/{}/{}", configDir, s, title));
             }
         }
-        FileUtil.mkdir(torrents);
         return torrents;
     }
 
@@ -198,16 +197,16 @@ public class TorrentUtil {
      * @param deleteFiles  删除本地文件
      */
     public static Boolean delete(TorrentsInfo torrentsInfo, Boolean forcedDelete, Boolean deleteFiles) {
-        Config config = ConfigUtil.CONFIG;
-        Boolean delete = config.getDelete();
-
-        if (!delete) {
-            return false;
-        }
-
         String name = torrentsInfo.getName();
 
         if (!forcedDelete) {
+            Config config = ConfigUtil.CONFIG;
+            Boolean delete = config.getDelete();
+
+            if (!delete) {
+                return false;
+            }
+
             if (!allowDelete(torrentsInfo)) {
                 return false;
             }
@@ -227,7 +226,7 @@ public class TorrentUtil {
         }
         // 清理空文件夹
         ClearService clearService = SpringUtil.getBean(ClearService.class);
-        clearService.clearParentFile(new File(torrentsInfo.getSavePath(), name));
+        clearService.clearDir(torrentsInfo.getSavePath());
         return true;
     }
 

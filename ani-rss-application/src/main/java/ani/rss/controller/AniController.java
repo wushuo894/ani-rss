@@ -132,17 +132,15 @@ public class AniController extends BaseController {
             return Result.error("修改失败");
         }
         HttpServletRequest request = Global.REQUEST.get();
+
+        // 移动视频文件
         String move = request.getParameter("move");
         if (Boolean.parseBoolean(move)) {
             Ani get = ObjectUtil.clone(first.get());
             ThreadUtil.execute(() -> {
                 String downloadPath = downloadService.getDownloadPath(get);
                 String newDownloadPath = downloadService.getDownloadPath(ani);
-                Boolean login = TorrentUtil.login();
-                List<TorrentsInfo> torrentsInfos = new ArrayList<>();
-                if (login) {
-                    torrentsInfos = TorrentUtil.getTorrentsInfos();
-                }
+                List<TorrentsInfo> torrentsInfos = TorrentUtil.getTorrentsInfos();
                 if (downloadPath.equals(newDownloadPath)) {
                     // 位置未发生改变
                     return;
@@ -175,22 +173,23 @@ public class AniController extends BaseController {
                         log.info("移动文件 {} ==> {}", oldFile, newDownloadPath);
                         FileUtil.move(oldFile, new File(newDownloadPath), true);
                     }
-                    FileUtil.del(downloadPath);
-                    clearService.clearParentFile(downloadPath);
+                    clearService.clearDir(downloadPath);
                 } catch (Exception e) {
                     log.error(ExceptionUtils.getMessage(e), e);
                 }
             });
         }
-        File torrentDir = TorrentUtil.getTorrentDir(first.get());
 
+        //  移动种子
+        File torrentDir = TorrentUtil.getTorrentDir(first.get());
         String[] ignoreProperties = new String[]{"currentEpisodeNumber", "lastDownloadTime"};
         BeanUtil.copyProperties(ani, first.get(), ignoreProperties);
-
         File newTorrentDir = TorrentUtil.getTorrentDir(first.get());
         if (!torrentDir.toString().equals(newTorrentDir.toString())) {
+            FileUtil.mkdir(newTorrentDir);
             FileUtil.move(torrentDir, newTorrentDir.getParentFile(), true);
         }
+        clearService.clearDir(torrentDir);
         AniUtil.sync();
 
         log.info("修改订阅 {} {} {}", ani.getTitle(), ani.getUrl(), ani.getId());
@@ -208,49 +207,32 @@ public class AniController extends BaseController {
         if (anis.isEmpty()) {
             return Result.error("删除失败");
         }
-        for (Ani ani : anis) {
-            AniUtil.ANI_LIST.remove(ani);
-        }
 
+        AniUtil.ANI_LIST.removeAll(anis);
         AniUtil.sync();
+
         ThreadUtil.execute(() -> {
+            List<TorrentsInfo> torrentsInfos = TorrentUtil.getTorrentsInfos();
+
             for (Ani ani : anis) {
                 File torrentDir = TorrentUtil.getTorrentDir(ani);
                 FileUtil.del(torrentDir);
-                clearService.clearParentFile(torrentDir);
+                clearService.clearDir(torrentDir);
                 log.info("删除订阅 {} {} {}", ani.getTitle(), ani.getUrl(), ani.getId());
-            }
-            if (!deleteFiles) {
-                // 不删除本地文件
-                return;
-            }
 
-            List<File> files = anis
-                    .stream()
-                    .map(ani -> downloadService.getDownloadPath(ani))
-                    .map(File::new)
-                    .toList();
-
-            Boolean login = TorrentUtil.login();
-            List<TorrentsInfo> torrentsInfos = new ArrayList<>();
-            if (login) {
-                torrentsInfos = TorrentUtil.getTorrentsInfos();
-            }
-            for (File file : files) {
-                String path = FileUtils.getAbsolutePath(file);
+                if (!deleteFiles) {
+                    continue;
+                }
+                // 删除本地文件
+                String downloadPath = downloadService.getDownloadPath(ani);
                 for (TorrentsInfo torrentsInfo : torrentsInfos) {
                     String savePath = torrentsInfo.getSavePath();
-                    if (savePath.equals(path)) {
+                    if (savePath.equals(downloadPath)) {
                         TorrentUtil.delete(torrentsInfo, true, true);
                     }
                 }
-                if (!file.exists()) {
-                    continue;
-                }
                 ThreadUtil.sleep(3000);
-                log.info("删除 {}", file);
-                FileUtil.del(file);
-                clearService.clearParentFile(file);
+                clearService.clearDir(downloadPath);
             }
         });
         return Result.success("删除订阅成功");
