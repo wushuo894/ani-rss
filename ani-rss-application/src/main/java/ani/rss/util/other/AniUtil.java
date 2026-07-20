@@ -315,26 +315,6 @@ public class AniUtil {
         }
     }
 
-    /**
-     * 校验参数
-     *
-     * @param ani 订阅
-     */
-    public static void verify(Ani ani) {
-        String url = ani.getUrl();
-        List<String> exclude = ani.getExclude();
-        Integer season = ani.getSeason();
-        Integer offset = ani.getOffset();
-        String title = ani.getTitle();
-        Assert.notBlank(url, "RSS URL 不能为空");
-        if (Objects.isNull(exclude)) {
-            ani.setExclude(new ArrayList<>());
-        }
-        Assert.notNull(season, "季不能为空");
-        Assert.notBlank(title, "标题不能为空");
-        Assert.notNull(offset, "集数偏移不能为空");
-    }
-
 
     /**
      * 获取蜜柑的bangumiId
@@ -361,14 +341,14 @@ public class AniUtil {
         ani = ObjectUtil.clone(ani);
 
         String title = ani.getTitle();
-        Boolean completed = ani.getCompleted();
+        boolean completed = ani.getCompleted();
         boolean ova = ani.getOva();
         boolean enable = ani.getEnable();
         int currentEpisodeNumber = ani.getCurrentEpisodeNumber();
         int totalEpisodeNumber = ani.getTotalEpisodeNumber();
 
         if (!completed) {
-            // 未开启
+            // 未开启完结迁移
             return;
         }
 
@@ -394,21 +374,18 @@ public class AniUtil {
 
         Config config = ObjectUtil.clone(ConfigUtil.CONFIG);
 
-        boolean autoDisabled = config.getAutoDisabled();
-        if (!autoDisabled) {
+        if (!config.getAutoDisabled()) {
             // 未开启自动禁用订阅
             return;
         }
 
-        completed = config.getCompleted();
-        if (!completed) {
-            // 未开启
+        if (!config.getCompleted()) {
+            // 未开启完结迁移
             return;
         }
 
+        boolean customCompleted = ani.getCustomCompleted();
         String completedPathTemplate = config.getCompletedPathTemplate();
-
-        Boolean customCompleted = ani.getCustomCompleted();
         if (customCompleted) {
             // 自定义完结迁移
             completedPathTemplate = ani.getCustomCompletedPathTemplate();
@@ -423,6 +400,8 @@ public class AniUtil {
         DownloadService downloadService = SpringUtil.getBean(DownloadService.class);
         String oldPath = downloadService.getDownloadPath(ani, config);
 
+        List<TorrentsInfo> torrentsInfos = TorrentUtil.findTorrentsInfosByAni(ani);
+
         config.setDownloadPathTemplate(completedPathTemplate);
         // 因为临时修改下载位置模版以获取对应下载位置, 要关闭自定义下载位置
         ani.setCustomDownloadPath(false);
@@ -431,20 +410,14 @@ public class AniUtil {
         String newPath = downloadService.getDownloadPath(ani, config);
 
         if (!FileUtil.exist(oldPath)) {
-            // 旧文件不存在
+            // 旧位置不存在
             return;
         }
 
         FileUtil.mkdir(newPath);
 
-        List<TorrentsInfo> torrentsInfos = TorrentUtil.getTorrentsInfos();
-
+        // 修改任务位置
         for (TorrentsInfo torrentsInfo : torrentsInfos) {
-            String savePath = torrentsInfo.getSavePath();
-            if (!savePath.equals(oldPath)) {
-                // 旧位置不相同
-                continue;
-            }
             // 修改保存位置
             TorrentUtil.setSavePath(torrentsInfo, newPath);
         }

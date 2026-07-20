@@ -79,8 +79,7 @@ public class BackupService {
                         "files", "torrents", "database.db",
                         AniUtil.FILE_NAME, ConfigUtil.FILE_NAME
                 )
-                .map(s -> configDir + "/" + s)
-                .map(File::new)
+                .map(s -> new File(configDir, s))
                 .filter(File::exists)
                 .toList();
 

@@ -54,10 +54,6 @@ public class AniController extends BaseController {
     @Operation(summary = "添加订阅")
     @PostMapping("/addAni")
     public Result<Void> addAni(@RequestBody Ani ani) {
-        ani.setTitle(ani.getTitle().trim())
-                .setUrl(ani.getUrl().trim());
-        AniUtil.verify(ani);
-
         Optional<Ani> first = AniUtil.ANI_LIST.stream()
                 .filter(it -> it.getId().equals(ani.getId()))
                 .findFirst();
@@ -114,9 +110,6 @@ public class AniController extends BaseController {
     @Operation(summary = "修改订阅")
     @PostMapping("/setAni")
     public Result<Void> setAni(@RequestBody Ani ani) {
-        ani.setTitle(ani.getTitle().trim())
-                .setUrl(ani.getUrl().trim());
-        AniUtil.verify(ani);
         Optional<Ani> first = AniUtil.ANI_LIST.stream()
                 .filter(it -> !it.getId().equals(ani.getId()))
                 .filter(it -> it.getTitle().equals(ani.getTitle()) && it.getSeason().equals(ani.getSeason()))
@@ -136,39 +129,24 @@ public class AniController extends BaseController {
         // 移动视频文件
         String move = request.getParameter("move");
         if (Boolean.parseBoolean(move)) {
-            Ani get = ObjectUtil.clone(first.get());
+            Ani oldAni = ObjectUtil.clone(first.get());
             ThreadUtil.execute(() -> {
-                String downloadPath = downloadService.getDownloadPath(get);
+                String downloadPath = downloadService.getDownloadPath(oldAni);
                 String newDownloadPath = downloadService.getDownloadPath(ani);
-                List<TorrentsInfo> torrentsInfos = TorrentUtil.getTorrentsInfos();
                 if (downloadPath.equals(newDownloadPath)) {
                     // 位置未发生改变
                     return;
                 }
 
-                File downloadPathFile = new File(downloadPath);
-
+                List<TorrentsInfo> torrentsInfos = TorrentUtil.findTorrentsInfosByAni(oldAni);
                 for (TorrentsInfo torrentsInfo : torrentsInfos) {
-                    String savePath = torrentsInfo.getSavePath();
-                    if (!savePath.equals(downloadPath)) {
-                        // 旧位置不相同
-                        continue;
-                    }
                     // 修改保存位置
                     TorrentUtil.setSavePath(torrentsInfo, newDownloadPath);
                 }
-                if (!downloadPathFile.exists()) {
-                    return;
-                }
-                if (downloadPathFile.isFile()) {
-                    return;
-                }
-                if (!torrentsInfos.isEmpty()) {
-                    ThreadUtil.sleep(3000);
-                }
+
                 try {
                     FileUtil.mkdir(newDownloadPath);
-                    File[] files = FileUtils.listFiles(downloadPath);
+                    List<File> files = FileUtils.listFileList(downloadPath);
                     for (File oldFile : files) {
                         log.info("移动文件 {} ==> {}", oldFile, newDownloadPath);
                         FileUtil.move(oldFile, new File(newDownloadPath), true);
@@ -212,27 +190,25 @@ public class AniController extends BaseController {
         AniUtil.sync();
 
         ThreadUtil.execute(() -> {
-            List<TorrentsInfo> torrentsInfos = TorrentUtil.getTorrentsInfos();
-
+            // 删除种子
             for (Ani ani : anis) {
                 File torrentDir = TorrentUtil.getTorrentDir(ani);
                 FileUtil.del(torrentDir);
                 clearService.clearDir(torrentDir);
                 log.info("删除订阅 {} {} {}", ani.getTitle(), ani.getUrl(), ani.getId());
+            }
 
-                if (!deleteFiles) {
-                    continue;
+            if (deleteFiles) {
+                // 删除任务
+                List<TorrentsInfo> torrentsInfoList = TorrentUtil.findTorrentsInfosByAni(anis);
+                for (TorrentsInfo torrentsInfo : torrentsInfoList) {
+                    TorrentUtil.delete(torrentsInfo, true, true);
                 }
-                // 删除本地文件
-                String downloadPath = downloadService.getDownloadPath(ani);
-                for (TorrentsInfo torrentsInfo : torrentsInfos) {
-                    String savePath = torrentsInfo.getSavePath();
-                    if (savePath.equals(downloadPath)) {
-                        TorrentUtil.delete(torrentsInfo, true, true);
-                    }
+                // 删除本地视频
+                for (Ani ani : anis) {
+                    String downloadPath = downloadService.getDownloadPath(ani);
+                    clearService.clearDir(downloadPath);
                 }
-                ThreadUtil.sleep(3000);
-                clearService.clearDir(downloadPath);
             }
         });
         return Result.success("删除订阅成功");
@@ -471,8 +447,6 @@ public class AniController extends BaseController {
         ImportAniDataDTO.Conflict conflict = dto.getConflict();
 
         for (Ani ani : aniList) {
-            AniUtil.verify(ani);
-
             String title = ani.getTitle();
             int season = ani.getSeason();
             Optional<Ani> first = AniUtil.ANI_LIST.stream()

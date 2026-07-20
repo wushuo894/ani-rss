@@ -306,38 +306,28 @@ public class DownloadService {
 
         String downloadPath = getDownloadPath(ani);
 
-        List<TorrentsInfo> torrentsInfos = TorrentUtil.getTorrentsInfos();
+        List<TorrentsInfo> torrentsInfos = TorrentUtil.findTorrentsInfosByAni(ani);
 
-        torrentsInfos
-                .stream()
-                .filter(torrentsInfo -> {
-                    String name = torrentsInfo.getName();
-                    String downloadDir = torrentsInfo.getSavePath();
-                    if (!downloadDir.equals(downloadPath)) {
-                        return false;
-                    }
-                    if (!ReUtil.contains(StringEnum.SEASON_REG, name)) {
-                        return false;
-                    }
-                    String s = ReUtil.get(StringEnum.SEASON_REG, name, 0);
-                    return s.equalsIgnoreCase(episode);
-                })
-                .findFirst()
-                .ifPresent(standbyRSS ->
-                        TorrentUtil.delete(standbyRSS, true, true)
-                );
+        // 删除备用rss任务
+        for (TorrentsInfo torrentsInfo : torrentsInfos) {
+            String name = torrentsInfo.getName();
+            if (!ReUtil.contains(StringEnum.SEASON_REG, name)) {
+                continue;
+            }
+            String s = ReUtil.get(StringEnum.SEASON_REG, name, 0);
+            if (s.equalsIgnoreCase(episode)) {
+                TorrentUtil.delete(torrentsInfo, true, true);
+            }
+        }
 
-        File[] files = FileUtils.listFiles(downloadPath);
+        List<File> files = FileUtils.listFileList(downloadPath);
         for (File file : files) {
-            String fileMainName = FileUtil.mainName(file);
-            if (StrUtil.isBlank(fileMainName)) {
+            String fileName = file.getName();
+            if (!ReUtil.contains(StringEnum.SEASON_REG, fileName)) {
                 continue;
             }
-            if (!ReUtil.contains(StringEnum.SEASON_REG, fileMainName)) {
-                continue;
-            }
-            fileMainName = ReUtil.get(StringEnum.SEASON_REG, fileMainName, 0);
-            if (!fileMainName.equalsIgnoreCase(episode)) {
+            fileName = ReUtil.get(StringEnum.SEASON_REG, fileName, 0);
+            if (!fileName.equalsIgnoreCase(episode)) {
                 continue;
             }
             boolean isDel = false;
@@ -351,6 +341,9 @@ public class DownloadService {
                 if (FileUtils.isVideoFormat(extName)) {
                     isDel = true;
                 }
+                if (FileUtils.isSubtitleFormat(extName)) {
+                    isDel = true;
+                }
                 if (List.of("nfo", "bif").contains(extName)) {
                     isDel = true;
                 }
@@ -362,12 +355,12 @@ public class DownloadService {
                 isDel = true;
             }
             if (isDel) {
-                log.info("已开启备用RSS, 自动删除 {}", FileUtils.getAbsolutePath(file));
+                log.info("已开启备用RSS, 自动删除 {}", file);
                 try {
                     FileUtil.del(file);
-                    log.info("删除成功 {}", FileUtils.getAbsolutePath(file));
+                    log.info("删除成功 {}", file);
                 } catch (Exception e) {
-                    log.error("删除失败 {}", FileUtils.getAbsolutePath(file));
+                    log.error("删除失败 {}", file);
                     log.error(e.getMessage(), e);
                 }
             }
@@ -394,7 +387,7 @@ public class DownloadService {
         log.info("添加下载 {}", name);
 
         if (!torrentFile.exists()) {
-            log.error("种子下载出现问题 {} {}", name, FileUtils.getAbsolutePath(torrentFile));
+            log.error("种子下载出现问题 {} {}", name, torrentFile);
             return;
         }
         ThreadUtil.sleep(1000);
@@ -659,17 +652,11 @@ public class DownloadService {
         String reName = item.getReName();
         Double episode = item.getEpisode();
 
-        String downloadPath = getDownloadPath(ani);
-
         if (downloadList) {
-            List<TorrentsInfo> torrentsInfos = TorrentUtil.getTorrentsInfos();
-            for (TorrentsInfo torrentsInfo : torrentsInfos) {
+            List<TorrentsInfo> torrentsInfoList = TorrentUtil.findTorrentsInfosByAni(ani);
+            for (TorrentsInfo torrentsInfo : torrentsInfoList) {
                 String name = torrentsInfo.getName();
                 if (!name.equalsIgnoreCase(reName)) {
-                    continue;
-                }
-                String downloadDir = torrentsInfo.getSavePath();
-                if (!downloadDir.equals(downloadPath)) {
                     continue;
                 }
                 log.info("已存在下载任务 {}", reName);
@@ -678,40 +665,29 @@ public class DownloadService {
             }
         }
 
+        String downloadPath = getDownloadPath(ani);
         List<File> files = FileUtils.listFileList(downloadPath);
 
         if (files.stream()
-                .filter(file -> {
-                    if (file.isFile()) {
-                        String extName = FileUtil.extName(file);
-                        if (StrUtil.isBlank(extName)) {
-                            return false;
-                        }
-                        return FileUtils.isVideoFormat(extName);
-                    }
-                    return true;
-                })
+                .filter(file -> FileUtils.isVideoFormat(file.getName()))
                 .anyMatch(file -> {
                     if (ova) {
                         return true;
                     }
 
-                    String mainName = FileUtil.mainName(file);
-                    if (StrUtil.isBlank(mainName)) {
-                        return false;
-                    }
-                    mainName = mainName.trim().toUpperCase();
-                    if (!ReUtil.contains(StringEnum.SEASON_REG, mainName)) {
+                    String fileName = file.getName();
+                    if (!ReUtil.contains(StringEnum.SEASON_REG, fileName)) {
                         return false;
                     }
 
-                    String seasonStr = ReUtil.get(StringEnum.SEASON_REG, mainName, 1);
+                    String seasonStr = ReUtil.get(StringEnum.SEASON_REG, fileName, 1);
 
-                    String episodeStr = ReUtil.get(StringEnum.SEASON_REG, mainName, 2);
+                    String episodeStr = ReUtil.get(StringEnum.SEASON_REG, fileName, 2);
 
                     if (StrUtil.isBlank(seasonStr) || StrUtil.isBlank(episodeStr)) {
                         return false;
                     }
+
                     return season == Integer.parseInt(seasonStr) && episode == Double.parseDouble(episodeStr);
                 })) {
             // 保存 torrent 下次只校验 torrent 是否存在 ， 可以将config设置到固态硬盘，防止一直唤醒机械硬盘

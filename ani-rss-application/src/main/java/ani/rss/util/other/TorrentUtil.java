@@ -1,7 +1,6 @@
 package ani.rss.util.other;
 
 import ani.rss.commons.ExceptionUtils;
-import ani.rss.commons.FileUtils;
 import ani.rss.commons.PinyinUtils;
 import ani.rss.download.BaseDownload;
 import ani.rss.entity.Ani;
@@ -12,6 +11,7 @@ import ani.rss.enums.StringEnum;
 import ani.rss.enums.TorrentsStateEnum;
 import ani.rss.enums.TorrentsTagEnum;
 import ani.rss.service.ClearService;
+import ani.rss.service.DownloadService;
 import ani.rss.util.basic.HttpReq;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.text.StrFormatter;
@@ -24,6 +24,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.eclipse.bittorrent.TorrentFile;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -212,7 +213,7 @@ public class TorrentUtil {
             }
         }
 
-        log.info("删除任务 title:{} forcedDelete:{} deleteFiles:{}", name, forcedDelete, deleteFiles);
+        log.info("删除任务 title: {} forcedDelete: {} deleteFiles: {}", name, forcedDelete, deleteFiles);
 
         ThreadUtil.sleep(500);
         Boolean b = DOWNLOAD.delete(torrentsInfo, deleteFiles);
@@ -301,6 +302,7 @@ public class TorrentUtil {
         try {
             log.info("修改保存位置 {} ==> {}", torrentsInfo.getName(), path);
             DOWNLOAD.setSavePath(torrentsInfo, path);
+            ThreadUtil.sleep(3000);
         } catch (Exception e) {
             log.error(e.getMessage(), e);
         }
@@ -342,10 +344,44 @@ public class TorrentUtil {
             TorrentFile torrentFile = new TorrentFile(file);
             hexHash = torrentFile.getHexHash();
         } catch (Exception e) {
-            log.error("转换种子为磁力链接时出现错误 {}", FileUtils.getAbsolutePath(file));
+            log.error("转换种子为磁力链接时出现错误 {}", file);
             log.error(e.getMessage(), e);
         }
         return StrFormatter.format("magnet:?xt=urn:btih:{}", hexHash);
+    }
+
+    /**
+     * 根据订阅查询到任务列表
+     *
+     * @param anis 订阅
+     * @return 任务列表
+     */
+    public static List<TorrentsInfo> findTorrentsInfosByAni(Ani... anis) {
+        return findTorrentsInfosByAni(List.of(anis));
+    }
+
+
+    /**
+     * 根据订阅查询到任务列表
+     *
+     * @param anis 订阅
+     * @return 任务列表
+     */
+    public static List<TorrentsInfo> findTorrentsInfosByAni(List<Ani> anis) {
+        DownloadService downloadService = SpringUtil.getBean(DownloadService.class);
+
+        List<TorrentsInfo> torrentsInfos = getTorrentsInfos();
+        List<TorrentsInfo> torrentsInfoList = new ArrayList<>();
+        for (Ani ani : anis) {
+            String downloadPath = downloadService.getDownloadPath(ani);
+            for (TorrentsInfo torrentsInfo : torrentsInfos) {
+                String savePath = torrentsInfo.getSavePath();
+                if (savePath.equals(downloadPath)) {
+                    torrentsInfoList.add(torrentsInfo);
+                }
+            }
+        }
+        return torrentsInfoList;
     }
 
 }

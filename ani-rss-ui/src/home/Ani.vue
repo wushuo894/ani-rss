@@ -13,7 +13,7 @@
             <el-form-item label="标题">
               <div class="full-width">
                 <div>
-                  <el-input v-model:model-value="props.ani.title" class="full-width"/>
+                  <el-input v-model.trim="props.ani.title" class="full-width"/>
                 </div>
                 <div class="change-title-button">
                   <el-button :loading="getBgmNameLoading"
@@ -57,7 +57,7 @@
               </div>
             </el-form-item>
             <el-form-item label="BgmUrl">
-              <el-input v-model:model-value="props.ani.bgmUrl" placeholder="https://xxx.xxx"/>
+              <el-input v-model.trim="props.ani.bgmUrl" placeholder="https://xxx.xxx"/>
             </el-form-item>
             <el-form-item label="主 RSS">
               <div class="full-width">
