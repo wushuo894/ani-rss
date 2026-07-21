@@ -1,2 +1,2 @@
-- refactor: 更改 UA
-- refactor: 优化清理空文件夹
+- fix: 修复报错 close #700
+- refactor: 洗版时支持字幕文件

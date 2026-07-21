@@ -10,10 +10,10 @@
       </el-select>
     </el-form-item>
     <el-form-item label="地址">
-      <el-input v-model:model-value="props.config.downloadToolHost" placeholder="http://192.168.1.x:8080"/>
+      <el-input v-model.trim="props.config.downloadToolHost" placeholder="http://192.168.1.x:8080"/>
     </el-form-item>
     <el-form-item v-if="props.config.downloadToolType === 'Aria2'" label="RPC 密钥">
-      <el-input v-model:model-value="props.config.downloadToolPassword" placeholder="" show-password>
+      <el-input v-model.trim="props.config.downloadToolPassword" placeholder="" show-password>
         <template #prefix>
           <el-icon class="el-input__icon">
             <Key/>
@@ -23,7 +23,7 @@
     </el-form-item>
     <template v-else-if="props.config.downloadToolType === 'OpenList'">
       <el-form-item label="Token">
-        <el-input v-model:model-value="props.config.downloadToolPassword" placeholder="OpenList-xxxxxx" show-password>
+        <el-input v-model.trim="props.config.downloadToolPassword" placeholder="OpenList-xxxxxx" show-password>
           <template #prefix>
             <el-icon class="el-input__icon">
               <Key/>
@@ -69,7 +69,7 @@
     </template>
     <template v-else>
       <el-form-item label="用户名">
-        <el-input v-model:model-value="props.config.downloadToolUsername" placeholder="username"
+        <el-input v-model.trim="props.config.downloadToolUsername" placeholder="username"
                   autocomplete="new-password">
           <template #prefix>
             <el-icon class="el-input__icon">
@@ -79,7 +79,7 @@
         </el-input>
       </el-form-item>
       <el-form-item label="密码">
-        <el-input v-model:model-value="props.config.downloadToolPassword" placeholder="password" show-password
+        <el-input v-model.trim="props.config.downloadToolPassword" placeholder="password" show-password
                   autocomplete="new-password">
           <template #prefix>
             <el-icon class="el-input__icon">
@@ -97,7 +97,7 @@
     </el-form-item>
     <el-form-item label="保存位置">
       <div class="full-width">
-        <el-input v-model:model-value="props.config['downloadPathTemplate']"/>
+        <el-input v-model.trim="props.config['downloadPathTemplate']"/>
         <el-alert
             v-if="!testPathTemplate(props.config['downloadPathTemplate'])"
             class="download-alert"
@@ -113,7 +113,7 @@
     </el-form-item>
     <el-form-item label="剧场版保存位置">
       <div class="full-width">
-        <el-input v-model:model-value="props.config['ovaDownloadPathTemplate']"/>
+        <el-input v-model.trim="props.config['ovaDownloadPathTemplate']"/>
         <el-alert
             v-if="!testPathTemplate(props.config['ovaDownloadPathTemplate'])"
             class="download-alert"
