@@ -11,7 +11,6 @@ import ani.rss.entity.StandbyRss;
 import ani.rss.entity.torrent.TorrentsInfo;
 import ani.rss.enums.NotificationStatusEnum;
 import ani.rss.enums.StringEnum;
-import ani.rss.enums.TorrentsStateEnum;
 import ani.rss.enums.TorrentsTagEnum;
 import ani.rss.util.other.*;
 import cn.hutool.core.date.DateField;
@@ -77,14 +76,8 @@ public class DownloadService {
         long count = torrentsInfos
                 .stream()
                 .filter(it -> {
-                    TorrentsStateEnum torrentsState = it.getState();
                     // 未下载完成
-                    return !List.of(
-                            TorrentsStateEnum.queuedUP,
-                            TorrentsStateEnum.uploading,
-                            TorrentsStateEnum.stalledUP,
-                            TorrentsStateEnum.stoppedUP
-                    ).contains(torrentsState);
+                    return !it.finished();
                 })
                 .count();
 
@@ -430,15 +423,10 @@ public class DownloadService {
      * @param torrentsInfo 种子信息
      */
     public void notification(TorrentsInfo torrentsInfo) {
-        TorrentsStateEnum torrentsState = torrentsInfo.getState();
+        Boolean finished = torrentsInfo.finished();
         String name = torrentsInfo.getName();
 
-        if (!List.of(
-                TorrentsStateEnum.queuedUP,
-                TorrentsStateEnum.uploading,
-                TorrentsStateEnum.stalledUP,
-                TorrentsStateEnum.stoppedUP
-        ).contains(torrentsState)) {
+        if (!finished) {
             return;
         }
         // 添加下载完成标签，防止重复通知

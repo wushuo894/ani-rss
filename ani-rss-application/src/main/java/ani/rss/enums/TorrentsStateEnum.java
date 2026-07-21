@@ -35,10 +35,12 @@ public enum TorrentsStateEnum {
     @Schema(description = "种子已暂停且尚未完成下载 >= 5.0.0")
     stoppedDL,
     @Schema(description = "种子已暂停且尚未完成下载")
+    @Deprecated
     pausedDL,
     @Schema(description = "种子已暂停且已完成下载 >= 5.0.0")
     stoppedUP,
     @Schema(description = "种子已暂停且已完成下载")
+    @Deprecated
     pausedUP,
     @Schema(description = "种子正在移动到另一个位置")
     moving,

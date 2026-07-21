@@ -181,12 +181,7 @@ public class TorrentUtil {
             return torrentsState == TorrentsStateEnum.stoppedUP;
         }
 
-        return List.of(
-                TorrentsStateEnum.queuedUP,
-                TorrentsStateEnum.uploading,
-                TorrentsStateEnum.stalledUP,
-                TorrentsStateEnum.stoppedUP
-        ).contains(torrentsState);
+        return torrentsInfo.finished();
     }
 
 

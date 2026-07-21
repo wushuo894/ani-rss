@@ -10,6 +10,7 @@ import lombok.experimental.Accessors;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Objects;
 import java.util.function.Supplier;
 
 /**
@@ -105,6 +106,22 @@ public class TorrentsInfo implements Serializable {
         this.setSize(size);
         this.setFormatSize(formatSize);
         return this;
+    }
+
+    public Boolean finished() {
+        if (Objects.nonNull(progress)) {
+            if (progress < 100) {
+                return false;
+            }
+        }
+
+        // 下载完成的状态
+        return List.of(
+                TorrentsStateEnum.queuedUP,
+                TorrentsStateEnum.uploading,
+                TorrentsStateEnum.stalledUP,
+                TorrentsStateEnum.stoppedUP
+        ).contains(state);
     }
 
 }
