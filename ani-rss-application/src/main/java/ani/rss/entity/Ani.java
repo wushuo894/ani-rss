@@ -196,7 +196,8 @@ public class Ani implements Serializable {
      * 自定义下载位置
      */
     @Schema(description = "自定义下载位置路径")
-    private String downloadPath;
+    @SerializedName(value = "customDownloadPathTemplate", alternate = "downloadPath")
+    private String customDownloadPathTemplate;
 
     /**
      * 评分

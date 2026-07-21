@@ -57,7 +57,7 @@ public class CollectionService {
         Ani ani = collectionInfo.getAni();
         String title = ani.getTitle();
         String subgroup = ani.getSubgroup();
-        String downloadPath = ani.getDownloadPath();
+        String downloadPath = ani.getCustomDownloadPathTemplate();
 
         String name = StrFormatter.format("[{}] {} 第{}季", subgroup, title, ani.getSeason());
         download(name, tempFile, downloadPath, List.of("ANI-RSS合集下载", subgroup));

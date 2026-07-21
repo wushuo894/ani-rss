@@ -97,22 +97,16 @@ public class OpenListUploadNotification implements BaseNotification {
         String localPath = downloadService.getDownloadPath(ani);
 
         // 新的位置; 设置自定义下载位置同时启用, 用以获取新的位置
-        Boolean ova = ani.getOva();
-        if (ova) {
-            ani.setDownloadPath(openListUploadOvaPath);
-        } else {
-            ani.setDownloadPath(openListUploadPath);
-        }
+        boolean ova = ani.getOva();
+        String downloadPathTemplate = ova ? openListUploadOvaPath : openListUploadPath;
 
         Boolean customUploadEnable = ani.getCustomUploadEnable();
         if (customUploadEnable) {
             // 自定义上传位置
-            ani.setDownloadPath(ani.getCustomUploadPathTarget());
+            downloadPathTemplate = ani.getCustomUploadPathTarget();
         }
 
-        ani.setCustomDownloadPath(true);
-
-        String target = downloadService.getDownloadPath(ani);
+        String target = downloadService.getDownloadPath(ani, downloadPathTemplate);
         target = ReUtil.replaceAll(target, "^[A-z]:", "");
 
         if (ova) {

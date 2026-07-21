@@ -884,7 +884,7 @@ public class BgmUtil {
         return ani
                 // tmdb 标题
                 .setThemoviedbName(themoviedbName)
-                .setDownloadPath(downloadPath)
+                .setCustomDownloadPathTemplate(downloadPath)
                 .setCustomCompletedPathTemplate(completedPathTemplate);
     }
 

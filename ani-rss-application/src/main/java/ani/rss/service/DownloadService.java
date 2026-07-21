@@ -73,6 +73,7 @@ public class DownloadService {
         ItemsUtil.omit(ani, items);
         log.debug("{} 共 {} 个", title, items.size());
 
+        // 统计正在下载任务数量 计算同时下载数量限制
         long count = torrentsInfos
                 .stream()
                 .filter(it -> {
@@ -98,7 +99,7 @@ public class DownloadService {
             log.debug(JSONUtil.formatJsonStr(GsonStatic.toJson(item)));
             String reName = item.getReName();
             File torrent = TorrentUtil.getTorrent(ani, item);
-            Boolean master = item.getMaster();
+            boolean master = item.getMaster();
             String hash = FileUtil.mainName(torrent)
                     .trim().toLowerCase();
 
@@ -260,7 +261,7 @@ public class DownloadService {
         if (!autoDisabled) {
             return;
         }
-        Integer totalEpisodeNumber = ani.getTotalEpisodeNumber();
+        int totalEpisodeNumber = ani.getTotalEpisodeNumber();
         if (totalEpisodeNumber < 1) {
             return;
         }
@@ -513,12 +514,26 @@ public class DownloadService {
     /**
      * 获取下载位置
      *
+     * @param ani                  订阅
+     * @param downloadPathTemplate 下载位置模板
+     * @return 下载位置
+     */
+    public String getDownloadPath(Ani ani, String downloadPathTemplate) {
+        Ani clone = ObjectUtil.clone(ani);
+        clone.setCustomDownloadPathTemplate(downloadPathTemplate)
+                .setCustomDownloadPath(true);
+        return getDownloadPath(clone, ConfigUtil.CONFIG);
+    }
+
+    /**
+     * 获取下载位置
+     *
      * @param ani 订阅
      * @return 下载位置
      */
     public String getDownloadPath(Ani ani, Config config) {
         Boolean customDownloadPath = ani.getCustomDownloadPath();
-        String aniDownloadPath = ani.getDownloadPath();
+        String customDownloadPathTemplate = ani.getCustomDownloadPathTemplate();
         Boolean ova = ani.getOva();
 
         String downloadPathTemplate = config.getDownloadPathTemplate();
@@ -528,9 +543,9 @@ public class DownloadService {
             downloadPathTemplate = ovaDownloadPathTemplate;
         }
 
-        if (customDownloadPath && StrUtil.isNotBlank(aniDownloadPath)) {
+        if (customDownloadPath && StrUtil.isNotBlank(customDownloadPathTemplate)) {
             // 自定义下载位置
-            downloadPathTemplate = StrUtil.split(aniDownloadPath, "\n", true, true)
+            downloadPathTemplate = StrUtil.split(customDownloadPathTemplate, "\n", true, true)
                     .stream()
                     .map(FileUtils::getAbsolutePath)
                     .findFirst()

@@ -68,14 +68,9 @@ public class FileMoveNotification implements BaseNotification {
         String fileMoveTarget = notificationConfig.getFileMoveTarget();
         String fileMoveOvaTarget = notificationConfig.getFileMoveOvaTarget();
         boolean fileMoveDeleteOldEpisode = notificationConfig.getFileMoveDeleteOldEpisode();
-        if (ova) {
-            ani.setDownloadPath(fileMoveOvaTarget);
-        } else {
-            ani.setDownloadPath(fileMoveTarget);
-        }
-        ani.setCustomDownloadPath(true);
 
-        String target = downloadService.getDownloadPath(ani);
+        String downloadPathTemplate = ova ? fileMoveOvaTarget : fileMoveTarget;
+        String target = downloadService.getDownloadPath(ani, downloadPathTemplate);
 
         // 进行移动
         FileUtil.mkdir(target);

@@ -384,30 +384,16 @@ public class AniUtil {
             return;
         }
 
-        boolean customCompleted = ani.getCustomCompleted();
-        String completedPathTemplate = config.getCompletedPathTemplate();
-        if (customCompleted) {
-            // 自定义完结迁移
-            completedPathTemplate = ani.getCustomCompletedPathTemplate();
-        }
-
-        if (StrUtil.isBlank(completedPathTemplate)) {
-            // 路径为空
-            return;
-        }
 
         // 旧文件路径
         DownloadService downloadService = SpringUtil.getBean(DownloadService.class);
-        String oldPath = downloadService.getDownloadPath(ani, config);
+        String oldPath = downloadService.getDownloadPath(ani);
 
         List<TorrentsInfo> torrentsInfos = TorrentUtil.findTorrentsInfosByAni(ani);
 
-        config.setDownloadPathTemplate(completedPathTemplate);
-        // 因为临时修改下载位置模版以获取对应下载位置, 要关闭自定义下载位置
-        ani.setCustomDownloadPath(false);
-
         // 新文件路径
-        String newPath = downloadService.getDownloadPath(ani, config);
+        String completedPathTemplate = ani.getCustomCompleted() ? ani.getCustomCompletedPathTemplate() : config.getCompletedPathTemplate();
+        String newPath = downloadService.getDownloadPath(ani, completedPathTemplate);
 
         if (!FileUtil.exist(oldPath)) {
             // 旧位置不存在
@@ -460,7 +446,7 @@ public class AniUtil {
                 .setImage("")
                 .setThemoviedbName("")
                 .setCustomDownloadPath(false)
-                .setDownloadPath("")
+                .setCustomDownloadPathTemplate("")
                 .setGlobalExclude(false)
                 .setCurrentEpisodeNumber(0)
                 .setTotalEpisodeNumber(0)
