@@ -1,6 +1,6 @@
 <template>
   <ImportAni ref="importAniRef" @callback="getList"/>
-  <Del ref="delRef" @callback="reLoadList"/>
+  <DelAni ref="delAniRef" @callback="reLoadList"/>
   <el-dialog v-model="dialogVisible" center title="管理">
     <div class="manage-content" v-loading="loading">
       <div class="manage-header">
@@ -107,7 +107,7 @@
                     导出
                   </el-text>
                 </el-dropdown-item>
-                <el-dropdown-item divided @click="delRef?.show(selectList)">
+                <el-dropdown-item divided @click="delAniRef?.show(selectList)">
                   <el-text type="danger">
                     <el-icon>
                       <Remove/>
@@ -188,14 +188,14 @@
 <script setup>
 import {ref} from "vue";
 import {ElMessage, ElText} from "element-plus";
-import Del from "./Del.vue";
+import DelAni from "./DelAni.vue";
 import ImportAni from "@/home/ImportAni.vue";
 import {CircleCheck, CircleClose, Refresh, RefreshRight, Remove, Upload} from "@element-plus/icons-vue";
 import * as http from "@/js/http.js";
 
 let releaseDateList = ref([])
 
-let delRef = ref()
+let delAniRef = ref()
 let importAniRef = ref()
 
 let selectFilter = ref('全部')

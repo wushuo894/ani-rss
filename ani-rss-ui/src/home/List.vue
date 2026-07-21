@@ -1,8 +1,8 @@
 <template>
-  <Edit ref="editRef"/>
+  <EditAni ref="editAniRef"/>
   <PlayList ref="playListRef"/>
   <Cover ref="coverRef"/>
-  <Del ref="delRef"/>
+  <DelAni ref="delAniRef"/>
   <BgmRate ref="bgmRateRef"/>
   <div class="list-container" v-loading="loading">
     <el-scrollbar class="hide-scrollbar">
@@ -16,10 +16,10 @@
               <div v-for="item in weekItem.items" :key="item.id">
                 <AniCard
                     :item="item"
-                    @edit="editRef?.show"
+                    @edit="editAniRef?.show"
                     @playlist="playListRef?.show"
                     @cover="coverRef?.show"
-                    @del="delRef?.show"
+                    @del="delAniRef?.show"
                     @rate="bgmRateRef?.show"
                 />
               </div>
@@ -31,10 +31,10 @@
             <div v-for="item in flatFilterList">
               <AniCard
                   :item="item"
-                  @edit="editRef?.show"
+                  @edit="editAniRef?.show"
                   @playlist="playListRef?.show"
                   @cover="coverRef?.show"
-                  @del="delRef?.show"
+                  @del="delAniRef?.show"
                   @rate="bgmRateRef?.show"
               />
             </div>
@@ -48,18 +48,18 @@
 
 <script setup>
 import {onMounted, ref} from "vue";
-import Edit from "./Edit.vue";
+import EditAni from "./EditAni.vue";
 import PlayList from "@/play/PlayList.vue";
 import Cover from "./Cover.vue";
-import Del from "./Del.vue";
+import DelAni from "./DelAni.vue";
 import BgmRate from "./BgmRate.vue";
 import formatTime from "@/js/format-time.js";
 import {listAni} from "@/js/http.js";
 import AniCard from "@/home/AniCard.vue";
 import {showWeek} from "@/js/global.js";
 
-const editRef = ref()
-const delRef = ref()
+const editAniRef = ref()
+const delAniRef = ref()
 const coverRef = ref()
 const playListRef = ref()
 const bgmRateRef = ref()
