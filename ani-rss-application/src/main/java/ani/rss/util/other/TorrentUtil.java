@@ -41,7 +41,7 @@ public class TorrentUtil {
      */
     public static List<TorrentsInfo> getTorrentsInfos() {
         ThreadUtil.sleep(1000);
-        return DOWNLOAD.getTorrentsInfos();
+        return new ArrayList<>(DOWNLOAD.getTorrentsInfos());
     }
 
     /**
