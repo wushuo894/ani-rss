@@ -33,6 +33,8 @@ import java.util.stream.Stream;
 @Service
 public class ScrapeService {
 
+    private static final Config CONFIG = ConfigUtil.CONFIG;
+
     @Resource
     private NfoGenerator nfoGenerator;
 
@@ -233,9 +235,8 @@ public class ScrapeService {
                 .stream()
                 .collect(Collectors.toMap(TmdbEpisode::getEpisodeNumber, it -> it));
 
-        Config config = ConfigUtil.CONFIG;
         // 追更天数
-        Integer followDay = config.getFollowDay();
+        Integer followDay = CONFIG.getFollowDay();
 
         // 以下开始保存集的 thumb、nfo
         for (File file : files) {
@@ -320,8 +321,7 @@ public class ScrapeService {
 
         FileUtil.del(saveFile);
 
-        Config config = ConfigUtil.CONFIG;
-        String tmdbImage = config.getTmdbImage();
+        String tmdbImage = CONFIG.getTmdbImage();
 
         HttpReq.get(tmdbImage + "/t/p/original" + tmdbPath)
                 .then(res -> {
@@ -341,8 +341,7 @@ public class ScrapeService {
      * @param force 强制
      */
     public void saveBangumiIni(Ani ani, Boolean force) {
-        Config config = ConfigUtil.CONFIG;
-        Boolean bangumiIniEnabled = config.getBangumiIniEnabled();
+        Boolean bangumiIniEnabled = CONFIG.getBangumiIniEnabled();
         if (!bangumiIniEnabled) {
             // 未开启 bangumi.ini
             return;

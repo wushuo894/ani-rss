@@ -30,6 +30,7 @@ import java.util.function.Function;
  */
 @Slf4j
 public class AuthUtil {
+    private static final Config CONFIG = ConfigUtil.CONFIG;
     private static final Map<String, Function<HttpServletRequest, Boolean>> MAP = new HashMap<>();
 
     static {
@@ -44,8 +45,7 @@ public class AuthUtil {
         if (StrUtil.isBlank(key)) {
             return;
         }
-        Config config = ConfigUtil.CONFIG;
-        Integer loginEffectiveHours = config.getLoginEffectiveHours();
+        Integer loginEffectiveHours = CONFIG.getLoginEffectiveHours();
         CacheUtils.put("auth_key", key, TimeUnit.HOURS.toMillis(loginEffectiveHours));
     }
 
@@ -53,13 +53,11 @@ public class AuthUtil {
      * 刷新密钥
      */
     public static String resetKey() {
-        Config config = ConfigUtil.CONFIG;
-
         // 登录有效时间/小时
-        Integer loginEffectiveHours = config.getLoginEffectiveHours();
-        Boolean multiLoginForbidden = config.getMultiLoginForbidden();
+        Integer loginEffectiveHours = CONFIG.getLoginEffectiveHours();
+        Boolean multiLoginForbidden = CONFIG.getMultiLoginForbidden();
 
-        String key = config.getUuid();
+        String key = CONFIG.getUuid();
 
         if (multiLoginForbidden) {
             // 禁止多端登录
@@ -79,9 +77,8 @@ public class AuthUtil {
     }
 
     public static Login getLogin() {
-        Config config = ConfigUtil.CONFIG;
-        Login login = ObjectUtil.clone(config.getLogin());
-        if (config.getVerifyLoginIp()) {
+        Login login = ObjectUtil.clone(CONFIG.getLogin());
+        if (CONFIG.getVerifyLoginIp()) {
             login.setIp(getIp());
         } else {
             login.setIp("");
@@ -96,9 +93,8 @@ public class AuthUtil {
      */
     public static String getIp() {
         try {
-            Config config = ConfigUtil.CONFIG;
-            List<String> reverseProxyTrustIpList = config.getReverseProxyTrustIpList();
-            Boolean reverseProxyTrustIpListEnabled = config.getReverseProxyTrustIpListEnabled();
+            List<String> reverseProxyTrustIpList = CONFIG.getReverseProxyTrustIpList();
+            Boolean reverseProxyTrustIpListEnabled = CONFIG.getReverseProxyTrustIpListEnabled();
 
             HttpServletRequest request = Global.REQUEST.get();
             String ip = request.getRemoteAddr();
@@ -174,8 +170,7 @@ public class AuthUtil {
      * @param isAdd 累加计数
      */
     public static void limitLoginAttempts(Boolean isAdd) {
-        Config config = ConfigUtil.CONFIG;
-        boolean limitLoginAttempts = config.getLimitLoginAttempts();
+        boolean limitLoginAttempts = CONFIG.getLimitLoginAttempts();
         if (!limitLoginAttempts) {
             return;
         }

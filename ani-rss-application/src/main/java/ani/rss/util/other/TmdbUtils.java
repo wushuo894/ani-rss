@@ -21,8 +21,8 @@ import java.util.concurrent.TimeUnit;
  */
 @Slf4j
 public class TmdbUtils {
-    public final static TmdbConfig config = new CustomTmdbConfig();
-    public final static TmdbUtil TMDB_UTIL = new TmdbUtil(config);
+    private static final Config CONFIG = ConfigUtil.CONFIG;
+    public final static TmdbUtil TMDB_UTIL = new TmdbUtil(new CustomTmdbConfig());
 
     /**
      * 获取番剧在tmdb的名称
@@ -72,16 +72,14 @@ public class TmdbUtils {
         if (Objects.isNull(tmdb)) {
             return title;
         }
-        Config config = ConfigUtil.CONFIG;
-
-        boolean titleYear = config.getTitleYear();
+        boolean titleYear = CONFIG.getTitleYear();
         if (titleYear) {
             title = RenameUtil.renameDel(title, false);
             title = StrFormatter.format("{} ({})", title, DateUtil.year(tmdb.getDate()));
         }
 
-        boolean tmdbId = config.getTmdbId();
-        boolean tmdbIdPlexMode = config.getTmdbIdPlexMode();
+        boolean tmdbId = CONFIG.getTmdbId();
+        boolean tmdbIdPlexMode = CONFIG.getTmdbIdPlexMode();
         if (tmdbId) {
             if (tmdbIdPlexMode) {
                 title = StrFormatter.format("{} {tmdb-{}}", title, tmdb.getId());
@@ -114,8 +112,7 @@ public class TmdbUtils {
             return;
         }
 
-        Config config = ConfigUtil.CONFIG;
-        Boolean tmdbRomaji = config.getTmdbRomaji();
+        Boolean tmdbRomaji = CONFIG.getTmdbRomaji();
         if (!tmdbRomaji) {
             // 未开启罗马音
             return;

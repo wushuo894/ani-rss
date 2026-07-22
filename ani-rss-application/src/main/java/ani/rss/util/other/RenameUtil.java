@@ -20,11 +20,10 @@ import java.util.function.Function;
 
 @Slf4j
 public class RenameUtil {
+    private static final Config CONFIG = ConfigUtil.CONFIG;
     public static final String REG_STR = "(.*|\\[.*])(( - |Vol |[Ee][Pp]?)\\d+(\\.5)?( ?\\(\\d+\\))?|【\\d+(\\.5)?】|\\[\\d+(\\.5)?( ?\\(\\d+\\))?( ?[vV]\\d)?( ?END)?( ?完)?( ?FIN)?]|第\\d+(\\.5)?[话話集]( - END)?|^\\[TOC].* \\d+|^六四位元字幕组.*★\\d+(\\.5)?★)";
 
     public static Boolean rename(Ani ani, Item item) {
-        Config config = ConfigUtil.CONFIG;
-
         int offset = ani.getOffset();
         int season = ani.getSeason();
         String title = ani.getTitle();
@@ -79,7 +78,7 @@ public class RenameUtil {
         // x.5
         boolean is5 = ItemsUtil.is5(episode);
 
-        boolean skip5 = config.getSkip5();
+        boolean skip5 = CONFIG.getSkip5();
         if (skip5 && is5) {
             return false;
         }
@@ -127,7 +126,7 @@ public class RenameUtil {
 
         String reName = getName(renameTemplate);
 
-        Integer maxFileNameLength = config.getMaxFileNameLength();
+        Integer maxFileNameLength = CONFIG.getMaxFileNameLength();
 
         if (maxFileNameLength > 0) {
             reName = StrUtil.sub(reName, 0, maxFileNameLength);
@@ -145,8 +144,7 @@ public class RenameUtil {
      * @return 重命名模版
      */
     public static String getRenameTemplate(Ani ani) {
-        Config config = ConfigUtil.CONFIG;
-        String renameTemplate = config.getRenameTemplate();
+        String renameTemplate = CONFIG.getRenameTemplate();
 
         Boolean customRenameTemplateEnable = ani.getCustomRenameTemplateEnable();
         String customRenameTemplate = ani.getCustomRenameTemplate();
@@ -322,9 +320,8 @@ public class RenameUtil {
             return title;
         }
 
-        Config config = ConfigUtil.CONFIG;
-        Boolean renameDelYear = config.getRenameDelYear();
-        Boolean renameDelTmdbId = config.getRenameDelTmdbId();
+        Boolean renameDelYear = CONFIG.getRenameDelYear();
+        Boolean renameDelTmdbId = CONFIG.getRenameDelTmdbId();
 
         if (renameDelTmdbId) {
             title = ReUtil.replaceAll(title, StringEnum.TMDB_ID_REG, "")

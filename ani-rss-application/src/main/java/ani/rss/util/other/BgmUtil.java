@@ -41,7 +41,7 @@ import java.util.function.Function;
  */
 @Slf4j
 public class BgmUtil {
-    private static final Config config = ConfigUtil.CONFIG;
+    private static final Config CONFIG = ConfigUtil.CONFIG;
 
     /**
      * 获取bgm名称
@@ -50,7 +50,7 @@ public class BgmUtil {
      * @return 名称
      */
     public static String getFinalName(BgmInfo bgmInfo) {
-        Boolean bgmJpName = config.getBgmJpName();
+        Boolean bgmJpName = CONFIG.getBgmJpName();
 
         String name = bgmInfo.getName();
         String nameCn = bgmInfo.getNameCn();
@@ -75,7 +75,7 @@ public class BgmUtil {
      * @return 名称
      */
     public static String getFinalName(BgmInfo bgmInfo, Tmdb tmdb) {
-        Boolean titleYear = config.getTitleYear();
+        Boolean titleYear = CONFIG.getTitleYear();
 
         String title = getFinalName(bgmInfo);
 
@@ -101,7 +101,7 @@ public class BgmUtil {
 
         name = name.replace("1/2", "½");
 
-        String bgmApi = config.getBgmApi();
+        String bgmApi = CONFIG.getBgmApi();
 
         String url = UrlBuilder.of(bgmApi + "/search/subject/" + name)
                 .addQuery("type", 2)
@@ -226,7 +226,7 @@ public class BgmUtil {
     public static List<JsonObject> getEpisodes(String subjectId, Integer type) {
         ThreadUtil.sleep(500);
         Objects.requireNonNull(subjectId);
-        String bgmApi = config.getBgmApi();
+        String bgmApi = CONFIG.getBgmApi();
         HttpRequest httpRequest = HttpReq.get(bgmApi + "/v0/episodes");
         setToken(httpRequest);
 
@@ -262,7 +262,7 @@ public class BgmUtil {
     }
 
     public static BgmMe me() {
-        String bgmToken = config.getBgmToken();
+        String bgmToken = CONFIG.getBgmToken();
         Assert.notBlank(bgmToken, "BgmToken 未填写");
 
         String key = "BGM_me:" + bgmToken;
@@ -272,7 +272,7 @@ public class BgmUtil {
             return GsonStatic.fromJson(me, BgmMe.class);
         }
 
-        String bgmApi = config.getBgmApi();
+        String bgmApi = CONFIG.getBgmApi();
         BgmMe bgmMe = setToken(HttpReq.get(bgmApi + "/v0/me"))
                 .thenFunction(res -> {
                     HttpReq.assertStatus(res);
@@ -304,7 +304,7 @@ public class BgmUtil {
         if (Objects.isNull(rate)) {
             // 获取评分
             String username = username();
-            String bgmApi = config.getBgmApi();
+            String bgmApi = CONFIG.getBgmApi();
             return setToken(HttpReq.get(bgmApi + "/v0/users/" + username + "/collections/" + subjectId))
                     .thenFunction(res -> {
                         if (res.getStatus() == 404) {
@@ -316,7 +316,7 @@ public class BgmUtil {
                     });
         }
 
-        String bgmApi = config.getBgmApi();
+        String bgmApi = CONFIG.getBgmApi();
         setToken(HttpReq.post(bgmApi + "/v0/users/-/collections/" + subjectId))
                 .contentType(ContentType.JSON)
                 .body(GsonStatic.toJson(Map.of(
@@ -344,7 +344,7 @@ public class BgmUtil {
         String username = username();
 
         // 如果已经订阅，则不再订阅
-        String bgmApi = config.getBgmApi();
+        String bgmApi = CONFIG.getBgmApi();
         Boolean ok = setToken(HttpReq.get(bgmApi + "/v0/users/" + username + "/collections/" + subjectId))
                 .thenFunction(HttpResponse::isOk);
 
@@ -405,7 +405,7 @@ public class BgmUtil {
         Objects.requireNonNull(episodeId);
 
         // bgm点格子前先判断状态，防止刷屏 #142
-        String bgmApi = config.getBgmApi();
+        String bgmApi = CONFIG.getBgmApi();
         JsonObject jsonObject = setToken(HttpReq.get(bgmApi + "/v0/users/-/collections/-/episodes/" + episodeId))
                 .contentType(ContentType.JSON)
                 .thenFunction(res -> GsonStatic.fromJson(res.body(), JsonObject.class));
@@ -466,7 +466,7 @@ public class BgmUtil {
      * @return bgm信息
      */
     public static BgmInfo getBgmInfo(String subjectId, Boolean isCache) {
-        String bgmApi = config.getBgmApi();
+        String bgmApi = CONFIG.getBgmApi();
 
         Function<HttpResponse, BgmInfo> fun = res -> {
             HttpReq.assertStatus(res);
@@ -628,7 +628,7 @@ public class BgmUtil {
      * @return HttpRequest
      */
     public static HttpRequest setToken(HttpRequest httpRequest) {
-        String bgmToken = config.getBgmToken();
+        String bgmToken = CONFIG.getBgmToken();
 
         if (StrUtil.isNotBlank(bgmToken)) {
             httpRequest.header(Header.AUTHORIZATION, "Bearer " + bgmToken);
@@ -644,7 +644,7 @@ public class BgmUtil {
      * @return 天数
      */
     public static Integer getExpiresDays() {
-        String bgmToken = config.getBgmToken();
+        String bgmToken = CONFIG.getBgmToken();
         if (StrUtil.isBlank(bgmToken)) {
             return 0;
         }
@@ -670,12 +670,12 @@ public class BgmUtil {
      * 刷新token
      */
     public static void refreshToken() {
-        BgmTokenTypeEnum bgmTokenType = config.getBgmTokenType();
+        BgmTokenTypeEnum bgmTokenType = CONFIG.getBgmTokenType();
         if (bgmTokenType != BgmTokenTypeEnum.AUTO) {
             return;
         }
 
-        String bgmToken = config.getBgmToken();
+        String bgmToken = CONFIG.getBgmToken();
         if (StrUtil.isBlank(bgmToken)) {
             return;
         }
@@ -686,10 +686,10 @@ public class BgmUtil {
             return;
         }
 
-        String bgmAppID = config.getBgmAppID();
-        String bgmAppSecret = config.getBgmAppSecret();
-        String bgmRefreshToken = config.getBgmRefreshToken();
-        String bgmRedirectUri = config.getBgmRedirectUri();
+        String bgmAppID = CONFIG.getBgmAppID();
+        String bgmAppSecret = CONFIG.getBgmAppSecret();
+        String bgmRefreshToken = CONFIG.getBgmRefreshToken();
+        String bgmRedirectUri = CONFIG.getBgmRedirectUri();
 
         if (StrUtil.isBlank(bgmAppID)) {
             return;
@@ -717,7 +717,7 @@ public class BgmUtil {
                     JsonObject jsonObject = GsonStatic.fromJson(res.body(), JsonObject.class);
                     String accessToken = jsonObject.get("access_token").getAsString();
                     String refreshToken = jsonObject.get("refresh_token").getAsString();
-                    config.setBgmToken(accessToken)
+                    CONFIG.setBgmToken(accessToken)
                             .setBgmRefreshToken(refreshToken);
                 });
 
@@ -816,9 +816,9 @@ public class BgmUtil {
      * @return 订阅
      */
     public static Ani toAni(BgmInfo bgmInfo, Ani ani) {
-        String bgmImage = config.getBgmImage();
+        String bgmImage = CONFIG.getBgmImage();
         // 使用tmdb标题
-        Boolean tmdb = config.getTmdb();
+        Boolean tmdb = CONFIG.getTmdb();
 
         String title = BgmUtil.getFinalName(bgmInfo);
 
@@ -874,7 +874,7 @@ public class BgmUtil {
         DownloadService downloadService = SpringUtil.getBean(DownloadService.class);
         String downloadPath = downloadService.getDownloadPath(ani);
 
-        String completedPathTemplate = config.getCompletedPathTemplate();
+        String completedPathTemplate = CONFIG.getCompletedPathTemplate();
 
         if (ova) {
             // 剧场版默认不开启摸鱼检测

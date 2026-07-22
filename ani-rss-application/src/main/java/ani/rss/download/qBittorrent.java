@@ -12,6 +12,7 @@ import ani.rss.enums.StringEnum;
 import ani.rss.enums.TorrentsTagEnum;
 import ani.rss.service.DownloadService;
 import ani.rss.util.basic.HttpReq;
+import ani.rss.util.other.ConfigUtil;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.lang.Assert;
@@ -36,9 +37,10 @@ import java.util.*;
 @RequiredArgsConstructor
 public class qBittorrent implements BaseDownload {
 
+    private static final Config CONFIG = ConfigUtil.CONFIG;
+
     private final DownloadService downloadService;
 
-    private Config config;
 
     /**
      * 获取对应任务的文件列表
@@ -80,7 +82,6 @@ public class qBittorrent implements BaseDownload {
 
     @Override
     public Boolean login(Boolean test, Config config) {
-        this.config = config;
         String host = config.getDownloadToolHost();
         String username = config.getDownloadToolUsername();
         String password = config.getDownloadToolPassword();
@@ -125,18 +126,18 @@ public class qBittorrent implements BaseDownload {
     @Override
     public Boolean download(Ani ani, Item item, String savePath, File torrentFile) {
         String name = item.getReName();
-        String host = config.getDownloadToolHost();
-        Boolean qbUseDownloadPath = config.getQbUseDownloadPath();
+        String host = CONFIG.getDownloadToolHost();
+        Boolean qbUseDownloadPath = CONFIG.getQbUseDownloadPath();
 
         List<String> tags = newTags(ani, item);
 
-        Integer ratioLimit = config.getRatioLimit();
-        Integer seedingTimeLimit = config.getSeedingTimeLimit();
-        Integer inactiveSeedingTimeLimit = config.getInactiveSeedingTimeLimit();
-        Boolean rename = config.getRename();
+        Integer ratioLimit = CONFIG.getRatioLimit();
+        Integer seedingTimeLimit = CONFIG.getSeedingTimeLimit();
+        Integer inactiveSeedingTimeLimit = CONFIG.getInactiveSeedingTimeLimit();
+        Boolean rename = CONFIG.getRename();
 
-        Long upLimit = config.getUpLimit() * 1024;
-        Long dlLimit = config.getDlLimit() * 1024;
+        Long upLimit = CONFIG.getUpLimit() * 1024;
+        Long dlLimit = CONFIG.getDlLimit() * 1024;
 
         HttpRequest httpRequest = HttpReq.post(host + "/api/v2/torrents/add")
                 .form("addToTopOfQueue", false)
@@ -220,7 +221,7 @@ public class qBittorrent implements BaseDownload {
 
     @Override
     public List<TorrentsInfo> getTorrentsInfos() {
-        String host = config.getDownloadToolHost();
+        String host = CONFIG.getDownloadToolHost();
         try {
             return HttpReq.get(host + "/api/v2/torrents/info")
                     .thenFunction(res -> {
@@ -247,11 +248,11 @@ public class qBittorrent implements BaseDownload {
 
     @Override
     public Boolean delete(TorrentsInfo torrentsInfo, Boolean deleteFiles) {
-        String host = config.getDownloadToolHost();
+        String host = CONFIG.getDownloadToolHost();
         String name = torrentsInfo.getName();
         String hash = torrentsInfo.getHash();
         try {
-            List<qBittorrentTorrentsInfo.FileEntity> files = files(torrentsInfo, false, config);
+            List<qBittorrentTorrentsInfo.FileEntity> files = files(torrentsInfo, false, CONFIG);
             boolean b = HttpReq.post(host + "/api/v2/torrents/delete")
                     .form("hashes", hash)
                     .form("deleteFiles", deleteFiles)
@@ -279,8 +280,8 @@ public class qBittorrent implements BaseDownload {
                     .filter(File::isDirectory)
                     .toList();
 
-            Boolean subtitleIndependentFolderEnabled = config.getSubtitleIndependentFolderEnabled();
-            String subtitleIndependentFolderName = config.getSubtitleIndependentFolderName();
+            Boolean subtitleIndependentFolderEnabled = CONFIG.getSubtitleIndependentFolderEnabled();
+            String subtitleIndependentFolderName = CONFIG.getSubtitleIndependentFolderName();
 
             // 清空剩余文件夹
             for (File file : dirList) {
@@ -313,7 +314,7 @@ public class qBittorrent implements BaseDownload {
 
         if (StrUtil.isBlank(reName) || !ReUtil.contains(StringEnum.SEASON_REG, reName)) {
             // 剧场版 OR OVA 直接开始任务
-            Boolean start = start(torrentsInfo, config);
+            Boolean start = start(torrentsInfo, CONFIG);
             Assert.isTrue(start, "开始任务失败 {}", reName);
             if (start) {
                 log.info("开始任务 {}", reName);
@@ -323,7 +324,7 @@ public class qBittorrent implements BaseDownload {
 
         String hash = torrentsInfo.getHash();
 
-        String host = config.getDownloadToolHost();
+        String host = CONFIG.getDownloadToolHost();
 
         Optional<Ani> aniOpt = downloadService.findAniByDownloadPath(torrentsInfo);
 
@@ -334,9 +335,9 @@ public class qBittorrent implements BaseDownload {
 
         Ani ani = aniOpt.get();
 
-        List<String> priorityKeywords = getPriorityKeywords(config, ani);
+        List<String> priorityKeywords = getPriorityKeywords(CONFIG, ani);
 
-        List<qBittorrentTorrentsInfo.FileEntity> files = files(torrentsInfo, true, config);
+        List<qBittorrentTorrentsInfo.FileEntity> files = files(torrentsInfo, true, CONFIG);
 
         if (!priorityKeywords.isEmpty()) {
             files = files.stream()
@@ -365,8 +366,8 @@ public class qBittorrent implements BaseDownload {
             return false;
         }
 
-        Boolean subtitleIndependentFolderEnabled = config.getSubtitleIndependentFolderEnabled();
-        String subtitleIndependentFolderName = config.getSubtitleIndependentFolderName();
+        Boolean subtitleIndependentFolderEnabled = CONFIG.getSubtitleIndependentFolderEnabled();
+        String subtitleIndependentFolderName = CONFIG.getSubtitleIndependentFolderName();
 
         List<String> newNames = new ArrayList<>();
 
@@ -412,7 +413,7 @@ public class qBittorrent implements BaseDownload {
             Assert.isTrue(b, "重命名失败 {} ==> {}", name, newPath);
         }
 
-        Boolean start = start(torrentsInfo, config);
+        Boolean start = start(torrentsInfo, CONFIG);
         Assert.isTrue(start, "开始任务失败 {}", reName);
         log.info("开始任务 {}", reName);
 
@@ -435,7 +436,7 @@ public class qBittorrent implements BaseDownload {
 
     @Override
     public Boolean addTags(TorrentsInfo torrentsInfo, String tags) {
-        String host = config.getDownloadToolHost();
+        String host = CONFIG.getDownloadToolHost();
         String hash = torrentsInfo.getHash();
         return HttpReq.post(host + "/api/v2/torrents/addTags")
                 .form("hashes", hash)
@@ -451,7 +452,7 @@ public class qBittorrent implements BaseDownload {
 
     @Override
     public void updateTrackers(Set<String> trackers) {
-        String host = config.getDownloadToolHost();
+        String host = CONFIG.getDownloadToolHost();
         JsonObject preferences = HttpReq.get(host + "/api/v2/app/preferences")
                 .thenFunction(res -> {
                     int status = res.getStatus();
@@ -478,7 +479,7 @@ public class qBittorrent implements BaseDownload {
 
     @Override
     public void setSavePath(TorrentsInfo torrentsInfo, String path) {
-        String host = config.getDownloadToolHost();
+        String host = CONFIG.getDownloadToolHost();
         HttpReq.post(host + "/api/v2/torrents/setAutoManagement")
                 .form("hashes", torrentsInfo.getHash())
                 .form("enable", false)

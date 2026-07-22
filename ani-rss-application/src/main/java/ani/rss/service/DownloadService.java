@@ -40,6 +40,7 @@ import java.util.stream.Collectors;
 @Slf4j
 @Service
 public class DownloadService {
+    private static final Config CONFIG = ConfigUtil.CONFIG;
     private static final Object LOCK = new Object();
 
     @Resource
@@ -52,12 +53,11 @@ public class DownloadService {
      */
     @Synchronized("LOCK")
     public void downloadAni(Ani ani) {
-        Config config = ConfigUtil.CONFIG;
-        Boolean delete = config.getDelete();
-        Boolean autoDisabled = config.getAutoDisabled();
-        Integer downloadCount = config.getDownloadCount();
-        Integer delayedDownload = config.getDelayedDownload();
-        Boolean deleteStandbyRSSOnly = config.getDeleteStandbyRSSOnly();
+        Boolean delete = CONFIG.getDelete();
+        Boolean autoDisabled = CONFIG.getAutoDisabled();
+        Integer downloadCount = CONFIG.getDownloadCount();
+        Integer delayedDownload = CONFIG.getDelayedDownload();
+        Boolean deleteStandbyRSSOnly = CONFIG.getDeleteStandbyRSSOnly();
 
         String title = ani.getTitle();
         Integer season = ani.getSeason();
@@ -260,7 +260,7 @@ public class DownloadService {
         }
         if (currentDownloadCount >= totalEpisodeNumber) {
             log.info("{} 第 {} 季 共 {} 集 已全部下载完成, 自动停止订阅", title, season, totalEpisodeNumber);
-            NotificationUtil.send(config, ani, StrFormatter.format("{} 订阅已完结", title), NotificationStatusEnum.COMPLETED);
+            NotificationUtil.send(CONFIG, ani, StrFormatter.format("{} 订阅已完结", title), NotificationStatusEnum.COMPLETED);
             ani.setEnable(false);
             AniUtil.sync();
         }
@@ -273,10 +273,9 @@ public class DownloadService {
      * @param item 资源项
      */
     public void deleteStandbyRss(Ani ani, Item item) {
-        Config config = ConfigUtil.CONFIG;
-        Boolean standbyRss = config.getStandbyRss();
-        Boolean coexist = config.getCoexist();
-        Boolean delete = config.getDelete();
+        Boolean standbyRss = CONFIG.getStandbyRss();
+        Boolean coexist = CONFIG.getCoexist();
+        Boolean delete = CONFIG.getDelete();
         String reName = item.getReName();
 
         if (!delete) {
@@ -391,14 +390,12 @@ public class DownloadService {
         if (!master) {
             text = StrFormatter.format("(备用RSS) {}", text);
         }
-        NotificationUtil.send(ConfigUtil.CONFIG, ani, text, NotificationStatusEnum.DOWNLOAD_START);
+        NotificationUtil.send(CONFIG, ani, text, NotificationStatusEnum.DOWNLOAD_START);
 
-        Config config = ConfigUtil.CONFIG;
-
-        Integer downloadRetry = config.getDownloadRetry();
+        Integer downloadRetry = CONFIG.getDownloadRetry();
         for (int i = 1; i <= downloadRetry; i++) {
             try {
-                if (TorrentUtil.DOWNLOAD.download(ani, item, savePath, torrentFile)) {
+                if (TorrentUtil.download(ani, item, savePath, torrentFile)) {
                     return;
                 }
             } catch (Exception e) {
@@ -412,7 +409,7 @@ public class DownloadService {
         FileUtil.del(torrentFile);
 
         log.error("{} 添加失败，疑似为坏种", name);
-        NotificationUtil.send(ConfigUtil.CONFIG, ani,
+        NotificationUtil.send(CONFIG, ani,
                 StrFormatter.format("{} 添加失败，疑似为坏种", name),
                 NotificationStatusEnum.ERROR);
     }
@@ -462,8 +459,7 @@ public class DownloadService {
         subgroup = StrUtil.blankToDefault(subgroup, "未知字幕组");
         ani.setSubgroup(subgroup);
 
-        Config config = ConfigUtil.CONFIG;
-        Boolean scrape = config.getScrape();
+        Boolean scrape = CONFIG.getScrape();
         if (scrape) {
             try {
                 // 刮削
@@ -477,7 +473,7 @@ public class DownloadService {
         if (tags.contains(TorrentsTagEnum.STANDBY_RSS.getValue())) {
             text = StrFormatter.format("(备用RSS) {}", text);
         }
-        NotificationUtil.send(ConfigUtil.CONFIG, ani, text, NotificationStatusEnum.DOWNLOAD_END);
+        NotificationUtil.send(CONFIG, ani, text, NotificationStatusEnum.DOWNLOAD_END);
 
         String title = ani.getTitle();
 
@@ -496,7 +492,7 @@ public class DownloadService {
      * @return 下载位置
      */
     public String getDownloadPath(Ani ani) {
-        return getDownloadPath(ani, ConfigUtil.CONFIG);
+        return getDownloadPath(ani, CONFIG);
     }
 
     /**
@@ -510,7 +506,7 @@ public class DownloadService {
         Ani clone = ObjectUtil.clone(ani);
         clone.setCustomDownloadPathTemplate(downloadPathTemplate)
                 .setCustomDownloadPath(true);
-        return getDownloadPath(clone, ConfigUtil.CONFIG);
+        return getDownloadPath(clone, CONFIG);
     }
 
     /**
@@ -633,19 +629,18 @@ public class DownloadService {
      * @return 是否已下载
      */
     public Boolean itemDownloaded(Ani ani, Item item, Boolean downloadList) {
-        Config config = ConfigUtil.CONFIG;
-        Boolean rename = config.getRename();
+        Boolean rename = CONFIG.getRename();
         if (!rename) {
             return false;
         }
 
-        String downloadPathTemplate = config.getDownloadPathTemplate();
+        String downloadPathTemplate = CONFIG.getDownloadPathTemplate();
 
         if (StrUtil.isBlank(downloadPathTemplate)) {
             return false;
         }
 
-        Boolean fileExist = config.getFileExist();
+        Boolean fileExist = CONFIG.getFileExist();
         if (!fileExist) {
             return false;
         }

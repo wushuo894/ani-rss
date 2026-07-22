@@ -39,6 +39,7 @@ import java.util.Set;
 @Service
 @RequiredArgsConstructor
 public class Transmission implements BaseDownload {
+    private static final Config CONFIG = ConfigUtil.CONFIG;
     private static String SESSION_ID = "";
 
     @Override
@@ -242,10 +243,9 @@ public class Transmission implements BaseDownload {
      * @return HttpRequest
      */
     private HttpRequest rpc(TransmissionRpcBody transmissionRpcBody) {
-        Config config = ConfigUtil.CONFIG;
-        String downloadToolHost = config.getDownloadToolHost();
-        String username = config.getDownloadToolUsername();
-        String password = config.getDownloadToolPassword();
+        String downloadToolHost = CONFIG.getDownloadToolHost();
+        String username = CONFIG.getDownloadToolUsername();
+        String password = CONFIG.getDownloadToolPassword();
         String authorization = StrFormatter.format("Basic {}", Base64.encode(username + ":" + password));
 
         return HttpReq.post(downloadToolHost + "/transmission/rpc")

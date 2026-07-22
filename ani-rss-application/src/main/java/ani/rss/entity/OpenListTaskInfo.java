@@ -47,7 +47,7 @@ public class OpenListTaskInfo implements Serializable {
     private String error;
 
     @AllArgsConstructor
-    public static enum State implements IntEnum {
+    public enum State implements IntEnum {
         // https://github.com/OpenListTeam/OpenList-Frontend/blob/d94691c110bb046465e526323f46ead8ddd83c20/src/lang/en/tasks.json#L14-L25
         Pending(0),
         Running(1),

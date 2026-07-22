@@ -39,6 +39,8 @@ import java.util.stream.Collectors;
 @Service
 public class CollectionService {
 
+    private static final Config CONFIG = ConfigUtil.CONFIG;
+
     /**
      * 开始下载合集
      *
@@ -65,13 +67,11 @@ public class CollectionService {
         TorrentsInfo torrentsInfo = new TorrentsInfo()
                 .setHash(torrentFile.getHexHash());
 
-        Config config = ConfigUtil.CONFIG;
-
         List<qBittorrentTorrentsInfo.FileEntity> files = new ArrayList<>();
         for (int i = 0; i < 5; i++) {
             ThreadUtil.sleep(500);
             try {
-                files.addAll(qBittorrent.files(torrentsInfo, false, config));
+                files.addAll(qBittorrent.files(torrentsInfo, false, CONFIG));
             } catch (Exception e) {
                 log.error(e.getMessage(), e);
             }
@@ -100,7 +100,7 @@ public class CollectionService {
                         Item::getReName
                 ));
 
-        String host = config.getDownloadToolHost();
+        String host = CONFIG.getDownloadToolHost();
 
         for (int i = 0; i < 30; i++) {
             for (qBittorrentTorrentsInfo.FileEntity file : files) {
@@ -125,7 +125,7 @@ public class CollectionService {
                         .thenFunction(HttpResponse::isOk);
             }
             files.clear();
-            files.addAll(qBittorrent.files(torrentsInfo, false, config));
+            files.addAll(qBittorrent.files(torrentsInfo, false, CONFIG));
 
             if (CollUtil.containsAll(files.stream()
                     .map(qBittorrentTorrentsInfo.FileEntity::getName)
@@ -137,7 +137,7 @@ public class CollectionService {
             ThreadUtil.sleep(1000);
         }
 
-        qBittorrent.start(torrentsInfo, config);
+        qBittorrent.start(torrentsInfo, CONFIG);
     }
 
     /**
@@ -174,21 +174,20 @@ public class CollectionService {
      * @param tags        标签
      */
     public void download(String name, File torrentFile, String savePath, List<String> tags) {
-        Config config = ConfigUtil.CONFIG;
-        String host = config.getDownloadToolHost();
-        String download = config.getDownloadToolType();
+        String host = CONFIG.getDownloadToolHost();
+        String download = CONFIG.getDownloadToolType();
         Assert.isTrue("qBittorrent".equals(download), "合集下载暂时只支持 qBittorrent");
 
         Assert.isTrue(TorrentUtil.login(), "下载器登录失败");
 
-        Integer ratioLimit = config.getRatioLimit();
-        Integer seedingTimeLimit = config.getSeedingTimeLimit();
-        Integer inactiveSeedingTimeLimit = config.getInactiveSeedingTimeLimit();
+        Integer ratioLimit = CONFIG.getRatioLimit();
+        Integer seedingTimeLimit = CONFIG.getSeedingTimeLimit();
+        Integer inactiveSeedingTimeLimit = CONFIG.getInactiveSeedingTimeLimit();
 
-        Long upLimit = config.getUpLimit() * 1024;
-        Long dlLimit = config.getDlLimit() * 1024;
+        Long upLimit = CONFIG.getUpLimit() * 1024;
+        Long dlLimit = CONFIG.getDlLimit() * 1024;
 
-        Boolean qbUseDownloadPath = config.getQbUseDownloadPath();
+        Boolean qbUseDownloadPath = CONFIG.getQbUseDownloadPath();
 
         HttpReq.post(host + "/api/v2/torrents/add")
                 .form("torrents", torrentFile)
@@ -238,8 +237,7 @@ public class CollectionService {
         List<String> match = ani.getMatch();
         List<String> exclude = ani.getExclude();
         Boolean globalExclude = ani.getGlobalExclude();
-        Config config = ConfigUtil.CONFIG;
-        List<String> globalExcludeList = config.getExclude();
+        List<String> globalExcludeList = CONFIG.getExclude();
 
         Function<String, String> map = s -> {
             String subgroup = ReUtil.get(StringEnum.SUBGROUP_REG_STR, s, 1);

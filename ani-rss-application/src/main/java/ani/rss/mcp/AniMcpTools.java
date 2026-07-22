@@ -64,8 +64,7 @@ public class AniMcpTools {
                     title = "搜索 Mikan",
                     readOnlyHint = true,
                     destructiveHint = false,
-                    idempotentHint = true,
-                    openWorldHint = true
+                    idempotentHint = true
             )
     )
     public Mikan searchMikan(@McpToolParam SearchMikanDTO dto) {
@@ -83,8 +82,7 @@ public class AniMcpTools {
                     title = "搜索 AniBT",
                     readOnlyHint = true,
                     destructiveHint = false,
-                    idempotentHint = true,
-                    openWorldHint = true
+                    idempotentHint = true
             )
     )
     public AniBT searchAniBT() {
@@ -98,8 +96,7 @@ public class AniMcpTools {
                     title = "搜索 AnimeGarden",
                     readOnlyHint = true,
                     destructiveHint = false,
-                    idempotentHint = true,
-                    openWorldHint = true
+                    idempotentHint = true
             )
     )
     public List<AnimeGarden.Week> searchAnimeGarden() {
@@ -113,12 +110,11 @@ public class AniMcpTools {
                     title = "获取 Mikan 字幕组",
                     readOnlyHint = true,
                     destructiveHint = false,
-                    idempotentHint = true,
-                    openWorldHint = true
+                    idempotentHint = true
             )
     )
     public List<Mikan.Group> getMikanGroups(
-            @McpToolParam(description = "蜜柑（Mikan）番剧页面 URL", required = true)
+            @McpToolParam(description = "蜜柑（Mikan）番剧页面 URL")
             String url
     ) {
         return mikanService.getGroups(url);
@@ -131,12 +127,11 @@ public class AniMcpTools {
                     title = "获取 AniBT 字幕组",
                     readOnlyHint = true,
                     destructiveHint = false,
-                    idempotentHint = true,
-                    openWorldHint = true
+                    idempotentHint = true
             )
     )
     public List<AniBT.Group> getAniBTGroups(
-            @McpToolParam(description = "BGM 番剧 ID", required = true)
+            @McpToolParam(description = "BGM 番剧 ID")
             String bgmId
     ) {
         return aniBTService.getGroups(bgmId);
@@ -149,8 +144,7 @@ public class AniMcpTools {
                     title = "获取 AnimeGarden 字幕组",
                     readOnlyHint = true,
                     destructiveHint = false,
-                    idempotentHint = true,
-                    openWorldHint = true
+                    idempotentHint = true
             )
     )
     public List<AnimeGarden.Group> getAnimeGardenGroups(
@@ -167,8 +161,7 @@ public class AniMcpTools {
                     title = "预览订阅条目",
                     readOnlyHint = true,
                     destructiveHint = false,
-                    idempotentHint = true,
-                    openWorldHint = true
+                    idempotentHint = true
             )
     )
     public SubscriptionItemsPreviewVO previewSubscriptionItems(@McpToolParam RssToAniDTO dto) {
@@ -186,9 +179,7 @@ public class AniMcpTools {
             description = "添加一个 ANI-RSS 订阅。需要预览命中条目时请先调用 preview_subscription_items",
             annotations = @McpTool.McpAnnotations(
                     title = "添加订阅",
-                    readOnlyHint = false,
                     destructiveHint = false,
-                    idempotentHint = false,
                     openWorldHint = false
             )
     )

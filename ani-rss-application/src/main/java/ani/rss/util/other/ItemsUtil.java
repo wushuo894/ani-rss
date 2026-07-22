@@ -29,6 +29,7 @@ import java.util.function.Function;
 
 @Slf4j
 public class ItemsUtil {
+    private static final Config CONFIG = ConfigUtil.CONFIG;
 
     /**
      * 获取视频列表
@@ -37,7 +38,6 @@ public class ItemsUtil {
      * @return 视频列表
      */
     public static List<Item> getItems(Ani ani) {
-        Config config = ConfigUtil.CONFIG;
         String url = ani.getUrl();
         String subgroup = StrUtil.blankToDefault(ani.getSubgroup(), "未知字幕组");
         List<Item> items = new ArrayList<>(ItemsUtil.getItems(ani, url, subgroup)
@@ -45,7 +45,7 @@ public class ItemsUtil {
                 .peek(item -> item.setMaster(true))
                 .toList());
 
-        if (!config.getStandbyRss()) {
+        if (!CONFIG.getStandbyRss()) {
             items.sort(Comparator.comparingDouble(Item::getEpisode));
             return items;
         }
@@ -62,7 +62,7 @@ public class ItemsUtil {
                     .toList());
         }
         // 多字幕组共存模式
-        Boolean coexist = config.getCoexist();
+        Boolean coexist = CONFIG.getCoexist();
         if (coexist) {
             items = CollUtil.distinct(items, Item::getReName, false);
         } else {
@@ -81,8 +81,6 @@ public class ItemsUtil {
      * @return 视频列表
      */
     public static List<Item> getItems(Ani ani, String rssUrl, String subgroupName) {
-        Config config = ConfigUtil.CONFIG;
-
         String xml = getRss(rssUrl);
 
         List<String> exclude = ani.getExclude();
@@ -93,7 +91,7 @@ public class ItemsUtil {
         Document document = XmlUtil.readXML(xml);
         Node channel = document.getElementsByTagName("channel").item(0);
         NodeList childNodes = channel.getChildNodes();
-        List<String> globalExcludeList = config.getExclude();
+        List<String> globalExcludeList = CONFIG.getExclude();
         Boolean globalExclude = ani.getGlobalExclude();
 
         for (int i = childNodes.getLength() - 1; i >= 0; i--) {
@@ -270,10 +268,8 @@ public class ItemsUtil {
      * @return XML
      */
     public static String getRss(String url) {
-        Config config = ConfigUtil.CONFIG;
-
         String xml = HttpReq.get(url)
-                .timeout(config.getRssTimeout() * 1000)
+                .timeout(CONFIG.getRssTimeout() * 1000)
                 .thenFunction(res -> {
                     HttpReq.assertStatus(res);
                     HttpReq.assertXml(res);
@@ -289,8 +285,7 @@ public class ItemsUtil {
 
     public static List<Integer> omitList(Ani ani, List<Item> items) {
         ArrayList<Integer> list = new ArrayList<>();
-        Config config = ConfigUtil.CONFIG;
-        Boolean omit = config.getOmit();
+        Boolean omit = CONFIG.getOmit();
         if (!omit) {
             return list;
         }
@@ -335,7 +330,6 @@ public class ItemsUtil {
      * @param items 资源列表
      */
     public static void omit(Ani ani, List<Item> items) {
-        Config config = ConfigUtil.CONFIG;
         List<Integer> list = omitList(ani, items);
 
         if (list.isEmpty()) {
@@ -370,13 +364,12 @@ public class ItemsUtil {
             return;
         }
 
-        NotificationUtil.send(config, ani, CollUtil.join(sList, "\n"), NotificationStatusEnum.OMIT);
+        NotificationUtil.send(CONFIG, ani, CollUtil.join(sList, "\n"), NotificationStatusEnum.OMIT);
     }
 
     public static int currentEpisodeNumber(Ani ani, List<Item> items) {
-        Config config = ConfigUtil.CONFIG;
-        Boolean standbyRss = config.getStandbyRss();
-        Boolean coexist = config.getCoexist();
+        Boolean standbyRss = CONFIG.getStandbyRss();
+        Boolean coexist = CONFIG.getCoexist();
         if (standbyRss && coexist) {
             // 开启多字幕组共存模式则只计算主rss集数
             items = items.stream()
@@ -412,9 +405,8 @@ public class ItemsUtil {
      * @param items 资源列表
      */
     public static void procrastinating(Ani ani, List<Item> items) {
-        Config config = ConfigUtil.CONFIG;
-        Boolean procrastinating = config.getProcrastinating();
-        Integer procrastinatingDay = config.getProcrastinatingDay();
+        Boolean procrastinating = CONFIG.getProcrastinating();
+        Integer procrastinatingDay = CONFIG.getProcrastinatingDay();
         if (!procrastinating) {
             return;
         }
@@ -426,7 +418,7 @@ public class ItemsUtil {
             return;
         }
 
-        Boolean procrastinatingMasterOnly = config.getProcrastinatingMasterOnly();
+        Boolean procrastinatingMasterOnly = CONFIG.getProcrastinatingMasterOnly();
         if (procrastinatingMasterOnly) {
             // 仅启用主rss摸鱼检测
             items = items.stream()
@@ -466,7 +458,7 @@ public class ItemsUtil {
                     }
 
                     CacheUtils.put(key, text, TimeUnit.DAYS.toMillis(1));
-                    NotificationUtil.send(config, ani, text, NotificationStatusEnum.PROCRASTINATING);
+                    NotificationUtil.send(CONFIG, ani, text, NotificationStatusEnum.PROCRASTINATING);
                 });
     }
 

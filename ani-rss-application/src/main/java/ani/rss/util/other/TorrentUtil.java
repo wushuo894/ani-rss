@@ -32,7 +32,8 @@ import java.util.List;
  */
 @Slf4j
 public class TorrentUtil {
-    public static BaseDownload DOWNLOAD;
+    private static final Config CONFIG = ConfigUtil.CONFIG;
+    private static BaseDownload DOWNLOAD;
 
     /**
      * 获取任务列表
@@ -151,17 +152,29 @@ public class TorrentUtil {
      */
     public static Boolean login() {
         ThreadUtil.sleep(1000);
-        Config config = ConfigUtil.CONFIG;
-        String downloadPath = config.getDownloadPathTemplate();
+        String downloadPath = CONFIG.getDownloadPathTemplate();
         if (StrUtil.isBlank(downloadPath)) {
             log.warn("下载位置未设置");
             return false;
         }
         try {
-            return DOWNLOAD.login(ConfigUtil.CONFIG);
+            return DOWNLOAD.login(CONFIG);
         } catch (Exception e) {
             return false;
         }
+    }
+
+    /**
+     * 下载
+     *
+     * @param ani         订阅
+     * @param item        下载项
+     * @param savePath    保存位置
+     * @param torrentFile 种子文件
+     * @return 下载状态
+     */
+    public static Boolean download(Ani ani, Item item, String savePath, File torrentFile) {
+        return DOWNLOAD.download(ani, item, savePath, torrentFile);
     }
 
     /**
@@ -171,8 +184,7 @@ public class TorrentUtil {
      * @return 是否可以删除
      */
     public static Boolean allowDelete(TorrentsInfo torrentsInfo) {
-        Config config = ConfigUtil.CONFIG;
-        Boolean awaitStalledUP = config.getAwaitStalledUP();
+        Boolean awaitStalledUP = CONFIG.getAwaitStalledUP();
 
         TorrentsStateEnum torrentsState = torrentsInfo.getState();
 
@@ -196,8 +208,7 @@ public class TorrentUtil {
         String name = torrentsInfo.getName();
 
         if (!forcedDelete) {
-            Config config = ConfigUtil.CONFIG;
-            Boolean delete = config.getDelete();
+            Boolean delete = CONFIG.getDelete();
 
             if (!delete) {
                 return false;
@@ -243,8 +254,7 @@ public class TorrentUtil {
      * @param torrentsInfo 种子信息
      */
     public static void rename(TorrentsInfo torrentsInfo) {
-        Config config = ConfigUtil.CONFIG;
-        Boolean rename = config.getRename();
+        Boolean rename = CONFIG.getRename();
         if (!rename) {
             return;
         }
@@ -307,12 +317,11 @@ public class TorrentUtil {
      * 初始化下载工具
      */
     public static void loadDownloadTool() {
-        Config config = ConfigUtil.CONFIG;
-        String download = config.getDownloadToolType();
+        String download = CONFIG.getDownloadToolType();
 
         if (download.equals("Alist")) {
             download = "OpenList";
-            config.setDownloadToolType(download);
+            CONFIG.setDownloadToolType(download);
             ConfigUtil.sync();
         }
 

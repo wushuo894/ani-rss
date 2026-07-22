@@ -2,6 +2,7 @@ package ani.rss.notification;
 
 import ani.rss.commons.FileUtils;
 import ani.rss.commons.GsonStatic;
+import ani.rss.config.OpenListConfig;
 import ani.rss.entity.Ani;
 import ani.rss.entity.NotificationConfig;
 import ani.rss.entity.OpenListFileInfo;
@@ -10,25 +11,24 @@ import ani.rss.enums.NotificationStatusEnum;
 import ani.rss.enums.StringEnum;
 import ani.rss.service.DownloadService;
 import ani.rss.util.basic.HttpReq;
-import cn.hutool.core.collection.ListUtil;
+import ani.rss.util.other.OpenListUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.resource.ResourceUtil;
 import cn.hutool.core.lang.Assert;
-import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.ReUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.core.util.URLUtil;
 import cn.hutool.extra.spring.SpringUtil;
 import cn.hutool.http.HttpConfig;
-import cn.hutool.http.HttpRequest;
-import cn.hutool.http.HttpResponse;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.File;
-import java.util.*;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -39,7 +39,20 @@ public class OpenListUploadNotification implements BaseNotification {
     private final HttpConfig httpConfig = new HttpConfig()
             .setBlockSize(8192);
 
+    @Getter
     private NotificationConfig notificationConfig;
+
+    private final OpenListUtil openListUtil = OpenListUtil.getInstance(new OpenListConfig() {
+        @Override
+        public String getServer() {
+            return getNotificationConfig().getOpenListUploadHost();
+        }
+
+        @Override
+        public String getApiKey() {
+            return getNotificationConfig().getOpenListUploadApiKey();
+        }
+    });
 
     /**
      * 测试
@@ -163,7 +176,7 @@ public class OpenListUploadNotification implements BaseNotification {
                 .map(String::toUpperCase)
                 .collect(Collectors.toSet());
 
-        List<OpenListFileInfo> fileInfos = fileList(cloudFilePath);
+        List<OpenListFileInfo> fileInfos = openListUtil.fsList(cloudFilePath, true);
         for (OpenListFileInfo fileInfo : fileInfos) {
             String name = fileInfo.getName();
             if (!FileUtils.isVideoFormat(name) && !FileUtils.isSubtitleFormat(name)) {
@@ -194,11 +207,7 @@ public class OpenListUploadNotification implements BaseNotification {
             log.info("因洗版需要删除: {}", name);
 
             // 删除 洗版
-            postApi("fs/remove")
-                    .body(GsonStatic.toJson(Map.of(
-                            "dir", cloudFilePath,
-                            "names", List.of(name)
-                    ))).then(HttpResponse::isOk);
+            openListUtil.fsRemove(cloudFilePath, List.of(name));
         }
     }
 
@@ -206,7 +215,7 @@ public class OpenListUploadNotification implements BaseNotification {
         Boolean openListUploadDeleteLocalFile = notificationConfig.getOpenListUploadDeleteLocalFile();
 
         // 云端文件列表 存储为MAP便于根据文件名寻找
-        Map<String, OpenListFileInfo> cloudFileMap = fileList(cloudFilePath)
+        Map<String, OpenListFileInfo> cloudFileMap = openListUtil.fsList(cloudFilePath, true)
                 .stream()
                 .collect(Collectors.toMap(OpenListFileInfo::getName, i -> i));
 
@@ -290,64 +299,5 @@ public class OpenListUploadNotification implements BaseNotification {
 
                     log.info("OpenList 上传完成 {}", filename);
                 });
-    }
-
-    /**
-     * 文件列表
-     *
-     * @param path 目录
-     * @return 文件列表
-     */
-    public List<OpenListFileInfo> fileList(String path) {
-        try {
-            return postApi("fs/list")
-                    .body(GsonStatic.toJson(Map.of(
-                            "path", path,
-                            "page", 1,
-                            "per_page", 256,
-                            "refresh", true
-                    )))
-                    .thenFunction(res -> {
-                        JsonObject jsonObject = GsonStatic.fromJson(res.body(), JsonObject.class);
-                        int code = jsonObject.get("code").getAsInt();
-                        if (code != 200) {
-                            return List.of();
-                        }
-                        JsonElement data = jsonObject.get("data");
-                        if (Objects.isNull(data) || data.isJsonNull()) {
-                            return List.of();
-                        }
-                        JsonElement content = data.getAsJsonObject()
-                                .get("content");
-                        if (Objects.isNull(content) || content.isJsonNull()) {
-                            return List.of();
-                        }
-                        List<OpenListFileInfo> infos = GsonStatic.fromJsonList(content.getAsJsonArray(), OpenListFileInfo.class);
-                        for (OpenListFileInfo info : infos) {
-                            info.setPath(path);
-                        }
-                        return ListUtil.sort(new ArrayList<>(infos), Comparator.comparing(fileInfo -> {
-                            Long size = fileInfo.getSize();
-                            return Long.MAX_VALUE - ObjectUtil.defaultIfNull(size, 0L);
-                        }));
-                    });
-        } catch (Exception e) {
-            log.error(e.getMessage(), e);
-        }
-        return List.of();
-    }
-
-    /**
-     * post api
-     *
-     * @param action 操作
-     * @return HttpReq
-     */
-    public HttpRequest postApi(String action) {
-        ThreadUtil.sleep(2000);
-        String openListUploadHost = notificationConfig.getOpenListUploadHost();
-        String openListUploadApiKey = notificationConfig.getOpenListUploadApiKey();
-        return HttpReq.post(openListUploadHost + "/api/" + action)
-                .header(Header.AUTHORIZATION, openListUploadApiKey);
     }
 }

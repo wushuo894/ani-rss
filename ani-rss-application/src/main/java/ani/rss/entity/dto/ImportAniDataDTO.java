@@ -14,7 +14,7 @@ public class ImportAniDataDTO implements Serializable {
     private List<Ani> aniList;
     private Conflict conflict;
 
-    public static enum Conflict {
+    public enum Conflict {
         REPLACE,
         SKIP
     }

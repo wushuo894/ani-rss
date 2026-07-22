@@ -27,6 +27,8 @@ import java.util.stream.Collectors;
 @Component
 public class CronConfig {
 
+    private static final Config CONFIG = ConfigUtil.CONFIG;
+
     @Resource
     private BackupService backupService;
 
@@ -40,15 +42,14 @@ public class CronConfig {
 
     @Scheduled(cron = "0 0 1 * * *")
     public void autoTrackersUpdate() {
-        Config config = ConfigUtil.CONFIG;
-        Boolean autoTrackersUpdate = config.getAutoTrackersUpdate();
+        Boolean autoTrackersUpdate = CONFIG.getAutoTrackersUpdate();
         if (!autoTrackersUpdate) {
             // 未开启自动更新  Trackers
             return;
         }
         log.info("定时任务 开始更新 Trackers");
         try {
-            updateTrackers(config);
+            updateTrackers(CONFIG);
         } catch (Exception e) {
             log.error(e.getMessage(), e);
         }
@@ -56,8 +57,7 @@ public class CronConfig {
 
     @Scheduled(cron = "0 0 6 * * *")
     public void autoUpdate() {
-        Config config = ConfigUtil.CONFIG;
-        Boolean autoUpdate = config.getAutoUpdate();
+        Boolean autoUpdate = CONFIG.getAutoUpdate();
         if (!autoUpdate) {
             // 未开启 自动更新
             return;

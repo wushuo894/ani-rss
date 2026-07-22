@@ -39,6 +39,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 @Slf4j
 public class AniUtil {
 
+    private static final Config CONFIG = ConfigUtil.CONFIG;
     public static final List<Ani> ANI_LIST = new CopyOnWriteArrayList<>();
     public static final String FILE_NAME = "ani.v2.json";
 
@@ -188,16 +189,14 @@ public class AniUtil {
 
         BgmUtil.toAni(bgmInfo, ani);
 
-        Config config = ConfigUtil.CONFIG;
-
         // 只下载最新集
-        Boolean downloadNew = config.getDownloadNew();
+        Boolean downloadNew = CONFIG.getDownloadNew();
         // 默认启用全局排除
-        Boolean enabledExclude = config.getEnabledExclude();
+        Boolean enabledExclude = CONFIG.getEnabledExclude();
         // 默认导入全局排除
-        Boolean importExclude = config.getImportExclude();
+        Boolean importExclude = CONFIG.getImportExclude();
         // 全局排除
-        List<String> exclude = config.getExclude();
+        List<String> exclude = CONFIG.getExclude();
 
         // 默认导入全局排除
         if (importExclude) {
@@ -227,8 +226,8 @@ public class AniUtil {
 
         List<StandbyRss> standbyRssList = ani.getStandbyRssList();
 
-        boolean copyMasterToStandby = config.getCopyMasterToStandby();
-        boolean standbyRss = config.getStandbyRss();
+        boolean copyMasterToStandby = CONFIG.getCopyMasterToStandby();
+        boolean standbyRss = CONFIG.getStandbyRss();
         if (copyMasterToStandby && standbyRss) {
             StandbyRss copyStandbyRss = new StandbyRss()
                     .setUrl(url.trim())
@@ -243,7 +242,7 @@ public class AniUtil {
         }
 
         // 自动推断剧集偏移
-        if (config.getOffset()) {
+        if (CONFIG.getOffset()) {
             List<Item> items = ItemsUtil.getItems(ani, url, subgroup);
             if (items.isEmpty()) {
                 return ani;
@@ -372,7 +371,7 @@ public class AniUtil {
             return;
         }
 
-        Config config = ObjectUtil.clone(ConfigUtil.CONFIG);
+        Config config = ObjectUtil.clone(CONFIG);
 
         if (!config.getAutoDisabled()) {
             // 未开启自动禁用订阅
@@ -432,7 +431,6 @@ public class AniUtil {
 
     public static Ani createAni() {
         Ani newAni = new Ani();
-        Config config = ConfigUtil.CONFIG;
         return newAni
                 .setId(UUID.randomUUID().toString())
                 .setMikanTitle("")
@@ -454,9 +452,9 @@ public class AniUtil {
                 .setExclude(List.of("720[Pp]", "\\d-\\d", "合集", "特别篇"))
                 .setBgmUrl("")
                 .setSubgroup("")
-                .setCustomEpisode(config.getCustomEpisode())
-                .setCustomEpisodeStr(config.getCustomEpisodeStr())
-                .setCustomEpisodeGroupIndex(config.getCustomEpisodeGroupIndex())
+                .setCustomEpisode(CONFIG.getCustomEpisode())
+                .setCustomEpisodeStr(CONFIG.getCustomEpisodeStr())
+                .setCustomEpisodeGroupIndex(CONFIG.getCustomEpisodeGroupIndex())
                 .setOmit(true)
                 .setDownloadNew(false)
                 .setNotDownload(new ArrayList<>())
@@ -466,9 +464,9 @@ public class AniUtil {
                                 .setName("")
                                 .setDate(new Date())
                 )
-                .setUpload(config.getUpload())
+                .setUpload(CONFIG.getUpload())
                 .setProcrastinating(true)
-                .setCustomRenameTemplate(config.getRenameTemplate())
+                .setCustomRenameTemplate(CONFIG.getRenameTemplate())
                 .setCustomRenameTemplateEnable(false)
                 .setCustomPriorityKeywordsEnable(false)
                 .setCustomPriorityKeywords(new ArrayList<>())
