@@ -1,1 +1,1 @@
-- feat: 支持tmdb原标题
+- refactor: qBittorrent 改为 ApiKey 授权 (适用于5.2.0及以上版本)
