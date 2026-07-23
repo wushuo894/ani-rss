@@ -3,7 +3,6 @@ package ani.rss.entity.torrent;
 import ani.rss.commons.FileUtils;
 import ani.rss.download.qBittorrent;
 import ani.rss.enums.TorrentsStateEnum;
-import ani.rss.util.other.ConfigUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -32,7 +31,7 @@ public class qBittorrentTorrentsInfo extends TorrentsInfo implements Serializabl
 
         // 获取文件列表
         setFilesSupplier(() ->
-                qBittorrent.files(this, true, ConfigUtil.CONFIG)
+                qBittorrent.files(this, true)
                         .stream()
                         .filter(fileEntity -> fileEntity.getPriority() > 0)
                         .map(qBittorrentTorrentsInfo.FileEntity::getName)

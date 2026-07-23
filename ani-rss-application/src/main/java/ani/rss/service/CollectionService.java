@@ -71,7 +71,7 @@ public class CollectionService {
         for (int i = 0; i < 5; i++) {
             ThreadUtil.sleep(500);
             try {
-                files.addAll(qBittorrent.files(torrentsInfo, false, CONFIG));
+                files.addAll(qBittorrent.files(torrentsInfo, false));
             } catch (Exception e) {
                 log.error(e.getMessage(), e);
             }
@@ -100,8 +100,6 @@ public class CollectionService {
                         Item::getReName
                 ));
 
-        String host = CONFIG.getDownloadToolHost();
-
         for (int i = 0; i < 30; i++) {
             for (qBittorrentTorrentsInfo.FileEntity file : files) {
                 String oldPath = file.getName();
@@ -109,7 +107,7 @@ public class CollectionService {
 
                 if (!reNameMap.containsKey(oldPath)) {
                     if (!reNameMap.containsValue(oldPath) && file.getPriority() > 0) {
-                        HttpReq.post(host + "/api/v2/torrents/filePrio")
+                        qBittorrent.postApi("/api/v2/torrents/filePrio")
                                 .form("hash", torrentFile.getHexHash())
                                 .form("id", file.getIndex())
                                 .form("priority", 0)
@@ -118,14 +116,14 @@ public class CollectionService {
                     continue;
                 }
                 log.info("重命名 {} ==> {}", oldPath, newPath);
-                HttpReq.post(host + "/api/v2/torrents/renameFile")
+                qBittorrent.postApi("/api/v2/torrents/renameFile")
                         .form("hash", torrentFile.getHexHash())
                         .form("oldPath", oldPath)
                         .form("newPath", newPath)
                         .thenFunction(HttpResponse::isOk);
             }
             files.clear();
-            files.addAll(qBittorrent.files(torrentsInfo, false, CONFIG));
+            files.addAll(qBittorrent.files(torrentsInfo, false));
 
             if (CollUtil.containsAll(files.stream()
                     .map(qBittorrentTorrentsInfo.FileEntity::getName)
@@ -137,7 +135,7 @@ public class CollectionService {
             ThreadUtil.sleep(1000);
         }
 
-        qBittorrent.start(torrentsInfo, CONFIG);
+        qBittorrent.start(torrentsInfo);
     }
 
     /**
@@ -174,7 +172,6 @@ public class CollectionService {
      * @param tags        标签
      */
     public void download(String name, File torrentFile, String savePath, List<String> tags) {
-        String host = CONFIG.getDownloadToolHost();
         String download = CONFIG.getDownloadToolType();
         Assert.isTrue("qBittorrent".equals(download), "合集下载暂时只支持 qBittorrent");
 
@@ -189,7 +186,7 @@ public class CollectionService {
 
         Boolean qbUseDownloadPath = CONFIG.getQbUseDownloadPath();
 
-        HttpReq.post(host + "/api/v2/torrents/add")
+        qBittorrent.postApi("/api/v2/torrents/add")
                 .form("torrents", torrentFile)
                 .form("addToTopOfQueue", false)
                 .form("autoTMM", false)
