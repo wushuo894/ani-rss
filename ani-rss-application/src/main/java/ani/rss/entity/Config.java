@@ -351,6 +351,12 @@ public class Config implements Serializable {
     private Boolean tmdbRomaji;
 
     /**
+     * TMDB原标题
+     */
+    @Schema(defaultValue = "启用 TMDB 原标题")
+    private Boolean tmdbOriginalName;
+
+    /**
      * 开启ip白名单
      */
     @Schema(description = "开启 IP 白名单")

@@ -56,9 +56,22 @@ public class TmdbUtils {
         if (tmdb.isEmpty()) {
             return "";
         }
+        return getFinalName(tmdb.get());
+    }
 
-        String themoviedbName = tmdb.get().getName();
-        return getFinalName(themoviedbName, tmdb.get());
+    /**
+     * 获取添加tmdbid与年份后的名称
+     *
+     * @param tmdb tmdb
+     * @return 名称
+     */
+    public static String getFinalName(Tmdb tmdb) {
+        boolean tmdbOriginalNameEnable = CONFIG.getTmdbOriginalName();
+
+        String themoviedbName = tmdbOriginalNameEnable ?
+                tmdb.getOriginalName() :
+                tmdb.getName();
+        return getFinalName(themoviedbName, tmdb);
     }
 
     /**

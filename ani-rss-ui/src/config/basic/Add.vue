@@ -37,26 +37,23 @@
         </el-text>
         <br>
         <el-checkbox v-model="props.config['tmdbAnime']" label="仅获取动漫"/>
+        <el-checkbox v-model="props.config['tmdbOriginalName']" label="使用原标题"/>
+        <el-checkbox v-model="props.config['tmdbRomaji']" label="优先获取罗马音"/>
       </div>
     </el-form-item>
     <el-form-item label="TMDB语言">
-      <div>
-        <div>
-          <el-select v-model:model-value="props.config['tmdbLanguage']" class="width-150">
-            <el-option v-for="item in tmdb_i18n" :value="item.i18n_tag"
-                       :label="`${item.native_name} (${item.i18n_tag})`"
-                       :key="item.i18n_tag">
-              <span class="float-left">{{ item.native_name }}</span>
-              <el-text type="info" class="float-right" size="small">
-                {{ item.i18n_tag }}
-              </el-text>
-            </el-option>
-          </el-select>
-        </div>
-        <div>
-          <el-checkbox v-model="props.config['tmdbRomaji']" label="优先获取罗马音"/>
-        </div>
-      </div>
+      <el-select v-model:model-value="props.config['tmdbLanguage']" class="width-150">
+        <el-option v-for="item in tmdb_i18n" :value="item.i18n_tag"
+                   :label="`${item.native_name} (${item.i18n_tag})`"
+                   :key="item.i18n_tag">
+          <div style="width: 100%;">
+            <span class="float-left">{{ item.native_name }}</span>
+            <el-text type="info" class="float-right" size="small">
+              {{ item.i18n_tag }}
+            </el-text>
+          </div>
+        </el-option>
+      </el-select>
     </el-form-item>
     <el-form-item label="开启全局排除">
       <el-switch v-model:model-value="props.config.enabledExclude" :disabled="props.config.importExclude"/>

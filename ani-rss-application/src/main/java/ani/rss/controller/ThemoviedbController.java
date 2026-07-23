@@ -52,11 +52,7 @@ public class ThemoviedbController extends BaseController {
 
         Tmdb tmdb = tmdbOpt.get();
 
-        title = StrUtil.isNotBlank(title) ?
-                title :
-                RenameUtil.renameDel(tmdb.getName(), false);
-
-        String themoviedbName = TmdbUtils.getFinalName(title, tmdb);
+        String themoviedbName = TmdbUtils.getFinalName(tmdb);
 
         ThemoviedbVO themoviedbVO = new ThemoviedbVO()
                 .setTmdb(tmdb)
