@@ -8,9 +8,9 @@ import ani.rss.util.basic.HttpReq;
 import ani.rss.util.other.BgmUtil;
 import ani.rss.util.other.ConfigUtil;
 import ani.rss.util.other.TmdbUtils;
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.io.FileUtil;
-import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.ReUtil;
 import cn.hutool.core.util.StrUtil;
 import jakarta.annotation.Resource;
@@ -24,7 +24,6 @@ import java.io.File;
 import java.io.InputStream;
 import java.util.*;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * 刮削
@@ -58,14 +57,24 @@ public class ScrapeService {
         }
 
         boolean isOva = ani.getOva();
+        TmdbTypeEnum tmdbTypeEnum = isOva ? TmdbTypeEnum.MOVIE : TmdbTypeEnum.TV;
         try {
             log.info("正在刮削 ... {}", title);
-            saveBangumiIni(ani, forceScrape);
-            if (isOva) {
-                scrapeMovie(ani, forceScrape);
-            } else {
-                scrapeTv(ani, forceScrape);
+            // 下载位置
+            String downloadPath = downloadService.getDownloadPath(ani);
+            // 更新tmdb信息
+            Optional<Tmdb> tmdbOptional = TmdbUtils.getTmdb(tmdb, tmdbTypeEnum);
+            if (tmdbOptional.isEmpty()) {
+                log.warn("刮削失败: 获取tmdb失败 {}", tmdb.getId());
+                return;
             }
+            if (isOva) {
+                scrapeMovie(tmdb, downloadPath, forceScrape);
+            } else {
+                int season = ani.getSeason();
+                scrapeTv(tmdb, season, downloadPath, forceScrape);
+            }
+            saveBangumiIni(ani, forceScrape);
             log.info("刮削完成 {}", title);
         } catch (Exception e) {
             log.error("刮削错误 {}", title);
@@ -76,30 +85,20 @@ public class ScrapeService {
     /**
      * 电影刮削
      *
-     * @param ani   订阅
-     * @param force 强制
+     * @param tmdb         TMDB
+     * @param downloadPath 保存位置
+     * @param force        强制
      * @throws Exception 异常
      */
-    public void scrapeMovie(Ani ani, Boolean force) throws Exception {
-        Tmdb tmdb = ani.getTmdb();
+    public void scrapeMovie(Tmdb tmdb, String downloadPath, Boolean force) throws Exception {
+        List<File> files = FileUtils.listFileList(downloadPath);
 
-        // 更新tmdb信息
-        Optional<Tmdb> tmdbOptional = TmdbUtils.getTmdb(tmdb, TmdbTypeEnum.MOVIE);
-        if (tmdbOptional.isEmpty()) {
-            log.warn("获取tmdb失败 {}", tmdb.getId());
-            return;
-        }
-        tmdb = tmdbOptional.get();
-
-        // 下载位置
-        String downloadPath = downloadService.getDownloadPath(ani);
-        File[] files = FileUtils.listFiles(downloadPath);
-
-        if (ArrayUtil.isEmpty(files)) {
+        if (files.isEmpty()) {
             return;
         }
 
-        Optional<File> first = Stream.of(files)
+        Optional<File> first = files
+                .stream()
                 .filter(file -> {
                     String extName = FileUtil.extName(file);
                     if (StrUtil.isBlank(extName)) {
@@ -118,93 +117,37 @@ public class ScrapeService {
         String mainName = FileUtil.mainName(file);
 
         // 保存nfo
-        String outputPath = downloadPath + "/" + mainName + ".nfo";
-        if (force || !FileUtil.exist(outputPath)) {
-            nfoGenerator.generateMovieNfo(tmdb, outputPath);
+        File nfoFile = new File(downloadPath, mainName + ".nfo");
+        if (force || !FileUtil.exist(nfoFile)) {
+            nfoGenerator.generateMovieNfo(tmdb, nfoFile.toString());
         }
 
-        String posterPath = tmdb.getPosterPath();
-        String fanartPath = tmdb.getBackdropPath();
-
-        String posterExtName = FileUtil.extName(posterPath);
-        String fanartExtName = FileUtil.extName(fanartPath);
-
-        File posterFile = new File(downloadPath, "poster." + posterExtName);
-        File fanartFile = new File(downloadPath, "fanart." + fanartExtName);
-
-        // 封面、背景图
-        saveImages(posterPath, posterFile, force);
-        saveImages(fanartPath, fanartFile, force);
-
-        TmdbImages tmdbImages = TmdbUtils.getTmdbImages(tmdb, TmdbTypeEnum.MOVIE);
-        List<TmdbImage> logos = tmdbImages.getLogos();
-        if (logos.isEmpty()) {
-            return;
-        }
-
-        // 保存logo
-        TmdbImage tmdbImage = logos.get(0);
-        String logoPath = tmdbImage.getFilePath();
-        String extName = FileUtil.extName(logoPath);
-        File logoFile = new File(downloadPath, "clearlogo." + extName);
-        saveImages(logoPath, logoFile, force);
+        saveTmdbImages(tmdb, downloadPath, force);
     }
 
     /**
      * 电视剧刮削
      *
-     * @param ani   订阅
-     * @param force 强制
+     * @param tmdb         TMDB
+     * @param season       季度
+     * @param downloadPath 保存位置
+     * @param force        强制
      * @throws Exception 异常
      */
-    public void scrapeTv(Ani ani, Boolean force) throws Exception {
-        Tmdb tmdb = ani.getTmdb();
-
-        // 更新tmdb信息
-        Optional<Tmdb> tmdbOptional = TmdbUtils.getTmdb(tmdb, TmdbTypeEnum.TV);
-        if (tmdbOptional.isEmpty()) {
-            log.warn("获取tmdb失败 {}", tmdb.getId());
-            return;
-        }
-        tmdb = tmdbOptional.get();
-
+    public void scrapeTv(Tmdb tmdb, Integer season, String downloadPath, Boolean force) throws Exception {
         // 下载位置
-        File downloadPath = new File(downloadService.getDownloadPath(ani));
-        if (!FileUtil.exist(downloadPath)) {
+        File downloadPathFile = new File(downloadPath);
+        if (!FileUtil.exist(downloadPathFile)) {
             return;
         }
 
         // tvshow.nfo
-        File tvShowNfoFile = new File(downloadPath.getParent(), "tvshow.nfo");
+        File tvShowNfoFile = new File(downloadPathFile.getParent(), "tvshow.nfo");
         if (force || !FileUtil.exist(tvShowNfoFile)) {
             nfoGenerator.generateTvShowNfo(tmdb, tvShowNfoFile.toString());
         }
 
-        String posterPath = tmdb.getPosterPath();
-        String fanartPath = tmdb.getBackdropPath();
-
-        String posterExtName = FileUtil.extName(posterPath);
-        String fanartExtName = FileUtil.extName(fanartPath);
-
-        File posterFile = new File(downloadPath.getParent(), "poster." + posterExtName);
-        File fanartFile = new File(downloadPath.getParent(), "fanart." + fanartExtName);
-
-        // 封面、背景图
-        saveImages(posterPath, posterFile, force);
-        saveImages(fanartPath, fanartFile, force);
-
-        // 保存logo
-        TmdbImages tmdbImages = TmdbUtils.getTmdbImages(tmdb, TmdbTypeEnum.TV);
-        List<TmdbImage> logos = tmdbImages.getLogos();
-        if (!logos.isEmpty()) {
-            TmdbImage tmdbImage = logos.get(0);
-            String logoPath = tmdbImage.getFilePath();
-            String extName = FileUtil.extName(logoPath);
-            File logoFile = new File(downloadPath.getParent(), "clearlogo." + extName);
-            saveImages(logoPath, logoFile, force);
-        }
-
-        Integer season = ani.getSeason();
+        saveTmdbImages(tmdb, downloadPathFile.getParent(), force);
 
         Optional<TmdbSeason> optional = TmdbUtils.getTmdbSeason(tmdb, season);
         if (optional.isEmpty()) {
@@ -217,18 +160,18 @@ public class ScrapeService {
 
         // 季封面
         String seasonPosterPath = tmdbSeason.getPosterPath();
-        seasonPosterPath = StrUtil.blankToDefault(seasonPosterPath, posterPath);
+        seasonPosterPath = StrUtil.blankToDefault(seasonPosterPath, tmdb.getPosterPath());
         String seasonPosterExtName = FileUtil.extName(seasonPosterPath);
-        File seasonPosterFile = new File(downloadPath.getParent(), "season" + seasonFormat + "-poster." + seasonPosterExtName);
+        File seasonPosterFile = new File(downloadPathFile.getParent(), "season" + seasonFormat + "-poster." + seasonPosterExtName);
         saveImages(seasonPosterPath, seasonPosterFile, force);
 
         // 季nfo
-        File seasonNfoFile = new File(downloadPath, "season.nfo");
+        File seasonNfoFile = new File(downloadPathFile, "season.nfo");
         if (force || !seasonNfoFile.exists()) {
             nfoGenerator.generateSeasonNfo(tmdbSeason, seasonNfoFile.toString());
         }
 
-        File[] files = FileUtils.listFiles(downloadPath);
+        List<File> files = FileUtils.listFileList(downloadPathFile);
 
         Map<Integer, TmdbEpisode> episodeMap = tmdbSeason
                 .getEpisodes()
@@ -242,6 +185,7 @@ public class ScrapeService {
         for (File file : files) {
             String extName = FileUtil.extName(file);
             if (StrUtil.isBlank(extName)) {
+                // 扩展名为空
                 continue;
             }
 
@@ -286,18 +230,67 @@ public class ScrapeService {
             String thumbPath = tmdbEpisode.getStillPath();
             if (StrUtil.isNotBlank(thumbPath)) {
                 String thumbExtName = FileUtil.extName(thumbPath);
-                File thumbFile = new File(downloadPath, mainName + "-thumb." + thumbExtName);
+                File thumbFile = new File(downloadPathFile, mainName + "-thumb." + thumbExtName);
 
                 // 判断条件: 追更 or 强制
                 saveImages(thumbPath, thumbFile, isFollow || force);
             }
 
             // nfo
-            String episodeFile = downloadPath + "/" + mainName + ".nfo";
+            String episodeFile = downloadPathFile + "/" + mainName + ".nfo";
             // 判断条件: 追更 or 强制 or 元数据不存在
             if (isFollow || force || !FileUtil.exist(episodeFile)) {
                 nfoGenerator.generateEpisodeNfo(tmdbEpisode, episodeFile);
             }
+        }
+    }
+
+    public void saveTmdbImages(Tmdb tmdb, String outputPath, Boolean force) {
+        String posterPath = tmdb.getPosterPath();
+        String fanartPath = tmdb.getBackdropPath();
+
+        String posterExtName = FileUtil.extName(posterPath);
+        String fanartExtName = FileUtil.extName(fanartPath);
+
+        File posterFile = new File(outputPath, "poster." + posterExtName);
+        File fanartFile = new File(outputPath, "fanart." + fanartExtName);
+
+        // 封面、背景图
+        saveImages(posterPath, posterFile, force);
+        saveImages(fanartPath, fanartFile, force);
+
+        // 保存更多的背景图
+        TmdbImages tmdbImages = TmdbUtils.getTmdbImages(tmdb, tmdb.getTmdbType());
+        List<TmdbImage> backdrops = tmdbImages.getBackdrops();
+        backdrops = backdrops
+                .stream()
+                .filter(tmdbImage -> {
+                    Integer width = tmdbImage.getWidth();
+                    String filePath = tmdbImage.getFilePath();
+                    if (fanartPath.equals(filePath)) {
+                        return false;
+                    }
+                    return width >= 1280;
+                })
+                .limit(4)
+                .toList();
+        for (int i = 0; i < backdrops.size(); i++) {
+            TmdbImage tmdbImage = backdrops.get(i);
+            String filePath = tmdbImage.getFilePath();
+            String extName = FileUtil.extName(filePath);
+
+            File file = new File(outputPath, StrUtil.format("fanart{}.{}", i + 1, extName));
+            saveImages(filePath, file, force);
+        }
+
+        // 保存logo
+        List<TmdbImage> logos = tmdbImages.getLogos();
+        if (CollUtil.isNotEmpty(logos)) {
+            TmdbImage tmdbImage = logos.get(0);
+            String logoPath = tmdbImage.getFilePath();
+            String extName = FileUtil.extName(logoPath);
+            File logoFile = new File(outputPath, "clearlogo." + extName);
+            saveImages(logoPath, logoFile, force);
         }
     }
 

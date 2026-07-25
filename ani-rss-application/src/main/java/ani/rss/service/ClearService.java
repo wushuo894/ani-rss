@@ -21,14 +21,6 @@ import java.util.stream.Collectors;
 public class ClearService {
 
     /**
-     * 排除文件
-     */
-    private final List<String> excludeFileNames = List.of(
-            ".DS_Store",
-            "Thumbs.db"
-    );
-
-    /**
      * 清理文件夹
      *
      * @param dir 文件夹
@@ -50,17 +42,17 @@ public class ClearService {
      * 清理文件夹
      *
      * @param dir   文件夹
-     * @param image 排除图片
-     * @param nfo   排除nfo
+     * @param excludeImage 排除图片
+     * @param excludeNfo   排除nfo
      * @param max   向上删除深度
      */
-    public void clearDir(File dir, boolean image, boolean nfo, int max) {
+    public void clearDir(File dir, boolean excludeImage, boolean excludeNfo, int max) {
         File parentFile = dir;
         for (int i = 0; i < max; i++) {
             if (Objects.isNull(parentFile)) {
                 return;
             }
-            if (!isEmpty(parentFile, image, nfo)) {
+            if (!isEmpty(parentFile, excludeImage, excludeNfo)) {
                 // 不为空则不进行清理
                 return;
             }
@@ -73,12 +65,12 @@ public class ClearService {
     /**
      * 文件夹是否为空
      *
-     * @param image 排除图片
-     * @param nfo   排除nfo
-     * @param dir   文件夹
+     * @param excludeImage 排除图片
+     * @param excludeNfo   排除nfo
+     * @param dir          文件夹
      * @return 是否为空
      */
-    public Boolean isEmpty(File dir, boolean image, boolean nfo) {
+    public Boolean isEmpty(File dir, boolean excludeImage, boolean excludeNfo) {
         List<File> list = FileUtils.listFileList(dir);
 
         long count = list.stream()
@@ -87,21 +79,19 @@ public class ClearService {
                         return true;
                     }
 
-                    if (image && FileUtils.isImageFormat(f.getName())) {
+                    if (excludeImage && FileUtils.isImageFormat(f.getName())) {
                         return false;
                     }
 
-                    String extName = FileUtil.extName(f);
-                    if (StrUtil.isBlank(extName)) {
-                        return true;
-                    }
-                    if (nfo && extName.equalsIgnoreCase("nfo")) {
-                        return false;
-                    }
-                    return true;
-                })
-                .filter(f -> {
                     String name = f.getName();
+                    String extName = FileUtil.extName(name);
+                    if (StrUtil.isNotBlank(extName)) {
+                        if (excludeNfo && extName.equalsIgnoreCase("nfo")) {
+                            return false;
+                        }
+                    }
+
+                    List<String> excludeFileNames = List.of(".DS_Store", "Thumbs.db", "bangumi.ini");
                     for (String excludeFileName : excludeFileNames) {
                         if (excludeFileName.equalsIgnoreCase(name)) {
                             return false;
