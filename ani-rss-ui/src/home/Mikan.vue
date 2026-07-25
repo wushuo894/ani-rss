@@ -173,7 +173,7 @@ let data = ref({
 
 let seasonSelect = ref('')
 
-let show = (name) => {
+let show = (ani) => {
   seasonSelect.value = ''
   dialogVisible.value = true
   text.value = ''
@@ -182,16 +182,31 @@ let show = (name) => {
     'items': []
   }
   rssList.value = []
-  if (name) {
-    name = name.replace(/ ?\((19|20)\d{2}\)/g, "").trim()
-    name = name.replace(/ ?\[tmdbid=(\d+)]/g, "").trim()
-    if (name.length > 2) {
-      text.value = name
-      search()
+  searchAni(ani)
+  list(text.value)
+}
+
+let searchAni = ani => {
+  if (!ani) {
+    return
+  }
+
+  if (ani.url) {
+    let url = new URL(ani.url);
+    let searchParams = url.searchParams;
+    let mikanId = searchParams.get("bangumiId");
+    if (mikanId) {
+      text.value = `id: ${mikanId}`
       return
     }
   }
-  list({})
+
+  let title = ani.mikanTitle ? ani.mikanTitle : ani.title
+  title = title.replace(/ ?\((19|20)\d{2}\)/g, "").trim()
+  title = title.replace(/ ?\[tmdbid=(\d+)]/g, "").trim()
+  if (title.length > 2) {
+    text.value = title
+  }
 }
 
 let text = ref('')
@@ -203,12 +218,12 @@ let search = () => {
     return
   }
   searchLoading.value = true
-  list({}, text.value).finally(() => {
+  list(text.value).finally(() => {
     searchLoading.value = false
   })
 }
 
-let list = async (body, text) => {
+let list = async (text, body) => {
   loading.value = true
   text = text ? text : ''
   body = body ? body : {}
@@ -242,7 +257,7 @@ let list = async (body, text) => {
 let change = (v) => {
   let body = data.value.seasons.filter(item => item['seasonLabel'] === v)
   if (body.length) {
-    list(body[0])
+    list('', body[0])
   }
 }
 

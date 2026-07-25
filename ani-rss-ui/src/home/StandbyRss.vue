@@ -17,7 +17,7 @@
       <div class="standby-spacer"></div>
       <div>
         <el-button
-            @click="mikanShow"
+            @click="mikanRef?.show(props.ani)"
             text bg>
           <template #icon>
             <img src="@/icon/icon-Mikan.png" alt="mikan" class="icon"/>
@@ -199,21 +199,6 @@ let animeGardenShow = () => {
 let aniBTShow = () => {
   let bgmUrl = props.ani.bgmUrl;
   aniBTRef.value?.show(bgmUrl)
-}
-
-let mikanShow = () => {
-  let query = props.ani.mikanTitle ? props.ani.mikanTitle : props.ani.title;
-
-  if (props.ani.url) {
-    let url = new URL(props.ani.url);
-    let searchParams = url.searchParams;
-    let mikanId = searchParams.get("bangumiId");
-    if (mikanId) {
-      query = `id: ${mikanId}`
-    }
-  }
-
-  mikanRef.value?.show(query)
 }
 
 defineExpose({show})
