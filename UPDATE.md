@@ -1,1 +1,1 @@
-- refactor: qBittorrent 改为 ApiKey 授权 (适用于5.2.0及以上版本)
+- feat: 支持刮削多个背景图
