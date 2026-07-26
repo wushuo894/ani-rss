@@ -5,7 +5,7 @@
 
     <groupId>ani.rss</groupId>
     <artifactId>ani-rss</artifactId>
-    <version>3.2.1</version>
+    <version>3.2.2</version>
 
     <name>ani-rss</name>
     <inceptionYear>2025</inceptionYear>
@@ -43,7 +43,7 @@
             <dependency>
                 <groupId>org.mnode.ical4j</groupId>
                 <artifactId>ical4j</artifactId>
-                <version>4.2.5</version>
+                <version>4.3.0</version>
             </dependency>
             <dependency>
                 <groupId>org.commonmark</groupId>
@@ -90,7 +90,7 @@
             <dependency>
                 <groupId>io.swagger.core.v3</groupId>
                 <artifactId>swagger-core-jakarta</artifactId>
-                <version>2.2.49</version>
+                <version>2.2.52</version>
             </dependency>
 
             <!-- Spring AI -->
