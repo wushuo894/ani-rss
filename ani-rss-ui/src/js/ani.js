@@ -28,7 +28,7 @@ export let aniData = {
     "type": "mikan",
     "bgmUrl": "",
     "customDownloadPath": false,
-    "downloadPath": "",
+    "customDownloadPathTemplate": "",
     "score": 8,
     "customEpisode": false,
     "customEpisodeStr": "",

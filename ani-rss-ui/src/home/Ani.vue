@@ -165,7 +165,7 @@
                 <div>
                   <el-input type="textarea" class="full-width" :disabled="!props.ani.customDownloadPath"
                             :autosize="{ minRows: 2}"
-                            v-model:model-value="props.ani.downloadPath"/>
+                            v-model:model-value="props.ani.customDownloadPathTemplate"/>
                 </div>
                 <div style="display: flex;justify-content: space-between;margin-top: 6px;">
                   <el-button :disabled="!props.ani.customDownloadPath" :loading="downloadPathLoading" bg icon="Refresh"
@@ -399,7 +399,7 @@ let downloadPath = () => {
   newAni.customDownloadPath = false
   http.downloadPath(newAni)
       .then(res => {
-        props.ani.downloadPath = res.data.downloadPath
+        props.ani.customDownloadPathTemplate = res.data.downloadPath
       })
       .finally(() => {
         downloadPathLoading.value = false

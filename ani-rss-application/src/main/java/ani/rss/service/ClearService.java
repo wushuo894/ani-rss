@@ -41,10 +41,10 @@ public class ClearService {
     /**
      * 清理文件夹
      *
-     * @param dir   文件夹
+     * @param dir          文件夹
      * @param excludeImage 排除图片
      * @param excludeNfo   排除nfo
-     * @param max   向上删除深度
+     * @param max          向上删除深度
      */
     public void clearDir(File dir, boolean excludeImage, boolean excludeNfo, int max) {
         File parentFile = dir;

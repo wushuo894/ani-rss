@@ -102,7 +102,7 @@
               </el-form-item>
               <el-form-item label="下载位置">
                 <div class="full-width">
-                  <el-input v-model:model-value="data.ani.downloadPath" :autosize="{ minRows: 2}"
+                  <el-input v-model:model-value="data.ani.customDownloadPathTemplate" :autosize="{ minRows: 2}"
                             class="full-width"
                             type="textarea"/>
                 </div>
@@ -232,7 +232,7 @@ let downloadPath = () => {
   newAni.customDownloadPath = false
   http.downloadPath(newAni)
       .then(res => {
-        data.value.ani.downloadPath = res.data.downloadPath
+        data.value.ani.customDownloadPathTemplate = res.data.downloadPath
       })
       .finally(() => {
         downloadPathLoading.value = false
