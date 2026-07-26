@@ -1,13 +1,15 @@
+/* 深色模式 */
 html.dark {
-    /* 自定义深色背景颜色 */
     --el-bg-color: #2D2E2F;
     --el-bg-color-overlay: var(--el-bg-color);
     --el-fill-color-blank: var(--el-bg-color);
-    --el-collapse-header-bg-color: none;
-    --el-collapse-content-bg-color: none;
-    /* 深色模式下边框颜色调整，使其更融合 */
     --el-border-color: #414243;
     --el-border-color-light: #4C4D4F;
+
+    .el-card {
+        border: 1px solid var(--el-border-color);
+        box-shadow: none;
+    }
 }
 
 :root {
@@ -16,96 +18,104 @@ html.dark {
     --el-border-radius-base: 12px;
     --el-border-radius-round: 24px;
 
-    --el-collapse-item-content-padding: 16px;
-
     /* 全局边框淡化：使用更浅的颜色 */
     --el-border-color: var(--el-border-color-lighter);
     --el-border-color-light: var(--el-border-color-extra-light);
 
     /* 订阅卡片列数 */
-    --grid-columns: 1;
+    --ani-grid-columns: 1;
+
+    /* 折叠面板内边距 */
+    --el-collapse-item-content-padding: 16px;
 }
 
-.el-collapse {
+/* 折叠面板 */
+.el-collapse { /* 去除线条 */
     --el-collapse-border-color: none;
     --el-collapse-header-bg-color: none;
+
+    .el-collapse-item {
+        .el-collapse-item__content { /* 展开样式 */
+            border-radius: var(--el-border-radius-base);
+            background-color: var(--el-fill-color-light);
+            padding: var(--el-collapse-item-content-padding);
+        }
+
+        .el-collapse-item__wrap { /* 去除背景色 */
+            --el-collapse-content-bg-color: none;
+        }
+    }
 }
 
-/* 优化卡片样式：去除厚重边框，增加柔和阴影 */
+/* 卡片 去除厚重边框，增加柔和阴影 */
 .el-card {
     border: 1px solid var(--el-border-color-extra-light);
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.04);
     transition: all 0.3s ease;
 }
 
-html.dark .el-card {
-    border: 1px solid var(--el-border-color);
-    box-shadow: none;
-    background-color: #343536; /* 稍微提亮一点背景以区分 */
+/* 弹窗 */
+.el-overlay-dialog { /* 安全边距 */
+    padding: 12px;
+
+    .el-dialog { /* 圆角、阴影 */
+        border-radius: 16px;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+    }
 }
 
-.el-overlay-dialog {
-    padding: 12px; /* 最小安全边距 */
-}
-
-.el-dialog {
-    border-radius: 16px;
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
-}
-
-/* 优化输入框和选择器：更圆润，边框更淡 */
-.el-input__wrapper,
-.el-select__wrapper,
-.el-textarea__inner {
-    box-shadow: 0 0 0 1px var(--el-border-color) inset; /* 使用我们定义的淡化后的变量 */
-}
-
-/* 聚焦时保持高亮但不过分刺眼 */
-.el-input__wrapper.is-focus,
-.el-select__wrapper.is-focused,
-.el-textarea__inner:focus {
-    box-shadow: 0 0 0 1px var(--el-color-primary) inset;
-}
-
-/* 下拉弹出层圆角优化 */
-.el-select__popper,
-.el-select__popper .el-select-dropdown {
+/* 选择器 */
+.el-select__popper { /* 弹出层圆角 */
     border-radius: var(--el-border-radius-base);
     overflow: hidden;
+
+    .el-select-dropdown__item { /* 选择项圆角 */
+        border-radius: var(--el-border-radius-small);
+        margin: 2px 8px;
+        padding: 6px 10px;
+        display: flex;
+        align-items: center;
+    }
+
+    .el-select-dropdown__item:hover { /* 选择项悬浮时凸显 */
+        background-color: var(--el-fill-color-light);
+    }
+
+    .el-select-dropdown__item.selected { /* 选中项高亮显示 */
+        background-color: var(--el-color-primary-light-9);
+        color: var(--el-color-primary);
+    }
 }
 
-.el-dropdown__popper,
-.el-dropdown__popper .el-dropdown-menu {
+/* 下拉菜单 */
+.el-dropdown__popper { /* 弹出层圆角 */
     border-radius: var(--el-border-radius-base);
     overflow: hidden;
+
+    .el-dropdown-menu__item { /* 选择项圆角 */
+        border-radius: var(--el-border-radius-small);
+        margin: 2px 8px;
+        padding: 6px 10px;
+    }
+
+    .el-dropdown-menu__item:hover { /* 悬浮时凸显 */
+        background-color: var(--el-fill-color-light);
+    }
 }
 
-.el-select-dropdown__item {
-    border-radius: var(--el-border-radius-small);
-    margin: 2px 8px;
-    padding: 6px 10px;
-    display: flex;
-    align-items: center;
-}
-
-.el-select-dropdown__item:hover {
-    background-color: var(--el-fill-color-light);
-}
-
-.el-select-dropdown__item.selected {
-    background-color: var(--el-color-primary-light-9);
-    color: var(--el-color-primary);
-}
-
-/* 圆形按钮保持圆形 */
+/* 圆形按钮, 保持圆形 */
 .el-button.is-circle {
     border-radius: 50%;
 }
 
-/* 标签圆角 */
+/* 标签, 圆角 去边框 */
 .el-tag {
     border-radius: 6px;
-    border-width: 0; /* 保持原有的去边框 */
+    border: none;
+
+    .el-text { /* 修复tag文字圆角问题 */
+        border-radius: 0;
+    }
 }
 
 * {
@@ -115,6 +125,7 @@ html.dark .el-card {
     font-family: "PingFang SC", "Noto Sans SC", "Microsoft YaHei", "Helvetica Neue", Helvetica, "Hiragino Sans GB", Arial, sans-serif;
 }
 
+/* 输入框 字体 */
 .el-input__inner {
     font-family: "PingFang SC", "Microsoft YaHei", "Helvetica Neue", Helvetica, "Hiragino Sans GB", Arial, sans-serif;
 }
@@ -160,15 +171,6 @@ html, body, #app {
     }
 }
 
-.el-card__body {
-    height: 100%;
-    box-sizing: border-box;
-}
-
-.el-tag {
-    border-width: 0
-}
-
 .flex {
     display: flex;
 }
@@ -194,56 +196,30 @@ html, body, #app {
     border-left: .25em solid #d1d9e0;
 }
 
-.el-collapse-item__header {
-    width: auto;
-}
-
-#app {
-    margin: 0 auto;
-}
-
 @media (min-width: 1000px) {
     .auto-flex {
         display: flex;
     }
 }
 
+/* 多选框 */
 .el-checkbox-danger {
     --el-checkbox-checked-text-color: var(--el-color-danger);
     color: var(--el-color-danger);
 }
 
-.el-dropdown-menu__item {
-    border-radius: var(--el-border-radius-small);
-    margin: 2px 8px;
-    padding: 6px 10px;
-}
+/* 数字输入框 */
+.el-input-number { /* 优化按钮圆角 */
 
-.el-dropdown-menu__item:hover {
-    background-color: var(--el-fill-color-light);
-}
+    > span[role="button"]:nth-child(1) {
+        background-color: var(--el-bg-color);
+        border-radius: var(--el-border-radius-base) 0 0 var(--el-border-radius-base);
+    }
 
-.el-collapse-item__content {
-    border-radius: var(--el-border-radius-base);
-    background-color: var(--el-fill-color-light);
-    padding: var(--el-collapse-item-content-padding);
-}
-
-.el-collapse-item__wrap {
-    --el-collapse-content-bg-color: none;
-}
-
-/*
-优化按钮圆角
- */
-.el-input-number > span[role="button"]:nth-child(1) {
-    background-color: var(--el-bg-color);
-    border-radius: var(--el-border-radius-base) 0 0 var(--el-border-radius-base);
-}
-
-.el-input-number > span[role="button"]:nth-child(2) {
-    background-color: var(--el-bg-color);
-    border-radius: 0 var(--el-border-radius-base) var(--el-border-radius-base) 0;
+    > span[role="button"]:nth-child(2) {
+        background-color: var(--el-bg-color);
+        border-radius: 0 var(--el-border-radius-base) var(--el-border-radius-base) 0;
+    }
 }
 
 .el-color-picker__color-inner,
@@ -264,11 +240,6 @@ html, body, #app {
     border-radius: var(--el-border-radius-base);
 }
 
-/* 修复tag文字圆角问题 */
-.el-tag .el-text {
-    border-radius: 0;
-}
-
 .el-popover.el-popper {
     border-radius: var(--el-border-radius-base);
 }
@@ -277,18 +248,16 @@ html, body, #app {
     border-radius: var(--el-border-radius-base);
 }
 
+/* 隐藏滚动条 */
 .hide-scrollbar {
     .el-scrollbar__bar {
         display: none !important;
     }
 }
 
+/* 修复超链接文字对齐问题 */
 .el-link {
     vertical-align: baseline;
-}
-
-html.dark .el-progress-bar__outer {
-    border: 1px solid var(--el-border-color-light);
 }
 
 .full-width {
