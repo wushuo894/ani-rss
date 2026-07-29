@@ -2,6 +2,7 @@ package ani.rss.entity.torrent;
 
 import ani.rss.commons.FileUtils;
 import ani.rss.enums.TorrentsStateEnum;
+import com.google.gson.annotations.SerializedName;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
@@ -12,11 +13,11 @@ import java.util.List;
 @Data
 @Accessors(chain = true)
 public class TransmissionTorrentsInfo implements Serializable {
-    private Arguments arguments;
+    private Result result;
 
     @Data
     @Accessors(chain = true)
-    public static class Arguments implements Serializable {
+    public static class Result implements Serializable {
         private List<Torrent> torrents;
     }
 
@@ -27,6 +28,7 @@ public class TransmissionTorrentsInfo implements Serializable {
         /**
          * HASH
          */
+        @SerializedName(value = "hashString", alternate = "hash_string")
         private String hashString;
 
         /**
@@ -37,16 +39,19 @@ public class TransmissionTorrentsInfo implements Serializable {
         /**
          * 已下载大小
          */
+        @SerializedName(value = "haveValid", alternate = "have_valid")
         private Long haveValid;
 
         /**
          * 大小
          */
+        @SerializedName(value = "totalSize", alternate = "total_size")
         private Long totalSize;
 
         /**
          * 下载位置
          */
+        @SerializedName(value = "downloadDir", alternate = "download_dir")
         private String downloadDir;
 
         /**
@@ -57,6 +62,7 @@ public class TransmissionTorrentsInfo implements Serializable {
         /**
          * 已完成
          */
+        @SerializedName(value = "isFinished", alternate = "is_finished")
         private Boolean isFinished;
 
         /**

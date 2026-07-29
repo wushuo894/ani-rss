@@ -82,7 +82,7 @@ public class Transmission implements BaseDownload {
                         TransmissionTorrentsInfo transmissionTorrentsInfo = GsonStatic.fromJson(res.body(), TransmissionTorrentsInfo.class);
 
                         List<TransmissionTorrentsInfo.Torrent> torrentsInfoList = transmissionTorrentsInfo
-                                .getArguments()
+                                .getResult()
                                 .getTorrents();
                         return torrentsInfoList
                                 .stream()
@@ -120,19 +120,19 @@ public class Transmission implements BaseDownload {
 
         TransmissionRpcBody transmissionRpcBody = getTorrentAddBody(ani, item, savePath, torrentFile);
 
-        String id = rpc(transmissionRpcBody)
+        String hash = rpc(transmissionRpcBody)
                 .thenFunction(res -> {
                     JsonObject jsonObject = GsonStatic.fromJson(res.body(), JsonObject.class);
-                    return jsonObject.getAsJsonObject("arguments")
-                            .getAsJsonObject("torrent-added")
-                            .get("id").getAsString();
+                    return jsonObject.getAsJsonObject("result")
+                            .getAsJsonObject("torrent_added")
+                            .get("hash_string").getAsString();
                 });
 
-        log.info("tr 添加下载 => name: {} id: {}", name, id);
+        log.info("tr 添加下载 => name: {} hash: {}", name, hash);
 
         Boolean ova = ani.getOva();
         if (!ova) {
-            RenameCacheUtil.put(id, name);
+            RenameCacheUtil.put(hash, name);
         }
 
         for (int i = 0; i < 3; i++) {
@@ -140,7 +140,7 @@ public class Transmission implements BaseDownload {
             List<TorrentsInfo> torrentsInfos = getTorrentsInfos();
             Optional<TorrentsInfo> optionalTorrentsInfo = torrentsInfos
                     .stream()
-                    .filter(torrentsInfo -> torrentsInfo.getId().equals(id))
+                    .filter(torrentsInfo -> torrentsInfo.getHash().equals(hash))
                     .findFirst();
             if (optionalTorrentsInfo.isEmpty()) {
                 continue;
@@ -153,8 +153,8 @@ public class Transmission implements BaseDownload {
 
     @Override
     public Boolean delete(TorrentsInfo torrentsInfo, Boolean deleteFiles) {
-        String id = torrentsInfo.getId();
-        TransmissionRpcBody transmissionRpcBody = TransmissionRpcBody.torrentRemove(id, deleteFiles);
+        String hash = torrentsInfo.getHash();
+        TransmissionRpcBody transmissionRpcBody = TransmissionRpcBody.torrentRemove(hash, deleteFiles);
         try {
             return rpc(transmissionRpcBody)
                     .thenFunction(HttpResponse::isOk);
@@ -166,7 +166,7 @@ public class Transmission implements BaseDownload {
 
     @Override
     public Boolean rename(TorrentsInfo torrentsInfo) {
-        String id = torrentsInfo.getId();
+        String hash = torrentsInfo.getHash();
         String name = torrentsInfo.getName();
 
         if (ReUtil.contains("^\\w{40}$", name)) {
@@ -174,9 +174,9 @@ public class Transmission implements BaseDownload {
             return false;
         }
 
-        String reName = RenameCacheUtil.get(id);
+        String reName = RenameCacheUtil.get(hash);
         if (StrUtil.isBlank(reName)) {
-            log.debug("未获取到重命名 => id: {}", id);
+            log.debug("未获取到重命名 => hash: {}", hash);
             return false;
         }
 
@@ -185,20 +185,20 @@ public class Transmission implements BaseDownload {
             reName = reName + "." + extName;
         }
 
-        TransmissionRpcBody transmissionRpcBody = TransmissionRpcBody.torrentRenamePath(id, name, reName);
+        TransmissionRpcBody transmissionRpcBody = TransmissionRpcBody.torrentRenamePath(hash, name, reName);
 
         log.info("重命名 {} ==> {}", name, reName);
 
         Boolean ok = rpc(transmissionRpcBody)
                 .thenFunction(HttpResponse::isOk);
         Assert.isTrue(ok, "重命名失败 {} ==> {}", name, reName);
-        RenameCacheUtil.remove(id);
+        RenameCacheUtil.remove(hash);
 
         for (int i = 0; i < 10; i++) {
             ThreadUtil.sleep(1000);
             Optional<TorrentsInfo> first = getTorrentsInfos()
                     .stream()
-                    .filter(info -> info.getId().equals(id))
+                    .filter(info -> info.getHash().equals(hash))
                     .findFirst();
             if (first.isEmpty()) {
                 break;
@@ -214,11 +214,11 @@ public class Transmission implements BaseDownload {
 
     @Override
     public Boolean addTags(TorrentsInfo torrentsInfo, String tag) {
-        String id = torrentsInfo.getId();
+        String hash = torrentsInfo.getHash();
         List<String> tags = new ArrayList<>(torrentsInfo.getTagList());
         tags.add(tag);
 
-        TransmissionRpcBody transmissionRpcBody = TransmissionRpcBody.torrentSet(id, tags);
+        TransmissionRpcBody transmissionRpcBody = TransmissionRpcBody.torrentSet(hash, tags);
         return rpc(transmissionRpcBody)
                 .thenFunction(HttpResponse::isOk);
     }
@@ -230,8 +230,8 @@ public class Transmission implements BaseDownload {
 
     @Override
     public void setSavePath(TorrentsInfo torrentsInfo, String path) {
-        String id = torrentsInfo.getId();
-        TransmissionRpcBody transmissionRpcBody = TransmissionRpcBody.torrentSetLocation(id, path);
+        String hash = torrentsInfo.getHash();
+        TransmissionRpcBody transmissionRpcBody = TransmissionRpcBody.torrentSetLocation(hash, path);
         rpc(transmissionRpcBody)
                 .thenFunction(HttpResponse::isOk);
     }
