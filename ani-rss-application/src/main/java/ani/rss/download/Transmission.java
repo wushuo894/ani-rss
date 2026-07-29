@@ -140,7 +140,7 @@ public class Transmission implements BaseDownload {
             List<TorrentsInfo> torrentsInfos = getTorrentsInfos();
             Optional<TorrentsInfo> optionalTorrentsInfo = torrentsInfos
                     .stream()
-                    .filter(torrentsInfo -> torrentsInfo.getId().equals(id))
+                    .filter(torrentsInfo -> torrentsInfo.getHash().equals(id))
                     .findFirst();
             if (optionalTorrentsInfo.isEmpty()) {
                 continue;
@@ -153,7 +153,7 @@ public class Transmission implements BaseDownload {
 
     @Override
     public Boolean delete(TorrentsInfo torrentsInfo, Boolean deleteFiles) {
-        String id = torrentsInfo.getId();
+        String id = torrentsInfo.getHash();
         TransmissionRpcBody transmissionRpcBody = TransmissionRpcBody.torrentRemove(id, deleteFiles);
         try {
             return rpc(transmissionRpcBody)
@@ -166,7 +166,7 @@ public class Transmission implements BaseDownload {
 
     @Override
     public Boolean rename(TorrentsInfo torrentsInfo) {
-        String id = torrentsInfo.getId();
+        String id = torrentsInfo.getHash();
         String name = torrentsInfo.getName();
 
         if (ReUtil.contains("^\\w{40}$", name)) {
@@ -198,7 +198,7 @@ public class Transmission implements BaseDownload {
             ThreadUtil.sleep(1000);
             Optional<TorrentsInfo> first = getTorrentsInfos()
                     .stream()
-                    .filter(info -> info.getId().equals(id))
+                    .filter(info -> info.getHash().equals(id))
                     .findFirst();
             if (first.isEmpty()) {
                 break;
@@ -214,7 +214,7 @@ public class Transmission implements BaseDownload {
 
     @Override
     public Boolean addTags(TorrentsInfo torrentsInfo, String tag) {
-        String id = torrentsInfo.getId();
+        String id = torrentsInfo.getHash();
         List<String> tags = new ArrayList<>(torrentsInfo.getTagList());
         tags.add(tag);
 
@@ -230,7 +230,7 @@ public class Transmission implements BaseDownload {
 
     @Override
     public void setSavePath(TorrentsInfo torrentsInfo, String path) {
-        String id = torrentsInfo.getId();
+        String id = torrentsInfo.getHash();
         TransmissionRpcBody transmissionRpcBody = TransmissionRpcBody.torrentSetLocation(id, path);
         rpc(transmissionRpcBody)
                 .thenFunction(HttpResponse::isOk);
