@@ -61,7 +61,7 @@ public class TransmissionRpcBody implements Serializable {
     }
 
     public static TransmissionRpcBody torrentRemove(String id, Boolean deleteLocalData) {
-        TransmissionRpcBody transmissionRpcBody = getInstance(TransmissionMethodEnum.torrentAdd);
+        TransmissionRpcBody transmissionRpcBody = getInstance(TransmissionMethodEnum.torrentRemove);
         Map<String, Object> arguments = transmissionRpcBody.getArguments();
         arguments.put("ids", List.of(id));
         arguments.put("delete-local-data", deleteLocalData);
@@ -71,7 +71,7 @@ public class TransmissionRpcBody implements Serializable {
     public static TransmissionRpcBody torrentRenamePath(String id, String path, String name) {
         TransmissionRpcBody transmissionRpcBody = getInstance(TransmissionMethodEnum.torrentRenamePath);
         Map<String, Object> arguments = transmissionRpcBody.getArguments();
-        arguments.put("id", id);
+        arguments.put("ids", List.of(id));
         arguments.put("path", path);
         arguments.put("name", name);
         return transmissionRpcBody;
