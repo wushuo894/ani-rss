@@ -135,6 +135,10 @@ html, body, #app {
     height: 100%;
 }
 
+#app {
+    margin: 0 auto;
+}
+
 @media (max-width: 450px) {
     .el-dialog {
         --el-dialog-width: 100%;
