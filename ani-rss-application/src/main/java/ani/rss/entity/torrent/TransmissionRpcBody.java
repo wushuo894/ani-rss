@@ -40,7 +40,7 @@ public class TransmissionRpcBody implements Serializable {
         TransmissionRpcBody transmissionRpcBody = getInstance(TransmissionMethodEnum.torrentAdd);
         Map<String, Object> params = transmissionRpcBody.getParams();
         params.put("labels", tags);
-        params.put("download-dir", downloadDir);
+        params.put("download_dir", downloadDir);
         params.put("metainfo", Base64.encode(torrent));
         params.put("filename", "");
         return transmissionRpcBody;
@@ -50,7 +50,7 @@ public class TransmissionRpcBody implements Serializable {
         TransmissionRpcBody transmissionRpcBody = getInstance(TransmissionMethodEnum.torrentAdd);
         Map<String, Object> params = transmissionRpcBody.getParams();
         params.put("labels", tags);
-        params.put("download-dir", downloadDir);
+        params.put("download_dir", downloadDir);
         params.put("metainfo", "");
         params.put("filename", magnet);
         return transmissionRpcBody;
@@ -74,7 +74,7 @@ public class TransmissionRpcBody implements Serializable {
         TransmissionRpcBody transmissionRpcBody = getInstance(TransmissionMethodEnum.torrentRemove);
         Map<String, Object> params = transmissionRpcBody.getParams();
         params.put("ids", List.of(hash));
-        params.put("delete-local-data", deleteLocalData);
+        params.put("delete_local_data", deleteLocalData);
         return transmissionRpcBody;
     }
 
