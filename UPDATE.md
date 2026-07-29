@@ -1,1 +1,1 @@
-- fix: 修复自定义路径
+- fix: 修复 Transmission 删除任务，重命名任务失败 @dragonflylee

@@ -15,7 +15,7 @@ public enum NotificationStatusEnum {
     /**
      * 缺集
      */
-    OMIT("⚠", "缺少集数"),
+    OMIT("⛔", "缺少集数"),
     /**
      * 错误
      */
