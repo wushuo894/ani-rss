@@ -15,7 +15,6 @@ import ani.rss.service.TaskService;
 import ani.rss.util.other.AniUtil;
 import ani.rss.util.other.ConfigUtil;
 import cn.hutool.core.io.FileUtil;
-import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.text.StrFormatter;
 import cn.hutool.core.util.StrUtil;
@@ -116,11 +115,7 @@ public class ConfigController extends BaseController {
         String customJs = ConfigUtil.CONFIG.getCustomJs();
         customJs = StrUtil.blankToDefault(customJs, "// empty js");
 
-        response.setContentType(ContentType.JAVASCRIPT);
-        response.setContentLength(customJs.length());
-        @Cleanup
-        OutputStream outputStream = response.getOutputStream();
-        IoUtil.writeUtf8(outputStream, true, customJs);
+        write(200, ContentType.JAVASCRIPT, customJs);
     }
 
     @Operation(summary = "自定义CSS")
@@ -132,11 +127,7 @@ public class ConfigController extends BaseController {
         String customCss = ConfigUtil.CONFIG.getCustomCss();
         customCss = StrUtil.blankToDefault(customCss, "/* empty css */");
 
-        response.setContentType(ContentType.TEXT_CSS);
-        response.setContentLength(customCss.length());
-        @Cleanup
-        OutputStream outputStream = response.getOutputStream();
-        IoUtil.writeUtf8(outputStream, true, customCss);
+        write(200, ContentType.TEXT_CSS, customCss);
     }
 
     @Auth
