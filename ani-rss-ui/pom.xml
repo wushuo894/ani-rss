@@ -18,6 +18,7 @@
     </properties>
 
     <build>
+        <finalName>ani-rss-ui</finalName>
         <plugins>
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
@@ -52,8 +53,8 @@
                             <goal>install-node-and-pnpm</goal>
                         </goals>
                         <configuration>
-                            <nodeVersion>v26.4.0</nodeVersion>
-                            <pnpmVersion>11.9.0</pnpmVersion>
+                            <nodeVersion>v26.5.1</nodeVersion>
+                            <pnpmVersion>11.18.0</pnpmVersion>
                         </configuration>
                     </execution>
                     <execution>
@@ -64,6 +65,9 @@
                         <phase>generate-resources</phase>
                         <configuration>
                             <arguments>install</arguments>
+                            <environmentVariables>
+                                <CI>true</CI>
+                            </environmentVariables>
                         </configuration>
                     </execution>
                     <execution>

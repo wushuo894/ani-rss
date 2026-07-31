@@ -6,12 +6,10 @@ import ani.rss.entity.NotificationConfig;
 import ani.rss.util.basic.HttpReq;
 import cn.hutool.core.lang.Assert;
 import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
@@ -53,10 +51,10 @@ public class EmbyRefreshService {
                 .header("X-Emby-Token", embyApiKey)
                 .then(res -> {
                     if (res.isOk()) {
-                        log.info("Emby正在扫描媒体库 id: {} name: {}", embyViews.getId(), embyViews.getName());
+                        log.info("正在扫描 Emby 媒体库 id: {} name: {}", embyViews.getId(), embyViews.getName());
                     } else {
                         int status = res.getStatus();
-                        log.error("Emby扫描媒体库出错 id: {} name: {} status: {}", embyViews.getId(), embyViews.getName(), status);
+                        log.error("扫描 Emby 媒体库出错 id: {} name: {} status: {}", embyViews.getId(), embyViews.getName(), status);
                     }
                 });
     }
@@ -73,8 +71,6 @@ public class EmbyRefreshService {
         Assert.notBlank(embyHost, "embyHost 为空");
         Assert.notBlank(embyApiKey, "embyApiKey 为空");
 
-        List<EmbyViews> viewsList = new ArrayList<>();
-
         JsonArray items = HttpReq.get(embyHost + "/Library/MediaFolders")
                 .header("X-Emby-Token", embyApiKey)
                 .thenFunction(res -> {
@@ -82,18 +78,6 @@ public class EmbyRefreshService {
                     JsonObject body = GsonStatic.fromJson(res.body(), JsonObject.class);
                     return body.get("Items").getAsJsonArray();
                 });
-
-        // 遍历媒体库
-        for (JsonElement item : items) {
-            JsonObject itemAsJsonObject = item.getAsJsonObject();
-            String id = itemAsJsonObject.get("Id").getAsString();
-            String name = itemAsJsonObject.get("Name").getAsString();
-            EmbyViews views = new EmbyViews()
-                    .setId(id)
-                    .setName(name);
-            viewsList.add(views);
-        }
-
-        return viewsList;
+        return GsonStatic.fromJsonList(items, EmbyViews.class);
     }
 }
