@@ -24,10 +24,10 @@
               <el-select v-model="chatId"
                          class="notification-input-width"
                          @change="chatIdChange">
-                <el-option v-for="item in Object.keys(chatIdMap)"
-                           :key="item"
-                           :label="item"
-                           :value="item"/>
+                <el-option v-for="chat in chatList"
+                           :key="chat.id"
+                           :label="`${chat.type}: ${chat.username}`"
+                           :value="chat.id"/>
               </el-select>
             </div>
             <div class="notification-margin-left">
@@ -61,7 +61,7 @@ import {ElMessage} from "element-plus";
 import {ref} from "vue";
 import * as http from "@/js/http.js";
 
-let chatIdMap = ref({})
+let chatList = ref([])
 let chatId = ref('')
 let getUpdatesLoading = ref(false)
 
@@ -74,9 +74,9 @@ let getUpdates = () => {
   getUpdatesLoading.value = true
   http.getTgUpdates(props.notificationConfig)
       .then(res => {
-        chatIdMap.value = res.data
-        if (Object.keys(chatIdMap.value).length) {
-          chatId.value = Object.keys(chatIdMap.value)[0]
+        chatList.value = res.data
+        if (chatList.value.length) {
+          chatId.value = chatList.value[0].id
           chatIdChange(chatId.value)
         }
       })
@@ -85,8 +85,8 @@ let getUpdates = () => {
       })
 }
 
-let chatIdChange = (k) => {
-  props.notificationConfig.telegramChatId = chatIdMap.value[k]
+let chatIdChange = (v) => {
+  props.notificationConfig.telegramChatId = v
 }
 
 let props = defineProps(['notificationConfig', 'config'])

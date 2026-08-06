@@ -317,12 +317,14 @@ public class BgmUtil {
         }
 
         String bgmApi = CONFIG.getBgmApi();
-        setToken(HttpReq.post(bgmApi + "/v0/users/-/collections/" + subjectId))
+
+        Map<String, Integer> bodyMap = Map.of(
+                "type", 3,
+                "rate", rate
+        );
+
+        setToken(HttpReq.post(bgmApi + "/v0/users/-/collections/" + subjectId, bodyMap))
                 .contentType(ContentType.JSON)
-                .body(GsonStatic.toJson(Map.of(
-                        "type", 3,
-                        "rate", rate
-                )))
                 .then(HttpReq::assertStatus);
         return rate;
     }
@@ -354,9 +356,10 @@ public class BgmUtil {
             return;
         }
 
-        setToken(HttpReq.post(bgmApi + "/v0/users/-/collections/" + subjectId))
+        Map<String, Integer> bodyMap = Map.of("type", 3);
+
+        setToken(HttpReq.post(bgmApi + "/v0/users/-/collections/" + subjectId, bodyMap))
                 .contentType(ContentType.JSON)
-                .body(GsonStatic.toJson(Map.of("type", 3)))
                 .thenFunction(HttpResponse::isOk);
     }
 
@@ -704,14 +707,15 @@ public class BgmUtil {
             return;
         }
 
-        HttpReq.post("https://bgm.tv/oauth/access_token")
-                .body(GsonStatic.toJson(Map.of(
-                        "grant_type", "refresh_token",
-                        "client_id", bgmAppID,
-                        "client_secret", bgmAppSecret,
-                        "refresh_token", bgmRefreshToken,
-                        "redirect_uri", bgmRedirectUri
-                )))
+        Map<String, String> bodyMap = Map.of(
+                "grant_type", "refresh_token",
+                "client_id", bgmAppID,
+                "client_secret", bgmAppSecret,
+                "refresh_token", bgmRefreshToken,
+                "redirect_uri", bgmRedirectUri
+        );
+
+        HttpReq.post("https://bgm.tv/oauth/access_token", bodyMap)
                 .then(res -> {
                     HttpReq.assertStatus(res);
                     JsonObject jsonObject = GsonStatic.fromJson(res.body(), JsonObject.class);

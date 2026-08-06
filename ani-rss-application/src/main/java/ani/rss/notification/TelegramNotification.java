@@ -7,21 +7,23 @@ import ani.rss.entity.web.ContentType;
 import ani.rss.enums.NotificationStatusEnum;
 import ani.rss.util.basic.HttpReq;
 import ani.rss.util.other.ConfigUtil;
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.text.StrFormatter;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpResponse;
-import com.google.gson.JsonElement;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import com.google.gson.annotations.SerializedName;
+import lombok.Data;
+import lombok.experimental.Accessors;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.File;
+import java.io.Serializable;
 import java.nio.file.Path;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * Telegram
@@ -42,51 +44,37 @@ public class TelegramNotification implements BaseNotification {
         send(notificationConfig, ani, text, notificationStatusEnum);
     }
 
-    public static Map<String, String> getUpdates(NotificationConfig notificationConfig) {
+    public static List<Message.Chat> getUpdates(NotificationConfig notificationConfig) {
         String telegramBotToken = notificationConfig.getTelegramBotToken();
         if (StrUtil.isBlank(telegramBotToken)) {
-            return Map.of();
+            return new ArrayList<>();
         }
         String telegramApiHost = notificationConfig.getTelegramApiHost();
         telegramApiHost = StrUtil.blankToDefault(telegramApiHost, "https://api.telegram.org");
         String url = StrFormatter.format("{}/bot{}/getUpdates", telegramApiHost, telegramBotToken);
-        Map<String, String> map = new HashMap<>();
         return HttpReq.get(url)
                 .thenFunction(res -> {
                     JsonObject jsonObject = GsonStatic.fromJson(res.body(), JsonObject.class);
-                    JsonElement result = jsonObject.get("result");
-                    if (Objects.isNull(result)) {
-                        return map;
-                    }
-                    result.getAsJsonArray()
-                            .asList()
+                    JsonArray result = jsonObject.getAsJsonArray("result");
+                    List<Message.Chat> chatList = GsonStatic.fromJsonList(result, Update.class)
                             .stream()
-                            .map(JsonElement::getAsJsonObject)
-                            .map(o -> o.getAsJsonObject("message"))
+                            .map(Update::getMessage)
                             .filter(Objects::nonNull)
-                            .map(o -> o.getAsJsonObject("chat"))
+                            .map(Message::getChat)
                             .filter(Objects::nonNull)
-                            .forEach(o ->
-                                    map.put(
-                                            o.get("type").getAsString() + ": " + buildUsername(o),
-                                            o.get("id").getAsString()
-                                    )
-                            );
-                    return map;
+                            .peek(chat -> {
+                                String username = chat.getUsername();
+                                if (StrUtil.isNotBlank(username)) {
+                                    return;
+                                }
+                                String firstName = chat.getFirstName();
+                                String lastName = chat.getLastName();
+                                username = StrUtil.join(" ", firstName, lastName);
+                                chat.setUsername(username);
+                            })
+                            .toList();
+                    return CollUtil.distinct(chatList, Message.Chat::getId, false);
                 });
-    }
-
-    private static String buildUsername(JsonObject jsonObject) {
-        if (jsonObject.has("username")) {
-            return jsonObject.get("username").getAsString();
-        }
-        String firstName = Optional.ofNullable(jsonObject.get("first_name"))
-                .map(JsonElement::getAsString)
-                .orElse("");
-        String lastName = Optional.ofNullable(jsonObject.get("last_name"))
-                .map(JsonElement::getAsString)
-                .orElse("");
-        return firstName + " " + lastName;
     }
 
     /**
@@ -129,8 +117,7 @@ public class TelegramNotification implements BaseNotification {
             if (StrUtil.isNotBlank(telegramFormat)) {
                 body.put("parse_mode", telegramFormat);
             }
-            return HttpReq.post(url)
-                    .body(GsonStatic.toJson(body))
+            return HttpReq.post(url, body)
                     .thenFunction(HttpResponse::isOk);
         }
 
@@ -163,5 +150,51 @@ public class TelegramNotification implements BaseNotification {
 
         return request
                 .thenFunction(HttpResponse::isOk);
+    }
+
+    @Data
+    @Accessors(chain = true)
+    private static class Update implements Serializable {
+        private String updateId;
+        @SerializedName(value = "message", alternate = "my_chat_member")
+        private Message message;
+    }
+
+    @Data
+    @Accessors(chain = true)
+    public static class Message implements Serializable {
+        @SerializedName(value = "messageId", alternate = "message_id")
+        private Integer messageId;
+        private Long date;
+        private String text;
+        private From from;
+        private Chat chat;
+
+        @Data
+        @Accessors(chain = true)
+        public static class From implements Serializable {
+            private Integer id;
+            @SerializedName(value = "isBot", alternate = "is_bot")
+            private Boolean isBot;
+            @SerializedName(value = "firstName", alternate = "first_name")
+            private String firstName;
+            @SerializedName(value = "lastName", alternate = "last_name")
+            private String lastName;
+            private String username;
+            @SerializedName(value = "languageCode", alternate = "language_code")
+            private String language_code;
+        }
+
+        @Data
+        @Accessors(chain = true)
+        public static class Chat implements Serializable {
+            private Integer id;
+            @SerializedName(value = "firstName", alternate = "first_name")
+            private String firstName;
+            @SerializedName(value = "lastName", alternate = "last_name")
+            private String lastName;
+            private String username;
+            private String type;
+        }
     }
 }

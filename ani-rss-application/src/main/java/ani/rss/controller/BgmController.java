@@ -96,7 +96,7 @@ public class BgmController extends BaseController {
         String bgmAppSecret = config.getBgmAppSecret();
         String bgmRedirectUri = config.getBgmRedirectUri();
 
-        Map<String, String> map = Map.of(
+        Map<String, String> bodyMap = Map.of(
                 "grant_type", "authorization_code",
                 "client_id", bgmAppID,
                 "client_secret", bgmAppSecret,
@@ -104,8 +104,7 @@ public class BgmController extends BaseController {
                 "redirect_uri", bgmRedirectUri
         );
 
-        HttpReq.post("https://bgm.tv/oauth/access_token")
-                .body(GsonStatic.toJson(map))
+        HttpReq.post("https://bgm.tv/oauth/access_token", bodyMap)
                 .then(res -> {
                     HttpReq.assertStatus(res);
                     JsonObject jsonObject = GsonStatic.fromJson(res.body(), JsonObject.class);

@@ -28,9 +28,8 @@ public class AniListUtil {
                 }
                 """, title);
 
-        return HttpReq.post("https://graphql.anilist.co")
+        return HttpReq.post("https://graphql.anilist.co", body)
                 .timeout(5000)
-                .body(body)
                 .thenFunction(res -> {
                     HttpReq.assertStatus(res);
                     JsonObject jsonObject = GsonStatic.fromJson(res.body(), JsonObject.class);

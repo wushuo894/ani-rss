@@ -248,9 +248,8 @@ public class Transmission implements BaseDownload {
         String password = CONFIG.getDownloadToolPassword();
         String authorization = StrFormatter.format("Basic {}", Base64.encode(username + ":" + password));
 
-        return HttpReq.post(downloadToolHost + "/transmission/rpc")
+        return HttpReq.post(downloadToolHost + "/transmission/rpc", transmissionRpcBody)
                 .header(Header.AUTHORIZATION, authorization)
-                .header("X-Transmission-Session-Id", SESSION_ID)
-                .body(GsonStatic.toJson(transmissionRpcBody));
+                .header("X-Transmission-Session-Id", SESSION_ID);
     }
 }

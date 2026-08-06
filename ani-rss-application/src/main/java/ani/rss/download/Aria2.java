@@ -239,7 +239,6 @@ public class Aria2 implements BaseDownload {
     private HttpRequest rpc(Aria2RpcBody aria2RpcBody) {
         Config config = ConfigUtil.CONFIG;
         String host = config.getDownloadToolHost();
-        return HttpReq.post(host + "/jsonrpc")
-                .body(GsonStatic.toJson(aria2RpcBody));
+        return HttpReq.post(host + "/jsonrpc", aria2RpcBody);
     }
 }

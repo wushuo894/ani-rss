@@ -1,6 +1,5 @@
 package ani.rss.notification;
 
-import ani.rss.commons.GsonStatic;
 import ani.rss.entity.Ani;
 import ani.rss.entity.NotificationConfig;
 import ani.rss.enums.NotificationStatusEnum;
@@ -47,8 +46,7 @@ public class BarkNotification implements BaseNotification {
 
         Assert.notBlank(serverUrl, "请设置 Bark ServerUrl");
 
-        return HttpReq.post(serverUrl + "/push")
-                .body(GsonStatic.toJson(barkPushBody))
+        return HttpReq.post(serverUrl + "/push", barkPushBody)
                 .thenFunction(HttpResponse::isOk);
     }
 
