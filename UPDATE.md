@@ -1,2 +1,3 @@
-- fix: 修复自定义css、js不生效的问题
-- fix: 修复订阅列表局中问题
+- refactor: 优化 Telegram 通知
+- refactor: 优化前端构建
+- build: 更新前端依赖
