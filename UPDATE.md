@@ -1,3 +1,1 @@
-- refactor: 优化 Telegram 通知
-- refactor: 优化前端构建
-- build: 更新前端依赖
+- refactor: 增加 qBittorrent 未配置 ApiKey 提示
