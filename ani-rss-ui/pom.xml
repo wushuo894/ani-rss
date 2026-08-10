@@ -54,7 +54,7 @@
                         </goals>
                         <configuration>
                             <nodeVersion>v26.5.1</nodeVersion>
-                            <pnpmVersion>11.18.0</pnpmVersion>
+                            <pnpmVersion>11.20.0</pnpmVersion>
                         </configuration>
                     </execution>
                     <execution>

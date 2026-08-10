@@ -90,6 +90,11 @@ public class qBittorrent implements BaseDownload {
             return false;
         }
 
+        if (!password.startsWith("qbt_")) {
+            log.warn("qBittorrent 未配置 ApiKey");
+            return false;
+        }
+
         try {
             // 校验当前登录状态
             return HttpReq.post(host + "/api/v2/app/version")
