@@ -213,8 +213,8 @@ public class TmdbUtils {
      * @param ani 订阅
      * @return 每集的标题
      */
-    public static Map<Integer, String> getEpisodeTitleMap(Ani ani) {
-        Map<Integer, String> episodeTitleMap = new HashMap<>();
+    public static Map<Integer, TmdbEpisode> getEpisodeTitleMap(Ani ani) {
+        Map<Integer, TmdbEpisode> episodeTitleMap = new HashMap<>();
 
         if (Objects.isNull(ani)) {
             return episodeTitleMap;
@@ -237,7 +237,7 @@ public class TmdbUtils {
 
         String key = StrFormatter.format("TMDB_getEpisodeTitleMap:{}:{}:{}", tmdbId, tmdbGroupId, season);
 
-        Map<Integer, String> cacheMap = CacheUtils.get(key);
+        Map<Integer, TmdbEpisode> cacheMap = CacheUtils.get(key);
         if (Objects.nonNull(cacheMap)) {
             return cacheMap;
         }
@@ -258,7 +258,7 @@ public class TmdbUtils {
      * @param season 季
      * @return 每集的标题
      */
-    public static Map<Integer, String> getEpisodeTitleMap(Tmdb tmdb, Integer season) {
+    public static Map<Integer, TmdbEpisode> getEpisodeTitleMap(Tmdb tmdb, Integer season) {
         return TMDB_UTIL.getEpisodeTitleMap(tmdb, season);
     }
 

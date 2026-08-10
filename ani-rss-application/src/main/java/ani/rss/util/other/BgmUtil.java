@@ -2,10 +2,7 @@ package ani.rss.util.other;
 
 import ani.rss.cache.CacheUtils;
 import ani.rss.commons.GsonStatic;
-import ani.rss.entity.Ani;
-import ani.rss.entity.BgmInfo;
-import ani.rss.entity.BgmMe;
-import ani.rss.entity.Config;
+import ani.rss.entity.*;
 import ani.rss.entity.web.ContentType;
 import ani.rss.entity.web.Header;
 import ani.rss.enums.BgmTokenTypeEnum;
@@ -223,7 +220,7 @@ public class BgmUtil {
      * @param type      0正常 1番外
      * @return 视频列表
      */
-    public static List<JsonObject> getEpisodes(String subjectId, Integer type) {
+    public static List<BgmEpisodes.BgmEpisode> getEpisodes(String subjectId, Integer type) {
         ThreadUtil.sleep(500);
         Objects.requireNonNull(subjectId);
         String bgmApi = CONFIG.getBgmApi();
@@ -245,15 +242,12 @@ public class BgmUtil {
                         return List.of();
                     }
 
-                    return GsonStatic.fromJson(body, JsonObject.class)
-                            .get("data")
-                            .getAsJsonArray()
-                            .asList()
+                    return GsonStatic.fromJson(body, BgmEpisodes.class)
+                            .getData()
                             .stream()
-                            .map(JsonElement::getAsJsonObject)
-                            .filter(itemObject -> {
+                            .filter(bgmEpisode -> {
                                 if (Objects.nonNull(type)) {
-                                    return type == itemObject.get("type").getAsInt();
+                                    return type.intValue() == bgmEpisode.getType();
                                 }
                                 return true;
                             })
@@ -376,20 +370,20 @@ public class BgmUtil {
 
         String key = "BGM_getEpisodeId:" + subjectId;
 
-        List<JsonObject> episodes = CacheUtils.get(key);
+        List<BgmEpisodes.BgmEpisode> episodes = CacheUtils.get(key);
         if (Objects.isNull(episodes)) {
             episodes = getEpisodes(subjectId, 0);
             CacheUtils.put(key, episodes, TimeUnit.MINUTES.toMillis(10));
         }
-        for (JsonObject itemObject : episodes) {
-            double ep = itemObject.get("ep").getAsDouble();
-            double sort = itemObject.get("sort").getAsDouble();
+        for (BgmEpisodes.BgmEpisode itemObject : episodes) {
+            int ep = itemObject.getEp();
+            int sort = itemObject.getSort();
             if (ep == e) {
-                epId = itemObject.get("id").getAsString();
+                epId = itemObject.getId();
                 break;
             }
             if (sort == e) {
-                sortId = itemObject.get("id").getAsString();
+                sortId = itemObject.getId();
                 break;
             }
         }
@@ -735,8 +729,8 @@ public class BgmUtil {
      * @param ani 订阅
      * @return 每集标题
      */
-    public static Map<Integer, Function<Boolean, String>> getEpisodeTitleMap(Ani ani) {
-        Map<Integer, Function<Boolean, String>> episodeTitleMap = new HashMap<>();
+    public static Map<Integer, BgmEpisodes.BgmEpisode> getEpisodeTitleMap(Ani ani) {
+        Map<Integer, BgmEpisodes.BgmEpisode> episodeTitleMap = new HashMap<>();
 
         if (Objects.isNull(ani)) {
             return episodeTitleMap;
@@ -754,32 +748,33 @@ public class BgmUtil {
 
         String key = "BGM_getEpisodeTitleMap:" + subjectId;
 
-        Map<Integer, Function<Boolean, String>> cacheMap = CacheUtils.get(key);
+        Map<Integer, BgmEpisodes.BgmEpisode> cacheMap = CacheUtils.get(key);
         if (Objects.nonNull(cacheMap)) {
             return cacheMap;
         }
 
         try {
-            List<JsonObject> data = getEpisodes(subjectId, 0);
-            for (JsonObject it : data) {
-                int ep = it.get("ep").getAsInt();
-                String jpTitle = it.get("name").getAsString();
-
-                String title = it.get("name_cn").getAsString();
-                title = StrUtil.blankToDefault(title, it.get("name").getAsString());
-
-                title = RenameUtil.getName(title);
-                jpTitle = RenameUtil.getName(jpTitle);
+            List<BgmEpisodes.BgmEpisode> data = getEpisodes(subjectId, 0);
+            for (BgmEpisodes.BgmEpisode bgmEpisode : data) {
+                int ep = bgmEpisode.getEp();
 
                 String defaultEpisodeTitle = "第" + ep + "集";
 
-                title = StrUtil.blankToDefault(title, defaultEpisodeTitle);
-                jpTitle = StrUtil.blankToDefault(jpTitle, defaultEpisodeTitle);
+                String name = bgmEpisode.getName();
+                String nameCn = bgmEpisode.getNameCn();
 
-                AtomicReference<String> titleRef = new AtomicReference<>(title);
-                AtomicReference<String> jpTitleRef = new AtomicReference<>(jpTitle);
+                nameCn = StrUtil.blankToDefault(nameCn, name);
 
-                episodeTitleMap.put(ep, jp -> jp ? jpTitleRef.get() : titleRef.get());
+                nameCn = RenameUtil.getName(nameCn);
+                name = RenameUtil.getName(name);
+
+                nameCn = StrUtil.blankToDefault(nameCn, defaultEpisodeTitle);
+                name = StrUtil.blankToDefault(name, defaultEpisodeTitle);
+
+                bgmEpisode.setName(name)
+                        .setNameCn(nameCn);
+
+                episodeTitleMap.put(ep, bgmEpisode);
             }
         } catch (Exception e) {
             log.error(e.getMessage(), e);
