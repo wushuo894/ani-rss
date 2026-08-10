@@ -35,10 +35,10 @@
                 </el-tag>
               </div>
               <div>
-                <el-tag class="torrents-tag-right" type="success">
+                <el-tag class="torrents-tag-spacer" type="success">
                   {{ torrentsInfo['formatSize'] }}
                 </el-tag>
-                <el-tag type="primary">
+                <el-tag class="torrents-tag-spacer" type="primary">
                   {{ torrentsInfo['state'] }}
                 </el-tag>
               </div>
@@ -160,10 +160,7 @@ defineExpose({show})
 }
 
 .torrents-tag-spacer {
+  margin-top: 4px;
   margin-left: 4px;
-}
-
-.torrents-tag-right {
-  margin-right: 4px;
 }
 </style>

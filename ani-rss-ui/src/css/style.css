@@ -175,16 +175,6 @@ html, body, #app {
     }
 }
 
-.flex {
-    display: flex;
-}
-
-.flex-center {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
 .markdown-body code, .markdown-body tt {
     padding: .2em .4em;
     margin: 0;
@@ -198,12 +188,6 @@ html, body, #app {
     padding: 0 1em;
     color: #59636e;
     border-left: .25em solid #d1d9e0;
-}
-
-@media (min-width: 1000px) {
-    .auto-flex {
-        display: flex;
-    }
 }
 
 /* 多选框 */
@@ -224,6 +208,11 @@ html, body, #app {
         background-color: var(--el-bg-color);
         border-radius: 0 var(--el-border-radius-base) var(--el-border-radius-base) 0;
     }
+}
+
+/* 修复超链接文字对齐问题 */
+.el-link {
+    vertical-align: baseline;
 }
 
 .el-color-picker__color-inner,
@@ -250,40 +239,4 @@ html, body, #app {
 
 .el-loading-mask {
     border-radius: var(--el-border-radius-base);
-}
-
-/* 隐藏滚动条 */
-.hide-scrollbar {
-    .el-scrollbar__bar {
-        display: none !important;
-    }
-}
-
-/* 修复超链接文字对齐问题 */
-.el-link {
-    vertical-align: baseline;
-}
-
-.full-width {
-    width: 100%;
-}
-
-.width-150 {
-    width: 150px;
-}
-
-.width-200 {
-    width: 200px;
-}
-
-.spacer {
-    height: 8px;
-    width: 8px;
-}
-
-.tabs-center {
-    .el-tabs__nav-scroll {
-        display: flex;
-        justify-content: center;
-    }
 }

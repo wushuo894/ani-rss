@@ -13,7 +13,7 @@
         <div>
           <el-input v-model="props.config['githubToken']" clearable placeholder="在此处输入GithubToken"/>
         </div>
-        <div style="justify-content: end;margin-top: 4px;" class="flex">
+        <div style="justify-content: end;" class="flex margin-top-4">
           <el-button :icon="Github" bg
                      @click="openUrl('https://github.com/login/oauth/authorize?client_id=Ov23li1dD89l7iGKhYa3&redirect_uri=https://github-app.wushuo.top/&scope=read:user')">
             获取GithubToken

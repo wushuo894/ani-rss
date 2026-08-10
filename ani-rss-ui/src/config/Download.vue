@@ -20,6 +20,13 @@
           </el-icon>
         </template>
       </el-input>
+      <div v-if="!props.config.downloadToolPassword.startsWith('qbt_')" class="full-width margin-top-4">
+        <el-alert show-icon type="warning" :closable="false">
+          <template #title>
+            ApiKey 未正确配置
+          </template>
+        </el-alert>
+      </div>
     </el-form-item>
     <el-form-item v-else-if="props.config.downloadToolType === 'Aria2'" label="RPC 密钥">
       <el-input v-model.trim="props.config.downloadToolPassword" placeholder="" show-password>
@@ -105,11 +112,9 @@
       </div>
     </el-form-item>
     <el-form-item label="保存位置">
-      <div class="full-width">
-        <el-input v-model.trim="props.config['downloadPathTemplate']"/>
+      <el-input v-model.trim="props.config['downloadPathTemplate']"/>
+      <div class="full-width margin-top-4" v-if="!testPathTemplate(props.config['downloadPathTemplate'])">
         <el-alert
-            v-if="!testPathTemplate(props.config['downloadPathTemplate'])"
-            class="download-alert"
             type="warning"
             show-icon
             :closable="false"
@@ -121,11 +126,9 @@
       </div>
     </el-form-item>
     <el-form-item label="剧场版保存位置">
-      <div class="full-width">
-        <el-input v-model.trim="props.config['ovaDownloadPathTemplate']"/>
+      <el-input v-model.trim="props.config['ovaDownloadPathTemplate']"/>
+      <div class="full-width margin-top-4" v-if="!testPathTemplate(props.config['ovaDownloadPathTemplate'])">
         <el-alert
-            v-if="!testPathTemplate(props.config['ovaDownloadPathTemplate'])"
-            class="download-alert"
             type="warning"
             show-icon
             :closable="false"
@@ -274,10 +277,6 @@ let props = defineProps(['config'])
   display: flex;
   width: 100%;
   justify-content: end;
-}
-
-.download-alert {
-  margin-top: 8px;
 }
 
 .download-danger-text {

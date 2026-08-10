@@ -66,7 +66,7 @@
                   <div style="width: 6px;"></div>
                   <el-input v-model:model-value="props.ani.url" placeholder="https://xxx.xxx"/>
                 </div>
-                <div style="justify-content: end;margin-top: 4px;" class="flex full-width">
+                <div style="justify-content: end;" class="flex full-width margin-top-4">
                   <el-button bg text
                              @click="mikanRef?.show(props.ani)">
                     <template #icon>
