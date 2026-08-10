@@ -1,6 +1,6 @@
 package ani.rss.util.other;
 
-import ani.rss.commons.CacheUtils;
+import ani.rss.cache.CacheUtils;
 import ani.rss.commons.GsonStatic;
 import ani.rss.entity.Ani;
 import ani.rss.entity.BgmInfo;

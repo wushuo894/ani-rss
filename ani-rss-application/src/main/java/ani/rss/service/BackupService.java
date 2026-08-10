@@ -76,7 +76,7 @@ public class BackupService {
 
         File configDir = ConfigUtil.getConfigDir();
         List<File> backupFiles = Stream.of(
-                        "files", "torrents", "database.db",
+                        "files", "torrents",
                         AniUtil.FILE_NAME, ConfigUtil.FILE_NAME
                 )
                 .map(s -> new File(configDir, s))

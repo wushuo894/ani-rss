@@ -5,7 +5,6 @@ import ani.rss.entity.Global;
 import ani.rss.entity.web.Result;
 import ani.rss.entity.web.ResultCode;
 import ani.rss.exception.ResultException;
-import ani.rss.util.other.AuthUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.Aspect;

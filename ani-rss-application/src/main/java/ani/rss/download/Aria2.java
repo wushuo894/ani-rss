@@ -1,5 +1,7 @@
 package ani.rss.download;
 
+import ani.rss.cache.RenameCacheUtil;
+import ani.rss.commons.ExceptionUtils;
 import ani.rss.commons.FileUtils;
 import ani.rss.commons.GsonStatic;
 import ani.rss.entity.Ani;
@@ -10,7 +12,6 @@ import ani.rss.entity.torrent.Aria2TorrentsInfo;
 import ani.rss.entity.torrent.TorrentsInfo;
 import ani.rss.enums.TorrentsStateEnum;
 import ani.rss.util.basic.HttpReq;
-import ani.rss.util.basic.RenameCacheUtil;
 import ani.rss.util.other.ConfigUtil;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.io.FileUtil;
@@ -51,8 +52,14 @@ public class Aria2 implements BaseDownload {
         params.remove(0);
         params.add("token:" + password);
 
-        return rpc(aria2RpcBody)
-                .thenFunction(HttpResponse::isOk);
+        try {
+            return rpc(aria2RpcBody)
+                    .thenFunction(HttpResponse::isOk);
+        } catch (Exception e) {
+            String message = ExceptionUtils.getMessage(e);
+            log.error("登录 Aria2 失败 {}", message);
+        }
+        return false;
     }
 
     @Override

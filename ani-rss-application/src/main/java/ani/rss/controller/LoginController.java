@@ -1,11 +1,11 @@
 package ani.rss.controller;
 
-import ani.rss.commons.CacheUtils;
+import ani.rss.auth.AuthUtil;
+import ani.rss.cache.CacheUtils;
 import ani.rss.entity.Config;
 import ani.rss.entity.Login;
 import ani.rss.entity.web.Result;
 import ani.rss.entity.web.ResultCode;
-import ani.rss.util.other.AuthUtil;
 import ani.rss.util.other.ConfigUtil;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.thread.ThreadUtil;

@@ -1,13 +1,14 @@
 package ani.rss.util.other;
 
 import ani.rss.commons.FileUtils;
-import ani.rss.commons.GsonStatic;
 import ani.rss.commons.URLUtils;
 import ani.rss.entity.Config;
 import ani.rss.entity.Login;
 import ani.rss.entity.NotificationConfig;
 import ani.rss.enums.AniSortTypeEnum;
 import ani.rss.enums.BgmTokenTypeEnum;
+import ani.rss.handle.JsonReader;
+import ani.rss.handle.JsonWriter;
 import ani.rss.util.basic.LogUtil;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.bean.DynaBean;
@@ -270,15 +271,13 @@ public class ConfigUtil {
     public static synchronized void load() {
         File configFile = getConfigFile();
 
-        if (!configFile.exists()) {
-            FileUtil.writeUtf8String(GsonStatic.toJson(CONFIG), configFile);
-        }
-        String s = FileUtil.readUtf8String(configFile);
+        Config config = JsonReader.getInstance(configFile)
+                .toObject(Config.class, CONFIG);
 
         CopyOptions copyOptions = CopyOptions
                 .create()
                 .setIgnoreNullValue(true);
-        BeanUtil.copyProperties(GsonStatic.fromJson(s, Config.class), CONFIG, copyOptions);
+        BeanUtil.copyProperties(config, CONFIG, copyOptions);
         format(CONFIG);
         LogUtil.loadLogback();
         log.debug("加载配置文件 {}", configFile);
@@ -293,11 +292,11 @@ public class ConfigUtil {
         log.debug("保存配置 {}", configFile);
         try {
             ConfigUtil.format(CONFIG);
-            String json = GsonStatic.toJson(CONFIG);
-            File temp = new File(configFile + ".temp");
-            FileUtil.del(temp);
-            FileUtil.writeUtf8String(json, temp);
-            FileUtils.move(temp.toPath(), configFile.toPath());
+
+            // 写入到硬盘
+            JsonWriter.getInstance(configFile)
+                    .writer(CONFIG);
+
             LogUtil.loadLogback();
             log.debug("保存成功 {}", configFile);
         } catch (Exception e) {

@@ -1,7 +1,7 @@
 package ani.rss.auth.fun;
 
+import ani.rss.auth.AuthUtil;
 import ani.rss.entity.Login;
-import ani.rss.util.other.AuthUtil;
 import cn.hutool.core.util.StrUtil;
 import jakarta.servlet.http.HttpServletRequest;
 

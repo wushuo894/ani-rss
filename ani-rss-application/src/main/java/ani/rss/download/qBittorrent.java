@@ -102,7 +102,6 @@ public class qBittorrent implements BaseDownload {
                     .thenFunction(HttpResponse::isOk);
         } catch (Exception e) {
             String message = ExceptionUtils.getMessage(e);
-            log.error(message, e);
             log.error("登录 qBittorrent 失败 {}", message);
         }
         return false;

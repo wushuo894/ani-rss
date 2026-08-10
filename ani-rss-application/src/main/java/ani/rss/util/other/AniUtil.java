@@ -6,6 +6,8 @@ import ani.rss.entity.*;
 import ani.rss.entity.dto.RssToAniDTO;
 import ani.rss.entity.torrent.TorrentsInfo;
 import ani.rss.exception.ResultException;
+import ani.rss.handle.JsonReader;
+import ani.rss.handle.JsonWriter;
 import ani.rss.service.ClearService;
 import ani.rss.service.DownloadService;
 import ani.rss.service.MikanService;
@@ -59,11 +61,8 @@ public class AniUtil {
     public static void load() {
         File configFile = getAniFile();
 
-        if (!configFile.exists()) {
-            FileUtil.writeUtf8String(GsonStatic.toJson(ANI_LIST), configFile);
-        }
-        String s = FileUtil.readUtf8String(configFile);
-        List<Ani> anis = GsonStatic.fromJsonList(s, Ani.class);
+        List<Ani> anis = JsonReader.getInstance(configFile)
+                .toList(Ani.class, ANI_LIST);
 
         CopyOptions copyOptions = CopyOptions
                 .create()
@@ -105,11 +104,9 @@ public class AniUtil {
         File configFile = getAniFile();
         log.debug("保存订阅 {}", configFile);
         try {
-            String json = GsonStatic.toJson(ANI_LIST);
-            File temp = new File(configFile + ".temp");
-            FileUtil.del(temp);
-            FileUtil.writeUtf8String(json, temp);
-            FileUtils.move(temp.toPath(), configFile.toPath());
+            // 写入到硬盘
+            JsonWriter.getInstance(configFile)
+                    .writer(ANI_LIST);
             log.debug("保存成功 {}", configFile);
         } catch (Exception e) {
             log.error("保存失败 {}", configFile);

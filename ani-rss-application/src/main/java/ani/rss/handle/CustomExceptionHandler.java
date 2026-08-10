@@ -1,4 +1,4 @@
-package ani.rss.config;
+package ani.rss.handle;
 
 import ani.rss.entity.web.Result;
 import ani.rss.exception.ResultException;

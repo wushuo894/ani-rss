@@ -1,8 +1,8 @@
-package ani.rss.util.other;
+package ani.rss.auth;
 
 import ani.rss.annotation.Auth;
 import ani.rss.auth.enums.AuthType;
-import ani.rss.commons.CacheUtils;
+import ani.rss.cache.CacheUtils;
 import ani.rss.commons.ExceptionUtils;
 import ani.rss.commons.GsonStatic;
 import ani.rss.entity.Config;
@@ -11,6 +11,7 @@ import ani.rss.entity.Login;
 import ani.rss.entity.web.Result;
 import ani.rss.entity.web.ResultCode;
 import ani.rss.exception.ResultException;
+import ani.rss.util.other.ConfigUtil;
 import cn.hutool.core.net.NetUtil;
 import cn.hutool.core.text.StrFormatter;
 import cn.hutool.core.util.ObjectUtil;

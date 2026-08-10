@@ -1,5 +1,7 @@
 package ani.rss.download;
 
+import ani.rss.cache.RenameCacheUtil;
+import ani.rss.commons.ExceptionUtils;
 import ani.rss.commons.GsonStatic;
 import ani.rss.entity.Ani;
 import ani.rss.entity.Config;
@@ -10,7 +12,6 @@ import ani.rss.entity.torrent.TransmissionTorrentsInfo;
 import ani.rss.entity.web.Header;
 import ani.rss.enums.TorrentsTagEnum;
 import ani.rss.util.basic.HttpReq;
-import ani.rss.util.basic.RenameCacheUtil;
 import ani.rss.util.other.ConfigUtil;
 import cn.hutool.core.codec.Base64;
 import cn.hutool.core.io.FileUtil;
@@ -57,15 +58,22 @@ public class Transmission implements BaseDownload {
         }
 
         String authorization = StrFormatter.format("Basic {}", Base64.encode(username + ":" + password));
-        Boolean isOk = HttpReq.get(downloadToolHost)
-                .header(Header.AUTHORIZATION, authorization)
-                .thenFunction(HttpResponse::isOk);
-        if (!isOk) {
+        try {
+            Boolean isOk = HttpReq.get(downloadToolHost)
+                    .header(Header.AUTHORIZATION, authorization)
+                    .thenFunction(HttpResponse::isOk);
+            if (isOk) {
+                getTorrentsInfos();
+                return true;
+            }
+
             log.error("登录 Transmission 失败");
-            return false;
+        } catch (Exception e) {
+            String message = ExceptionUtils.getMessage(e);
+            log.error("登录 qBittorrent 失败 {}", message);
         }
-        getTorrentsInfos();
-        return true;
+
+        return false;
     }
 
     @Override

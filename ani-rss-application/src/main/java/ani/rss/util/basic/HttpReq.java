@@ -1,6 +1,6 @@
 package ani.rss.util.basic;
 
-import ani.rss.commons.CacheUtils;
+import ani.rss.cache.CacheUtils;
 import ani.rss.commons.GsonStatic;
 import ani.rss.commons.MavenUtils;
 import ani.rss.entity.Config;
