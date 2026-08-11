@@ -1,1 +1,5 @@
-- refactor: 增加 qBittorrent 未配置 ApiKey 提示
+- fix: 修复 AniBT 发布时间错误
+- refactor: 为消除歧义，将预览页面 本地存在 改为 已下载
+- refactor: 优化集标题获取
+- refactor: 优化持久化缓存
+- build: 更新 swagger
