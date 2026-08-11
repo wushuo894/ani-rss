@@ -373,14 +373,14 @@ public class AniService {
         String downloadPath = downloadService.getDownloadPath(ani);
 
         for (Item item : items) {
-            item.setLocal(false);
+            item.setHasDownloaded(false);
             File torrent = TorrentUtil.getTorrent(ani, item);
             if (torrent.exists()) {
-                item.setLocal(true);
+                item.setHasDownloaded(true);
                 continue;
             }
             if (downloadService.itemDownloaded(ani, item, false)) {
-                item.setLocal(true);
+                item.setHasDownloaded(true);
             }
         }
 

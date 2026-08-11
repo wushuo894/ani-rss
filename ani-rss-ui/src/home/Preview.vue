@@ -37,9 +37,9 @@
               <el-tag v-else>是</el-tag>
             </template>
           </el-table-column>
-          <el-table-column label="本地存在" min-width="100">
+          <el-table-column label="已下载" min-width="100">
             <template #default="it">
-              <el-tag v-if="!showItems[it.$index].local" type="info">否</el-tag>
+              <el-tag v-if="!showItems[it.$index]['hasDownloaded']" type="info">否</el-tag>
               <el-tag v-else>是</el-tag>
             </template>
           </el-table-column>

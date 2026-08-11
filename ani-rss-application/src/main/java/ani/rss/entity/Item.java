@@ -57,10 +57,10 @@ public class Item implements Serializable {
     private Long length;
 
     /**
-     * 本地已存在
+     * 已下载
      */
-    @Schema(description = "本地已存在")
-    private Boolean local;
+    @Schema(description = "已下载")
+    private Boolean hasDownloaded;
 
     /**
      * 主 rss
