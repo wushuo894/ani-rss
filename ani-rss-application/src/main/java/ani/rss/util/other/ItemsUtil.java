@@ -10,7 +10,6 @@ import ani.rss.enums.NotificationStatusEnum;
 import ani.rss.enums.StringEnum;
 import ani.rss.util.basic.HttpReq;
 import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.date.DatePattern;
 import cn.hutool.core.date.DateTime;
 import cn.hutool.core.date.DateUnit;
 import cn.hutool.core.date.DateUtil;
@@ -149,7 +148,7 @@ public class ItemsUtil {
 
                 if (itemChildNodeName.equals("pubDate")) {
                     try {
-                        pubDate = DateUtil.parse(itemChild.getTextContent(), DatePattern.HTTP_DATETIME_PATTERN);
+                        pubDate = DateUtil.parse(itemChild.getTextContent());
                     } catch (Exception ignored) {
                     }
                 }
@@ -163,10 +162,9 @@ public class ItemsUtil {
 
                         Element pubDateEl = XmlUtil.getElement((Element) itemChild, "pubDate");
 
-                        if (Objects.nonNull(pubDateEl)) {
+                        if (Objects.nonNull(pubDateEl) && Objects.isNull(pubDate)) {
                             String pubDateStr = pubDateEl.getTextContent();
-                            pubDateStr = pubDateStr.replaceAll("\\.\\d+$", "");
-                            pubDate = DateUtil.parse(pubDateStr, DatePattern.UTC_SIMPLE_PATTERN);
+                            pubDate = DateUtil.parse(pubDateStr);
                         }
                     } catch (Exception ignored) {
                     }
