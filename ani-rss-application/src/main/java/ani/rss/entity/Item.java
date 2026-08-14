@@ -1,6 +1,7 @@
 package ani.rss.entity;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.annotation.Nullable;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
@@ -77,6 +78,7 @@ public class Item implements Serializable {
     /**
      * 发布时间
      */
+    @Nullable
     @Schema(description = "发布时间")
     private Date pubDate;
 }

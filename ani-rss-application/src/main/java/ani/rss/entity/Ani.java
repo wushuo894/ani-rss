@@ -4,6 +4,7 @@ import ani.rss.commons.DateAdapter;
 import com.google.gson.annotations.JsonAdapter;
 import com.google.gson.annotations.SerializedName;
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.annotation.Nullable;
 import lombok.Data;
 import lombok.experimental.Accessors;
 import wushuo.tmdb.api.entity.Tmdb;
@@ -244,6 +245,7 @@ public class Ani implements Serializable {
     /**
      * tmdb 相关信息
      */
+    @Nullable
     @Schema(description = "TMDB 相关信息")
     private Tmdb tmdb;
 

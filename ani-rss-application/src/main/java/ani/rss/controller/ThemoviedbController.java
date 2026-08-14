@@ -19,6 +19,7 @@ import wushuo.tmdb.api.entity.TmdbGroup;
 import wushuo.tmdb.api.enums.TmdbTypeEnum;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @RestController
@@ -74,7 +75,7 @@ public class ThemoviedbController extends BaseController {
     @PostMapping("/getThemoviedbGroup")
     public Result<List<TmdbGroup>> getThemoviedbGroup(@RequestBody Ani ani) {
         Tmdb tmdb = ani.getTmdb();
-        Assert.notNull(tmdb, "tmdb is null");
+        Objects.requireNonNull(tmdb, "tmdb is null");
         Assert.notBlank(tmdb.getId(), "tmdb is null");
         List<TmdbGroup> tmdbGroup = TmdbUtils.getTmdbGroup(tmdb);
         return Result.success(tmdbGroup);
