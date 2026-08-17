@@ -1,1 +1,3 @@
-- feat: 增加下载位置 tmdb 年份 ${tmdbYear} Close #710
+- refactor: 默认启用 `标题年份`、`TMDB 标题`
+- refactor: 优化空指针判断
+- refactor: 优化前端构建
