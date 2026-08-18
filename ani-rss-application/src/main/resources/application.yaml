@@ -10,7 +10,6 @@ spring:
           mcp-endpoint: /api/mcp
   web:
     resources:
-      static-locations: classpath:/META-INF/dist
       chain:
         compressed: true
   jackson:

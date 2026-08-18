@@ -18,7 +18,7 @@
         <popconfirm @confirm="delTorrent" :title="`删除${selectViews.filter(it => it.local).length}个种子缓存?`">
           <template #reference>
             <el-button icon="Remove" bg text type="danger"
-                       :disabled="!selectViews.filter(it => it.local).length">
+                       :disabled="!selectViews.filter(it => it['hasDownloaded']).length">
               删除种子
             </el-button>
           </template>

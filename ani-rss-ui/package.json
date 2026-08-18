@@ -15,7 +15,7 @@
     "artplayer": "^5.4.0",
     "artplayer-plugin-multiple-subtitles": "^1.2.0",
     "crypto-js": "^4.2.0",
-    "dayjs": "^1.11.21",
+    "dayjs": "^1.11.22",
     "element-plus": "^2.14.4",
     "markdown-it": "^15.0.0",
     "markdown-it-github-alerts": "^1.0.1",
