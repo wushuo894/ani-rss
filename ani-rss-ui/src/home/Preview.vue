@@ -15,7 +15,7 @@
         <el-button bg text :disabled="!selectViews.length" @click="allowDownload" icon="Check" type="primary">允许下载
         </el-button>
         <el-button bg text :disabled="!selectViews.length" @click="notDownload" icon="Close">禁止下载</el-button>
-        <popconfirm @confirm="delTorrent" :title="`删除${selectViews.filter(it => it.local).length}个种子缓存?`">
+        <popconfirm @confirm="delTorrent" :title="`删除${selectViews.filter(it => it['hasDownloaded']).length}个种子缓存?`">
           <template #reference>
             <el-button icon="Remove" bg text type="danger"
                        :disabled="!selectViews.filter(it => it['hasDownloaded']).length">
@@ -123,11 +123,11 @@ const selectItems = ref([
   },
   {
     label: '本地已存在',
-    fun: it => it.local
+    fun: it => it['hasDownloaded']
   },
   {
     label: '本地不存在',
-    fun: it => !it.local
+    fun: it => !it['hasDownloaded']
   }
 ])
 const dialogVisible = ref(false)
@@ -175,7 +175,7 @@ let load = () => {
 }
 
 let delTorrent = () => {
-  let infoHash = selectViews.value.filter(it => it['local']).map(it => it['infoHash']).join(",")
+  let infoHash = selectViews.value.filter(it => it['hasDownloaded']).map(it => it['infoHash']).join(",")
   http.deleteTorrent(props.ani.id, infoHash)
       .then(res => {
         ElMessage.success(res.message)
