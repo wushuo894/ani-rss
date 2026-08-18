@@ -1,3 +1,1 @@
-- refactor: 默认启用 `标题年份`、`TMDB 标题`
-- refactor: 优化空指针判断
-- refactor: 优化前端构建
+- fix: 修复无法删除种子的问题
