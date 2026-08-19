@@ -1,1 +1,2 @@
-- fix: 修复无法删除种子的问题
+- feat: 支持使用备用 webui (自动加载 `/config/webui` 下的前端文件)
+- fix (ui): use downloaded status field in preview @kookxiang
