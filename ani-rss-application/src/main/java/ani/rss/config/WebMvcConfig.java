@@ -1,6 +1,7 @@
 package ani.rss.config;
 
 import ani.rss.commons.GsonStatic;
+import ani.rss.util.other.ConfigUtil;
 import cn.hutool.core.util.ClassUtil;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
@@ -10,13 +11,28 @@ import org.springframework.http.converter.HttpMessageConverters;
 import org.springframework.http.converter.json.GsonHttpMessageConverter;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.config.annotation.PathMatchConfigurer;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import org.springframework.web.servlet.resource.EncodedResourceResolver;
 import org.springframework.web.util.pattern.PathPatternParser;
 
+import java.io.File;
 import java.nio.charset.StandardCharsets;
 
 @Configuration
 public class WebMvcConfig implements WebMvcConfigurer {
+
+    @Override
+    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+        File configDir = ConfigUtil.getConfigDir();
+        File webuiDir = new File(configDir, "webui");
+        registry.addResourceHandler("/**")
+                .addResourceLocations(webuiDir.toURI().toString())
+                .addResourceLocations("classpath:/META-INF/resources/")
+                .resourceChain(true)
+                .addResolver(new EncodedResourceResolver());
+    }
+
     @Override
     public void configurePathMatch(PathMatchConfigurer configurer) {
         PathPatternParser pathPatternParser = new PathPatternParser();

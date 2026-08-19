@@ -8,10 +8,6 @@ spring:
         protocol: streamable
         streamable-http:
           mcp-endpoint: /api/mcp
-  web:
-    resources:
-      chain:
-        compressed: true
   jackson:
     date-format: yyyy-MM-dd HH:mm:ss
     time-zone: GMT+8

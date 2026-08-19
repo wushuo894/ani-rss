@@ -15,7 +15,8 @@
         <el-button bg text :disabled="!selectViews.length" @click="allowDownload" icon="Check" type="primary">允许下载
         </el-button>
         <el-button bg text :disabled="!selectViews.length" @click="notDownload" icon="Close">禁止下载</el-button>
-        <popconfirm @confirm="delTorrent" :title="`删除${selectViews.filter(it => it['hasDownloaded']).length}个种子缓存?`">
+        <popconfirm @confirm="delTorrent"
+                    :title="`删除${selectViews.filter(it => it['hasDownloaded']).length}个种子缓存?`">
           <template #reference>
             <el-button icon="Remove" bg text type="danger"
                        :disabled="!selectViews.filter(it => it['hasDownloaded']).length">
@@ -122,11 +123,11 @@ const selectItems = ref([
     fun: () => true
   },
   {
-    label: '本地已存在',
+    label: '已下载',
     fun: it => it['hasDownloaded']
   },
   {
-    label: '本地不存在',
+    label: '未下载',
     fun: it => !it['hasDownloaded']
   }
 ])
