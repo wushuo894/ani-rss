@@ -91,19 +91,20 @@ public class FileController extends BaseController {
         response.setHeader(Header.CONTENT_DISPOSITION, StrFormatter.format("inline; filename=\"{}\"", URLUtil.encode(file.getName())));
         if (contentType.startsWith("video/")) {
             response.setContentType(contentType);
-            response.setHeader(Header.ACCEPT_RANGES, "bytes");
             String rangeHeader = request.getHeader("Range");
             if (StrUtil.isNotBlank(rangeHeader) && rangeHeader.startsWith("bytes=")) {
                 String[] range = rangeHeader.substring(6).split("-");
-                if (range.length > 0) {
+                if (range.length > 0 && StrUtil.isNotBlank(range[0])) {
                     start = Long.parseLong(range[0]);
                 }
-                if (range.length > 1) {
+                if (range.length > 1 && StrUtil.isNotBlank(range[1])) {
                     end = Long.parseLong(range[1]);
                 }
+
+                response.setHeader(Header.ACCEPT_RANGES, "bytes");
+                response.setHeader(Header.CONTENT_RANGE, "bytes " + start + "-" + end + "/" + fileLength);
+                hasRange = true;
             }
-            response.setHeader(Header.CONTENT_RANGE, "bytes " + start + "-" + end + "/" + fileLength);
-            hasRange = true;
         } else {
             long maxAge = 0;
 
@@ -119,8 +120,9 @@ public class FileController extends BaseController {
 
         try {
             if (hasRange) {
-                long length = end - start;
+                long length = end - start + 1;
                 response.setStatus(206);
+                response.setContentLengthLong(length);
                 @Cleanup
                 OutputStream out = response.getOutputStream();
                 @Cleanup
@@ -132,7 +134,7 @@ public class FileController extends BaseController {
                 InputStream inputStream = Channels.newInputStream(channel);
                 IoUtil.copy(inputStream, out, 40960, length, null);
             } else {
-                response.setContentLengthLong(file.length());
+                response.setContentLengthLong(fileLength);
 
                 @Cleanup
                 InputStream inputStream = FileUtil.getInputStream(file);

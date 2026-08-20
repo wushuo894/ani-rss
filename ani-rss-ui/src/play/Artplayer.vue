@@ -40,7 +40,7 @@
               </el-text>
             </el-dropdown-item>
             <el-dropdown-item
-                @click="openUrl(`infuse://x-callback-url/play?url=${playItem.src}&filename=${playItem.name}`)">
+                @click="openUrl(`infuse://x-callback-url/play?url=${encodeUrl(playItem.src)}&filename=${playItem.name}`)">
               <el-text>
                 <el-icon>
                   <img alt="Infuse" class="el-icon--left icon" src="../icon/icon-Infuse.png"/>
@@ -66,7 +66,7 @@
             </el-text>
           </el-dropdown-item>
           <el-dropdown-item
-              @click="openUrl(`SenPlayer://x-callback-url/play?url=${playItem.src}&name=${playItem.name}`)">
+              @click="openUrl(`SenPlayer://x-callback-url/play?url=${encodeUrl(playItem.src)}&name=${playItem.name}`)">
             <el-text>
               <el-icon>
                 <img alt="SenPlayer" class="el-icon--left icon" src="../icon/icon-SenPlayer.webp"/>
