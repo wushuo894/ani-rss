@@ -4,9 +4,9 @@ import ani.rss.commons.DateAdapter;
 import com.google.gson.annotations.JsonAdapter;
 import com.google.gson.annotations.SerializedName;
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.annotation.Nullable;
 import lombok.Data;
 import lombok.experimental.Accessors;
+import org.jspecify.annotations.Nullable;
 import wushuo.tmdb.api.entity.Tmdb;
 
 import java.io.Serializable;

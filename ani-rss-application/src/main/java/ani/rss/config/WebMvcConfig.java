@@ -29,7 +29,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
         registry.addResourceHandler("/**")
                 .addResourceLocations(webuiDir.toURI().toString())
                 .addResourceLocations("classpath:/META-INF/resources/")
-                .resourceChain(true)
+                .resourceChain(false)
                 .addResolver(new EncodedResourceResolver());
     }
 

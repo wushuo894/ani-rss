@@ -1,9 +1,9 @@
 package ani.rss.entity;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.annotation.Nullable;
 import lombok.Data;
 import lombok.experimental.Accessors;
+import org.jspecify.annotations.Nullable;
 
 import java.io.Serializable;
 import java.util.Date;
