@@ -1,1 +1,1 @@
-- refactor: 优化webui加载
+- feat: 支持 webui 更新
