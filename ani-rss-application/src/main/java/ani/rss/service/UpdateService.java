@@ -2,32 +2,26 @@ package ani.rss.service;
 
 import ani.rss.cache.CacheUtils;
 import ani.rss.commons.ExceptionUtils;
-import ani.rss.commons.FileUtils;
-import ani.rss.commons.GsonStatic;
 import ani.rss.commons.MavenUtils;
 import ani.rss.entity.About;
-import ani.rss.entity.Config;
-import ani.rss.entity.Github;
+import ani.rss.entity.UpdateInfo;
 import ani.rss.update.BaseUpdate;
-import ani.rss.util.basic.HttpReq;
-import ani.rss.util.other.ConfigUtil;
-import cn.hutool.core.comparator.VersionComparator;
+import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.thread.ThreadUtil;
-import cn.hutool.core.util.ReUtil;
-import cn.hutool.core.util.StrUtil;
-import cn.hutool.http.Header;
-import cn.hutool.http.HttpRequest;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
-import java.util.List;
 import java.util.Objects;
 
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class UpdateService {
+
+    private final GithubService githubService;
 
     /**
      * 关于
@@ -35,7 +29,6 @@ public class UpdateService {
      * @return 关于信息
      */
     public synchronized About about() {
-        Config config = ConfigUtil.CONFIG;
         String key = "github#releases-latest";
 
         About cacheAbout = CacheUtils.get(key);
@@ -46,76 +39,20 @@ public class UpdateService {
 
         String version = MavenUtils.getVersion();
 
-        About about = new About()
+        About about = (About) new About()
                 .setVersion(version)
                 .setUpdate(false)
                 .setAutoUpdate(false)
                 .setLatest("")
                 .setMarkdownBody("");
         try {
-            HttpRequest request = HttpReq.get("https://api.github.com/repos/wushuo894/ani-rss/releases/latest")
-                    .timeout(3000);
+            MavenUtils.CurrentFile currentFile = MavenUtils.getCurrentFile();
 
-            String githubToken = config.getGithubToken();
-            if (StrUtil.isNotBlank(githubToken)) {
-                request.header(Header.AUTHORIZATION, "Bearer " + githubToken);
-            }
+            String filename = currentFile.isJar() ? "ani-rss.jar" : "ani-rss.exe";
 
-            request.then(response -> {
-                int status = response.getStatus();
-                if (status == 404) {
-                    return;
-                }
-                HttpReq.assertStatus(response);
+            UpdateInfo updateInfo = githubService.getUpdateInfo("wushuo894", "ani-rss", filename, version);
 
-                Github.Release release = GsonStatic.fromJson(response.body(), Github.Release.class);
-
-                String message = release.getMessage();
-                if (StrUtil.isNotBlank(message)) {
-                    log.error(message);
-                    return;
-                }
-
-                String latest = release.getTagName().replace("v", "");
-
-                /*
-                禁止非跨小版本的更新
-                取前两位版本号判断是允许自动更新
-                */
-                String reg = "^[Vv]?(\\d+\\.\\d+)";
-                boolean autoUpdate = ReUtil.get(reg, latest, 1)
-                        .equals(ReUtil.get(reg, version, 1));
-
-                about
-                        .setDate(release.getPublishedAt())
-                        .setAutoUpdate(autoUpdate)
-                        .setUpdate(VersionComparator.INSTANCE.compare(latest, version) > 0)
-                        .setLatest(latest)
-                        .setMarkdownBody(release.getBody());
-
-                MavenUtils.CurrentFile currentFile = MavenUtils.getCurrentFile();
-
-                String filename = currentFile.isJar() ? "ani-rss.jar" : "ani-rss.exe";
-
-                List<Github.Assets> assets = release.getAssets();
-                for (Github.Assets asset : assets) {
-                    String name = asset.getName();
-                    if (!filename.equals(name)) {
-                        continue;
-                    }
-
-                    Long size = asset.getSize();
-                    String formatSize = FileUtils.formatSize(size, true);
-
-                    String sha256 = asset.getDigest()
-                            .replace("sha256:", "");
-
-                    about.setDownloadUrl(asset.getBrowserDownloadUrl())
-                            .setSha256(sha256)
-                            .setSize(size)
-                            .setFormatSize(formatSize);
-                }
-            });
+            BeanUtil.copyProperties(updateInfo, about, "version");
         } catch (Exception e) {
             String message = ExceptionUtils.getMessage(e);
             log.error("检测更新失败 {}", message);
