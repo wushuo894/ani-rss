@@ -1,0 +1,359 @@
+<template>
+  <ImportAniView ref="importAniRef" @callback="getList"/>
+  <DelAniView ref="delAniRef" @callback="reLoadList"/>
+  <el-dialog v-model="dialogVisible" center title="管理">
+    <div class="manage-content" v-loading="loading">
+      <div class="manage-header">
+        <div class="auto-flex">
+          <div>
+            <el-input
+                v-model="text"
+                @input="changeFilterList"
+                @clear="changeFilterList"
+                clearable
+                placeholder="搜索"
+                prefix-icon="Search"
+                style="width: 180px;"
+            />
+          </div>
+          <div class="spacer"></div>
+          <div class="select-width">
+            <el-select
+                v-model:model-value="releaseDate"
+                clearable
+                @change="changeFilterList">
+              <el-option v-for="it in releaseDateList"
+                         :key="it" :label="it" :value="it"
+              />
+            </el-select>
+          </div>
+          <div class="spacer"></div>
+          <div class="select-width">
+            <el-select v-model:model-value="selectFilter"
+                       @change="changeFilterList">
+              <el-option v-for="filter in selectFilters"
+                         :key="filter.label"
+                         :label="filter.label"
+                         :value="filter.label"/>
+            </el-select>
+          </div>
+        </div>
+        <div>
+          <el-dropdown trigger="click">
+            <el-button bg text icon="MoreFilled"/>
+            <template #dropdown>
+              <el-dropdown-menu>
+                <el-dropdown-item @click="updateTotalEpisodeNumber(false)">
+                  <el-text>
+                    <el-icon>
+                      <RefreshRight/>
+                    </el-icon>
+                    更新总集数
+                  </el-text>
+                </el-dropdown-item>
+                <el-dropdown-item @click="updateTotalEpisodeNumber(true)">
+                  <el-text type="warning">
+                    <el-icon>
+                      <Refresh/>
+                    </el-icon>
+                    更新总集数 [F]
+                  </el-text>
+                </el-dropdown-item>
+                <el-dropdown-item divided @click="batchScrape(false)">
+                  <el-text>
+                    <el-icon>
+                      <RefreshRight/>
+                    </el-icon>
+                    刮削
+                  </el-text>
+                </el-dropdown-item>
+                <el-dropdown-item @click="batchScrape(true)">
+                  <el-text type="warning">
+                    <el-icon>
+                      <Refresh/>
+                    </el-icon>
+                    刮削 [F]
+                  </el-text>
+                </el-dropdown-item>
+                <el-dropdown-item divided @click="batchEnable(true)">
+                  <el-text type="primary">
+                    <el-icon>
+                      <CircleCheck/>
+                    </el-icon>
+                    启用
+                  </el-text>
+                </el-dropdown-item>
+                <el-dropdown-item @click="batchEnable(false)">
+                  <el-text type="warning">
+                    <el-icon>
+                      <CircleClose/>
+                    </el-icon>
+                    禁用
+                  </el-text>
+                </el-dropdown-item>
+                <el-dropdown-item divided @click="importAniRef?.show">
+                  <el-text>
+                    <el-icon>
+                      <Download/>
+                    </el-icon>
+                    导入
+                  </el-text>
+                </el-dropdown-item>
+                <el-dropdown-item @click="exportData">
+                  <el-text>
+                    <el-icon>
+                      <Upload/>
+                    </el-icon>
+                    导出
+                  </el-text>
+                </el-dropdown-item>
+                <el-dropdown-item divided @click="delAniRef?.show(selectList)">
+                  <el-text type="danger">
+                    <el-icon>
+                      <Remove/>
+                    </el-icon>
+                    删除
+                  </el-text>
+                </el-dropdown-item>
+              </el-dropdown-menu>
+            </template>
+          </el-dropdown>
+        </div>
+      </div>
+      <el-table
+          size="small"
+          @selection-change="handleSelectionChange"
+          v-model:data="searchList"
+          height="400px"
+          stripe
+      >
+        <el-table-column type="selection" width="55" fixed/>
+        <el-table-column label="标题" width="200" fixed>
+          <template #default="it">
+            <el-text :line-clamp="2" size="small">
+              {{ searchList[it.$index].title }}
+            </el-text>
+          </template>
+        </el-table-column>
+        <el-table-column label="季" prop="season" width="50"/>
+        <el-table-column label="字幕组" width="100">
+          <template #default="it">
+            <el-text size="small" truncated>
+              {{ searchList[it.$index].subgroup }}
+            </el-text>
+          </template>
+        </el-table-column>
+        <el-table-column label="状态" width="80">
+          <template #default="it">
+            <el-tag v-if="searchList[it.$index].enable">
+              已启用
+            </el-tag>
+            <el-tag v-else type="info">
+              未启用
+            </el-tag>
+          </template>
+        </el-table-column>
+        <el-table-column label="进度" width="100">
+          <template #default="it">
+            <el-tag type="warning">
+              {{ searchList[it.$index]['currentEpisodeNumber'] }} /
+              {{ searchList[it.$index]['totalEpisodeNumber'] ? searchList[it.$index]['totalEpisodeNumber'] : '*' }}
+            </el-tag>
+          </template>
+        </el-table-column>
+        <el-table-column label="类型" width="100">
+          <template #default="it">
+            <el-tag type="danger" v-if="searchList[it.$index].ova">
+              ova
+            </el-tag>
+            <el-tag type="danger" v-else>
+              tv
+            </el-tag>
+          </template>
+        </el-table-column>
+        <el-table-column label="URL" width="300">
+          <template #default="it">
+            <el-text :line-clamp="2" size="small">
+              {{ searchList[it.$index].url }}
+            </el-text>
+          </template>
+        </el-table-column>
+      </el-table>
+      <div>
+        <p class="manage-count">共 {{ searchList.length }} 项</p>
+      </div>
+    </div>
+  </el-dialog>
+</template>
+<script setup>
+import {ref} from "vue";
+import {ElMessage, ElText} from "element-plus";
+import DelAniView from "./DelAniView.vue";
+import ImportAniView from "@/view/home/ImportAniView.vue";
+import {CircleCheck, CircleClose, Download, Refresh, RefreshRight, Remove, Upload} from "@element-plus/icons-vue";
+import * as http from "@/js/http.js";
+
+let releaseDateList = ref([])
+
+let delAniRef = ref()
+let importAniRef = ref()
+
+let selectFilter = ref('全部')
+
+let selectFilters = ref([
+  {
+    label: '全部',
+    fun: () => true
+  },
+  {
+    label: '已启用',
+    fun: it => it.enable
+  },
+  {
+    label: '未启用',
+    fun: it => !it.enable
+  },
+])
+
+let searchList = ref([])
+
+let text = ref('')
+
+let changeFilterList = () => {
+  const filter = item => {
+    if (text.value.length < 1) {
+      return true
+    }
+    let {title, pinyin, pinyinInitials} = item
+    return title.indexOf(text.value) > -1 ||
+        pinyin.indexOf(text.value) > -1 ||
+        pinyinInitials.indexOf(text.value) > -1;
+  }
+
+  searchList.value = list.value
+      .filter(filter)
+      .filter(it => {
+        if (!releaseDate.value) {
+          return true
+        }
+        // 仅对比年月
+        return releaseDate.value === it['releaseDate'].replace(/-\d{2}$/, '');
+      })
+      .filter(selectFilters.value.filter(item => selectFilter.value === item.label)[0].fun)
+}
+
+let dialogVisible = ref(false)
+let loading = ref(false)
+
+let show = () => {
+  releaseDate.value = ''
+  selectFilter.value = '全部'
+  dialogVisible.value = true
+  selectList.value = []
+  text.value = ''
+  getList()
+}
+
+const list = ref([])
+
+const reLoadList = () => {
+  return getList()
+      .then(() => {
+        window.$reLoadList()
+      });
+}
+
+const getList = () => {
+  loading.value = true
+  return http.listAni()
+      .then(res => {
+        // 新接口返回 ListAni 对象
+        let data = res.data
+        releaseDateList.value = data.releaseDateList
+        list.value = data.weekList.flatMap(week => week.items)
+        changeFilterList()
+      })
+      .finally(() => {
+        loading.value = false
+      });
+}
+
+let selectList = ref([])
+
+let handleSelectionChange = (v) => {
+  selectList.value = v
+}
+
+let exportData = () => {
+  if (!selectList.value.length) {
+    ElMessage.error('未选择订阅')
+    return
+  }
+  const textContent = JSON.stringify(selectList.value);
+  const blob = new Blob([textContent], {type: "text/plain"});
+  const url = URL.createObjectURL(blob);
+
+  const a = document.createElement("a");
+  a.style.display = "none";
+  a.href = url;
+  a.download = "ani.v2.json";
+  document.body.appendChild(a);
+  a.click();
+  URL.revokeObjectURL(url);
+  document.body.removeChild(a);
+}
+
+let batchEnable = (value) => {
+  loading.value = true
+  let ids = selectList.value.map(it => it['id']);
+  http.batchEnable(value, ids)
+      .then(res => {
+        ElMessage.success(res.message)
+      })
+      .finally(() => {
+        reLoadList()
+      })
+}
+
+let releaseDate = ref('')
+
+let updateTotalEpisodeNumber = (force) => {
+  let ids = selectList.value.map(it => it['id']);
+  http.updateTotalEpisodeNumber(force, ids)
+      .then(res => {
+        ElMessage.success(res.message)
+        reLoadList()
+      })
+}
+
+let batchScrape = (force) => {
+  let ids = selectList.value.map(it => it['id']);
+  http.batchScrape(force, ids)
+      .then(res => {
+        ElMessage.success(res.message)
+      })
+}
+
+defineExpose({show})
+</script>
+
+<style scoped>
+.manage-content {
+  min-height: 300px;
+}
+
+.manage-header {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.select-width {
+  width: 120px;
+}
+
+.manage-count {
+  margin: 6px;
+  text-align: end;
+}
+</style>

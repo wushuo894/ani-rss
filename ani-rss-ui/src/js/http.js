@@ -1,6 +1,6 @@
 import api from "@/js/api.js";
-import CryptoJS from "crypto-js";
-import {authorization, base64Encode} from "./global.js";
+import {md5} from "js-md5";
+import {base64Encode} from "./global.js";
 
 /**
  * 获取设置
@@ -315,7 +315,7 @@ export let getTgUpdates = (notificationConfig) => api.post('api/getTgUpdates', n
  */
 export let login = (user) => {
     user = JSON.parse(JSON.stringify(user))
-    user.password = CryptoJS['MD5'](user.password).toString()
+    user.password = md5(user.password)
     return api.post('api/login', user)
 }
 
@@ -389,17 +389,5 @@ export let aniBT = (season, bgmUrl, text) => api.post('api/aniBT', {
  * @returns {Promise<unknown>}
  */
 export let deleteTorrent = (id, hash) => api.post(`api/deleteTorrent?id=${id}&hash=${hash}`)
-
-export let importConfig = (file) => {
-    const formData = new FormData();
-    formData.append("file", file);
-    return fetch('api/importConfig', {
-        method: 'POST',
-        body: formData,
-        headers: {
-            'Authorization': authorization.value
-        }
-    }).then(res => res.json())
-}
 
 export let ping = () => api.get("api/ping")

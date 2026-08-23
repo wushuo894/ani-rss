@@ -118,9 +118,8 @@ public class WebUIService {
             throw new IllegalArgumentException("上传 WebUI 失败");
         }
 
-        delete();
-
         File webuiDir = getWebUIDir();
+        FileUtil.del(webuiDir);
 
         try {
             ZipUtil.unzip(tempFile, webuiDir);

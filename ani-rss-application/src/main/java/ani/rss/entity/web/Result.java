@@ -4,7 +4,6 @@ import cn.hutool.core.text.StrFormatter;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
 import java.io.Serializable;
@@ -18,9 +17,13 @@ import java.util.function.Consumer;
 @Data
 @Accessors(chain = true)
 @AllArgsConstructor
-@NoArgsConstructor
 @Schema(description = "返回包装体")
 public class Result<T> implements Serializable {
+    public Result() {
+        this.code = ResultCode.HTTP_OK;
+        this.message = "success";
+    }
+
     public Result(Integer code, String message) {
         this.code = code;
         this.message = message;

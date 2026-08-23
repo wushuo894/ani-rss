@@ -8,6 +8,8 @@ import compression from 'vite-plugin-compression'
 
 let serverHost = process.env['SERVER_HOST'];
 
+let dirname = import.meta.dirname;
+
 export default defineConfig({
     base: './',
     server: {
@@ -45,14 +47,15 @@ export default defineConfig({
     ],
     resolve: {
         alias: {
-            '@': path.resolve(__dirname, './src/')
+            '@': path.resolve(dirname, './src/')
         }
     },
     build: {
+        chunkSizeWarningLimit: 1024,
         rollupOptions: {
             input: {
-                main: path.resolve(__dirname, 'index.html'),
-                bgmOauthCallback: path.resolve(__dirname, 'bgm-oauth-callback.html')
+                main: path.resolve(dirname, 'index.html'),
+                bgmOauthCallback: path.resolve(dirname, 'bgm-oauth-callback.html')
             },
             output: {
                 codeSplitting: {
@@ -63,7 +66,7 @@ export default defineConfig({
                         },
                         {
                             name: 'utils',
-                            test: /node_modules[\\/](crypto-js|markdown-it|markdown-it-github-alerts)/,
+                            test: /node_modules[\\/](js-md5|markdown-it|markdown-it-github-alerts)/,
                         },
                         {
                             name: 'element-icon',
