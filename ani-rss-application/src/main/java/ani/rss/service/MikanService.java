@@ -283,7 +283,7 @@ public class MikanService {
                         groups.add(group);
                         // 字幕组更新日期
                         String day = subgroupText.select(".date").text().trim();
-                        group.setUpdateDay(DateUtil.formatDate(DateUtil.parse(day, "MM/dd/yyyy")));
+                        group.setUpdateDay(day);
 
                         Element table = document.selectFirst(id).nextElementSibling();
                         Element tbody = table.selectFirst("tbody");
@@ -381,7 +381,7 @@ public class MikanService {
                         // 字幕组更新日期
                         String day = subgroupText.select(".date").text().trim();
 
-                        group.setUpdateDay(DateUtil.formatDate(DateUtil.parse(day, "MM/dd/yyyy")));
+                        group.setUpdateDay(day);
 
                         Element table = html.selectFirst(id).nextElementSibling();
                         Element tbody = table.selectFirst("tbody");

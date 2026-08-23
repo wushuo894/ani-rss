@@ -21,7 +21,10 @@
               </div>
               <div style="margin-top: 8px;">
                 <el-upload
-                    :action="`api/upload?s=${authorization}`"
+                    action="api/upload"
+                    :headers="{
+                      Authorization: authorization
+                    }"
                     :before-upload="beforeAvatarUpload"
                     :on-success="res => {
                       ani['cover'] = res.data

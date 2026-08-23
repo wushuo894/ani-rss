@@ -13,9 +13,13 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jspecify.annotations.Nullable;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
+import java.io.InputStream;
 import java.util.Objects;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
 
 @Slf4j
 @Service
@@ -23,10 +27,15 @@ import java.util.Objects;
 public class WebUIService {
     private final GithubService githubService;
 
+    public File getWebUIDir() {
+        File configDir = ConfigUtil.getConfigDir();
+        return new File(configDir, "webui");
+    }
+
     @Nullable
     public WebUI getWebUI() {
-        File configDir = ConfigUtil.getConfigDir();
-        File webuiJson = new File(configDir, "webui/webui.json");
+        File webuiDir = getWebUIDir();
+        File webuiJson = new File(webuiDir, "webui/webui.json");
 
         if (FileUtil.exist(webuiJson)) {
             return JsonReader.getInstance(webuiJson)
@@ -58,6 +67,8 @@ public class WebUIService {
         Boolean update = updateInfo.getUpdate();
         Assert.isTrue(update, "无 WebUI 更新");
 
+        log.info("更新 WebUI");
+
         File tempFile = FileUtil.createTempFile();
 
         String downloadUrl = updateInfo.getDownloadUrl();
@@ -72,7 +83,7 @@ public class WebUIService {
                     Assert.isTrue(SecureUtil.sha256(tempFile).equals(sha256), "WebUI 更新文件的 sha256 不匹配");
                 });
 
-        File webuiDir = new File(ConfigUtil.getConfigDir(), "webui");
+        File webuiDir = getWebUIDir();
 
         FileUtil.del(webuiDir);
 
@@ -81,7 +92,50 @@ public class WebUIService {
         } finally {
             FileUtil.del(tempFile);
         }
+
+        log.info("WebUI 更新完成");
     }
 
+    public void upload(MultipartFile file) {
+        String originalFilename = file.getOriginalFilename();
+
+        String extName = FileUtil.extName(originalFilename);
+        Assert.isTrue("zip".equals(extName), "文件格式错误");
+
+        log.info("上传 WebUI {}", originalFilename);
+
+        File tempFile = FileUtil.createTempFile();
+        try (InputStream inputStream = file.getInputStream()) {
+            FileUtil.writeFromStream(inputStream, tempFile);
+        } catch (Exception e) {
+            throw new IllegalArgumentException("上传 WebUI 失败");
+        }
+
+        try (ZipFile zipFile = new ZipFile(tempFile)) {
+            ZipEntry entry = zipFile.getEntry("webui.json");
+            Objects.requireNonNull(entry);
+        } catch (Exception e) {
+            throw new IllegalArgumentException("上传 WebUI 失败");
+        }
+
+        delete();
+
+        File webuiDir = getWebUIDir();
+
+        try {
+            ZipUtil.unzip(tempFile, webuiDir);
+        } finally {
+            FileUtil.del(tempFile);
+        }
+
+        log.info("WebUI 上传完成");
+    }
+
+    public void delete() {
+        File webuiDir = getWebUIDir();
+        FileUtil.del(webuiDir);
+
+        log.info("已删除 WebUI");
+    }
 
 }

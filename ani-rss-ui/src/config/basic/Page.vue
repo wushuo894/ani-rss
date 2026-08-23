@@ -82,6 +82,24 @@
         CSS
       </el-button>
     </el-form-item>
+    <el-form-item label="WebUI">
+      <div class="full-width">
+        <el-upload
+            action="api/webui/upload"
+            :headers="{
+              Authorization: authorization
+            }"
+            :on-success="onMessage"
+            :on-error="onMessage"
+            :show-file-list="false"
+            :auto-upload="true"
+        >
+          <template #trigger>
+            <el-button bg icon="Upload">选择文件并上传</el-button>
+          </template>
+        </el-upload>
+      </div>
+    </el-form-item>
   </el-form>
 </template>
 
@@ -89,6 +107,7 @@
 import {ref} from "vue";
 import {Adjust, Css3Alt, Js, Moon, Sun} from "@vicons/fa";
 import {
+  authorization,
   color,
   colorChange,
   maxContentWidth,
@@ -98,6 +117,7 @@ import {
   showWeek,
   store
 } from "@/js/global.js";
+import {ElMessage} from "element-plus";
 
 let predefineColors = ref([
   '#409eff', '#109D58', '#BF3545', '#CB7574',
@@ -110,6 +130,15 @@ let predefineColors = ref([
 
 let jsDialogVisible = ref(false)
 let cssDialogVisible = ref(false)
+
+let onMessage = res => {
+  let {code, message} = res
+  if (code === 200) {
+    ElMessage.success(message)
+    return
+  }
+  ElMessage.error(message)
+}
 
 let props = defineProps(['config'])
 </script>
