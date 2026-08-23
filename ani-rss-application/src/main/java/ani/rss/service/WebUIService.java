@@ -53,12 +53,10 @@ public class WebUIService {
 
     public void update() {
         UpdateInfo updateInfo = getUpdate();
-        if (Objects.isNull(updateInfo)) {
-            return;
-        }
+        Objects.requireNonNull(updateInfo, "无 WebUI 更新");
 
         Boolean update = updateInfo.getUpdate();
-        Assert.isTrue(update, "WebUI 无更新");
+        Assert.isTrue(update, "无 WebUI 更新");
 
         File tempFile = FileUtil.createTempFile();
 
@@ -78,7 +76,11 @@ public class WebUIService {
 
         FileUtil.del(webuiDir);
 
-        ZipUtil.unzip(tempFile, webuiDir);
+        try {
+            ZipUtil.unzip(tempFile, webuiDir);
+        } finally {
+            FileUtil.del(tempFile);
+        }
     }
 
 

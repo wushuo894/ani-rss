@@ -9,7 +9,6 @@ import ani.rss.entity.dto.ImportAniDataDTO;
 import ani.rss.entity.dto.RssToAniDTO;
 import ani.rss.entity.web.Result;
 import ani.rss.service.AniService;
-import ani.rss.service.DownloadService;
 import ani.rss.util.other.AniUtil;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.annotation.Resource;
@@ -27,9 +26,6 @@ import java.util.Map;
 public class AniController extends BaseController {
     @Resource
     private AniService aniService;
-
-    @Resource
-    private DownloadService downloadService;
 
     @Auth
     @Operation(summary = "添加订阅")

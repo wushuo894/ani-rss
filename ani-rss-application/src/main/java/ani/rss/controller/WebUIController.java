@@ -24,9 +24,7 @@ public class WebUIController extends BaseController {
     @PostMapping("/webui/getUpdate")
     public Result<UpdateInfo> getUpdate() {
         UpdateInfo updateInfo = webUIService.getUpdate();
-        if (Objects.isNull(updateInfo)) {
-            return Result.error("ERROR");
-        }
+        Objects.requireNonNull(updateInfo, "无 WebUI 更新");
         return Result.success(updateInfo);
     }
 

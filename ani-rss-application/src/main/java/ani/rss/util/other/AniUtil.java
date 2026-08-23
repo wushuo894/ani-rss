@@ -34,7 +34,6 @@ import wushuo.tmdb.api.entity.Tmdb;
 import java.io.File;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Path;
 import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -277,7 +276,7 @@ public class AniUtil {
 
         // 默认空图片
         String cover = "cover.png";
-        File defaultFile = Path.of(filesDir.toString(), cover).toFile();
+        File defaultFile = new File(filesDir, cover);
         if (!defaultFile.exists()) {
             try (InputStream inputStream = ResourceUtil.getStream("image/cover.png")) {
                 FileUtil.writeFromStream(inputStream, defaultFile);
@@ -293,7 +292,7 @@ public class AniUtil {
         // 取url的md5作为文件名, 避免重复下载
         String filename = SecureUtil.md5(coverUrl) + "." + extName;
 
-        File dir = new File(filesDir.toString(), String.valueOf(filename.charAt(0)));
+        File dir = new File(filesDir, String.valueOf(filename.charAt(0)));
 
         FileUtil.mkdir(dir);
         File file = new File(dir, filename);
