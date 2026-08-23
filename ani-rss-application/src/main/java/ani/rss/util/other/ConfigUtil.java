@@ -129,6 +129,7 @@ public class ConfigUtil {
                 .setDownloadToolUsername(downloadToolUsername)
                 .setDownloadToolPassword(downloadToolPassword)
                 .setQbUseDownloadPath(false)
+                .setQbContentLayout("Original")
                 .setRatioLimit(-2)
                 .setSeedingTimeLimit(-2)
                 .setInactiveSeedingTimeLimit(-2)

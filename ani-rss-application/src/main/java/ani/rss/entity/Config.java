@@ -81,6 +81,17 @@ public class Config implements Serializable {
     private Boolean qbUseDownloadPath;
 
     /**
+     * qb下载时的内容布局
+     * <ul>
+     *   <li>Original：原始布局</li>
+     *   <li>Subfolder：创建子文件夹</li>
+     *   <li>NoSubfolder：不创建子文件夹</li>
+     * </ul>
+     */
+    @Schema(description = "qb 内容布局")
+    private String qbContentLayout;
+
+    /**
      * 分享率
      */
     @Schema(description = "分享率")

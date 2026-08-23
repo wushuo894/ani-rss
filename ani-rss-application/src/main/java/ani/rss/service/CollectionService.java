@@ -186,12 +186,14 @@ public class CollectionService {
 
         Boolean qbUseDownloadPath = CONFIG.getQbUseDownloadPath();
 
+        String qbContentLayout = CONFIG.getQbContentLayout();
+
         qBittorrent.postApi("/api/v2/torrents/add")
                 .form("torrents", torrentFile)
                 .form("addToTopOfQueue", false)
                 .form("autoTMM", false)
                 .form("category", "")
-                .form("contentLayout", "Original")
+                .form("contentLayout", qbContentLayout)
                 .form("dlLimit", dlLimit)
                 .form("firstLastPiecePrio", false)
                 .form("paused", true)

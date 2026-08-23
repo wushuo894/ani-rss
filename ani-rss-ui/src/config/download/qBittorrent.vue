@@ -48,6 +48,15 @@
       </el-text>
     </div>
   </el-form-item>
+  <el-form-item label="内容布局">
+    <div>
+      <el-select v-model:model-value="props.config.qbContentLayout" class="width-150">
+        <el-option label="原始" value="Original"/>
+        <el-option label="创建子文件夹" value="Subfolder"/>
+        <el-option label="不创建子文件夹" value="NoSubfolder"/>
+      </el-select>
+    </div>
+  </el-form-item>
   <el-form-item label="qb保存路径">
     <div>
       <el-switch v-model:model-value="props.config.qbUseDownloadPath"
