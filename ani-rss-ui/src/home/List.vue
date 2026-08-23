@@ -53,7 +53,7 @@ import PlayList from "@/play/PlayList.vue";
 import Cover from "./Cover.vue";
 import DelAni from "./DelAni.vue";
 import BgmRate from "./BgmRate.vue";
-import formatTime from "@/js/format-time.js";
+import {format} from "@/js/format-time.js";
 import {listAni} from "@/js/http.js";
 import AniCard from "@/home/AniCard.vue";
 import {showWeek} from "@/js/global.js";
@@ -92,7 +92,7 @@ const changeFilterList = (text = '') => {
             .filter(props.filter)
             .filter(filter)
             .map(it => {
-              return {...it, lastDownloadFormat: formatTime(it['lastDownloadTime'])}
+              return {...it, lastDownloadFormat: format(it['lastDownloadTime'])}
             });
         return {
           weekLabel: it.weekLabel,

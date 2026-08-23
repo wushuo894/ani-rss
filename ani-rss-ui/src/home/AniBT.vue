@@ -103,7 +103,7 @@
                                 <div class="group-label">
                                   <el-text style="max-width: 100px;" truncated>{{ group.name }}</el-text>
                                   &nbsp;
-                                  <el-text class="mx-1" size="small">{{ group['updateDay'] }}</el-text>
+                                  <el-text class="mx-1" size="small">{{ formatDate(group['lastUpdatedAt']) }}</el-text>
                                 </div>
                                 <div v-if="showTag()">
                                   <el-tag v-for="tag in group['groupRegex']['tags']"
@@ -128,7 +128,7 @@
                                     <div class="item-footer">
                                       <p>
                                         {{ ti['formatSize'] }}
-                                        {{ formatTime(ti['publishedAt']) }}
+                                        {{ formatDate(ti['publishedAt']) }}
                                       </p>
                                       <div>
                                         <el-button :icon="DocumentCopy" bg text @click="copy(ti['magnet']  )"/>
@@ -158,7 +158,7 @@ import {ref} from "vue";
 import {ElMessage, ElText} from "element-plus";
 import {DocumentCopy} from "@element-plus/icons-vue";
 import * as http from "@/js/http.js";
-import formatTime from "../js/format-time.js";
+import {formatDate} from "@/js/format-time.js";
 import {proxyImage} from "@/js/global.js";
 
 // 批量添加订阅

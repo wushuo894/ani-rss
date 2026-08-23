@@ -46,7 +46,7 @@
 <script setup>
 import {ref} from "vue";
 import PlayStart from "./PlayStart.vue";
-import formatTime from "@/js/format-time.js";
+import {format} from "@/js/format-time.js";
 import * as http from "@/js/http.js";
 
 const dialogVisible = ref(false)
@@ -68,7 +68,7 @@ const show = (it) => {
   http.playList(it)
       .then(res => {
         list.value = res.data.map(it => {
-          return {...it, lastModifyFormat: formatTime(it['lastModify'])}
+          return {...it, lastModifyFormat: format(it['lastModify'])}
         })
       })
       .finally(() => {

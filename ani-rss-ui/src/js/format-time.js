@@ -1,6 +1,10 @@
 import dayjs from "dayjs";
 
-let formatTime = timestamp => {
+export let format = (timestamp, template) => {
+    if (template) {
+        return dayjs(new Date(timestamp)).format(template);
+    }
+
     const now = Date.now();
     const elapsedMs = now - timestamp;
     const elapsedMin = Math.floor(elapsedMs / (1000 * 60));
@@ -31,9 +35,15 @@ let formatTime = timestamp => {
     // 是否为当前年
     const isCurrentYear = target.getFullYear() === nowDate.getFullYear();
 
-    const template = isCurrentYear ? 'MM-DD HH:mm:ss' : 'YYYY-MM-DD HH:mm:ss';
+    template = isCurrentYear ? 'MM-DD HH:mm:ss' : 'YYYY-MM-DD HH:mm:ss';
 
     return dayjs(target).format(template);
 }
 
-export default formatTime;
+export let formatTime = ts => {
+    return dayjs(new Date(ts)).format('YYYY-MM-DD HH:mm:ss')
+}
+
+export let formatDate = ts => {
+    return dayjs(new Date(ts)).format('YYYY-MM-DD')
+};
