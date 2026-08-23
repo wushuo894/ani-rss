@@ -35,7 +35,7 @@ public class WebUIService {
     @Nullable
     public WebUI getWebUI() {
         File webuiDir = getWebUIDir();
-        File webuiJson = new File(webuiDir, "webui/webui.json");
+        File webuiJson = new File(webuiDir, "webui.json");
 
         if (FileUtil.exist(webuiJson)) {
             return JsonReader.getInstance(webuiJson)
