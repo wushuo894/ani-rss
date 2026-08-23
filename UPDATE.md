@@ -1,3 +1,1 @@
-- refactor: 优化封面加载
-- refactor: 优化日期展示
-- feat: 增加上传 WebUI 功能
+- feat: 增加 qBittorrent 内容布局设置
