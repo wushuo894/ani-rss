@@ -47,7 +47,7 @@
 </template>
 
 <script setup>
-import {onBeforeUnmount, onMounted, ref} from "vue";
+import {onMounted, ref} from "vue";
 import EditAniView from "./EditAniView.vue";
 import PlayListView from "@/view/play/PlayListView.vue";
 import CoverView from "./CoverView.vue";
@@ -116,7 +116,6 @@ const getList = () => {
         weekList.value = data.weekList
         releaseDateList.value = data.releaseDateList
 
-        updateGridLayout()
         changeFilterList(props.title)
       })
       .finally(() => {
@@ -124,22 +123,9 @@ const getList = () => {
       })
 }
 
-let updateGridLayout = () => {
-  const app = document.querySelector('#app');
-  let gridColumns = Math.max(1, Math.floor(app.offsetWidth / 400));
-
-  const el = document.documentElement
-  el.style.setProperty('--ani-grid-columns', gridColumns)
-}
-
 onMounted(() => {
-  window.addEventListener('resize', updateGridLayout);
   window.$reLoadList = getList
   getList()
-})
-
-onBeforeUnmount(() => {
-  window.removeEventListener('resize', updateGridLayout);
 })
 
 defineExpose({
@@ -159,7 +145,7 @@ let props = defineProps({
   display: grid;
   grid-gap: 8px;
   width: 100%;
-  grid-template-columns: repeat(var(--ani-grid-columns), 1fr);
+  grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
 }
 
 .list-container {

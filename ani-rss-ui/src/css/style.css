@@ -22,9 +22,6 @@ html.dark {
     --el-border-color: var(--el-border-color-lighter);
     --el-border-color-light: var(--el-border-color-extra-light);
 
-    /* 订阅卡片列数 */
-    --ani-grid-columns: 1;
-
     /* 折叠面板内边距 */
     --el-collapse-item-content-padding: 16px;
 }
