@@ -37,19 +37,13 @@ public class LoginController extends BaseController {
         String username = login.getUsername();
         String password = login.getPassword();
 
-        // 一个令牌只能用于一个ip
         String ip = AuthUtil.getIp();
-        if (config.getVerifyLoginIp()) {
-            myLogin.setIp(ip);
-        } else {
-            myLogin.setIp("");
-        }
 
         if (username.equals(myUsername) && password.equals(myPassword)) {
-            AuthUtil.resetKey();
+            AuthUtil.resetSessionId();
             clearLimitLoginAttempts();
             log.info("登录成功 {} ip: {}", username, ip);
-            String s = AuthUtil.getAuth(myLogin);
+            String s = AuthUtil.getToken();
             return new Result<String>()
                     .setCode(ResultCode.HTTP_OK)
                     .setMessage("登录成功")

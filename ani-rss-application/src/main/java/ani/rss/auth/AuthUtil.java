@@ -4,20 +4,21 @@ import ani.rss.annotation.Auth;
 import ani.rss.auth.enums.AuthType;
 import ani.rss.cache.CacheUtils;
 import ani.rss.commons.ExceptionUtils;
-import ani.rss.commons.GsonStatic;
 import ani.rss.entity.Config;
 import ani.rss.entity.Global;
-import ani.rss.entity.Login;
 import ani.rss.entity.web.Result;
 import ani.rss.entity.web.ResultCode;
 import ani.rss.exception.ResultException;
 import ani.rss.util.other.ConfigUtil;
+import cn.hutool.core.codec.Base64;
+import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.net.NetUtil;
 import cn.hutool.core.text.StrFormatter;
-import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.ReflectUtil;
 import cn.hutool.core.util.StrUtil;
-import cn.hutool.crypto.SecureUtil;
+import cn.hutool.json.JSONObject;
+import cn.hutool.jwt.JWT;
+import cn.hutool.jwt.JWTUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 
@@ -33,58 +34,90 @@ import java.util.function.Function;
 public class AuthUtil {
     private static final Config CONFIG = ConfigUtil.CONFIG;
     private static final Map<String, Function<HttpServletRequest, Boolean>> MAP = new HashMap<>();
+    private static String SESSION_ID = "-";
 
     static {
-        resetKey();
+        resetSessionId();
     }
 
     /**
-     * 刷新有效时间
+     * 刷新 SessionId
      */
-    public static void resetTime() {
-        String key = CacheUtils.get("auth_key");
-        if (StrUtil.isBlank(key)) {
-            return;
-        }
-        Integer loginEffectiveHours = CONFIG.getLoginEffectiveHours();
-        CacheUtils.put("auth_key", key, TimeUnit.HOURS.toMillis(loginEffectiveHours));
-    }
-
-    /**
-     * 刷新密钥
-     */
-    public static String resetKey() {
-        // 登录有效时间/小时
-        Integer loginEffectiveHours = CONFIG.getLoginEffectiveHours();
+    public static String resetSessionId() {
         Boolean multiLoginForbidden = CONFIG.getMultiLoginForbidden();
-
-        String key = CONFIG.getUuid();
-
         if (multiLoginForbidden) {
-            // 禁止多端登录
-            key = UUID.randomUUID().toString();
-        }
-        CacheUtils.put("auth_key", key, TimeUnit.HOURS.toMillis(loginEffectiveHours));
-        return key;
-    }
-
-    public static String getAuth(Login login) {
-        String key = CacheUtils.get("auth_key");
-        if (StrUtil.isBlank(key)) {
-            key = resetKey();
-        }
-        login.setKey(key);
-        return SecureUtil.sha256(GsonStatic.toJson(login));
-    }
-
-    public static Login getLogin() {
-        Login login = ObjectUtil.clone(CONFIG.getLogin());
-        if (CONFIG.getVerifyLoginIp()) {
-            login.setIp(getIp());
+            SESSION_ID = UUID.randomUUID().toString();
         } else {
-            login.setIp("");
+            SESSION_ID = "-";
         }
-        return login;
+        return SESSION_ID;
+    }
+
+    /**
+     * 生成 Token
+     *
+     * @return Token
+     */
+    public static String getToken() {
+        String sessionId = resetSessionId();
+
+        String tokenId = CONFIG.getTokenId();
+
+        int loginEffectiveHours = CONFIG.getLoginEffectiveHours();
+        long expireTime = 0;
+        if (loginEffectiveHours > 0) {
+            expireTime = DateUtil.offsetHour(new Date(), loginEffectiveHours).getTime();
+        }
+
+        Map<String, Object> map = Map.of(
+                "sessionId", sessionId,
+                "expireTime", expireTime,
+                "tokenId", tokenId
+        );
+
+        String jwtKey = CONFIG.getJwtKey();
+        return JWTUtil.createToken(map, Base64.decode(jwtKey));
+    }
+
+    /**
+     * 校验 Token
+     *
+     * @param token Token
+     * @return 是否校验通过
+     */
+    public static Boolean verify(String token) {
+        if (StrUtil.isBlank(token)) {
+            return false;
+        }
+
+        try {
+            String jwtKey = CONFIG.getJwtKey();
+            if (!JWTUtil.verify(token, Base64.decode(jwtKey))) {
+                // Token 校验未通过
+                return false;
+            }
+
+            JWT jwt = JWTUtil.parseToken(token);
+            JSONObject payloads = jwt.getPayloads();
+
+            String tokenId = payloads.getStr("tokenId");
+            if (!tokenId.equals(CONFIG.getTokenId())) {
+                // TokenVersion 不匹配, 可能已经修改密码
+                return false;
+            }
+
+            long expireTime = payloads.getLong("expireTime");
+            if (expireTime > 0 && expireTime < new Date().getTime()) {
+                // Token 已过期
+                return false;
+            }
+
+            // 会话ID, 多设备登陆可以顶掉
+            String sessionId = payloads.getStr("sessionId");
+            return SESSION_ID.equals(sessionId);
+        } catch (Exception e) {
+            return false;
+        }
     }
 
     /**

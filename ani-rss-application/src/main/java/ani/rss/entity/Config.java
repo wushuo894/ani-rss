@@ -460,12 +460,6 @@ public class Config implements Serializable {
     private Boolean renameDelTmdbId;
 
     /**
-     * 校验登录IP
-     */
-    @Schema(description = "校验登录 IP")
-    private Boolean verifyLoginIp;
-
-    /**
      * 自动更新 trackers
      */
     @Schema(description = "自动更新 trackers")
@@ -731,4 +725,10 @@ public class Config implements Serializable {
 
     @Schema(description = "唯一ID")
     private String uuid;
+
+    @Schema(description = "JwtKey")
+    private String jwtKey;
+
+    @Schema(description = "tokenId")
+    private String tokenId;
 }

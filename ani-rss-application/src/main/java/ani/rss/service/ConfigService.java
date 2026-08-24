@@ -32,6 +32,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.File;
 import java.util.Objects;
+import java.util.UUID;
 
 @Slf4j
 @Service
@@ -54,8 +55,7 @@ public class ConfigService {
         Config config = ObjectUtil.clone(ConfigUtil.CONFIG);
         config.getLogin().setPassword("");
         config.setVersion(version)
-                .setGitInfo(getGitInfo())
-                .setVerifyExpirationTime(afdianService.verifyExpirationTime());
+                .setGitInfo(getGitInfo()).setVerifyExpirationTime(afdianService.verifyExpirationTime()).setJwtKey("");
         return config;
     }
 
@@ -77,8 +77,7 @@ public class ConfigService {
         Boolean autoStart = config.getAutoStart();
 
         newConfig.setExpirationTime(null)
-                .setOutTradeNo(null)
-                .setTryOut(null);
+                .setOutTradeNo(null).setTryOut(null).setJwtKey(null);
 
         CopyOptions copyOptions = CopyOptions
                 .create()
@@ -90,12 +89,18 @@ public class ConfigService {
                 copyOptions
         );
 
+        String loginUsername = config.getLogin().getUsername();
         String loginPassword = config.getLogin().getPassword();
+
+        // 密码或用户名发生改动
+        if (!loginUsername.equals(username) || StrUtil.isNotBlank(loginPassword)) {
+            config.setTokenId(UUID.randomUUID().toString());
+        }
+
         // 密码未发生修改
         if (StrUtil.isBlank(loginPassword)) {
             config.getLogin().setPassword(password);
         }
-        String loginUsername = config.getLogin().getUsername();
         if (StrUtil.isBlank(loginUsername)) {
             config.getLogin().setUsername(username);
         }

@@ -25,7 +25,9 @@ import cn.hutool.system.SystemUtil;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.File;
+import java.security.SecureRandom;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 import java.util.UUID;
 
@@ -101,7 +103,6 @@ public class ConfigUtil {
                 raw.githubusercontent.com
                 telegram.org
                 """;
-
         CONFIG.setRssSleepMinutes(15)
                 .setMikanHost("https://mikanani.me")
                 .setTmdbApi("https://api.themoviedb.org")
@@ -177,7 +178,6 @@ public class ConfigUtil {
                 .setRenameDelTmdbId(false)
                 .setPriorityKeywordsEnable(false)
                 .setPriorityKeywords(new ArrayList<>())
-                .setVerifyLoginIp(false)
                 .setAutoTrackersUpdate(false)
                 .setTrackersUpdateUrls("https://cf.trackerslist.com/best.txt")
                 .setAutoUpdate(false)
@@ -227,7 +227,16 @@ public class ConfigUtil {
                 .setBgmApi("https://api.bgm.tv")
                 .setAutoStart(false)
                 .setAllowCors(false)
-                .setUuid(UUID.randomUUID().toString());
+                .setUuid(UUID.randomUUID().toString())
+                .setJwtKey(createJwtKey())
+                .setTokenId(UUID.randomUUID().toString());
+    }
+
+    private static String createJwtKey() {
+        SecureRandom random = new SecureRandom();
+        byte[] key = new byte[32]; // 32字节 = 256 bits
+        random.nextBytes(key);
+        return Base64.getEncoder().encodeToString(key);
     }
 
     /**
