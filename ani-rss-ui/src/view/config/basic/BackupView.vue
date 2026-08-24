@@ -2,7 +2,7 @@
   <div class="content flex">
     <el-button bg @click="exportConfig" icon="Upload">导出设置</el-button>
     <el-button bg @click="importConfig" icon="Download">导入设置</el-button>
-    <UploadView ref="uploadRef" url="api/importConfig" :types="['application/zip']" :callback="callback"/>
+    <UploadView ref="uploadRef" url="api/importConfig" :extensions="['zip']" :callback="callback"/>
   </div>
 </template>
 <script setup>

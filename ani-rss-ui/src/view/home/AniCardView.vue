@@ -5,7 +5,7 @@
         <img :src="toApiFile(item['cover'])"
              :alt="item.title"
              class="list-card-image"
-             @click="emit('cover', item)"/>
+             @click="openBgmUrl(item)"/>
       </div>
       <div class="list-card-info">
         <div class="list-card-info-inner">
@@ -30,9 +30,7 @@
                    class="list-card-url">
             {{ decodeURLComponentSafe(item.url) }}
           </el-text>
-          <div class="list-card-tags"
-               :class="isNotMobile ? 'gtc3' : 'gtc2'"
-          >
+          <div class="list-card-tags">
             <el-tag>
               第 {{ item.season }} 季
             </el-tag>
@@ -75,6 +73,12 @@
             </el-icon>
           </el-button>
           <div class="list-card-spacer" v-if="showPlaylist"></div>
+          <el-button bg text title="更换封面" @click="emit('cover', item)">
+            <el-icon>
+              <Picture/>
+            </el-icon>
+          </el-button>
+          <div class="list-card-spacer"></div>
           <el-button bg text @click="emit('edit', item)">
             <el-icon>
               <EditIcon/>
@@ -93,18 +97,18 @@
 </template>
 
 <script setup>
-import {isNotMobile, showLastDownloadTime, showPlaylist, showScore, toApiFile} from "@/js/global.js";
-import {Delete, Edit as EditIcon, Files} from "@element-plus/icons-vue";
+import {showLastDownloadTime, showPlaylist, showScore, toApiFile} from "@/js/global.js";
+import {Delete, Edit as EditIcon, Files, Picture} from "@element-plus/icons-vue";
 
 let openBgmUrl = (it) => {
-  if (it.bgmUrl.length) {
-    window.open(it.bgmUrl)
+  if (it.bgmUrl?.length) {
+    window.open(it.bgmUrl, '_blank', 'noopener')
     return
   }
-  if (it.title.length) {
+  if (it.title?.length) {
     let title = it.title.replace(/ ?\((19|20)\d{2}\)/g, "").trim()
     title = title.replace(/ ?\[tmdbid=(\d+)]/g, "").trim()
-    window.open(`https://bgm.tv/subject_search/${title}?cat=2`)
+    window.open(`https://bgm.tv/subject_search/${encodeURIComponent(title)}?cat=2`, '_blank', 'noopener')
   }
 }
 
@@ -170,6 +174,7 @@ let props = defineProps(["item"])
 .list-card-tags {
   width: 180px;
   display: grid;
+  grid-template-columns: repeat(3, 1fr);
   grid-gap: 4px;
 }
 
@@ -192,11 +197,9 @@ let props = defineProps(["item"])
   height: 5px;
 }
 
-.gtc3 {
-  grid-template-columns: repeat(3, 1fr);
-}
-
-.gtc2 {
-  grid-template-columns: repeat(2, 1fr);
+@media (max-width: 800px) {
+  .list-card-tags {
+    grid-template-columns: repeat(2, 1fr);
+  }
 }
 </style>

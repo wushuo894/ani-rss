@@ -54,6 +54,12 @@
         <el-option value="DOWNLOAD_TIME" label="更新时间"/>
       </el-select>
     </el-form-item>
+    <el-form-item label="订阅布局">
+      <el-select v-model="subscriptionViewMode" class="width-150">
+        <el-option label="封面" value="cover"/>
+        <el-option label="卡片" value="card"/>
+      </el-select>
+    </el-form-item>
     <el-form-item label="最大内容宽度">
       <el-input-number v-model="maxContentWidth"
                        :min="1200">
@@ -83,7 +89,7 @@
       </el-button>
     </el-form-item>
     <el-form-item label="WebUI">
-      <UploadView url="api/webui/upload" :callback="callback" :types="['application/zip']">
+      <UploadView url="api/webui/upload" :callback="callback" :extensions="['zip']">
         <el-button bg icon="Upload">选择文件并上传</el-button>
       </UploadView>
     </el-form-item>
@@ -101,7 +107,8 @@ import {
   showPlaylist,
   showScore,
   showWeek,
-  store
+  store,
+  subscriptionViewMode
 } from "@/js/global.js";
 import {ElMessage} from "element-plus";
 import UploadView from "@/view/custom/UploadView.vue";

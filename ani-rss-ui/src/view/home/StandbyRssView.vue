@@ -2,7 +2,7 @@
   <AniBTView ref="aniBTRef" @callback="mikanCallback"/>
   <MikanView ref="mikanRef" @callback="mikanCallback"/>
   <AnimeGardenView ref="animeGardenRef" @callback="mikanCallback"/>
-  <el-dialog v-model="dialogVisible" center title="备用订阅">
+  <div class="standby-rss-view">
     <el-alert v-if="!config.standbyRss" :closable="false"
               show-icon
               class="standby-alert" type="warning">
@@ -45,7 +45,7 @@
       </div>
     </div>
     <div>
-      <el-table v-model:data="standbyRss" height="400px" size="small">
+      <el-table :data="standbyRss" height="400px" size="small">
         <el-table-column fixed label="字幕组" min-width="100px">
           <template #default="it">
             <div v-if="editIndex !== it.$index">
@@ -83,7 +83,7 @@
             <div class="flex">
               <div>
                 <el-button bg text icon="Edit" @click="editIndex = it.$index" v-if="editIndex !== it.$index"/>
-                <el-button bg text icon="Check" @click="check" type="primary" v-else/>
+                <el-button bg text icon="Check" @click="normalize" type="primary" v-else/>
               </div>
               <div class="standby-action-spacer">
                 <el-button bg text @click="del(it.$index)" icon="Delete" type="danger"/>
@@ -101,23 +101,18 @@
         </el-table-column>
       </el-table>
     </div>
-    <div class="flex standby-footer">
-      <el-button icon="Check" bg text @click="ok" :disabled="editIndex > -1">确定</el-button>
-    </div>
-  </el-dialog>
+  </div>
 </template>
 
 <script setup>
-import {ref} from "vue";
+import {computed, onMounted, ref} from "vue";
 import MikanView from "./MikanView.vue";
 import AniBTView from "@/view/home/AniBTView.vue";
 import AnimeGardenView from "@/view/home/AnimeGardenView.vue";
 import * as http from "@/js/http.js";
 
+const props = defineProps(['ani'])
 const editIndex = ref(-1)
-
-const dialogVisible = ref(false)
-const standbyRss = ref()
 const aniBTRef = ref()
 const mikanRef = ref()
 const animeGardenRef = ref()
@@ -125,18 +120,24 @@ const config = ref({
   standbyRss: true
 })
 
-let show = () => {
-  editIndex.value = -1
-  dialogVisible.value = true
-  standbyRss.value = JSON.parse(JSON.stringify(props.ani.standbyRssList))
+const standbyRss = computed({
+  get: () => Array.isArray(props.ani.standbyRssList) ? props.ani.standbyRssList : [],
+  set: value => {
+    props.ani.standbyRssList = value
+  }
+})
 
+onMounted(() => {
   http.config()
       .then(res => {
         config.value = res.data;
       })
-}
+})
 
 let plus = () => {
+  if (!Array.isArray(props.ani.standbyRssList)) {
+    props.ani.standbyRssList = []
+  }
   let object = {
     label: '未知字幕组',
     url: '',
@@ -152,7 +153,7 @@ let del = (index) => {
   standbyRss.value = standbyRss.value.filter((s, i) => i !== index)
 }
 
-let check = () => {
+const normalize = () => {
   editIndex.value = -1
   standbyRss.value = standbyRss.value
       .map(it => {
@@ -160,12 +161,6 @@ let check = () => {
         return it;
       })
       .filter(it => it.url !== '')
-}
-
-let ok = () => {
-  check()
-  props.ani.standbyRssList = standbyRss.value
-  dialogVisible.value = false
 }
 
 let move = (index, offset) => {
@@ -201,18 +196,24 @@ let aniBTShow = () => {
   aniBTRef.value?.show(bgmUrl)
 }
 
-defineExpose({show})
-let props = defineProps(['ani'])
+defineExpose({normalize})
 
 </script>
 
 <style scoped>
+.standby-rss-view {
+  height: 500px;
+  min-width: 0;
+  overflow: hidden;
+}
+
 .standby-alert {
   margin-bottom: 8px;
 }
 
 .standby-toolbar {
   width: 100%;
+  margin-bottom: 8px;
 }
 
 .standby-spacer {
@@ -221,12 +222,6 @@ let props = defineProps(['ani'])
 
 .standby-action-spacer {
   margin-left: 4px;
-}
-
-.standby-footer {
-  width: 100%;
-  justify-content: end;
-  margin-top: 10px;
 }
 
 .icon {

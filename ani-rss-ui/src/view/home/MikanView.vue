@@ -60,14 +60,10 @@
           </div>
         </div>
         <div v-loading="loading" class="scroll-container">
-          <el-scrollbar>
-            <el-collapse v-model="activeName">
-              <el-collapse-item v-for="week in data.weeks" :name="week.weekLabel">
-                <template #title>
-                  <span style="margin-left: 4px;font-weight: bold;">
-                    {{ week.weekLabel }}
-                  </span>
-                </template>
+          <el-tabs v-model="activeName" class="week-tabs">
+            <el-tab-pane v-for="week in data.weeks" :key="week.weekLabel"
+                         :label="week.weekLabel" :name="week.weekLabel" lazy>
+              <el-scrollbar class="week-pane-scrollbar">
                 <div class="collapse-content">
                   <el-collapse accordion @change="collapseChange">
                     <el-collapse-item v-for="it in week.items" :name="it.url">
@@ -143,9 +139,9 @@
                     </el-collapse-item>
                   </el-collapse>
                 </div>
-              </el-collapse-item>
-            </el-collapse>
-          </el-scrollbar>
+              </el-scrollbar>
+            </el-tab-pane>
+          </el-tabs>
         </div>
       </div>
     </el-checkbox-group>
@@ -168,7 +164,8 @@ let dialogVisible = ref(false)
 let loading = ref(false)
 let data = ref({
   'seasons': [],
-  'items': []
+  'items': [],
+  'weeks': []
 })
 
 let seasonSelect = ref('')
@@ -179,7 +176,8 @@ let show = (ani) => {
   text.value = ''
   data.value = {
     'seasons': [],
-    'items': []
+    'items': [],
+    'weeks': []
   }
   rssList.value = []
   searchAni(ani)
@@ -442,6 +440,10 @@ let openUrl = (url) => window.open(url)
 .scroll-container {
   margin: 8px 0 4px 0;
   height: 600px;
+}
+
+.week-tabs {
+  margin: 0 4px;
 }
 
 .collapse-content {

@@ -43,14 +43,10 @@
           </div>
         </div>
         <div v-loading="loading" class="scroll-container">
-          <el-scrollbar>
-            <el-collapse v-model="activeName">
-              <el-collapse-item v-for="item in data.items" :name="item.weekLabel">
-                <template #title>
-                  <span style="margin-left: 4px;font-weight: bold;">
-                    {{ item.weekLabel }}
-                  </span>
-                </template>
+          <el-tabs v-model="activeName" class="week-tabs">
+            <el-tab-pane v-for="item in data.items" :key="item.weekLabel"
+                         :label="item.weekLabel" :name="item.weekLabel" lazy>
+              <el-scrollbar class="week-pane-scrollbar">
                 <div class="collapse-content">
                   <el-collapse accordion @change="collapseChange">
                     <el-collapse-item v-for="anime in item.subjects" :name="anime.id">
@@ -128,9 +124,9 @@
                     </el-collapse-item>
                   </el-collapse>
                 </div>
-              </el-collapse-item>
-            </el-collapse>
-          </el-scrollbar>
+              </el-scrollbar>
+            </el-tab-pane>
+          </el-tabs>
         </div>
       </div>
     </el-checkbox-group>
@@ -356,6 +352,10 @@ let copy = (v) => {
 .scroll-container {
   margin: 8px 0 4px 0;
   height: 600px;
+}
+
+.week-tabs {
+  margin: 0 4px;
 }
 
 .collapse-content {

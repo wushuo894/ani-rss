@@ -146,7 +146,7 @@
                 </el-tag>
                 <UploadView v-else
                             url="api/uploadAndReadToBase64"
-                            :types="['application/x-bittorrent']"
+                            :extensions="['torrent']"
                             :callback="uploadCallback">
                   <el-button bg>选择并上传种子</el-button>
                 </UploadView>

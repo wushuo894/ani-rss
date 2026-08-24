@@ -3,154 +3,118 @@
   <AniBTView ref="aniBTRef" @callback="rssCallback"/>
   <MikanView ref="mikanRef" @callback="rssCallback"/>
   <BgmView ref="bgmRef" @callback="bgmCallback"/>
-  <el-dialog v-model="dialogVisible" center title="添加订阅"
+  <el-dialog v-model="dialogVisible" class="add-subscription-dialog" center title="添加订阅"
              :close-on-click-modal="!rssButtonLoading"
              :close-on-press-escape="!rssButtonLoading"
              :show-close="!rssButtonLoading"
   >
-    <div v-show="showRss">
-      <el-tabs tab-position="left" v-model="activeName">
-        <el-tab-pane label="Mikan" name="mikan">
-          <el-form @submit.prevent label-width="auto"
-                   style="height: 260px">
-            <el-form-item label="RSS 地址">
-              <div class="full-width">
-                <el-input
-                    :disabled="rssButtonLoading"
-                    type="textarea"
-                    :autosize="{ minRows: 2}"
-                    v-model:model-value="ani.url"
-                    placeholder="https://mikanani.me/RSS/Bangumi?bangumiId=xxx&subgroupid=xxx"
-                />
-                <br>
-                <div class="mikan-button">
-                  <el-button @click="mikanRef?.show()" text bg type="primary"
-                             :disabled="rssButtonLoading">
-                    <template #icon>
-                      <img src="@/icon/icon-Mikan.png" alt="mikan" class="icon el-icon--left"/>
-                    </template>
-                    Mikan
-                  </el-button>
-                </div>
+    <div v-show="showRss" class="add-source-step">
+      <el-tabs v-model="activeName" class="add-source-tabs tabs-center" tab-position="top">
+        <el-tab-pane
+            v-for="source in rssSources"
+            :key="source.name"
+            :label="source.label"
+            :name="source.name">
+          <div class="source-panel">
+            <div class="source-heading">
+              <div class="source-identity">
+                <img :src="source.icon" :alt="source.label" class="source-icon"/>
                 <div>
-                  <el-text class="mx-1" size="small">
-                    不支持聚合订阅，原因是如果一次过多更新会出现遗漏
-                    <br>
-                    不必在 mikan 网站添加订阅, 你可以通过上方👆 [Mikan] 按钮浏览字幕组订阅
-                  </el-text>
+                  <h3>{{ source.label }}</h3>
+                  <el-text size="small" type="info">RSS 订阅</el-text>
                 </div>
               </div>
-            </el-form-item>
-          </el-form>
-        </el-tab-pane>
-        <el-tab-pane label="AniBT" name="ani-bt">
-          <el-form @submit.prevent label-width="auto"
-                   style="height: 260px">
-            <el-form-item label="RSS 地址">
-              <div class="full-width">
-                <el-input
-                    :disabled="rssButtonLoading"
-                    type="textarea"
-                    :autosize="{ minRows: 2}"
-                    v-model:model-value="ani.url"
-                    placeholder="https://anibt.net/rss/anime.xml?bgmId=xxx&groupSlug=xxx"
-                />
-                <br>
-                <div class="mikan-button">
-                  <el-button @click="aniBTRef?.show()" text bg type="primary"
-                             :disabled="rssButtonLoading">
-                    <template #icon>
-                      <img src="@/icon/icon-AniBT.png" alt="ani-bt" class="icon el-icon--left"/>
-                    </template>
-                    AniBT
-                  </el-button>
-                </div>
-                <div>
-                  <el-text class="mx-1" size="small">
-                    不支持聚合订阅，原因是如果一次过多更新会出现遗漏
-                    <br>
-                    不必在 AniBT 网站添加订阅, 你可以通过上方👆 [AniBT] 按钮浏览字幕组订阅
-                  </el-text>
-                </div>
-              </div>
-            </el-form-item>
-          </el-form>
-        </el-tab-pane>
-        <el-tab-pane label="AG" name="anime-garden">
-          <el-form @submit.prevent label-width="auto"
-                   style="height: 260px">
-            <el-form-item label="RSS 地址">
-              <div class="full-width">
-                <el-input
-                    :disabled="rssButtonLoading"
-                    type="textarea"
-                    :autosize="{ minRows: 2}"
-                    v-model:model-value="ani.url"
-                    placeholder="https://api.animes.garden/feed.xml?subject=xxx&fansub=xxx"
-                />
-                <br>
-                <div class="mikan-button">
-                  <el-button @click="animeGardenRef?.show()" text bg type="primary"
-                             :disabled="rssButtonLoading">
-                    <template #icon>
-                      <img src="@/icon/icon-AnimeGarden.png" alt="AnimeGarden" class="icon el-icon--left"/>
-                    </template>
-                    AnimeGarden
-                  </el-button>
-                </div>
-                <div>
-                  <el-text class="mx-1" size="small">
-                    不支持聚合订阅，原因是如果一次过多更新会出现遗漏
-                    <br>
-                    不必在 AnimeGarden 网站添加订阅, 你可以通过上方👆 [AnimeGarden] 按钮浏览字幕组订阅
-                  </el-text>
-                </div>
-              </div>
-            </el-form-item>
-          </el-form>
-        </el-tab-pane>
-        <el-tab-pane label="Other" name="other">
-          <el-form @submit.prevent label-width="auto"
-                   style="height: 200px">
-            <el-form-item label="番剧名称">
-              <div class="flex full-width">
-                <el-input
-                    v-model:model-value="ani.title"
-                    :disabled="rssButtonLoading"
-                    placeholder="请勿留空"
-                />
-                <div style="width: 4px;"></div>
-                <el-button :disabled="rssButtonLoading" bg icon="Search" text type="primary"
-                           @click="bgmRef?.show(ani.title)"/>
-              </div>
-            </el-form-item>
-            <el-form-item label="BgmUrl">
-              <el-input
-                  v-model:model-value="ani.bgmUrl"
-                  placeholder="https://bgm.tv/subject/123456"
+              <el-button
+                  bg
+                  text
+                  type="primary"
                   :disabled="rssButtonLoading"
-              />
-            </el-form-item>
-            <el-form-item label="RSS 地址">
-              <el-input
-                  :disabled="rssButtonLoading"
-                  :autosize="{ minRows: 2}"
-                  type="textarea"
-                  v-model:model-value="ani.url"
-                  placeholder="https://xxxx.com/a.xml"
-              />
-            </el-form-item>
-          </el-form>
-          <el-text class="mx-1" size="small">
-            dmhy等含有磁力链接的RSS不支持Aria2
-          </el-text>
+                  @click="source.open">
+                <el-icon class="el-icon--left">
+                  <Search/>
+                </el-icon>
+                浏览 {{ source.label }}
+              </el-button>
+            </div>
+            <el-form class="source-form" label-position="top" @submit.prevent>
+              <el-form-item label="RSS 地址">
+                <el-input
+                    v-model="ani.url"
+                    :autosize="{ minRows: 3, maxRows: 5 }"
+                    :disabled="rssButtonLoading"
+                    :placeholder="source.placeholder"
+                    type="textarea"/>
+              </el-form-item>
+            </el-form>
+            <el-alert
+                :closable="false"
+                show-icon
+                title="请使用单个番剧与字幕组的 RSS，聚合订阅集中更新时可能出现遗漏。"
+                type="info"/>
+          </div>
+        </el-tab-pane>
+        <el-tab-pane label="其他" name="other">
+          <div class="source-panel other-source-panel">
+            <el-form class="source-form" label-position="top" @submit.prevent>
+              <el-form-item label="番剧名称">
+                <div class="title-search-row">
+                  <el-input
+                      v-model="ani.title"
+                      :disabled="rssButtonLoading"
+                      placeholder="请勿留空"/>
+                  <el-button
+                      aria-label="搜索 Bangumi"
+                      bg
+                      text
+                      type="primary"
+                      :disabled="rssButtonLoading"
+                      title="搜索 Bangumi"
+                      @click="bgmRef?.show(ani.title)">
+                    <el-icon class="el-icon--left">
+                      <Search/>
+                    </el-icon>
+                  </el-button>
+                </div>
+              </el-form-item>
+              <el-form-item label="Bangumi 地址">
+                <el-input
+                    v-model="ani.bgmUrl"
+                    :disabled="rssButtonLoading"
+                    placeholder="https://bgm.tv/subject/123456"/>
+              </el-form-item>
+              <el-form-item label="RSS 地址">
+                <el-input
+                    v-model="ani.url"
+                    :autosize="{ minRows: 3, maxRows: 5 }"
+                    :disabled="rssButtonLoading"
+                    placeholder="https://example.com/anime.xml"
+                    type="textarea"/>
+              </el-form-item>
+            </el-form>
+            <el-alert
+                :closable="false"
+                show-icon
+                title="含有磁力链接的 RSS 不支持 Aria2。"
+                type="warning"/>
+          </div>
         </el-tab-pane>
       </el-tabs>
       <div class="action">
-        <el-button :loading="rssButtonLoading" @click="getRss" text bg icon="Check">确定</el-button>
+        <el-button :loading="rssButtonLoading" bg text type="primary" @click="getRss">
+          下一步
+          <el-icon class="el-icon--right">
+            <ArrowRight/>
+          </el-icon>
+        </el-button>
       </div>
     </div>
-    <div v-if="!showRss">
+    <div v-if="!showRss" class="ani-step">
+      <el-button class="ani-step-back" bg text @click="showRss = true">
+        <el-icon>
+          <ArrowLeft/>
+        </el-icon>
+        返回 RSS
+      </el-button>
       <AniView v-model:ani="ani" @callback="addAni"/>
     </div>
   </el-dialog>
@@ -159,6 +123,7 @@
 <script setup>
 import {ref} from "vue";
 import {ElMessage} from "element-plus";
+import {ArrowLeft, ArrowRight, Search} from "@element-plus/icons-vue";
 import MikanView from "./MikanView.vue";
 import AniView from "./AniView.vue";
 import BgmView from "./BgmView.vue";
@@ -167,12 +132,39 @@ import * as http from "@/js/http.js";
 import AniBTView from "@/view/home/AniBTView.vue";
 import {useLocalStorage} from "@vueuse/core";
 import AnimeGardenView from "@/view/home/AnimeGardenView.vue";
+import mikanIcon from "@/icon/icon-Mikan.png";
+import aniBTIcon from "@/icon/icon-AniBT.png";
+import animeGardenIcon from "@/icon/icon-AnimeGarden.png";
 
 const showRss = ref(true)
 const aniBTRef = ref()
 const mikanRef = ref()
 const animeGardenRef = ref()
 const bgmRef = ref()
+
+const rssSources = [
+  {
+    name: 'mikan',
+    label: 'Mikan',
+    icon: mikanIcon,
+    placeholder: 'https://mikanani.me/RSS/Bangumi?bangumiId=xxx&subgroupid=xxx',
+    open: () => mikanRef.value?.show()
+  },
+  {
+    name: 'ani-bt',
+    label: 'AniBT',
+    icon: aniBTIcon,
+    placeholder: 'https://anibt.net/rss/anime.xml?bgmId=xxx&groupSlug=xxx',
+    open: () => aniBTRef.value?.show()
+  },
+  {
+    name: 'anime-garden',
+    label: 'AnimeGarden',
+    icon: animeGardenIcon,
+    placeholder: 'https://api.animes.garden/feed.xml?subject=xxx&fansub=xxx',
+    open: () => animeGardenRef.value?.show()
+  }
+]
 
 const dialogVisible = ref(false)
 
@@ -239,23 +231,109 @@ defineExpose({show})
 </script>
 
 <style scoped>
-.mikan-button {
-  width: 100%;
+.add-source-tabs {
+  min-width: 0;
+}
+
+.source-panel {
+  min-height: 272px;
+  padding: 14px 4px 4px;
+}
+
+.source-heading {
   display: flex;
-  justify-content: end;
-  margin-top: 8px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.source-identity {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.source-identity h3 {
+  margin: 0;
+  font-size: 16px;
+  line-height: 1.35;
+}
+
+.source-icon {
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+  border-radius: 8px;
+  object-fit: cover;
+}
+
+.source-form :deep(.el-form-item) {
+  margin-bottom: 16px;
+}
+
+.source-form :deep(.el-form-item__label) {
+  height: auto;
+  padding-bottom: 7px;
+  color: var(--el-text-color-regular);
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+.title-search-row {
+  width: 100%;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 40px;
+  gap: 8px;
+}
+
+.title-search-row .el-button {
+  width: 40px;
+  margin: 0;
+}
+
+.other-source-panel {
+  min-height: 366px;
 }
 
 .action {
   width: 100%;
   display: flex;
-  justify-content: end;
-  margin-top: 10px;
+  justify-content: flex-end;
+  margin-top: 12px;
+  padding-top: 16px;
+  border-top: 1px solid var(--el-border-color-extra-light);
 }
 
-.icon {
-  width: 24px;
-  height: 24px;
-  border-radius: 8px;
+.ani-step-back {
+  margin: 0 12px 10px;
+}
+
+@media (max-width: 600px) {
+  .source-panel {
+    min-height: 250px;
+    padding-top: 10px;
+  }
+
+  .source-heading {
+    align-items: flex-start;
+    gap: 10px;
+    margin-bottom: 16px;
+  }
+
+  .source-heading .el-button {
+    max-width: 172px;
+    margin: 0;
+  }
+
+  .source-icon {
+    width: 36px;
+    height: 36px;
+  }
+
+  .other-source-panel {
+    min-height: 350px;
+  }
 }
 </style>

@@ -1,5 +1,5 @@
 <template>
-  <input ref="inputRef" hidden="hidden" type="file" @change="changeFile">
+  <input ref="inputRef" :accept="accept" hidden="hidden" type="file" @change="changeFile">
   <div
       @click="selectAndUpload"
       @dragenter.prevent="onDragEnter"
@@ -24,12 +24,26 @@
 
 <script setup>
 
-import {ref} from "vue";
+import {computed, ref} from "vue";
 import {authorization} from "@/js/global.js";
+
+const props = defineProps({
+  url: String,
+  extensions: {
+    type: Array,
+    default: () => []
+  },
+  callback: Function
+})
 
 let inputRef = ref()
 let isDragOver = ref(false)
 let dragCounter = ref(0)
+const acceptedExtensions = computed(() => props.extensions
+    .map(extension => extension.replace(/^\./, '').toLowerCase()))
+const accept = computed(() => acceptedExtensions.value
+    .map(extension => `.${extension}`)
+    .join(','))
 
 let selectAndUpload = () => {
   inputRef.value.value = ''
@@ -41,7 +55,8 @@ let uploadFile = async (file) => {
     return Promise.reject(new Error('文件为空'))
   }
 
-  if (!props.types.includes(file.type)) {
+  const extension = file.name.match(/\.([^.]+)$/)?.[1]?.toLowerCase()
+  if (acceptedExtensions.value.length && !acceptedExtensions.value.includes(extension)) {
     return Promise.reject(new Error('文件格式错误'))
   }
 
@@ -95,12 +110,6 @@ let onDrop = (e) => {
       .then(res => props.callback?.(res, files[0]))
       .catch(err => props.callback?.({message: err.message}, files[0]))
 }
-
-let props = defineProps({
-  url: String,
-  types: Array,
-  callback: Function
-})
 
 defineExpose({
   selectAndUpload

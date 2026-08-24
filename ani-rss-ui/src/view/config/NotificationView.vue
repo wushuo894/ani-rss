@@ -15,10 +15,12 @@
       <el-space wrap class="flex flex-wrap gap-4" size="small">
         <el-card v-for="it in props.config['notificationConfigList']" shadow="never" class="notification-card">
           <div class="flex notification-card-content">
-            <div>
-              <p style="width: 110px;">
-                {{ getLabel(it['notificationType']) }}
-              </p>
+            <div class="notification-card-main">
+              <el-tooltip :content="getLabel(it['notificationType'])" placement="top">
+                <p class="notification-card-title">
+                  {{ getLabel(it['notificationType']) }}
+                </p>
+              </el-tooltip>
               <el-text line-clamp="1" size="small" class="notification-card-text" truncated>
                 {{ it['comment'] ? it['comment'] : '无备注' }}
               </el-text>
@@ -109,12 +111,33 @@ let props = defineProps(['config'])
 }
 
 .notification-card {
-  min-width: 180px;
+  width: 190px;
+  height: 88px;
+}
+
+.notification-card :deep(.el-card__body) {
+  height: 100%;
+  box-sizing: border-box;
 }
 
 .notification-card-content {
+  height: 100%;
   align-items: center;
   justify-content: space-between;
+}
+
+.notification-card-main {
+  min-width: 0;
+  flex: 1;
+}
+
+.notification-card-title {
+  height: 22px;
+  margin: 0 0 4px;
+  overflow: hidden;
+  line-height: 22px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .notification-card-text {

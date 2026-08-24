@@ -69,10 +69,13 @@ public class AuthUtil {
             expireTime = DateUtil.offsetHour(new Date(), loginEffectiveHours).getTime();
         }
 
+        String ip = getIp();
+
         Map<String, Object> map = Map.of(
                 "sessionId", sessionId,
                 "expireTime", expireTime,
-                "tokenId", tokenId
+                "tokenId", tokenId,
+                "ip", ip
         );
 
         String jwtKey = CONFIG.getJwtKey();
@@ -99,6 +102,16 @@ public class AuthUtil {
 
             JWT jwt = JWTUtil.parseToken(token);
             JSONObject payloads = jwt.getPayloads();
+
+            boolean verifyLoginIp = CONFIG.getVerifyLoginIp();
+            if (verifyLoginIp) {
+                // 校验登陆 ip
+                String ip = payloads.getStr("ip");
+                String currentIp = getIp();
+                if (!ip.equals(currentIp)) {
+                    return false;
+                }
+            }
 
             String tokenId = payloads.getStr("tokenId");
             if (!tokenId.equals(CONFIG.getTokenId())) {

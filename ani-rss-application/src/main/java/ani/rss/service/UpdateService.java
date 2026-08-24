@@ -1,6 +1,5 @@
 package ani.rss.service;
 
-import ani.rss.cache.CacheUtils;
 import ani.rss.commons.ExceptionUtils;
 import ani.rss.commons.MavenUtils;
 import ani.rss.entity.About;
@@ -14,7 +13,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
-import java.util.Objects;
 
 @Slf4j
 @Service
@@ -29,14 +27,6 @@ public class UpdateService {
      * @return 关于信息
      */
     public synchronized About about() {
-        String key = "github#releases-latest";
-
-        About cacheAbout = CacheUtils.get(key);
-
-        if (Objects.nonNull(cacheAbout)) {
-            return cacheAbout;
-        }
-
         String version = MavenUtils.getVersion();
 
         About about = (About) new About()
@@ -58,8 +48,6 @@ public class UpdateService {
             log.error("检测更新失败 {}", message);
             log.error(message, e);
         }
-        // 缓存一分钟
-        CacheUtils.put(key, about, 1000 * 60);
         return about;
     }
 

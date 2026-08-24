@@ -75,6 +75,7 @@ export let configData = {
     "apiKey": "",
     "downloadNew": false,
     "innerIP": false,
+    "verifyLoginIp": false,
     "renameTemplate": "[${subgroup}] ${title} S${seasonFormat}E${episodeFormat}",
     "renameDelYear": false,
     "renameDelTmdbId": false,

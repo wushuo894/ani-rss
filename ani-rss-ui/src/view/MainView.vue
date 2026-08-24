@@ -4,14 +4,14 @@
       :link="linkConfig"
       :dialog="dialogConfig">
     <LoginView v-if="!authorization"/>
-    <AppView v-else/>
+    <MainLayoutView v-else/>
   </el-config-provider>
 </template>
 
 <script setup>
 import zhCn from 'element-plus/es/locale/lang/zh-cn'
 import LoginView from "@/view/LoginView.vue";
-import AppView from "@/view/home/AppView.vue";
+import MainLayoutView from "@/view/home/MainLayoutView.vue";
 import {authorization, init} from "@/js/global.js";
 import {reactive} from "vue";
 

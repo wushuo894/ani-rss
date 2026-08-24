@@ -35,7 +35,7 @@
           </div>
         </div>
         <UploadView url="api/uploadAndRead"
-                    :types="['application/json']"
+                    :extensions="['json']"
                     :callback="uploadCallback">
           <el-button bg>选择并上传文件</el-button>
         </UploadView>

@@ -1,5 +1,4 @@
 import {useColorMode, useDark, useDebounceFn, useEventListener, useLocalStorage} from "@vueuse/core";
-import {ref} from "vue";
 
 /**
  * 保存登录信息
@@ -36,6 +35,11 @@ const showScore = useLocalStorage('show-score', true)
 const showWeek = useLocalStorage("show-week", true)
 
 /**
+ * 订阅页面布局
+ */
+const subscriptionViewMode = useLocalStorage('subscription-view-mode', 'cover')
+
+/**
  * 显示视频列表
  */
 const showPlaylist = useLocalStorage('show-playlist', true)
@@ -57,18 +61,6 @@ const colorChange = (v) => {
     const el = document.documentElement
     el.style.setProperty('--el-color-primary', v)
 }
-
-/**
- * 是否非移动设备
- */
-const isNotMobile = ref(false)
-
-/**
- * el-icon的class
- *
- * 自动适应移动布局
- */
-const elIconClass = ref('')
 
 /**
  * 主题初始化
@@ -104,15 +96,6 @@ const initLayout = () => {
     const el = document.documentElement
     el.style.setProperty('--max-content-width', `${maxContentWidth.value}px`)
 
-    // 是否非移动设备
-    isNotMobile.value = app.offsetWidth > 800
-
-    if (isNotMobile.value) {
-        elIconClass.value = 'el-icon--left'
-    } else {
-        // 用以控制图标与文字的间距 当为移动设备时便不需要间距了
-        elIconClass.value = ''
-    }
 }
 
 /**
@@ -168,12 +151,11 @@ export {
     maxContentWidth,
     showScore,
     showWeek,
+    subscriptionViewMode,
     showPlaylist,
     showLastDownloadTime,
     color,
     colorChange,
-    isNotMobile,
-    elIconClass,
     init,
     initTheme,
     initLayout,

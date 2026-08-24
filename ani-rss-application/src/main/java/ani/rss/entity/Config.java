@@ -140,6 +140,12 @@ public class Config implements Serializable {
     private List<String> priorityKeywords;
 
     /**
+     * 校验登录IP
+     */
+    @Schema(description = "校验登录 IP")
+    private Boolean verifyLoginIp;
+
+    /**
      * 延迟下载
      */
     @Schema(description = "延迟下载(分钟)")

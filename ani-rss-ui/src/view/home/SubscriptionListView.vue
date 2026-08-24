@@ -8,13 +8,14 @@
     <el-scrollbar class="hide-scrollbar">
       <div class="list-content">
         <template v-if="showWeek">
-          <div v-for="weekItem in filterList">
+          <div v-for="weekItem in filterList" :key="weekItem.weekLabel">
             <h2 class="list-week-title">
               {{ weekItem.weekLabel }}
             </h2>
-            <div class="grid-container">
+            <div :class="gridClass">
               <div v-for="item in weekItem.items" :key="item.id">
-                <AniCardView
+                <component
+                    :is="viewComponent"
                     :item="item"
                     @edit="editAniRef?.show"
                     @playlist="playListRef?.show"
@@ -27,9 +28,10 @@
           </div>
         </template>
         <template v-else>
-          <div class="grid-container">
-            <div v-for="item in flatFilterList">
-              <AniCardView
+          <div :class="gridClass">
+            <div v-for="item in flatFilterList" :key="item.id">
+              <component
+                  :is="viewComponent"
                   :item="item"
                   @edit="editAniRef?.show"
                   @playlist="playListRef?.show"
@@ -47,7 +49,7 @@
 </template>
 
 <script setup>
-import {onMounted, ref} from "vue";
+import {computed, onMounted, ref} from "vue";
 import EditAniView from "./EditAniView.vue";
 import PlayListView from "@/view/play/PlayListView.vue";
 import CoverView from "./CoverView.vue";
@@ -56,7 +58,18 @@ import BgmRateView from "./BgmRateView.vue";
 import {fromNow} from "@/js/format.js";
 import {listAni} from "@/js/http.js";
 import AniCardView from "@/view/home/AniCardView.vue";
+import AniCoverView from "@/view/home/AniCoverView.vue";
 import {showWeek} from "@/js/global.js";
+
+const props = defineProps({
+  title: String,
+  filter: Function,
+  viewMode: {
+    type: String,
+    default: 'card'
+  }
+})
+const emit = defineEmits(['loaded'])
 
 const editAniRef = ref()
 const delAniRef = ref()
@@ -70,6 +83,11 @@ const flatFilterList = ref([])
 const releaseDateList = ref([])
 
 const loading = ref(true)
+const viewComponent = computed(() => props.viewMode === 'cover' ? AniCoverView : AniCardView)
+const gridClass = computed(() => [
+  'grid-container',
+  props.viewMode === 'cover' ? 'cover-grid-container' : 'card-grid-container'
+])
 
 const changeFilterList = (text = '') => {
   let tempList = weekList.value;
@@ -115,6 +133,10 @@ const getList = () => {
         let data = res.data
         weekList.value = data.weekList
         releaseDateList.value = data.releaseDateList
+        emit('loaded', {
+          releaseDateList: releaseDateList.value,
+          total: weekList.value.reduce((total, week) => total + week.items.length, 0)
+        })
 
         changeFilterList(props.title)
       })
@@ -130,12 +152,8 @@ onMounted(() => {
 
 defineExpose({
   releaseDateList,
-  changeFilterList
-})
-
-let props = defineProps({
-  title: String,
-  filter: Function
+  changeFilterList,
+  getList
 })
 
 </script>
@@ -145,16 +163,30 @@ let props = defineProps({
   display: grid;
   grid-gap: 8px;
   width: 100%;
+}
+
+.card-grid-container {
   grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+}
+
+.cover-grid-container {
+  grid-template-columns: repeat(auto-fill, minmax(132px, 1fr));
 }
 
 .list-container {
   height: 100%;
+  display: flex;
+  flex-direction: column;
   overflow: hidden;
 }
 
+.hide-scrollbar {
+  flex: 1;
+  min-height: 0;
+}
+
 .list-content {
-  margin: 0 10px;
+  margin: 0;
 }
 
 .list-week-title {
@@ -164,6 +196,14 @@ let props = defineProps({
 .list-bottom-spacer {
   height: 8px;
 }
+
+@media (max-width: 560px) {
+  .card-grid-container {
+    grid-template-columns: 1fr;
+  }
+
+  .cover-grid-container {
+    grid-template-columns: repeat(auto-fill, minmax(108px, 1fr));
+  }
+}
 </style>
-
-

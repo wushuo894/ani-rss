@@ -77,10 +77,6 @@ export default defineConfig({
                             test: /node_modules[\\/](artplayer|artplayer-plugin-multiple-subtitles)/,
                         },
                         {
-                            name: 'shiki',
-                            test: /node_modules[\\/]shiki/,
-                        },
-                        {
                             name: 'element-plus',
                             test: /node_modules[\\/]element-plus/
                         }

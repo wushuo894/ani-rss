@@ -1,6 +1,5 @@
 <template>
   <PreviewView ref="previewRef" :ani="props.ani"/>
-  <StandbyRssView ref="standbyRssRef" :ani="props.ani"/>
   <AniBTView ref="aniBTRef" @callback="mikanCallback"/>
   <MikanView ref="mikanRef" @callback="mikanCallback"/>
   <AnimeGardenView ref="animeGardenRef" @callback="mikanCallback"/>
@@ -88,11 +87,6 @@
                 </div>
               </div>
             </el-form-item>
-            <el-form-item label="备用 RSS">
-              <div class="form-item-flex">
-                <el-button bg icon="EditPen" text @click="standbyRssRef?.show">管理</el-button>
-              </div>
-            </el-form-item>
             <el-form-item label="日期">
               <div class="form-item-flex">
                 <el-date-picker
@@ -138,6 +132,9 @@
             </el-form-item>
           </el-form>
         </el-scrollbar>
+      </el-tab-pane>
+      <el-tab-pane label="备用 RSS" name="standby-rss" :lazy="true">
+        <StandbyRssView ref="standbyRssRef" :ani="props.ani"/>
       </el-tab-pane>
       <el-tab-pane label="自定义" name="custom" :lazy="true">
         <el-scrollbar height="500">
@@ -294,6 +291,7 @@
     <div>
       <el-button @click="previewRef.show()" bg text icon="Grid">预览</el-button>
       <el-button icon="Check" type="primary" :loading="okLoading" @click="async ()=>{
+        standbyRssRef?.normalize()
         okLoading = true
         emit('callback',()=>okLoading = false)
       }" text bg>确定
@@ -326,8 +324,7 @@ const aniBTRef = ref()
 const mikanRef = ref()
 const animeGardenRef = ref()
 const tmdbGroupRef = ref()
-
-let standbyRssRef = ref()
+const standbyRssRef = ref()
 
 let previewRef = ref()
 let okLoading = ref(false)

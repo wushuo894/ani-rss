@@ -222,8 +222,7 @@ public class qBittorrent implements BaseDownload {
                                 })
                                 .toList();
                     });
-        } catch (Exception e) {
-            log.error(e.getMessage(), e);
+        } catch (Exception ignored) {
         }
         return new ArrayList<>();
     }

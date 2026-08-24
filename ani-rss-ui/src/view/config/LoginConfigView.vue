@@ -28,6 +28,7 @@
     <el-form-item label="其他">
       <el-checkbox v-model="props.config['multiLoginForbidden']" label="禁止多端登录"/>
       <el-checkbox v-model="props.config.innerIP" label="禁止公网访问"/>
+      <el-checkbox v-model="props.config.verifyLoginIp" label="如果IP发生改变登录将失效"/>
       <el-checkbox v-model="props.config.limitLoginAttempts" label="限制尝试次数"/>
       <el-checkbox v-model="props.config.allowCors" label="允许跨域"/>
     </el-form-item>

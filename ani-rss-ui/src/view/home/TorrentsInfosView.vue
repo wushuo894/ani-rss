@@ -1,32 +1,80 @@
 <template>
-  <el-dialog v-model="dialogVisible" center title="下载">
+  <div class="torrents-page">
+    <header class="torrents-header">
+      <h2>下载</h2>
+      <el-text size="small" type="info">共 {{ torrentsInfos.length }} 个任务</el-text>
+    </header>
     <div class="torrents-container">
-      <div class="torrents-header">
-        <el-radio-group v-model="sortType">
-          <el-radio-button
-              v-for="item in sortTypeList"
-              :value="item.value"
-              @click="changeSort(item.value)">
-            <div class="flex-center">
-              {{ item.label }}
-              <el-icon
-                  v-if="sortType === item.value"
-                  class="el-icon--right"
-              >
-                <Top v-if="sortOrder === 'asc'"/>
-                <Bottom v-else/>
+      <div class="torrents-toolbar">
+        <el-tabs v-model="activeTab" class="torrents-tabs">
+          <el-tab-pane name="downloading">
+            <template #label>
+              <span class="tab-label">下载中</span>
+              <el-tag size="small" type="primary">{{ downloadingInfos.length }}</el-tag>
+            </template>
+          </el-tab-pane>
+          <el-tab-pane name="completed">
+            <template #label>
+              <span class="tab-label">已完成</span>
+              <el-tag size="small" type="success">{{ completedInfos.length }}</el-tag>
+            </template>
+          </el-tab-pane>
+        </el-tabs>
+        <div class="sort-actions">
+          <el-dropdown trigger="click" @command="changeSortType">
+            <el-button class="sort-field-button" bg text>
+              <el-icon>
+                <Sort/>
               </el-icon>
-            </div>
-          </el-radio-button>
-        </el-radio-group>
+              <span>{{ currentSortLabel }}</span>
+              <el-icon class="sort-field-arrow">
+                <ArrowDown/>
+              </el-icon>
+            </el-button>
+            <template #dropdown>
+              <el-dropdown-menu>
+                <el-dropdown-item
+                    v-for="item in sortTypeList"
+                    :key="item.value"
+                    :command="item.value">
+                  <span class="sort-option-label">{{ item.label }}</span>
+                  <el-icon v-if="sortType === item.value">
+                    <Check/>
+                  </el-icon>
+                </el-dropdown-item>
+              </el-dropdown-menu>
+            </template>
+          </el-dropdown>
+          <el-tooltip :content="sortOrder === 'asc' ? '正序' : '倒序'" placement="top">
+            <el-button
+                :aria-label="sortOrder === 'asc' ? '正序' : '倒序'"
+                class="sort-order-button"
+                bg
+                text
+                @click="toggleSortOrder">
+              <el-icon>
+                <SortUp v-if="sortOrder === 'asc'"/>
+                <SortDown v-else/>
+              </el-icon>
+            </el-button>
+          </el-tooltip>
+        </div>
       </div>
-      <el-empty v-if="!torrentsInfos.length" description="当前无下载任务" class="torrents-empty"/>
+      <el-empty v-if="!activeTorrentsInfos.length" :description="emptyDescription" class="torrents-empty"/>
       <el-scrollbar v-else class="torrents-scrollbar">
-        <el-card v-for="torrentsInfo in torrentsInfos"
+        <el-card v-for="torrentsInfo in activeTorrentsInfos"
+                 :key="torrentsInfo.hash || torrentsInfo.id || torrentsInfo.name"
                  shadow="never"
                  class="torrents-card">
           <p>{{ torrentsInfo.name }}</p>
           <el-progress :percentage="torrentsInfo['progress']"/>
+          <div class="torrents-size-info">
+            <span>
+              <span class="torrents-size-value">{{ formatTorrentSize(torrentsInfo['completed']) }}</span>
+              /
+              <span class="torrents-size-value">{{ formatTorrentSize(torrentsInfo['size']) }}</span>
+            </span>
+          </div>
           <template #footer>
             <div class="flex torrents-footer">
               <div>
@@ -35,9 +83,6 @@
                 </el-tag>
               </div>
               <div>
-                <el-tag class="torrents-tag-spacer" type="success">
-                  {{ torrentsInfo['formatSize'] }}
-                </el-tag>
                 <el-tag class="torrents-tag-spacer" type="primary">
                   {{ torrentsInfo['state'] }}
                 </el-tag>
@@ -47,14 +92,16 @@
         </el-card>
       </el-scrollbar>
     </div>
-  </el-dialog>
+  </div>
 </template>
 
 <script setup>
-import {ref} from "vue";
+import {computed, onActivated, onDeactivated, onMounted, onUnmounted, ref} from "vue";
 import * as http from "@/js/http.js";
-import {Bottom, Top} from "@element-plus/icons-vue";
+import {ArrowDown, Check, Sort, SortDown, SortUp} from "@element-plus/icons-vue";
+import {formatSize} from "@/js/format.js";
 
+const activeTab = ref('downloading')
 // 记录排序方式
 let sortType = ref('name')
 // 记录排序顺序 asc=正序, desc=倒序
@@ -62,14 +109,14 @@ let sortOrder = ref('asc')
 
 let sortTypeList = [
   {
-    label: "按名称排序",
+    label: "名称",
     value: "name",
     fun: (value) => {
       return value.sort((a, b) => a.name.localeCompare(b.name));
     }
   },
   {
-    label: "按进度排序",
+    label: "进度",
     value: "progress",
     fun: (value) => {
       return value.sort((a, b) => b.progress - a.progress);
@@ -77,24 +124,45 @@ let sortTypeList = [
   }
 ]
 
-let dialogVisible = ref(false)
-
-let show = () => {
-  dialogVisible.value = true
-  getTorrentsInfos()
-}
+let polling = false
+let stopped = false
 
 let torrentsInfos = ref([])
 
-let changeSort = (type) => {
-  if (sortType.value === type) {
-    // 相同排序方式，切换正序/倒序
-    sortOrder.value = sortOrder.value === 'asc' ? 'desc' : 'asc'
-  } else {
-    sortType.value = type
-    sortOrder.value = 'asc'
+const completedInfos = computed(() => torrentsInfos.value.filter(isCompleted))
+const downloadingInfos = computed(() => torrentsInfos.value.filter(item => !isCompleted(item)))
+const activeTorrentsInfos = computed(() => activeTab.value === 'completed' ? completedInfos.value : downloadingInfos.value)
+const emptyDescription = computed(() => activeTab.value === 'completed' ? '当前无已完成任务' : '当前无下载中任务')
+const currentSortLabel = computed(() => sortTypeList.find(item => item.value === sortType.value)?.label || '名称')
+
+const isCompleted = item => {
+  return item.state === 'stoppedUP'
+}
+
+const formatTorrentSize = bytes => {
+  const size = Number(bytes)
+  if (!Number.isFinite(size) || size < 0) {
+    return '-'
   }
+  return size === 0 ? '0 B' : formatSize(size)
+}
+
+const resort = () => {
   torrentsInfos.value = sortInfos(torrentsInfos.value)
+}
+
+let changeSortType = type => {
+  if (sortType.value === type) {
+    return
+  }
+  sortType.value = type
+  sortOrder.value = 'asc'
+  resort()
+}
+
+let toggleSortOrder = () => {
+  sortOrder.value = sortOrder.value === 'asc' ? 'desc' : 'asc'
+  resort()
 }
 
 let sortInfos = (infos) => {
@@ -103,14 +171,18 @@ let sortInfos = (infos) => {
     if (value !== sortType.value) {
       continue
     }
-    let sorted = fun(infos)
+    let sorted = fun([...infos])
     return sortOrder.value === 'asc' ? sorted : sorted.reverse()
   }
   return infos;
 }
 
-let getTorrentsInfos = async () => {
-  while (dialogVisible.value) {
+let startPolling = async () => {
+  if (polling) {
+    return
+  }
+  polling = true
+  while (!stopped) {
     try {
       let res = await http.torrentsInfos()
       let infos = await res.data
@@ -119,26 +191,111 @@ let getTorrentsInfos = async () => {
     }
     await sleep(3000)
   }
+  polling = false
 }
 
 let sleep = ms => {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-defineExpose({show})
+const resumePolling = () => {
+  stopped = false
+  startPolling()
+}
+
+const pausePolling = () => {
+  stopped = true
+}
+
+onMounted(resumePolling)
+onActivated(resumePolling)
+onDeactivated(pausePolling)
+onUnmounted(pausePolling)
 </script>
 
 <style scoped>
+.torrents-page {
+  height: 100%;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.torrents-header {
+  flex-shrink: 0;
+  padding-bottom: 12px;
+}
+
+.torrents-header h2 {
+  line-height: 1.4;
+}
+
 .torrents-container {
-  height: 500px;
+  flex: 1;
+  min-height: 0;
   display: flex;
   flex-direction: column;
 }
 
-.torrents-header {
-  text-align: center;
-  margin-bottom: 10px;
+.torrents-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 0 4px 10px;
   flex-shrink: 0;
+}
+
+.torrents-tabs {
+  flex: 1;
+  min-width: 0;
+}
+
+.torrents-tabs :deep(.el-tabs__header) {
+  margin: 0;
+}
+
+.torrents-tabs :deep(.el-tabs__nav-wrap:after) {
+  height: 0;
+}
+
+.torrents-tabs :deep(.el-tabs__item) {
+  height: 36px;
+  font-weight: 600;
+}
+
+.tab-label {
+  margin-right: 6px;
+  flex-shrink: 0;
+}
+
+.sort-actions {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.sort-actions .el-button {
+  margin-left: 0;
+}
+
+.sort-field-button {
+  min-width: 82px;
+  padding: 0 9px;
+}
+
+.sort-field-arrow {
+  margin-left: 2px;
+  color: var(--el-text-color-placeholder);
+  font-size: 12px;
+}
+
+.sort-order-button {
+  width: 30px;
+  height: 30px;
+  padding: 0;
 }
 
 .torrents-scrollbar {
@@ -154,6 +311,25 @@ defineExpose({show})
   margin-bottom: 4px;
 }
 
+.torrents-size-info {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 16px;
+  margin-top: 6px;
+  font-size: 13px;
+  line-height: 20px;
+  font-variant-numeric: tabular-nums;
+}
+
+.torrents-size-label {
+  margin-right: 4px;
+  color: var(--el-text-color-placeholder);
+}
+
+.torrents-size-value {
+  color: var(--el-text-color-regular);
+}
+
 .torrents-footer {
   width: 100%;
   justify-content: space-between;
@@ -162,5 +338,17 @@ defineExpose({show})
 .torrents-tag-spacer {
   margin-top: 4px;
   margin-left: 4px;
+}
+
+@media (max-width: 700px) {
+  .torrents-toolbar {
+    align-items: flex-end;
+    gap: 6px;
+    padding: 0 0 8px;
+  }
+
+  .torrents-tabs :deep(.el-tabs__item) {
+    padding: 0 10px;
+  }
 }
 </style>

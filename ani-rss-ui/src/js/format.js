@@ -52,7 +52,7 @@ export let fromNow = (timestamp, template) => {
     // 是否为当前年
     const isCurrentYear = target.getFullYear() === nowDate.getFullYear();
 
-    template = isCurrentYear ? 'MM-DD HH:mm:ss' : 'YYYY-MM-DD HH:mm:ss';
+    template = isCurrentYear ? 'MM/DD HH:mm' : 'YYYY/MM/DD HH:mm';
 
     return dayjs(target).format(template);
 }

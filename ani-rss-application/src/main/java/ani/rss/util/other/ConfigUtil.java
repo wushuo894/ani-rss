@@ -178,6 +178,7 @@ public class ConfigUtil {
                 .setRenameDelTmdbId(false)
                 .setPriorityKeywordsEnable(false)
                 .setPriorityKeywords(new ArrayList<>())
+                .setVerifyLoginIp(false)
                 .setAutoTrackersUpdate(false)
                 .setTrackersUpdateUrls("https://cf.trackerslist.com/best.txt")
                 .setAutoUpdate(false)

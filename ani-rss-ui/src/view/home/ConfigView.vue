@@ -1,56 +1,54 @@
 <template>
-  <el-dialog v-model="dialogVisible" center title="设置">
-    <div v-loading="loading" class="loading">
-      <el-tabs v-model:model-value="activeName" style="margin: 0 15px;">
-        <el-tab-pane label="下载设置" name="download" :lazy="true">
-          <div style="height: 500px;">
-            <el-scrollbar style="padding: 0 12px">
-              <DownloadView v-model:config="config"/>
-            </el-scrollbar>
-          </div>
-        </el-tab-pane>
-        <el-tab-pane :lazy="true" label="基本设置" name="basic">
-          <div style="height: 500px;">
-            <el-scrollbar style="padding: 0 12px;">
-              <BasicView v-model:config="config"/>
-            </el-scrollbar>
-          </div>
-        </el-tab-pane>
-        <el-tab-pane label="全局排除" :lazy="true">
-          <ExcludeView v-model:exclude="config.exclude" :show-text="true"/>
-        </el-tab-pane>
-        <el-tab-pane label="代理设置" :lazy="true">
-          <ProxyView v-model:config="config"/>
-        </el-tab-pane>
-        <el-tab-pane label="登录设置" :lazy="true">
-          <LoginConfigView :config="config"/>
-        </el-tab-pane>
-        <el-tab-pane label="通知" :lazy="true">
-          <div style="height: 500px;">
-            <el-scrollbar style="padding: 0 12px;">
-              <NotificationView v-model:config="config"/>
-            </el-scrollbar>
-          </div>
-        </el-tab-pane>
-        <el-tab-pane :lazy="true" label="捐赠" name="afdian">
-          <AfdianView :config="config"/>
-        </el-tab-pane>
-        <el-tab-pane label="关于" name="about" :lazy="true">
-          <AboutView :config="config"/>
-        </el-tab-pane>
-      </el-tabs>
-      <div class="action">
-        <el-button :loading="configButtonLoading" bg icon="Check" text type="primary" @click="saveConfig">确定
-        </el-button>
-        <el-button icon="Close" bg text @click="dialogVisible = false">取消</el-button>
+  <div v-loading="loading" class="config-page">
+    <header class="config-header">
+      <div class="config-heading">
+        <h2>设置</h2>
+        <el-text size="small" type="info">{{ activeDescription }}</el-text>
       </div>
-    </div>
-  </el-dialog>
+      <el-button
+          bg text
+          :disabled="loading"
+          :loading="configButtonLoading"
+          type="primary"
+          @click="saveConfig">
+        <el-icon class="el-icon--left">
+          <Check/>
+        </el-icon>
+        保存
+      </el-button>
+    </header>
+
+    <el-tabs v-model="activeName" class="segmented-tabs config-tabs">
+      <el-tab-pane
+          v-for="tab in tabs"
+          :key="tab.name"
+          :label="tab.label"
+          :name="tab.name"
+          :lazy="true">
+        <el-scrollbar class="config-scrollbar">
+          <div class="tab-scroll-content">
+            <DownloadView v-if="tab.name === 'download'" v-model:config="config"/>
+            <BasicView v-else-if="tab.name === 'basic'" v-model:config="config"/>
+            <ExcludeView
+                v-else-if="tab.name === 'exclude'"
+                v-model:exclude="config.exclude"
+                :show-text="true"/>
+            <ProxyView v-else-if="tab.name === 'proxy'" v-model:config="config"/>
+            <LoginConfigView v-else-if="tab.name === 'login'" :config="config"/>
+            <NotificationView v-else-if="tab.name === 'notification'" v-model:config="config"/>
+            <AfdianView v-else-if="tab.name === 'afdian'" :config="config"/>
+            <AboutView v-else-if="tab.name === 'about'" :config="config"/>
+          </div>
+        </el-scrollbar>
+      </el-tab-pane>
+    </el-tabs>
+  </div>
 </template>
 
 <script setup>
-import {ref} from "vue";
+import {computed, onMounted, ref} from "vue";
 import {ElMessage} from "element-plus";
+import {Check} from "@element-plus/icons-vue";
 import {md5} from "js-md5";
 import ExcludeView from "@/view/config/ExcludeView.vue";
 import NotificationView from "@/view/config/NotificationView.vue";
@@ -63,17 +61,25 @@ import AfdianView from "@/view/config/AfdianView.vue";
 import {configData} from "@/js/config.js";
 import * as http from "@/js/http.js";
 
-const dialogVisible = ref(false)
 const configButtonLoading = ref(false)
 const loading = ref(true)
 
 const config = ref(configData)
 
 const activeName = ref('download')
+const tabs = [
+  {name: 'download', label: '下载设置', description: '下载器、目录与任务行为'},
+  {name: 'basic', label: '基本设置', description: '订阅、命名、刮削与备份'},
+  {name: 'exclude', label: '全局排除', description: '统一排除不需要的资源'},
+  {name: 'proxy', label: '代理设置', description: '网络代理与连接配置'},
+  {name: 'login', label: '登录设置', description: '账号与访问安全'},
+  {name: 'notification', label: '通知', description: '消息渠道与事件通知'},
+  {name: 'afdian', label: '捐赠', description: '支持项目持续维护'},
+  {name: 'about', label: '关于', description: '版本信息与项目链接'}
+]
+const activeDescription = computed(() => tabs.find(tab => tab.name === activeName.value)?.description || '')
 
-const show = (update) => {
-  activeName.value = update ? 'about' : 'download'
-  dialogVisible.value = true
+const loadConfig = () => {
   loading.value = true
   http.config()
       .then(res => {
@@ -99,23 +105,127 @@ const saveConfig = () => {
   http.setConfig(my_config)
       .then(res => {
         ElMessage.success(res.message)
-        window.$reLoadList()
-        dialogVisible.value = false
+        window.$reLoadList?.()
       })
       .finally(() => {
         configButtonLoading.value = false
       })
 }
 
-defineExpose({
-  show
+onMounted(() => {
+  loadConfig()
 })
 </script>
 <style scoped>
-.action {
+.config-page {
+  height: 100%;
+  min-width: 0;
   display: flex;
-  justify-content: end;
-  width: 100%;
-  margin-top: 8px;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.config-header {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding-bottom: 12px;
+}
+
+.config-heading {
+  min-width: 0;
+}
+
+.config-heading h2 {
+  line-height: 1.4;
+}
+
+.config-tabs {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.config-tabs :deep(.el-tabs__header) {
+  flex-shrink: 0;
+}
+
+.config-tabs :deep(.el-tabs__content) {
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+  border: 1px solid var(--el-border-color-light);
+  border-radius: 8px;
+  background: var(--el-bg-color);
+}
+
+.config-tabs :deep(.el-tab-pane) {
+  height: 100%;
+}
+
+.config-scrollbar {
+  height: 100%;
+}
+
+.tab-scroll-content {
+  width: min(100%, 920px);
+  min-width: 0;
+  margin: 0 auto;
+  padding: 24px 28px 40px;
+}
+
+.config-tabs :deep(.el-form-item) {
+  margin-bottom: 20px;
+}
+
+.config-tabs :deep(.el-form-item__label) {
+  padding-right: 18px;
+  color: var(--el-text-color-regular);
+  font-weight: 500;
+}
+
+.config-tabs :deep(.el-alert) {
+  border-radius: 6px;
+}
+
+@media (max-width: 700px) {
+  .config-header {
+    padding-bottom: 8px;
+  }
+
+  .config-header .el-button {
+    min-width: 72px;
+  }
+
+  .config-tabs :deep(.el-tabs__content) {
+    border-right: 0;
+    border-left: 0;
+    border-radius: 0;
+  }
+
+  .tab-scroll-content {
+    padding: 18px 4px 30px;
+  }
+
+  .config-tabs :deep(.el-form-item) {
+    display: block;
+    margin-bottom: 18px;
+  }
+
+  .config-tabs :deep(.el-form-item__label) {
+    width: 100% !important;
+    height: auto;
+    margin-bottom: 7px;
+    padding: 0;
+    line-height: 1.4;
+    justify-content: flex-start;
+  }
+
+  .config-tabs :deep(.el-form-item__content) {
+    margin-left: 0 !important;
+  }
 }
 </style>
