@@ -1,1 +1,3 @@
-- feat: 增加 qBittorrent 内容布局设置
+- refactor: 优化登陆逻辑
+- feat: 全新的页面
+- fix: 修复 Windows 下上传格式错误的问题
