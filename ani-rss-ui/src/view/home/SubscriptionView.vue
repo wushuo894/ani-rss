@@ -1,83 +1,85 @@
 <template>
-  <AddView ref="addRef"/>
-  <CollectionView ref="collectionRef"/>
-  <ManageView ref="manageRef"/>
-  <PageHeaderView title="订阅" :subtitle="`共 ${subscriptionTotal} 个订阅`"/>
-  <div class="subscription-page app-page-padding">
-    <div class="subscription-toolbar">
-      <div class="subscription-filters">
-        <el-input
-            v-model="title"
-            class="subscription-search"
-            clearable
-            placeholder="搜索"
-            prefix-icon="Search"
-            @clear="changeFilterList"
-            @input="changeFilterList"/>
-        <el-select
-            v-model:model-value="releaseDate"
-            class="subscription-select"
-            clearable
-            placeholder="日期"
-            @change="selectChange">
-          <el-option v-for="it in releaseDateList"
-                     :key="it"
-                     :label="it"
-                     :value="it"/>
-        </el-select>
-        <el-select
-            v-model:model-value="enable"
-            class="subscription-select"
-            @change="selectChange">
-          <el-option v-for="selectItem in enableSelect"
-                     :key="selectItem.label"
-                     :label="selectItem.label"
-                     :value="selectItem.label"/>
-        </el-select>
-      </div>
-      <div class="subscription-actions">
-        <el-dropdown trigger="click">
-          <el-button aria-label="添加" type="primary" bg text>
-            <el-icon class="subscription-action-icon">
-              <Plus/>
-            </el-icon>
-            <span class="subscription-action-label">添加</span>
-          </el-button>
-          <template #dropdown>
-            <el-dropdown-menu>
-              <el-dropdown-item @click="addRef?.show">
-                添加订阅
-              </el-dropdown-item>
-              <el-dropdown-item @click="collectionRef?.show">
-                添加合集
-              </el-dropdown-item>
-            </el-dropdown-menu>
-          </template>
-        </el-dropdown>
-        <PopconfirmView title="立即刷新全部订阅?" @confirm="refreshAni">
-          <template #reference>
-            <el-button aria-label="刷新" :loading="refreshLoading" bg text>
+  <div class="subscription-page app-page-layout">
+    <AddView ref="addRef"/>
+    <CollectionView ref="collectionRef"/>
+    <ManageView ref="manageRef"/>
+    <PageHeaderView title="订阅" :subtitle="`共 ${subscriptionTotal} 个订阅`"/>
+    <div class="subscription-body app-page-content app-page-padding">
+      <div class="subscription-toolbar">
+        <div class="subscription-filters">
+          <el-input
+              v-model="title"
+              class="subscription-search"
+              clearable
+              placeholder="搜索"
+              prefix-icon="Search"
+              @clear="changeFilterList"
+              @input="changeFilterList"/>
+          <el-select
+              v-model:model-value="releaseDate"
+              class="subscription-select"
+              clearable
+              placeholder="日期"
+              @change="selectChange">
+            <el-option v-for="it in releaseDateList"
+                       :key="it"
+                       :label="it"
+                       :value="it"/>
+          </el-select>
+          <el-select
+              v-model:model-value="enable"
+              class="subscription-select"
+              @change="selectChange">
+            <el-option v-for="selectItem in enableSelect"
+                       :key="selectItem.label"
+                       :label="selectItem.label"
+                       :value="selectItem.label"/>
+          </el-select>
+        </div>
+        <div class="subscription-actions">
+          <el-dropdown trigger="click">
+            <el-button aria-label="添加" type="primary" bg text>
               <el-icon class="subscription-action-icon">
-                <Refresh/>
+                <Plus/>
               </el-icon>
-              <span class="subscription-action-label">刷新</span>
+              <span class="subscription-action-label">添加</span>
             </el-button>
-          </template>
-        </PopconfirmView>
-        <el-button aria-label="管理" @click="manageRef?.show" bg text>
-          <el-icon class="subscription-action-icon">
-            <Fold/>
-          </el-icon>
-          <span class="subscription-action-label">管理</span>
-        </el-button>
+            <template #dropdown>
+              <el-dropdown-menu>
+                <el-dropdown-item @click="addRef?.show">
+                  添加订阅
+                </el-dropdown-item>
+                <el-dropdown-item @click="collectionRef?.show">
+                  添加合集
+                </el-dropdown-item>
+              </el-dropdown-menu>
+            </template>
+          </el-dropdown>
+          <PopconfirmView title="立即刷新全部订阅?" @confirm="refreshAni">
+            <template #reference>
+              <el-button aria-label="刷新" :loading="refreshLoading" bg text>
+                <el-icon class="subscription-action-icon">
+                  <Refresh/>
+                </el-icon>
+                <span class="subscription-action-label">刷新</span>
+              </el-button>
+            </template>
+          </PopconfirmView>
+          <el-button aria-label="管理" @click="manageRef?.show" bg text>
+            <el-icon class="subscription-action-icon">
+              <Fold/>
+            </el-icon>
+            <span class="subscription-action-label">管理</span>
+          </el-button>
+        </div>
       </div>
+      <SubscriptionListView
+          ref="listRef"
+          :filter="filter"
+          :title="title"
+          :view-mode="subscriptionViewMode"
+          @loaded="listLoaded"/>
     </div>
-    <SubscriptionListView
-        ref="listRef"
-        :filter="filter"
-        :title="title"
-        :view-mode="subscriptionViewMode"
-        @loaded="listLoaded"/>
   </div>
 </template>
 
@@ -163,13 +165,6 @@ onMounted(() => {
 </script>
 
 <style scoped>
-.subscription-page {
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-}
-
 .subscription-toolbar {
   flex-shrink: 0;
   display: flex;

@@ -18,88 +18,85 @@
       <el-button bg icon="Close" text @click="cssDialogVisible = false">关闭</el-button>
     </div>
   </el-dialog>
-  <el-form @submit.prevent label-width="auto"
-           class="full-width">
-    <el-form-item label="外观">
-      <el-radio-group v-model="store">
-        <el-radio-button label="自动" value="auto">
-          <template #default>
-            <el-icon>
-              <Adjust/>
-            </el-icon>
-          </template>
-        </el-radio-button>
-        <el-radio-button label="浅色" value="light">
+  <SettingsItem label="外观">
+    <el-radio-group v-model="store">
+      <el-radio-button label="自动" value="auto">
+        <template #default>
           <el-icon>
-            <Sun/>
+            <Adjust/>
           </el-icon>
-        </el-radio-button>
-        <el-radio-button label="深色" value="dark">
-          <el-icon>
-            <Moon/>
-          </el-icon>
-        </el-radio-button>
-      </el-radio-group>
-    </el-form-item>
-    <el-form-item label="主题色">
-      <el-color-picker v-model="color" :predefine="predefineColors"
-                       @blur="colorChange(color)"
-                       @change="colorChange(color)"
-                       @active-change="colorChange"/>
-    </el-form-item>
-    <el-form-item label="排序">
-      <el-select v-model="props.config['sortType']" class="width-150">
-        <el-option value="SCORE" label="评分"/>
-        <el-option value="PINYIN" label="拼音"/>
-        <el-option value="DOWNLOAD_TIME" label="更新时间"/>
-      </el-select>
-    </el-form-item>
-    <el-form-item label="订阅布局">
-      <el-select v-model="subscriptionViewMode" class="width-150">
-        <el-option label="封面" value="cover"/>
-        <el-option label="卡片" value="card"/>
-      </el-select>
-    </el-form-item>
-    <el-form-item label="启动页">
-      <el-select v-model="startupPage" class="width-150">
-        <el-option label="首页" value="/home"/>
-        <el-option label="订阅页" value="/subscriptions"/>
-      </el-select>
-    </el-form-item>
-    <el-form-item label="最大内容宽度">
-      <el-input-number v-model="maxContentWidth"
-                       :min="1200">
-        <template #suffix>
-          <span>px</span>
         </template>
-      </el-input-number>
-    </el-form-item>
-    <el-form-item label="其他">
-      <el-checkbox v-model="showScore" label="显示评分"/>
-      <el-checkbox v-model="showWeek" label="按星期展示"/>
-      <el-checkbox v-model="showPlaylist" label="显示视频列表"/>
-      <el-checkbox v-model="showLastDownloadTime" label="显示更新时间"/>
-    </el-form-item>
-    <el-form-item label="自定义">
-      <el-button bg @click="jsDialogVisible = true">
-        <template #icon>
-          <Js/>
-        </template>
-        JavaScript
-      </el-button>
-      <el-button bg @click="cssDialogVisible = true">
-        <template #icon>
-          <Css3Alt/>
-        </template>
-        CSS
-      </el-button>
-    </el-form-item>
-    <el-form-item label="WebUI">
-      <UploadView url="api/webui/upload" :callback="callback" :extensions="['zip']">
-        <el-button bg icon="Upload">选择文件并上传</el-button>
-      </UploadView>
-    </el-form-item>
-  </el-form>
+      </el-radio-button>
+      <el-radio-button label="浅色" value="light">
+        <el-icon>
+          <Sun/>
+        </el-icon>
+      </el-radio-button>
+      <el-radio-button label="深色" value="dark">
+        <el-icon>
+          <Moon/>
+        </el-icon>
+      </el-radio-button>
+    </el-radio-group>
+  </SettingsItem>
+  <SettingsItem label="主题色">
+    <el-color-picker v-model="color" :predefine="predefineColors"
+                     @blur="colorChange(color)"
+                     @change="colorChange(color)"
+                     @active-change="colorChange"/>
+  </SettingsItem>
+  <SettingsItem label="排序">
+    <el-select v-model="props.config['sortType']" class="width-150">
+      <el-option value="SCORE" label="评分"/>
+      <el-option value="PINYIN" label="拼音"/>
+      <el-option value="DOWNLOAD_TIME" label="更新时间"/>
+    </el-select>
+  </SettingsItem>
+  <SettingsItem label="订阅布局">
+    <el-select v-model="subscriptionViewMode" class="width-150">
+      <el-option label="封面" value="cover"/>
+      <el-option label="卡片" value="card"/>
+    </el-select>
+  </SettingsItem>
+  <SettingsItem label="启动页">
+    <el-select v-model="startupPage" class="width-150">
+      <el-option label="首页" value="/home"/>
+      <el-option label="订阅页" value="/subscriptions"/>
+    </el-select>
+  </SettingsItem>
+  <SettingsItem label="最大内容宽度">
+    <el-input-number v-model="maxContentWidth"
+                     :min="1200">
+      <template #suffix>
+        <span>px</span>
+      </template>
+    </el-input-number>
+  </SettingsItem>
+  <SettingsItem label="其他">
+    <el-checkbox v-model="showScore" label="显示评分"/>
+    <el-checkbox v-model="showWeek" label="按星期展示"/>
+    <el-checkbox v-model="showPlaylist" label="显示视频列表"/>
+    <el-checkbox v-model="showLastDownloadTime" label="显示更新时间"/>
+  </SettingsItem>
+  <SettingsItem label="自定义">
+    <el-button bg @click="jsDialogVisible = true">
+      <template #icon>
+        <Js/>
+      </template>
+      JavaScript
+    </el-button>
+    <el-button bg @click="cssDialogVisible = true">
+      <template #icon>
+        <Css3Alt/>
+      </template>
+      CSS
+    </el-button>
+  </SettingsItem>
+  <SettingsItem label="WebUI">
+    <UploadView url="api/webui/upload" :callback="callback" :extensions="['zip']">
+      <el-button bg icon="Upload">选择文件并上传</el-button>
+    </UploadView>
+  </SettingsItem>
 </template>
 
 <script setup>
@@ -119,6 +116,7 @@ import {
 } from "@/js/global.js";
 import {ElMessage} from "element-plus";
 import UploadView from "@/view/custom/UploadView.vue";
+import SettingsItem from "@/view/custom/SettingsItem.vue";
 
 let predefineColors = ref([
   '#409eff', '#109D58', '#BF3545', '#CB7574',

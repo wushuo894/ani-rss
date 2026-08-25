@@ -1,12 +1,12 @@
 <template>
   <template v-if="notificationConfig['notificationType'] === 'EMBY_REFRESH'">
-    <el-form-item label="EmbyHost">
+    <SettingsItem label="EmbyHost">
       <el-input v-model="notificationConfig['embyHost']" placeholder="http://x.x.x.x:8096"/>
-    </el-form-item>
-    <el-form-item label="Emby密钥">
+    </SettingsItem>
+    <SettingsItem label="Emby密钥">
       <el-input v-model="notificationConfig['embyApiKey']"/>
-    </el-form-item>
-    <el-form-item label="媒体库">
+    </SettingsItem>
+    <SettingsItem label="媒体库">
       <div>
         <el-checkbox-group v-model="notificationConfig['embyRefreshViewIds']">
           <el-checkbox
@@ -19,8 +19,8 @@
           <el-button :loading="getEmbyViewsLoading" bg icon="Refresh" text @click="getEmbyViews"/>
         </div>
       </div>
-    </el-form-item>
-    <el-form-item label="延迟">
+    </SettingsItem>
+    <SettingsItem label="延迟">
       <el-input-number v-model="notificationConfig['embyDelayed']"
                        class="notification-input-width"
                        :min="0">
@@ -28,11 +28,12 @@
           <span>秒</span>
         </template>
       </el-input-number>
-    </el-form-item>
+    </SettingsItem>
   </template>
 </template>
 
 <script setup>
+import SettingsItem from "@/view/custom/SettingsItem.vue";
 import {onMounted, ref} from "vue";
 import * as http from "@/js/http.js";
 

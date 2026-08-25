@@ -1,37 +1,39 @@
 <template>
   <template v-if="notificationConfig['notificationType'] === 'BARK'">
-    <el-form-item label="通知模版">
+    <SettingsItem label="通知模版">
       <el-input v-model:model-value="notificationConfig['notificationTemplate']" :autosize="{ minRows: 2}"
                 placeholder="${notification}" type="textarea"/>
-    </el-form-item>
-    <el-form-item label="ServerUrl">
+    </SettingsItem>
+    <SettingsItem label="ServerUrl">
       <el-input v-model="notificationConfig['barkServerUrl']" placeholder="https://api.day.app"/>
-    </el-form-item>
-    <el-form-item label="DeviceKeys">
+    </SettingsItem>
+    <SettingsItem label="DeviceKeys">
       <el-input-tag v-model="notificationConfig['barkDeviceKeys']"/>
-    </el-form-item>
-    <el-form-item label="Group">
+    </SettingsItem>
+    <SettingsItem label="Group">
       <el-input v-model="notificationConfig['barkGroup']"/>
-    </el-form-item>
-    <el-form-item label="Level">
+    </SettingsItem>
+    <SettingsItem label="Level">
       <el-select v-model="notificationConfig['barkLevel']" placeholder="Select Level">
         <el-option label="Critical" value="critical"/>
         <el-option label="Active" value="active"/>
         <el-option label="TimeSensitive" value="timeSensitive"/>
         <el-option label="Passive" value="passive"/>
       </el-select>
-    </el-form-item>
-    <el-form-item label="Volume">
+    </SettingsItem>
+    <SettingsItem label="Volume">
       <el-input-number v-model="notificationConfig['barkVolume']" :min="1" :max="10"/>
-    </el-form-item>
-    <el-form-item label="Other">
+    </SettingsItem>
+    <SettingsItem label="Other">
       <el-checkbox v-model="notificationConfig['barkUseMarkdown']">
         Use Markdown
       </el-checkbox>
-    </el-form-item>
+    </SettingsItem>
   </template>
 </template>
 
 <script setup>
+import SettingsItem from "@/view/custom/SettingsItem.vue";
+
 let props = defineProps(['notificationConfig', 'config'])
 </script>

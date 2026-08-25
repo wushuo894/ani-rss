@@ -1,7 +1,6 @@
 <template>
-  <el-form @submit.prevent label-width="auto"
-           class="full-width">
-    <el-form-item label="更新地址">
+  <div>
+    <SettingsItem label="更新地址">
       <div class="full-width">
         <div>
           <el-input v-model:model-value="props.config.trackersUpdateUrls" :autosize="{ minRows: 2}"
@@ -19,11 +18,12 @@
           </el-text>
         </div>
       </div>
-    </el-form-item>
-  </el-form>
+    </SettingsItem>
+  </div>
 </template>
 
 <script setup>
+import SettingsItem from "@/view/custom/SettingsItem.vue";
 import {ElMessage, ElText} from "element-plus";
 import {ref} from "vue";
 import * as http from "@/js/http.js";

@@ -1,12 +1,14 @@
 <template>
   <template v-if="notificationConfig['notificationType'] === 'SYSTEM'">
-    <el-form-item label="通知模版">
+    <SettingsItem label="通知模版">
       <el-input v-model:model-value="notificationConfig['notificationTemplate']" :autosize="{ minRows: 2}"
                 placeholder="${notification}" type="textarea"/>
-    </el-form-item>
+    </SettingsItem>
   </template>
 </template>
 
 <script setup>
+import SettingsItem from "@/view/custom/SettingsItem.vue";
+
 let props = defineProps(['notificationConfig', 'config'])
 </script>

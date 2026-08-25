@@ -1,19 +1,19 @@
 <template>
-  <el-form-item label="下载速度限制">
+  <SettingsItem label="下载速度限制">
     <el-input-number v-model:model-value="props.config['dlLimit']" :min="0">
       <template #suffix>
         <span>KiB/s</span>
       </template>
     </el-input-number>
-  </el-form-item>
-  <el-form-item label="上传速度限制">
+  </SettingsItem>
+  <SettingsItem label="上传速度限制">
     <el-input-number v-model:model-value="props.config['upLimit']" :min="0">
       <template #suffix>
         <span>KiB/s</span>
       </template>
     </el-input-number>
-  </el-form-item>
-  <el-form-item label="分享率">
+  </SettingsItem>
+  <SettingsItem label="分享率">
     <div>
       <el-input-number v-model:model-value="props.config.ratioLimit" :min="-2"/>
       <br>
@@ -21,8 +21,8 @@
         "-1"表示禁用, "-2"使用全局设置
       </el-text>
     </div>
-  </el-form-item>
-  <el-form-item label="总做种时长">
+  </SettingsItem>
+  <SettingsItem label="总做种时长">
     <div>
       <el-input-number v-model:model-value="props.config.seedingTimeLimit" :min="-2">
         <template #suffix>
@@ -34,8 +34,8 @@
         "-1"表示禁用, "-2"使用全局设置
       </el-text>
     </div>
-  </el-form-item>
-  <el-form-item label="非活跃时长">
+  </SettingsItem>
+  <SettingsItem label="非活跃时长">
     <div>
       <el-input-number v-model:model-value="props.config.inactiveSeedingTimeLimit" :min="-2">
         <template #suffix>
@@ -47,8 +47,8 @@
         "-1"表示禁用, "-2"使用全局设置
       </el-text>
     </div>
-  </el-form-item>
-  <el-form-item label="内容布局">
+  </SettingsItem>
+  <SettingsItem label="内容布局">
     <div>
       <el-select v-model:model-value="props.config.qbContentLayout" class="width-150">
         <el-option label="原始" value="Original"/>
@@ -56,8 +56,8 @@
         <el-option label="不创建子文件夹" value="NoSubfolder"/>
       </el-select>
     </div>
-  </el-form-item>
-  <el-form-item label="qb保存路径">
+  </SettingsItem>
+  <SettingsItem label="qb保存路径">
     <div>
       <el-switch v-model:model-value="props.config.qbUseDownloadPath"
                  :disabled="config.downloadToolType !== 'qBittorrent'"/>
@@ -66,9 +66,11 @@
         开启后将使用qBittorrent的临时下载位置 (最终下载位置不受影响)
       </el-text>
     </div>
-  </el-form-item>
+  </SettingsItem>
 </template>
 
 <script setup>
+import SettingsItem from "@/view/custom/SettingsItem.vue";
+
 let props = defineProps(['config'])
 </script>

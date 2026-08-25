@@ -1,160 +1,162 @@
 <template>
-  <EditAniView ref="editAniRef"/>
-  <PlayListView ref="playListRef"/>
-  <CoverView ref="coverRef"/>
-  <DelAniView ref="delAniRef"/>
-  <BgmRateView ref="bgmRateRef"/>
-  <PageHeaderView title="首页" :subtitle="`${todayLabel} · ${todayText}`">
-    <template #actions>
-      <el-button :loading="refreshLoading" icon="Refresh" bg text @click="loadAll">
-        刷新
-      </el-button>
-    </template>
-  </PageHeaderView>
-  <div class="dashboard-page app-page-padding">
+  <div class="dashboard-page app-page-layout">
+    <EditAniView ref="editAniRef"/>
+    <PlayListView ref="playListRef"/>
+    <CoverView ref="coverRef"/>
+    <DelAniView ref="delAniRef"/>
+    <BgmRateView ref="bgmRateRef"/>
+    <PageHeaderView title="首页" :subtitle="`${todayLabel} · ${todayText}`">
+      <template #actions>
+        <el-button :loading="refreshLoading" icon="Refresh" bg text @click="loadAll">
+          刷新
+        </el-button>
+      </template>
+    </PageHeaderView>
+    <div class="dashboard-body app-page-content app-page-padding">
 
-    <el-scrollbar class="dashboard-scrollbar">
-      <div class="dashboard-content">
-        <div class="metric-grid">
-          <div class="metric-item">
-            <div class="metric-icon subscriptions">
-              <el-icon>
-                <List/>
-              </el-icon>
+      <el-scrollbar class="dashboard-scrollbar">
+        <div class="dashboard-content">
+          <div class="metric-grid">
+            <div class="metric-item">
+              <div class="metric-icon subscriptions">
+                <el-icon>
+                  <List/>
+                </el-icon>
+              </div>
+              <div>
+                <el-text size="small" type="info">订阅数量</el-text>
+                <div class="metric-value">{{ subscriptionTotal }}</div>
+              </div>
             </div>
-            <div>
-              <el-text size="small" type="info">订阅数量</el-text>
-              <div class="metric-value">{{ subscriptionTotal }}</div>
+            <div class="metric-item">
+              <div class="metric-icon enabled">
+                <el-icon>
+                  <CircleCheck/>
+                </el-icon>
+              </div>
+              <div>
+                <el-text size="small" type="info">已启用</el-text>
+                <div class="metric-value">{{ enabledTotal }}</div>
+              </div>
+            </div>
+            <div class="metric-item">
+              <div class="metric-icon downloading">
+                <el-icon>
+                  <Download/>
+                </el-icon>
+              </div>
+              <div>
+                <el-text size="small" type="info">下载中</el-text>
+                <div class="metric-value">{{ downloadingList.length }}</div>
+              </div>
+            </div>
+            <div class="metric-item">
+              <div class="metric-icon seeding">
+                <el-icon>
+                  <Upload/>
+                </el-icon>
+              </div>
+              <div>
+                <el-text size="small" type="info">做种中</el-text>
+                <div class="metric-value">{{ seedingList.length }}</div>
+              </div>
             </div>
           </div>
-          <div class="metric-item">
-            <div class="metric-icon enabled">
-              <el-icon>
-                <CircleCheck/>
-              </el-icon>
-            </div>
-            <div>
-              <el-text size="small" type="info">已启用</el-text>
-              <div class="metric-value">{{ enabledTotal }}</div>
-            </div>
-          </div>
-          <div class="metric-item">
-            <div class="metric-icon downloading">
-              <el-icon>
-                <Download/>
-              </el-icon>
-            </div>
-            <div>
-              <el-text size="small" type="info">下载中</el-text>
-              <div class="metric-value">{{ downloadingList.length }}</div>
-            </div>
-          </div>
-          <div class="metric-item">
-            <div class="metric-icon seeding">
-              <el-icon>
-                <Upload/>
-              </el-icon>
-            </div>
-            <div>
-              <el-text size="small" type="info">做种中</el-text>
-              <div class="metric-value">{{ seedingList.length }}</div>
-            </div>
-          </div>
-        </div>
 
-        <section class="dashboard-section today-section">
-          <div class="today-section-content">
-            <div class="section-title">
-              <h3>今天的订阅</h3>
-              <div class="today-heading-actions">
-                <el-tag type="info">{{ todayAnis.length }}</el-tag>
-                <div v-if="todayAnis.length" class="today-scroll-actions">
-                  <el-button aria-label="向左滚动" bg circle text @click="scrollToday(-1)">
-                    <el-icon>
-                      <ArrowLeft/>
-                    </el-icon>
-                  </el-button>
-                  <el-button aria-label="向右滚动" bg circle text @click="scrollToday(1)">
-                    <el-icon>
-                      <ArrowRight/>
-                    </el-icon>
-                  </el-button>
+          <section class="dashboard-section today-section">
+            <div class="today-section-content">
+              <div class="section-title">
+                <h3>今天的订阅</h3>
+                <div class="today-heading-actions">
+                  <el-tag type="info">{{ todayAnis.length }}</el-tag>
+                  <div v-if="todayAnis.length" class="today-scroll-actions">
+                    <el-button aria-label="向左滚动" bg circle text @click="scrollToday(-1)">
+                      <el-icon>
+                        <ArrowLeft/>
+                      </el-icon>
+                    </el-button>
+                    <el-button aria-label="向右滚动" bg circle text @click="scrollToday(1)">
+                      <el-icon>
+                        <ArrowRight/>
+                      </el-icon>
+                    </el-button>
+                  </div>
+                </div>
+              </div>
+              <el-empty v-if="!todayAnis.length" description="今天没有订阅"/>
+              <div v-else ref="todayTrack" class="today-track">
+                <div v-for="ani in todayAnis"
+                     :key="ani.id"
+                     class="today-item">
+                  <AniCoverView
+                      :item="ani"
+                      @edit="editAniRef?.show"
+                      @playlist="playListRef?.show"
+                      @cover="coverRef?.show"
+                      @del="delAniRef?.show"
+                      @rate="bgmRateRef?.show"/>
                 </div>
               </div>
             </div>
-            <el-empty v-if="!todayAnis.length" description="今天没有订阅"/>
-            <div v-else ref="todayTrack" class="today-track">
-              <div v-for="ani in todayAnis"
-                   :key="ani.id"
-                   class="today-item">
-                <AniCoverView
-                    :item="ani"
-                    @edit="editAniRef?.show"
-                    @playlist="playListRef?.show"
-                    @cover="coverRef?.show"
-                    @del="delAniRef?.show"
-                    @rate="bgmRateRef?.show"/>
-              </div>
+          </section>
+
+          <section class="dashboard-section">
+            <div class="section-title">
+              <h3>下载中</h3>
+              <el-tag type="info">{{ activeTorrents.length }}</el-tag>
             </div>
-          </div>
-        </section>
+            <el-empty v-if="!activeTorrents.length" description="当前无下载中任务"/>
+            <el-table v-else :data="activeTorrents" class="dashboard-table" size="small">
+              <el-table-column label="类型" width="76">
+                <template #default="{ row }">
+                  <el-tag :type="isDownloading(row) ? 'primary' : 'success'" size="small">
+                    {{ isDownloading(row) ? '下载' : '做种' }}
+                  </el-tag>
+                </template>
+              </el-table-column>
+              <el-table-column label="名称" min-width="220" prop="name" show-overflow-tooltip/>
+              <el-table-column label="进度" width="150">
+                <template #default="{ row }">
+                  <el-progress :percentage="row.progress || 0" :show-text="false"/>
+                </template>
+              </el-table-column>
+              <el-table-column label="大小" width="110" prop="formatSize"/>
+              <el-table-column label="状态" width="100">
+                <template #default="{ row }">
+                  {{ stateLabel(row.state) }}
+                </template>
+              </el-table-column>
+            </el-table>
+          </section>
 
-        <section class="dashboard-section">
-          <div class="section-title">
-            <h3>下载中</h3>
-            <el-tag type="info">{{ activeTorrents.length }}</el-tag>
-          </div>
-          <el-empty v-if="!activeTorrents.length" description="当前无下载中任务"/>
-          <el-table v-else :data="activeTorrents" class="dashboard-table" size="small">
-            <el-table-column label="类型" width="76">
-              <template #default="{ row }">
-                <el-tag :type="isDownloading(row) ? 'primary' : 'success'" size="small">
-                  {{ isDownloading(row) ? '下载' : '做种' }}
-                </el-tag>
-              </template>
-            </el-table-column>
-            <el-table-column label="名称" min-width="220" prop="name" show-overflow-tooltip/>
-            <el-table-column label="进度" width="150">
-              <template #default="{ row }">
-                <el-progress :percentage="row.progress || 0" :show-text="false"/>
-              </template>
-            </el-table-column>
-            <el-table-column label="大小" width="110" prop="formatSize"/>
-            <el-table-column label="状态" width="100">
-              <template #default="{ row }">
-                {{ stateLabel(row.state) }}
-              </template>
-            </el-table-column>
-          </el-table>
-        </section>
-
-        <section class="dashboard-section">
-          <div class="section-title">
-            <h3>疑似停更列表</h3>
-            <el-tag type="warning">{{ procrastinatingList.length }}</el-tag>
-          </div>
-          <el-empty v-if="!procrastinatingList.length" description="暂无疑似停更订阅"/>
-          <el-table v-else :data="procrastinatingList" class="dashboard-table" size="small">
-            <el-table-column label="订阅" min-width="220" prop="title" show-overflow-tooltip/>
-            <el-table-column label="进度" width="100">
-              <template #default="{ row }">
-                {{ row.currentEpisodeNumber }} / {{ row.totalEpisodeNumber || '*' }}
-              </template>
-            </el-table-column>
-            <el-table-column label="最后下载" width="150">
-              <template #default="{ row }">
-                {{ row.lastDownloadTime > 0 ? fromNow(row.lastDownloadTime) : formatDate(row.releaseDate) }}
-              </template>
-            </el-table-column>
-            <el-table-column label="间隔" width="90">
-              <template #default="{ row }">
-                {{ row.procrastinatingDays }} 天
-              </template>
-            </el-table-column>
-          </el-table>
-        </section>
-      </div>
-    </el-scrollbar>
+          <section class="dashboard-section">
+            <div class="section-title">
+              <h3>疑似停更列表</h3>
+              <el-tag type="warning">{{ procrastinatingList.length }}</el-tag>
+            </div>
+            <el-empty v-if="!procrastinatingList.length" description="暂无疑似停更订阅"/>
+            <el-table v-else :data="procrastinatingList" class="dashboard-table" size="small">
+              <el-table-column label="订阅" min-width="220" prop="title" show-overflow-tooltip/>
+              <el-table-column label="进度" width="100">
+                <template #default="{ row }">
+                  {{ row.currentEpisodeNumber }} / {{ row.totalEpisodeNumber || '*' }}
+                </template>
+              </el-table-column>
+              <el-table-column label="最后下载" width="150">
+                <template #default="{ row }">
+                  {{ row.lastDownloadTime > 0 ? fromNow(row.lastDownloadTime) : formatDate(row.releaseDate) }}
+                </template>
+              </el-table-column>
+              <el-table-column label="间隔" width="90">
+                <template #default="{ row }">
+                  {{ row.procrastinatingDays }} 天
+                </template>
+              </el-table-column>
+            </el-table>
+          </section>
+        </div>
+      </el-scrollbar>
+    </div>
   </div>
 </template>
 
@@ -312,13 +314,6 @@ onUnmounted(stopPolling)
 </script>
 
 <style scoped>
-.dashboard-page {
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-}
-
 .metric-grid {
   grid-column: 1 / -1;
   display: grid;

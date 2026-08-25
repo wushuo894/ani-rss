@@ -1,45 +1,47 @@
 <template>
-  <PageHeaderView title="设置" :subtitle="activeDescription">
-    <template #actions>
-      <el-button
-          class="config-save-button"
-          bg text
-          :disabled="loading"
-          :loading="configButtonLoading"
-          type="primary"
-          @click="saveConfig">
-        <el-icon class="el-icon--left">
-          <Check/>
-        </el-icon>
-        保存
-      </el-button>
-    </template>
-  </PageHeaderView>
-  <div v-loading="loading" class="config-page app-page-padding">
-    <el-tabs v-model="activeName" class="segmented-tabs config-tabs">
-      <el-tab-pane
-          v-for="tab in tabs"
-          :key="tab.name"
-          :label="tab.label"
-          :name="tab.name"
-          :lazy="true">
-        <el-scrollbar class="config-scrollbar">
-          <div class="tab-scroll-content">
-            <DownloadView v-if="tab.name === 'download'" v-model:config="config"/>
-            <BasicView v-else-if="tab.name === 'basic'" v-model:config="config"/>
-            <ExcludeView
-                v-else-if="tab.name === 'exclude'"
-                v-model:exclude="config.exclude"
-                :show-text="true"/>
-            <ProxyView v-else-if="tab.name === 'proxy'" v-model:config="config"/>
-            <LoginConfigView v-else-if="tab.name === 'login'" :config="config"/>
-            <NotificationView v-else-if="tab.name === 'notification'" v-model:config="config"/>
-            <AfdianView v-else-if="tab.name === 'afdian'" :config="config"/>
-            <AboutView v-else-if="tab.name === 'about'" :config="config"/>
-          </div>
-        </el-scrollbar>
-      </el-tab-pane>
-    </el-tabs>
+  <div v-loading="loading" class="config-page app-page-layout">
+    <PageHeaderView title="设置" :subtitle="activeDescription">
+      <template #actions>
+        <el-button
+            class="config-save-button"
+            bg text
+            :disabled="loading"
+            :loading="configButtonLoading"
+            type="primary"
+            @click="saveConfig">
+          <el-icon class="el-icon--left">
+            <Check/>
+          </el-icon>
+          保存
+        </el-button>
+      </template>
+    </PageHeaderView>
+    <div class="config-content app-page-content app-page-padding">
+      <el-tabs v-model="activeName" class="segmented-tabs config-tabs">
+        <el-tab-pane
+            v-for="tab in tabs"
+            :key="tab.name"
+            :label="tab.label"
+            :name="tab.name"
+            :lazy="true">
+          <el-scrollbar class="config-scrollbar">
+            <div class="tab-scroll-content">
+              <DownloadView v-if="tab.name === 'download'" v-model:config="config"/>
+              <BasicView v-else-if="tab.name === 'basic'" v-model:config="config"/>
+              <ExcludeView
+                  v-else-if="tab.name === 'exclude'"
+                  v-model:exclude="config.exclude"
+                  :show-text="true"/>
+              <ProxyView v-else-if="tab.name === 'proxy'" v-model:config="config"/>
+              <LoginConfigView v-else-if="tab.name === 'login'" :config="config"/>
+              <NotificationView v-else-if="tab.name === 'notification'" v-model:config="config"/>
+              <AfdianView v-else-if="tab.name === 'afdian'" :config="config"/>
+              <AboutView v-else-if="tab.name === 'about'" :config="config"/>
+            </div>
+          </el-scrollbar>
+        </el-tab-pane>
+      </el-tabs>
+    </div>
   </div>
 </template>
 
@@ -117,11 +119,7 @@ onMounted(() => {
 </script>
 <style scoped>
 .config-page {
-  height: 100%;
-  min-width: 0;
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
+  padding-bottom: 8px;
 }
 
 .config-tabs {
@@ -159,16 +157,6 @@ onMounted(() => {
   padding: 24px 28px 40px;
 }
 
-.config-tabs :deep(.el-form-item) {
-  margin-bottom: 20px;
-}
-
-.config-tabs :deep(.el-form-item__label) {
-  padding-right: 18px;
-  color: var(--el-text-color-regular);
-  font-weight: 500;
-}
-
 .config-tabs :deep(.el-alert) {
   border-radius: 6px;
 }
@@ -188,22 +176,5 @@ onMounted(() => {
     padding: 18px 4px 30px;
   }
 
-  .config-tabs :deep(.el-form-item) {
-    display: block;
-    margin-bottom: 18px;
-  }
-
-  .config-tabs :deep(.el-form-item__label) {
-    width: 100% !important;
-    height: auto;
-    margin-bottom: 7px;
-    padding: 0;
-    line-height: 1.4;
-    justify-content: flex-start;
-  }
-
-  .config-tabs :deep(.el-form-item__content) {
-    margin-left: 0 !important;
-  }
 }
 </style>

@@ -1,18 +1,18 @@
 <template>
   <template v-if="notificationConfig['notificationType'] === 'TELEGRAM'">
-    <el-form-item label="通知模版">
+    <SettingsItem label="通知模版">
       <el-input v-model="notificationConfig['notificationTemplate']" :autosize="{ minRows: 2}"
                 placeholder="${notification}" type="textarea"/>
-    </el-form-item>
-    <el-form-item label="Api Host">
+    </SettingsItem>
+    <SettingsItem label="Api Host">
       <el-input v-model="notificationConfig['telegramApiHost']"
                 placeholder="https://api.telegram.org"/>
-    </el-form-item>
-    <el-form-item label="Token">
+    </SettingsItem>
+    <SettingsItem label="Token">
       <el-input v-model="notificationConfig['telegramBotToken']"
                 placeholder="123456:ABC-DEF1234ghIkl-zyx57W2v1u123ew11"/>
-    </el-form-item>
-    <el-form-item label="ChatId">
+    </SettingsItem>
+    <SettingsItem label="ChatId">
       <div>
         <div class="auto-flex notification-flex-between">
           <div class="notification-margin-top-right">
@@ -36,15 +36,15 @@
           </div>
         </div>
       </div>
-    </el-form-item>
-    <el-form-item label="话题ID">
+    </SettingsItem>
+    <SettingsItem label="话题ID">
       <el-input-number v-model="notificationConfig['telegramTopicId']"
                        :min="-1" class="notification-input-width"/>
-    </el-form-item>
-    <el-form-item label="图片">
+    </SettingsItem>
+    <SettingsItem label="图片">
       <el-switch v-model="notificationConfig['telegramImage']"/>
-    </el-form-item>
-    <el-form-item label="格式">
+    </SettingsItem>
+    <SettingsItem label="格式">
       <div class="notification-input-width">
         <el-select v-model="notificationConfig['telegramFormat']" placeholder="None">
           <el-option label="None" value=""/>
@@ -52,11 +52,12 @@
           <el-option label="HTML" value="HTML"/>
         </el-select>
       </div>
-    </el-form-item>
+    </SettingsItem>
   </template>
 </template>
 
 <script setup>
+import SettingsItem from "@/view/custom/SettingsItem.vue";
 import {ElMessage} from "element-plus";
 import {ref} from "vue";
 import * as http from "@/js/http.js";

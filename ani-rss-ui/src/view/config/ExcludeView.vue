@@ -1,14 +1,14 @@
 <template>
   <el-dialog title="添加正则" v-if="add" v-model:model-value="add" center align-center width="300">
-    <el-form @submit.prevent label-width="auto">
-      <el-form-item label="字幕组">
+    <div>
+      <SettingsItem label="字幕组">
         <el-input placeholder="留空匹配所有字幕组" v-model="subgroup"></el-input>
-      </el-form-item>
+      </SettingsItem>
       <div class="exclude-spacer"></div>
-      <el-form-item label="正则">
+      <SettingsItem label="正则">
         <el-input placeholder="如 720、简、\d-\d" v-model="exclude"></el-input>
-      </el-form-item>
-    </el-form>
+      </SettingsItem>
+    </div>
     <div class="flex exclude-dialog-footer">
       <el-button bg text @click="addExclude" icon="Plus">添加</el-button>
     </div>
@@ -75,6 +75,7 @@
 </template>
 
 <script setup>
+import SettingsItem from "@/view/custom/SettingsItem.vue";
 import {ref} from "vue";
 import {ElMessage} from "element-plus";
 import {config} from "@/js/http.js";

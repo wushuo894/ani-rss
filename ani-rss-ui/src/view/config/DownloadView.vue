@@ -1,22 +1,22 @@
 <template>
-  <el-form @submit.prevent label-width="auto"
-           class="download-settings-form full-width">
+  <div
+      class="download-settings-form full-width">
     <section class="settings-section">
       <div class="settings-section-heading">
         <h3>下载器连接</h3>
       </div>
-      <el-form-item label="下载工具">
+      <SettingsItem label="下载工具">
         <el-select v-model:model-value="props.config.downloadToolType">
           <el-option v-for="item in downloadSelect"
                      :key="item"
                      :label="item"
                      :value="item"/>
         </el-select>
-      </el-form-item>
-      <el-form-item label="地址">
+      </SettingsItem>
+      <SettingsItem label="地址">
         <el-input v-model.trim="props.config.downloadToolHost" placeholder="http://192.168.1.x:8080"/>
-      </el-form-item>
-      <el-form-item v-if="props.config.downloadToolType === 'qBittorrent'" label="ApiKey">
+      </SettingsItem>
+      <SettingsItem v-if="props.config.downloadToolType === 'qBittorrent'" label="ApiKey">
         <el-input v-model.trim="props.config.downloadToolPassword" placeholder="qbt_xxxx" show-password>
           <template #prefix>
             <el-icon class="el-input__icon">
@@ -31,8 +31,8 @@
             </template>
           </el-alert>
         </div>
-      </el-form-item>
-      <el-form-item v-else-if="props.config.downloadToolType === 'Aria2'" label="RPC 密钥">
+      </SettingsItem>
+      <SettingsItem v-else-if="props.config.downloadToolType === 'Aria2'" label="RPC 密钥">
         <el-input v-model.trim="props.config.downloadToolPassword" placeholder="" show-password>
           <template #prefix>
             <el-icon class="el-input__icon">
@@ -40,9 +40,9 @@
             </el-icon>
           </template>
         </el-input>
-      </el-form-item>
+      </SettingsItem>
       <template v-else-if="props.config.downloadToolType === 'OpenList'">
-        <el-form-item label="Token">
+        <SettingsItem label="Token">
           <el-input v-model.trim="props.config.downloadToolPassword" placeholder="OpenList-xxxxxx" show-password>
             <template #prefix>
               <el-icon class="el-input__icon">
@@ -64,13 +64,13 @@
               </template>
             </el-alert>
           </template>
-        </el-form-item>
-        <el-form-item label="Driver">
+        </SettingsItem>
+        <SettingsItem label="Driver">
           <el-select v-model="props.config['provider']" class="width-150">
             <el-option v-for="it in offlineList" :key="it.label" :label="it.label" :value="it.value"/>
           </el-select>
-        </el-form-item>
-        <el-form-item label="重试次数">
+        </SettingsItem>
+        <SettingsItem label="重试次数">
           <div>
             <el-input-number v-model="props.config['openListDownloadRetryNumber']" :min="-1"/>
             <br>
@@ -78,17 +78,17 @@
               设置为 -1 将一直进行重试
             </el-text>
           </div>
-        </el-form-item>
-        <el-form-item label="离线超时">
+        </SettingsItem>
+        <SettingsItem label="离线超时">
           <el-input-number v-model:model-value="props.config['openListDownloadTimeout']" :min="1">
             <template #suffix>
               <span>分钟</span>
             </template>
           </el-input-number>
-        </el-form-item>
+        </SettingsItem>
       </template>
       <template v-else>
-        <el-form-item label="用户名">
+        <SettingsItem label="用户名">
           <el-input v-model.trim="props.config.downloadToolUsername" placeholder="username"
                     autocomplete="new-password">
             <template #prefix>
@@ -97,8 +97,8 @@
               </el-icon>
             </template>
           </el-input>
-        </el-form-item>
-        <el-form-item label="密码">
+        </SettingsItem>
+        <SettingsItem label="密码">
           <el-input v-model.trim="props.config.downloadToolPassword" placeholder="password" show-password
                     autocomplete="new-password">
             <template #prefix>
@@ -107,21 +107,21 @@
               </el-icon>
             </template>
           </el-input>
-        </el-form-item>
+        </SettingsItem>
       </template>
-      <el-form-item>
+      <SettingsItem>
         <div class="download-test-button">
           <el-button @click="downloadLoginTest" bg text :loading="downloadLoginTestLoading" icon="Odometer">测试
           </el-button>
         </div>
-      </el-form-item>
+      </SettingsItem>
     </section>
 
     <section class="settings-section">
       <div class="settings-section-heading">
         <h3>保存与清理</h3>
       </div>
-      <el-form-item label="保存位置">
+      <SettingsItem label="保存位置">
         <el-input v-model.trim="props.config['downloadPathTemplate']"/>
         <div class="full-width margin-top-4" v-if="!testPathTemplate(props.config['downloadPathTemplate'])">
           <el-alert
@@ -134,8 +134,8 @@
             </template>
           </el-alert>
         </div>
-      </el-form-item>
-      <el-form-item label="剧场版保存位置">
+      </SettingsItem>
+      <SettingsItem label="剧场版保存位置">
         <el-input v-model.trim="props.config['ovaDownloadPathTemplate']"/>
         <div class="full-width margin-top-4" v-if="!testPathTemplate(props.config['ovaDownloadPathTemplate'])">
           <el-alert
@@ -148,8 +148,8 @@
             </template>
           </el-alert>
         </div>
-      </el-form-item>
-      <el-form-item label="自动删除">
+      </SettingsItem>
+      <SettingsItem label="自动删除">
         <div>
           <el-switch v-model:model-value="props.config.delete"/>
           <br>
@@ -171,32 +171,33 @@
             <strong>主RSS</strong> 将 <span class="download-danger-text">不会自动删除</span>，仅在其更新后删除对应备用RSS的任务与文件
           </el-text>
         </div>
-      </el-form-item>
+      </SettingsItem>
     </section>
 
     <section class="settings-section">
       <div class="settings-section-heading">
         <h3>任务控制</h3>
       </div>
-      <el-form-item label="失败重试次数">
+      <SettingsItem label="失败重试次数">
         <el-input-number v-model:model-value="props.config['downloadRetry']" :max="100" :min="3"/>
-      </el-form-item>
-      <el-form-item label="同时下载限制">
+      </SettingsItem>
+      <SettingsItem label="同时下载限制">
         <div>
           <el-input-number v-model:model-value="props.config.downloadCount" :min="0"/>
-          <div>
+          <br/>
+          <el-text class="mx-1" size="small">
             设置为 0 时不做限制
-          </div>
+          </el-text>
         </div>
-      </el-form-item>
-      <el-form-item label="延迟下载">
+      </SettingsItem>
+      <SettingsItem label="延迟下载">
         <el-input-number v-model:model-value="props.config.delayedDownload" :min="0">
           <template #suffix>
             <span>分钟</span>
           </template>
         </el-input-number>
-      </el-form-item>
-      <el-form-item label="优先保留">
+      </SettingsItem>
+      <SettingsItem label="优先保留">
         <div class="full-width">
           <el-switch v-model:model-value="props.config.priorityKeywordsEnable"/>
           <div>
@@ -212,10 +213,10 @@
             />
           </div>
         </div>
-      </el-form-item>
-      <el-form-item label="自定义标签">
+      </SettingsItem>
+      <SettingsItem label="自定义标签">
         <CustomTagsView :config="props.config"/>
-      </el-form-item>
+      </SettingsItem>
     </section>
 
     <section class="settings-section settings-section-advanced">
@@ -228,10 +229,11 @@
         </el-collapse-item>
       </el-collapse>
     </section>
-  </el-form>
+  </div>
 </template>
 
 <script setup>
+import SettingsItem from "@/view/custom/SettingsItem.vue";
 import {ref} from "vue";
 import {ElMessage, ElText} from "element-plus";
 import {Key, User} from "@element-plus/icons-vue";

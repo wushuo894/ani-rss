@@ -1,110 +1,112 @@
 <template>
-  <PageHeaderView title="日志" :subtitle="`共 ${logs.length} 条 · 显示 ${filteredLogs.length} 条`">
-    <template #actions>
-      <div class="log-actions">
-        <el-tooltip content="下载日志" placement="bottom">
-          <el-button @click="downloadLogs" bg text>
-            <el-icon>
-              <DownloadIcon/>
-            </el-icon>
-            <span class="action-label">下载</span>
-          </el-button>
-        </el-tooltip>
-        <el-tooltip content="刷新日志" placement="bottom">
-          <el-button :loading="getLogsLoading" @click="getLogs" bg text>
-            <el-icon>
-              <Refresh/>
-            </el-icon>
-            <span class="action-label">刷新</span>
-          </el-button>
-        </el-tooltip>
-        <PopconfirmView title="清空当前日志?" @confirm="clearLogs">
-          <template #reference>
-            <el-button :loading="clearLoading" type="danger" bg text>
+  <div class="logs-page app-page-layout">
+    <PageHeaderView title="日志" :subtitle="`共 ${logs.length} 条 · 显示 ${filteredLogs.length} 条`">
+      <template #actions>
+        <div class="log-actions">
+          <el-tooltip content="下载日志" placement="bottom">
+            <el-button @click="downloadLogs" bg text>
               <el-icon>
-                <Delete/>
+                <DownloadIcon/>
               </el-icon>
-              <span class="action-label">清空</span>
+              <span class="action-label">下载</span>
             </el-button>
-          </template>
-        </PopconfirmView>
-      </div>
-    </template>
-  </PageHeaderView>
-  <div v-loading="loading" class="logs-page app-page-padding">
-    <section class="logs-toolbar" aria-label="日志筛选">
-      <el-input
-          v-model="searchText"
-          :prefix-icon="Search"
-          class="log-search"
-          clearable
-          placeholder="搜索日志"/>
-      <el-select
-          v-model="selectLevels"
-          class="level-select"
-          clearable
-          collapse-tags
-          collapse-tags-tooltip
-          :max-collapse-tags="1"
-          multiple
-          placeholder="日志等级">
-        <el-option v-for="level in levels" :key="level" :label="level" :value="level">
-          <div class="level-option">
+          </el-tooltip>
+          <el-tooltip content="刷新日志" placement="bottom">
+            <el-button :loading="getLogsLoading" @click="getLogs" bg text>
+              <el-icon>
+                <Refresh/>
+              </el-icon>
+              <span class="action-label">刷新</span>
+            </el-button>
+          </el-tooltip>
+          <PopconfirmView title="清空当前日志?" @confirm="clearLogs">
+            <template #reference>
+              <el-button :loading="clearLoading" type="danger" bg text>
+                <el-icon>
+                  <Delete/>
+                </el-icon>
+                <span class="action-label">清空</span>
+              </el-button>
+            </template>
+          </PopconfirmView>
+        </div>
+      </template>
+    </PageHeaderView>
+    <div v-loading="loading" class="logs-body app-page-content app-page-padding">
+      <section class="logs-toolbar" aria-label="日志筛选">
+        <el-input
+            v-model="searchText"
+            :prefix-icon="Search"
+            class="log-search"
+            clearable
+            placeholder="搜索日志"/>
+        <el-select
+            v-model="selectLevels"
+            class="level-select"
+            clearable
+            collapse-tags
+            collapse-tags-tooltip
+            :max-collapse-tags="1"
+            multiple
+            placeholder="日志等级">
+          <el-option v-for="level in levels" :key="level" :label="level" :value="level">
+            <div class="level-option">
             <span class="level-option-name">
               <span class="level-dot" :class="`is-${level.toLowerCase()}`"></span>
               {{ level }}
             </span>
-            <span class="level-count">{{ levelCounts[level] }}</span>
-          </div>
-        </el-option>
-      </el-select>
-      <el-select
-          v-model="selectLoggerNames"
-          class="logger-select"
-          clearable
-          collapse-tags
-          collapse-tags-tooltip
-          multiple
-          placeholder="来源">
-        <el-option
-            v-for="loggerName in loggerNames"
-            :key="loggerName"
-            :label="loggerName"
-            :value="loggerName"/>
-      </el-select>
-    </section>
+              <span class="level-count">{{ levelCounts[level] }}</span>
+            </div>
+          </el-option>
+        </el-select>
+        <el-select
+            v-model="selectLoggerNames"
+            class="logger-select"
+            clearable
+            collapse-tags
+            collapse-tags-tooltip
+            multiple
+            placeholder="来源">
+          <el-option
+              v-for="loggerName in loggerNames"
+              :key="loggerName"
+              :label="loggerName"
+              :value="loggerName"/>
+        </el-select>
+      </section>
 
-    <div class="log-viewer">
-      <div class="log-columns" aria-hidden="true">
-        <span>时间</span>
-        <span>级别</span>
-        <span>来源</span>
-        <span>内容</span>
-      </div>
-      <el-scrollbar ref="scrollbarRef" class="logs-scrollbar" always>
-        <div ref="innerRef" class="log-list">
-          <el-empty v-if="!filteredLogs.length"
-                    :description="logs.length ? '没有匹配的日志' : '暂无日志'"
-                    :image-size="72"/>
-          <div v-for="(entry, index) in filteredLogs"
-               v-else
-               :key="`${entry.timestamp}-${index}`"
-               class="log-entry"
-               :class="`level-${entry.level.toLowerCase()}`">
-            <el-tooltip :content="entry.timestamp || '未知时间'" placement="top">
-              <time class="log-time">{{ entry.time || '--:--:--' }}</time>
-            </el-tooltip>
-            <span class="log-level">{{ entry.level }}</span>
-            <el-tooltip :content="entry.loggerName || '未知来源'" placement="top">
-              <div class="log-source">
-                <span class="logger-name">{{ entry.shortLoggerName }}</span>
-                <span class="thread-name">{{ entry.threadName || '未知线程' }}</span>
-              </div>
-            </el-tooltip>
-            <pre class="log-message">{{ entry.content }}</pre>
-          </div>
+      <div class="log-viewer">
+        <div class="log-columns" aria-hidden="true">
+          <span>时间</span>
+          <span>级别</span>
+          <span>来源</span>
+          <span>内容</span>
         </div>
-      </el-scrollbar>
+        <el-scrollbar ref="scrollbarRef" class="logs-scrollbar" always>
+          <div ref="innerRef" class="log-list">
+            <el-empty v-if="!filteredLogs.length"
+                      :description="logs.length ? '没有匹配的日志' : '暂无日志'"
+                      :image-size="72"/>
+            <div v-for="(entry, index) in filteredLogs"
+                 v-else
+                 :key="`${entry.timestamp}-${index}`"
+                 class="log-entry"
+                 :class="`level-${entry.level.toLowerCase()}`">
+              <el-tooltip :content="entry.timestamp || '未知时间'" placement="top">
+                <time class="log-time">{{ entry.time || '--:--:--' }}</time>
+              </el-tooltip>
+              <span class="log-level">{{ entry.level }}</span>
+              <el-tooltip :content="entry.loggerName || '未知来源'" placement="top">
+                <div class="log-source">
+                  <span class="logger-name">{{ entry.shortLoggerName }}</span>
+                  <span class="thread-name">{{ entry.threadName || '未知线程' }}</span>
+                </div>
+              </el-tooltip>
+              <pre class="log-message">{{ entry.content }}</pre>
+            </div>
+          </div>
+        </el-scrollbar>
+      </div>
     </div>
   </div>
 </template>
@@ -218,11 +220,7 @@ onActivated(getLogs)
 
 <style scoped>
 .logs-page {
-  height: 100%;
-  min-width: 0;
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
+  padding-bottom: 8px;
 }
 
 .log-actions {
@@ -246,7 +244,7 @@ onActivated(getLogs)
   border: 1px solid var(--el-border-color-light);
   border-radius: 8px;
   background-color: var(--el-bg-color);
-  margin-bottom: 10px;
+  margin-bottom: 8px;
 }
 
 .log-search {

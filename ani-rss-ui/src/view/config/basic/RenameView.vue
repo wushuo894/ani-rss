@@ -1,83 +1,81 @@
 <template>
-  <el-form @submit.prevent label-width="auto"
-           class="full-width">
-    <el-form-item label="自动重命名">
-      <el-switch v-model:model-value="props.config.rename"/>
-    </el-form-item>
-    <el-form-item label="重命名间隔">
-      <el-input-number v-model:model-value="props.config['renameSleepSeconds']"
-                       :disabled="!config.rename"
-                       :min="5">
-        <template #suffix>
-          <span>秒</span>
-        </template>
-      </el-input-number>
-    </el-form-item>
-    <el-form-item label="最大文件名长度">
-      <el-input-number v-model:model-value="props.config.maxFileNameLength" :min="0"/>
-    </el-form-item>
-    <el-form-item label="重命名模版">
-      <div class="full-width">
-        <div>
-          <el-input v-model:model-value="props.config.renameTemplate"
-                    placeholder="${title} S${seasonFormat}E${episodeFormat}"/>
-        </div>
-        <div>
-          <el-alert
-              v-if="!testRenameTemplate(props.config.renameTemplate)"
-              class="mt-8"
-              type="warning"
-              show-icon
-              :closable="false"
-          >
-            <template #title>
-              模板内至少需要保留 S${seasonFormat}E${episodeFormat} or S${season}E${episode} 否则会导致无法正常重命名
-            </template>
-          </el-alert>
-        </div>
-        <el-text class="mx-1" size="small">
-          <el-link
-              class="text-extra-small"
-              type="primary"
-              href="https://docs.wushuo.top/config/basic/rename#rename-template"
-              target="_blank">详细说明
-          </el-link>
-        </el-text>
-      </div>
-    </el-form-item>
-    <el-form-item label="剔除年份">
+  <SettingsItem label="自动重命名">
+    <el-switch v-model:model-value="props.config.rename"/>
+  </SettingsItem>
+  <SettingsItem label="重命名间隔">
+    <el-input-number v-model:model-value="props.config['renameSleepSeconds']"
+                     :disabled="!config.rename"
+                     :min="5">
+      <template #suffix>
+        <span>秒</span>
+      </template>
+    </el-input-number>
+  </SettingsItem>
+  <SettingsItem label="最大文件名长度">
+    <el-input-number v-model:model-value="props.config.maxFileNameLength" :min="0"/>
+  </SettingsItem>
+  <SettingsItem label="重命名模版">
+    <div class="full-width">
       <div>
-        <el-switch v-model:model-value="props.config.renameDelYear"/>
-        <br>
-        <el-text class="mx-1" size="small">
-          重命名时剔除 年份, 如 (2024)
-        </el-text>
+        <el-input v-model:model-value="props.config.renameTemplate"
+                  placeholder="${title} S${seasonFormat}E${episodeFormat}"/>
       </div>
-    </el-form-item>
-    <el-form-item label="剔除TMDB ID">
       <div>
-        <el-switch v-model:model-value="props.config.renameDelTmdbId"/>
-        <br>
-        <el-text class="mx-1" size="small">
-          重命名时剔除 tmdbid, 如 [tmdbid=242143]
-        </el-text>
+        <el-alert
+            v-if="!testRenameTemplate(props.config.renameTemplate)"
+            class="mt-8"
+            type="warning"
+            show-icon
+            :closable="false"
+        >
+          <template #title>
+            模板内至少需要保留 S${seasonFormat}E${episodeFormat} or S${season}E${episode} 否则会导致无法正常重命名
+          </template>
+        </el-alert>
       </div>
-    </el-form-item>
-    <el-form-item label="字幕独立文件夹">
-      <div>
-        <el-switch v-model:model-value="props.config.subtitleIndependentFolderEnabled"/>
-        <br>
-        <el-input v-model="config.subtitleIndependentFolderName"/>
-        <br>
-        <el-text class="mx-1" size="small">
-          仅支持 qBittorrent
-        </el-text>
-      </div>
-    </el-form-item>
-  </el-form>
+      <el-text class="mx-1" size="small">
+        <el-link
+            class="text-extra-small"
+            type="primary"
+            href="https://docs.wushuo.top/config/basic/rename#rename-template"
+            target="_blank">详细说明
+        </el-link>
+      </el-text>
+    </div>
+  </SettingsItem>
+  <SettingsItem label="剔除年份">
+    <div>
+      <el-switch v-model:model-value="props.config.renameDelYear"/>
+      <br>
+      <el-text class="mx-1" size="small">
+        重命名时剔除 年份, 如 (2024)
+      </el-text>
+    </div>
+  </SettingsItem>
+  <SettingsItem label="剔除TMDB ID">
+    <div>
+      <el-switch v-model:model-value="props.config.renameDelTmdbId"/>
+      <br>
+      <el-text class="mx-1" size="small">
+        重命名时剔除 tmdbid, 如 [tmdbid=242143]
+      </el-text>
+    </div>
+  </SettingsItem>
+  <SettingsItem label="字幕独立文件夹">
+    <div>
+      <el-switch v-model:model-value="props.config.subtitleIndependentFolderEnabled"/>
+      <br>
+      <el-input v-model="config.subtitleIndependentFolderName"/>
+      <br>
+      <el-text class="mx-1" size="small">
+        仅支持 qBittorrent
+      </el-text>
+    </div>
+  </SettingsItem>
 </template>
 
 <script setup>
+import SettingsItem from "@/view/custom/SettingsItem.vue";
 import {ElText} from "element-plus";
 
 let testRenameTemplate = renameTemplate => {

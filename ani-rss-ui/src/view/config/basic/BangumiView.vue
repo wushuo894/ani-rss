@@ -1,93 +1,90 @@
 <template>
   <BangumiMeView ref="bangumiMeRef"/>
-  <el-form @submit.prevent label-width="auto"
-           class="full-width">
-    <el-form-item label="BgmApi">
-      <el-input v-model:model-value="props.config['bgmApi']" placeholder="https://api.bgm.tv"/>
-    </el-form-item>
-    <el-form-item label="获取方式">
-      <el-radio-group v-model="props.config['bgmTokenType']">
-        <el-radio label="手动输入" value="INPUT"/>
-        <el-radio label="自动获取" value="AUTO"/>
-      </el-radio-group>
-    </el-form-item>
-    <template v-if="props.config['bgmTokenType'] === 'INPUT'">
-      <el-form-item label="Token">
-        <div class="full-width">
-          <el-input
-              v-model="props.config.bgmToken"
-              placeholder="ABCDEFGHIJKLMNOPQRS"
-          />
-          <div>
-            <el-text class="mx-1" size="small">
-              你可以在&nbsp;
-              <el-link
-                  type="primary"
-                  class="text-extra-small"
-                  href="https://next.bgm.tv/demo/access-token"
-                  target="_blank">
-                https://next.bgm.tv/demo/access-token
-              </el-link>
-              &nbsp;生成一个 Access Token
-            </el-text>
-          </div>
-        </div>
-      </el-form-item>
-    </template>
-    <template v-if="props.config['bgmTokenType'] === 'AUTO'">
-      <el-form-item label="App ID">
+  <SettingsItem label="BgmApi">
+    <el-input v-model:model-value="props.config['bgmApi']" placeholder="https://api.bgm.tv"/>
+  </SettingsItem>
+  <SettingsItem label="获取方式">
+    <el-radio-group v-model="props.config['bgmTokenType']">
+      <el-radio label="手动输入" value="INPUT"/>
+      <el-radio label="自动获取" value="AUTO"/>
+    </el-radio-group>
+  </SettingsItem>
+  <template v-if="props.config['bgmTokenType'] === 'INPUT'">
+    <SettingsItem label="Token">
+      <div class="full-width">
         <el-input
-            v-model="props.config['bgmAppID']"
-            placeholder="bgm123456789"
+            v-model="props.config.bgmToken"
+            placeholder="ABCDEFGHIJKLMNOPQRS"
         />
-      </el-form-item>
-      <el-form-item label="App Secret">
-        <el-input
-            v-model="props.config['bgmAppSecret']"
-            placeholder="abcdefghijklm"
-        />
-      </el-form-item>
-      <el-form-item label="回调地址">
-        <div class="full-width">
-          <el-input v-model="props.config['bgmRedirectUri']"/>
-          <el-button bg icon="Refresh"
-                     class="mt-6"
-                     @click="setRedirectUri"/>
-        </div>
-      </el-form-item>
-      <div class="flex justify-space-between">
-        <el-text class="mx-1" size="small">
-          自动获取可以实现token自动续期
-          <br>
-          前往&nbsp;
-          <el-link
-              class="text-extra-small"
-              type="primary"
-              target="_blank"
-              href="https://bgm.tv/dev/app">
-            Bangumi 开发者平台
-          </el-link>
-          &nbsp;设置你自己的应用
-        </el-text>
         <div>
-          <el-button bg
-                     type="primary"
-                     :disabled="!props.config['bgmAppSecret'] || !props.config['bgmAppID']"
-                     @click="start"
-                     :loading="loading"
-          >
-            获取授权
-          </el-button>
-          <el-button
-              bg
-              type="success"
-              @click="bangumiMeRef?.show">
-            查看授权状态
-          </el-button>
+          <el-text class="mx-1" size="small">
+            你可以在&nbsp;
+            <el-link
+                type="primary"
+                class="text-extra-small"
+                href="https://next.bgm.tv/demo/access-token"
+                target="_blank">
+              https://next.bgm.tv/demo/access-token
+            </el-link>
+            &nbsp;生成一个 Access Token
+          </el-text>
         </div>
       </div>
-    </template>
-  </el-form>
+    </SettingsItem>
+  </template>
+  <template v-if="props.config['bgmTokenType'] === 'AUTO'">
+    <SettingsItem label="App ID">
+      <el-input
+          v-model="props.config['bgmAppID']"
+          placeholder="bgm123456789"
+      />
+    </SettingsItem>
+    <SettingsItem label="App Secret">
+      <el-input
+          v-model="props.config['bgmAppSecret']"
+          placeholder="abcdefghijklm"
+      />
+    </SettingsItem>
+    <SettingsItem label="回调地址">
+      <div class="full-width">
+        <el-input v-model="props.config['bgmRedirectUri']"/>
+        <el-button bg icon="Refresh"
+                   class="mt-6"
+                   @click="setRedirectUri"/>
+      </div>
+    </SettingsItem>
+    <div class="flex justify-space-between">
+      <el-text class="mx-1" size="small">
+        自动获取可以实现token自动续期
+        <br>
+        前往&nbsp;
+        <el-link
+            class="text-extra-small"
+            type="primary"
+            target="_blank"
+            href="https://bgm.tv/dev/app">
+          Bangumi 开发者平台
+        </el-link>
+        &nbsp;设置你自己的应用
+      </el-text>
+      <div>
+        <el-button bg
+                   type="primary"
+                   :disabled="!props.config['bgmAppSecret'] || !props.config['bgmAppID']"
+                   @click="start"
+                   :loading="loading"
+        >
+          获取授权
+        </el-button>
+        <el-button
+            bg
+            type="success"
+            @click="bangumiMeRef?.show">
+          查看授权状态
+        </el-button>
+      </div>
+    </div>
+  </template>
   <div class="flex justify-start">
     <el-link type="primary"
              class="text-extra-small"
@@ -98,6 +95,7 @@
 </template>
 
 <script setup>
+import SettingsItem from "@/view/custom/SettingsItem.vue";
 import {ElText} from "element-plus";
 import BangumiMeView from "./BangumiMeView.vue";
 import {onMounted, ref} from "vue";

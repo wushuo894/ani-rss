@@ -52,20 +52,20 @@
   <el-dialog v-if="dialogVisible" v-model="dialogVisible" align-center center title="版本更新"
              class="about-dialog">
     <div v-if="about.update">
-      <el-form @submit.prevent label-width="auto">
-        <el-form-item label="版本号">
+      <div>
+        <SettingsItem label="版本号">
           <el-link type="default" :href="`https://github.com/wushuo894/ani-rss/releases/tag/v${about.latest}`"
                    target="_blank">
             {{ about.latest }}
           </el-link>
-        </el-form-item>
-        <el-form-item label="发布时间">
+        </SettingsItem>
+        <SettingsItem label="发布时间">
           {{ about.date }}
-        </el-form-item>
-        <el-form-item label="大小">
+        </SettingsItem>
+        <SettingsItem label="大小">
           {{ about['formatSize'] }}
-        </el-form-item>
-        <el-form-item label="更新内容">
+        </SettingsItem>
+        <SettingsItem label="更新内容">
           <el-scrollbar class="about-scrollbar" :always="true">
             <div class="markdown-body about-markdown" v-html="md.render(about.markdownBody)"></div>
             <el-alert
@@ -76,8 +76,8 @@
                 type="info"
             />
           </el-scrollbar>
-        </el-form-item>
-      </el-form>
+        </SettingsItem>
+      </div>
     </div>
     <div v-else>
       <el-empty description="无更新"></el-empty>
@@ -100,6 +100,7 @@
 </template>
 
 <script setup>
+import SettingsItem from "@/view/custom/SettingsItem.vue";
 import {onMounted, ref} from "vue";
 import {ElMessage, ElText} from "element-plus";
 import PopconfirmView from "@/view/custom/PopconfirmView.vue";

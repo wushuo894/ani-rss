@@ -1,14 +1,14 @@
 <template>
-  <el-form @submit.prevent label-width="auto">
-    <el-form-item label="IP">
+  <div>
+    <SettingsItem label="IP">
       <el-input v-model:model-value="props.config.proxyHost" :disabled="!props.config.proxy"
                 placeholder="192.168.0.x"/>
-    </el-form-item>
-    <el-form-item label="端口">
+    </SettingsItem>
+    <SettingsItem label="端口">
       <el-input-number v-model:model-value="props.config.proxyPort" :disabled="!props.config.proxy" :min="1"
                        :max="65535"/>
-    </el-form-item>
-    <el-form-item label="用户名">
+    </SettingsItem>
+    <SettingsItem label="用户名">
       <el-input v-model:model-value="props.config.proxyUsername" :disabled="!props.config.proxy"
                 placeholder="可以为空">
         <template #prefix>
@@ -17,8 +17,8 @@
           </el-icon>
         </template>
       </el-input>
-    </el-form-item>
-    <el-form-item label="密码">
+    </SettingsItem>
+    <SettingsItem label="密码">
       <el-input v-model:model-value="props.config.proxyPassword" :disabled="!props.config.proxy"
                 placeholder="可以为空">
         <template #prefix>
@@ -27,19 +27,19 @@
           </el-icon>
         </template>
       </el-input>
-    </el-form-item>
-    <el-form-item label="代理列表">
+    </SettingsItem>
+    <SettingsItem label="代理列表">
       <el-input
           class="full-width"
           type="textarea"
           :autosize="{ minRows: 3, maxRows: 3}"
           v-model="props.config.proxyList"
           :disabled="!props.config.proxy"/>
-    </el-form-item>
-    <el-form-item label="启用">
+    </SettingsItem>
+    <SettingsItem label="启用">
       <el-switch v-model:model-value="props.config.proxy"/>
-    </el-form-item>
-    <el-form-item label="ScrapeTest">
+    </SettingsItem>
+    <SettingsItem label="ScrapeTest">
       <div class="auto-flex proxy-test-container">
         <div class="proxy-test-controls">
           <el-select v-model:model-value="url" class="proxy-test-select">
@@ -54,11 +54,12 @@
           time: {{ time }}ms
         </div>
       </div>
-    </el-form-item>
-  </el-form>
+    </SettingsItem>
+  </div>
 </template>
 
 <script setup>
+import SettingsItem from "@/view/custom/SettingsItem.vue";
 import {onMounted, ref} from "vue";
 import {ElMessage} from "element-plus";
 import {Key, User} from "@element-plus/icons-vue";
