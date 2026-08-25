@@ -1,38 +1,37 @@
 <template>
-  <div v-loading="loading" class="logs-page">
-    <PageHeaderView title="日志" :subtitle="`共 ${logs.length} 条 · 显示 ${filteredLogs.length} 条`">
-      <template #actions>
-        <div class="log-actions">
-          <el-tooltip content="下载日志" placement="bottom">
-            <el-button @click="downloadLogs" bg text>
+  <PageHeaderView title="日志" :subtitle="`共 ${logs.length} 条 · 显示 ${filteredLogs.length} 条`">
+    <template #actions>
+      <div class="log-actions">
+        <el-tooltip content="下载日志" placement="bottom">
+          <el-button @click="downloadLogs" bg text>
+            <el-icon>
+              <DownloadIcon/>
+            </el-icon>
+            <span class="action-label">下载</span>
+          </el-button>
+        </el-tooltip>
+        <el-tooltip content="刷新日志" placement="bottom">
+          <el-button :loading="getLogsLoading" @click="getLogs" bg text>
+            <el-icon>
+              <Refresh/>
+            </el-icon>
+            <span class="action-label">刷新</span>
+          </el-button>
+        </el-tooltip>
+        <PopconfirmView title="清空当前日志?" @confirm="clearLogs">
+          <template #reference>
+            <el-button :loading="clearLoading" type="danger" bg text>
               <el-icon>
-                <DownloadIcon/>
+                <Delete/>
               </el-icon>
-              <span class="action-label">下载</span>
+              <span class="action-label">清空</span>
             </el-button>
-          </el-tooltip>
-          <el-tooltip content="刷新日志" placement="bottom">
-            <el-button :loading="getLogsLoading" @click="getLogs" bg text>
-              <el-icon>
-                <Refresh/>
-              </el-icon>
-              <span class="action-label">刷新</span>
-            </el-button>
-          </el-tooltip>
-          <PopconfirmView title="清空当前日志?" @confirm="clearLogs">
-            <template #reference>
-              <el-button :loading="clearLoading" type="danger" bg text>
-                <el-icon>
-                  <Delete/>
-                </el-icon>
-                <span class="action-label">清空</span>
-              </el-button>
-            </template>
-          </PopconfirmView>
-        </div>
-      </template>
-    </PageHeaderView>
-
+          </template>
+        </PopconfirmView>
+      </div>
+    </template>
+  </PageHeaderView>
+  <div v-loading="loading" class="logs-page app-page-padding">
     <section class="logs-toolbar" aria-label="日志筛选">
       <el-input
           v-model="searchText"

@@ -2,8 +2,8 @@
   <AddView ref="addRef"/>
   <CollectionView ref="collectionRef"/>
   <ManageView ref="manageRef"/>
-  <div class="subscription-page">
-    <PageHeaderView title="订阅" :subtitle="`共 ${subscriptionTotal} 个订阅`"/>
+  <PageHeaderView title="订阅" :subtitle="`共 ${subscriptionTotal} 个订阅`"/>
+  <div class="subscription-page app-page-padding">
     <div class="subscription-toolbar">
       <div class="subscription-filters">
         <el-input

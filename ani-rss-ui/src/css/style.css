@@ -144,6 +144,16 @@ body {
     margin: 0 auto;
 }
 
+.app-page-padding {
+    padding: 24px 24px 0;
+}
+
+@media (max-width: 800px) {
+    .app-page-padding {
+        padding: 12px 12px 0;
+    }
+}
+
 @media (max-width: 450px) {
     .el-dialog {
         --el-dialog-width: 100%;

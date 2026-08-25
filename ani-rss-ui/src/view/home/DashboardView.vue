@@ -4,14 +4,14 @@
   <CoverView ref="coverRef"/>
   <DelAniView ref="delAniRef"/>
   <BgmRateView ref="bgmRateRef"/>
-  <div class="dashboard-page">
-    <PageHeaderView title="首页" :subtitle="`${todayLabel} · ${todayText}`">
-      <template #actions>
-        <el-button :loading="refreshLoading" icon="Refresh" bg text @click="loadAll">
-          刷新
-        </el-button>
-      </template>
-    </PageHeaderView>
+  <PageHeaderView title="首页" :subtitle="`${todayLabel} · ${todayText}`">
+    <template #actions>
+      <el-button :loading="refreshLoading" icon="Refresh" bg text @click="loadAll">
+        刷新
+      </el-button>
+    </template>
+  </PageHeaderView>
+  <div class="dashboard-page app-page-padding">
 
     <el-scrollbar class="dashboard-scrollbar">
       <div class="dashboard-content">

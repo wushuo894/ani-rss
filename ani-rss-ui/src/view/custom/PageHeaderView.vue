@@ -1,5 +1,5 @@
 <template>
-  <header class="page-header">
+  <header class="page-header app-page-padding">
     <div class="page-header-heading">
       <h2 class="page-header-title">{{ title }}</h2>
       <el-text v-if="subtitle" class="page-header-subtitle" size="small" type="info">
@@ -33,7 +33,6 @@ defineProps({
   align-items: center;
   justify-content: space-between;
   gap: 12px;
-  padding-bottom: 12px;
 }
 
 .page-header-heading {

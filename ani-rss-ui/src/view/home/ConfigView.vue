@@ -1,22 +1,21 @@
 <template>
-  <div v-loading="loading" class="config-page">
-    <PageHeaderView title="设置" :subtitle="activeDescription">
-      <template #actions>
-        <el-button
-            class="config-save-button"
-            bg text
-            :disabled="loading"
-            :loading="configButtonLoading"
-            type="primary"
-            @click="saveConfig">
-          <el-icon class="el-icon--left">
-            <Check/>
-          </el-icon>
-          保存
-        </el-button>
-      </template>
-    </PageHeaderView>
-
+  <PageHeaderView title="设置" :subtitle="activeDescription">
+    <template #actions>
+      <el-button
+          class="config-save-button"
+          bg text
+          :disabled="loading"
+          :loading="configButtonLoading"
+          type="primary"
+          @click="saveConfig">
+        <el-icon class="el-icon--left">
+          <Check/>
+        </el-icon>
+        保存
+      </el-button>
+    </template>
+  </PageHeaderView>
+  <div v-loading="loading" class="config-page app-page-padding">
     <el-tabs v-model="activeName" class="segmented-tabs config-tabs">
       <el-tab-pane
           v-for="tab in tabs"

@@ -1,6 +1,6 @@
 <template>
-  <div class="torrents-page">
-    <PageHeaderView title="下载" :subtitle="`共 ${torrentsInfos.length} 个任务`"/>
+  <PageHeaderView title="下载" :subtitle="`共 ${torrentsInfos.length} 个任务`"/>
+  <div class="torrents-page app-page-padding">
     <div class="torrents-container">
       <div class="torrents-toolbar">
         <el-tabs v-model="activeTab" class="torrents-tabs">

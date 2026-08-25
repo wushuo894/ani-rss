@@ -121,7 +121,6 @@ onMounted(() => {
   min-width: 0;
   height: 100%;
   overflow: hidden;
-  padding: 24px 24px 0 24px;
 }
 
 @media (max-width: 800px) {
@@ -177,7 +176,6 @@ onMounted(() => {
 
   .app-main {
     height: 100%;
-    padding: 12px 12px 0 12px;
   }
 }
 </style>
