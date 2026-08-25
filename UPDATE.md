@@ -1,3 +1,4 @@
-- refactor: 优化登陆逻辑
-- feat: 全新的页面
-- fix: 修复 Windows 下上传格式错误的问题
+- fix: 修复日志无法自动刷新
+- feat: 增加启动页设置
+- refactor: 优化订阅标题展示
+- refactor: 优化页面加载
