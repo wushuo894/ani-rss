@@ -306,11 +306,7 @@ const stopPolling = () => {
   timer = undefined
 }
 
-onMounted(() => {
-  loadAll()
-  startPolling()
-})
-
+onMounted(loadAll)
 onActivated(startPolling)
 onDeactivated(stopPolling)
 onUnmounted(stopPolling)

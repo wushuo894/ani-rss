@@ -105,6 +105,10 @@ html.dark {
     border-radius: 50%;
 }
 
+.el-button + .el-button {
+    margin-left: 8px;
+}
+
 /* 标签, 圆角 去边框 */
 .el-tag {
     border-radius: 6px;

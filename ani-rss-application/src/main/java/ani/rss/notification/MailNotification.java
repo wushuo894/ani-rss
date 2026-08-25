@@ -51,7 +51,6 @@ public class MailNotification implements BaseNotification {
         String mailPassword = notificationConfig.getMailPassword();
         Integer mailSMTPPort = notificationConfig.getMailSMTPPort();
         String mailAddressee = notificationConfig.getMailAddressee();
-        Boolean mailImage = notificationConfig.getMailImage();
         Boolean mailSSLEnable = notificationConfig.getMailSSLEnable();
         Boolean mailTLSEnable = notificationConfig.getMailTLSEnable();
 

@@ -96,7 +96,7 @@
 </template>
 
 <script setup>
-import {computed, onActivated, onDeactivated, onMounted, onUnmounted, ref} from "vue";
+import {computed, onActivated, onDeactivated, onUnmounted, ref} from "vue";
 import * as http from "@/js/http.js";
 import {ArrowDown, Check, Sort, SortDown, SortUp} from "@element-plus/icons-vue";
 import {formatSize} from "@/js/format.js";
@@ -207,7 +207,6 @@ const pausePolling = () => {
   stopped = true
 }
 
-onMounted(resumePolling)
 onActivated(resumePolling)
 onDeactivated(pausePolling)
 onUnmounted(pausePolling)

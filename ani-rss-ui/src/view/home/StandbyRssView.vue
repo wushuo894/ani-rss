@@ -11,38 +11,27 @@
       </template>
     </el-alert>
     <div class="flex standby-toolbar">
-      <div>
-        <el-button text bg icon="Plus" @click="plus" type="primary"/>
-      </div>
-      <div class="standby-spacer"></div>
-      <div>
-        <el-button
-            @click="mikanRef?.show(props.ani)"
-            text bg>
-          <template #icon>
-            <img src="@/icon/icon-Mikan.png" alt="mikan" class="icon"/>
-          </template>
-        </el-button>
-      </div>
-      <div class="standby-spacer"></div>
-      <div>
-        <el-button
-            @click="aniBTShow"
-            text bg>
-          <template #icon>
-            <img src="@/icon/icon-AniBT.png" alt="ani-bt" class="icon"/>
-          </template>
-        </el-button>
-      </div>
-      <div class="standby-spacer"></div>
-      <div>
-        <el-button bg text
-                   @click="animeGardenShow">
-          <template #icon>
-            <img src="@/icon/icon-AnimeGarden.png" alt="anime-garden" class="icon"/>
-          </template>
-        </el-button>
-      </div>
+      <el-button text bg icon="Plus" @click="plus" type="primary"/>
+      <el-button
+          @click="mikanRef?.show(props.ani)"
+          text bg>
+        <template #icon>
+          <img src="@/icon/icon-Mikan.png" alt="mikan" class="icon"/>
+        </template>
+      </el-button>
+      <el-button
+          @click="aniBTShow"
+          text bg>
+        <template #icon>
+          <img src="@/icon/icon-AniBT.png" alt="ani-bt" class="icon"/>
+        </template>
+      </el-button>
+      <el-button bg text
+                 @click="animeGardenShow">
+        <template #icon>
+          <img src="@/icon/icon-AnimeGarden.png" alt="anime-garden" class="icon"/>
+        </template>
+      </el-button>
     </div>
     <div>
       <el-table :data="standbyRss" height="400px" size="small">
@@ -81,21 +70,13 @@
         <el-table-column label="操作" width="300">
           <template #default="it">
             <div class="flex">
-              <div>
-                <el-button bg text icon="Edit" @click="editIndex = it.$index" v-if="editIndex !== it.$index"/>
-                <el-button bg text icon="Check" @click="normalize" type="primary" v-else/>
-              </div>
-              <div class="standby-action-spacer">
-                <el-button bg text @click="del(it.$index)" icon="Delete" type="danger"/>
-              </div>
-              <div class="standby-action-spacer">
-                <el-button :disabled="it.$index < 1" bg icon="ArrowUpBold" text type="primary"
-                           @click="move(it.$index,-1)"/>
-              </div>
-              <div class="standby-action-spacer">
-                <el-button :disabled="it.$index >= standbyRss.length-1" bg icon="ArrowDownBold" text type="primary"
-                           @click="move(it.$index,1)"/>
-              </div>
+              <el-button bg text icon="Edit" @click="editIndex = it.$index" v-if="editIndex !== it.$index"/>
+              <el-button bg text icon="Check" @click="normalize" type="primary" v-else/>
+              <el-button bg text @click="del(it.$index)" icon="Delete" type="danger"/>
+              <el-button :disabled="it.$index < 1" bg icon="ArrowUpBold" text type="primary"
+                         @click="move(it.$index,-1)"/>
+              <el-button :disabled="it.$index >= standbyRss.length-1" bg icon="ArrowDownBold" text type="primary"
+                         @click="move(it.$index,1)"/>
             </div>
           </template>
         </el-table-column>

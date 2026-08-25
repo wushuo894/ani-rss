@@ -165,14 +165,6 @@ defineExpose({
   width: 100%;
 }
 
-.card-grid-container {
-  grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
-}
-
-.cover-grid-container {
-  grid-template-columns: repeat(auto-fill, minmax(132px, 1fr));
-}
-
 .list-container {
   height: 100%;
   display: flex;
@@ -197,13 +189,21 @@ defineExpose({
   height: 8px;
 }
 
-@media (max-width: 560px) {
+.card-grid-container {
+  grid-template-columns: 1fr;
+}
+
+.cover-grid-container {
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+}
+
+@media (min-width: 960px) {
   .card-grid-container {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
   }
 
   .cover-grid-container {
-    grid-template-columns: repeat(auto-fill, minmax(108px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
   }
 }
 </style>

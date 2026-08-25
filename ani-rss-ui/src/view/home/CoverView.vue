@@ -87,8 +87,8 @@
 
     <template #footer>
       <div class="cover-footer">
-        <el-button @click="dialogVisible = false">取消</el-button>
-        <el-button :loading="saveLoading" type="primary" @click="save">
+        <el-button @click="dialogVisible = false" bg text>取消</el-button>
+        <el-button :loading="saveLoading" type="primary" bg text @click="save">
           <el-icon>
             <Check/>
           </el-icon>
@@ -257,7 +257,6 @@ defineExpose({show})
 .cover-footer {
   display: flex;
   justify-content: flex-end;
-  gap: 8px;
 }
 
 @media (max-width: 600px) {
