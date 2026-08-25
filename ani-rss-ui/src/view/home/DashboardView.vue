@@ -5,15 +5,13 @@
   <DelAniView ref="delAniRef"/>
   <BgmRateView ref="bgmRateRef"/>
   <div class="dashboard-page">
-    <div class="dashboard-header">
-      <div>
-        <h2>首页</h2>
-        <el-text size="small" type="info">{{ todayLabel }} · {{ todayText }}</el-text>
-      </div>
-      <el-button :loading="refreshLoading" icon="Refresh" bg text @click="loadAll">
-        刷新
-      </el-button>
-    </div>
+    <PageHeaderView title="首页" :subtitle="`${todayLabel} · ${todayText}`">
+      <template #actions>
+        <el-button :loading="refreshLoading" icon="Refresh" bg text @click="loadAll">
+          刷新
+        </el-button>
+      </template>
+    </PageHeaderView>
 
     <el-scrollbar class="dashboard-scrollbar">
       <div class="dashboard-content">
@@ -171,6 +169,7 @@ import PlayListView from "@/view/play/PlayListView.vue";
 import CoverView from "@/view/home/CoverView.vue";
 import DelAniView from "@/view/home/DelAniView.vue";
 import BgmRateView from "@/view/home/BgmRateView.vue";
+import PageHeaderView from "@/view/custom/PageHeaderView.vue";
 
 const weekLabels = ['星期日', '星期一', '星期二', '星期三', '星期四', '星期五', '星期六']
 const downloadingStates = ['forcedDL', 'downloading', 'forcedMetaDL', 'metaDL', 'stalledDL', 'checkingDL', 'queuedDL', 'allocating', 'moving']
@@ -318,18 +317,6 @@ onUnmounted(stopPolling)
   display: flex;
   flex-direction: column;
   overflow: hidden;
-}
-
-.dashboard-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  margin-bottom: 12px;
-}
-
-.dashboard-header h2 {
-  line-height: 1.4;
 }
 
 .metric-grid {
@@ -487,10 +474,6 @@ onUnmounted(stopPolling)
 }
 
 @media (max-width: 560px) {
-  .dashboard-header {
-    align-items: flex-start;
-  }
-
   .metric-grid,
   .dashboard-content {
     grid-template-columns: 1fr;

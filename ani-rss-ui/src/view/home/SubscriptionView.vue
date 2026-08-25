@@ -3,10 +3,7 @@
   <CollectionView ref="collectionRef"/>
   <ManageView ref="manageRef"/>
   <div class="subscription-page">
-    <header class="subscription-header">
-      <h2>订阅</h2>
-      <el-text size="small" type="info">共 {{ subscriptionTotal }} 个订阅</el-text>
-    </header>
+    <PageHeaderView title="订阅" :subtitle="`共 ${subscriptionTotal} 个订阅`"/>
     <div class="subscription-toolbar">
       <div class="subscription-filters">
         <el-input
@@ -94,6 +91,7 @@ import AddView from "@/view/home/AddView.vue";
 import CollectionView from "@/view/home/CollectionView.vue";
 import ManageView from "@/view/home/ManageView.vue";
 import PopconfirmView from "@/view/custom/PopconfirmView.vue";
+import PageHeaderView from "@/view/custom/PageHeaderView.vue";
 import {subscriptionViewMode} from "@/js/global.js";
 import * as http from "@/js/http.js";
 
@@ -170,15 +168,6 @@ onMounted(() => {
   display: flex;
   flex-direction: column;
   overflow: hidden;
-}
-
-.subscription-header {
-  flex-shrink: 0;
-  padding-bottom: 12px;
-}
-
-.subscription-header h2 {
-  line-height: 1.4;
 }
 
 .subscription-toolbar {

@@ -1,9 +1,6 @@
 <template>
   <div class="torrents-page">
-    <header class="torrents-header">
-      <h2>下载</h2>
-      <el-text size="small" type="info">共 {{ torrentsInfos.length }} 个任务</el-text>
-    </header>
+    <PageHeaderView title="下载" :subtitle="`共 ${torrentsInfos.length} 个任务`"/>
     <div class="torrents-container">
       <div class="torrents-toolbar">
         <el-tabs v-model="activeTab" class="torrents-tabs">
@@ -38,7 +35,7 @@
                     :key="item.value"
                     :command="item.value">
                   <span class="sort-option-label">{{ item.label }}</span>
-                  <el-icon v-if="sortType === item.value">
+                  <el-icon v-if="sortType === item.value" class="el-icon--right">
                     <Check/>
                   </el-icon>
                 </el-dropdown-item>
@@ -100,6 +97,7 @@ import {computed, onActivated, onDeactivated, onUnmounted, ref} from "vue";
 import * as http from "@/js/http.js";
 import {ArrowDown, Check, Sort, SortDown, SortUp} from "@element-plus/icons-vue";
 import {formatSize} from "@/js/format.js";
+import PageHeaderView from "@/view/custom/PageHeaderView.vue";
 
 const activeTab = ref('downloading')
 // 记录排序方式
@@ -221,15 +219,6 @@ onUnmounted(pausePolling)
   overflow: hidden;
 }
 
-.torrents-header {
-  flex-shrink: 0;
-  padding-bottom: 12px;
-}
-
-.torrents-header h2 {
-  line-height: 1.4;
-}
-
 .torrents-container {
   flex: 1;
   min-height: 0;
@@ -286,7 +275,7 @@ onUnmounted(pausePolling)
 }
 
 .sort-field-arrow {
-  margin-left: 2px;
+  margin-left: 6px;
   color: var(--el-text-color-placeholder);
   font-size: 12px;
 }

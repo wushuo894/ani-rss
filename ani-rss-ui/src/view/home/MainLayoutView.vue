@@ -70,7 +70,6 @@ onMounted(() => {
   width: 100%;
   height: 100%;
   display: flex;
-  background: var(--el-bg-color);
 }
 
 .app-nav {
@@ -78,7 +77,7 @@ onMounted(() => {
   flex-shrink: 0;
   display: flex;
   flex-direction: column;
-  background-color: var(--el-bg-color);
+  background: var(--el-bg-color);
   border-right: 1px solid var(--el-border-color-light);
 }
 
@@ -103,6 +102,7 @@ onMounted(() => {
 .app-menu {
   flex: 1;
   border: 0;
+  background: none;
 }
 
 .app-menu :deep(.el-menu-item) {
@@ -122,7 +122,6 @@ onMounted(() => {
   height: 100%;
   overflow: hidden;
   padding: 24px 24px 0 24px;
-  background: var(--el-bg-color);
 }
 
 @media (max-width: 800px) {

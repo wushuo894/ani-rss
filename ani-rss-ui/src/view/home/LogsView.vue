@@ -1,41 +1,37 @@
 <template>
   <div v-loading="loading" class="logs-page">
-    <header class="logs-header">
-      <div>
-        <h2>日志</h2>
-        <el-text size="small" type="info">
-          共 {{ logs.length }} 条 · 显示 {{ filteredLogs.length }} 条
-        </el-text>
-      </div>
-      <div class="log-actions">
-        <el-tooltip content="下载日志" placement="bottom">
-          <el-button @click="downloadLogs" bg text>
-            <el-icon>
-              <DownloadIcon/>
-            </el-icon>
-            <span class="action-label">下载</span>
-          </el-button>
-        </el-tooltip>
-        <el-tooltip content="刷新日志" placement="bottom">
-          <el-button :loading="getLogsLoading" @click="getLogs" bg text>
-            <el-icon>
-              <Refresh/>
-            </el-icon>
-            <span class="action-label">刷新</span>
-          </el-button>
-        </el-tooltip>
-        <PopconfirmView title="清空当前日志?" @confirm="clearLogs">
-          <template #reference>
-            <el-button :loading="clearLoading" type="danger" bg text>
+    <PageHeaderView title="日志" :subtitle="`共 ${logs.length} 条 · 显示 ${filteredLogs.length} 条`">
+      <template #actions>
+        <div class="log-actions">
+          <el-tooltip content="下载日志" placement="bottom">
+            <el-button @click="downloadLogs" bg text>
               <el-icon>
-                <Delete/>
+                <DownloadIcon/>
               </el-icon>
-              <span class="action-label">清空</span>
+              <span class="action-label">下载</span>
             </el-button>
-          </template>
-        </PopconfirmView>
-      </div>
-    </header>
+          </el-tooltip>
+          <el-tooltip content="刷新日志" placement="bottom">
+            <el-button :loading="getLogsLoading" @click="getLogs" bg text>
+              <el-icon>
+                <Refresh/>
+              </el-icon>
+              <span class="action-label">刷新</span>
+            </el-button>
+          </el-tooltip>
+          <PopconfirmView title="清空当前日志?" @confirm="clearLogs">
+            <template #reference>
+              <el-button :loading="clearLoading" type="danger" bg text>
+                <el-icon>
+                  <Delete/>
+                </el-icon>
+                <span class="action-label">清空</span>
+              </el-button>
+            </template>
+          </PopconfirmView>
+        </div>
+      </template>
+    </PageHeaderView>
 
     <section class="logs-toolbar" aria-label="日志筛选">
       <el-input
@@ -119,6 +115,7 @@ import {computed, nextTick, onActivated, ref} from "vue";
 import {Delete, Download as DownloadIcon, Refresh, Search} from "@element-plus/icons-vue";
 import {authorization} from "@/js/global.js";
 import PopconfirmView from "@/view/custom/PopconfirmView.vue";
+import PageHeaderView from "@/view/custom/PageHeaderView.vue";
 import * as http from "@/js/http.js";
 
 const levels = ['DEBUG', 'INFO', 'WARN', 'ERROR']
@@ -226,20 +223,7 @@ onActivated(getLogs)
   min-width: 0;
   display: flex;
   flex-direction: column;
-  gap: 10px;
   overflow: hidden;
-}
-
-.logs-header {
-  flex-shrink: 0;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-}
-
-.logs-header h2 {
-  line-height: 1.4;
 }
 
 .log-actions {
@@ -263,6 +247,7 @@ onActivated(getLogs)
   border: 1px solid var(--el-border-color-light);
   border-radius: 8px;
   background-color: var(--el-bg-color);
+  margin-bottom: 10px;
 }
 
 .log-search {

@@ -1,22 +1,21 @@
 <template>
   <div v-loading="loading" class="config-page">
-    <header class="config-header">
-      <div class="config-heading">
-        <h2>设置</h2>
-        <el-text size="small" type="info">{{ activeDescription }}</el-text>
-      </div>
-      <el-button
-          bg text
-          :disabled="loading"
-          :loading="configButtonLoading"
-          type="primary"
-          @click="saveConfig">
-        <el-icon class="el-icon--left">
-          <Check/>
-        </el-icon>
-        保存
-      </el-button>
-    </header>
+    <PageHeaderView title="设置" :subtitle="activeDescription">
+      <template #actions>
+        <el-button
+            class="config-save-button"
+            bg text
+            :disabled="loading"
+            :loading="configButtonLoading"
+            type="primary"
+            @click="saveConfig">
+          <el-icon class="el-icon--left">
+            <Check/>
+          </el-icon>
+          保存
+        </el-button>
+      </template>
+    </PageHeaderView>
 
     <el-tabs v-model="activeName" class="segmented-tabs config-tabs">
       <el-tab-pane
@@ -58,6 +57,7 @@ import BasicView from "@/view/config/BasicView.vue";
 import AboutView from "@/view/config/AboutView.vue";
 import LoginConfigView from "@/view/config/LoginConfigView.vue";
 import AfdianView from "@/view/config/AfdianView.vue";
+import PageHeaderView from "@/view/custom/PageHeaderView.vue";
 import {configData} from "@/js/config.js";
 import * as http from "@/js/http.js";
 
@@ -125,23 +125,6 @@ onMounted(() => {
   overflow: hidden;
 }
 
-.config-header {
-  flex-shrink: 0;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16px;
-  padding-bottom: 12px;
-}
-
-.config-heading {
-  min-width: 0;
-}
-
-.config-heading h2 {
-  line-height: 1.4;
-}
-
 .config-tabs {
   flex: 1;
   min-height: 0;
@@ -192,11 +175,7 @@ onMounted(() => {
 }
 
 @media (max-width: 700px) {
-  .config-header {
-    padding-bottom: 8px;
-  }
-
-  .config-header .el-button {
+  .config-save-button {
     min-width: 72px;
   }
 
