@@ -60,6 +60,12 @@
         <el-option label="卡片" value="card"/>
       </el-select>
     </el-form-item>
+    <el-form-item label="启动页">
+      <el-select v-model="startupPage" class="width-150">
+        <el-option label="首页" value="/home"/>
+        <el-option label="订阅页" value="/subscriptions"/>
+      </el-select>
+    </el-form-item>
     <el-form-item label="最大内容宽度">
       <el-input-number v-model="maxContentWidth"
                        :min="1200">
@@ -107,6 +113,7 @@ import {
   showPlaylist,
   showScore,
   showWeek,
+  startupPage,
   store,
   subscriptionViewMode
 } from "@/js/global.js";
