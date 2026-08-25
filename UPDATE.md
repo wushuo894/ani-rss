@@ -1,4 +1,1 @@
-- fix: 修复日志无法自动刷新
-- feat: 增加启动页设置
-- refactor: 优化订阅标题展示
-- refactor: 优化页面加载
+- refactor: 统一间距
