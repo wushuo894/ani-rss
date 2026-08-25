@@ -115,7 +115,7 @@
 </template>
 
 <script setup>
-import {computed, nextTick, onMounted, ref} from "vue";
+import {computed, nextTick, onActivated, ref} from "vue";
 import {Delete, Download as DownloadIcon, Refresh, Search} from "@element-plus/icons-vue";
 import {authorization} from "@/js/global.js";
 import PopconfirmView from "@/view/custom/PopconfirmView.vue";
@@ -217,7 +217,7 @@ const downloadLogs = () => {
   window.open(`api/downloadLogs?s=${authorization.value}`)
 }
 
-onMounted(getLogs)
+onActivated(getLogs)
 </script>
 
 <style scoped>
@@ -246,7 +246,7 @@ onMounted(getLogs)
   flex-shrink: 0;
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: 8px;
 }
 
 .log-actions .el-button {
