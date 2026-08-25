@@ -245,7 +245,7 @@ defineExpose({show})
   min-width: 0;
   display: grid;
   grid-template-columns: minmax(0, 1fr) 34px;
-  gap: 6px;
+  gap: 8px;
 }
 
 .cover-url-row .el-button {

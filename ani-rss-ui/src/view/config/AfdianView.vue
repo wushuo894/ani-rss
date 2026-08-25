@@ -52,7 +52,6 @@
             </el-icon>
           </template>
         </el-input>
-        <div class="spacer"></div>
         <el-button :loading="verifyNoLoading"
                    bg text
                    type="primary"

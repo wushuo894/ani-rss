@@ -42,11 +42,10 @@
             <el-input v-model:model-value="title" clearable placeholder="请输入搜索标题"
                       prefix-icon="Search"
                       @clear="()=>{
-            title = ''
-            search()
-          }"
-                      @keyup.enter="search()"></el-input>
-            <div class="spacer"></div>
+                        title = ''
+                        search()
+                      }"
+                      @keyup.enter="search()"/>
             <el-button :loading="searchLoading" bg icon="Search" text @click="search()">搜索</el-button>
           </div>
           <div class="flex season-selector">
@@ -375,10 +374,11 @@ let copy = (v) => {
 .search-header {
   display: flex;
   justify-content: space-between;
+  gap: 8px;
 }
 
 .season-selector {
-  margin-top: 4px;
+  margin-top: 8px;
   width: 100%;
   justify-content: space-between;
 }

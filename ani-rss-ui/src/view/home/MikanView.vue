@@ -42,11 +42,10 @@
             <el-input v-model:model-value="text" clearable placeholder="请输入搜索标题"
                       prefix-icon="Search"
                       @clear="()=>{
-            text = ''
-            search()
-          }"
-                      @keyup.enter="search"></el-input>
-            <div class="spacer"></div>
+                        text = ''
+                        search()
+                      }"
+                      @keyup.enter="search"/>
             <el-button :loading="searchLoading" bg icon="Search" text @click="search">搜索</el-button>
           </div>
           <div v-if="data.seasons.length" class="flex season-selector">
@@ -421,14 +420,11 @@ let openUrl = (url) => window.open(url)
 .search-header {
   display: flex;
   justify-content: space-between;
-}
-
-.spacer {
-  width: 4px;
+  gap: 8px;
 }
 
 .season-selector {
-  margin-top: 4px;
+  margin-top: 8px;
   width: 100%;
   justify-content: space-between;
 }

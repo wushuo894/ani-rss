@@ -340,7 +340,7 @@ let copy = (v) => {
 }
 
 .season-selector {
-  margin-top: 4px;
+  margin-top: 8px;
   width: 100%;
   justify-content: flex-end;
 }

@@ -259,7 +259,7 @@ onActivated(getLogs)
   display: flex;
   align-items: center;
   gap: 8px;
-  padding: 9px;
+  padding: 8px;
   border: 1px solid var(--el-border-color-light);
   border-radius: 8px;
   background-color: var(--el-bg-color);

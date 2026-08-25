@@ -4,7 +4,7 @@
   <el-dialog v-model="dialogVisible" center title="管理">
     <div class="manage-content" v-loading="loading">
       <div class="manage-header">
-        <div class="auto-flex">
+        <div class="auto-flex mange-toolbar">
           <div>
             <el-input
                 v-model="text"
@@ -16,7 +16,6 @@
                 style="width: 180px;"
             />
           </div>
-          <div class="spacer"></div>
           <div class="select-width">
             <el-select
                 v-model:model-value="releaseDate"
@@ -27,7 +26,6 @@
               />
             </el-select>
           </div>
-          <div class="spacer"></div>
           <div class="select-width">
             <el-select v-model:model-value="selectFilter"
                        @change="changeFilterList">
@@ -356,4 +354,15 @@ defineExpose({show})
   margin: 6px;
   text-align: end;
 }
+
+.mange-toolbar {
+  gap: 8px;
+}
+
+@media (max-width: 1000px) {
+  .mange-toolbar > div {
+    margin-top: 8px;
+  }
+}
+
 </style>

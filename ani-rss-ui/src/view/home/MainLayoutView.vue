@@ -107,7 +107,7 @@ onMounted(() => {
 
 .app-menu :deep(.el-menu-item) {
   height: 46px;
-  margin: 4px 8px;
+  margin: 8px 12px;
   border-radius: 8px;
   border: none !important;
 }
@@ -121,7 +121,7 @@ onMounted(() => {
   min-width: 0;
   height: 100%;
   overflow: hidden;
-  padding: 12px;
+  padding: 24px 24px 0 24px;
   background: var(--el-bg-color);
 }
 
@@ -178,7 +178,7 @@ onMounted(() => {
 
   .app-main {
     height: 100%;
-    padding: 8px;
+    padding: 12px 12px 0 12px;
   }
 }
 </style>

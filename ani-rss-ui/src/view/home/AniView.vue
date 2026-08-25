@@ -30,7 +30,7 @@
             </el-form-item>
             <el-form-item label="TMDB">
               <div class="flex full-width" style="justify-content: space-between;">
-                <div class="el-input is-disabled">
+                <div class="el-input is-disabled" style="margin-right: 8px">
                   <div class="el-input__wrapper" tabindex="-1"
                        style="pointer-events: auto;cursor: auto;justify-content: left;padding: 0 11px;">
                     <el-link v-if="props.ani?.tmdb?.id"
@@ -42,16 +42,13 @@
                     <span v-else>{{ props.ani.themoviedbName }}</span>
                   </div>
                 </div>
-                <div style="width: 4px;"></div>
                 <el-button icon="Search" bg text @click="searchThemoviedb"/>
-                <div style="width: 4px;"></div>
                 <el-button icon="Refresh" bg text @click="getThemoviedbName" :loading="getThemoviedbNameLoading"/>
               </div>
             </el-form-item>
             <el-form-item v-if="!props.ani.ova && props.ani.tmdb" label="剧集组">
               <div class="tmdb-group">
                 <el-input v-model="props.ani.tmdb['tmdbGroupId']" placeholder="留空不使用剧集组"/>
-                <div style="width: 4px;"/>
                 <el-button bg icon="Menu" text @click="tmdbGroupRef?.show"/>
               </div>
             </el-form-item>
@@ -462,6 +459,7 @@ const emit = defineEmits(['callback'])
   display: flex;
   width: 100%;
   justify-content: space-between;
+  gap: 8px;
 }
 
 .form-item-flex {

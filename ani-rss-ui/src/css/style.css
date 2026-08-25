@@ -245,7 +245,7 @@ html, body, #app {
 }
 
 .segmented-tabs > .el-tabs__header .el-tabs__nav-wrap {
-    padding: 4px;
+    padding: 8px;
     border: 1px solid var(--el-border-color-light);
     border-radius: 8px;
     background: var(--el-bg-color);
@@ -258,7 +258,7 @@ html, body, #app {
 
 .segmented-tabs > .el-tabs__header .el-tabs__nav {
     display: flex;
-    gap: 4px;
+    gap: 8px;
 }
 
 .segmented-tabs > .el-tabs__header .el-tabs__item {

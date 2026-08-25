@@ -8,8 +8,7 @@
                     placeholder="换行输入多个"
                     class="full-width" type="textarea"/>
         </div>
-        <div class="spacer-12"/>
-        <div class="flex justify-space-between">
+        <div class="flex justify-space-between" style="margin-top: 8px">
           <el-checkbox v-model:model-value="props.config.autoTrackersUpdate" label="每天1:00自动更新"/>
           <el-button :loading="trackersUpdateLoading" bg icon="Refresh" @click="trackersUpdate">更新
           </el-button>
@@ -46,10 +45,6 @@ let props = defineProps(['config'])
 </script>
 
 <style scoped>
-.spacer-12 {
-  height: 12px;
-}
-
 .justify-space-between {
   justify-content: space-between;
 }
