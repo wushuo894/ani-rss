@@ -1,12 +1,13 @@
 <template>
   <div class="cover-card">
-    <div class="cover-image-container" :class="{'is-disabled': !item.enable}">
+    <div class="cover-image-container"
+         :class="{'is-disabled': !item.enable}"
+         @click="emit('cover', item)">
       <img v-if="item.cover"
            :src="toApiFile(item.cover)"
            :alt="item.title"
-           class="cover-image"
-           @click="openBgmUrl(item)">
-      <div v-else class="cover-image cover-empty" @click="openBgmUrl(item)">
+           class="cover-image">
+      <div v-else class="cover-image cover-empty">
         <el-icon>
           <Picture/>
         </el-icon>
@@ -19,7 +20,7 @@
       </div>
       <div class="cover-overlay">
         <el-tooltip :content="item.title" placement="top">
-          <el-text class="cover-title" line-clamp="2" truncated @click="openBgmUrl(item)">
+          <el-text class="cover-title" line-clamp="2" @click.stop="openBgmUrl(item)">
             {{ item.title }}
           </el-text>
         </el-tooltip>
@@ -271,7 +272,10 @@ const emit = defineEmits(['edit', 'playlist', 'cover', 'del', 'rate'])
 }
 
 .cover-title {
-  max-width: 100%;
+  width: 100%;
+  display: -webkit-box;
+  align-self: flex-start;
+  text-align: left;
   line-height: 1.35;
   font-weight: 600;
   cursor: pointer;
