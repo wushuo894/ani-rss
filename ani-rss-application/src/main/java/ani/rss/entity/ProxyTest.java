@@ -14,6 +14,12 @@ import java.io.Serializable;
 @Schema(description = "代理测试响应体")
 public class ProxyTest implements Serializable {
     /**
+     * 标题
+     */
+    @Schema(defaultValue = "标题")
+    private String title;
+
+    /**
      * 状态码
      */
     @Schema(description = "状态码")

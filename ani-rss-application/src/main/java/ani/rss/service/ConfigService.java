@@ -18,7 +18,6 @@ import cn.hutool.core.bean.copier.CopyOptions;
 import cn.hutool.core.codec.Base64;
 import cn.hutool.core.date.LocalDateTimeUtil;
 import cn.hutool.core.io.FileUtil;
-import cn.hutool.core.text.StrFormatter;
 import cn.hutool.core.util.ClassUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
@@ -171,7 +170,7 @@ public class ConfigService {
 
                         String title = Jsoup.parse(res.body())
                                 .title();
-                        result.setMessage(StrFormatter.format("测试成功 {}", title));
+                        proxyTest.setTitle(title);
                     });
         } catch (Exception e) {
             result.setMessage(e.getMessage())
