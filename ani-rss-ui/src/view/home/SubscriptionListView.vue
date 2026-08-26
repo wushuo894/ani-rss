@@ -182,7 +182,8 @@ defineExpose({
 }
 
 .list-week-title {
-  margin: 16px 0 8px 4px;
+  margin-top: 12px;
+  margin-bottom: 4px;
 }
 
 .list-bottom-spacer {

@@ -1,5 +1,6 @@
 /* 深色模式 */
 html.dark {
+    --body-background-color: #000000;
     --el-bg-color: #2D2E2F;
     --el-bg-color-overlay: var(--el-bg-color);
     --el-fill-color-blank: var(--el-bg-color);
@@ -13,6 +14,8 @@ html.dark {
 }
 
 :root {
+    --body-background-color: #f7f5fa;
+
     /* 全局圆角优化：更圆润 */
     --el-border-radius-small: 8px;
     --el-border-radius-base: 12px;
@@ -24,6 +27,10 @@ html.dark {
 
     /* 折叠面板内边距 */
     --el-collapse-item-content-padding: 16px;
+}
+
+body {
+    background-color: var(--body-background-color);
 }
 
 /* 折叠面板 */
@@ -276,7 +283,6 @@ html, body, #app {
 
 .segmented-tabs > .el-tabs__header .el-tabs__nav-wrap {
     padding: 8px;
-    border: 1px solid var(--el-border-color-light);
     border-radius: 8px;
     background: var(--el-bg-color);
 }

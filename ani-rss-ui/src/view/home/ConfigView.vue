@@ -133,7 +133,6 @@ onMounted(() => {
   flex: 1;
   min-height: 0;
   overflow: hidden;
-  border: 1px solid var(--el-border-color-light);
   border-radius: 8px;
   background: var(--el-bg-color);
 }
@@ -160,12 +159,6 @@ onMounted(() => {
 @media (max-width: 700px) {
   .config-save-button {
     min-width: 72px;
-  }
-
-  .config-tabs :deep(.el-tabs__content) {
-    border-right: 0;
-    border-left: 0;
-    border-radius: 0;
   }
 
   .tab-scroll-content {

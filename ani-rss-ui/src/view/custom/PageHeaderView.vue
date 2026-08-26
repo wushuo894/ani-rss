@@ -34,7 +34,7 @@ defineProps({
   justify-content: space-between;
   gap: 12px;
   margin-top: 24px;
-  margin-bottom: 24px;
+  margin-bottom: 8px;
 }
 
 .page-header-heading {

@@ -123,7 +123,7 @@
 <script setup>
 import {ref} from "vue";
 import {ElMessage} from "element-plus";
-import {ArrowLeft, ArrowRight, Search} from "@element-plus/icons-vue";
+import {ArrowRight, Search} from "@element-plus/icons-vue";
 import MikanView from "./MikanView.vue";
 import AniView from "./AniView.vue";
 import BgmView from "./BgmView.vue";

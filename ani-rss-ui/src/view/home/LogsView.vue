@@ -231,10 +231,6 @@ onActivated(getLogs)
   display: flex;
   align-items: center;
   gap: 8px;
-  padding: 8px;
-  border: 1px solid var(--el-border-color-light);
-  border-radius: 8px;
-  background-color: var(--el-bg-color);
   margin-bottom: 8px;
 }
 
@@ -299,7 +295,6 @@ onActivated(getLogs)
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  border: 1px solid var(--el-border-color-light);
   border-radius: 8px;
   background-color: var(--el-bg-color);
 }
