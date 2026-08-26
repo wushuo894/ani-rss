@@ -37,7 +37,7 @@
         <UploadView url="api/uploadAndRead"
                     :extensions="['json']"
                     :callback="uploadCallback">
-          <el-button bg>选择并上传文件</el-button>
+          <el-button bg icon="Upload">选择并上传文件</el-button>
         </UploadView>
       </div>
 
@@ -72,6 +72,7 @@
         <el-button
             @click="dialogVisible = false"
             size="large"
+            icon="Close"
         >
           取消
         </el-button>
@@ -81,11 +82,9 @@
             :disabled="!data.filename"
             @click="startImport"
             size="large"
+            icon="Upload"
         >
-          <el-icon v-if="!importDataLoading">
-            <upload/>
-          </el-icon>
-          {{ importDataLoading ? '导入中...' : '开始导入' }}
+          开始导入
         </el-button>
       </div>
     </div>
@@ -93,7 +92,7 @@
 </template>
 <script setup>
 import {getCurrentInstance, ref} from "vue";
-import {Document, Setting, Upload} from "@element-plus/icons-vue";
+import {Document, Setting} from "@element-plus/icons-vue";
 import {ElMessage} from "element-plus";
 import {importAni} from "@/js/http.js";
 import UploadView from "@/view/custom/UploadView.vue";

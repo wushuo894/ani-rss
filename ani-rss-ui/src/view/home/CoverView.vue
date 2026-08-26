@@ -54,11 +54,8 @@
                   :disabled="!ani.image"
                   :loading="refreshLoading"
                   bg
-                  @click="refreshCover">
-                <el-icon>
-                  <Refresh/>
-                </el-icon>
-              </el-button>
+                  icon="Refresh"
+                  @click="refreshCover"/>
             </el-tooltip>
           </div>
         </section>
@@ -74,10 +71,7 @@
               url="api/upload"
               :extensions="['jpg', 'jpeg', 'png']"
               :callback="uploadCallback">
-            <el-button bg>
-              <el-icon>
-                <UploadFilled/>
-              </el-icon>
+            <el-button bg icon="Upload">
               选择图片
             </el-button>
           </UploadView>
@@ -87,11 +81,8 @@
 
     <template #footer>
       <div class="cover-footer">
-        <el-button @click="dialogVisible = false" bg text>取消</el-button>
-        <el-button :loading="saveLoading" type="primary" bg text @click="save">
-          <el-icon>
-            <Check/>
-          </el-icon>
+        <el-button @click="dialogVisible = false" bg text icon="Close">取消</el-button>
+        <el-button :loading="saveLoading" type="primary" bg text @click="save" icon="Check">
           保存
         </el-button>
       </div>
@@ -102,7 +93,7 @@
 <script setup>
 import {computed, ref} from "vue";
 import {ElMessage} from "element-plus";
-import {Check, Link, Picture, Refresh, UploadFilled} from "@element-plus/icons-vue";
+import {Link, Picture, UploadFilled} from "@element-plus/icons-vue";
 import {toApiFile} from "@/js/global.js";
 import * as http from "@/js/http.js";
 import UploadView from "@/view/custom/UploadView.vue";

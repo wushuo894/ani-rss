@@ -4,14 +4,11 @@
       <template #actions>
         <el-button
             class="config-save-button"
-            bg text
+            icon="Check"
             :disabled="loading"
             :loading="configButtonLoading"
             type="primary"
             @click="saveConfig">
-          <el-icon class="el-icon--left">
-            <Check/>
-          </el-icon>
           保存
         </el-button>
       </template>
@@ -48,7 +45,6 @@
 <script setup>
 import {computed, onMounted, ref} from "vue";
 import {ElMessage} from "element-plus";
-import {Check} from "@element-plus/icons-vue";
 import {md5} from "js-md5";
 import ExcludeView from "@/view/config/ExcludeView.vue";
 import NotificationView from "@/view/config/NotificationView.vue";

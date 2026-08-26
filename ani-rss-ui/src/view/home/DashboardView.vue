@@ -7,7 +7,7 @@
     <BgmRateView ref="bgmRateRef"/>
     <PageHeaderView title="首页" :subtitle="`${todayLabel} · ${todayText}`">
       <template #actions>
-        <el-button :loading="refreshLoading" icon="Refresh" bg text @click="loadAll">
+        <el-button :loading="refreshLoading" icon="Refresh" @click="loadAll">
           刷新
         </el-button>
       </template>

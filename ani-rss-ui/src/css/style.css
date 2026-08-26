@@ -136,10 +136,6 @@ html, body, #app {
     height: 100%;
 }
 
-body {
-    background: var(--el-bg-color);
-}
-
 #app {
     margin: 0 auto;
 }

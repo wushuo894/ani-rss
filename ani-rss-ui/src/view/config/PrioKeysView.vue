@@ -32,10 +32,7 @@
     </div>
     <div class="flex prio-keys-footer">
       <el-button bg text size="small" @click="importGlobalKeywords" v-if="props.importGlobal"
-                 :disabled="disabledImport" :loading="importLoading">
-        <el-icon>
-          <Download/>
-        </el-icon>
+                 :disabled="disabledImport" :loading="importLoading" icon="Download">
         从全局导入关键词
       </el-button>
       <el-text class="mx-1" size="small" v-if="props.showText">
@@ -49,7 +46,6 @@
 import SettingsItem from "@/view/custom/SettingsItem.vue";
 import {ref} from "vue";
 import {ElMessage} from "element-plus";
-import {Download} from '@element-plus/icons-vue'
 import {config} from "@/js/http.js";
 
 const handleClose = (index) => {

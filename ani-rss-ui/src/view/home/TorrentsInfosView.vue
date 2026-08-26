@@ -20,7 +20,7 @@
           </el-tabs>
           <div class="sort-actions">
             <el-dropdown trigger="click" @command="changeSortType">
-              <el-button class="sort-field-button" bg text>
+              <el-button class="sort-field-button">
                 <el-icon>
                   <Sort/>
                 </el-icon>
@@ -47,8 +47,6 @@
               <el-button
                   :aria-label="sortOrder === 'asc' ? '正序' : '倒序'"
                   class="sort-order-button"
-                  bg
-                  text
                   @click="toggleSortOrder">
                 <el-icon>
                   <SortUp v-if="sortOrder === 'asc'"/>

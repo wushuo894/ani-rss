@@ -38,7 +38,7 @@
         </div>
         <div class="subscription-actions">
           <el-dropdown trigger="click">
-            <el-button aria-label="添加" type="primary" bg text>
+            <el-button aria-label="添加" type="primary">
               <el-icon class="subscription-action-icon">
                 <Plus/>
               </el-icon>
@@ -57,7 +57,7 @@
           </el-dropdown>
           <PopconfirmView title="立即刷新全部订阅?" @confirm="refreshAni">
             <template #reference>
-              <el-button aria-label="刷新" :loading="refreshLoading" bg text>
+              <el-button aria-label="刷新" :loading="refreshLoading">
                 <el-icon class="subscription-action-icon">
                   <Refresh/>
                 </el-icon>
@@ -65,7 +65,7 @@
               </el-button>
             </template>
           </PopconfirmView>
-          <el-button aria-label="管理" @click="manageRef?.show" bg text>
+          <el-button aria-label="管理" @click="manageRef?.show">
             <el-icon class="subscription-action-icon">
               <Fold/>
             </el-icon>

@@ -109,10 +109,10 @@
       </div>
     </div>
     <div v-if="!showRss" class="ani-step">
-      <el-button class="ani-step-back" bg text @click="showRss = true">
-        <el-icon>
-          <ArrowLeft/>
-        </el-icon>
+      <el-button
+          class="ani-step-back"
+          bg text icon="ArrowLeft"
+          @click="showRss = true">
         返回 RSS
       </el-button>
       <AniView v-model:ani="ani" @callback="addAni"/>

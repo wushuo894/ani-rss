@@ -4,27 +4,18 @@
       <template #actions>
         <div class="log-actions">
           <el-tooltip content="下载日志" placement="bottom">
-            <el-button @click="downloadLogs" bg text>
-              <el-icon>
-                <DownloadIcon/>
-              </el-icon>
+            <el-button @click="downloadLogs" icon="Download">
               <span class="action-label">下载</span>
             </el-button>
           </el-tooltip>
           <el-tooltip content="刷新日志" placement="bottom">
-            <el-button :loading="getLogsLoading" @click="getLogs" bg text>
-              <el-icon>
-                <Refresh/>
-              </el-icon>
+            <el-button :loading="getLogsLoading" @click="getLogs" icon="Refresh">
               <span class="action-label">刷新</span>
             </el-button>
           </el-tooltip>
           <PopconfirmView title="清空当前日志?" @confirm="clearLogs">
             <template #reference>
-              <el-button :loading="clearLoading" type="danger" bg text>
-                <el-icon>
-                  <Delete/>
-                </el-icon>
+              <el-button :loading="clearLoading" type="danger" icon="Delete">
                 <span class="action-label">清空</span>
               </el-button>
             </template>
@@ -113,7 +104,7 @@
 
 <script setup>
 import {computed, nextTick, onActivated, ref} from "vue";
-import {Delete, Download as DownloadIcon, Refresh, Search} from "@element-plus/icons-vue";
+import {Search} from "@element-plus/icons-vue";
 import {authorization} from "@/js/global.js";
 import PopconfirmView from "@/view/custom/PopconfirmView.vue";
 import PageHeaderView from "@/view/custom/PageHeaderView.vue";

@@ -148,7 +148,7 @@
                             url="api/uploadAndReadToBase64"
                             :extensions="['torrent']"
                             :callback="uploadCallback">
-                  <el-button bg>选择并上传种子</el-button>
+                  <el-button bg icon="Upload">选择并上传种子</el-button>
                 </UploadView>
               </el-form-item>
             </template>

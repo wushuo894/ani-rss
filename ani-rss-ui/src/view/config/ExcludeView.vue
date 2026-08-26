@@ -54,10 +54,7 @@
     </div>
     <div class="flex exclude-footer">
       <el-button bg text size="small" @click="importExclude" v-if="props.importExclude"
-                 :disabled="disabledImportExclude" :loading="importExcludeLoading">
-        <el-icon>
-          <Download/>
-        </el-icon>
+                 :disabled="disabledImportExclude" :loading="importExcludeLoading" icon="Download">
         导入全局排除
       </el-button>
       <el-text class="mx-1" size="small" v-if="props.showText">
