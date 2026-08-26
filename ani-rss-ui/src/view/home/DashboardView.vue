@@ -196,11 +196,12 @@ let timer
 
 const todayLabel = computed(() => weekLabels[new Date().getDay()])
 const flatAnis = computed(() => weekList.value.flatMap(week => week.items || []))
+const enabledAnis = computed(() => flatAnis.value.filter(item => item.enable))
 const subscriptionTotal = computed(() => subscriptionTotalValue.value || flatAnis.value.length)
-const enabledTotal = computed(() => flatAnis.value.filter(item => item.enable).length)
+const enabledTotal = computed(() => enabledAnis.value.length)
 const todayAnis = computed(() => {
   const today = weekList.value.find(week => week.weekLabel === todayLabel.value)
-  return today ? today.items || [] : []
+  return today ? (today.items || []).filter(item => item.enable) : []
 })
 const todayText = computed(() => todayAnis.value.length ? `${todayAnis.value.length} 个订阅` : '没有订阅')
 const downloadingList = computed(() => torrentsInfos.value.filter(isDownloading))
@@ -208,8 +209,7 @@ const seedingList = computed(() => torrentsInfos.value.filter(isSeeding))
 const activeTorrents = computed(() => torrentsInfos.value.filter(item => item.state !== 'stoppedUP'))
 const procrastinatingList = computed(() => {
   const threshold = Number(config.value.procrastinatingDay || 14)
-  return flatAnis.value
-      .filter(item => item.enable)
+  return enabledAnis.value
       .filter(item => item.procrastinating !== false)
       .filter(item => !item.totalEpisodeNumber || item.currentEpisodeNumber < item.totalEpisodeNumber)
       .map(item => {
