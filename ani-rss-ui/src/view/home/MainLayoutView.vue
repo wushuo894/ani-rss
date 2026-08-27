@@ -90,7 +90,6 @@ onMounted(() => {
   color: var(--el-text-color-primary);
   font-size: 13px;
   font-weight: 600;
-  border-bottom: 1px solid var(--el-border-color-extra-light);
 }
 
 .app-logo {
