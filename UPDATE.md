@@ -1,1 +1,1 @@
-- refactor: 按钮优化
+- refactor: 默认封面尺寸调整为 medium
