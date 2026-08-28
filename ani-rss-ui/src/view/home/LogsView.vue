@@ -4,19 +4,19 @@
       <template #actions>
         <div class="log-actions">
           <el-tooltip content="下载日志" placement="bottom">
-            <el-button @click="downloadLogs" icon="Download">
-              <span class="action-label">下载</span>
+            <el-button @click="downloadLogs" class="auto-button" icon="Download">
+              下载
             </el-button>
           </el-tooltip>
           <el-tooltip content="刷新日志" placement="bottom">
-            <el-button :loading="getLogsLoading" @click="getLogs" icon="Refresh">
-              <span class="action-label">刷新</span>
+            <el-button :loading="getLogsLoading" @click="getLogs" class="auto-button" icon="Refresh">
+              刷新
             </el-button>
           </el-tooltip>
           <PopconfirmView title="清空当前日志?" @confirm="clearLogs">
             <template #reference>
-              <el-button :loading="clearLoading" type="danger" icon="Delete">
-                <span class="action-label">清空</span>
+              <el-button :loading="clearLoading" class="auto-button" type="danger" icon="Delete">
+                清空
               </el-button>
             </template>
           </PopconfirmView>

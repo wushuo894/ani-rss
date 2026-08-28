@@ -38,11 +38,8 @@
         </div>
         <div class="subscription-actions">
           <el-dropdown trigger="click">
-            <el-button aria-label="添加" type="primary">
-              <el-icon class="subscription-action-icon">
-                <Plus/>
-              </el-icon>
-              <span class="subscription-action-label">添加</span>
+            <el-button aria-label="添加" type="primary" class="auto-button" icon="Plus">
+              添加
             </el-button>
             <template #dropdown>
               <el-dropdown-menu>
@@ -57,19 +54,13 @@
           </el-dropdown>
           <PopconfirmView title="立即刷新全部订阅?" @confirm="refreshAni">
             <template #reference>
-              <el-button aria-label="刷新" :loading="refreshLoading">
-                <el-icon class="subscription-action-icon">
-                  <Refresh/>
-                </el-icon>
-                <span class="subscription-action-label">刷新</span>
+              <el-button aria-label="刷新" :loading="refreshLoading" class="auto-button" icon="Refresh">
+                刷新
               </el-button>
             </template>
           </PopconfirmView>
-          <el-button aria-label="管理" @click="manageRef?.show">
-            <el-icon class="subscription-action-icon">
-              <Fold/>
-            </el-icon>
-            <span class="subscription-action-label">管理</span>
+          <el-button aria-label="管理" @click="manageRef?.show" class="auto-button" icon="Fold">
+            管理
           </el-button>
         </div>
       </div>
@@ -87,7 +78,6 @@
 import {onMounted, ref} from "vue";
 import {ElMessage} from "element-plus";
 import {useLocalStorage} from "@vueuse/core";
-import {Fold, Plus, Refresh} from "@element-plus/icons-vue";
 import SubscriptionListView from "@/view/home/SubscriptionListView.vue";
 import AddView from "@/view/home/AddView.vue";
 import CollectionView from "@/view/home/CollectionView.vue";
@@ -198,10 +188,6 @@ onMounted(() => {
   margin: 0;
 }
 
-.subscription-action-icon {
-  margin-right: 6px;
-}
-
 .subscription-search {
   width: 220px;
 }
@@ -235,16 +221,6 @@ onMounted(() => {
 
   .subscription-select {
     flex: 1 1 120px;
-  }
-}
-
-@media (max-width: 800px) {
-  .subscription-action-label {
-    display: none;
-  }
-
-  .subscription-action-icon {
-    margin-right: 0;
   }
 }
 

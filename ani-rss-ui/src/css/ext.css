@@ -35,6 +35,15 @@
     }
 }
 
+@media (max-width: 700px) {
+    .auto-button {
+        span {
+            display: none;
+        }
+    }
+}
+
+
 /* 隐藏滚动条 */
 .hide-scrollbar {
     .el-scrollbar__bar {

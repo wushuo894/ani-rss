@@ -3,7 +3,7 @@
     <PageHeaderView title="设置" :subtitle="activeDescription">
       <template #actions>
         <el-button
-            class="config-save-button"
+            class="auto-button"
             icon="Check"
             :disabled="loading"
             :loading="configButtonLoading"
@@ -157,10 +157,6 @@ onMounted(() => {
 }
 
 @media (max-width: 700px) {
-  .config-save-button {
-    min-width: 72px;
-  }
-
   .tab-scroll-content {
     padding: 18px 4px 30px;
   }
