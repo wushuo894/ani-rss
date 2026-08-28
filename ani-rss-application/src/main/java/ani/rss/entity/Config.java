@@ -500,7 +500,7 @@ public class Config implements Serializable {
      * 获取BGM封面图片质量
      */
     @Schema(description = "BGM 封面图片质量")
-    private String bgmImage;
+    private String bgmImageSize;
 
     /**
      * 自定义CSS

@@ -815,7 +815,7 @@ public class BgmUtil {
      * @return 订阅
      */
     public static Ani toAni(BgmInfo bgmInfo, Ani ani) {
-        String bgmImage = CONFIG.getBgmImage();
+        String bgmImageSize = CONFIG.getBgmImageSize();
         // 使用tmdb标题
         Boolean tmdb = CONFIG.getTmdb();
 
@@ -825,7 +825,7 @@ public class BgmUtil {
 
         BgmInfo.Images images = bgmInfo.getImages();
 
-        String image = (String) ReflectUtil.getFieldValue(images, bgmImage);
+        String image = (String) ReflectUtil.getFieldValue(images, bgmImageSize);
 
         double score = Optional.ofNullable(bgmInfo.getRating())
                 .map(BgmInfo.Rating::getScore)

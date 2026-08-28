@@ -84,7 +84,7 @@ export let configData = {
     "notificationTemplate": "",
     "autoUpdate": false,
     "version": "3.1.69",
-    "bgmImage": "large",
+    "bgmImageSize": "medium",
     "customCss": "",
     "customJs": "",
     "customEpisode": false,

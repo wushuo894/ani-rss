@@ -183,7 +183,7 @@ public class ConfigUtil {
                 .setTrackersUpdateUrls("https://cf.trackerslist.com/best.txt")
                 .setAutoUpdate(false)
                 .setVersion("")
-                .setBgmImage("large")
+                .setBgmImageSize("medium")
                 .setCustomCss("")
                 .setCustomJs("")
                 .setCustomEpisode(false)
