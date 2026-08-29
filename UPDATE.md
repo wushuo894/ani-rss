@@ -1,1 +1,1 @@
-- refactor: 默认封面尺寸调整为 medium
+- refactor: 优化封面补全
