@@ -87,7 +87,8 @@ public class AniUtil {
 
             // 自动修补缺失的封面
             String image = ani.getImage();
-            saveCover(image);
+            String cover = saveCover(image);
+            ani.setCover(cover);
 
             Ani newAni = AniUtil.createAni();
             BeanUtil.copyProperties(newAni, ani, copyOptions);
