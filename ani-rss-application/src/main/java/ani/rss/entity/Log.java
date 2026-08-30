@@ -14,6 +14,8 @@ import java.io.Serializable;
 @Schema(description = "日志")
 public class Log implements Serializable {
 
+    private Long ts;
+
     /**
      * 日志信息
      */

@@ -13,8 +13,6 @@ import ch.qos.logback.classic.spi.StackTraceElementProxy;
 import ch.qos.logback.core.Appender;
 import ch.qos.logback.core.filter.AbstractMatcherFilter;
 import ch.qos.logback.core.spi.FilterReply;
-import cn.hutool.core.date.DatePattern;
-import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.io.resource.ResourceUtil;
 import cn.hutool.core.text.StrFormatter;
@@ -27,7 +25,6 @@ import java.io.ByteArrayInputStream;
 import java.nio.charset.StandardCharsets;
 import java.time.Instant;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
@@ -74,16 +71,18 @@ public class LogUtil {
                 @Override
                 public FilterReply decide(ILoggingEvent event) {
                     Instant instant = event.getInstant();
-                    String date = DateUtil.format(new Date(instant.toEpochMilli()), DatePattern.NORM_DATETIME_PATTERN);
                     String level = event.getLevel().toString();
                     String loggerName = event.getLoggerName();
                     String formattedMessage = event.getFormattedMessage();
                     String threadName = event.getThreadName();
-                    StringBuilder log = new StringBuilder(StrFormatter.format("{} {} [{}] {} - {}", date, level, threadName, loggerName, formattedMessage));
+
+                    StringBuilder message = new StringBuilder(formattedMessage);
                     IThrowableProxy throwableProxy = event.getThrowableProxy();
-                    addThrowableMsg(log, throwableProxy);
+                    addThrowableMsg(message, throwableProxy);
+
                     Log logEntity = new Log()
-                            .setMessage(log.toString())
+                            .setTs(instant.toEpochMilli())
+                            .setMessage(message.toString())
                             .setLevel(level)
                             .setLoggerName(loggerName)
                             .setThreadName(threadName);
