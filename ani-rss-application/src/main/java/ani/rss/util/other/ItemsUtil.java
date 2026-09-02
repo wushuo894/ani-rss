@@ -161,10 +161,19 @@ public class ItemsUtil {
                         }
 
                         Element pubDateEl = XmlUtil.getElement((Element) itemChild, "pubDate");
-
                         if (Objects.nonNull(pubDateEl) && Objects.isNull(pubDate)) {
                             String pubDateStr = pubDateEl.getTextContent();
                             pubDate = DateUtil.parse(pubDateStr);
+                        }
+
+                        Element contentLength = XmlUtil.getElement((Element) itemChild, "contentLength");
+                        if (Objects.nonNull(contentLength) && StrUtil.isBlank(length)) {
+                            length = contentLength.getTextContent();
+                        }
+
+                        Element magneturi = XmlUtil.getElement((Element) itemChild, "magneturi");
+                        if (Objects.nonNull(magneturi) && StrUtil.isBlank(torrent)) {
+                            torrent = magneturi.getTextContent();
                         }
                     } catch (Exception ignored) {
                     }
@@ -172,10 +181,9 @@ public class ItemsUtil {
 
                 if (itemChildNodeName.equals("link")) {
                     String link = itemChild.getTextContent();
-                    if (!link.endsWith(".torrent")) {
-                        continue;
+                    if (link.endsWith(".torrent")) {
+                        torrent = link;
                     }
-                    torrent = link;
                 }
 
             }
