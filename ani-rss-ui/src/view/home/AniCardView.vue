@@ -5,7 +5,7 @@
         <img :src="toApiFile(item['cover'])"
              :alt="item.title"
              class="list-card-image"
-             @click="openBgmUrl(item)"/>
+             @click="handleCoverClick"/>
       </div>
       <div class="list-card-info">
         <div class="list-card-info-inner">
@@ -97,7 +97,7 @@
 </template>
 
 <script setup>
-import {showLastDownloadTime, showPlaylist, showScore, toApiFile} from "@/js/global.js";
+import {coverClickAction, showLastDownloadTime, showPlaylist, showScore, toApiFile} from "@/js/global.js";
 import {Delete, Edit as EditIcon, Files, Picture} from "@element-plus/icons-vue";
 
 let openBgmUrl = (it) => {
@@ -118,6 +118,13 @@ let decodeURLComponentSafe = (str) => {
 
 const emit = defineEmits(['edit', 'playlist', 'cover', 'del', 'rate'])
 let props = defineProps(["item"])
+
+const handleCoverClick = () => {
+  const action = ['edit', 'playlist', 'cover'].includes(coverClickAction.value)
+      ? coverClickAction.value
+      : 'cover'
+  emit(action, props.item)
+}
 </script>
 
 <style scoped>

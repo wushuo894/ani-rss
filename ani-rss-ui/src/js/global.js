@@ -40,6 +40,11 @@ const showWeek = useLocalStorage("show-week", true)
 const subscriptionViewMode = useLocalStorage('subscription-view-mode', 'cover')
 
 /**
+ * 点击订阅封面时执行的操作
+ */
+const coverClickAction = useLocalStorage('cover-click-action', 'cover')
+
+/**
  * 启动页
  */
 const startupPage = useLocalStorage('startup-page', '/home')
@@ -157,6 +162,7 @@ export {
     showScore,
     showWeek,
     subscriptionViewMode,
+    coverClickAction,
     startupPage,
     showPlaylist,
     showLastDownloadTime,

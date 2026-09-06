@@ -233,6 +233,6 @@ public class NfoGenerator {
         StreamResult result = new StreamResult(new File(savePath));
         transformer.transform(source, result);
 
-        log.info("已保存NFO {}", savePath);
+        log.info("已保存 NFO {}", savePath);
     }
 }

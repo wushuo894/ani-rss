@@ -2,7 +2,7 @@
   <div class="cover-card">
     <div class="cover-image-container"
          :class="{'is-disabled': !item.enable}"
-         @click="emit('cover', item)">
+         @click="handleCoverClick">
       <img v-if="item.cover"
            :src="toApiFile(item.cover)"
            :alt="item.title"
@@ -91,7 +91,7 @@
 <script setup>
 import {computed, ref} from "vue";
 import {Delete, Edit as EditIcon, Files, Fold, Picture, Star} from "@element-plus/icons-vue";
-import {showLastDownloadTime, showPlaylist, showScore, toApiFile} from "@/js/global.js";
+import {coverClickAction, showLastDownloadTime, showPlaylist, showScore, toApiFile} from "@/js/global.js";
 import {fromNow} from "@/js/format.js";
 
 const actionsVisible = ref(false)
@@ -122,6 +122,13 @@ const updateText = computed(() => {
   }
   return '未更新'
 })
+
+const handleCoverClick = () => {
+  const action = ['edit', 'playlist', 'cover'].includes(coverClickAction.value)
+      ? coverClickAction.value
+      : 'cover'
+  emit(action, props.item)
+}
 
 const openBgmUrl = it => {
   if (it.bgmUrl?.length) {
