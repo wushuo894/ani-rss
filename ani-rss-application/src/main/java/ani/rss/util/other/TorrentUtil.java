@@ -84,11 +84,22 @@ public class TorrentUtil {
         String infoHash = item.getInfoHash();
         File torrents = getTorrentDir(ani);
         String torrent = item.getTorrent();
+
+        File txtFile = new File(torrents, infoHash + ".txt");
+        File torrentFile = new File(torrents, infoHash + ".torrent");
+
+        if (txtFile.exists()) {
+            return txtFile;
+        }
+        if (torrentFile.exists()) {
+            return torrentFile;
+        }
+
         if (ReUtil.contains(StringEnum.MAGNET_REG, torrent)
                 || ReUtil.contains(StringEnum.ED2K_REG, torrent)) {
-            return new File(torrents, infoHash + ".txt");
+            return txtFile;
         }
-        return new File(torrents, infoHash + ".torrent");
+        return torrentFile;
     }
 
     /**
