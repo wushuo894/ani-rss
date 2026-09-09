@@ -27,9 +27,7 @@
         <div class="cover-meta">
           <div class="cover-meta-line">
             <span class="cover-meta-fixed">{{ episodeText }}</span>
-            <el-tooltip :content="subgroupText" placement="top">
-              <span class="cover-subgroup">{{ subgroupText }}</span>
-            </el-tooltip>
+            <span class="cover-subgroup">{{ subgroupText }}</span>
           </div>
           <div v-if="showLastDownloadTime || hasStandbyRss" class="cover-meta-line cover-meta-secondary">
             <span v-if="showLastDownloadTime" class="cover-meta-fixed">{{ updateText }}</span>
