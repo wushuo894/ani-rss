@@ -1,1 +1,2 @@
-- feat: 支持自定义点击封面行为 close #725
+- refactor: 优化种子缓存处理方式 #726
+- refactor: 删除字幕组 tooltip
