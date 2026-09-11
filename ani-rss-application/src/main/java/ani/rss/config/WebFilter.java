@@ -1,9 +1,14 @@
 package ani.rss.config;
 
+import ani.rss.auth.AuthUtil;
+import ani.rss.controller.BaseController;
 import ani.rss.entity.Config;
 import ani.rss.entity.Global;
+import ani.rss.entity.web.ResultCode;
 import ani.rss.util.other.ConfigUtil;
 import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.lang.PatternPool;
+import cn.hutool.core.net.Ipv4Util;
 import cn.hutool.core.util.StrUtil;
 import jakarta.servlet.*;
 import jakarta.servlet.http.HttpServletRequest;
@@ -27,34 +32,59 @@ public class WebFilter implements Filter {
         HttpServletRequest request = (HttpServletRequest) req;
         HttpServletResponse response = (HttpServletResponse) res;
 
-        String uri = request.getRequestURI();
+        Global.REQUEST.set(request);
+        Global.RESPONSE.set(response);
 
-        // 非 api
-        if (!uri.startsWith("/api")) {
-            String extName = FileUtil.extName(uri);
-
-            if (StrUtil.isBlank(extName) && !uri.endsWith("/")) {
-                String htmlPath = uri + ".html";
-                request.getRequestDispatcher(htmlPath).forward(request, response);
+        try {
+            if (isPublicAccessForbidden()) {
+                BaseController.writeHtml(ResultCode.HTTP_FORBIDDEN, "禁止公网访问");
                 return;
             }
 
-            if (StrUtil.isNotBlank(extName) && CACHE_EXT.contains(extName)) {
-                setCacheControl(response, 86400);
-            } else {
-                setCacheControl(response, 0);
-            }
-        }
+            String uri = request.getRequestURI();
 
-        Global.REQUEST.set(request);
-        Global.RESPONSE.set(response);
-        try {
+            // 非 api
+            if (!uri.startsWith("/api")) {
+                String extName = FileUtil.extName(uri);
+
+                if (StrUtil.isBlank(extName) && !uri.endsWith("/")) {
+                    String htmlPath = uri + ".html";
+                    request.getRequestDispatcher(htmlPath).forward(request, response);
+                    return;
+                }
+
+                if (StrUtil.isNotBlank(extName) && CACHE_EXT.contains(extName)) {
+                    setCacheControl(response, 86400);
+                } else {
+                    setCacheControl(response, 0);
+                }
+            }
+
             cors(response);
             filterChain.doFilter(req, res);
         } finally {
             Global.REQUEST.remove();
             Global.RESPONSE.remove();
         }
+    }
+
+    private boolean isPublicAccessForbidden() {
+        if (!ConfigUtil.CONFIG.getInnerIP()) {
+            return false;
+        }
+        return !isInnerIp(AuthUtil.getIp());
+    }
+
+    static boolean isInnerIp(String ip) {
+        if (StrUtil.isBlank(ip)) {
+            return false;
+        }
+
+        if (PatternPool.IPV4.matcher(ip).matches()) {
+            return Ipv4Util.isInnerIP(ip);
+        }
+
+        return false;
     }
 
     private void cors(HttpServletResponse response) {
