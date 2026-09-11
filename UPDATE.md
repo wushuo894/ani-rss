@@ -1,2 +1,1 @@
-- refactor: 优化种子缓存处理方式 #726
-- refactor: 删除字幕组 tooltip
+- fix: 修复禁止公网访问
