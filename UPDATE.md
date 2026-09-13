@@ -1,1 +1,1 @@
-- fix: 修复禁止公网访问
+- fix: send credentials when fetching web manifest @leko
