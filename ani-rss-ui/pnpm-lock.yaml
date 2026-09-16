@@ -46,17 +46,17 @@ importers:
         version: 4.6.4(vue@3.5.42)
     devDependencies:
       '@vitejs/plugin-vue':
-        specifier: ^6.0.8
-        version: 6.0.8(vite@8.3.0(terser@5.51.2))(vue@3.5.42)
+        specifier: ^6.0.9
+        version: 6.0.9(vite@8.3.0(terser@5.51.2))(vue@3.5.42)
       terser:
         specifier: ^5.51.2
         version: 5.51.2
       unplugin-auto-import:
         specifier: ^21.1.0
-        version: 21.1.0(@vueuse/core@14.4.0(vue@3.5.42))(vite@8.3.0(terser@5.51.2))
+        version: 21.1.0(@vueuse/core@14.4.0(vue@3.5.42))(rolldown@1.2.8)(vite@8.3.0(terser@5.51.2))
       unplugin-vue-components:
         specifier: ^32.1.0
-        version: 32.1.0(vite@8.3.0(terser@5.51.2))(vue@3.5.42)
+        version: 32.1.0(rolldown@1.2.8)(vite@8.3.0(terser@5.51.2))(vue@3.5.42)
       vite:
         specifier: ^8.3.0
         version: 8.3.0(terser@5.51.2)
@@ -240,8 +240,8 @@ packages:
   '@vicons/fa@0.13.0':
     resolution: {integrity: sha512-BFcDewcT78fSn4Y/fOgqlswbLUEW3+qJK2iJiNtgmkMzadBVpDXhNyVKsYM3V2uKPvDUrZT0JCWDWVRCiBXJZA==}
 
-  '@vitejs/plugin-vue@6.0.8':
-    resolution: {integrity: sha512-0ZjgOg7oO6farnNGup7yvoM/YXZV84OZxHAwtflItNa/6zzQyVb5LNxyea3FEKEX2XlagIKzrlH7wwxkKgtiew==}
+  '@vitejs/plugin-vue@6.0.9':
+    resolution: {integrity: sha512-rD/MORlhaZMlXWW0rEn4FB4wMinWC0z/D7Ye160S5+Rs1mC8ZDAdcDp4SjKfUhG5t8q1ktcPVw4xuTkPRlzrSA==}
     engines: {node: ^20.19.0 || >=22.12.0}
     peerDependencies:
       vite: ^5.0.0 || ^6.0.0 || ^7.0.0 || ^8.0.0
@@ -518,8 +518,8 @@ packages:
   magic-string@0.30.21:
     resolution: {integrity: sha512-vd2F4YUyEXKGcLHoq+TEyCjxueSeHnFxyyjNp80yg0XV4vUhnDer/lvvlqM/arB5bXQN5K2/3oinyCRyx8T2CQ==}
 
-  magic-string@1.3.1:
-    resolution: {integrity: sha512-rm91zr2Ou+XueDTohjQQjdQEcYM6zVi8KVUCG8Ec3vHwUEKrhSdCNyfuIywkA6hcCAteIn0ZOtAHA6eGpiX+Pg==}
+  magic-string@1.4.1:
+    resolution: {integrity: sha512-8lyCu36ErXR0J9uaGKlKQoiLZKmtI63YGLE8G2o9jyRPdr4X47LusSOwgOJOzcVtp81fTAAjxR7BwKz682Jhow==}
 
   markdown-it-github-alerts@1.0.1:
     resolution: {integrity: sha512-NNATF4QdoGI07hyCitoB2YqJ1YcNVCKT89ut2VtfFY9rkeFCXe/V2lOonKQLpJiq5DjiZZepf97BJx5xOjFIAw==}
@@ -890,7 +890,7 @@ snapshots:
 
   '@vicons/fa@0.13.0': {}
 
-  '@vitejs/plugin-vue@6.0.8(vite@8.3.0(terser@5.51.2))(vue@3.5.42)':
+  '@vitejs/plugin-vue@6.0.9(vite@8.3.0(terser@5.51.2))(vue@3.5.42)':
     dependencies:
       '@rolldown/pluginutils': 1.0.1
       vite: 8.3.0(terser@5.51.2)
@@ -1151,7 +1151,7 @@ snapshots:
     dependencies:
       '@jridgewell/sourcemap-codec': 1.6.0
 
-  magic-string@1.3.1:
+  magic-string@1.4.1:
     dependencies:
       '@jridgewell/sourcemap-codec': 1.6.0
 
@@ -1277,13 +1277,13 @@ snapshots:
 
   ufo@1.6.4: {}
 
-  unimport@6.5.0(vite@8.3.0(terser@5.51.2)):
+  unimport@6.5.0(rolldown@1.2.8)(vite@8.3.0(terser@5.51.2)):
     dependencies:
       acorn: 8.18.0
       escape-string-regexp: 5.0.0
       estree-walker: 3.0.3
       local-pkg: 1.2.1
-      magic-string: 1.3.1
+      magic-string: 1.4.1
       mlly: 1.8.2
       pathe: 2.0.3
       picomatch: 4.0.7
@@ -1291,8 +1291,10 @@ snapshots:
       scule: 1.3.0
       strip-literal: 4.0.0
       tinyglobby: 0.2.17
-      unplugin: 3.3.0(vite@8.3.0(terser@5.51.2))
+      unplugin: 3.3.0(rolldown@1.2.8)(vite@8.3.0(terser@5.51.2))
       unplugin-utils: 0.3.2
+    optionalDependencies:
+      rolldown: 1.2.8
     transitivePeerDependencies:
       - '@farmfe/core'
       - '@rspack/core'
@@ -1305,13 +1307,13 @@ snapshots:
 
   universalify@2.0.1: {}
 
-  unplugin-auto-import@21.1.0(@vueuse/core@14.4.0(vue@3.5.42))(vite@8.3.0(terser@5.51.2)):
+  unplugin-auto-import@21.1.0(@vueuse/core@14.4.0(vue@3.5.42))(rolldown@1.2.8)(vite@8.3.0(terser@5.51.2)):
     dependencies:
       local-pkg: 1.2.1
-      magic-string: 1.3.1
+      magic-string: 1.4.1
       picomatch: 4.0.7
-      unimport: 6.5.0(vite@8.3.0(terser@5.51.2))
-      unplugin: 3.3.0(vite@8.3.0(terser@5.51.2))
+      unimport: 6.5.0(rolldown@1.2.8)(vite@8.3.0(terser@5.51.2))
+      unplugin: 3.3.0(rolldown@1.2.8)(vite@8.3.0(terser@5.51.2))
       unplugin-utils: 0.3.2
     optionalDependencies:
       '@vueuse/core': 14.4.0(vue@3.5.42)
@@ -1332,7 +1334,7 @@ snapshots:
       pathe: 2.0.3
       picomatch: 4.0.7
 
-  unplugin-vue-components@32.1.0(vite@8.3.0(terser@5.51.2))(vue@3.5.42):
+  unplugin-vue-components@32.1.0(rolldown@1.2.8)(vite@8.3.0(terser@5.51.2))(vue@3.5.42):
     dependencies:
       chokidar: 5.0.0
       local-pkg: 1.2.1
@@ -1341,7 +1343,7 @@ snapshots:
       obug: 2.2.1
       picomatch: 4.0.7
       tinyglobby: 0.2.17
-      unplugin: 3.3.0(vite@8.3.0(terser@5.51.2))
+      unplugin: 3.3.0(rolldown@1.2.8)(vite@8.3.0(terser@5.51.2))
       unplugin-utils: 0.3.2
       vue: 3.5.42
     transitivePeerDependencies:
@@ -1355,12 +1357,13 @@ snapshots:
       - vite
       - webpack
 
-  unplugin@3.3.0(vite@8.3.0(terser@5.51.2)):
+  unplugin@3.3.0(rolldown@1.2.8)(vite@8.3.0(terser@5.51.2)):
     dependencies:
       '@jridgewell/remapping': 2.3.5
       picomatch: 4.0.7
       webpack-virtual-modules: 0.6.2
     optionalDependencies:
+      rolldown: 1.2.8
       vite: 8.3.0(terser@5.51.2)
 
   vite-plugin-compression@0.5.1(supports-color@7.2.0)(vite@8.3.0(terser@5.51.2)):

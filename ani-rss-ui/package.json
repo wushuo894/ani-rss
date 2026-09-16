@@ -23,7 +23,7 @@
     "vue-router": "^4.6.4"
   },
   "devDependencies": {
-    "@vitejs/plugin-vue": "^6.0.8",
+    "@vitejs/plugin-vue": "^6.0.9",
     "terser": "^5.51.2",
     "unplugin-auto-import": "^21.1.0",
     "unplugin-vue-components": "^32.1.0",
