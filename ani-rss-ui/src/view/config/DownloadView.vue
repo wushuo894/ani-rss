@@ -7,10 +7,10 @@
       </div>
       <SettingsItem label="下载工具">
         <el-select v-model:model-value="props.config.downloadToolType">
-          <el-option v-for="item in downloadSelect"
-                     :key="item"
-                     :label="item"
-                     :value="item"/>
+          <el-option label="qBittorrent" value="qBittorrent"/>
+          <el-option label="Transmission" value="Transmission"/>
+          <el-option label="Aria2" value="Aria2"/>
+          <el-option label="OpenList" value="OpenList" disabled/>
         </el-select>
       </SettingsItem>
       <SettingsItem label="地址">
@@ -241,13 +241,6 @@ import qBittorrentView from "@/view/config/download/qBittorrentView.vue";
 import PrioKeysView from "@/view/config/PrioKeysView.vue";
 import CustomTagsView from "@/view/config/CustomTagsView.vue";
 import * as http from "@/js/http.js";
-
-const downloadSelect = ref([
-  'qBittorrent',
-  'Transmission',
-  'Aria2',
-  'OpenList'
-])
 
 const offlineList = ref([
   {

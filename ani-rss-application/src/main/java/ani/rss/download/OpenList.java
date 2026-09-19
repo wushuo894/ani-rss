@@ -45,6 +45,8 @@ public class OpenList implements BaseDownload {
 
     @Override
     public Boolean login(Boolean test, Config config) {
+        log.warn("OpenList 将在后续版本停止支持!");
+
         String host = config.getDownloadToolHost();
         String password = config.getDownloadToolPassword();
         if (StrUtil.isBlank(host) || StrUtil.isBlank(password)) {
