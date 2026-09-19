@@ -13,13 +13,13 @@
               刷新
             </el-button>
           </el-tooltip>
-          <PopconfirmView title="清空当前日志?" @confirm="clearLogs">
-            <template #reference>
-              <el-button :loading="clearLoading" class="auto-button" type="danger" icon="Delete">
-                清空
-              </el-button>
-            </template>
-          </PopconfirmView>
+          <el-button :loading="clearLoading"
+                     class="auto-button"
+                     type="danger"
+                     icon="Delete"
+                     @click="confirmClearLogs">
+            清空
+          </el-button>
         </div>
       </template>
     </PageHeaderView>
@@ -105,8 +105,8 @@
 <script setup>
 import {computed, nextTick, onActivated, ref} from "vue";
 import {Search} from "@element-plus/icons-vue";
+import {ElMessageBox} from "element-plus";
 import {authorization} from "@/js/global.js";
-import PopconfirmView from "@/view/custom/PopconfirmView.vue";
 import PageHeaderView from "@/view/custom/PageHeaderView.vue";
 import * as http from "@/js/http.js";
 import {formatTime} from "@/js/format.js";
@@ -194,6 +194,22 @@ const clearLogs = () => {
       .finally(() => {
         clearLoading.value = false
       })
+}
+
+// 清理操作不可恢复，执行接口前通过模态弹窗进行二次确认。
+const confirmClearLogs = () => {
+  ElMessageBox.confirm(
+      '日志清空后无法恢复，是否继续？',
+      '清空日志',
+      {
+        confirmButtonText: '确认清空',
+        confirmButtonClass: 'is-text is-has-bg el-button--danger',
+        cancelButtonText: '取消',
+        cancelButtonClass: 'is-text is-has-bg',
+        type: 'warning'
+      }
+  ).then(clearLogs).catch(() => {
+  })
 }
 
 const downloadLogs = () => {

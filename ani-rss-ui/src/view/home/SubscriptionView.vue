@@ -52,13 +52,13 @@
               </el-dropdown-menu>
             </template>
           </el-dropdown>
-          <PopconfirmView title="立即刷新全部订阅?" @confirm="refreshAni">
-            <template #reference>
-              <el-button aria-label="刷新" :loading="refreshLoading" class="auto-button" icon="Refresh">
-                刷新
-              </el-button>
-            </template>
-          </PopconfirmView>
+          <el-button aria-label="刷新"
+                     :loading="refreshLoading"
+                     class="auto-button"
+                     icon="Refresh"
+                     @click="confirmRefreshAni">
+            刷新
+          </el-button>
           <el-button aria-label="管理" @click="manageRef?.show" class="auto-button" icon="Fold">
             管理
           </el-button>
@@ -76,13 +76,12 @@
 
 <script setup>
 import {onMounted, ref} from "vue";
-import {ElMessage} from "element-plus";
+import {ElMessage, ElMessageBox} from "element-plus";
 import {useLocalStorage} from "@vueuse/core";
 import SubscriptionListView from "@/view/home/SubscriptionListView.vue";
 import AddView from "@/view/home/AddView.vue";
 import CollectionView from "@/view/home/CollectionView.vue";
 import ManageView from "@/view/home/ManageView.vue";
-import PopconfirmView from "@/view/custom/PopconfirmView.vue";
 import PageHeaderView from "@/view/custom/PageHeaderView.vue";
 import {subscriptionViewMode} from "@/js/global.js";
 import * as http from "@/js/http.js";
@@ -147,6 +146,22 @@ const refreshAni = () => {
       .finally(() => {
         refreshLoading.value = false
       })
+}
+
+// 全量刷新可能触发大量订阅请求，执行前通过模态弹窗进行确认。
+const confirmRefreshAni = () => {
+  ElMessageBox.confirm(
+      '将立即刷新全部订阅，是否继续？',
+      '刷新全部订阅',
+      {
+        confirmButtonText: '确认刷新',
+        confirmButtonClass: 'is-text is-has-bg el-button--primary',
+        cancelButtonText: '取消',
+        cancelButtonClass: 'is-text is-has-bg',
+        type: 'warning'
+      }
+  ).then(refreshAni).catch(() => {
+  })
 }
 
 onMounted(() => {
