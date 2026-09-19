@@ -1,1 +1,3 @@
-- fix: send credentials when fetching web manifest @leko
+- refactor: 最低 jdk 版本调整到 jdk 25
+- refactor: 下载器禁用 OpenList 并在日志中提示 「OpenList 将在后续版本停止支持!」
+- fix: 修复解析种子错误 close #730
