@@ -1,3 +1,4 @@
-- refactor: 最低 jdk 版本调整到 jdk 25
-- refactor: 下载器禁用 OpenList 并在日志中提示 「OpenList 将在后续版本停止支持!」
-- fix: 修复解析种子错误 close #730
+- feat: 合集下载支持磁力链接
+- refactor: 优化默认下载位置
+- fix: 首页激活时刷新数据
+- refactor: 重要操作使用弹窗确认
