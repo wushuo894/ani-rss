@@ -18,7 +18,10 @@
     <packaging>pom</packaging>
     <properties>
         <java.version>25</java.version>
+        <lombok.version>1.18.48</lombok.version>
+        <hutool.version>5.8.47</hutool.version>
         <spring-ai.version>2.0.0</spring-ai.version>
+        <jlibtorrent.version>2.0.12.9</jlibtorrent.version>
     </properties>
 
     <modules>

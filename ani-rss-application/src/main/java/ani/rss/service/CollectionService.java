@@ -44,8 +44,7 @@ public class CollectionService {
      */
     public void startCollection(CollectionInfo collectionInfo) {
         String torrent = collectionInfo.getTorrent();
-        File tempFile = FileUtil.createTempFile();
-        Base64.decodeToFile(torrent, tempFile);
+        File tempFile = getTorrentFile(torrent);
         TorrentMetadata torrentFile;
         try {
             torrentFile = TorrentMetadata.from(tempFile);
@@ -216,8 +215,7 @@ public class CollectionService {
      */
     public List<Item> preview(CollectionInfo collectionInfo) {
         String torrent = collectionInfo.getTorrent();
-        File tempFile = FileUtil.createTempFile();
-        Base64.decodeToFile(torrent, tempFile);
+        File tempFile = getTorrentFile(torrent);
         TorrentMetadata torrentFile;
         try {
             torrentFile = TorrentMetadata.from(tempFile);
@@ -316,5 +314,27 @@ public class CollectionService {
                 })
                 .filter(Objects::nonNull)
                 .toList();
+    }
+
+    /**
+     * 根据合集来源生成种子文件，磁力链接会由 jlibtorrent 自动获取元数据。
+     *
+     * @param torrent Base64 种子内容或磁力链接
+     * @return 本地种子文件
+     */
+    private File getTorrentFile(String torrent) {
+        Assert.notBlank(torrent, "请选择种子文件或输入磁力链接");
+        if (StrUtil.startWithIgnoreCase(torrent, "magnet:?")) {
+            try {
+                return MagnetTorrentUtil.resolve(torrent);
+            } catch (Exception e) {
+                throw new RuntimeException("磁力链接解析失败: " + e.getMessage(), e);
+            }
+        }
+
+        // 上传的种子仍沿用原有 Base64 数据格式。
+        File tempFile = FileUtil.createTempFile();
+        Base64.decodeToFile(torrent, tempFile);
+        return tempFile;
     }
 }
