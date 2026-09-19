@@ -10,10 +10,7 @@ import ani.rss.entity.torrent.TorrentsInfo;
 import ani.rss.entity.torrent.qBittorrentTorrentsInfo;
 import ani.rss.enums.StringEnum;
 import ani.rss.util.basic.HttpReq;
-import ani.rss.util.other.ConfigUtil;
-import ani.rss.util.other.ItemsUtil;
-import ani.rss.util.other.RenameUtil;
-import ani.rss.util.other.TorrentUtil;
+import ani.rss.util.other.*;
 import cn.hutool.core.codec.Base64;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.io.FileUtil;
@@ -26,7 +23,6 @@ import cn.hutool.core.util.ReUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.HttpResponse;
 import lombok.extern.slf4j.Slf4j;
-import org.eclipse.bittorrent.TorrentFile;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
@@ -50,9 +46,9 @@ public class CollectionService {
         String torrent = collectionInfo.getTorrent();
         File tempFile = FileUtil.createTempFile();
         Base64.decodeToFile(torrent, tempFile);
-        TorrentFile torrentFile;
+        TorrentMetadata torrentFile;
         try {
-            torrentFile = new TorrentFile(tempFile);
+            torrentFile = TorrentMetadata.from(tempFile);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -65,7 +61,7 @@ public class CollectionService {
         download(name, tempFile, downloadPath, List.of("ANI-RSS合集下载", subgroup));
 
         TorrentsInfo torrentsInfo = new TorrentsInfo()
-                .setHash(torrentFile.getHexHash());
+                .setHash(torrentFile.getHash());
 
         List<qBittorrentTorrentsInfo.FileEntity> files = new ArrayList<>();
         for (int i = 0; i < 5; i++) {
@@ -108,7 +104,7 @@ public class CollectionService {
                 if (!reNameMap.containsKey(oldPath)) {
                     if (!reNameMap.containsValue(oldPath) && file.getPriority() > 0) {
                         qBittorrent.postApi("/api/v2/torrents/filePrio")
-                                .form("hash", torrentFile.getHexHash())
+                                .form("hash", torrentFile.getHash())
                                 .form("id", file.getIndex())
                                 .form("priority", 0)
                                 .thenFunction(HttpResponse::isOk);
@@ -117,7 +113,7 @@ public class CollectionService {
                 }
                 log.info("重命名 {} ==> {}", oldPath, newPath);
                 qBittorrent.postApi("/api/v2/torrents/renameFile")
-                        .form("hash", torrentFile.getHexHash())
+                        .form("hash", torrentFile.getHash())
                         .form("oldPath", oldPath)
                         .form("newPath", newPath)
                         .thenFunction(HttpResponse::isOk);
@@ -222,9 +218,9 @@ public class CollectionService {
         String torrent = collectionInfo.getTorrent();
         File tempFile = FileUtil.createTempFile();
         Base64.decodeToFile(torrent, tempFile);
-        TorrentFile torrentFile;
+        TorrentMetadata torrentFile;
         try {
-            torrentFile = new TorrentFile(tempFile);
+            torrentFile = TorrentMetadata.from(tempFile);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

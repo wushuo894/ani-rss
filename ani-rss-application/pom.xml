@@ -46,8 +46,8 @@
             <artifactId>thymeleaf</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.eclipse</groupId>
-            <artifactId>bittorrent</artifactId>
+            <groupId>com.dampcake</groupId>
+            <artifactId>bencode</artifactId>
         </dependency>
         <dependency>
             <groupId>org.eclipse.angus</groupId>

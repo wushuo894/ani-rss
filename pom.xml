@@ -76,9 +76,9 @@
                 <version>1.23.2</version>
             </dependency>
             <dependency>
-                <groupId>org.eclipse</groupId>
-                <artifactId>bittorrent</artifactId>
-                <version>0.3.0-v20070627-1030</version>
+                <groupId>com.dampcake</groupId>
+                <artifactId>bencode</artifactId>
+                <version>1.4.1</version>
             </dependency>
 
             <!-- Swagger -->
