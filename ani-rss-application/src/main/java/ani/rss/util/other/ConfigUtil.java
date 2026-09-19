@@ -44,8 +44,8 @@ public class ConfigUtil {
         String rootPath = "/Media";
 
         OsInfo osInfo = SystemUtil.getOsInfo();
-        if (osInfo.isMac()) {
-            rootPath = FileUtil.getUserHomePath() + "/Movies";
+        if (osInfo.isMac() || osInfo.isWindows()) {
+            rootPath = FileUtil.getUserHomePath() + "/Downloads";
         }
 
         String downloadPath = FileUtils.getAbsolutePath(new File(rootPath, "番剧"));
