@@ -20,6 +20,7 @@ html.dark {
     --el-border-radius-small: 8px;
     --el-border-radius-base: 12px;
     --el-border-radius-round: 24px;
+    --app-dialog-border-radius: 16px;
 
     /* 全局边框淡化：使用更浅的颜色 */
     --el-border-color: var(--el-border-color-lighter);
@@ -63,9 +64,14 @@ body {
     padding: 12px;
 
     .el-dialog { /* 圆角、阴影 */
-        border-radius: 16px;
+        border-radius: var(--app-dialog-border-radius);
         box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
     }
+}
+
+/* MessageBox 与 Dialog 使用相同的容器圆角。 */
+.el-message-box {
+    border-radius: var(--app-dialog-border-radius);
 }
 
 /* 选择器 */
