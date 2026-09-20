@@ -1,2 +1,2 @@
-- fix: 修复合集下载 close #731
-- style: 统一弹窗圆角
+- refactor: 优化 chrome 自动填充问题
+- refactor: 登陆设置更名为安全
