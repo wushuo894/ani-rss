@@ -30,7 +30,7 @@
                   v-model:exclude="config.exclude"
                   :show-text="true"/>
               <ProxyView v-else-if="tab.name === 'proxy'" v-model:config="config"/>
-              <LoginConfigView v-else-if="tab.name === 'login'" :config="config"/>
+              <Security v-else-if="tab.name === 'security'" :config="config"/>
               <NotificationView v-else-if="tab.name === 'notification'" v-model:config="config"/>
               <AfdianView v-else-if="tab.name === 'afdian'" :config="config"/>
               <AboutView v-else-if="tab.name === 'about'" :config="config"/>
@@ -52,7 +52,7 @@ import ProxyView from "@/view/config/ProxyView.vue";
 import DownloadView from "@/view/config/DownloadView.vue";
 import BasicView from "@/view/config/BasicView.vue";
 import AboutView from "@/view/config/AboutView.vue";
-import LoginConfigView from "@/view/config/LoginConfigView.vue";
+import Security from "@/view/config/SecurityView.vue";
 import AfdianView from "@/view/config/AfdianView.vue";
 import PageHeaderView from "@/view/custom/PageHeaderView.vue";
 import {configData} from "@/js/config.js";
@@ -68,8 +68,8 @@ const tabs = [
   {name: 'download', label: '下载设置', description: '下载器、目录与任务行为'},
   {name: 'basic', label: '基本设置', description: '订阅、命名、刮削与备份'},
   {name: 'exclude', label: '全局排除', description: '统一排除不需要的资源'},
-  {name: 'proxy', label: '代理设置', description: '网络代理与连接配置'},
-  {name: 'login', label: '登录设置', description: '账号与访问安全'},
+  {name: 'proxy', label: '代理', description: '网络代理与连接配置'},
+  {name: 'security', label: '安全', description: '账号与访问安全'},
   {name: 'notification', label: '通知', description: '消息渠道与事件通知'},
   {name: 'afdian', label: '捐赠', description: '支持项目持续维护'},
   {name: 'about', label: '关于', description: '版本信息与项目链接'}
