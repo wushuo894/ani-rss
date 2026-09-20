@@ -53,8 +53,18 @@ public final class TorrentMetadata {
      * @return v1 或 hybrid 种子的 SHA-1 哈希；纯 v2 种子的 SHA-256 哈希
      */
     public String getHash() {
-        // qBittorrent uses the v1 SHA-1 hash for hybrid torrents.
-        return hasV1InfoHash() ? shaHex("SHA-1") : shaHex("SHA-256");
+        if (isV2()) {
+            return getHashV2();
+        }
+        return getHashV1();
+    }
+
+    public String getHashV1() {
+        return shaHex("SHA-1");
+    }
+
+    public String getHashV2() {
+        return shaHex("SHA-256").substring(0, 40);
     }
 
     /**
