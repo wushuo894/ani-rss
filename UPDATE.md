@@ -1,2 +1,3 @@
-- refactor: 优化 chrome 自动填充问题
-- refactor: 登陆设置更名为安全
+- refactor: 完善 OpenList 已停止支持提示
+- refactor: 优化导出与导入备份
+- refactor: 优化错误日志
