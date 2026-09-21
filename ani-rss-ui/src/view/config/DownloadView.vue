@@ -10,7 +10,12 @@
           <el-option label="qBittorrent" value="qBittorrent"/>
           <el-option label="Transmission" value="Transmission"/>
           <el-option label="Aria2" value="Aria2"/>
-          <el-option label="OpenList" value="OpenList" disabled/>
+          <el-option value="OpenList" disabled>
+            <div class="full-width">
+              <span style="float: left">OpenList</span>
+              <span style="float: right">已停止支持</span>
+            </div>
+          </el-option>
         </el-select>
       </SettingsItem>
       <SettingsItem label="地址">
