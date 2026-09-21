@@ -53,17 +53,6 @@
       </div>
     </div>
   </SettingsItem>
-  <SettingsItem label="自动备份配置">
-    <div>
-      <el-switch v-model="props.config['configBackup']"/>
-      <br>
-      <el-input-number v-model="props.config['configBackupDay']" :min="1">
-        <template #suffix>
-          <span>天</span>
-        </template>
-      </el-input-number>
-    </div>
-  </SettingsItem>
   <SettingsItem label="开机自启">
     <el-switch v-model="props.config['autoStart']"/>
   </SettingsItem>
