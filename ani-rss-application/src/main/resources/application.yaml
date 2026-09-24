@@ -13,8 +13,8 @@ spring:
     time-zone: GMT+8
   servlet:
     multipart:
-      max-request-size: 50MB
-      max-file-size: 50MB
+      max-request-size: 200MB
+      max-file-size: 200MB
       enabled: true
   jmx:
     enabled: false
