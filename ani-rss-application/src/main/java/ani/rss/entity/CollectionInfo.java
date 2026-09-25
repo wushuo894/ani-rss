@@ -14,9 +14,9 @@ import java.io.Serializable;
 @Schema(description = "合集")
 public class CollectionInfo implements Serializable {
     /**
-     * 种子文件 Base64 或磁力链接
+     * 种子文件 Base64
      */
-    @Schema(description = "种子文件 Base64 或磁力链接")
+    @Schema(description = "种子文件 Base64")
     private String torrent;
 
     /**

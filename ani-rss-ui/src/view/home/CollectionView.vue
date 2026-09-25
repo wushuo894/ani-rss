@@ -134,33 +134,19 @@
                 <CustomTagsView :config="data.ani"/>
               </el-form-item>
               <el-form-item label="Torrent">
-                <div class="torrent-source">
-                  <el-radio-group v-model="torrentSource" size="small" @change="clearTorrentSource">
-                    <el-radio-button value="file">种子文件</el-radio-button>
-                    <el-radio-button value="magnet">磁力链接</el-radio-button>
-                  </el-radio-group>
-                  <div v-if="torrentSource === 'file'" class="torrent-input">
-                    <el-tag v-if="data.filename" closable @close="clearTorrent">
-                      <el-tooltip :content="data.filename">
-                        <el-text line-clamp="1" size="small" class="filename">
-                          {{ data.filename }}
-                        </el-text>
-                      </el-tooltip>
-                    </el-tag>
-                    <UploadView v-else
-                                url="api/uploadAndReadToBase64"
-                                :extensions="['torrent']"
-                                :callback="uploadCallback">
-                      <el-button bg icon="Upload">选择并上传种子</el-button>
-                    </UploadView>
-                  </div>
-                  <el-input v-else
-                            v-model="data.torrent"
-                            class="torrent-input"
-                            :autosize="{ minRows: 2, maxRows: 4 }"
-                            placeholder="magnet:?xt=urn:btih:..."
-                            type="textarea"/>
-                </div>
+                <el-tag v-if="data.filename" closable @close="clearTorrent">
+                  <el-tooltip :content="data.filename">
+                    <el-text line-clamp="1" size="small" class="filename">
+                      {{ data.filename }}
+                    </el-text>
+                  </el-tooltip>
+                </el-tag>
+                <UploadView v-else
+                            url="api/uploadAndReadToBase64"
+                            :extensions="['torrent']"
+                            :callback="uploadCallback">
+                  <el-button bg icon="Upload">选择并上传种子</el-button>
+                </UploadView>
               </el-form-item>
             </template>
           </el-form>
@@ -168,13 +154,13 @@
       </el-scrollbar>
     </div>
     <div class="action">
-      <el-button :disabled="!data.torrent" bg
+      <el-button :disabled="!data.filename" bg
                  icon="Grid"
                  text
                  @click="collectionPreviewRef?.show">
         预览
       </el-button>
-      <el-button :disabled="!data.torrent"
+      <el-button :disabled="!data.filename"
                  :loading="startLoading"
                  bg
                  icon="Check"
@@ -242,16 +228,10 @@ let bgmRef = ref()
 let rssButtonLoading = ref(false)
 let loading = ref(false)
 
-let torrentSource = ref('file')
-
-// 切换来源时清空旧数据，避免把磁力链接误当作 Base64 种子提交。
+// 清空已经上传的种子文件及其 Base64 内容。
 let clearTorrent = () => {
   data.value.filename = ''
   data.value.torrent = ''
-}
-
-let clearTorrentSource = () => {
-  clearTorrent()
 }
 
 let bgmAdd = (bgm) => {
@@ -300,7 +280,6 @@ let show = () => {
   data.value.ani.title = ''
   data.value.torrent = ''
   data.value.filename = ''
-  torrentSource.value = 'file'
   dialogVisible.value = true
 }
 
@@ -358,14 +337,6 @@ defineExpose({show})
 .filename {
   max-width: 300px;
   color: var(--el-color-info);
-}
-
-.torrent-source {
-  width: 100%;
-}
-
-.torrent-input {
-  margin-top: 8px;
 }
 
 .action {

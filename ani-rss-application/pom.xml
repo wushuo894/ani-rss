@@ -29,10 +29,6 @@
             <id>tmdb-api</id>
             <url>https://raw.github.com/wushuo894/tmdb-api/mvn-repo</url>
         </repository>
-        <repository>
-            <id>frostwire-maven</id>
-            <url>https://dl.frostwire.com/maven</url>
-        </repository>
     </repositories>
 
     <dependencies>
@@ -116,33 +112,6 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-webmvc-test</artifactId>
             <scope>test</scope>
-        </dependency>
-
-        <!-- jlibtorrent -->
-        <dependency>
-            <groupId>com.frostwire</groupId>
-            <artifactId>jlibtorrent</artifactId>
-            <version>${jlibtorrent.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.frostwire</groupId>
-            <artifactId>jlibtorrent-linux-arm64</artifactId>
-            <version>${jlibtorrent.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.frostwire</groupId>
-            <artifactId>jlibtorrent-linux-x86_64</artifactId>
-            <version>${jlibtorrent.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.frostwire</groupId>
-            <artifactId>jlibtorrent-macosx-arm64</artifactId>
-            <version>${jlibtorrent.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.frostwire</groupId>
-            <artifactId>jlibtorrent-windows</artifactId>
-            <version>${jlibtorrent.version}</version>
         </dependency>
 
         <!-- hutool -->
