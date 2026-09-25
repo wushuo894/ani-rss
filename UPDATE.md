@@ -1,3 +1,2 @@
-- refactor: 完善 OpenList 已停止支持提示
-- refactor: 优化导出与导入备份
-- refactor: 优化错误日志
+- refactor: 调整文件上传大小限制
+- refactor: 移除合集下载磁力链接支持

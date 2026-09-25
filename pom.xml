@@ -5,7 +5,7 @@
 
     <groupId>ani.rss</groupId>
     <artifactId>ani-rss</artifactId>
-    <version>3.2.37</version>
+    <version>3.2.38</version>
 
     <name>ani-rss</name>
     <inceptionYear>2025</inceptionYear>
@@ -80,7 +80,7 @@
             <dependency>
                 <groupId>com.dampcake</groupId>
                 <artifactId>bencode</artifactId>
-                <version>1.4.1</version>
+                <version>1.4.2</version>
             </dependency>
 
             <!-- Swagger -->
