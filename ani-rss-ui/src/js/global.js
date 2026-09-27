@@ -42,7 +42,7 @@ const subscriptionViewMode = useLocalStorage('subscription-view-mode', 'cover')
 /**
  * 点击订阅封面时执行的操作
  */
-const coverClickAction = useLocalStorage('cover-click-action', 'cover')
+const coverClickAction = useLocalStorage('cover-click-action', 'edit')
 
 /**
  * 启动页
