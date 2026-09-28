@@ -1,2 +1,2 @@
-- refactor: 调整文件上传大小限制
-- refactor: 移除合集下载磁力链接支持
+- refactor: 默认点击封面操作改为编辑订阅
+- refactor: 优化移动端布局
