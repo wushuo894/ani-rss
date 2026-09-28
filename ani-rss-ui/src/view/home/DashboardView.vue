@@ -469,9 +469,12 @@ onUnmounted(stopPolling)
 }
 
 @media (max-width: 560px) {
-  .metric-grid,
   .dashboard-content {
     grid-template-columns: 1fr;
+  }
+
+  .metric-grid {
+    grid-template-columns: 1fr 1fr;
   }
 
   .metric-item {

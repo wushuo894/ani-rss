@@ -385,7 +385,7 @@ defineExpose({show})
 
 @media (max-width: 560px) {
   .manage-search {
-    flex: 1 1 180px;
+    width: 100%;
   }
 
   .select-width {

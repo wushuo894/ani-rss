@@ -231,7 +231,7 @@ onMounted(() => {
   }
 
   .subscription-search {
-    flex: 1 1 180px;
+    width: 100%;
   }
 
   .subscription-select {
