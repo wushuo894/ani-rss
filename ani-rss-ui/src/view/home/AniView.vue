@@ -49,11 +49,14 @@
             <el-form-item v-if="!props.ani.ova && props.ani.tmdb" label="剧集组">
               <div class="tmdb-group">
                 <el-input v-model="props.ani.tmdb['tmdbGroupId']" placeholder="留空不使用剧集组"/>
-                <el-button bg icon="Menu" text @click="tmdbGroupRef?.show"/>
+                <el-button bg text icon="Menu" @click="tmdbGroupRef?.show"/>
               </div>
             </el-form-item>
             <el-form-item label="BgmUrl">
-              <el-input v-model.trim="props.ani.bgmUrl" placeholder="https://xxx.xxx"/>
+              <div class="tmdb-group">
+                <el-input v-model.trim="props.ani.bgmUrl" placeholder="https://bgm.tv/subject/12345"/>
+                <el-button bg text icon="link" @click="openUrl(props.ani.bgmUrl)"/>
+              </div>
             </el-form-item>
             <el-form-item label="主 RSS">
               <div class="full-width">
@@ -442,6 +445,8 @@ let aniBTShow = () => {
   let bgmUrl = props.ani.bgmUrl;
   aniBTRef.value?.show(bgmUrl)
 }
+
+let openUrl = (url) => window.open(url)
 
 let props = defineProps(['ani'])
 const emit = defineEmits(['callback'])
