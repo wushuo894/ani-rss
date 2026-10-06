@@ -1,4 +1,1 @@
-- refactor: 优化下载列表
-- refactor: 优化标签显示
-- refactor: 关于页面移动端布局
-- refactor: 优化排除布局
+- fix: 修复 x.5 集刮削错误
