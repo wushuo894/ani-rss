@@ -7,6 +7,7 @@ import ani.rss.enums.StringEnum;
 import ani.rss.util.basic.HttpReq;
 import ani.rss.util.other.BgmUtil;
 import ani.rss.util.other.ConfigUtil;
+import ani.rss.util.other.ItemsUtil;
 import ani.rss.util.other.TmdbUtils;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.date.DateUtil;
@@ -206,14 +207,19 @@ public class ScrapeService {
                 continue;
             }
 
-            Integer episodeNumber =
-                    Integer.parseInt(ReUtil.get(StringEnum.SEASON_REG, mainName, 2));
-            if (!episodeMap.containsKey(episodeNumber)) {
+            Double episodeNumber =
+                    Double.parseDouble(ReUtil.get(StringEnum.SEASON_REG, mainName, 2));
+
+            if (ItemsUtil.is5(episodeNumber)) {
+                continue;
+            }
+
+            if (!episodeMap.containsKey(episodeNumber.intValue())) {
                 // 找不到对应集
                 continue;
             }
 
-            TmdbEpisode tmdbEpisode = episodeMap.get(episodeNumber);
+            TmdbEpisode tmdbEpisode = episodeMap.get(episodeNumber.intValue());
 
             // 该集的播出日期
             Date airDate = Optional.of(tmdbEpisode)
