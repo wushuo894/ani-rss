@@ -26,12 +26,8 @@
         </el-tooltip>
         <div class="cover-meta">
           <div class="cover-meta-line">
-            <span class="cover-meta-fixed">{{ episodeText }}</span>
+            <span class="cover-meta-fixed">{{ seasonText }}</span>
             <span class="cover-subgroup">{{ subgroupText }}</span>
-          </div>
-          <div v-if="showLastDownloadTime || hasStandbyRss" class="cover-meta-line cover-meta-secondary">
-            <span v-if="showLastDownloadTime" class="cover-meta-fixed">{{ updateText }}</span>
-            <span v-if="hasStandbyRss" class="cover-meta-fixed">备用RSS</span>
           </div>
         </div>
       </div>
@@ -46,31 +42,63 @@
           </el-button>
           <template #dropdown>
             <el-dropdown-menu>
-              <el-dropdown-item v-if="showPlaylist" @click="emit('playlist', item)">
-                <el-icon>
-                  <Files/>
-                </el-icon>
-                播放列表
+              <el-dropdown-item @click="emit('playlist', item)">
+                <el-text>
+                  <el-icon>
+                    <Files/>
+                  </el-icon>
+                  列表
+                </el-text>
               </el-dropdown-item>
               <el-dropdown-item @click="emit('cover', item)">
-                <el-icon>
-                  <Picture/>
-                </el-icon>
-                封面
+                <el-text>
+                  <el-icon>
+                    <Picture/>
+                  </el-icon>
+                  封面
+                </el-text>
               </el-dropdown-item>
               <el-dropdown-item v-if="showScore" @click="emit('rate', item)">
-                <el-icon>
-                  <Star/>
-                </el-icon>
-                评分
+                <el-text>
+                  <el-icon>
+                    <Star/>
+                  </el-icon>
+                  评分
+                </el-text>
               </el-dropdown-item>
-              <el-dropdown-item @click="emit('edit', item)">
-                <el-icon>
-                  <EditIcon/>
-                </el-icon>
-                编辑
+              <el-dropdown-item @click="refreshAni" divided>
+                <el-text>
+                  <el-icon>
+                    <RefreshRight/>
+                  </el-icon>
+                  刷新
+                </el-text>
               </el-dropdown-item>
-              <el-dropdown-item divided @click="emit('del', [item])">
+              <el-dropdown-item @click="scrape(false)">
+                <el-text>
+                  <el-icon>
+                    <RefreshRight/>
+                  </el-icon>
+                  刮削
+                </el-text>
+              </el-dropdown-item>
+              <el-dropdown-item @click="scrape(true)">
+                <el-text type="warning">
+                  <el-icon>
+                    <Refresh/>
+                  </el-icon>
+                  刮削 [F]
+                </el-text>
+              </el-dropdown-item>
+              <el-dropdown-item @click="emit('edit', item)" divided>
+                <el-text type="primary">
+                  <el-icon>
+                    <EditIcon/>
+                  </el-icon>
+                  编辑
+                </el-text>
+              </el-dropdown-item>
+              <el-dropdown-item @click="emit('del', [item])">
                 <el-text type="danger">
                   <el-icon>
                     <Delete/>
@@ -83,20 +111,40 @@
         </el-dropdown>
       </div>
     </div>
+    <div class="cover-below-meta">
+      <el-tag type="danger" size="small" v-if="item.ova">
+        OVA
+      </el-tag>
+      <el-tag type="danger" size="small" v-else>
+        TV
+      </el-tag>
+      <el-tag effect="plain" size="small" type="warning">
+        {{ episodeText }}
+      </el-tag>
+      <el-tag v-if="hasStandbyRss" effect="plain" size="small" type="primary">备用RSS</el-tag>
+      <el-tag v-if="showLastDownloadTime"
+              effect="plain" size="small" type="info">
+        {{ updateText }}
+      </el-tag>
+    </div>
   </div>
 </template>
 
 <script setup>
 import {computed, ref} from "vue";
-import {Delete, Edit as EditIcon, Files, Fold, Picture, Star} from "@element-plus/icons-vue";
-import {coverClickAction, showLastDownloadTime, showPlaylist, showScore, toApiFile} from "@/js/global.js";
+import {Delete, Edit as EditIcon, Files, Fold, Picture, Refresh, RefreshRight, Star} from "@element-plus/icons-vue";
+import {ElMessage, ElText} from "element-plus";
+import {coverClickAction, showLastDownloadTime, showScore, toApiFile} from "@/js/global.js";
 import {fromNow} from "@/js/format.js";
+import * as http from "@/js/http.js";
 
 const actionsVisible = ref(false)
 const props = defineProps(["item"])
 
 const hasStandbyRss = computed(() => (props.item.standbyRssList || []).length > 0)
 const subgroupText = computed(() => props.item.subgroup || '未知字幕组')
+// 封面底部主信息展示当前订阅的季数。
+const seasonText = computed(() => `第 ${props.item.season || 1} 季`)
 const scoreText = computed(() => {
   if (!showScore.value) {
     return ''
@@ -120,6 +168,18 @@ const updateText = computed(() => {
   }
   return '未更新'
 })
+
+// 从封面菜单直接刷新当前订阅。
+const refreshAni = () => {
+  http.refreshAni(props.item)
+      .then(res => ElMessage.success(res.message))
+}
+
+// 从封面菜单发起普通或强制刮削。
+const scrape = force => {
+  http.scrape(force, props.item)
+      .then(res => ElMessage.success(res.message))
+}
 
 const handleCoverClick = () => {
   const action = ['edit', 'playlist', 'cover'].includes(coverClickAction.value)
@@ -307,8 +367,12 @@ const emit = defineEmits(['edit', 'playlist', 'cover', 'del', 'rate'])
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.7);
 }
 
-.cover-meta-secondary {
-  padding-right: 34px;
+.cover-below-meta {
+  margin-top: 4px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  width: 100%;
 }
 
 .cover-meta-fixed {

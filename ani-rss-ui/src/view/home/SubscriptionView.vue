@@ -68,7 +68,6 @@
           ref="listRef"
           :filter="filter"
           :title="title"
-          :view-mode="subscriptionViewMode"
           @loaded="listLoaded"/>
     </div>
   </div>
@@ -83,7 +82,6 @@ import AddView from "@/view/home/AddView.vue";
 import CollectionView from "@/view/home/CollectionView.vue";
 import ManageView from "@/view/home/ManageView.vue";
 import PageHeaderView from "@/view/custom/PageHeaderView.vue";
-import {subscriptionViewMode} from "@/js/global.js";
 import * as http from "@/js/http.js";
 
 const listRef = ref()

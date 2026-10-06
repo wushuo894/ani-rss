@@ -35,11 +35,6 @@ const showScore = useLocalStorage('show-score', true)
 const showWeek = useLocalStorage("show-week", true)
 
 /**
- * 订阅页面布局
- */
-const subscriptionViewMode = useLocalStorage('subscription-view-mode', 'cover')
-
-/**
  * 点击订阅封面时执行的操作
  */
 const coverClickAction = useLocalStorage('cover-click-action', 'edit')
@@ -48,11 +43,6 @@ const coverClickAction = useLocalStorage('cover-click-action', 'edit')
  * 启动页
  */
 const startupPage = useLocalStorage('startup-page', '/home')
-
-/**
- * 显示视频列表
- */
-const showPlaylist = useLocalStorage('show-playlist', true)
 
 /**
  * 显示更新时间
@@ -161,10 +151,8 @@ export {
     maxContentWidth,
     showScore,
     showWeek,
-    subscriptionViewMode,
     coverClickAction,
     startupPage,
-    showPlaylist,
     showLastDownloadTime,
     color,
     colorChange,
