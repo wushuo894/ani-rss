@@ -13,15 +13,18 @@
         </el-tooltip>
       </div>
     </div>
-    <div class="flex about-buttons">
-      <div id="button-list">
-        <el-button :icon="Github" bg text type="info" @click="openUrl('https://github.com/wushuo894/ani-rss')">GitHub
-        </el-button>
-        <el-button :icon="Book" bg text type="info" @click="openUrl('https://docs.wushuo.top')">使用文档</el-button>
-        <el-button :icon="Telegram" bg text type="info" @click="openUrl('https://t.me/ani_rss')">TG群</el-button>
-      </div>
+    <div class="flex button-list">
+      <el-button :icon="Github" bg text type="info" @click="openUrl('https://github.com/wushuo894/ani-rss')">
+        GitHub
+      </el-button>
+      <el-button :icon="Book" bg text type="info" @click="openUrl('https://docs.wushuo.top')">
+        使用文档
+      </el-button>
+      <el-button :icon="Telegram" bg text type="info" @click="openUrl('https://t.me/ani_rss')">
+        TG群
+      </el-button>
     </div>
-    <div v-loading.fullscreen.lock="actionLoading" class="flex about-actions">
+    <div v-loading.fullscreen.lock="actionLoading" class="button-list">
       <PopconfirmView title="你确定要退出吗?" @confirm="logout">
         <template #reference>
           <el-button type="danger" bg text icon="Back">
@@ -29,19 +32,16 @@
           </el-button>
         </template>
       </PopconfirmView>
-      <div class="about-action-spacer"></div>
       <PopconfirmView title="你确定重启吗?" @confirm="stop(0)">
         <template #reference>
           <el-button bg icon="RefreshRight" text type="warning">重启</el-button>
         </template>
       </PopconfirmView>
-      <div class="about-action-spacer"></div>
       <PopconfirmView title="你确定关闭吗?" @confirm="stop(1)">
         <template #reference>
           <el-button bg icon="SwitchButton" text type="danger">关闭</el-button>
         </template>
       </PopconfirmView>
-      <div class="about-action-spacer"></div>
       <el-badge :hidden="!about.update" class="item" value="new">
         <el-button :loading="about.version.length < 1" bg icon="Top" text type="success" @click="dialogVisible = true">
           更新
@@ -214,19 +214,6 @@ let props = defineProps(['config'])
   cursor: pointer;
 }
 
-.about-buttons {
-  margin-bottom: 12px;
-  align-items: center;
-}
-
-.about-actions {
-  margin-bottom: 8px;
-}
-
-.about-action-spacer {
-  margin: 6px;
-}
-
 .about-dialog {
   max-width: 500px;
 }
@@ -249,17 +236,17 @@ let props = defineProps(['config'])
   justify-content: space-between;
 }
 
-#button-list > button {
-  margin-top: 12px;
-  margin-left: 0;
-}
+.button-list {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  max-width: 100%;
+  gap: 12px;
+  margin-bottom: 12px;
 
-#button-list > button {
-  margin-right: 12px;
-}
-
-#button-list > button:last-child {
-  margin-right: 0;
+  .el-button {
+    margin: 0;
+  }
 }
 
 </style>
