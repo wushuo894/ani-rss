@@ -71,20 +71,18 @@
               <span class="torrents-size-value">{{ formatTorrentSize(torrentsInfo['size']) }}</span>
             </span>
             </div>
-            <template #footer>
-              <div class="flex torrents-footer">
-                <div>
-                  <el-tag v-for="tag in torrentsInfo['tagList']" class="torrents-tag-spacer" type="info">
-                    {{ tag }}
-                  </el-tag>
-                </div>
-                <div>
-                  <el-tag class="torrents-tag-spacer" type="primary">
-                    {{ torrentsInfo['state'] }}
-                  </el-tag>
-                </div>
+            <div class="flex torrents-footer">
+              <div class="torrents-tags">
+                <el-tag v-for="tag in torrentsInfo['tagList']" type="info">
+                  {{ tag }}
+                </el-tag>
               </div>
-            </template>
+              <div>
+                <el-tag type="primary">
+                  {{ torrentsInfo['state'] }}
+                </el-tag>
+              </div>
+            </div>
           </el-card>
         </el-scrollbar>
       </div>
@@ -311,13 +309,15 @@ onUnmounted(pausePolling)
 }
 
 .torrents-footer {
+  margin-top: 4px;
   width: 100%;
   justify-content: space-between;
 }
 
-.torrents-tag-spacer {
-  margin-top: 4px;
-  margin-left: 4px;
+.torrents-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
 }
 
 @media (max-width: 700px) {
