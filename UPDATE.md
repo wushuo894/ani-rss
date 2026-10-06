@@ -1,2 +1,6 @@
-- refactor: 默认点击封面操作改为编辑订阅
-- refactor: 优化移动端布局
+- refactor: 优化标签显示
+- refactor: 去除卡片列表模式; 优化封面展示; 封面菜单增加 刷新、刮削、刮削 [F]
+- refactor: 更新种子存放位置
+- refactor: 增加 BgmUrl 按钮
+- refactor: 优化初始化配置
+- refactor: docker 容器更新 jdk27
