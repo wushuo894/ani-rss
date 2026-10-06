@@ -96,9 +96,12 @@
             </template>
           </el-table-column>
           <el-table-column prop="formatSize" label="大小" width="120"/>
-          <el-table-column label="种子" width="90">
+          <el-table-column label="种子" width="150">
             <template #default="{row}">
               <el-button bg size="small" text @click="copyTorrent(row.torrent)">复制</el-button>
+              <el-button bg icon="FolderOpened" size="small" text @click="showTorrentPath(row.torrentPath)">
+                位置
+              </el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -119,7 +122,7 @@
 
 <script setup>
 import {computed, ref} from "vue";
-import {ElMessage} from "element-plus";
+import {ElMessage, ElMessageBox} from "element-plus";
 import PopconfirmView from "@/view/custom/PopconfirmView.vue";
 import * as http from "@/js/http.js";
 
@@ -199,6 +202,14 @@ const copyTorrent = async value => {
   } else {
     ElMessage.error('复制失败')
   }
+}
+
+// 通过弹窗展示当前种子文件的完整路径，避免长路径挤占表格列宽。
+const showTorrentPath = path => {
+  ElMessageBox.alert(path || '暂无种子文件', '种子位置', {
+    confirmButtonText: '关闭',
+    center: true
+  })
 }
 
 const clearSelection = () => {

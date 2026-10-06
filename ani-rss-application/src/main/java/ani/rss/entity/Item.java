@@ -64,6 +64,12 @@ public class Item implements Serializable {
     private Boolean hasDownloaded;
 
     /**
+     * 种子位置
+     */
+    @Schema(defaultValue = "种子位置")
+    private String torrentPath;
+
+    /**
      * 主 rss
      */
     @Schema(description = "主 rss")

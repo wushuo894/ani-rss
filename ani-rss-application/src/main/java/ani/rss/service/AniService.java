@@ -376,7 +376,8 @@ public class AniService {
             item.setHasDownloaded(false);
             File torrent = TorrentUtil.getTorrent(ani, item);
             if (torrent.exists()) {
-                item.setHasDownloaded(true);
+                item.setHasDownloaded(true)
+                        .setTorrentPath(torrent.getAbsolutePath());
                 continue;
             }
             if (downloadService.itemDownloaded(ani, item, false)) {

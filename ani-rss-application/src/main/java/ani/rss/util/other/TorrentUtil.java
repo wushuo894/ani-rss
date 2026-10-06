@@ -51,6 +51,7 @@ public class TorrentUtil {
      * @return 文件夹
      */
     public static File getTorrentDir(Ani ani) {
+        String id = ani.getId();
         String title = ani.getTitle();
         Boolean ova = ani.getOva();
         Integer season = ani.getSeason();
@@ -58,18 +59,19 @@ public class TorrentUtil {
         File configDir = ConfigUtil.getConfigDir();
 
         String s = PinyinUtils.getPinyinInitialLetters(title);
+        String fastId = id.substring(0, 1);
 
-        File torrents = new File(StrFormatter.format("{}/torrents/{}/Season {}", configDir, title, season));
-        if (!torrents.exists()) {
-            torrents = new File(StrFormatter.format("{}/torrents/{}/{}/Season {}", configDir, s, title, season));
+        // 兼容旧的路径
+        File torrentDir = ova ?
+                new File(StrFormatter.format("{}/torrents/{}/{}", configDir, s, title)) :
+                new File(StrFormatter.format("{}/torrents/{}/{}/Season {}", configDir, s, title, season));
+
+        if (!torrentDir.exists()) {
+            // 新的种子存放路径
+            torrentDir = new File(StrFormatter.format("{}/torrents/{}/{}", configDir, fastId, id));
         }
-        if (ova) {
-            torrents = new File(StrFormatter.format("{}/torrents/{}", configDir, title));
-            if (!torrents.exists()) {
-                torrents = new File(StrFormatter.format("{}/torrents/{}/{}", configDir, s, title));
-            }
-        }
-        return torrents;
+
+        return torrentDir;
     }
 
     /**
