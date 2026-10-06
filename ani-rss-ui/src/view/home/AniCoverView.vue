@@ -368,11 +368,15 @@ const emit = defineEmits(['edit', 'playlist', 'cover', 'del', 'rate'])
 }
 
 .cover-below-meta {
-  margin-top: 4px;
+  margin-top: 3px;
   display: flex;
   flex-wrap: wrap;
-  gap: 4px;
+  gap: 2px;
   width: 100%;
+
+  .el-tag {
+    border: 1px solid var(--el-border-color);
+  }
 }
 
 .cover-meta-fixed {
