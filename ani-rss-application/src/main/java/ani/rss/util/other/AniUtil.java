@@ -243,15 +243,18 @@ public class AniUtil {
             if (items.isEmpty()) {
                 return ani;
             }
-            Double offset = -(items.stream()
+
+            Double minEpisode = items.stream()
                     .map(Item::getEpisode)
                     .min(Comparator.comparingDouble(i -> i))
-                    .get() - 1);
+                    .get();
+
+            int offset = ItemsUtil.is5(minEpisode) ? -minEpisode.intValue() : -(minEpisode.intValue() - 1);
             log.debug("自动获取到剧集偏移为 {}", offset);
-            ani.setOffset(offset.intValue());
+            ani.setOffset(offset);
 
             for (StandbyRss rss : standbyRssList) {
-                rss.setOffset(offset.intValue());
+                rss.setOffset(offset);
             }
         }
         return ani;
