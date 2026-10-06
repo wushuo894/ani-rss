@@ -112,18 +112,18 @@
       </div>
     </div>
     <div class="cover-below-meta">
-      <el-tag type="danger" size="small" v-if="item.ova">
-        OVA
+      <el-tag size="small" type="danger">
+        {{ item.ova ? 'ova' : 'tv' }}
       </el-tag>
-      <el-tag type="danger" size="small" v-else>
-        TV
-      </el-tag>
-      <el-tag effect="plain" size="small" type="warning">
+      <el-tag size="small" type="warning">
         {{ episodeText }}
       </el-tag>
-      <el-tag v-if="hasStandbyRss" effect="plain" size="small" type="primary">备用RSS</el-tag>
+      <el-tag v-if="hasStandbyRss"
+              size="small" type="primary">
+        备用RSS
+      </el-tag>
       <el-tag v-if="showLastDownloadTime"
-              effect="plain" size="small" type="info">
+              size="small" type="info">
         {{ updateText }}
       </el-tag>
     </div>
