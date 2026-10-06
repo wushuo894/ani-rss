@@ -1,11 +1,10 @@
 <template>
   <el-dialog title="添加正则" v-if="add" v-model:model-value="add" center align-center width="300">
     <div>
-      <SettingsItem label="字幕组">
+      <SettingsItem label="字幕组" :label-width="50">
         <el-input placeholder="留空匹配所有字幕组" v-model="subgroup"></el-input>
       </SettingsItem>
-      <div class="exclude-spacer"></div>
-      <SettingsItem label="正则">
+      <SettingsItem label="正则" :label-width="50">
         <el-input placeholder="如 720、简、\d-\d" v-model="exclude"></el-input>
       </SettingsItem>
     </div>
@@ -14,10 +13,9 @@
     </div>
   </el-dialog>
   <div class="full-width">
-    <div class="gap-2">
+    <div class="tags-content">
       <el-tag v-if="!props.exclude.length"
-              type="info"
-              class="exclude-tag">
+              type="info">
         无
       </el-tag>
       <el-tag
@@ -26,7 +24,6 @@
           closable
           :disable-transitions="false"
           @close="handleClose(tag)"
-          class="exclude-tag"
       >
         <el-tooltip :content="tag">
           <el-text line-clamp="1" size="small" class="exclude-tag-text">
@@ -37,7 +34,6 @@
       <el-button bg
                  icon="Plus"
                  size="small"
-                 class="exclude-tag"
                  text
                  @click="()=> add = true"
       />
@@ -72,10 +68,10 @@
 </template>
 
 <script setup>
-import SettingsItem from "@/view/custom/SettingsItem.vue";
 import {ref} from "vue";
 import {ElMessage} from "element-plus";
 import {config} from "@/js/http.js";
+import SettingsItem from "@/view/custom/SettingsItem.vue";
 
 const handleClose = (tag) => {
   props.exclude.splice(props.exclude.indexOf(tag), 1)
@@ -129,29 +125,15 @@ let props = defineProps({
 </script>
 
 <style scoped>
-.exclude-spacer {
-  margin: 4px;
-}
-
 .exclude-dialog-footer {
   width: 100%;
   justify-content: end;
   margin-top: 8px;
 }
 
-.exclude-tag {
-  margin-right: 4px;
-  margin-bottom: 4px;
-}
-
 .exclude-tag-text {
   max-width: 300px;
   color: var(--el-color-primary);
-}
-
-.exclude-delete-button {
-  margin-left: 0;
-  margin-bottom: 4px;
 }
 
 .exclude-footer {
@@ -162,5 +144,15 @@ let props = defineProps({
 
 .exclude-link {
   font-size: var(--el-font-size-extra-small);
+}
+
+.tags-content {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+
+  .el-button {
+    margin: 0;
+  }
 }
 </style>

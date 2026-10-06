@@ -1,27 +1,29 @@
 <template>
-  <SettingsItem label="捐赠状态">
-    <div v-if="props.config['tryOut']">
-      <el-tag v-if="props.config['verifyExpirationTime']" type="primary">
-        试用中 过期时间: {{ timestampToDate(props.config['expirationTime']) }}
-      </el-tag>
-      <el-tag v-else type="warning">
-        试用已过期
-      </el-tag>
-    </div>
-    <div v-else>
-      <el-tag v-if="props.config['verifyExpirationTime']" type="success">
-        <div class="flex afdian-tag-content">
-          <el-icon>
-            <Mug/>
-          </el-icon>
-          <span>
+  <SettingsItem label="捐赠状态" :label-width="60">
+    <div style="height: 32px;" class="flex flex-center">
+      <template v-if="props.config['tryOut']">
+        <el-tag v-if="props.config['verifyExpirationTime']" type="primary">
+          试用中 过期时间: {{ timestampToDate(props.config['expirationTime']) }}
+        </el-tag>
+        <el-tag v-else type="warning">
+          试用已过期
+        </el-tag>
+      </template>
+      <template v-else>
+        <el-tag v-if="props.config['verifyExpirationTime']" type="success">
+          <div class="flex afdian-tag-content">
+            <el-icon>
+              <Mug/>
+            </el-icon>
+            <span>
             已捐赠
             </span>
-        </div>
-      </el-tag>
-      <el-tag v-else type="info">
-        未捐赠
-      </el-tag>
+          </div>
+        </el-tag>
+        <el-tag v-else type="info">
+          未捐赠
+        </el-tag>
+      </template>
     </div>
   </SettingsItem>
   <div class="flex afdian-header">

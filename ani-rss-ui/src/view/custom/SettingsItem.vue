@@ -1,5 +1,8 @@
 <template>
-  <div class="settings-item" :class="{'is-label-empty': !label}">
+  <div
+      class="settings-item"
+      :class="{'is-label-empty': !label}"
+      :style="{'--settings-label-width': labelWidth + 'px'}">
     <div v-if="label" class="settings-item-label">
       {{ label }}
     </div>
@@ -9,17 +12,22 @@
   </div>
 </template>
 <script setup>
-defineProps({
+const props = defineProps({
   label: {
     type: String,
     default: ''
+  },
+  labelWidth: {
+    type: Number,
+    default: 130
   }
 })
+
 </script>
 <style scoped>
 .settings-item {
   display: grid;
-  grid-template-columns: 130px minmax(0, 1fr);
+  grid-template-columns: var(--settings-label-width, 130px) minmax(0, 1fr);
   gap: 8px;
   width: 100%;
   min-width: 0;
