@@ -65,11 +65,7 @@
             <p>{{ torrentsInfo.name }}</p>
             <el-progress :percentage="torrentsInfo['progress']"/>
             <div class="torrents-size-info">
-            <span>
-              <span class="torrents-size-value">{{ formatTorrentSize(torrentsInfo['completed']) }}</span>
-              /
-              <span class="torrents-size-value">{{ formatTorrentSize(torrentsInfo['size']) }}</span>
-            </span>
+              {{ formatTorrentSize(torrentsInfo['completed']) + ' / ' + formatTorrentSize(torrentsInfo['size']) }}
             </div>
             <div class="flex torrents-footer">
               <div class="torrents-tags">
@@ -290,21 +286,9 @@ onUnmounted(pausePolling)
 }
 
 .torrents-size-info {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 4px 16px;
-  margin-top: 6px;
   font-size: 13px;
   line-height: 20px;
   font-variant-numeric: tabular-nums;
-}
-
-.torrents-size-label {
-  margin-right: 4px;
-  color: var(--el-text-color-placeholder);
-}
-
-.torrents-size-value {
   color: var(--el-text-color-regular);
 }
 
