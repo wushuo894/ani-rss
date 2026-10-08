@@ -7,6 +7,7 @@ import ani.rss.enums.NotificationStatusEnum;
 import ani.rss.util.other.TemplateUtil;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.text.StrFormatter;
+import cn.hutool.core.util.StrUtil;
 import cn.hutool.extra.mail.JakartaMailUtil;
 import cn.hutool.extra.mail.MailAccount;
 import lombok.extern.slf4j.Slf4j;
@@ -57,7 +58,8 @@ public class MailNotification implements BaseNotification {
         Assert.notBlank(mailFrom, "发件人邮箱 为空");
         Assert.notBlank(mailSMTPHost, "SMTP地址 为空");
         Assert.notBlank(mailPassword, "密码 为空");
-        Assert.notBlank(mailAddressee, "收件人 为空");
+
+        List<String> mailAddressees = parseMailAddressees(mailAddressee);
 
         MailAccount mailAccount = new MailAccount()
                 .setUser(mailFrom)
@@ -92,7 +94,7 @@ public class MailNotification implements BaseNotification {
         String html = TemplateUtil.render("mail.html", map);
 
         try {
-            JakartaMailUtil.send(mailAccount, List.of(mailAddressee), title, html, true);
+            JakartaMailUtil.send(mailAccount, mailAddressees, title, html, true);
             return true;
         } catch (Exception e) {
             String message = ExceptionUtils.getMessage(e);
@@ -100,4 +102,18 @@ public class MailNotification implements BaseNotification {
             return false;
         }
     }
+
+    /**
+     * 解析收件人，支持配置多个邮箱，使用 , 分隔
+     *
+     * @param mailAddressee 收件人
+     * @return 收件人列表
+     */
+    public static List<String> parseMailAddressees(String mailAddressee) {
+        Assert.notBlank(mailAddressee, "收件人 为空");
+        List<String> mailAddressees = StrUtil.split(mailAddressee, ',', true, true);
+        Assert.notEmpty(mailAddressees, "收件人 为空");
+        return mailAddressees;
+    }
+
 }

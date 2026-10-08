@@ -76,9 +76,9 @@ public class NotificationConfig implements Serializable {
     @Schema(description = "邮箱 TLS")
     private Boolean mailTLSEnable;
     /**
-     * 邮箱 收件人
+     * 邮箱 收件人 支持多个，使用 , 分隔
      */
-    @Schema(description = "邮箱 收件人")
+    @Schema(description = "邮箱 收件人，支持多个，使用 , 分隔")
     private String mailAddressee;
     /**
      * 邮箱 发送图片
