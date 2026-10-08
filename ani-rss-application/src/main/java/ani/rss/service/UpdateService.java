@@ -4,6 +4,7 @@ import ani.rss.commons.ExceptionUtils;
 import ani.rss.commons.MavenUtils;
 import ani.rss.entity.About;
 import ani.rss.entity.UpdateInfo;
+import ani.rss.exception.GithubApiException;
 import ani.rss.update.BaseUpdate;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.lang.Assert;
@@ -31,6 +32,7 @@ public class UpdateService {
 
         About about = (About) new About()
                 .setVersion(version)
+                .setErrorMessage("")
                 .setUpdate(false)
                 .setAutoUpdate(false)
                 .setLatest("")
@@ -43,8 +45,13 @@ public class UpdateService {
             UpdateInfo updateInfo = githubService.getUpdateInfo("wushuo894", "ani-rss", filename, version);
 
             BeanUtil.copyProperties(updateInfo, about, "version");
+        } catch (GithubApiException e) {
+            about.setErrorCode(e.getStatus())
+                    .setErrorMessage(e.getMessage());
+            log.error("检测更新失败 HTTP {}: {}", e.getStatus(), e.getMessage(), e);
         } catch (Exception e) {
             String message = ExceptionUtils.getMessage(e);
+            about.setErrorMessage((message.isBlank() ? "检测更新失败" : message) + "，请检查网络或代理设置。");
             log.error("检测更新失败 {}", message);
             log.error(message, e);
         }

@@ -20,4 +20,10 @@ public class About extends UpdateInfo implements Serializable {
      */
     @Schema(description = "版本")
     private String version;
+
+    @Schema(description = "GitHub HTTP 状态码")
+    private Integer errorCode;
+
+    @Schema(description = "检测更新失败提示")
+    private String errorMessage;
 }

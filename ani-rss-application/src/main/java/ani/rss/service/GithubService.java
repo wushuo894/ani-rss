@@ -5,6 +5,7 @@ import ani.rss.commons.GsonStatic;
 import ani.rss.entity.Config;
 import ani.rss.entity.Github;
 import ani.rss.entity.UpdateInfo;
+import ani.rss.exception.GithubApiException;
 import ani.rss.util.basic.HttpReq;
 import ani.rss.util.other.ConfigUtil;
 import cn.hutool.core.comparator.VersionComparator;
@@ -43,7 +44,9 @@ public class GithubService {
             if (status == 404) {
                 return Optional.empty();
             }
-            HttpReq.assertStatus(res);
+            if (!res.isOk()) {
+                throw new GithubApiException(status);
+            }
             Github.Release release = GsonStatic.fromJson(res.body(), Github.Release.class);
             return Optional.of(release);
         });
@@ -71,7 +74,7 @@ public class GithubService {
         String message = release.getMessage();
         if (StrUtil.isNotBlank(message)) {
             log.error(message);
-            return updateInfo;
+            throw new IllegalStateException("GitHub 返回异常响应");
         }
 
         String latest = release.getTagName().replace("v", "");

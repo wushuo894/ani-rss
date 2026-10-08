@@ -43,7 +43,7 @@
         </template>
       </PopconfirmView>
       <el-badge :hidden="!about.update" class="item" value="new">
-        <el-button :loading="about.version.length < 1" bg icon="Top" text type="success" @click="dialogVisible = true">
+        <el-button :loading="checkLoading" bg icon="Top" text type="success" @click="dialogVisible = true">
           更新
         </el-button>
       </el-badge>
@@ -51,7 +51,17 @@
   </div>
   <el-dialog v-if="dialogVisible" v-model="dialogVisible" align-center center title="版本更新"
              class="about-dialog">
-    <div v-if="about.update">
+    <el-empty v-if="about.errorMessage" class="about-error-empty">
+      <template #description>
+        <el-alert class="about-error-alert"
+                  :title="about.errorCode ? `检测更新失败（HTTP ${about.errorCode}）` : '检测更新失败'"
+                  :description="about.errorMessage"
+                  type="error"
+                  show-icon
+                  :closable="false"/>
+      </template>
+    </el-empty>
+    <div v-else-if="about.update">
       <div>
         <SettingsItem label="版本号">
           <el-link type="default" :href="`https://github.com/wushuo894/ani-rss/releases/tag/v${about.latest}`"
@@ -177,13 +187,23 @@ const about = ref({
   'version': '',
   'latest': '',
   'update': false,
-  'markdownBody': ''
+  'markdownBody': '',
+  'errorCode': null,
+  'errorMessage': ''
 })
+
+const checkLoading = ref(true)
 
 onMounted(() => {
   http.about()
       .then(res => {
         about.value = res.data
+      })
+      .catch(() => {
+        about.value.errorMessage = '无法获取更新信息，请检查服务连接。'
+      })
+      .finally(() => {
+        checkLoading.value = false
       })
 })
 
@@ -229,6 +249,19 @@ let props = defineProps(['config'])
 
 .about-alert {
   margin-top: 8px;
+}
+
+.about-error-empty {
+  --el-empty-description-margin-top: 0;
+  flex-direction: column-reverse;
+  gap: 20px;
+}
+
+.about-error-alert {
+  width: fit-content;
+  max-width: 100%;
+  text-align: left;
+  overflow-wrap: anywhere;
 }
 
 .about-dialog-footer {
