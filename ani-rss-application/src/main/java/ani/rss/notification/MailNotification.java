@@ -14,7 +14,6 @@ import org.commonmark.node.Node;
 import org.commonmark.parser.Parser;
 import org.commonmark.renderer.html.HtmlRenderer;
 
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -69,7 +68,6 @@ public class MailNotification implements BaseNotification {
                 .setStarttlsEnable(mailTLSEnable)
                 .setAuth(true);
 
-
         String image = ani.getImage();
         String notificationTemplate = replaceNotificationTemplate(ani, notificationConfig, text, notificationStatusEnum);
         notificationTemplate = notificationTemplate.replace("\n", "\n\n");
@@ -92,7 +90,7 @@ public class MailNotification implements BaseNotification {
         String html = TemplateUtil.render("mail.html", map);
 
         try {
-            JakartaMailUtil.send(mailAccount, List.of(mailAddressee), title, html, true);
+            JakartaMailUtil.send(mailAccount, mailAddressee, title, html, true);
             return true;
         } catch (Exception e) {
             String message = ExceptionUtils.getMessage(e);
