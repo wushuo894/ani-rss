@@ -1,8 +1,8 @@
 <template>
   <PreviewView ref="previewRef" :ani="props.ani"/>
-  <AniBTView v-if="!props.batchMode" ref="aniBTRef" @callback="mikanCallback"/>
-  <MikanView v-if="!props.batchMode" ref="mikanRef" @callback="mikanCallback"/>
-  <AnimeGardenView v-if="!props.batchMode" ref="animeGardenRef" @callback="mikanCallback"/>
+  <AniBTView ref="aniBTRef" @callback="mikanCallback"/>
+  <MikanView ref="mikanRef" @callback="mikanCallback"/>
+  <AnimeGardenView ref="animeGardenRef" @callback="mikanCallback"/>
   <TmdbGroupView ref="tmdbGroupRef" :ani="props.ani"/>
   <div style="padding: 0 12px;">
     <el-tabs v-model="activeName" class="tabs-center">
@@ -254,7 +254,7 @@
   </div>
   <div class="flex full-width" style="justify-content: space-between;margin-top: 10px;">
     <div>
-      <el-dropdown v-if="!props.batchMode" trigger="click">
+      <el-dropdown v-if="props.editMode" trigger="click">
         <el-button bg text icon="MoreFilled">
           其他
         </el-button>
@@ -450,8 +450,7 @@ let openUrl = (url) => window.open(url)
 
 let props = defineProps({
   ani: Object,
-  // 批量模式下隐藏其他来源的添加入口，避免打开嵌套弹窗。
-  batchMode: {type: Boolean, default: false}
+  editMode: {type: Boolean, default: false}
 })
 const emit = defineEmits(['callback'])
 </script>

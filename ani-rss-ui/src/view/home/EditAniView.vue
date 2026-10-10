@@ -26,7 +26,7 @@
     </div>
   </el-dialog>
   <el-dialog v-model="dialogVisible" title="修改订阅" center v-if="dialogVisible">
-    <AniView v-model:ani="ani" @callback="editChange"/>
+    <AniView v-model:ani="ani" edit-mode @callback="editChange"/>
   </el-dialog>
 </template>
 

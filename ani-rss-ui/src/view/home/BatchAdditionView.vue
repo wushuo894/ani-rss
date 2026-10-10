@@ -13,7 +13,7 @@
         <div v-if="item.status === 'loading'" v-loading="true" class="batch-loading">正在加载订阅信息…</div>
         <el-alert v-else-if="item.status === 'error'" :title="item.error" type="error" show-icon :closable="false"/>
         <div v-else-if="item.ani" class="batch-editor">
-          <AniView v-model:ani="item.ani" batch-mode @callback="confirmItem(item, $event)"/>
+          <AniView v-model:ani="item.ani" @callback="confirmItem(item, $event)"/>
         </div>
         <div v-if="item.status === 'error'" class="batch-actions">
           <el-button type="primary" :loading="item.status === 'loading'" @click="retry(item)">重试</el-button>
