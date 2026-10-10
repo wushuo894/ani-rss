@@ -1,16 +1,6 @@
 <template>
-  <el-dialog v-model="batchAdditionDialogVisible" align-center center title="正在批量添加订阅"
-             width="500"
-             :close-on-click-modal="false"
-             :close-on-press-escape="false"
-             :show-close="false">
-    <div>
-      <el-progress :percentage="Number.parseInt((batchAdditionNum / rssList.length) * 100.0)"/>
-    </div>
-    <div>
-      {{ batchAdditionNum }} / {{ rssList.length }}
-    </div>
-  </el-dialog>
+  <BatchAdditionView ref="batchAdditionRef" v-model="batchAdditionDialogVisible" :items="rssList" type="ani-bt"
+                     @done="batchDone"/>
   <el-dialog v-model="matchDialogVisible" align-center center title="匹配" width="auto">
     <div class="match-content">
       <el-radio-group v-model="addAni.match">
@@ -155,6 +145,7 @@ import {ref} from "vue";
 import {ElMessage, ElText} from "element-plus";
 import {DocumentCopy} from "@element-plus/icons-vue";
 import * as http from "@/js/http.js";
+import BatchAdditionView from './BatchAdditionView.vue'
 import {formatDate, fromNow} from "@/js/format.js";
 import {proxyImage} from "@/js/global.js";
 
@@ -272,63 +263,14 @@ let emit = defineEmits(['callback'])
 
 let batchAdditionNum = ref(0)
 let batchAdditionDialogVisible = ref(false)
+let batchAdditionRef = ref()
 
 let batchAddition = async () => {
-  batchAdditionNum.value = 0
   batchAdditionDialogVisible.value = true
-  let getBgmId = (url) => {
-    const parsedUrl = new URL(url);
-    return parsedUrl.searchParams.get('bgmId');
-  };
-
-  try {
-    ElMessage.success("添加中....")
-    let map = rssList.value.reduce((acc, item) => {
-      let bangumiId = getBgmId(JSON.parse(item)['rss']);
-      if (!acc[bangumiId]) {
-        acc[bangumiId] = [];
-      }
-      acc[bangumiId].push(JSON.parse(item));
-      return acc;
-    }, {})
-    for (let item of Object.values(map)) {
-      let ani = {
-        "url": item[0]['rss'],
-        "season": 1,
-        "offset": 0,
-        "title": "",
-        "exclude": [],
-        "totalEpisodeNumber": 0,
-        "match": [],
-        "type": "ani-bt",
-        "bgmUrl": `https://bgm.tv/subject/${item[0].bgmId}`,
-        "subgroup": item[0].name
-      }
-
-      ani = (await http.rssToAni(ani)).data
-      if (item.length > 1) {
-        ani.standbyRssList = item.slice(1)
-            .map(o => {
-              return {
-                label: o.name,
-                url: o['rss'],
-                offset: 0
-              }
-            })
-      }
-      batchAdditionNum.value += item.length
-      await http.addAni(ani)
-    }
-    ElMessage.success("添加成功")
-
-    setTimeout(() => {
-      location.reload()
-    }, 1000)
-  } catch (e) {
-    ElMessage.error(e)
-  } finally {
-    batchAdditionDialogVisible.value = false
-  }
+  await batchAdditionRef.value?.open()
+}
+let batchDone = () => {
+  window.$reLoadList?.()
 }
 
 let copy = (v) => {
