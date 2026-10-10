@@ -50,11 +50,7 @@ const makeAni = item => {
     ani.bgmUrl = source.bgmUrl || `https://bgm.tv/subject/${source.bgmId}`
     ani.subgroup = source.label || source.name
   }
-  return ani
-}
-
-// 解析接口返回结果后再补回备用 RSS，避免接口响应覆盖本地分组数据。
-const appendStandbyRss = (ani, item) => {
+  // 将同番剧的后续字幕组作为 DTO 的备用 RSS 一并提交给解析接口。
   if (item.sources.length > 1) {
     ani.standbyRssList = item.sources.slice(1).map(value => {
       const standby = typeof value === 'string' ? JSON.parse(value) : value
@@ -69,7 +65,7 @@ const load = async item => {
   item.status = 'loading'
   item.error = ''
   try {
-    item.ani = appendStandbyRss((await http.rssToAni(makeAni(item))).data, item)
+    item.ani = (await http.rssToAni(makeAni(item))).data
     item.status = 'success'
   } catch (error) {
     item.status = 'error'

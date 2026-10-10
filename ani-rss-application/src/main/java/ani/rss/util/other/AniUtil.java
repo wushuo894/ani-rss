@@ -122,8 +122,13 @@ public class AniUtil {
     public static Ani getAni(RssToAniDTO dto) {
         String url = dto.getUrl();
         String type = dto.getType();
-        Boolean enable = dto.getEnable();
-        enable = ObjectUtil.defaultIfNull(enable, true);
+
+        Boolean enable = Optional.of(dto)
+                .map(RssToAniDTO::getEnable)
+                .orElse(true);
+        List<StandbyRss> standbyRssList = Optional.of(dto)
+                .map(RssToAniDTO::getStandbyRssList)
+                .orElse(new ArrayList<>());
 
         Assert.notBlank(url, "RSS地址 不能为空");
 
@@ -131,6 +136,8 @@ public class AniUtil {
 
         Ani ani = AniUtil.createAni();
         ani.setUrl(url);
+        ani.getStandbyRssList()
+                .addAll(standbyRssList);
 
         Map<String, String> paramMap = HttpUtil.decodeParamMap(url, StandardCharsets.UTF_8);
 
@@ -220,18 +227,6 @@ public class AniUtil {
 
         ani.setSubgroup(subgroup);
 
-        List<StandbyRss> standbyRssList = ani.getStandbyRssList();
-
-        boolean copyMasterToStandby = CONFIG.getCopyMasterToStandby();
-        boolean standbyRss = CONFIG.getStandbyRss();
-        if (copyMasterToStandby && standbyRss) {
-            StandbyRss copyStandbyRss = new StandbyRss()
-                    .setUrl(url.trim())
-                    .setOffset(0)
-                    .setLabel(ani.getSubgroup());
-            standbyRssList.add(copyStandbyRss);
-        }
-
         log.debug("获取到动漫信息 {}", JSONUtil.formatJsonStr(GsonStatic.toJson(ani)));
         if (ani.getOva()) {
             return ani;
@@ -239,27 +234,37 @@ public class AniUtil {
 
         // 自动推断剧集偏移
         if (CONFIG.getOffset()) {
-            List<Item> items = ItemsUtil.getItems(ani, url, subgroup);
-            if (items.isEmpty()) {
-                return ani;
-            }
-
-            Double minEpisode = items.stream()
-                    .map(Item::getEpisode)
-                    .min(Comparator.comparingDouble(i -> i))
-                    .get();
-
-            int offset = ItemsUtil.is5(minEpisode) ? -minEpisode.intValue() : -(minEpisode.intValue() - 1);
-            log.debug("自动获取到剧集偏移为 {}", offset);
-            ani.setOffset(offset);
-
-            for (StandbyRss rss : standbyRssList) {
-                rss.setOffset(offset);
-            }
+            autoOffset(ani);
         }
         return ani;
     }
 
+    private static void autoOffset(Ani ani) {
+        String url = ani.getUrl();
+        Integer offset = autoOffset(ani, url);
+        ani.setOffset(offset);
+
+        List<StandbyRss> standbyRssList = ani.getStandbyRssList();
+        for (StandbyRss standbyRss : standbyRssList) {
+            Integer standbyRssOffset = autoOffset(ani, standbyRss.getUrl());
+            standbyRss.setOffset(standbyRssOffset);
+        }
+    }
+
+    private static Integer autoOffset(Ani ani, String rssUrl) {
+        List<Item> items = ItemsUtil.getItems(ani, rssUrl, "");
+        if (items.isEmpty()) {
+            return 0;
+        }
+
+        Double minEpisode = items.stream()
+                .map(Item::getEpisode)
+                .min(Comparator.comparingDouble(i -> i))
+                .get();
+
+        return ItemsUtil.is5(minEpisode) ?
+                -minEpisode.intValue() : -(minEpisode.intValue() - 1);
+    }
 
     public static String saveCover(String coverUrl) {
         return saveCover(coverUrl, false);

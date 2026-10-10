@@ -193,7 +193,6 @@ public class DefaultConfigFactory {
                 .setNotificationTemplate(notificationTemplate)
                 .setNotificationConfigList(new ArrayList<>())
                 .setApiKey(apiKey)
-                .setCopyMasterToStandby(false)
                 .setSortType(AniSortTypeEnum.SCORE)
                 .setTmdbIdPlexMode(false)
                 .setProxyList(proxyList)

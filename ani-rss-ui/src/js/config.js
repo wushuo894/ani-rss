@@ -110,7 +110,6 @@ export let configData = {
     "completed": false,
     "completedPathTemplate": "",
     "notificationConfigList": [],
-    "copyMasterToStandby": false,
     "sortType": "SCORE",
     "proxyList": "",
     "scrape": false,

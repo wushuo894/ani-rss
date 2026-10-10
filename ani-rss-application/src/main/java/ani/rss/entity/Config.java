@@ -655,12 +655,6 @@ public class Config implements Serializable {
     private List<NotificationConfig> notificationConfigList;
 
     /**
-     * 添加订阅时自动复制主rss至备用rss
-     */
-    @Schema(description = "添加订阅时复制主RSS至备用")
-    private Boolean copyMasterToStandby;
-
-    /**
      * 排序方式
      */
     @Schema(description = "排序方式")
