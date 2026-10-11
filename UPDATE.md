@@ -1,2 +1,2 @@
-- feat: WASM 播放器
-- refactor: 优化多音字处理
+- refactor: 彻底移除 OpenList
+- refactor: 去除封面标题 tooltip
