@@ -8,80 +8,27 @@ import ani.rss.entity.web.Result;
 import ani.rss.enums.StringEnum;
 import ani.rss.service.DownloadService;
 import ani.rss.util.other.AniUtil;
-import cn.hutool.core.codec.Base64;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.io.FileUtil;
-import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.ReUtil;
 import cn.hutool.core.util.StrUtil;
-import com.matthewn4444.ebml.EBMLReader;
-import com.matthewn4444.ebml.subtitles.Subtitles;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.annotation.Resource;
-import lombok.Cleanup;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.File;
-import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Optional;
 
 @RestController
 public class PlayController extends BaseController {
 
     @Resource
     private DownloadService downloadService;
-
-    @Auth
-    @Operation(summary = "获取内封字幕")
-    @PostMapping("/getSubtitles")
-    public Result<List<PlayItem.Subtitles>> getSubtitles(@RequestParam("filename") String filename) throws IOException {
-        filename = filename.replace(" ", "+");
-        filename = Base64.decodeStr(filename);
-
-        List<PlayItem.Subtitles> subtitlesList = new ArrayList<>();
-
-        String extName = FileUtil.extName(filename);
-        if (StrUtil.isBlank(extName)) {
-            return Result.success(subtitlesList);
-        }
-
-        if (!"mkv".equals(extName)) {
-            return Result.success(subtitlesList);
-        }
-
-        Assert.isTrue(FileUtil.exist(filename), "视频文件不存在");
-
-        @Cleanup
-        EBMLReader reader = new EBMLReader(filename);
-        if (!reader.readHeader()) {
-            return Result.success(subtitlesList);
-        }
-        reader.readTracks();
-        reader.readCues();
-
-        for (int i = 0; i < reader.getCuesCount(); i++) {
-            reader.readSubtitlesInCueFrame(i);
-        }
-
-        List<Subtitles> subtitles = reader.getSubtitles();
-        for (Subtitles subtitle : subtitles) {
-            String name = subtitle.getName();
-            String presentableName = subtitle.getPresentableName();
-            String contents = subtitle.getContentsToVTT();
-            PlayItem.Subtitles sub = new PlayItem.Subtitles();
-            sub.setContent(contents)
-                    .setName(name)
-                    .setHtml(presentableName)
-                    .setUrl("")
-                    .setType("vtt");
-            subtitlesList.add(sub);
-        }
-
-        return Result.success(subtitlesList);
-    }
 
     @Auth
     @Operation(summary = "获取视频列表")
@@ -147,9 +94,6 @@ public class PlayController extends BaseController {
             return playItems;
         }
 
-        // 查找同层级的字幕文件
-        List<PlayItem.Subtitles> subtitles = getSubtitlesByVideo(file);
-
         String videoFileName = file.getName();
         long lastModified = file.lastModified();
         String formatSize = FileUtils.formatSize(file);
@@ -163,8 +107,7 @@ public class PlayController extends BaseController {
                 .setLastModify(lastModified)
                 .setEpisode(1.0)
                 .setFormatSize(formatSize)
-                .setExtName(extName)
-                .setSubtitles(subtitles);
+                .setExtName(extName);
 
         if (ReUtil.contains(StringEnum.SEASON_REG, file.getName())) {
             // 如匹配正则则用正则取 S01E01
@@ -180,47 +123,6 @@ public class PlayController extends BaseController {
 
         // 按照集数排序
         return playItems;
-    }
-
-    /**
-     * 根据视频文件找到同层级的字幕
-     *
-     * @param videoFile 视频文件
-     * @return 字幕列表
-     */
-    public List<PlayItem.Subtitles> getSubtitlesByVideo(File videoFile) {
-        // 查找同层级的字幕文件
-        File[] files = FileUtils.listFiles(videoFile.getParentFile());
-        List<PlayItem.Subtitles> subtitles = Arrays.stream(files)
-                .filter(sub -> {
-                    String ext = FileUtil.extName(sub);
-                    if (StrUtil.isBlank(ext)) {
-                        return false;
-                    }
-                    // 浏览器仅支持 ass、srt
-                    if (!List.of("ass", "srt").contains(ext)) {
-                        return false;
-                    }
-                    // 视频主文件名
-                    String videoMainName = FileUtil.mainName(videoFile);
-                    // 字幕文件主文件名
-                    String subMainName = FileUtil.mainName(sub);
-
-                    // 字幕文件需与视频文件匹配 如 S01E01.chs.ass S01E01.mkv
-                    return subMainName.startsWith(videoMainName);
-                })
-                .map(sub -> {
-                    // 主文件名
-                    String subMainName = FileUtil.mainName(sub.getName());
-                    String absolutePath = FileUtils.getAbsolutePath(sub);
-                    return new PlayItem.Subtitles()
-                            .setName(subMainName)
-                            .setHtml(subMainName.toUpperCase())
-                            .setUrl(absolutePath)
-                            .setType(FileUtil.extName(sub));
-                }).toList();
-        // 去重复
-        return CollUtil.distinct(subtitles, PlayItem.Subtitles::getName, true);
     }
 
 }

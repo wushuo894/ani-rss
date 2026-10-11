@@ -14,7 +14,7 @@
     </PageHeaderView>
     <div class="dashboard-body app-page-content app-page-padding">
 
-      <el-scrollbar class="dashboard-scrollbar">
+      <el-scrollbar class="dashboard-scrollbar hide-scrollbar">
         <div class="dashboard-content">
           <div class="metric-grid">
             <div class="metric-item">

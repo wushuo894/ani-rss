@@ -5,7 +5,6 @@ import lombok.Data;
 import lombok.experimental.Accessors;
 
 import java.io.Serializable;
-import java.util.List;
 
 /**
  * 视频列表
@@ -56,24 +55,5 @@ public class PlayItem implements Serializable {
      */
     @Schema(description = "扩展名")
     private String extName;
-
-    @Schema(description = "字幕列表")
-    private List<Subtitles> subtitles;
-
-    @Data
-    @Accessors(chain = true)
-    @Schema(description = "字幕")
-    public static class Subtitles {
-        @Schema(description = "字幕 HTML")
-        private String html;
-        @Schema(description = "字幕名")
-        private String name;
-        @Schema(description = "字幕地址")
-        private String url;
-        @Schema(description = "字幕内容")
-        private String content;
-        @Schema(description = "字幕类型")
-        private String type;
-    }
 
 }

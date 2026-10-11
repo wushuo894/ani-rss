@@ -17,12 +17,6 @@ importers:
       '@vueuse/core':
         specifier: ^14.4.0
         version: 14.4.0(vue@3.5.43)
-      artplayer:
-        specifier: ^5.4.0
-        version: 5.4.0
-      artplayer-plugin-multiple-subtitles:
-        specifier: ^1.2.0
-        version: 1.2.0
       dayjs:
         specifier: ^1.11.23
         version: 1.11.23
@@ -38,6 +32,9 @@ importers:
       markdown-it-github-alerts:
         specifier: ^1.0.1
         version: 1.0.1(markdown-it@15.0.2)
+      movi-player:
+        specifier: 0.4.1
+        version: 0.4.1(@svta/cml-cta@1.0.6(@svta/cml-structured-field-values@1.1.3(@svta/cml-utils@1.5.0))(@svta/cml-utils@1.5.0))(@svta/cml-structured-field-values@1.1.3(@svta/cml-utils@1.5.0))(@svta/cml-utils@1.5.0)(vue@3.5.43)
       vue:
         specifier: ^3.5.43
         version: 3.5.43
@@ -222,6 +219,68 @@ packages:
   '@rolldown/pluginutils@1.0.1':
     resolution: {integrity: sha512-2j9bGt5Jh8hj+vPtgzPtl72j0yRxHAyumoo6TNfAjsLB04UtpSvPbPcDcBMxz7n+9CYB0c1GxQFxYRg2jimqGw==}
 
+  '@svta/cml-608@1.0.2':
+    resolution: {integrity: sha512-ZEJ68330gcLKfvVv6Qifr1HR7+GldDUxzkjqSbqRK7jHtHSLSV1JAyDwlYe8+C7ABuY1bp8MpgJ4/Gg+jl+pLQ==}
+    engines: {node: '>=20'}
+
+  '@svta/cml-cmcd@2.3.2':
+    resolution: {integrity: sha512-SKBBjLmci0WK8HMjuv+36tVIMktonoOoxsXblOFZmB+ePPV2zjRMTD+2ZmE/1VEPJkKHENyhSjSHgJyeOlvZ1A==}
+    engines: {node: '>=20'}
+    peerDependencies:
+      '@svta/cml-structured-field-values': 1.1.3
+      '@svta/cml-utils': 1.5.0
+
+  '@svta/cml-cmsd@1.0.6':
+    resolution: {integrity: sha512-LUORV6bb0TbU4rSC2HoPqUCix1igLrXkRQXWiIyJo2OMzb14kAK/1jsW0mzY6up6w1GrjKQcjc6OwqJdo/zd/g==}
+    engines: {node: '>=20'}
+    peerDependencies:
+      '@svta/cml-cta': 1.0.6
+      '@svta/cml-structured-field-values': 1.1.3
+      '@svta/cml-utils': 1.5.0
+
+  '@svta/cml-cta@1.0.6':
+    resolution: {integrity: sha512-l13/4myTX1EbRd38nY8J1umVY5UdR/nZO6CeKqVLXnMMIayg7/fu0TueZckjTA9Loal55MGK1xbHnXVjz7OUUw==}
+    engines: {node: '>=20'}
+    peerDependencies:
+      '@svta/cml-structured-field-values': 1.1.3
+      '@svta/cml-utils': 1.5.0
+
+  '@svta/cml-dash@1.0.6':
+    resolution: {integrity: sha512-4XtHYlPrzL/dRe/8XmRQoLnTo9S86tISgrl67eUqKl5MtNTpZBYTncuPrspslPZPZROBBWNrBuepYfYUtU9CKA==}
+    engines: {node: '>=20'}
+    peerDependencies:
+      '@svta/cml-utils': 1.5.0
+
+  '@svta/cml-id3@1.0.6':
+    resolution: {integrity: sha512-63j8gkAnPOmOBWlp0hIZPvsIioZttdbg6/TgwITqMYbSLYVJ+6QGa/UtIP0I84NsfstANw6QdCn7i8SS08kn1A==}
+    engines: {node: '>=20'}
+    peerDependencies:
+      '@svta/cml-utils': 1.5.0
+
+  '@svta/cml-request@1.0.12':
+    resolution: {integrity: sha512-4sJvnnoNpq58j2mCGP8k+MF6wVy/qa4gbt6kfT1dPIKmn3mPxw+JVfilhcWsUi+peK2yCZxOJJYyHj1cAcQE1w==}
+    engines: {node: '>=20'}
+    peerDependencies:
+      '@svta/cml-cmcd': 2.3.2
+      '@svta/cml-utils': 1.5.0
+      '@svta/cml-xml': 1.1.4
+
+  '@svta/cml-structured-field-values@1.1.3':
+    resolution: {integrity: sha512-XqLzQOTznz6kh/nsSh8dy1kV7GQjL4csG+2U5EvLGhAqNuNUczbVg5EAsDobKDVg8xhdthdXx2UuwM+ZHQCxSg==}
+    engines: {node: '>=20'}
+    peerDependencies:
+      '@svta/cml-utils': 1.5.0
+
+  '@svta/cml-utils@1.5.0':
+    resolution: {integrity: sha512-JMqclD7Akd+GSJiuaYNUHOP2wNtf/nauKeszlYeivSHfi0Lp3pmSW5PXDvJ2dO4aPmmSOQbF0ztTsW9Vcs2Whw==}
+    engines: {node: '>=20'}
+
+  '@svta/cml-xml@1.1.4':
+    resolution: {integrity: sha512-jbixqjiJIc16SGxylHwiOzO+DuhkGfuP+fJ9AHeVJKdFDKnabgfCDpnp6dvZpZnjMj4nHvzVtuUV7RISPIwYXw==}
+    engines: {node: '>=20'}
+    peerDependencies:
+      '@svta/cml-utils': 1.5.0
+
   '@sxzz/popperjs-es@2.11.8':
     resolution: {integrity: sha512-wOwESXvvED3S8xBmcPWHs2dUuzrE4XiZeFu7e1hROIJkm02a49N120pmOXxY33sBb6hArItm5W5tcg1cBtV+HQ==}
 
@@ -231,8 +290,8 @@ packages:
   '@types/lodash-es@4.17.12':
     resolution: {integrity: sha512-0NgftHUcV4v34VhXm8QBSftKVXtbkBG3ViCjs6+eJ5a6y6Mi/jiFGPc1sC7QK+9BFhWrURE3EOggmWaSxL9OzQ==}
 
-  '@types/lodash@4.17.25':
-    resolution: {integrity: sha512-+K1NIO8I+F9/wNulfVvu23QYd0Pe9/OCqRrim4NoYIf1VoEDL90Ve4ClzpyqBLc7NpGGWRvYNCKZ1BE/Jpf8dQ==}
+  '@types/lodash@4.17.26':
+    resolution: {integrity: sha512-48NWfiY6oNcKOh47Z4h+sIvwcQR91h6KPhaYKgeMIrkT2jV82Gy90SErj60vW8jQbeMSOSbhIv3bZ7JoqPPVhA==}
 
   '@types/web-bluetooth@0.0.21':
     resolution: {integrity: sha512-oIQLCGWtcFZy2JW77j9k8nHzAOpqMHLQejDA48XXMWH6tjCQHz5RCFz1bzsmROyL6PUm+LLnUiI4BCn221inxA==}
@@ -318,14 +377,11 @@ packages:
   argparse@3.0.2:
     resolution: {integrity: sha512-mFdDM6WqWKraGLsVb+C9CahPnzTXOefAOLq3jYcca2YZ8bEWpr++Tzj+zSaKW9+X9L5uSxcm1AZ3Y6aZJ09OhQ==}
 
-  artplayer-plugin-multiple-subtitles@1.2.0:
-    resolution: {integrity: sha512-3mzoHkgKx3KVdxKQBwLkjetPF6WjJtro5uQNdse8FqUeiV0afbywLnP6H8lcDN/Fwgp2VlBknrs2+COiyFdV8g==}
-
-  artplayer@5.4.0:
-    resolution: {integrity: sha512-2B+plbx8N2yNsjK4nJU3+EOG8TULm1LRZk/QPkWRAMEX2Ee/MSnZG/WJYz8kcoZxZuLKcQ3uXifqLuPxZOH29A==}
-
   async-validator@4.2.5:
     resolution: {integrity: sha512-7HhHjtERjqlNbZtqNqy2rckN/SpOOlmDliet+lP7k+eKZEjPk3DgyeU9lIXLdeLz0uBbbVp+9Qdow9wJWgwwfg==}
+
+  bcp-47-match@2.0.3:
+    resolution: {integrity: sha512-JtTezzbAibu8G0R9op9zb3vcWZd9JF6M0xOYGPn0fNCd7wOpRB1mU2mH9T8gaBGbAAyIIVgB2G7xG0GP98zMAQ==}
 
   buffer-from@1.1.2:
     resolution: {integrity: sha512-E+XQCRwSbaaiChtv6k6Dwgc+bx+Bs6vuKJHHl5kox/BaKbhiXzqQOwK4cO22yElGp2OCmjwVhT3HmxgyPGnJfQ==}
@@ -337,6 +393,9 @@ packages:
   chokidar@5.0.0:
     resolution: {integrity: sha512-TQMmc3w+5AxjpL8iIiwebF73dRDF4fBIieAqGn9RGCWaEVwQ6Fb2cGe31Yns0RRIzii5goJ1Y7xbMwo1TxMplw==}
     engines: {node: '>= 20.19.0'}
+
+  codem-isoboxer@0.3.10:
+    resolution: {integrity: sha512-eNk3TRV+xQMJ1PEj0FQGY8KD4m0GPxT487XJ+Iftm7mVa9WpPFDMWqPt+46buiP5j5Wzqe5oMIhqBcAeKfygSA==}
 
   color-convert@2.0.1:
     resolution: {integrity: sha512-RRECPsj7iu/xb5oKYcsFHSppFNnsj/52OVTRKb4zP5onXwVF3zVmmToNcOfGC+CRDpfK/U584fMg38ZHCaElKQ==}
@@ -356,6 +415,10 @@ packages:
 
   csstype@3.2.3:
     resolution: {integrity: sha512-z1HGKcYy2xA8AGQfwrn0PAy+PB7X/GSj3UVJW9qKyn43xWa+gl5nXmU4qqLMRzWVLFC8KusUX8T/0kCiOYpAIQ==}
+
+  dashjs@5.2.1:
+    resolution: {integrity: sha512-axcJmLeJCTJMLUfQRErUJB1KOiU5iHF+DMLBc3FKeox1HPYtGUQlC6Xm5Mm6vhBUR3CHHLIPOqw0JDIqMtP+Dw==}
+    engines: {node: '>=20'}
 
   dayjs@1.11.23:
     resolution: {integrity: sha512-QDTCU0M0MxR3hQfnlDJfwekQiaanm1ubOD231u73WBckQ/fsamwRLiE2GBz6D3a/xF1NgfiDLJjXBa1hYOYTtQ==}
@@ -399,6 +462,9 @@ packages:
   exsolve@1.1.3:
     resolution: {integrity: sha512-kuzL9zherLQoqDeQaS55AiiIg1kb4KYXaSusTtgZTPlvKP2gGCI82LNmBNh5RjDVUXIcmgx+/Mx7vPwRzBbhJA==}
 
+  fast-deep-equal@3.1.3:
+    resolution: {integrity: sha512-f3qQ9oQy9j2AhBe/H9VC91wLmKBCCU/gDOnKNAYG5hswO7BLKj09Hc5HYNz9cGI++xlpDCIgDaitVs03ATR84Q==}
+
   fdir@6.5.0:
     resolution: {integrity: sha512-tIbYtZbucOs0BRGqPJkshJUYdL+SDH7dVM8gjy+ERp3WAUjLEFJE+02kanyHtwjWOnwrKYBiwAmM0p4kLJAnXg==}
     engines: {node: '>=12.0.0'}
@@ -424,6 +490,18 @@ packages:
     resolution: {integrity: sha512-EykJT/Q1KjTWctppgIAgfSO0tKVuZUjhgMr17kqTumMl6Afv3EISleU7qZUzoXDFTAHTDC4NOoG/ZxU3EvlMPQ==}
     engines: {node: '>=8'}
 
+  hls.js@1.7.3:
+    resolution: {integrity: sha512-MsPlx6yVW4Qv4C7mEVou4/gk/5cN2dVxOTnrNjPSmyH2f0Ln+/UkG10Ax1PE6OvrmTVPKgQYozTtBaPOuCzq7A==}
+
+  html-entities@2.6.0:
+    resolution: {integrity: sha512-kig+rMn/QOVRvr7c86gQ8lWXq+Hkv6CbAH1hLu+RG338StTpE8Z0b44SDVaqVu7HGKf27frdmUYEs9hTUX/cLQ==}
+
+  immediate@3.0.6:
+    resolution: {integrity: sha512-XXOFtyqDjNDAQxVfYxuF7g9Il/IbWmmlQg2MYKOH8ExIT1qg6xc4zyS3HaEEATgs1btfzxq15ciUiY7gjSXRGQ==}
+
+  imsc@1.1.5:
+    resolution: {integrity: sha512-V8je+CGkcvGhgl2C1GlhqFFiUOIEdwXbXLiu1Fcubvvbo+g9inauqT3l0pNYXGoLPBj3jxtZz9t+wCopMkwadQ==}
+
   js-md5@0.9.2:
     resolution: {integrity: sha512-QK62elp/ozZj7kzyCG5yaeK+uWeqxPlg3w3znYDBvwyqzJs7nh5bgTAAH9KltLni2LT7qx/E1EgSVwfiOSRe0Q==}
 
@@ -433,9 +511,8 @@ packages:
   jsonfile@6.2.1:
     resolution: {integrity: sha512-zwOTdL3rFQ/lRdBnntKVOX6k5cKJwEc1HdilT71BWEu7J41gXIB2MRp+vxduPSwZJPWBxEzv4yH1wYLJGUHX4Q==}
 
-  kind-of@6.0.3:
-    resolution: {integrity: sha512-dcS1ul+9tmeD95T+x28/ehLgd9mENa3LsvDTtzm3vyBEO7RPptvAD+t44WVXaUjTBRcrpFeFlC8WCruUR456hw==}
-    engines: {node: '>=0.10.0'}
+  lie@3.1.1:
+    resolution: {integrity: sha512-RiNhHysUjhrDQntfYSfY4MU24coXXdEOgw9WGcKHNeEwffDYbF//u87M1EWaMGzuFoSbqW0C9C6lEEhDOAswfw==}
 
   lightningcss-android-arm64@1.33.0:
     resolution: {integrity: sha512-gEpRTalKdosp4Bb8qWtc2iOgE5SeIHlpS1up9bFq2wAyYhl1UdTObYiHe98zEM9SQvSoqQZ1IQD0JNpg3Ml5pg==}
@@ -518,6 +595,9 @@ packages:
     resolution: {integrity: sha512-++gUqRDEvcnN6Zhqrr+y/CkVEHhlrR96vZn3nZZPYzMcBUyBtTKzB9NadClFIsIVSsu+3i9tfk/erqy9kAmt7Q==}
     engines: {node: '>=14'}
 
+  localforage@1.10.0:
+    resolution: {integrity: sha512-14/H1aX7hzBBmmh7sGPd+AOMkkIrHM3Z1PAyGgZigA1H1p5O5ANnMyWzvpAETtG68/dC4pC0ncy3+PPGzXZHPg==}
+
   lodash-es@4.18.1:
     resolution: {integrity: sha512-J8xewKD/Gk22OZbhpOVSwcs60zhd95ESDwezOFuA3/099925PdHJ7OFHNTGtajL3AlZkykD32HykiMo+BIBI8A==}
 
@@ -555,6 +635,21 @@ packages:
   mlly@1.8.2:
     resolution: {integrity: sha512-d+ObxMQFmbt10sretNDytwt85VrbkhhUA/JBGm1MPaWJ65Cl4wOgLaB1NYvJSZ0Ef03MMEU/0xpPMXUIQ29UfA==}
 
+  movi-player@0.4.1:
+    resolution: {integrity: sha512-oA91s8nxyt7tnd7SaZNKVkjkz8UeHVrcZNxWQSBo5Jj/MOog7pnGtwv0edimjwocJkZVBBtBMy8Ef4HOGzBJGQ==}
+    engines: {node: '>=18'}
+    peerDependencies:
+      react: '>=17'
+      svelte: '>=4'
+      vue: '>=3.3'
+    peerDependenciesMeta:
+      react:
+        optional: true
+      svelte:
+        optional: true
+      vue:
+        optional: true
+
   ms@2.1.3:
     resolution: {integrity: sha512-6FlzubTLZG3J2a/NVCAleEhjzq5oxgHyaCU9yYXvcLsvoVaHJq/s5xXI6/XXP6tz7R9xAOtHnSO/tXtF3WRTlA==}
 
@@ -570,8 +665,8 @@ packages:
     resolution: {integrity: sha512-XrsrhT5sybtKI6wakr2SPOlGZWWYbUXZ7a0jT8/QOeAPau+1X/bSegNe5YR75oJmEZQbKningirmGOEJCIk61Q==}
     engines: {node: '>=12.20.0'}
 
-  option-validator@2.0.6:
-    resolution: {integrity: sha512-tmZDan2LRIRQyhUGvkff68/O0R8UmF+Btmiiz0SmSw2ng3CfPZB9wJlIjHpe/MKUZqyIZkVIXCrwr1tIN+0Dzg==}
+  path-browserify@1.0.1:
+    resolution: {integrity: sha512-b7uo2UCUOYZcnF/3ID0lulOJi/bafxa1xPe7ZPsammBSpjSWQkjNxlt635YGS2MiR9GjvuXCtz2emr3jbsz98g==}
 
   pathe@2.0.3:
     resolution: {integrity: sha512-WUjGcAqP1gQacoQe+OBJsFA7Ld4DyXuUIjZ5cc75cLHvJ7dtNsTugphxIADwspS+AraAUePCKrSVtPLFj/F88w==}
@@ -609,8 +704,15 @@ packages:
     engines: {node: ^20.19.0 || >=22.12.0}
     hasBin: true
 
+  sax@1.2.1:
+    resolution: {integrity: sha512-8I2a3LovHTOpm7NV5yOyO8IHqgVsfK4+UuySrXU8YXkSRX7k6hCV9b3HrkKCr3nMpgj+0bmocaJJWpvp1oc7ZA==}
+
   scule@1.3.0:
     resolution: {integrity: sha512-6FtHJEvt+pVMIB9IBY+IcCJ6Z5f1iQnytgyfKMhDKgmzYG+TeH/wx1y3l27rshSbLiSanrR9ffZDrEsmjlQF2g==}
+
+  shaka-player@4.16.52:
+    resolution: {integrity: sha512-B56UZ0hAK16mLBjlzZ2FWZBREyh8hVDrDJnHYTP8pWKjmn2vgZMa6cb7ljkvZI1qHTz3v+zt2G3EXlzIqWn6zA==}
+    engines: {node: '>=18'}
 
   source-map-js@1.2.2:
     resolution: {integrity: sha512-KGj/8Y43x35aZVDtt+J4mK1hoLGHULMYfSkODJNQjNDC3oW1PqPoxMwo0pLUsWM/UEGzON/NxeHywEfNXNP3Vw==}
@@ -895,15 +997,57 @@ snapshots:
 
   '@rolldown/pluginutils@1.0.1': {}
 
+  '@svta/cml-608@1.0.2': {}
+
+  '@svta/cml-cmcd@2.3.2(@svta/cml-structured-field-values@1.1.3(@svta/cml-utils@1.5.0))(@svta/cml-utils@1.5.0)':
+    dependencies:
+      '@svta/cml-structured-field-values': 1.1.3(@svta/cml-utils@1.5.0)
+      '@svta/cml-utils': 1.5.0
+
+  '@svta/cml-cmsd@1.0.6(@svta/cml-cta@1.0.6(@svta/cml-structured-field-values@1.1.3(@svta/cml-utils@1.5.0))(@svta/cml-utils@1.5.0))(@svta/cml-structured-field-values@1.1.3(@svta/cml-utils@1.5.0))(@svta/cml-utils@1.5.0)':
+    dependencies:
+      '@svta/cml-cta': 1.0.6(@svta/cml-structured-field-values@1.1.3(@svta/cml-utils@1.5.0))(@svta/cml-utils@1.5.0)
+      '@svta/cml-structured-field-values': 1.1.3(@svta/cml-utils@1.5.0)
+      '@svta/cml-utils': 1.5.0
+
+  '@svta/cml-cta@1.0.6(@svta/cml-structured-field-values@1.1.3(@svta/cml-utils@1.5.0))(@svta/cml-utils@1.5.0)':
+    dependencies:
+      '@svta/cml-structured-field-values': 1.1.3(@svta/cml-utils@1.5.0)
+      '@svta/cml-utils': 1.5.0
+
+  '@svta/cml-dash@1.0.6(@svta/cml-utils@1.5.0)':
+    dependencies:
+      '@svta/cml-utils': 1.5.0
+
+  '@svta/cml-id3@1.0.6(@svta/cml-utils@1.5.0)':
+    dependencies:
+      '@svta/cml-utils': 1.5.0
+
+  '@svta/cml-request@1.0.12(@svta/cml-cmcd@2.3.2(@svta/cml-structured-field-values@1.1.3(@svta/cml-utils@1.5.0))(@svta/cml-utils@1.5.0))(@svta/cml-utils@1.5.0)(@svta/cml-xml@1.1.4(@svta/cml-utils@1.5.0))':
+    dependencies:
+      '@svta/cml-cmcd': 2.3.2(@svta/cml-structured-field-values@1.1.3(@svta/cml-utils@1.5.0))(@svta/cml-utils@1.5.0)
+      '@svta/cml-utils': 1.5.0
+      '@svta/cml-xml': 1.1.4(@svta/cml-utils@1.5.0)
+
+  '@svta/cml-structured-field-values@1.1.3(@svta/cml-utils@1.5.0)':
+    dependencies:
+      '@svta/cml-utils': 1.5.0
+
+  '@svta/cml-utils@1.5.0': {}
+
+  '@svta/cml-xml@1.1.4(@svta/cml-utils@1.5.0)':
+    dependencies:
+      '@svta/cml-utils': 1.5.0
+
   '@sxzz/popperjs-es@2.11.8': {}
 
   '@types/estree@1.0.9': {}
 
   '@types/lodash-es@4.17.12':
     dependencies:
-      '@types/lodash': 4.17.25
+      '@types/lodash': 4.17.26
 
-  '@types/lodash@4.17.25': {}
+  '@types/lodash@4.17.26': {}
 
   '@types/web-bluetooth@0.0.21': {}
 
@@ -1005,13 +1149,9 @@ snapshots:
 
   argparse@3.0.2: {}
 
-  artplayer-plugin-multiple-subtitles@1.2.0: {}
-
-  artplayer@5.4.0:
-    dependencies:
-      option-validator: 2.0.6
-
   async-validator@4.2.5: {}
+
+  bcp-47-match@2.0.3: {}
 
   buffer-from@1.1.2: {}
 
@@ -1023,6 +1163,8 @@ snapshots:
   chokidar@5.0.0:
     dependencies:
       readdirp: 5.1.1
+
+  codem-isoboxer@0.3.10: {}
 
   color-convert@2.0.1:
     dependencies:
@@ -1037,6 +1179,27 @@ snapshots:
   confbox@0.3.1: {}
 
   csstype@3.2.3: {}
+
+  dashjs@5.2.1(@svta/cml-cta@1.0.6(@svta/cml-structured-field-values@1.1.3(@svta/cml-utils@1.5.0))(@svta/cml-utils@1.5.0))(@svta/cml-structured-field-values@1.1.3(@svta/cml-utils@1.5.0))(@svta/cml-utils@1.5.0):
+    dependencies:
+      '@svta/cml-608': 1.0.2
+      '@svta/cml-cmcd': 2.3.2(@svta/cml-structured-field-values@1.1.3(@svta/cml-utils@1.5.0))(@svta/cml-utils@1.5.0)
+      '@svta/cml-cmsd': 1.0.6(@svta/cml-cta@1.0.6(@svta/cml-structured-field-values@1.1.3(@svta/cml-utils@1.5.0))(@svta/cml-utils@1.5.0))(@svta/cml-structured-field-values@1.1.3(@svta/cml-utils@1.5.0))(@svta/cml-utils@1.5.0)
+      '@svta/cml-dash': 1.0.6(@svta/cml-utils@1.5.0)
+      '@svta/cml-id3': 1.0.6(@svta/cml-utils@1.5.0)
+      '@svta/cml-request': 1.0.12(@svta/cml-cmcd@2.3.2(@svta/cml-structured-field-values@1.1.3(@svta/cml-utils@1.5.0))(@svta/cml-utils@1.5.0))(@svta/cml-utils@1.5.0)(@svta/cml-xml@1.1.4(@svta/cml-utils@1.5.0))
+      '@svta/cml-xml': 1.1.4(@svta/cml-utils@1.5.0)
+      bcp-47-match: 2.0.3
+      codem-isoboxer: 0.3.10
+      fast-deep-equal: 3.1.3
+      html-entities: 2.6.0
+      imsc: 1.1.5
+      localforage: 1.10.0
+      path-browserify: 1.0.1
+    transitivePeerDependencies:
+      - '@svta/cml-cta'
+      - '@svta/cml-structured-field-values'
+      - '@svta/cml-utils'
 
   dayjs@1.11.23: {}
 
@@ -1054,7 +1217,7 @@ snapshots:
       '@element-plus/icons-vue': 2.3.2(vue@3.5.43)
       '@floating-ui/dom': 1.8.0
       '@popperjs/core': '@sxzz/popperjs-es@2.11.8'
-      '@types/lodash': 4.17.25
+      '@types/lodash': 4.17.26
       '@types/lodash-es': 4.17.12
       '@vueuse/core': 15.0.0(vue@3.5.43)
       async-validator: 4.2.5
@@ -1081,6 +1244,8 @@ snapshots:
 
   exsolve@1.1.3: {}
 
+  fast-deep-equal@3.1.3: {}
+
   fdir@6.5.0(picomatch@4.0.7):
     optionalDependencies:
       picomatch: 4.0.7
@@ -1098,6 +1263,16 @@ snapshots:
 
   has-flag@4.0.0: {}
 
+  hls.js@1.7.3: {}
+
+  html-entities@2.6.0: {}
+
+  immediate@3.0.6: {}
+
+  imsc@1.1.5:
+    dependencies:
+      sax: 1.2.1
+
   js-md5@0.9.2: {}
 
   js-tokens@10.0.0: {}
@@ -1108,7 +1283,9 @@ snapshots:
     optionalDependencies:
       graceful-fs: 4.2.11
 
-  kind-of@6.0.3: {}
+  lie@3.1.1:
+    dependencies:
+      immediate: 3.0.6
 
   lightningcss-android-arm64@1.33.0:
     optional: true
@@ -1169,6 +1346,10 @@ snapshots:
       pkg-types: 2.3.3
       quansync: 0.2.11
 
+  localforage@1.10.0:
+    dependencies:
+      lie: 3.1.1
+
   lodash-es@4.18.1: {}
 
   lodash-unified@1.0.3(@types/lodash-es@4.17.12)(lodash-es@4.18.1)(lodash@4.18.1):
@@ -1211,6 +1392,18 @@ snapshots:
       pkg-types: 1.3.1
       ufo: 1.6.4
 
+  movi-player@0.4.1(@svta/cml-cta@1.0.6(@svta/cml-structured-field-values@1.1.3(@svta/cml-utils@1.5.0))(@svta/cml-utils@1.5.0))(@svta/cml-structured-field-values@1.1.3(@svta/cml-utils@1.5.0))(@svta/cml-utils@1.5.0)(vue@3.5.43):
+    dependencies:
+      dashjs: 5.2.1(@svta/cml-cta@1.0.6(@svta/cml-structured-field-values@1.1.3(@svta/cml-utils@1.5.0))(@svta/cml-utils@1.5.0))(@svta/cml-structured-field-values@1.1.3(@svta/cml-utils@1.5.0))(@svta/cml-utils@1.5.0)
+      hls.js: 1.7.3
+      shaka-player: 4.16.52
+    optionalDependencies:
+      vue: 3.5.43
+    transitivePeerDependencies:
+      - '@svta/cml-cta'
+      - '@svta/cml-structured-field-values'
+      - '@svta/cml-utils'
+
   ms@2.1.3: {}
 
   nanoid@3.3.20: {}
@@ -1219,9 +1412,7 @@ snapshots:
 
   obug@2.2.1: {}
 
-  option-validator@2.0.6:
-    dependencies:
-      kind-of: 6.0.3
+  path-browserify@1.0.1: {}
 
   pathe@2.0.3: {}
 
@@ -1274,7 +1465,11 @@ snapshots:
       '@rolldown/binding-win32-arm64-msvc': 1.2.13
       '@rolldown/binding-win32-x64-msvc': 1.2.13
 
+  sax@1.2.1: {}
+
   scule@1.3.0: {}
+
+  shaka-player@4.16.52: {}
 
   source-map-js@1.2.2: {}
 

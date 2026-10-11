@@ -2,16 +2,15 @@
   <el-dialog v-model="dialogVisible" :title="playItem.name" center @close="onClose">
     <div
         class="flex-center content" v-loading="loading">
-      <ArtplayerView :playItem="playItem" v-if="dialogVisible && !loading"/>
+      <MoviPlayerView :playItem="playItem" v-if="dialogVisible && !loading"/>
     </div>
   </el-dialog>
 </template>
 <script setup>
 
 import {ref} from "vue";
-import ArtplayerView from "./ArtplayerView.vue";
+import MoviPlayerView from "./MoviPlayerView.vue";
 import {toApiFile} from "@/js/global.js";
-import * as http from "@/js/http.js";
 
 let loading = ref(false);
 let dialogVisible = ref(false)
@@ -20,23 +19,7 @@ let playItem = ref({})
 let show = (pi) => {
   playItem.value = {...pi};
   playItem.value.src = toApiFile(playItem.value.filename)
-  for (let subtitle of playItem.value.subtitles) {
-    subtitle.url = toApiFile(subtitle.url)
-  }
-
-  loading.value = true;
-  // 获取内封字幕
-  http.getSubtitles(playItem.value.filename)
-      .then(res => {
-        for (let sub of res.data) {
-          const blob = new Blob([sub.content], {type: "text/plain"});
-          sub.url = URL.createObjectURL(blob);
-          playItem.value.subtitles.push(sub)
-        }
-      })
-      .finally(() => {
-        loading.value = false
-      });
+  loading.value = false
   dialogVisible.value = true
 }
 

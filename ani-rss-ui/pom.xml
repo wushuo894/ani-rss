@@ -53,8 +53,8 @@
                             <goal>install-node-and-pnpm</goal>
                         </goals>
                         <configuration>
-                            <nodeVersion>v26.8.1</nodeVersion>
-                            <pnpmVersion>12.3.4</pnpmVersion>
+                            <nodeVersion>v26.11.0</nodeVersion>
+                            <pnpmVersion>12.10.1</pnpmVersion>
                         </configuration>
                     </execution>
                     <execution>

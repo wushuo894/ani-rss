@@ -65,10 +65,6 @@
             <artifactId>gson</artifactId>
         </dependency>
         <dependency>
-            <groupId>ebml.reader</groupId>
-            <artifactId>ebml-reader</artifactId>
-        </dependency>
-        <dependency>
             <groupId>wushuo.tmdb.api</groupId>
             <artifactId>tmdb-api</artifactId>
         </dependency>

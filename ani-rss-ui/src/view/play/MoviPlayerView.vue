@@ -1,6 +1,9 @@
 <template>
   <div>
-    <div class="art-app"></div>
+    <movi-player
+        class="movi-app"
+        :src="playItem.src"
+        :controls="true"/>
     <div class="flex" style="justify-content: end;">
       <el-dropdown>
         <el-button bg text icon="MoreFilled"/>
@@ -81,9 +84,8 @@
 </template>
 
 <script setup>
-import {onBeforeUnmount, onMounted} from 'vue'
-import Artplayer from 'artplayer';
-import artplayerPluginMultipleSubtitles from 'artplayer-plugin-multiple-subtitles';
+// 使用 slim 构建，将 FFmpeg WASM 拆成独立资源，避免把大体积 WASM 内嵌到 JS。
+import 'movi-player'
 
 const props = defineProps(['playItem'])
 
@@ -95,70 +97,11 @@ let encodeUrl = (str) => {
   return encodeURIComponent(str);
 }
 
-let art = null
-
-onMounted(() => {
-  let {src, subtitles, extName} = props['playItem'];
-  let defaultName = ''
-  let settings = []
-  if (subtitles.length) {
-    subtitles[0]['default'] = true
-    defaultName = subtitles[0].name
-    settings = [
-      {
-        width: 200,
-        html: 'Subtitle',
-        tooltip: defaultName,
-        selector: subtitles,
-        onSelect: function (item) {
-          art.plugins['multipleSubtitles'].tracks([item.name]);
-          return item.html;
-        },
-      },
-    ]
-  }
-  art = new Artplayer({
-    container: '.art-app',
-    url: src,
-    type: extName,
-    theme: '#646cff',
-    playbackRate: true,
-    aspectRatio: true,
-    screenshot: true,
-    setting: true,
-    pip: true,
-    fullscreen: true,
-    fullscreenWeb: true,
-    airplay: true,
-    preload: true,
-    plugins: [
-      artplayerPluginMultipleSubtitles({
-        subtitles: subtitles
-      })
-    ],
-    settings: settings
-  });
-  art.on('video:canplay', () => {
-    if (defaultName) {
-      art.plugins['multipleSubtitles'].tracks([defaultName]);
-    }
-  });
-})
-
-onBeforeUnmount(() => {
-  if (!art) {
-    return
-  }
-  try {
-    art.destroy(true);
-    art = null;
-  } catch (e) {
-  }
-})
 </script>
 
 <style scoped>
-.art-app {
+.movi-app {
+  display: block;
   width: 700px;
   height: 450px;
   max-width: calc(100vw - 48px);

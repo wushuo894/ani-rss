@@ -74,8 +74,8 @@ export default defineConfig({
                             test: /node_modules[\\/](@element-plus[\\/]icons-vue)/,
                         },
                         {
-                            name: 'artplayer',
-                            test: /node_modules[\\/](artplayer|artplayer-plugin-multiple-subtitles)/,
+                            name: 'movi-player',
+                            test: /node_modules[\\/]movi-player/,
                         },
                         {
                             name: 'element-plus',
