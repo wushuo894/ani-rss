@@ -1,2 +1,2 @@
-- feat: 批量添加大升级
-- refactor: 批量添加备用rss可以自动偏移了
+- feat: WASM 播放器
+- refactor: 优化多音字处理
