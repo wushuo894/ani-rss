@@ -2,7 +2,6 @@ package ani.rss.entity;
 
 import ani.rss.enums.AniSortTypeEnum;
 import ani.rss.enums.BgmTokenTypeEnum;
-import com.google.gson.annotations.SerializedName;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.experimental.Accessors;
@@ -533,12 +532,6 @@ public class Config implements Serializable {
     private Integer customEpisodeGroupIndex;
 
     /**
-     * OpenList driver
-     */
-    @Schema(description = "OpenList Driver")
-    private String provider;
-
-    /**
      * 添加行订阅是是否开启自动上传
      */
     @Schema(description = "新增订阅自动上传")
@@ -609,20 +602,6 @@ public class Config implements Serializable {
      */
     @Schema(description = "强制更新总集数信息")
     private Boolean forceUpdateTotalEpisodeNumber;
-
-    /**
-     * OpenList 离线超时 分钟
-     */
-    @Schema(description = "OpenList 离线超时(分钟)")
-    @SerializedName(value = "openListDownloadTimeout", alternate = "alistDownloadTimeout")
-    private Integer openListDownloadTimeout;
-
-    /**
-     * OpenList 下载重试次数
-     */
-    @Schema(description = "OpenList 下载重试次数")
-    @SerializedName(value = "openListDownloadRetryNumber", alternate = "alistDownloadRetryNumber")
-    private Long openListDownloadRetryNumber;
 
     /**
      * 设置备份

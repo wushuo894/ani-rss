@@ -10,12 +10,6 @@
           <el-option label="qBittorrent" value="qBittorrent"/>
           <el-option label="Transmission" value="Transmission"/>
           <el-option label="Aria2" value="Aria2"/>
-          <el-option value="OpenList" disabled>
-            <div class="full-width">
-              <span style="float: left">OpenList</span>
-              <span style="float: right">已停止支持</span>
-            </div>
-          </el-option>
         </el-select>
       </SettingsItem>
       <SettingsItem label="地址">
@@ -56,56 +50,6 @@
           </template>
         </el-input>
       </SettingsItem>
-      <template v-else-if="props.config.downloadToolType === 'OpenList'">
-        <SettingsItem label="Token">
-          <el-input
-              v-model.trim="props.config.downloadToolPassword"
-              placeholder="OpenList-xxxxxx"
-              show-password
-              autocomplete="new-password">
-            <template #prefix>
-              <el-icon class="el-input__icon">
-                <Key/>
-              </el-icon>
-            </template>
-          </el-input>
-          <br/>
-          <el-text class="mx-1" size="small">
-            请设置好 <strong>保存位置</strong> 才能通过测试<br/>
-            请在 OpenList -> 设置-> 其他 -> 配置临时目录<br/>
-            支持离线下载到 115、PikPak、迅雷云盘
-          </el-text>
-          <template v-if="props.config.delayedDownload < 1">
-            <br/>
-            <el-alert show-icon type="warning" :closable="false">
-              <template #title>
-                未设置 <strong>延迟下载</strong>
-              </template>
-            </el-alert>
-          </template>
-        </SettingsItem>
-        <SettingsItem label="Driver">
-          <el-select v-model="props.config['provider']" class="width-150">
-            <el-option v-for="it in offlineList" :key="it.label" :label="it.label" :value="it.value"/>
-          </el-select>
-        </SettingsItem>
-        <SettingsItem label="重试次数">
-          <div>
-            <el-input-number v-model="props.config['openListDownloadRetryNumber']" :min="-1"/>
-            <br>
-            <el-text class="mx-1" size="small">
-              设置为 -1 将一直进行重试
-            </el-text>
-          </div>
-        </SettingsItem>
-        <SettingsItem label="离线超时">
-          <el-input-number v-model:model-value="props.config['openListDownloadTimeout']" :min="1">
-            <template #suffix>
-              <span>分钟</span>
-            </template>
-          </el-input-number>
-        </SettingsItem>
-      </template>
       <template v-else>
         <SettingsItem label="用户名">
           <el-input

@@ -331,10 +331,8 @@ public class TorrentUtil {
     public static void loadDownloadTool() {
         String download = CONFIG.getDownloadToolType();
 
-        if (download.equals("Alist")) {
-            download = "OpenList";
-            CONFIG.setDownloadToolType(download);
-            ConfigUtil.sync();
+        if (!List.of("Aria2", "qBittorrent", "Transmission").contains(download)) {
+            download = "qBittorrent";
         }
 
         DOWNLOAD = SpringUtil.getBean(ClassUtil.loadClass("ani.rss.download." + download));
