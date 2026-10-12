@@ -1,14 +1,16 @@
 <template>
-  <AnimeGardenView ref="animeGardenRef" @callback="rssCallback"/>
-  <AniBTView ref="aniBTRef" @callback="rssCallback"/>
-  <MikanView ref="mikanRef" @callback="rssCallback"/>
+  <BatchAdditionView ref="batchAdditionRef" v-model="batchAdditionDialogVisible" :items="[]" type="other"
+                     @done="batchDone"/>
+  <AnimeGardenView ref="animeGardenRef"/>
+  <AniBTView ref="aniBTRef"/>
+  <MikanView ref="mikanRef"/>
   <BgmView ref="bgmRef" @callback="bgmCallback"/>
   <el-dialog v-model="dialogVisible" class="add-subscription-dialog" center title="添加订阅"
              :close-on-click-modal="!rssButtonLoading"
              :close-on-press-escape="!rssButtonLoading"
              :show-close="!rssButtonLoading"
   >
-    <div v-show="showRss" class="add-source-step">
+    <div class="add-source-step">
       <el-tabs v-model="activeName" class="add-source-tabs tabs-center" tab-position="top">
         <el-tab-pane
             v-for="source in rssSources"
@@ -108,15 +110,6 @@
         </el-button>
       </div>
     </div>
-    <div v-if="!showRss" class="ani-step">
-      <el-button
-          class="ani-step-back"
-          bg text icon="ArrowLeft"
-          @click="showRss = true">
-        返回 RSS
-      </el-button>
-      <AniView v-model:ani="ani" @callback="addAni"/>
-    </div>
   </el-dialog>
 </template>
 
@@ -125,10 +118,9 @@ import {ref} from "vue";
 import {ElMessage} from "element-plus";
 import {ArrowRight, Search} from "@element-plus/icons-vue";
 import MikanView from "./MikanView.vue";
-import AniView from "./AniView.vue";
 import BgmView from "./BgmView.vue";
+import BatchAdditionView from './BatchAdditionView.vue'
 import {aniData} from "@/js/ani.js";
-import * as http from "@/js/http.js";
 import AniBTView from "@/view/home/AniBTView.vue";
 import {useLocalStorage} from "@vueuse/core";
 import AnimeGardenView from "@/view/home/AnimeGardenView.vue";
@@ -136,11 +128,12 @@ import mikanIcon from "@/icon/icon-Mikan.png";
 import aniBTIcon from "@/icon/icon-AniBT.png";
 import animeGardenIcon from "@/icon/icon-AnimeGarden.png";
 
-const showRss = ref(true)
 const aniBTRef = ref()
 const mikanRef = ref()
 const animeGardenRef = ref()
 const bgmRef = ref()
+const batchAdditionRef = ref()
+const batchAdditionDialogVisible = ref(false)
 
 const rssSources = [
   {
@@ -172,42 +165,23 @@ const ani = ref(aniData)
 
 const rssButtonLoading = ref(false)
 
-const getRss = () => {
+// 手动 RSS 也交给统一弹窗串行加载并确认，不再进入 AddView 内部的第二步。
+const getRss = async () => {
   if (activeName.value === 'other') {
     if (!ani.value.bgmUrl) {
       ElMessage.error('请选择在 Bangumi 中所对应的番剧')
       return
     }
   }
-  rssButtonLoading.value = true
   ani.value.type = activeName.value
-  http.rssToAni(ani.value)
-      .then(res => {
-        let match = ani.value['match'];
-        ani.value = res['data']
-        ani.value['match'] = match
-        ani.value.showDownlaod = false
-        showRss.value = false
-      })
-      .finally(() => {
-        rssButtonLoading.value = false
-      })
-}
-
-const addAni = (fun) => {
-  http.addAni(ani.value)
-      .then(res => {
-        ElMessage.success(res.message)
-        window.$reLoadList()
-        dialogVisible.value = false
-      }).finally(fun)
+  batchAdditionDialogVisible.value = true
+  await batchAdditionRef.value?.openRequests([JSON.parse(JSON.stringify(ani.value))])
 }
 
 const activeName = useLocalStorage('add-active-name', 'mikan')
 
 const show = () => {
   ani.value = JSON.parse(JSON.stringify(aniData))
-  showRss.value = true
   dialogVisible.value = true
   rssButtonLoading.value = false
 }
@@ -217,14 +191,8 @@ let bgmCallback = it => {
   ani.value.bgmUrl = it.url
 }
 
-let rssCallback = v => {
-  let {subgroup, match, url, bgmUrl} = v
-  ani.value.url = url
-  ani.value.bgmUrl = bgmUrl
-  ani.value.subgroup = subgroup
-  ani.value.match = JSON.parse(match)
-      .map(s => `{{${subgroup}}}:${s}`)
-  getRss()
+let batchDone = () => {
+  window.$reLoadList?.()
 }
 
 defineExpose({show})

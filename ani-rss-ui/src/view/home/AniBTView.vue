@@ -1,5 +1,6 @@
 <template>
-  <BatchAdditionView ref="batchAdditionRef" v-model="batchAdditionDialogVisible" :items="batchAdditionItems" type="ani-bt"
+  <BatchAdditionView ref="batchAdditionRef" v-model="batchAdditionDialogVisible" :items="batchAdditionItems"
+                     type="ani-bt"
                      @done="batchDone"/>
   <el-dialog v-model="matchDialogVisible" align-center center title="匹配" width="auto" @close="cancelBatchMatch">
     <div class="match-content">
@@ -236,6 +237,7 @@ let addAni = ref({
 let regexList = ref([])
 let batchMatchGroup = ref(null)
 let batchMatchMap = ref({})
+let selectedMatchGroup = ref(null)
 
 let callback = v => {
   let {bgmId, rss, name} = v
@@ -247,6 +249,7 @@ let callback = v => {
   addAni.value.match = '[]'
 
   regexList.value.push([])
+  selectedMatchGroup.value = v
   batchMatchGroup.value = null
   matchDialogVisible.value = true
 }
@@ -265,8 +268,10 @@ let confirmMatch = () => {
   if (batchMatchGroup.value) {
     batchMatchMap.value[batchMatchGroup.value.rss] = JSON.parse(addAni.value.match)
   } else {
-    emit('callback', addAni.value)
-    dialogVisible.value = false
+    const source = {...selectedMatchGroup.value, match: JSON.parse(addAni.value.match)}
+    batchAdditionItems.value = [JSON.stringify(source)]
+    batchAdditionDialogVisible.value = true
+    batchAdditionRef.value?.open(batchAdditionItems.value)
   }
   batchMatchGroup.value = null
   matchDialogVisible.value = false

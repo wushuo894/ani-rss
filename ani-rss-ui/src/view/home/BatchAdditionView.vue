@@ -75,7 +75,16 @@ const load = async item => {
   item.status = 'loading'
   item.error = ''
   try {
-    item.ani = appendMatchRules((await http.rssToAni(makeAni(item))).data, item)
+    const request = item.request || makeAni(item)
+    const result = (await http.rssToAni(request)).data
+    if (item.sources?.length) {
+      item.ani = appendMatchRules(result, item)
+    } else {
+      // 手动添加沿用 AddView 中尚未参与解析的本地匹配配置。
+      result.match = request.match || result.match || []
+      result.showDownlaod = false
+      item.ani = result
+    }
     item.status = 'success'
   } catch (error) {
     item.status = 'error'
@@ -96,6 +105,21 @@ const open = async (items = props.items) => {
     label: `订阅 ${index + 1}`,
     source: sources[0],
     sources,
+    status: 'loading',
+    ani: null,
+    error: ''
+  }))
+  activeName.value = entries.value[0]?.id || ''
+  for (const item of entries.value) await load(item)
+}
+
+// 手动或单条添加直接传入 RssToAniDTO，并复用相同的加载与确认流程。
+const openRequests = async requests => {
+  entries.value = requests.map((request, index) => ({
+    id: `${Date.now()}-${index}`,
+    label: request.title || request.subgroup || `订阅 ${index + 1}`,
+    request,
+    sources: [],
     status: 'loading',
     ani: null,
     error: ''
@@ -133,7 +157,7 @@ const closeItemById = id => {
   if (item) closeItem(item)
 }
 
-defineExpose({open})
+defineExpose({open, openRequests})
 </script>
 
 <style scoped>
