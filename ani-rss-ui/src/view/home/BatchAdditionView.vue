@@ -60,12 +60,22 @@ const makeAni = item => {
   return ani
 }
 
+// 加载完成后补全匹配规则，避免 rssToAni 的响应覆盖批量选择结果。
+const appendMatchRules = (ani, item) => {
+  ani.match = item.sources.flatMap(value => {
+    const group = typeof value === 'string' ? JSON.parse(value) : value
+    const subgroup = group.label || group.name
+    return (group.match || []).map(rule => `{{${subgroup}}}:${rule}`)
+  })
+  return ani
+}
+
 // 单条串行解析，失败只影响当前 tab，后续任务继续执行。
 const load = async item => {
   item.status = 'loading'
   item.error = ''
   try {
-    item.ani = (await http.rssToAni(makeAni(item))).data
+    item.ani = appendMatchRules((await http.rssToAni(makeAni(item))).data, item)
     item.status = 'success'
   } catch (error) {
     item.status = 'error'
@@ -73,9 +83,9 @@ const load = async item => {
   }
 }
 
-const open = async () => {
+const open = async (items = props.items) => {
   const grouped = new Map()
-  props.items.forEach(value => {
+  items.forEach(value => {
     const source = typeof value === 'string' ? JSON.parse(value) : value
     const key = props.type === 'mikan' ? new URL(source.rss).searchParams.get('bangumiId') : source.bgmId
     if (!grouped.has(key)) grouped.set(key, [])
