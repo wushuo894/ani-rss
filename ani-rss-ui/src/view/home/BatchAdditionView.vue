@@ -25,7 +25,7 @@
 
 <script setup>
 import {computed, ref} from 'vue'
-import {ElMessage} from 'element-plus'
+import {ElMessage, ElMessageBox} from 'element-plus'
 import * as http from '@/js/http.js'
 import AniView from './AniView.vue'
 import {aniData} from '@/js/ani.js'
@@ -132,7 +132,8 @@ const retry = item => load(item)
 
 const confirmItem = async (item, done) => {
   try {
-    await http.addAni(item.ani)
+    const added = await addSubscription(item)
+    if (!added) return
     item.status = 'added'
     ElMessage.success('订阅添加成功')
     closeItem(item)
@@ -141,6 +142,27 @@ const confirmItem = async (item, done) => {
   } finally {
     done?.()
   }
+}
+
+// 首次添加禁止覆盖；检测到重复时由用户明确确认后再携带 override 重试。
+const addSubscription = async item => {
+  try {
+    await http.addAni(item.ani)
+  } catch (error) {
+    const duplicate = ['此订阅已存在', '订阅标题重复'].includes(error?.message)
+    if (!duplicate) throw error
+    try {
+      await ElMessageBox.confirm(
+          `订阅“${item.ani.title}”已存在，是否覆盖原订阅？`,
+          '订阅重复',
+          {confirmButtonText: '覆盖', cancelButtonText: '取消', type: 'warning'}
+      )
+    } catch {
+      return false
+    }
+    await http.addAni(item.ani, true)
+  }
+  return true
 }
 
 const closeItem = item => {

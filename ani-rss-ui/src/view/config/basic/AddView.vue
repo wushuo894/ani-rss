@@ -81,16 +81,6 @@
   <SettingsItem label="自动上传">
     <el-switch v-model="props.config['upload']"/>
   </SettingsItem>
-  <SettingsItem label="自动替换">
-    <div>
-      <div>
-        <el-switch v-model="props.config['replace']"/>
-      </div>
-      <el-text size="small">
-        重名的订阅将允许被替换
-      </el-text>
-    </div>
-  </SettingsItem>
 </template>
 
 <script setup>

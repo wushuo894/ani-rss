@@ -186,7 +186,7 @@ public class AniMcpTools {
     public Ani addSubscription(@McpToolParam RssToAniDTO dto) {
         try {
             Ani ani = AniUtil.getAni(dto);
-            aniController.addAni(ani);
+            aniController.addAni(ani, false);
             return ani;
         } catch (Exception e) {
             throw mcpException("创建订阅失败", e);

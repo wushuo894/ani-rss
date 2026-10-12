@@ -658,12 +658,6 @@ public class Config implements Serializable {
     private Boolean bangumiIniEnabled;
 
     /**
-     * 重名的订阅将允许被替换
-     */
-    @Schema(description = "重名订阅允许替换")
-    private Boolean replace;
-
-    /**
      * 最大文件名长度 不包含后缀 如: .mkv .mp4
      */
     @Schema(description = "最大文件名长度(不含后缀)")

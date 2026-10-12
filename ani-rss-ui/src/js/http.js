@@ -25,7 +25,7 @@ export let listAni = () => api.post('api/listAni')
  * @param ani 订阅
  * @returns {Promise<unknown>}
  */
-export let addAni = (ani) => api.post('api/addAni', ani)
+export let addAni = (ani, override = false) => api.post(`api/addAni?override=${override}`, ani, {silent: true})
 
 /**
  * 修改订阅

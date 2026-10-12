@@ -40,15 +40,19 @@ public class AniService {
     /**
      * 添加订阅
      *
-     * @param ani 订阅
+     * @param ani      订阅
+     * @param override 是否覆盖重复订阅
      */
-    public void addAni(Ani ani) {
+    public void addAni(Ani ani, Boolean override) {
         Optional<Ani> first = AniUtil.ANI_LIST.stream()
                 .filter(it -> it.getId().equals(ani.getId()))
                 .findFirst();
 
         if (first.isPresent()) {
-            throw new IllegalArgumentException("此订阅已存在");
+            if (!override) {
+                throw new IllegalArgumentException("此订阅已存在");
+            }
+            AniUtil.ANI_LIST.remove(first.get());
         }
 
         first = AniUtil.ANI_LIST.stream()
@@ -59,11 +63,9 @@ public class AniService {
         Integer season = ani.getSeason();
 
         if (first.isPresent()) {
-            Config config = ConfigUtil.CONFIG;
-            Boolean replace = config.getReplace();
-            if (replace) {
+            if (override) {
                 AniUtil.ANI_LIST.remove(first.get());
-                log.info("自动替换 {} 第{}季", title, season);
+                log.info("覆盖订阅 {} 第{}季", title, season);
             } else {
                 throw new IllegalArgumentException("订阅标题重复");
             }

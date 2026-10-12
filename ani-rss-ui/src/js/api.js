@@ -1,8 +1,8 @@
 import {ElMessage} from "element-plus";
 import {authorization} from "@/js/global.js";
 
-let post = async (url, body) => {
-    return await fetch_(url, 'POST', body);
+let post = async (url, body, options = {}) => {
+    return await fetch_(url, 'POST', body, options);
 }
 
 let get = async (url) => {
@@ -17,7 +17,7 @@ let put = async (url, body) => {
     return await fetch_(url, 'PUT', body);
 }
 
-let fetch_ = async (url, method, body) => {
+let fetch_ = async (url, method, body, options = {}) => {
     let headers = {}
     if (authorization.value) {
         headers['Authorization'] = authorization.value
@@ -42,7 +42,9 @@ let fetch_ = async (url, method, body) => {
                 return res
             }
 
-            ElMessage.error(message)
+            if (!options.silent) {
+                ElMessage.error(message)
+            }
             if (code === 403) {
                 authorization.value = ''
                 setTimeout(() => {

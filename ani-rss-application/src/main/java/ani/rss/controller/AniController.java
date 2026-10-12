@@ -30,8 +30,9 @@ public class AniController extends BaseController {
     @Auth
     @Operation(summary = "添加订阅")
     @PostMapping("/addAni")
-    public Result<Void> addAni(@RequestBody Ani ani) {
-        aniService.addAni(ani);
+    public Result<Void> addAni(@RequestBody Ani ani,
+                               @RequestParam(value = "override", defaultValue = "false") Boolean override) {
+        aniService.addAni(ani, override);
         return Result.success("添加订阅成功");
     }
 
