@@ -1,2 +1,3 @@
-- refactor: 彻底移除 OpenList
-- refactor: 去除封面标题 tooltip
+- refactor: 优化订阅添加流程
+- feat: 批量添加支持选择匹配规则
+- feat: 检测到订阅重复支持决定是否覆盖
