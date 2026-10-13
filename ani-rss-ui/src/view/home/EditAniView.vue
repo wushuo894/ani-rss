@@ -64,7 +64,7 @@ const editAni = () => {
   let action = () => http.setAni(move.value, ani.value)
       .then(res => {
         ElMessage.success(res.message)
-        window.$reLoadList()
+        window.$reLoadList?.()
         dialogVisible.value = false
       })
       .finally(callback.value)

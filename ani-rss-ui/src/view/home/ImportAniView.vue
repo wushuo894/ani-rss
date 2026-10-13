@@ -107,7 +107,7 @@ let startImport = () => {
         if (instance.vnode.props.onCallback) {
           emit('callback')
         }
-        window.$reLoadList()
+        window.$reLoadList?.()
         dialogVisible.value = false
       })
       .finally(() => {

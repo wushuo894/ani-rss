@@ -41,7 +41,7 @@ const delAni = async () => {
         if (instance.vnode.props.onCallback) {
           emit('callback')
         } else {
-          window.$reLoadList()
+          window.$reLoadList?.()
         }
         dialogVisible.value = false
       })
