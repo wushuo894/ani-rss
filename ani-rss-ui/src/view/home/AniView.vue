@@ -1,8 +1,8 @@
 <template>
   <PreviewView ref="previewRef" :ani="props.ani"/>
-  <AniBTView ref="aniBTRef" @callback="mikanCallback"/>
-  <MikanView ref="mikanRef" @callback="mikanCallback"/>
-  <AnimeGardenView ref="animeGardenRef" @callback="mikanCallback"/>
+  <AniBTView ref="aniBTRef" fill-mode @callback="mikanCallback"/>
+  <MikanView ref="mikanRef" fill-mode @callback="mikanCallback"/>
+  <AnimeGardenView ref="animeGardenRef" fill-mode @callback="mikanCallback"/>
   <TmdbGroupView ref="tmdbGroupRef" :ani="props.ani"/>
   <div style="padding: 0 12px;">
     <el-tabs v-model="activeName" class="tabs-center">

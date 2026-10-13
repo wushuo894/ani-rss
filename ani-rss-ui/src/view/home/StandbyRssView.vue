@@ -1,7 +1,7 @@
 <template>
-  <AniBTView ref="aniBTRef" @callback="mikanCallback"/>
-  <MikanView ref="mikanRef" @callback="mikanCallback"/>
-  <AnimeGardenView ref="animeGardenRef" @callback="mikanCallback"/>
+  <AniBTView ref="aniBTRef" fill-mode @callback="mikanCallback"/>
+  <MikanView ref="mikanRef" fill-mode @callback="mikanCallback"/>
+  <AnimeGardenView ref="animeGardenRef" fill-mode @callback="mikanCallback"/>
   <div class="standby-rss-view">
     <el-alert v-if="!config.standbyRss" :closable="false"
               show-icon

@@ -143,6 +143,11 @@ import {proxyImage} from "@/js/global.js";
 import * as http from "@/js/http.js";
 import BatchAdditionView from './BatchAdditionView.vue'
 
+// 回填模式由编辑订阅和备用 RSS 场景显式启用，默认保持新增订阅流程。
+const props = defineProps({
+  fillMode: {type: Boolean, default: false}
+})
+
 // 批量添加订阅
 let rssList = ref([]);
 let batchAdditionItems = ref([])
@@ -312,7 +317,12 @@ let batchGroupChange = (checked, group) => {
 let confirmMatch = () => {
   if (batchMatchGroup.value) {
     batchMatchMap.value[batchMatchGroup.value.rss] = JSON.parse(addAni.value.match)
+  } else if (props.fillMode) {
+    // 编辑场景将选中的 RSS、字幕组和规则回填给父组件。
+    emit('callback', addAni.value)
+    dialogVisible.value = false
   } else {
+    // 新增场景继续进入统一添加弹窗，保留正常的订阅确认流程。
     const source = {...selectedMatchGroup.value, match: JSON.parse(addAni.value.match)}
     batchAdditionItems.value = [JSON.stringify(source)]
     batchAdditionDialogVisible.value = true
