@@ -1,5 +1,5 @@
 <template>
-  <el-dialog v-model="visible" title="批量添加订阅" width="860" align-center
+  <el-dialog v-model="visible" title="批量添加订阅" width="min(860px, calc(100vw - 24px))" align-center
              :close-on-click-modal="false" :close-on-press-escape="false">
     <el-tabs v-model="activeName" type="card" @tab-remove="closeItemById">
       <el-tab-pane v-for="item in entries" :key="item.id" :name="item.id" closable>
@@ -190,7 +190,20 @@ defineExpose({open, openRequests})
 }
 
 .batch-editor {
+  width: 100%;
+  max-width: 100%;
   min-height: 0;
+  min-width: 0;
+  overflow: hidden;
+}
+
+/* 限制延迟渲染的备用 RSS 表格，避免固定列宽反向撑大移动端弹窗。 */
+.batch-editor :deep(.el-tabs),
+.batch-editor :deep(.el-tabs__content),
+.batch-editor :deep(.el-tab-pane) {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
 }
 
 .batch-actions {
