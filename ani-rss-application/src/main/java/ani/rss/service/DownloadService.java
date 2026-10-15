@@ -83,8 +83,6 @@ public class DownloadService {
 
         String savePath = getDownloadPath(ani);
 
-        ItemsUtil.procrastinating(ani, items);
-
         // 实时保存文件
         boolean sync = false;
 
@@ -243,13 +241,15 @@ public class DownloadService {
         }
 
         if (sync) {
-            int size = ItemsUtil.currentEpisodeNumber(ani, items);
+            int currentEpisodeNumber = ItemsUtil.currentEpisodeNumber(ani, items);
             // 更新当前集数
-            ani.setCurrentEpisodeNumber(size);
+            ani.setCurrentEpisodeNumber(currentEpisodeNumber);
             // 更新下载时间
             ani.setLastDownloadTime(System.currentTimeMillis());
             AniUtil.sync();
         }
+
+        ItemsUtil.procrastinating(ani, items);
 
         if (!autoDisabled) {
             return;
