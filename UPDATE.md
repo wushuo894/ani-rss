@@ -1,1 +1,1 @@
-- fix: 修复移动端 备用rss 布局异常
+- refactor: 优化摸鱼检测 Close #741
