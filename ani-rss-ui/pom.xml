@@ -21,23 +21,13 @@
         <finalName>ani-rss-ui</finalName>
         <plugins>
             <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>exec-maven-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <phase>clean</phase>
-                        <goals>
-                            <goal>exec</goal>
-                        </goals>
-                    </execution>
-                </executions>
+                <artifactId>maven-clean-plugin</artifactId>
                 <configuration>
-                    <executable>rm</executable>
-                    <arguments>
-                        <argument>-rf</argument>
-                        <argument>./dist</argument>
-                    </arguments>
-                    <workingDirectory>${project.basedir}</workingDirectory>
+                    <filesets>
+                        <fileset>
+                            <directory>dist</directory>
+                        </fileset>
+                    </filesets>
                 </configuration>
             </plugin>
             <plugin>
