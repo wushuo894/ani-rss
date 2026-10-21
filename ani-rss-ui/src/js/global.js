@@ -22,7 +22,7 @@ const {store} = useColorMode()
 /**
  * 最大内容宽度
  */
-const maxContentWidth = useLocalStorage('max-content-width', 1600);
+const maxContentWidth = useLocalStorage('max-content-width', 3200);
 
 /**
  * 显示评分
