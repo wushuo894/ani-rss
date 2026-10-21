@@ -27,11 +27,11 @@ importers:
         specifier: ^0.9.2
         version: 0.9.2
       markdown-it:
-        specifier: ^15.0.2
-        version: 15.0.2
+        specifier: ^15.0.3
+        version: 15.0.3
       markdown-it-github-alerts:
         specifier: ^1.0.1
-        version: 1.0.1(markdown-it@15.0.2)
+        version: 1.0.1(markdown-it@15.0.3)
       movi-player:
         specifier: 0.4.1
         version: 0.4.1(@svta/cml-cta@1.0.6(@svta/cml-structured-field-values@1.1.3(@svta/cml-utils@1.5.0))(@svta/cml-utils@1.5.0))(@svta/cml-structured-field-values@1.1.3(@svta/cml-utils@1.5.0))(@svta/cml-utils@1.5.0)(vue@3.5.44)
@@ -50,10 +50,10 @@ importers:
         version: 5.51.2
       unplugin-auto-import:
         specifier: ^21.1.0
-        version: 21.1.0(@vueuse/core@14.4.0(vue@3.5.44))(vite@8.3.4(terser@5.51.2))
+        version: 21.1.0(@vueuse/core@14.4.0(vue@3.5.44))(rolldown@1.2.14)(vite@8.3.4(terser@5.51.2))
       unplugin-vue-components:
         specifier: ^32.1.0
-        version: 32.1.0(vite@8.3.4(terser@5.51.2))(vue@3.5.44)
+        version: 32.1.0(rolldown@1.2.14)(vite@8.3.4(terser@5.51.2))(vue@3.5.44)
       vite:
         specifier: ^8.3.4
         version: 8.3.4(terser@5.51.2)
@@ -374,8 +374,8 @@ packages:
     resolution: {integrity: sha512-zbB9rCJAT1rbjiVDb2hqKFHNYLxgtk8NURxZ3IZwD3F6NtxbXZQCnnSi1Lkx+IDohdPlFp222wVALIheZJQSEg==}
     engines: {node: '>=8'}
 
-  argparse@3.0.2:
-    resolution: {integrity: sha512-mFdDM6WqWKraGLsVb+C9CahPnzTXOefAOLq3jYcca2YZ8bEWpr++Tzj+zSaKW9+X9L5uSxcm1AZ3Y6aZJ09OhQ==}
+  argparse@3.0.3:
+    resolution: {integrity: sha512-Sn98ftV3KfsO8xfLPHG6oT8y+b0yvbrLgZjgPDXsharNY15tTAjqIsIju4S32nl6/iEUNNE4v+yL2Zhm8ooP3w==}
 
   async-validator@4.2.5:
     resolution: {integrity: sha512-7HhHjtERjqlNbZtqNqy2rckN/SpOOlmDliet+lP7k+eKZEjPk3DgyeU9lIXLdeLz0uBbbVp+9Qdow9wJWgwwfg==}
@@ -622,8 +622,8 @@ packages:
     peerDependencies:
       markdown-it: '>= 13.0.0'
 
-  markdown-it@15.0.2:
-    resolution: {integrity: sha512-q4IGxMv56jCqT4OCRCADBoDP3LO4MhmTXjFbphHPXs4g3j9Xg5RDnxqN8IF/3vIWEU+VCnUq+7JUg/cfy2E6Qw==}
+  markdown-it@15.0.3:
+    resolution: {integrity: sha512-+Az7Ojz3iRGu8KYMvJ6xVhvrxP3eE+vEtJX75Ow88XBpcQNV/0lGX5ZynIIBftREo4DC2jsveAMDaeltmm8QvQ==}
     hasBin: true
 
   mdurl@2.1.0:
@@ -681,11 +681,11 @@ packages:
   pkg-types@1.3.1:
     resolution: {integrity: sha512-/Jm5M4RvtBFVkKWRu2BLUTNP8/M2a+UwuAX+ae4770q1qVGtfjG+WTCupoZixokjmHiry8uI+dlY8KXYV5HVVQ==}
 
-  pkg-types@2.3.3:
-    resolution: {integrity: sha512-j/lCFdcppV0JxWpCEITdbDltBxPP6cHT+yNJ6Go2OgoSA9518X847X9z0p6LtA4Nc16+eQzCZjRrWanTGvHJ5w==}
+  pkg-types@2.4.0:
+    resolution: {integrity: sha512-07Fys7iVx0X6TcviMOgogM1Lk33ZyqOezMnU79S+kffWqwolG/5W9V8EgQSeYCIfFTYVgssRbnH630Oa2+soBA==}
 
-  postcss@8.5.30:
-    resolution: {integrity: sha512-zkd+e9S1AQHhmaBKye9zlFHWjOwVgqXl1q3ECYy8561K7qxR2cREf/STLskulBFd78k6AOFeA+ff1TtEzk9bAA==}
+  postcss@8.5.31:
+    resolution: {integrity: sha512-YUbWYCgErwnMAVkjUnYa+KlMBzGpHwiIt/DE7f0G33AuX2LH9UcTk6KgWxd3zRU+pN3u/C+Xl3EnMLM4Hea7Sg==}
     engines: {node: ^10 || ^12 || >=14}
 
   punycode.js@2.3.1:
@@ -710,8 +710,8 @@ packages:
   scule@1.3.0:
     resolution: {integrity: sha512-6FtHJEvt+pVMIB9IBY+IcCJ6Z5f1iQnytgyfKMhDKgmzYG+TeH/wx1y3l27rshSbLiSanrR9ffZDrEsmjlQF2g==}
 
-  shaka-player@4.16.52:
-    resolution: {integrity: sha512-B56UZ0hAK16mLBjlzZ2FWZBREyh8hVDrDJnHYTP8pWKjmn2vgZMa6cb7ljkvZI1qHTz3v+zt2G3EXlzIqWn6zA==}
+  shaka-player@4.16.53:
+    resolution: {integrity: sha512-XrOjsMMv/lIn1rlKl7shlw+QtO+DseiHvpKryCeR36EaIVCfQ50YZnbOr3ZqM7mBDkYx1vo1MaV6xPG5P4vbxg==}
     engines: {node: '>=18'}
 
   source-map-js@1.2.2:
@@ -1081,7 +1081,7 @@ snapshots:
       '@vue/shared': 3.5.44
       estree-walker: 2.0.2
       magic-string: 0.30.21
-      postcss: 8.5.30
+      postcss: 8.5.31
       source-map-js: 1.2.2
 
   '@vue/compiler-ssr@3.5.44':
@@ -1147,7 +1147,7 @@ snapshots:
     dependencies:
       color-convert: 2.0.1
 
-  argparse@3.0.2: {}
+  argparse@3.0.3: {}
 
   async-validator@4.2.5: {}
 
@@ -1343,7 +1343,7 @@ snapshots:
   local-pkg@1.2.1:
     dependencies:
       mlly: 1.8.2
-      pkg-types: 2.3.3
+      pkg-types: 2.4.0
       quansync: 0.2.11
 
   localforage@1.10.0:
@@ -1368,13 +1368,13 @@ snapshots:
     dependencies:
       '@jridgewell/sourcemap-codec': 1.6.0
 
-  markdown-it-github-alerts@1.0.1(markdown-it@15.0.2):
+  markdown-it-github-alerts@1.0.1(markdown-it@15.0.3):
     dependencies:
-      markdown-it: 15.0.2
+      markdown-it: 15.0.3
 
-  markdown-it@15.0.2:
+  markdown-it@15.0.3:
     dependencies:
-      argparse: 3.0.2
+      argparse: 3.0.3
       entities: 8.1.0
       linkify-it: 6.1.0
       mdurl: 2.1.0
@@ -1396,7 +1396,7 @@ snapshots:
     dependencies:
       dashjs: 5.2.1(@svta/cml-cta@1.0.6(@svta/cml-structured-field-values@1.1.3(@svta/cml-utils@1.5.0))(@svta/cml-utils@1.5.0))(@svta/cml-structured-field-values@1.1.3(@svta/cml-utils@1.5.0))(@svta/cml-utils@1.5.0)
       hls.js: 1.7.3
-      shaka-player: 4.16.52
+      shaka-player: 4.16.53
     optionalDependencies:
       vue: 3.5.44
     transitivePeerDependencies:
@@ -1426,13 +1426,13 @@ snapshots:
       mlly: 1.8.2
       pathe: 2.0.3
 
-  pkg-types@2.3.3:
+  pkg-types@2.4.0:
     dependencies:
       confbox: 0.3.1
       exsolve: 1.1.3
       pathe: 2.0.3
 
-  postcss@8.5.30:
+  postcss@8.5.31:
     dependencies:
       nanoid: 3.3.20
       picocolors: 1.1.1
@@ -1469,7 +1469,7 @@ snapshots:
 
   scule@1.3.0: {}
 
-  shaka-player@4.16.52: {}
+  shaka-player@4.16.53: {}
 
   source-map-js@1.2.2: {}
 
@@ -1504,7 +1504,7 @@ snapshots:
 
   ufo@1.6.4: {}
 
-  unimport@6.5.0(vite@8.3.4(terser@5.51.2)):
+  unimport@6.5.0(rolldown@1.2.14)(vite@8.3.4(terser@5.51.2)):
     dependencies:
       acorn: 8.19.0
       escape-string-regexp: 5.0.0
@@ -1514,12 +1514,14 @@ snapshots:
       mlly: 1.8.2
       pathe: 2.0.3
       picomatch: 4.0.7
-      pkg-types: 2.3.3
+      pkg-types: 2.4.0
       scule: 1.3.0
       strip-literal: 4.0.0
       tinyglobby: 0.2.17
-      unplugin: 3.4.0(vite@8.3.4(terser@5.51.2))
+      unplugin: 3.4.0(rolldown@1.2.14)(vite@8.3.4(terser@5.51.2))
       unplugin-utils: 0.3.2
+    optionalDependencies:
+      rolldown: 1.2.14
     transitivePeerDependencies:
       - '@farmfe/core'
       - '@rsbuild/core'
@@ -1533,13 +1535,13 @@ snapshots:
 
   universalify@2.0.1: {}
 
-  unplugin-auto-import@21.1.0(@vueuse/core@14.4.0(vue@3.5.44))(vite@8.3.4(terser@5.51.2)):
+  unplugin-auto-import@21.1.0(@vueuse/core@14.4.0(vue@3.5.44))(rolldown@1.2.14)(vite@8.3.4(terser@5.51.2)):
     dependencies:
       local-pkg: 1.2.1
       magic-string: 1.4.3
       picomatch: 4.0.7
-      unimport: 6.5.0(vite@8.3.4(terser@5.51.2))
-      unplugin: 3.4.0(vite@8.3.4(terser@5.51.2))
+      unimport: 6.5.0(rolldown@1.2.14)(vite@8.3.4(terser@5.51.2))
+      unplugin: 3.4.0(rolldown@1.2.14)(vite@8.3.4(terser@5.51.2))
       unplugin-utils: 0.3.2
     optionalDependencies:
       '@vueuse/core': 14.4.0(vue@3.5.44)
@@ -1561,7 +1563,7 @@ snapshots:
       pathe: 2.0.3
       picomatch: 4.0.7
 
-  unplugin-vue-components@32.1.0(vite@8.3.4(terser@5.51.2))(vue@3.5.44):
+  unplugin-vue-components@32.1.0(rolldown@1.2.14)(vite@8.3.4(terser@5.51.2))(vue@3.5.44):
     dependencies:
       chokidar: 5.0.0
       local-pkg: 1.2.1
@@ -1570,7 +1572,7 @@ snapshots:
       obug: 2.2.1
       picomatch: 4.0.7
       tinyglobby: 0.2.17
-      unplugin: 3.4.0(vite@8.3.4(terser@5.51.2))
+      unplugin: 3.4.0(rolldown@1.2.14)(vite@8.3.4(terser@5.51.2))
       unplugin-utils: 0.3.2
       vue: 3.5.44
     transitivePeerDependencies:
@@ -1585,12 +1587,13 @@ snapshots:
       - vite
       - webpack
 
-  unplugin@3.4.0(vite@8.3.4(terser@5.51.2)):
+  unplugin@3.4.0(rolldown@1.2.14)(vite@8.3.4(terser@5.51.2)):
     dependencies:
       '@jridgewell/remapping': 2.3.5
       picomatch: 4.0.7
       webpack-virtual-modules: 0.6.2
     optionalDependencies:
+      rolldown: 1.2.14
       vite: 8.3.4(terser@5.51.2)
 
   vite-plugin-compression@0.5.1(supports-color@7.2.0)(vite@8.3.4(terser@5.51.2)):
@@ -1606,7 +1609,7 @@ snapshots:
     dependencies:
       lightningcss: 1.33.0
       picomatch: 4.0.7
-      postcss: 8.5.30
+      postcss: 8.5.31
       rolldown: 1.2.14
       tinyglobby: 0.2.17
     optionalDependencies:
