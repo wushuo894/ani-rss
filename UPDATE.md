@@ -1,1 +1,3 @@
-- refactor: 优化摸鱼检测 Close #741
+- build: 更新依赖
+- refactor: 优化默认配置
+- refactor: 更新 AniBT Icon
