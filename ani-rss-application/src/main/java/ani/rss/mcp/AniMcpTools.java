@@ -1,10 +1,12 @@
 package ani.rss.mcp;
 
+import ani.rss.commons.GsonStatic;
 import ani.rss.controller.AniController;
 import ani.rss.entity.*;
 import ani.rss.entity.dto.AniBTQueryDTO;
 import ani.rss.entity.dto.RssToAniDTO;
 import ani.rss.exception.ResultException;
+import ani.rss.mcp.dto.DeleteSubscriptionDTO;
 import ani.rss.mcp.dto.ListSubscriptionDTO;
 import ani.rss.mcp.dto.SearchMikanDTO;
 import ani.rss.mcp.vo.SubscriptionItemsPreviewVO;
@@ -21,6 +23,7 @@ import org.springframework.ai.mcp.annotation.McpToolParam;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 @Slf4j
@@ -190,6 +193,61 @@ public class AniMcpTools {
             return ani;
         } catch (Exception e) {
             throw mcpException("创建订阅失败", e);
+        }
+    }
+
+    /**
+     * 使用完整订阅对象更新已有订阅。
+     *
+     * @param subscription 从订阅列表取得并修改后的完整订阅字段
+     * @return 修改后的订阅
+     */
+    @McpTool(
+            name = "edit_subscription",
+            description = "编辑一个 ANI-RSS 订阅。请先调用 list_subscriptions 获取完整订阅对象，保留 id 并修改需要调整的字段后传入",
+            annotations = @McpTool.McpAnnotations(
+                    title = "编辑订阅",
+                    destructiveHint = false,
+                    idempotentHint = true,
+                    openWorldHint = false
+            )
+    )
+    public Ani editSubscription(
+            @McpToolParam(description = "修改后的完整订阅对象，id 必须对应现有订阅")
+            Map<String, Object> subscription
+    ) {
+        try {
+            // 使用 Map 接收订阅，避免实体空字段被 MCP Schema 声明为必填。
+            Ani ani = GsonStatic.fromJson(GsonStatic.toJson(subscription), Ani.class);
+            aniController.setAni(ani);
+            return ani;
+        } catch (Exception e) {
+            throw mcpException("编辑订阅失败", e);
+        }
+    }
+
+    /**
+     * 删除指定订阅，可选择是否一并删除下载数据。
+     *
+     * @param dto 删除参数
+     * @return 已删除的订阅 ID
+     */
+    @McpTool(
+            name = "delete_subscription",
+            description = "删除一个或多个 ANI-RSS 订阅。deleteFiles 为 true 时还会删除下载器任务和本地视频文件",
+            annotations = @McpTool.McpAnnotations(
+                    title = "删除订阅",
+                    openWorldHint = false
+            )
+    )
+    public List<String> deleteSubscription(@McpToolParam DeleteSubscriptionDTO dto) {
+        try {
+            List<String> ids = dto.getIds();
+            boolean deleteFiles = Boolean.TRUE.equals(dto.getDeleteFiles());
+            aniController.deleteAni(ids, deleteFiles);
+            return ids;
+        } catch (Exception e) {
+            throw mcpException("删除订阅失败", e);
         }
     }
 
