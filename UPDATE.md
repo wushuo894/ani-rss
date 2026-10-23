@@ -1,3 +1,2 @@
 - build: 更新依赖
-- refactor: 优化默认配置
-- refactor: 更新 AniBT Icon
+- feat: MCP 支持编辑或删除订阅
