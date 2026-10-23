@@ -43,8 +43,8 @@
                             <goal>install-node-and-pnpm</goal>
                         </goals>
                         <configuration>
-                            <nodeVersion>v26.11.0</nodeVersion>
-                            <pnpmVersion>12.10.1</pnpmVersion>
+                            <nodeVersion>v26.12.1</nodeVersion>
+                            <pnpmVersion>12.15.0</pnpmVersion>
                         </configuration>
                     </execution>
                     <execution>
@@ -54,7 +54,7 @@
                         </goals>
                         <phase>generate-resources</phase>
                         <configuration>
-                            <arguments>install</arguments>
+                            <arguments>install --frozen-lockfile</arguments>
                             <environmentVariables>
                                 <CI>true</CI>
                             </environmentVariables>

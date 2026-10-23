@@ -18,7 +18,6 @@
     <packaging>pom</packaging>
     <properties>
         <java.version>25</java.version>
-        <lombok.version>1.18.48</lombok.version>
         <hutool.version>5.8.47</hutool.version>
         <logback.version>1.6.5</logback.version>
         <spring-ai.version>2.0.1</spring-ai.version>
@@ -32,7 +31,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>4.1.1</version>
+        <version>4.1.2</version>
         <relativePath/>
     </parent>
 
@@ -46,12 +45,12 @@
             <dependency>
                 <groupId>org.mnode.ical4j</groupId>
                 <artifactId>ical4j</artifactId>
-                <version>4.3.0</version>
+                <version>4.4.0</version>
             </dependency>
             <dependency>
                 <groupId>org.commonmark</groupId>
                 <artifactId>commonmark</artifactId>
-                <version>0.30.0</version>
+                <version>0.30.1</version>
             </dependency>
             <dependency>
                 <groupId>wushuo.tmdb.api</groupId>
@@ -125,7 +124,7 @@
                 <plugin>
                     <groupId>org.codehaus.mojo</groupId>
                     <artifactId>exec-maven-plugin</artifactId>
-                    <version>3.6.3</version>
+                    <version>3.6.4</version>
                 </plugin>
                 <plugin>
                     <groupId>com.github.eirslett</groupId>
