@@ -157,9 +157,34 @@ public class AniMcpTools {
         return animeGardenService.group(bgmId);
     }
 
+    /**
+     * 将 RSS 参数解析为完整订阅对象，供预览和添加工具继续使用。
+     *
+     * @param dto RSS 订阅参数
+     * @return 已补全番剧信息的订阅
+     */
+    @McpTool(
+            name = "rss_to_subscription",
+            description = "将 RSS 地址解析并转换为完整的 ANI-RSS 订阅对象。请先调用此工具，再将返回的订阅对象传给 preview_subscription_items 或 add_subscription",
+            annotations = @McpTool.McpAnnotations(
+                    title = "RSS 转订阅",
+                    readOnlyHint = true,
+                    destructiveHint = false,
+                    idempotentHint = true,
+                    openWorldHint = false
+            )
+    )
+    public Ani rssToSubscription(@McpToolParam RssToAniDTO dto) {
+        try {
+            return AniUtil.getAni(dto);
+        } catch (Exception e) {
+            throw mcpException("RSS转换失败", e);
+        }
+    }
+
     @McpTool(
             name = "preview_subscription_items",
-            description = "预览某个 RSS 订阅最终会命中的原始剧集条目",
+            description = "预览完整订阅对象最终会命中的原始剧集条目。请先调用 rss_to_subscription",
             annotations = @McpTool.McpAnnotations(
                     title = "预览订阅条目",
                     readOnlyHint = true,
@@ -167,9 +192,12 @@ public class AniMcpTools {
                     idempotentHint = true
             )
     )
-    public SubscriptionItemsPreviewVO previewSubscriptionItems(@McpToolParam RssToAniDTO dto) {
+    public SubscriptionItemsPreviewVO previewSubscriptionItems(
+            @McpToolParam(description = "由 rss_to_subscription 返回的完整订阅对象")
+            Map<String, Object> subscription
+    ) {
         try {
-            Ani ani = AniUtil.getAni(dto);
+            Ani ani = mapToAni(subscription);
             List<Item> items = ItemsUtil.getItems(ani);
             return new SubscriptionItemsPreviewVO(ani, items);
         } catch (Exception e) {
@@ -179,16 +207,19 @@ public class AniMcpTools {
 
     @McpTool(
             name = "add_subscription",
-            description = "添加一个 ANI-RSS 订阅。需要预览命中条目时请先调用 preview_subscription_items",
+            description = "添加一个完整的 ANI-RSS 订阅对象。请先调用 rss_to_subscription，可选调用 preview_subscription_items",
             annotations = @McpTool.McpAnnotations(
                     title = "添加订阅",
                     destructiveHint = false,
                     openWorldHint = false
             )
     )
-    public Ani addSubscription(@McpToolParam RssToAniDTO dto) {
+    public Ani addSubscription(
+            @McpToolParam(description = "由 rss_to_subscription 返回的完整订阅对象")
+            Map<String, Object> subscription
+    ) {
         try {
-            Ani ani = AniUtil.getAni(dto);
+            Ani ani = mapToAni(subscription);
             aniController.addAni(ani, false);
             return ani;
         } catch (Exception e) {
@@ -218,7 +249,7 @@ public class AniMcpTools {
     ) {
         try {
             // 使用 Map 接收订阅，避免实体空字段被 MCP Schema 声明为必填。
-            Ani ani = GsonStatic.fromJson(GsonStatic.toJson(subscription), Ani.class);
+            Ani ani = mapToAni(subscription);
             aniController.setAni(ani);
             return ani;
         } catch (Exception e) {
@@ -249,6 +280,10 @@ public class AniMcpTools {
         } catch (Exception e) {
             throw mcpException("删除订阅失败", e);
         }
+    }
+
+    private Ani mapToAni(Map<String, Object> map) {
+        return GsonStatic.fromJson(GsonStatic.toJson(map), Ani.class);
     }
 
     private ResultException mcpException(String action, Exception e) {
