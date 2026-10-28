@@ -1,2 +1,2 @@
-- build: 更新依赖
-- feat: MCP 支持编辑或删除订阅
+- fix: 修复 macOS 27 持续等待问题
+- refactor: 优化 MCP 调用 Close #744
