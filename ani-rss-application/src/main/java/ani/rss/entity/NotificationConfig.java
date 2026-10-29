@@ -283,6 +283,15 @@ public class NotificationConfig implements Serializable {
     @Schema(description = "Bark Volume")
     private Integer barkVolume;
 
+    @Schema(description = "QQ AppID")
+    private String qqAppId;
+
+    @Schema(description = "QQ AppSecret")
+    private String qqClientSecret;
+
+    @Schema(description = "QQ 用户 OpenID")
+    private String qqOpenId;
+
     /**
      * 通知 状态
      */
@@ -380,6 +389,12 @@ public class NotificationConfig implements Serializable {
                 .setBarkUseMarkdown(false)
                 .setBarkLevel("active")
                 .setBarkVolume(5);
+
+        // QQ
+        notificationConfig
+                .setQqAppId("")
+                .setQqClientSecret("")
+                .setQqOpenId("");
 
         return notificationConfig;
     }

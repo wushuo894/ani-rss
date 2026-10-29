@@ -308,6 +308,27 @@ export let downloadLoginTest = (config) => api.post('api/downloadLoginTest', con
 export let getTgUpdates = (notificationConfig) => api.post('api/getTgUpdates', notificationConfig)
 
 /**
+ * 开始绑定QQ OpenID
+ * @param data 绑定参数
+ * @returns {Promise<unknown>}
+ */
+export let qqBind = (data) => api.post('api/qqBind', data)
+
+/**
+ * 获取QQ绑定状态
+ * @param data 绑定参数
+ * @returns {Promise<unknown>}
+ */
+export let qqBindStatus = (data) => api.post('api/qqBindStatus', data)
+
+/**
+ * 取消QQ绑定
+ * @param data 绑定参数
+ * @returns {Promise<unknown>}
+ */
+export let qqBindCancel = (data) => api.post('api/qqBindCancel', data)
+
+/**
  * 登录
  * @param user
  * @returns {Promise<unknown>}

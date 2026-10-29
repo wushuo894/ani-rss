@@ -12,9 +12,11 @@ import ani.rss.notification.TelegramNotification;
 import ani.rss.util.other.AniUtil;
 import ani.rss.util.other.BgmUtil;
 import ani.rss.util.other.NotificationUtil;
+import ani.rss.util.other.QqBindUtil;
 import ani.rss.util.other.TmdbUtils;
 import cn.hutool.core.util.ReflectUtil;
 import io.swagger.v3.oas.annotations.Operation;
+import lombok.Data;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -71,6 +73,38 @@ public class NotificationController extends BaseController {
     public Result<List<TelegramNotification.Message.Chat>> getUpdates(@RequestBody NotificationConfig notificationConfig) {
         List<TelegramNotification.Message.Chat> map = TelegramNotification.getUpdates(notificationConfig);
         return Result.success(map);
+    }
+
+    @Auth
+    @Operation(summary = "开始绑定QQ OpenID")
+    @PostMapping("/qqBind")
+    public Result<QqBindUtil.Session> qqBind(@RequestBody QqBindRequest request) {
+        QqBindUtil.Session session = QqBindUtil.start(
+                request.getAppId(),
+                request.getClientSecret()
+        );
+        return Result.success(session);
+    }
+
+    @Auth
+    @Operation(summary = "获取QQ绑定状态")
+    @PostMapping("/qqBindStatus")
+    public Result<QqBindUtil.Session> qqBindStatus(@RequestBody QqBindRequest request) {
+        return Result.success(QqBindUtil.get(request.getTaskId()));
+    }
+
+    @Auth
+    @Operation(summary = "取消QQ绑定")
+    @PostMapping("/qqBindCancel")
+    public Result<QqBindUtil.Session> qqBindCancel(@RequestBody QqBindRequest request) {
+        return Result.success(QqBindUtil.cancel(request.getTaskId()));
+    }
+
+    @Data
+    public static class QqBindRequest {
+        private String appId;
+        private String clientSecret;
+        private String taskId;
     }
 
 }

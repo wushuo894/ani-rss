@@ -16,6 +16,10 @@ export let notificationTypeList = [
         label: "Bark通知"
     },
     {
+        name: "QQ",
+        label: "QQ通知"
+    },
+    {
         name: 'SYSTEM',
         label: '系统通知'
     },

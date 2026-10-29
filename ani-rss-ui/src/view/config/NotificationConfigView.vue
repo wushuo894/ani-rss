@@ -27,6 +27,7 @@
       <MailNotificationView v-model:notification-config="notificationConfig" v-model:config="props.config"/>
       <ServerChanNotificationView v-model:notification-config="notificationConfig" v-model:config="props.config"/>
       <BarkNotificationView v-model:config="props.config" v-model:notification-config="notificationConfig"/>
+      <QqNotificationView v-model:config="props.config" v-model:notification-config="notificationConfig"/>
       <TelegramNotificationView v-model:notification-config="notificationConfig" v-model:config="props.config"/>
       <WebhookNotificationView v-model:notification-config="notificationConfig" v-model:config="props.config"/>
       <SystemNotificationView v-model:notification-config="notificationConfig" v-model:config="props.config"/>
@@ -78,6 +79,7 @@ import FileMoveNotificationView from "./notification/FileMoveNotificationView.vu
 import OpenListUploadNotificationView from "./notification/OpenListUploadNotificationView.vue";
 import {testNotification} from "@/js/http.js";
 import BarkNotificationView from "./notification/BarkNotificationView.vue";
+import QqNotificationView from "./notification/QqNotificationView.vue";
 
 
 let notificationConfig = ref({
@@ -102,6 +104,9 @@ let notificationConfig = ref({
   "telegramApiHost": "https://api.telegram.org",
   "telegramImage": true,
   "telegramFormat": "",
+  "qqAppId": "",
+  "qqClientSecret": "",
+  "qqOpenId": "",
   "webHookMethod": "POST",
   "webHookUrl": "",
   "webHookBody": "",

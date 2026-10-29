@@ -13,5 +13,6 @@ public enum NotificationTypeEnum {
     SHELL,
     FILE_MOVE,
     OPEN_LIST_UPLOAD,
-    BARK
+    BARK,
+    QQ
 }
