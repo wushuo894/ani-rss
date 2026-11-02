@@ -190,14 +190,7 @@ public class qBittorrent implements BaseDownload {
      * @return 下载是否成功
      */
     public static Boolean start(TorrentsInfo torrentsInfo) {
-        boolean b = postApi("/api/v2/torrents/start")
-                .form("hashes", torrentsInfo.getHash())
-                .thenFunction(HttpResponse::isOk);
-        if (b) {
-            return true;
-        }
-
-        return postApi("/api/v2/torrents/resume")
+        return postApi("/api/v2/torrents/start")
                 .form("hashes", torrentsInfo.getHash())
                 .thenFunction(HttpResponse::isOk);
     }
