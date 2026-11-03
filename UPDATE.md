@@ -1,2 +1,2 @@
-- fix: 修复 macOS 27 持续等待问题
-- refactor: 优化 MCP 调用 Close #744
+- fix: 修复 Bangumi 日期解析错误
+- refactor: 优化重命名
