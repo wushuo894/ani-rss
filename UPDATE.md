@@ -1,2 +1,1 @@
-- fix: 修复 Bangumi 日期解析错误
-- refactor: 优化重命名
+- feat: 新增自动偏移类型, 可跟随 Bangumi 自动偏移
