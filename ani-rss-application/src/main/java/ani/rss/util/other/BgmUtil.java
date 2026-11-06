@@ -6,6 +6,7 @@ import ani.rss.entity.*;
 import ani.rss.entity.web.ContentType;
 import ani.rss.entity.web.Header;
 import ani.rss.enums.BgmTokenTypeEnum;
+import ani.rss.enums.OffsetTypeEnum;
 import ani.rss.service.DownloadService;
 import ani.rss.service.MikanService;
 import ani.rss.util.basic.HttpReq;
@@ -147,11 +148,6 @@ public class BgmUtil {
             return "";
         }
 
-        String key = "BGM_getSubjectId:" + bgmName;
-
-        if (CacheUtils.containsKey(key)) {
-            return CacheUtils.get(key);
-        }
         List<BgmInfo> list = search(bgmName);
 
         // 仅保留季数一致
@@ -176,10 +172,9 @@ public class BgmUtil {
         }
         // 次之使用第一个
         if (StrUtil.isBlank(id)) {
-            id = list.get(0).getId();
+            id = list.getFirst().getId();
         }
         ThreadUtil.sleep(1000);
-        CacheUtils.put(key, id, TimeUnit.MINUTES.toMillis(10));
         return id;
     }
 
@@ -259,22 +254,12 @@ public class BgmUtil {
         String bgmToken = CONFIG.getBgmToken();
         Assert.notBlank(bgmToken, "BgmToken 未填写");
 
-        String key = "BGM_me:" + bgmToken;
-
-        String me = CacheUtils.get(key);
-        if (StrUtil.isNotBlank(me)) {
-            return GsonStatic.fromJson(me, BgmMe.class);
-        }
-
         String bgmApi = CONFIG.getBgmApi();
-        BgmMe bgmMe = setToken(HttpReq.get(bgmApi + "/v0/me"))
+        return setToken(HttpReq.get(bgmApi + "/v0/me"))
                 .thenFunction(res -> {
                     HttpReq.assertStatus(res);
                     return GsonStatic.fromJson(res.body(), BgmMe.class);
                 });
-
-        CacheUtils.put(key, GsonStatic.toJson(bgmMe), TimeUnit.MINUTES.toMillis(10));
-        return bgmMe;
     }
 
     /**
@@ -331,12 +316,6 @@ public class BgmUtil {
     public static void collections(String subjectId) {
         Assert.notBlank(subjectId, "subjectId 不能为空");
 
-        String key = "BGM_collections:" + subjectId;
-        if (CacheUtils.containsKey(key)) {
-            return;
-        }
-        CacheUtils.put(key, subjectId, TimeUnit.MINUTES.toMillis(5));
-
         String username = username();
 
         // 如果已经订阅，则不再订阅
@@ -346,7 +325,6 @@ public class BgmUtil {
 
         if (ok) {
             // 已经收藏
-            log.info("已收藏番剧: {}", subjectId);
             return;
         }
 
@@ -365,30 +343,20 @@ public class BgmUtil {
      * @return 集id
      */
     public static String getEpisodeId(String subjectId, Double e) {
-        String epId = "";
-        String sortId = "";
+        List<BgmEpisodes.BgmEpisode> episodes = getEpisodes(subjectId, 0);
 
-        String key = "BGM_getEpisodeId:" + subjectId;
+        OffsetTypeEnum offsetType = CONFIG.getOffsetType();
 
-        List<BgmEpisodes.BgmEpisode> episodes = CacheUtils.get(key);
-        if (Objects.isNull(episodes)) {
-            episodes = getEpisodes(subjectId, 0);
-            CacheUtils.put(key, episodes, TimeUnit.MINUTES.toMillis(10));
-        }
-        for (BgmEpisodes.BgmEpisode itemObject : episodes) {
-            int ep = itemObject.getEp();
-            int sort = itemObject.getSort();
+        for (BgmEpisodes.BgmEpisode bgmEpisode : episodes) {
+            int ep = offsetType == OffsetTypeEnum.BGM_OFFSET ?
+                    bgmEpisode.getSort() :
+                    bgmEpisode.getEp();
             if (ep == e) {
-                epId = itemObject.getId();
-                break;
-            }
-            if (sort == e) {
-                sortId = itemObject.getId();
-                break;
+                return bgmEpisode.getId();
             }
         }
 
-        return StrUtil.blankToDefault(epId, sortId);
+        return "";
     }
 
     /**
@@ -746,7 +714,9 @@ public class BgmUtil {
             return episodeTitleMap;
         }
 
-        String key = "BGM_getEpisodeTitleMap:" + subjectId;
+        OffsetTypeEnum offsetType = CONFIG.getOffsetType();
+
+        String key = "BGM_getEpisodeTitleMap:" + subjectId + ":" + offsetType;
 
         Map<Integer, BgmEpisodes.BgmEpisode> cacheMap = CacheUtils.get(key);
         if (Objects.nonNull(cacheMap)) {
@@ -756,7 +726,9 @@ public class BgmUtil {
         try {
             List<BgmEpisodes.BgmEpisode> data = getEpisodes(subjectId, 0);
             for (BgmEpisodes.BgmEpisode bgmEpisode : data) {
-                int ep = bgmEpisode.getEp();
+                int ep = offsetType == OffsetTypeEnum.BGM_OFFSET ?
+                        bgmEpisode.getSort() :
+                        bgmEpisode.getEp();
 
                 String defaultEpisodeTitle = "第" + ep + "集";
 

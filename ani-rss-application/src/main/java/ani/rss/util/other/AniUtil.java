@@ -6,9 +6,11 @@ import ani.rss.config.DefaultAniFactory;
 import ani.rss.entity.*;
 import ani.rss.entity.dto.RssToAniDTO;
 import ani.rss.entity.torrent.TorrentsInfo;
+import ani.rss.enums.OffsetTypeEnum;
 import ani.rss.exception.ResultException;
 import ani.rss.handle.JsonReader;
 import ani.rss.handle.JsonWriter;
+import ani.rss.offset.BaseOffset;
 import ani.rss.service.ClearService;
 import ani.rss.service.DownloadService;
 import ani.rss.service.MikanService;
@@ -22,6 +24,7 @@ import cn.hutool.core.io.resource.ResourceUtil;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.core.util.ReflectUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.core.util.URLUtil;
 import cn.hutool.crypto.SecureUtil;
@@ -253,17 +256,10 @@ public class AniUtil {
 
     private static Integer autoOffset(Ani ani, String rssUrl) {
         List<Item> items = ItemsUtil.getItems(ani, rssUrl, "");
-        if (items.isEmpty()) {
-            return 0;
-        }
 
-        Double minEpisode = items.stream()
-                .map(Item::getEpisode)
-                .min(Comparator.comparingDouble(i -> i))
-                .get();
-
-        return ItemsUtil.is5(minEpisode) ?
-                -minEpisode.intValue() : -(minEpisode.intValue() - 1);
+        OffsetTypeEnum offsetType = CONFIG.getOffsetType();
+        BaseOffset baseOffset = ReflectUtil.newInstance(offsetType.getBaseOffsetClass());
+        return baseOffset.getOffset(ani, items);
     }
 
     public static String saveCover(String coverUrl) {

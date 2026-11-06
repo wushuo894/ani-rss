@@ -5,6 +5,7 @@ import ani.rss.entity.Config;
 import ani.rss.entity.Login;
 import ani.rss.enums.AniSortTypeEnum;
 import ani.rss.enums.BgmTokenTypeEnum;
+import ani.rss.enums.OffsetTypeEnum;
 import ani.rss.util.other.RenameUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.text.StrFormatter;
@@ -102,6 +103,7 @@ public class DefaultConfigFactory {
                 .setDelete(false)
                 .setDeleteStandbyRSSOnly(false)
                 .setOffset(false)
+                .setOffsetType(OffsetTypeEnum.AUTO_OFFSET)
                 .setTitleYear(true)
                 .setAutoDisabled(false)
                 .setDownloadPathTemplate(downloadPathTemplate)
