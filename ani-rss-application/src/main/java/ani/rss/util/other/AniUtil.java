@@ -47,9 +47,9 @@ public class AniUtil {
     public static final String FILE_NAME = "ani.v2.json";
 
     /**
-     * 获取订阅配置文件
+     * 获取当前配置目录下的订阅数据文件。
      *
-     * @return 配置文件
+     * @return 指向 ani.v2.json 的文件对象
      */
     public static File getAniFile() {
         File configDir = ConfigUtil.getConfigDir();
@@ -57,7 +57,9 @@ public class AniUtil {
     }
 
     /**
-     * 加载订阅
+     * 从磁盘加载订阅，替换内存中的订阅列表。
+     * <p>
+     * 加载时兼容旧版日期字段、缓存封面，并使用当前默认配置补全缺失字段。
      */
     public static void load() {
         File configFile = getAniFile();
@@ -65,6 +67,7 @@ public class AniUtil {
         List<Ani> anis = JsonReader.getInstance(configFile)
                 .toList(Ani.class, ANI_LIST);
 
+        // 仅补全旧订阅中缺失的字段，保留用户已经保存的配置值。
         CopyOptions copyOptions = CopyOptions
                 .create()
                 .setIgnoreNullValue(true)
@@ -100,7 +103,9 @@ public class AniUtil {
     }
 
     /**
-     * 将订阅配置保存到磁盘
+     * 将当前内存中的订阅列表同步保存到磁盘。
+     * <p>
+     * 使用同步锁避免并发写入；保存失败时记录日志。
      */
     public static synchronized void sync() {
         File configFile = getAniFile();
@@ -117,10 +122,15 @@ public class AniUtil {
     }
 
     /**
-     * 获取动漫信息
+     * 根据 RSS 来源解析并构建待添加的订阅对象。
+     * <p>
+     * 根据来源获取 Bangumi 链接和字幕组，补全作品信息及新增订阅默认配置，
+     * 并在启用自动偏移时计算非剧场版订阅的主 RSS 和备用 RSS 偏移。
      *
-     * @param dto DTO
-     * @return 订阅
+     * @param dto 包含 RSS 地址、来源类型及可选 Bangumi 链接、字幕组和备用 RSS 的解析参数
+     * @return 补全信息后的订阅对象，供预览或后续添加使用
+     * @throws IllegalArgumentException RSS 地址为空，或解析后缺少 Bangumi 链接
+     * @throws ResultException          获取蜜柑作品信息失败
      */
     public static Ani getAni(RssToAniDTO dto) {
         String url = dto.getUrl();
@@ -144,6 +154,7 @@ public class AniUtil {
 
         Map<String, String> paramMap = HttpUtil.decodeParamMap(url, StandardCharsets.UTF_8);
 
+        // 各来源使用不同的 RSS 参数或页面信息提供 Bangumi 条目与字幕组。
         switch (type) {
             case "mikan":
                 try {
@@ -242,36 +253,59 @@ public class AniUtil {
         return ani;
     }
 
+    /**
+     * 使用全局选择的偏移策略，分别计算并回填主 RSS 和各备用 RSS 的集数偏移。
+     *
+     * @param ani 待更新偏移的订阅，策略计算过程中也可能调整其季编号
+     */
     private static void autoOffset(Ani ani) {
+        OffsetTypeEnum offsetType = CONFIG.getOffsetType();
+        // 同一次处理中的主 RSS 和备用 RSS 共用一个偏移策略实例。
+        BaseOffset baseOffset = ReflectUtil.newInstance(offsetType.getBaseOffsetClass());
+
         String url = ani.getUrl();
-        Integer offset = autoOffset(ani, url);
+        Integer offset = autoOffset(ani, url, baseOffset);
         ani.setOffset(offset);
 
         List<StandbyRss> standbyRssList = ani.getStandbyRssList();
         for (StandbyRss standbyRss : standbyRssList) {
-            Integer standbyRssOffset = autoOffset(ani, standbyRss.getUrl());
+            String standbyRssUrl = standbyRss.getUrl();
+            Integer standbyRssOffset = autoOffset(ani, standbyRssUrl, baseOffset);
             standbyRss.setOffset(standbyRssOffset);
         }
     }
 
-    private static Integer autoOffset(Ani ani, String rssUrl) {
+    /**
+     * 解析指定 RSS 的可用条目，并通过给定策略计算集数偏移。
+     *
+     * @param ani        用于 RSS 解析及目标集数计算的订阅，策略可能调整其季编号
+     * @param rssUrl     待计算偏移的主 RSS 或备用 RSS 地址
+     * @param baseOffset 当前处理所使用的偏移策略实例
+     * @return 根据最小可用集数计算出的偏移量，RSS 没有可用条目时返回 0
+     */
+    private static Integer autoOffset(Ani ani, String rssUrl, BaseOffset baseOffset) {
         List<Item> items = ItemsUtil.getItems(ani, rssUrl, "");
-
-        OffsetTypeEnum offsetType = CONFIG.getOffsetType();
-        BaseOffset baseOffset = ReflectUtil.newInstance(offsetType.getBaseOffsetClass());
         return baseOffset.getOffset(ani, items);
     }
 
+    /**
+     * 缓存订阅封面，优先复用已经下载的图片。
+     *
+     * @param coverUrl 封面图片地址，可为空
+     * @return 相对于配置目录下 files 目录的封面路径，地址为空或下载异常时返回 cover.png
+     */
     public static String saveCover(String coverUrl) {
         return saveCover(coverUrl, false);
     }
 
     /**
-     * 保存图片
+     * 将封面缓存到配置目录下的 files 目录，按图片 URL 的 MD5 命名并分目录存放。
+     * <p>
+     * 已缓存且未要求覆盖时直接返回路径；图片地址为空或下载异常时使用默认封面。
      *
-     * @param coverUrl   图片链接
-     * @param isOverride 是否覆盖
-     * @return 相对位置
+     * @param coverUrl   封面图片地址，可为空
+     * @param isOverride 是否删除已有缓存并重新下载
+     * @return 相对于 files 目录的封面路径，例如 a/图片文件名.jpg 或默认封面 cover.png
      */
     public static String saveCover(String coverUrl, Boolean isOverride) {
         File configDir = ConfigUtil.getConfigDir();
@@ -316,10 +350,10 @@ public class AniUtil {
 
 
     /**
-     * 获取蜜柑的bangumiId
+     * 从蜜柑 RSS 地址的查询参数中提取作品 ID。
      *
-     * @param ani 订阅
-     * @return bangumiId
+     * @param ani 包含蜜柑 RSS 地址的订阅
+     * @return bangumiId 参数值；RSS 地址为空时返回空字符串，未包含该参数时返回 null
      */
     public static String getBangumiId(Ani ani) {
         String url = ani.getUrl();
@@ -332,11 +366,16 @@ public class AniUtil {
 
 
     /**
-     * 订阅完结迁移
+     * 将符合完结条件的订阅文件迁移到配置的完结目录。
+     * <p>
+     * 仅处理已禁用、进度达到有效总集数的非剧场版订阅，且全局自动禁用、
+     * 全局完结迁移和订阅自身的完结迁移开关均需开启。
+     * 目标路径优先使用订阅自定义模板，迁移时同时调整下载器任务位置并清理旧目录。
      *
-     * @param ani 订阅
+     * @param ani 待判断并迁移的订阅，方法在其副本上计算迁移路径
      */
     public static void completed(Ani ani) {
+        // 使用副本计算迁移信息，避免迁移过程影响内存中的原订阅配置。
         ani = ObjectUtil.clone(ani);
 
         String title = ani.getTitle();
@@ -407,6 +446,7 @@ public class AniUtil {
             TorrentUtil.setSavePath(torrentsInfo, newPath);
         }
 
+        // 下载器修改保存位置后，短暂等待其处理，再迁移旧目录中剩余的文件。
         if (!torrentsInfos.isEmpty()) {
             ThreadUtil.sleep(3000);
         }
@@ -429,6 +469,11 @@ public class AniUtil {
         clearService.clearDir(oldPath);
     }
 
+    /**
+     * 通过默认配置工厂创建带有新 ID 和初始化字段的订阅对象。
+     *
+     * @return 按当前全局配置初始化自定义规则等默认值的新订阅对象
+     */
     public static Ani createAni() {
         return DefaultAniFactory.create();
     }
