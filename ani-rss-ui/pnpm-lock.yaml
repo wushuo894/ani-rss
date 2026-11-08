@@ -21,8 +21,8 @@ importers:
         specifier: ^1.11.23
         version: 1.11.23
       element-plus:
-        specifier: ^2.14.7
-        version: 2.14.7(vue@3.5.45)
+        specifier: ^2.14.8
+        version: 2.14.8(vue@3.5.45)
       js-md5:
         specifier: ^0.9.2
         version: 0.9.2
@@ -80,8 +80,8 @@ packages:
     resolution: {integrity: sha512-WCsemW40Cpc6gouC1SrY6PBaZ+oLRlEVY9XBvZBI7il/HyUrb2nJ505wE1MHEFyDZNnrWDEuy4jL50WVHfTTSQ==}
     engines: {node: '>=6.9.0'}
 
-  '@ctrl/tinycolor@4.2.2':
-    resolution: {integrity: sha512-9rQHijqB2Rq6qOEC/xHaA6aPlsKGi5kmCQW50O1asn9g63XFeD5NmBwysriistW5Xx0JPafyD/TA7yk2S3pXGQ==}
+  '@ctrl/tinycolor@4.3.0':
+    resolution: {integrity: sha512-6V0+8vw/GmH92URQ/Ki12FPhoB3nqaQUJE+5xgbFbB5ok0OXYK5jCQsQQoyR3BzCddHsCpyCFRnIcI1PSOVYkQ==}
     engines: {node: '>=14'}
 
   '@element-plus/icons-vue@2.3.2':
@@ -433,8 +433,8 @@ packages:
     resolution: {integrity: sha512-Btj2BOOO83o3WyH59e8MgXsxEQVcarkUOpEYrubB0urwnN10yQ364rsiByU11nZlqWYZm05i/of7io4mzihBtQ==}
     engines: {node: '>=8'}
 
-  element-plus@2.14.7:
-    resolution: {integrity: sha512-lrG7pZyCS+mpCNVpzxxyu5r35+T6V0hzkAeIwn7HA6to772XSTHKuYCZG51OfzlqaxGbNegLxs650zAF1j43gA==}
+  element-plus@2.14.8:
+    resolution: {integrity: sha512-Z4Br45W9b8vWKvVHSTvbS6rRKmsLjmHCPXICJR6osl35+i+S2LCBs4NN8apLBkQiUh0pzS9labK5eCS7yzDhWw==}
     peerDependencies:
       vue: ^3.3.7
 
@@ -707,8 +707,8 @@ packages:
   scule@1.3.0:
     resolution: {integrity: sha512-6FtHJEvt+pVMIB9IBY+IcCJ6Z5f1iQnytgyfKMhDKgmzYG+TeH/wx1y3l27rshSbLiSanrR9ffZDrEsmjlQF2g==}
 
-  shaka-player@4.16.55:
-    resolution: {integrity: sha512-kmiXtFj7DqTj/acZ/CN4ln5SD+mtlfCSxcINg1J7kbnadiFh1XgRAgPhlbJ+IsaOUgu73qbcsvchJFbQhLTAWw==}
+  shaka-player@4.16.56:
+    resolution: {integrity: sha512-btP78OWMpjTjY6KtuKuUZWdwRbMbZTz2+FUpQ3c/zxydHI32Uas1vvh4tyLTpIkidLRLrNNWVo5JVaa8j9R9Yw==}
     engines: {node: '>=18'}
 
   source-map-js@1.2.2:
@@ -904,7 +904,7 @@ snapshots:
       '@babel/helper-string-parser': 7.29.13
       '@babel/helper-validator-identifier': 7.29.7
 
-  '@ctrl/tinycolor@4.2.2': {}
+  '@ctrl/tinycolor@4.3.0': {}
 
   '@element-plus/icons-vue@2.3.2(vue@3.5.45)':
     dependencies:
@@ -1205,9 +1205,9 @@ snapshots:
 
   detect-libc@2.1.2: {}
 
-  element-plus@2.14.7(vue@3.5.45):
+  element-plus@2.14.8(vue@3.5.45):
     dependencies:
-      '@ctrl/tinycolor': 4.2.2
+      '@ctrl/tinycolor': 4.3.0
       '@element-plus/icons-vue': 2.3.2(vue@3.5.45)
       '@floating-ui/dom': 1.8.0
       '@popperjs/core': '@sxzz/popperjs-es@2.11.8'
@@ -1390,7 +1390,7 @@ snapshots:
     dependencies:
       dashjs: 5.3.0(@svta/cml-cta@1.0.9(@svta/cml-structured-field-values@1.1.6(@svta/cml-utils@1.6.1))(@svta/cml-utils@1.6.1))(@svta/cml-structured-field-values@1.1.6(@svta/cml-utils@1.6.1))(@svta/cml-utils@1.6.1)
       hls.js: 1.7.4
-      shaka-player: 4.16.55
+      shaka-player: 4.16.56
     optionalDependencies:
       vue: 3.5.45
     transitivePeerDependencies:
@@ -1463,7 +1463,7 @@ snapshots:
 
   scule@1.3.0: {}
 
-  shaka-player@4.16.55: {}
+  shaka-player@4.16.56: {}
 
   source-map-js@1.2.2: {}
 

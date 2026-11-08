@@ -10,8 +10,8 @@
   </SettingsItem>
   <SettingsItem label="自动偏移类型">
     <el-select v-model="props.config['offsetType']" class="width-150">
-      <el-option value="AUTO_OFFSET" label="AutoOffset"/>
-      <el-option value="BGM_OFFSET" label="BgmOffset"/>
+      <el-option value="AUTO_OFFSET" label="Auto"/>
+      <el-option value="BGM_OFFSET" label="Bangumi"/>
     </el-select>
   </SettingsItem>
   <SettingsItem label="BGM日语标题">
