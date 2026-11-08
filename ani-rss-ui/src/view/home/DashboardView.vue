@@ -3,7 +3,7 @@
     <EditAniView ref="editAniRef"/>
     <PlayListView ref="playListRef"/>
     <CoverView ref="coverRef"/>
-    <DelAniView ref="delAniRef"/>
+    <DelAniView ref="delAniRef" @callback="reloadAfterDelete"/>
     <BgmRateView ref="bgmRateRef"/>
     <PageHeaderView title="首页" :subtitle="`${todayLabel} · ${todayText}`">
       <template #actions>
@@ -293,6 +293,12 @@ const loadAll = async () => {
   } finally {
     refreshLoading.value = false
   }
+}
+
+// 删除成功后刷新首页列表、统计和下载任务，并同步缓存中的订阅页列表。
+const reloadAfterDelete = async () => {
+  window.$reLoadList?.()
+  await loadAll()
 }
 
 const startPolling = () => {
