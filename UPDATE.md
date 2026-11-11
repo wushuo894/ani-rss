@@ -1,2 +1,1 @@
-- fix: 修复首页删除订阅后列表未自动刷新
-- refactor: 优化偏移
+- refactor: 优化 AnimeGarden 图片接口
