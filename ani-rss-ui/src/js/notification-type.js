@@ -24,6 +24,10 @@ export let notificationTypeList = [
         label: 'WebHook'
     },
     {
+        name: 'ASTRBOT',
+        label: 'AstrBot推送'
+    },
+    {
         name: 'EMBY_REFRESH',
         label: 'Emby媒体库刷新'
     },

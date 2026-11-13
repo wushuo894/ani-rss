@@ -29,6 +29,7 @@
       <BarkNotificationView v-model:config="props.config" v-model:notification-config="notificationConfig"/>
       <TelegramNotificationView v-model:notification-config="notificationConfig" v-model:config="props.config"/>
       <WebhookNotificationView v-model:notification-config="notificationConfig" v-model:config="props.config"/>
+      <AstrBotNotificationView v-model:notification-config="notificationConfig"/>
       <SystemNotificationView v-model:notification-config="notificationConfig" v-model:config="props.config"/>
       <ShellNotificationView v-model:notification-config="notificationConfig" v-model:config="props.config"/>
       <FileMoveNotificationView v-model:notification-config="notificationConfig" v-model:config="props.config"/>
@@ -78,6 +79,7 @@ import FileMoveNotificationView from "./notification/FileMoveNotificationView.vu
 import OpenListUploadNotificationView from "./notification/OpenListUploadNotificationView.vue";
 import {testNotification} from "@/js/http.js";
 import BarkNotificationView from "./notification/BarkNotificationView.vue";
+import AstrBotNotificationView from "./notification/AstrBotNotificationView.vue";
 
 
 let notificationConfig = ref({
@@ -105,6 +107,10 @@ let notificationConfig = ref({
   "webHookMethod": "POST",
   "webHookUrl": "",
   "webHookBody": "",
+  // 与后端默认配置保持一致，切换通知类型时可直接填写 AstrBot 配置。
+  "astrBotHost": "http://127.0.0.1:6185",
+  "astrBotApiKey": "",
+  "astrBotUmo": "",
   "embyRefresh": false,
   "embyApiKey": "",
   "embyRefreshViewIds": [],
