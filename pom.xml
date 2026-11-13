@@ -5,7 +5,7 @@
 
     <groupId>ani.rss</groupId>
     <artifactId>ani-rss</artifactId>
-    <version>3.2.58</version>
+    <version>3.2.59</version>
 
     <name>ani-rss</name>
     <inceptionYear>2025</inceptionYear>
@@ -50,7 +50,7 @@
             <dependency>
                 <groupId>org.commonmark</groupId>
                 <artifactId>commonmark</artifactId>
-                <version>0.30.1</version>
+                <version>0.32.0</version>
             </dependency>
             <dependency>
                 <groupId>wushuo.tmdb.api</groupId>
@@ -82,7 +82,7 @@
             <dependency>
                 <groupId>org.springdoc</groupId>
                 <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
-                <version>3.1.1</version>
+                <version>3.2.0</version>
             </dependency>
 
             <!-- Spring AI -->

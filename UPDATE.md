@@ -1,1 +1,1 @@
-- refactor: 优化 AnimeGarden 图片接口
+- feat: 增加 AstrBot 通知
