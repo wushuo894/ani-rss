@@ -290,7 +290,7 @@ public class NotificationConfig implements Serializable {
     private String astrBotHost;
 
     /**
-     * AstrBot OpenAPI 密钥，需要 im 权限
+     * AstrBot OpenAPI 密钥，发送图片时还需要 file 权限
      */
     @Schema(description = "AstrBot OpenAPI 密钥")
     private String astrBotApiKey;
@@ -300,6 +300,12 @@ public class NotificationConfig implements Serializable {
      */
     @Schema(description = "AstrBot 目标 UMO")
     private String astrBotUmo;
+
+    /**
+     * AstrBot 是否附带番剧封面
+     */
+    @Schema(description = "AstrBot 发送图片")
+    private Boolean astrBotImage;
 
     /**
      * 通知 状态
@@ -408,7 +414,8 @@ public class NotificationConfig implements Serializable {
         notificationConfig
                 .setAstrBotHost("http://127.0.0.1:6185")
                 .setAstrBotApiKey("")
-                .setAstrBotUmo("");
+                .setAstrBotUmo("")
+                .setAstrBotImage(true);
 
         return notificationConfig;
     }

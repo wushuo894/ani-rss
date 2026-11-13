@@ -111,6 +111,7 @@ let notificationConfig = ref({
   "astrBotHost": "http://127.0.0.1:6185",
   "astrBotApiKey": "",
   "astrBotUmo": "",
+  "astrBotImage": true,
   "embyRefresh": false,
   "embyApiKey": "",
   "embyRefreshViewIds": [],

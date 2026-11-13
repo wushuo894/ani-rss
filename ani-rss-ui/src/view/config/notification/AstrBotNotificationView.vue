@@ -1,6 +1,6 @@
 <template>
   <template v-if="notificationConfig['notificationType'] === 'ASTRBOT'">
-    <!-- 复用现有模板变量，消息以文本形式发送到指定的 AstrBot 会话。 -->
+    <!-- 复用现有模板变量，根据图片开关附带本地缓存的番剧封面。 -->
     <SettingsItem label="通知模版">
       <el-input v-model="notificationConfig['notificationTemplate']" :autosize="{ minRows: 2 }"
                 placeholder="${notification}" type="textarea"/>
@@ -15,14 +15,8 @@
     <SettingsItem label="目标 UMO">
       <el-input v-model.trim="notificationConfig['astrBotUmo']" placeholder="在目标会话发送 /sid 获取"/>
     </SettingsItem>
-    <SettingsItem label="使用说明">
-      <div>
-        <div>需要 AstrBot v4.18.0 及以上版本，在「设置 → OpenAPI」创建具有 im 权限的 API Key。</div>
-        <div>服务地址填写 ani-rss 可访问的 AstrBot 地址；Docker 同网络部署可使用 http://astrbot:6185。</div>
-        <el-link href="https://docs.astrbot.app/dev/openapi.html" target="_blank" type="primary">
-          AstrBot HTTP API 文档
-        </el-link>
-      </div>
+    <SettingsItem label="发送图片">
+      <el-switch v-model="notificationConfig['astrBotImage']"/>
     </SettingsItem>
   </template>
 </template>
