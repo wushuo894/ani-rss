@@ -19,10 +19,10 @@
     "markdown-it-github-alerts": "^1.0.1",
     "movi-player": "0.4.1",
     "vue": "^3.5.45",
-    "vue-router": "^4.6.4"
+    "vue-router": "^4.6.5"
   },
   "devDependencies": {
-    "@vitejs/plugin-vue": "^6.0.10",
+    "@vitejs/plugin-vue": "^6.0.11",
     "terser": "^5.51.2",
     "unplugin-auto-import": "^21.1.0",
     "unplugin-vue-components": "^32.1.0",

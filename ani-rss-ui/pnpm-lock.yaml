@@ -39,21 +39,21 @@ importers:
         specifier: ^3.5.45
         version: 3.5.45
       vue-router:
-        specifier: ^4.6.4
-        version: 4.6.4(vue@3.5.45)
+        specifier: ^4.6.5
+        version: 4.6.5(vue@3.5.45)
     devDependencies:
       '@vitejs/plugin-vue':
-        specifier: ^6.0.10
-        version: 6.0.10(vite@8.3.8(terser@5.51.2))(vue@3.5.45)
+        specifier: ^6.0.11
+        version: 6.0.11(vite@8.3.8(terser@5.51.2))(vue@3.5.45)
       terser:
         specifier: ^5.51.2
         version: 5.51.2
       unplugin-auto-import:
         specifier: ^21.1.0
-        version: 21.1.0(@vueuse/core@14.4.0(vue@3.5.45))(vite@8.3.8(terser@5.51.2))
+        version: 21.1.0(@vueuse/core@14.4.0(vue@3.5.45))(rolldown@1.2.19)(vite@8.3.8(terser@5.51.2))
       unplugin-vue-components:
         specifier: ^32.1.0
-        version: 32.1.0(vite@8.3.8(terser@5.51.2))(vue@3.5.45)
+        version: 32.1.0(rolldown@1.2.19)(vite@8.3.8(terser@5.51.2))(vue@3.5.45)
       vite:
         specifier: ^8.3.8
         version: 8.3.8(terser@5.51.2)
@@ -113,8 +113,8 @@ packages:
   '@jridgewell/remapping@2.3.5':
     resolution: {integrity: sha512-LI9u/+laYG4Ds1TDKSJW2YPrIlcVYOwi2fUC6xB43lueCjgxV4lffOCZCtYFiH6TNOX+tQKXx97T4IKHbhyHEQ==}
 
-  '@jridgewell/resolve-uri@3.1.2':
-    resolution: {integrity: sha512-bRISgCIjP20/tbWSPWMEi54QVPRZExkuD9lJL+UIxUKtwVJA8wW1Trb1jMs1RFXo1CBTNZ/5hpC9QvmKWdopKw==}
+  '@jridgewell/resolve-uri@3.1.3':
+    resolution: {integrity: sha512-lhTtjtoEArWBjismtfS761S9Hlyn+nIZqOZVYoZ1Xn82PMNMVnk+jj/NhC4fAXGTs7ydONcJiR5vyQBTMDu27g==}
     engines: {node: '>=6.0.0'}
 
   '@jridgewell/source-map@0.3.11':
@@ -237,8 +237,8 @@ packages:
     cpu: [x64]
     os: [win32]
 
-  '@rolldown/pluginutils@1.1.0':
-    resolution: {integrity: sha512-K+NU2HDCEem4sClgHH4ZZXwdJeNFkJo+hRk479DIwdIviAPN2hFJH1KHHwg8CxHQXvi0M5XY4deTXINfIiSG6w==}
+  '@rolldown/pluginutils@1.1.1':
+    resolution: {integrity: sha512-glFIJDvLNDtJhT9qrMFWLPbvS+skxgt4L0K8Ei2YtnhPysAJnsI7nyxSJxKj4ADeKX0OLjC4ntRkwpLOoS3rwA==}
 
   '@svta/cml-608@1.1.0':
     resolution: {integrity: sha512-r427FE+vTYsgh9wi7lc6gkixFpdBiTSy+fIy4zdwe8+mgOtMiVjP9xHW68z1KcH/WNSGRDzCEunNIsX4tIljTA==}
@@ -323,12 +323,12 @@ packages:
   '@vicons/fa@0.13.0':
     resolution: {integrity: sha512-BFcDewcT78fSn4Y/fOgqlswbLUEW3+qJK2iJiNtgmkMzadBVpDXhNyVKsYM3V2uKPvDUrZT0JCWDWVRCiBXJZA==}
 
-  '@vitejs/plugin-vue@6.0.10':
-    resolution: {integrity: sha512-b80aUQh3n+qEzzZm5oQp3rT2QImeCx58K6eFl/RkJ3d65KW0kTuv5lNsLRVAjbW9YRUpo/wzmvzMgV34bTAItA==}
+  '@vitejs/plugin-vue@6.0.11':
+    resolution: {integrity: sha512-m48lskIUJGlB6qUiYhDMI8nd2ngeidz2U4nKTjqI13cFMu5rH8JeEILPkDtK9Fk/TjBA2pkj8AlbenqDaKu+ww==}
     engines: {node: ^20.19.0 || >=22.12.0}
     peerDependencies:
       vite: ^5.0.0 || ^6.0.0 || ^7.0.0 || ^8.0.0
-      vue: ^3.2.25 || ^3.6.0-rc.10
+      vue: ^3.2.25 || ^3.6.0-rc.15
 
   '@vue/compiler-core@3.5.45':
     resolution: {integrity: sha512-XGHJrM6ufZARAc/w+tyOswStw9tdKiqCKBScI4gGaNxD+aaGu/HQWgKJ+JItjRLPqenQ7iE7G8AJC7T5ew1p+g==}
@@ -504,8 +504,8 @@ packages:
     engines: {node: ^8.16.0 || ^10.6.0 || >=11.0.0}
     os: [darwin]
 
-  graceful-fs@4.2.11:
-    resolution: {integrity: sha512-RbJ5/jmFcNNCcDV5o9eTnBLJ/HszWV0P73bc+Ff4nS/rJj+YaS6IGyiOL0VoBYX+l1Wrl3k63h/KrH+nhJ0XvQ==}
+  graceful-fs@4.2.12:
+    resolution: {integrity: sha512-iuyGF2E4oafQfPsRrG2wtY2ILupMhvtdrhzrxB+0VcjsPpSPttpfYdjnGFGsTi5MaJFjI1jOKHPQ6UTbTj9TAw==}
 
   has-flag@4.0.0:
     resolution: {integrity: sha512-EykJT/Q1KjTWctppgIAgfSO0tKVuZUjhgMr17kqTumMl6Afv3EISleU7qZUzoXDFTAHTDC4NOoG/ZxU3EvlMPQ==}
@@ -731,8 +731,8 @@ packages:
   scule@1.3.0:
     resolution: {integrity: sha512-6FtHJEvt+pVMIB9IBY+IcCJ6Z5f1iQnytgyfKMhDKgmzYG+TeH/wx1y3l27rshSbLiSanrR9ffZDrEsmjlQF2g==}
 
-  shaka-player@4.16.56:
-    resolution: {integrity: sha512-btP78OWMpjTjY6KtuKuUZWdwRbMbZTz2+FUpQ3c/zxydHI32Uas1vvh4tyLTpIkidLRLrNNWVo5JVaa8j9R9Yw==}
+  shaka-player@4.16.57:
+    resolution: {integrity: sha512-iMXke1dkEbKP+Tl4m5ieA2YcnSTF0dSu37mp0t4J8uXtqyuHMdPvgl+orV1cRLhqS6v4WZvo8qUHwev4cA42AQ==}
     engines: {node: '>=18'}
 
   source-map-js@1.2.2:
@@ -900,8 +900,8 @@ packages:
   vue-component-type-helpers@3.3.14:
     resolution: {integrity: sha512-Pq3+OnbCiPCHk0R7KSZrx+j/XXaUn2kSQ1epxq60w8CPbByLjC1EJgV51n4WY851sTXUVzsNMuitywdkdVyKjA==}
 
-  vue-router@4.6.4:
-    resolution: {integrity: sha512-Hz9q5sa33Yhduglwz6g9skT8OBPii+4bFn88w6J+J4MfEo4KRRpmiNG/hHHkdbRFlLBOqxN8y8gf2Fb0MTUgVg==}
+  vue-router@4.6.5:
+    resolution: {integrity: sha512-HBoGqixpB2ej1kI17NotdOatUdKIsi3yfOQ5vhwAhcoHk90+JtwtIy7MEeOqdPi1+npmQVMEu5F+Hvw+3TU48w==}
     peerDependencies:
       vue: ^3.5.0
 
@@ -974,7 +974,7 @@ snapshots:
       '@jridgewell/gen-mapping': 0.3.13
       '@jridgewell/trace-mapping': 0.3.31
 
-  '@jridgewell/resolve-uri@3.1.2': {}
+  '@jridgewell/resolve-uri@3.1.3': {}
 
   '@jridgewell/source-map@0.3.11':
     dependencies:
@@ -985,7 +985,7 @@ snapshots:
 
   '@jridgewell/trace-mapping@0.3.31':
     dependencies:
-      '@jridgewell/resolve-uri': 3.1.2
+      '@jridgewell/resolve-uri': 3.1.3
       '@jridgewell/sourcemap-codec': 1.6.0
 
   '@napi-rs/wasm-runtime@1.2.6(@emnapi/core@2.0.0-beta.2)(@emnapi/runtime@2.0.0-beta.2)':
@@ -1049,7 +1049,7 @@ snapshots:
   '@rolldown/binding-win32-x64-msvc@1.2.19':
     optional: true
 
-  '@rolldown/pluginutils@1.1.0': {}
+  '@rolldown/pluginutils@1.1.1': {}
 
   '@svta/cml-608@1.1.0': {}
 
@@ -1112,9 +1112,9 @@ snapshots:
 
   '@vicons/fa@0.13.0': {}
 
-  '@vitejs/plugin-vue@6.0.10(vite@8.3.8(terser@5.51.2))(vue@3.5.45)':
+  '@vitejs/plugin-vue@6.0.11(vite@8.3.8(terser@5.51.2))(vue@3.5.45)':
     dependencies:
-      '@rolldown/pluginutils': 1.1.0
+      '@rolldown/pluginutils': 1.1.1
       vite: 8.3.8(terser@5.51.2)
       vue: 3.5.45
 
@@ -1308,14 +1308,14 @@ snapshots:
 
   fs-extra@10.1.0:
     dependencies:
-      graceful-fs: 4.2.11
+      graceful-fs: 4.2.12
       jsonfile: 6.2.1
       universalify: 2.0.1
 
   fsevents@2.3.3:
     optional: true
 
-  graceful-fs@4.2.11: {}
+  graceful-fs@4.2.12: {}
 
   has-flag@4.0.0: {}
 
@@ -1337,7 +1337,7 @@ snapshots:
     dependencies:
       universalify: 2.0.1
     optionalDependencies:
-      graceful-fs: 4.2.11
+      graceful-fs: 4.2.12
 
   lie@3.1.1:
     dependencies:
@@ -1452,7 +1452,7 @@ snapshots:
     dependencies:
       dashjs: 5.3.0(@svta/cml-cta@1.0.9(@svta/cml-structured-field-values@1.1.6(@svta/cml-utils@1.6.1))(@svta/cml-utils@1.6.1))(@svta/cml-structured-field-values@1.1.6(@svta/cml-utils@1.6.1))(@svta/cml-utils@1.6.1)
       hls.js: 1.7.4
-      shaka-player: 4.16.56
+      shaka-player: 4.16.57
     optionalDependencies:
       vue: 3.5.45
     transitivePeerDependencies:
@@ -1503,7 +1503,7 @@ snapshots:
   rolldown@1.2.19:
     dependencies:
       '@oxc-project/types': 0.156.0
-      '@rolldown/pluginutils': 1.1.0
+      '@rolldown/pluginutils': 1.1.1
     optionalDependencies:
       '@rolldown/binding-android-arm-eabi': 1.2.19
       '@rolldown/binding-android-arm64': 1.2.19
@@ -1526,7 +1526,7 @@ snapshots:
 
   scule@1.3.0: {}
 
-  shaka-player@4.16.56: {}
+  shaka-player@4.16.57: {}
 
   source-map-js@1.2.2: {}
 
@@ -1564,7 +1564,7 @@ snapshots:
 
   ufo@1.6.4: {}
 
-  unimport@6.5.0(vite@8.3.8(terser@5.51.2)):
+  unimport@6.5.0(rolldown@1.2.19)(vite@8.3.8(terser@5.51.2)):
     dependencies:
       acorn: 8.19.0
       escape-string-regexp: 5.0.0
@@ -1578,8 +1578,10 @@ snapshots:
       scule: 1.3.0
       strip-literal: 4.0.0
       tinyglobby: 0.2.17
-      unplugin: 3.7.0(vite@8.3.8(terser@5.51.2))
+      unplugin: 3.7.0(rolldown@1.2.19)(vite@8.3.8(terser@5.51.2))
       unplugin-utils: 0.3.2
+    optionalDependencies:
+      rolldown: 1.2.19
     transitivePeerDependencies:
       - '@farmfe/core'
       - '@rsbuild/core'
@@ -1593,13 +1595,13 @@ snapshots:
 
   universalify@2.0.1: {}
 
-  unplugin-auto-import@21.1.0(@vueuse/core@14.4.0(vue@3.5.45))(vite@8.3.8(terser@5.51.2)):
+  unplugin-auto-import@21.1.0(@vueuse/core@14.4.0(vue@3.5.45))(rolldown@1.2.19)(vite@8.3.8(terser@5.51.2)):
     dependencies:
       local-pkg: 1.2.1
       magic-string: 1.4.5
       picomatch: 4.0.7
-      unimport: 6.5.0(vite@8.3.8(terser@5.51.2))
-      unplugin: 3.7.0(vite@8.3.8(terser@5.51.2))
+      unimport: 6.5.0(rolldown@1.2.19)(vite@8.3.8(terser@5.51.2))
+      unplugin: 3.7.0(rolldown@1.2.19)(vite@8.3.8(terser@5.51.2))
       unplugin-utils: 0.3.2
     optionalDependencies:
       '@vueuse/core': 14.4.0(vue@3.5.45)
@@ -1621,7 +1623,7 @@ snapshots:
       pathe: 2.0.3
       picomatch: 4.0.7
 
-  unplugin-vue-components@32.1.0(vite@8.3.8(terser@5.51.2))(vue@3.5.45):
+  unplugin-vue-components@32.1.0(rolldown@1.2.19)(vite@8.3.8(terser@5.51.2))(vue@3.5.45):
     dependencies:
       chokidar: 5.0.0
       local-pkg: 1.2.1
@@ -1630,7 +1632,7 @@ snapshots:
       obug: 2.2.1
       picomatch: 4.0.7
       tinyglobby: 0.2.17
-      unplugin: 3.7.0(vite@8.3.8(terser@5.51.2))
+      unplugin: 3.7.0(rolldown@1.2.19)(vite@8.3.8(terser@5.51.2))
       unplugin-utils: 0.3.2
       vue: 3.5.45
     transitivePeerDependencies:
@@ -1645,13 +1647,14 @@ snapshots:
       - vite
       - webpack
 
-  unplugin@3.7.0(vite@8.3.8(terser@5.51.2)):
+  unplugin@3.7.0(rolldown@1.2.19)(vite@8.3.8(terser@5.51.2)):
     dependencies:
       '@jridgewell/remapping': 2.3.5
-      '@rolldown/pluginutils': 1.1.0
+      '@rolldown/pluginutils': 1.1.1
       picomatch: 4.0.7
       webpack-virtual-modules: 0.6.2
     optionalDependencies:
+      rolldown: 1.2.19
       vite: 8.3.8(terser@5.51.2)
 
   vite-plugin-compression@0.5.1(supports-color@7.2.0)(vite@8.3.8(terser@5.51.2)):
@@ -1676,7 +1679,7 @@ snapshots:
 
   vue-component-type-helpers@3.3.14: {}
 
-  vue-router@4.6.4(vue@3.5.45):
+  vue-router@4.6.5(vue@3.5.45):
     dependencies:
       '@vue/devtools-api': 6.6.4
       vue: 3.5.45

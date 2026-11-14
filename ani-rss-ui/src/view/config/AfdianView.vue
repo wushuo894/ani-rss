@@ -60,14 +60,6 @@
         </el-button>
       </div>
     </div>
-    <div class="afdian-link">
-      <el-link
-          type="primary"
-          target="_blank"
-          href="https://github.com/wushuo894/ani-rss/discussions/260">
-        关于增加的捐赠功能，我想说的话
-      </el-link>
-    </div>
   </div>
   <div class="afdian-section" v-else>
     <el-alert
@@ -107,10 +99,6 @@
 
 .afdian-input {
   max-width: 200px;
-}
-
-.afdian-link {
-  margin-top: 8px;
 }
 </style>
 
