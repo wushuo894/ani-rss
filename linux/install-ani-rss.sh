@@ -68,7 +68,7 @@ deploy_app() {
 
     echo "正在下载 run.sh"
     # 下载启动脚本
-    if ! wget -q https://github.com/wushuo894/ani-rss/raw/master/docker/run.sh -O "$INSTALL_DIR/run.sh"; then
+    if ! wget -q https://github.com/wushuo894/ani-rss/raw/main/docker/run.sh -O "$INSTALL_DIR/run.sh"; then
         echo -e "${RED}下载启动脚本失败${NC}"
         exit 1
     fi
@@ -76,7 +76,7 @@ deploy_app() {
 
     echo "正在下载 ani-rss.sh"
     # 下载管理脚本
-    if ! wget -q https://github.com/wushuo894/ani-rss/raw/master/linux/ani-rss.sh -O "/usr/local/bin/ani-rss"; then
+    if ! wget -q https://github.com/wushuo894/ani-rss/raw/main/linux/ani-rss.sh -O "/usr/local/bin/ani-rss"; then
         echo -e "${RED}下载启动脚本失败${NC}"
         exit 1
     fi

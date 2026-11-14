@@ -67,7 +67,7 @@ service_action() {
             systemctl status "$SERVICE" --no-pager
             ;;
         uninstall)
-            /bin/bash -c "$(curl -fsSL https://github.com/wushuo894/ani-rss/raw/master/linux/uninstall-ani-rss.sh)"
+            /bin/bash -c "$(curl -fsSL https://github.com/wushuo894/ani-rss/raw/main/linux/uninstall-ani-rss.sh)"
             ;;
         *)
             show_help
