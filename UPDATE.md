@@ -1,1 +1,3 @@
-- feat: 增加 AstrBot 通知
+- build: 更新依赖
+- refactor: 优化通知管理页面
+- fix: 修复安装脚本错误 Close #748
