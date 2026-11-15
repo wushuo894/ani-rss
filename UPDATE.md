@@ -1,3 +1,1 @@
-- build: 更新依赖
-- refactor: 优化通知管理页面
-- fix: 修复安装脚本错误 Close #748
+- refactor: 优化播放器加载
