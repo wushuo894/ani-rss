@@ -84,7 +84,6 @@
 </template>
 
 <script setup>
-// 使用 slim 构建，将 FFmpeg WASM 拆成独立资源，避免把大体积 WASM 内嵌到 JS。
 import 'movi-player'
 
 const props = defineProps(['playItem'])
