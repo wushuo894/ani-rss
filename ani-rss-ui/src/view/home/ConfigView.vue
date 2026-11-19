@@ -43,7 +43,8 @@
 </template>
 
 <script setup>
-import {computed, onMounted, ref} from "vue";
+import {computed, onMounted, ref, watch} from "vue";
+import {useRoute} from "vue-router";
 import {ElMessage} from "element-plus";
 import {md5} from "js-md5";
 import ExcludeView from "@/view/config/ExcludeView.vue";
@@ -62,6 +63,7 @@ const configButtonLoading = ref(false)
 const loading = ref(true)
 
 const config = ref(configData)
+const route = useRoute()
 
 const activeName = ref('download')
 const tabs = [
@@ -75,6 +77,13 @@ const tabs = [
   {name: 'about', label: '关于', description: '版本信息与项目链接'}
 ]
 const activeDescription = computed(() => tabs.find(tab => tab.name === activeName.value)?.description || '')
+
+// 支持从登录提醒定位页签，设置页被 KeepAlive 缓存后也能响应跳转。
+watch(() => route.query.tab, tab => {
+  if (route.path === '/settings' && tabs.some(item => item.name === tab)) {
+    activeName.value = tab
+  }
+}, {immediate: true})
 
 const loadConfig = () => {
   loading.value = true

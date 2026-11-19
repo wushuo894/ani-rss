@@ -2,6 +2,7 @@ package ani.rss.service;
 
 import ani.rss.commons.FileUtils;
 import ani.rss.commons.MavenUtils;
+import ani.rss.config.DefaultConfigFactory;
 import ani.rss.download.BaseDownload;
 import ani.rss.entity.Config;
 import ani.rss.entity.GitInfo;
@@ -52,9 +53,17 @@ public class ConfigService {
     public Config config() {
         String version = MavenUtils.getVersion();
         Config config = ObjectUtil.clone(ConfigUtil.CONFIG);
-        config.getLogin().setPassword("");
+
+        // 是否为默认登录账号与密码，用于提示用户及时修改密码
+        boolean isDefault = DefaultConfigFactory.isDefaultLogin(config);
+        config.getLogin()
+                .setPassword("")
+                .setIsDefault(isDefault);
+
         config.setVersion(version)
-                .setGitInfo(getGitInfo()).setVerifyExpirationTime(afdianService.verifyExpirationTime()).setJwtKey("");
+                .setGitInfo(getGitInfo())
+                .setVerifyExpirationTime(afdianService.verifyExpirationTime())
+                .setJwtKey("");
         return config;
     }
 

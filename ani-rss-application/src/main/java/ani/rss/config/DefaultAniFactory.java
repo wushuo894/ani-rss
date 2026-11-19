@@ -11,9 +11,23 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
+/**
+ * 订阅默认值工厂，集中初始化新订阅的基础状态和订阅级功能开关。
+ * <p>
+ * 自定义集数规则、重命名模板和自动上传默认值取自当前全局配置；
+ * 标题、RSS 地址、季号等业务信息由调用方继续补充。
+ */
 public class DefaultAniFactory {
+    /**
+     * 持有全局配置对象的引用，创建订阅时读取其当前值，而不是缓存一份配置快照。
+     */
     private static final Config CONFIG = ConfigUtil.CONFIG;
 
+    /**
+     * 创建带有独立 ID 和初始状态的订阅，不保存订阅，也不触发下载。
+     *
+     * @return 初始化基础字段并继承部分全局默认值的新订阅对象
+     */
     public static Ani create() {
         Ani ani = new Ani();
         return ani
