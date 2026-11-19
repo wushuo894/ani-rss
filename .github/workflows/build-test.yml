@@ -15,9 +15,7 @@ jobs:
           cache: maven
       - name: Build with Project
         run: |
-          mvn -B package \
-              -DskipTests \
-              --file pom.xml
+          mvn -B package -DskipTests --file pom.xml
           version=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout -f pom.xml)
           echo "version=v$version" >> $GITHUB_ENV
       - name: Login to Docker Hub

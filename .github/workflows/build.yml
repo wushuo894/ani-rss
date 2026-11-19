@@ -15,7 +15,7 @@ jobs:
           cache: maven
       - name: Build with Project
         run: |
-          bash ./package.sh
+          mvn -B package -DskipTests -P windows --file pom.xml
           version=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout -f pom.xml)
           echo "version=v$version" >> $GITHUB_ENV
       - name: Release
