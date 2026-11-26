@@ -2,6 +2,7 @@ package ani.rss.update;
 
 import ani.rss.commons.MavenUtils;
 import ani.rss.entity.About;
+import ani.rss.entity.Global;
 import ani.rss.util.basic.HttpReq;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.lang.Assert;
@@ -13,7 +14,13 @@ import java.io.File;
 
 @FunctionalInterface
 public interface BaseUpdate {
+    /**
+     * 根据启动方式选择更新实现，桌面端托管的 JAR 交给桌面端替换。
+     */
     static BaseUpdate getInstance() {
+        if (Global.ARGS.contains("--ani-rss-desktop=true")) {
+            return new DesktopUpdate();
+        }
         OsInfo osInfo = SystemUtil.getOsInfo();
 
         if (osInfo.isMac()) {
