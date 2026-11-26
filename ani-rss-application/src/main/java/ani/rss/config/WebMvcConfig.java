@@ -79,7 +79,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
             };
             converter.setGson(GsonStatic.GSON);
             converter.setDefaultCharset(StandardCharsets.UTF_8);
-            converters.add(0, converter);
+            converters.addFirst(converter);
         });
     }
 

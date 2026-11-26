@@ -1,2 +1,2 @@
-- build: 更新依赖
-- build: 更新 docker 基础镜像以处理 `CVE-2026-114938`
+- refactor: 去除开机自启与自更新
+- feat: 增加 ani-rss-desktop 支持

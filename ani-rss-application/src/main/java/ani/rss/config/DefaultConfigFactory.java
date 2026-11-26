@@ -66,8 +66,6 @@ public class DefaultConfigFactory {
         String ovaDownloadPathTemplate = StrFormatter.format("{}/${title}", ovaDownloadPath);
         String completedPathTemplate = StrFormatter.format("{}/${title}/Season ${season}", completedPath);
 
-        String password = SecureUtil.md5("admin");
-
         // 全局通知正文模板，发送时替换事件、订阅进度、路径和 TMDB 信息。
         String notificationTemplate = """
                 ${emoji}${emoji}${emoji}
