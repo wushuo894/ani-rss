@@ -15,7 +15,7 @@ jobs:
           cache: maven
       - name: Build with Project
         run: |
-          mvn -B package -DskipTests -P windows --file pom.xml
+          mvn -B package -DskipTests --file pom.xml
           version=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout -f pom.xml)
           echo "version=v$version" >> $GITHUB_ENV
       - name: Release
@@ -28,7 +28,6 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           files: |
             ./ani-rss-application/target/ani-rss.jar
-            ./ani-rss-application/target/ani-rss.exe
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v4
       - name: Set up Docker Buildx

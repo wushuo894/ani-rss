@@ -7,7 +7,6 @@ NC='\033[0m'
 
 mvn -B package \
     -DskipTests \
-    -P windows,macos \
     --file pom.xml
 
 if [ $? -eq 1 ]; then

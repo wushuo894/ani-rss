@@ -697,9 +697,6 @@ public class Config implements Serializable {
     @Schema(description = "bgmApi")
     private String bgmApi;
 
-    @Schema(description = "开机自启动")
-    private Boolean autoStart;
-
     @Schema(description = "允许跨域")
     private Boolean allowCors;
 

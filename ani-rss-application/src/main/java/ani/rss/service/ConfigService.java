@@ -10,7 +10,6 @@ import ani.rss.entity.Login;
 import ani.rss.entity.ProxyTest;
 import ani.rss.entity.web.Result;
 import ani.rss.entity.web.ResultCode;
-import ani.rss.start.BaseStart;
 import ani.rss.util.basic.HttpReq;
 import ani.rss.util.other.ConfigUtil;
 import ani.rss.util.other.TorrentUtil;
@@ -82,7 +81,6 @@ public class ConfigService {
         Integer renameSleepSeconds = config.getRenameSleepSeconds();
         Integer sleep = config.getRssSleepMinutes();
         String download = config.getDownloadToolType();
-        Boolean autoStart = config.getAutoStart();
 
         newConfig.setExpirationTime(null)
                 .setOutTradeNo(null).setTryOut(null).setJwtKey(null);
@@ -125,7 +123,6 @@ public class ConfigService {
         ConfigUtil.sync();
         Integer newRenameSleepSeconds = config.getRenameSleepSeconds();
         Integer newSleep = config.getRssSleepMinutes();
-        Boolean newAutoStart = config.getAutoStart();
 
         // 时间间隔发生改变，重启任务
         if (
@@ -137,13 +134,6 @@ public class ConfigService {
         // 下载工具发生改变
         if (!download.equals(config.getDownloadToolType())) {
             TorrentUtil.loadDownloadTool();
-        }
-        // 开机自启发生改变
-        if (!newAutoStart.equals(autoStart)) {
-            if (BaseStart.isSupported()) {
-                BaseStart instance = BaseStart.getInstance();
-                instance.sync();
-            }
         }
     }
 

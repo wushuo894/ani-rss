@@ -53,9 +53,6 @@
       </div>
     </div>
   </SettingsItem>
-  <SettingsItem label="开机自启">
-    <el-switch v-model="props.config['autoStart']"/>
-  </SettingsItem>
 </template>
 
 <script setup>

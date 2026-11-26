@@ -23,16 +23,12 @@ public interface BaseUpdate {
         }
         OsInfo osInfo = SystemUtil.getOsInfo();
 
-        if (osInfo.isMac()) {
-            return new MacUpdate();
-        } else if (osInfo.isLinux()) {
+        if (osInfo.isLinux()) {
             return new LinuxUpdate();
-        } else if (osInfo.isWindows()) {
-            return new WindowsUpdate();
-        } else {
-            String name = osInfo.getName();
-            throw new IllegalArgumentException("不支持的系统 " + name);
         }
+
+        String name = osInfo.getName();
+        throw new IllegalArgumentException("不支持的系统 " + name);
     }
 
     void update(File updateFile);

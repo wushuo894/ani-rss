@@ -236,7 +236,6 @@ public class DefaultConfigFactory {
                 .setSubtitleIndependentFolderEnabled(false)
                 .setSubtitleIndependentFolderName("Subs")
                 .setBgmApi("https://api.bgm.tv")
-                .setAutoStart(false)
                 .setAllowCors(false)
                 .setUuid(UUID.randomUUID().toString())
                 .setJwtKey(createJwtKey())
