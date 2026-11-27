@@ -30,7 +30,6 @@
       <TelegramNotificationView v-model:notification-config="notificationConfig" v-model:config="props.config"/>
       <WebhookNotificationView v-model:notification-config="notificationConfig" v-model:config="props.config"/>
       <AstrBotNotificationView v-model:notification-config="notificationConfig"/>
-      <SystemNotificationView v-model:notification-config="notificationConfig" v-model:config="props.config"/>
       <ShellNotificationView v-model:notification-config="notificationConfig" v-model:config="props.config"/>
       <FileMoveNotificationView v-model:notification-config="notificationConfig" v-model:config="props.config"/>
       <OpenListUploadNotificationView v-model:config="props.config" v-model:notification-config="notificationConfig"/>
@@ -72,7 +71,6 @@ import ServerChanNotificationView from "./notification/ServerChanNotificationVie
 import TelegramNotificationView from "./notification/TelegramNotificationView.vue";
 import WebhookNotificationView from "./notification/WebhookNotificationView.vue";
 import ShellNotificationView from "./notification/ShellNotificationView.vue";
-import SystemNotificationView from "./notification/SystemNotificationView.vue";
 import {notificationTypeList} from "@/js/notification-type.js";
 import {ElMessage} from "element-plus";
 import FileMoveNotificationView from "./notification/FileMoveNotificationView.vue";

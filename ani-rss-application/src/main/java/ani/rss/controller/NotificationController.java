@@ -32,6 +32,10 @@ public class NotificationController extends BaseController {
     public Result<Void> testNotification(@RequestBody NotificationConfig notificationConfig) {
         NotificationTypeEnum notificationType = notificationConfig.getNotificationType();
         Class<? extends BaseNotification> aClass = NotificationUtil.NOTIFICATION_MAP.get(notificationType);
+        // 旧配置可能包含已移除的通知类型。
+        if (aClass == null) {
+            return Result.error("该通知类型已不受支持");
+        }
         BaseNotification baseNotification = ReflectUtil.newInstance(aClass);
         Ani ani = AniUtil.createAni();
         BgmInfo bgmInfo = BgmUtil.getBgmInfo("292970", true);

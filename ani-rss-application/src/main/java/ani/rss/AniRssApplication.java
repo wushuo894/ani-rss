@@ -1,7 +1,6 @@
 package ani.rss;
 
 import ani.rss.entity.Global;
-import ani.rss.util.other.SystemTrayUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import org.springframework.boot.SpringApplication;
@@ -19,15 +18,10 @@ public class AniRssApplication {
     public static void main(String[] args) {
         Global.ARGS = List.of(ObjectUtil.defaultIfNull(args, new String[]{}));
         loadProperty();
-        SystemTrayUtil.start();
         SpringApplication.run(AniRssApplication.class, args);
     }
 
     public static void loadProperty() {
-        // 隐藏dock栏图标
-        System.setProperty("apple.awt.UIElement", "true");
-        // 菜单栏图标颜色自适应
-        System.setProperty("apple.awt.enableTemplateImages", "true");
         // 启用Basic认证
         System.setProperty("jdk.http.auth.tunneling.disabledSchemes", "");
         // DNS解析成功过期时间

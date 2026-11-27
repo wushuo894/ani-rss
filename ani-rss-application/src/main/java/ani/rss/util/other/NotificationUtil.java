@@ -26,14 +26,12 @@ public class NotificationUtil {
             .setWorkQueue(new LinkedBlockingQueue<>(256))
             .build();
 
-    // 通知类型超过十种，使用 ofEntries 注册各类型的实现。
     public final static Map<NotificationTypeEnum, Class<? extends BaseNotification>>
             NOTIFICATION_MAP =
             Map.ofEntries(
                     Map.entry(NotificationTypeEnum.EMBY_REFRESH, EmbyRefreshNotification.class),
                     Map.entry(NotificationTypeEnum.MAIL, MailNotification.class),
                     Map.entry(NotificationTypeEnum.SERVER_CHAN, ServerChanNotification.class),
-                    Map.entry(NotificationTypeEnum.SYSTEM, SystemNotification.class),
                     Map.entry(NotificationTypeEnum.TELEGRAM, TelegramNotification.class),
                     Map.entry(NotificationTypeEnum.WEB_HOOK, WebHookNotification.class),
                     Map.entry(NotificationTypeEnum.SHELL, ShellNotification.class),

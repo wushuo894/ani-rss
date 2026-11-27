@@ -16,10 +16,6 @@ export let notificationTypeList = [
         label: "Bark 通知"
     },
     {
-        name: 'SYSTEM',
-        label: '系统通知'
-    },
-    {
         name: 'WEB_HOOK',
         label: 'WebHook'
     },
@@ -46,5 +42,6 @@ export let notificationTypeList = [
 ]
 
 export let getLabel = (name) => {
-    return notificationTypeList.filter(item => item.name === name)[0].label;
+    // 旧配置中的通知类型可能已从可选列表移除。
+    return notificationTypeList.find(item => item.name === name)?.label ?? '已移除的通知类型';
 }

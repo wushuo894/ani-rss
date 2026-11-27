@@ -110,13 +110,6 @@ public class NotificationConfig implements Serializable {
 
 
     /**
-     * 系统通知
-     */
-    @Schema(description = "系统通知")
-    private Boolean systemMsg;
-
-
-    /**
      * telegram bot token
      */
     @Schema(description = "telegram bot token")
